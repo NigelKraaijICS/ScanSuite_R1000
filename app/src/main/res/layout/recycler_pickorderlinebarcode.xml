@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pickorderLineBarcodeItemLinearLayout"
+    style="@style/pickorderLineRecyclerLinearLayout"
+    >
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatImageView
+            style="@style/smallButton"
+            android:id="@+id/imageButtonBarcode"
+            app:srcCompat="@drawable/ic_barcode_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <TextView
+            style="@style/pickorderLineRecyclerLocationText"
+            android:id="@+id/textViewPickorderLineBarcode"
+            app:layout_constraintStart_toEndOf="@id/imageButtonBarcode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <TextView
+            style="@style/pickorderLineRecyclerQuantityText"
+            android:id="@+id/textViewQuantityLabel"
+            android:text="@string/number_per_scan"
+            app:layout_constraintStart_toStartOf="@id/textViewPickorderLineBarcode"
+            app:layout_constraintTop_toBottomOf="@id/textViewPickorderLineBarcode"
+            />
+        <TextView
+            style="@style/pickorderLineRecyclerQuantityText"
+            android:id="@+id/textViewPickorderLineBarcodeQuantity"
+            app:layout_constraintStart_toEndOf="@id/textViewQuantityLabel"
+            app:layout_constraintTop_toBottomOf="@id/textViewPickorderLineBarcode"
+            />
+        <View
+            android:id="@+id/menuSeparator"
+            style="@style/menuSeparator"
+            app:layout_constraintStart_toStartOf="@id/textViewPickorderLineBarcode"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>

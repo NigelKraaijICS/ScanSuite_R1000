@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="10dp">
+
+    <android.support.v7.widget.AppCompatImageView
+        style="@style/imageviewMenuButton"
+        android:id="@+id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/colorShimmer"
+        />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:id="@+id/textView1"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imageView"
+        android:background="@color/colorShimmer"
+        android:layout_marginLeft="@dimen/default_double_margin"
+        android:layout_marginRight="@dimen/default_double_margin"
+        />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="16dp"
+        app:layout_constraintStart_toStartOf="@id/textView1"
+        app:layout_constraintEnd_toEndOf="@id/textView1"
+        app:layout_constraintBottom_toBottomOf="@id/imageView"
+        android:layout_marginTop="@dimen/default_double_margin"
+        android:layout_marginRight="@dimen/default_double_margin"
+        android:layout_marginEnd="@dimen/default_double_margin"
+        android:background="@color/colorShimmer"
+        />
+    <View
+        android:id="@+id/menuSeparator"
+        style="@style/menuSeparator"
+        app:layout_constraintStart_toStartOf="@id/textView1"
+        app:layout_constraintEnd_toEndOf="@id/textView1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/colorShimmer"
+        />
+</android.support.constraint.ConstraintLayout>

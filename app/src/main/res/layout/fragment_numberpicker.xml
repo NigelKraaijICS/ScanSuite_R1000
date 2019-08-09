@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.dialogs.NumberpickerFragment"
+    >
+
+    <NumberPicker
+        android:id="@+id/quantityNumberPicker"
+        android:theme="@style/quantityNumberPicker"
+        style="@style/quantityNumberPicker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+    </NumberPicker>
+    <android.support.v7.widget.AppCompatImageButton
+        style="@style/countButton"
+        android:id="@+id/imageButtonMinus"
+        app:srcCompat="@drawable/ic_remove_black_24dp"
+        app:layout_constraintEnd_toStartOf="@id/quantityNumberPicker"
+        app:layout_constraintTop_toTopOf="@id/quantityNumberPicker"
+        app:layout_constraintBottom_toBottomOf="@id/quantityNumberPicker"
+        />
+    <android.support.v7.widget.AppCompatImageButton
+        style="@style/countButton"
+        android:id="@+id/imageButtonPlus"
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:layout_constraintStart_toEndOf="@id/quantityNumberPicker"
+        app:layout_constraintTop_toTopOf="@id/quantityNumberPicker"
+        app:layout_constraintBottom_toBottomOf="@id/quantityNumberPicker"
+        />
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/numPad"
+        style="@style/numPad"
+        app:layout_constraintTop_toBottomOf="@id/quantityNumberPicker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/buttonPlus5"
+                style="@style/numPadbutton"
+                android:text="@string/plus_5"
+                />
+
+            <Button
+                android:id="@+id/buttonPlus10"
+                style="@style/numPadbutton"
+                android:text="@string/plus_10" />
+
+            <Button
+                android:id="@+id/buttonMax"
+                style="@style/numPadbutton"
+                android:text="@string/plus_max" />
+
+            <Button
+                android:id="@+id/buttonMinus5"
+                style="@style/numPadbutton"
+                android:text="@string/minus_5" />
+            <Button
+                android:id="@+id/buttonMinus10"
+                style="@style/numPadbutton"
+                android:text="@string/minus_10" />
+            <Button
+                android:id="@+id/buttonMin"
+                style="@style/numPadbutton"
+                android:text="@string/minus_min"
+                />
+        </GridLayout>
+    </android.support.v7.widget.CardView>
+    <Button
+        android:id="@+id/doneButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:text="@string/done"
+        app:layout_constraintTop_toBottomOf="@id/numPad"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:text="@string/cancel"
+        app:layout_constraintTop_toTopOf="@id/doneButton"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+</android.support.constraint.ConstraintLayout>

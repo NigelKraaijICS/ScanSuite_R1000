@@ -1,0 +1,541 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 19,
+    "identityHash": "2f8cdaded660dca905cbb27b643bc9f2",
+    "entities": [
+      {
+        "tableName": "ScannerLogon",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`FixedScannerBranch` TEXT, `ScannerDescription` TEXT NOT NULL, `RequiredScannerVersion` TEXT, `ApplicationEnvironment` TEXT, `Languages` TEXT, `RequiredScannerConfiguration` TEXT, `ReapplyScannerConfiguration` TEXT, `VersionConfigAppCurrentScanner` TEXT, `VersionConfigAppRequiredScanner` TEXT, `ColorSet` TEXT, PRIMARY KEY(`ScannerDescription`))",
+        "fields": [
+          {
+            "fieldPath": "fixedscannerbranch",
+            "columnName": "FixedScannerBranch",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "scannerdescription",
+            "columnName": "ScannerDescription",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "requiredscannerversion",
+            "columnName": "RequiredScannerVersion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "applicationenvironment",
+            "columnName": "ApplicationEnvironment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "languages",
+            "columnName": "Languages",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "requiredscannerconfiguration",
+            "columnName": "RequiredScannerConfiguration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reapplyscannerconfiguration",
+            "columnName": "ReapplyScannerConfiguration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "versionconfigappcurrentscanner",
+            "columnName": "VersionConfigAppCurrentScanner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "versionconfigapprequiredscanner",
+            "columnName": "VersionConfigAppRequiredScanner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "colorset",
+            "columnName": "ColorSet",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ScannerDescription"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Settings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Name` TEXT NOT NULL, `Value` TEXT, PRIMARY KEY(`Name`))",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "Name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "Value",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Name"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Authorisations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Authorisation` TEXT NOT NULL, `Order` INTEGER, `License` TEXT, PRIMARY KEY(`Authorisation`))",
+        "fields": [
+          {
+            "fieldPath": "authorisation",
+            "columnName": "Authorisation",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "Order",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "license",
+            "columnName": "License",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Authorisation"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Username` TEXT NOT NULL, `Name` TEXT, `Pincode` TEXT, `Importfile` TEXT, PRIMARY KEY(`Username`))",
+        "fields": [
+          {
+            "fieldPath": "username",
+            "columnName": "Username",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "Name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pincode",
+            "columnName": "Pincode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "importfile",
+            "columnName": "Importfile",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Username"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Pickorders",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Ordernumber` TEXT NOT NULL, `Ordertype` TEXT, `Number_of_Bins` TEXT, `SingleArticleOrders` TEXT, `Pick_Reject_during_pick` TEXT, `Pick_Reject_during_sort` TEXT, `Pick_Sales_ask_workplace` TEXT, `Pick_Transfer_ask_workplace` TEXT, `Pick_Barcode_check` TEXT, `Pick_Pick_PV_VKO_each_piece` TEXT, `Pick_Pick_to_container` TEXT, `Pick_Pick_to_container_type` TEXT, `Pick_Print_addresslabel` TEXT, `Pick_Print_contentlabel` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `StatusPrintAtStart` TEXT, `ExternalReference` TEXT, `Workplace` TEXT, `StockOwner` TEXT, `RequestedEndDateTime` TEXT, `SourceDocument` TEXT, `Document` TEXT, `DocumentType` TEXT, `Document2` TEXT, `DocumentType2` TEXT, `Webservice_timeout_erp_in_s` TEXT, `Interface_result_method` TEXT, `Sorting` TEXT, PRIMARY KEY(`Ordernumber`))",
+        "fields": [
+          {
+            "fieldPath": "ordernumber",
+            "columnName": "Ordernumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ordertype",
+            "columnName": "Ordertype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "numberofBins",
+            "columnName": "Number_of_Bins",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "singleArticleOrders",
+            "columnName": "SingleArticleOrders",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickRejectduringpick",
+            "columnName": "Pick_Reject_during_pick",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickRejectduringsort",
+            "columnName": "Pick_Reject_during_sort",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickSalesaskworkplace",
+            "columnName": "Pick_Sales_ask_workplace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickTransferaskworkplace",
+            "columnName": "Pick_Transfer_ask_workplace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickBarcodecheck",
+            "columnName": "Pick_Barcode_check",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPickPVVKOeachpiece",
+            "columnName": "Pick_Pick_PV_VKO_each_piece",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPicktocontainer",
+            "columnName": "Pick_Pick_to_container",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPicktocontainertype",
+            "columnName": "Pick_Pick_to_container_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPrintaddresslabel",
+            "columnName": "Pick_Print_addresslabel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPrintcontentlabel",
+            "columnName": "Pick_Print_contentlabel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "assignedUserId",
+            "columnName": "AssignedUserId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentUserId",
+            "columnName": "CurrentUserId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "statusPrintAtStart",
+            "columnName": "StatusPrintAtStart",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "externalReference",
+            "columnName": "ExternalReference",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "workplace",
+            "columnName": "Workplace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stockOwner",
+            "columnName": "StockOwner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "requestedEndDateTime",
+            "columnName": "RequestedEndDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sourceDocument",
+            "columnName": "SourceDocument",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "document",
+            "columnName": "Document",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "documentType",
+            "columnName": "DocumentType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "document2",
+            "columnName": "Document2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "documentType2",
+            "columnName": "DocumentType2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "webservicetimeouterpins",
+            "columnName": "Webservice_timeout_erp_in_s",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "interfaceresultmethod",
+            "columnName": "Interface_result_method",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sorting",
+            "columnName": "Sorting",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Ordernumber"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Pickorderlines",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER, `ItemNo` TEXT, `VariantCode` TEXT, `Description` TEXT, `Description2` TEXT, `BinCode` TEXT, `Container` TEXT, `ContainerType` TEXT, `ContainerInput` TEXT, `ContainerHandled` TEXT, `Quantity` TEXT, `QuantityHandled` TEXT, `QuantityRejected` TEXT, `SourceNo` TEXT, `DestinationNo` TEXT, `IsPartOfMultiLineOrder` TEXT, `ShippingAdvice` TEXT, `ProcessingSequence` TEXT, `StoreSourceOpdracht` TEXT, `StorageBinCode` TEXT, `VendorItemNo` TEXT, `VendorItemDescription` TEXT, `PrintDocuments` TEXT, `Status` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "recordid",
+            "columnName": "recordid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lineno",
+            "columnName": "LineNo",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemno",
+            "columnName": "ItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "variantcode",
+            "columnName": "VariantCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description2",
+            "columnName": "Description2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bincode",
+            "columnName": "BinCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "container",
+            "columnName": "Container",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "containertype",
+            "columnName": "ContainerType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "containerinput",
+            "columnName": "ContainerInput",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "containerhandled",
+            "columnName": "ContainerHandled",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "Quantity",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityhandled",
+            "columnName": "QuantityHandled",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityrejected",
+            "columnName": "QuantityRejected",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sourceno",
+            "columnName": "SourceNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "destinationno",
+            "columnName": "DestinationNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ispartofmultilineorder",
+            "columnName": "IsPartOfMultiLineOrder",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shippingadvice",
+            "columnName": "ShippingAdvice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "processingsequence",
+            "columnName": "ProcessingSequence",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storesourceopdracht",
+            "columnName": "StoreSourceOpdracht",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storagebincode",
+            "columnName": "StorageBinCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vendoritemno",
+            "columnName": "VendorItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vendoritemdescription",
+            "columnName": "VendorItemDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "printdocuments",
+            "columnName": "PrintDocuments",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "recordid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2f8cdaded660dca905cbb27b643bc9f2\")"
+    ]
+  }
+}

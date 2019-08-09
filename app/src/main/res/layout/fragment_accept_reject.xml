@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/acceptRejectContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewAcceptRejectHeader"
+        style="@style/acceptRejectHeader"
+        android:text="@string/message_pickorderbusy_header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewAcceptRejectText"
+        style="@style/acceptRejectText"
+        android:text="@string/message_pickorderbusy_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectHeader" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/rejectImageView"
+        style="@style/defaultBottomButtonNoTint"
+        android:layout_marginTop="@dimen/default_double_margin"
+        app:layout_constraintEnd_toStartOf="@+id/acceptImageView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectText"
+        app:srcCompat="@drawable/ic_dislike"
+       />
+    <TextView
+        android:id="@+id/textReject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_huge"
+        android:layout_marginTop="@dimen/default_double_margin"
+        android:text="@string/message_pickorderbusy_reject"
+        app:layout_constraintStart_toStartOf="@id/rejectImageView"
+        app:layout_constraintEnd_toEndOf="@id/rejectImageView"
+        app:layout_constraintTop_toBottomOf="@id/rejectImageView" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/acceptImageView"
+        style="@style/defaultBottomButtonNoTint"
+        android:layout_marginTop="@dimen/default_double_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/rejectImageView"
+        app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectText"
+        app:srcCompat="@drawable/ic_like"
+        />
+    <TextView
+        android:id="@+id/textAccept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_double_margin"
+        android:text="@string/message_pickorderbusy_accept"
+        android:textSize="@dimen/textsize_huge"
+        app:layout_constraintEnd_toEndOf="@+id/acceptImageView"
+        app:layout_constraintStart_toStartOf="@+id/acceptImageView"
+        app:layout_constraintTop_toBottomOf="@id/acceptImageView" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        android:text="@string/cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textAccept" />
+</android.support.constraint.ConstraintLayout>

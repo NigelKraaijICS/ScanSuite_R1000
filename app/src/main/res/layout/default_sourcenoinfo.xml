@@ -1,0 +1,33 @@
+<android.support.v7.widget.CardView
+    android:id="@+id/sourcenoContainer"
+    style="@style/articleInfoContainer"
+    app:layout_constraintTop_toBottomOf="@id/numberAndButtonBottomBarrier"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_double_padding"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        >
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="@dimen/textsize_enormous"
+            android:layout_height="@dimen/textsize_enormous"
+            app:srcCompat="@drawable/ic_document_black_24dp"
+            android:tint="@color/colorDivider"
+            app:layout_constraintEnd_toStartOf="@id/sourcenoText"
+            app:layout_constraintTop_toTopOf="@id/sourcenoText"
+            app:layout_constraintBottom_toBottomOf="@id/sourcenoText"/>
+        <TextView
+            android:id="@+id/sourcenoText"
+            style="@style/defaultinfoSmallerText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

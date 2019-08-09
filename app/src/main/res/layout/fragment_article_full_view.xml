@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/articleFuillViewContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.dialogs.ArticleFullViewFragment">
+
+    <include layout="@layout/toolbar_subtext_default" />
+    <android.support.v7.widget.CardView
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/articleInfoContainer"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/imageFullBrand"
+                style="@style/articleFullImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_trademark_black_24dp"
+                android:visibility="gone"
+                />
+            <TextView
+                android:id="@+id/articleFullBrandTextView"
+                style="@style/articleFullTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/imageFullBrand"
+                app:layout_constraintTop_toTopOf="@id/imageFullBrand"
+                app:layout_constraintBottom_toBottomOf="@id/imageFullBrand"
+                android:visibility="gone"
+                />
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/imageFullItemno"
+                style="@style/articleFullImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageFullBrand"
+                app:srcCompat="@drawable/ic_numeric_black_24dp"
+                />
+            <TextView
+                android:id="@+id/articleFullItemNoTextView"
+                style="@style/articleFullTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/imageFullItemno"
+                app:layout_constraintTop_toTopOf="@id/imageFullItemno"
+                app:layout_constraintBottom_toBottomOf="@id/imageFullItemno" />
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/imageFullVariant"
+                style="@style/articleFullImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageFullItemno"
+                app:srcCompat="@drawable/ic_variant_black_24dp"
+                />
+            <TextView
+                android:id="@+id/articleFullVariantTextView"
+                style="@style/articleFullTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/imageFullVariant"
+                app:layout_constraintTop_toTopOf="@id/imageFullVariant"
+                app:layout_constraintBottom_toBottomOf="@id/imageFullVariant"  />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/articleFullImageView"
+        style="@style/articleFullImageView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/articleInfoContainer" />
+</android.support.constraint.ConstraintLayout>

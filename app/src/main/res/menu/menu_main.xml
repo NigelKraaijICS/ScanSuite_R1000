@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:theme="@style/menuButton"
+        android:orderInCategory="100"
+        android:title="@string/mainmenu_home"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_home_black_24dp"
+        />
+    <item
+        android:id="@+id/action_settings"
+        android:theme="@style/menuButton"
+        android:orderInCategory="100"
+        android:title="@string/mainmenu_settings"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:visible="false"
+        />
+    <item android:id="@+id/action_support"
+        android:theme="@style/menuButton"
+        android:orderInCategory="100"
+        android:title="@string/mainmenu_support"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_support_black_24dp"
+        />
+    <item android:id="@+id/action_language"
+        android:theme="@style/menuButton"
+        android:orderInCategory="100"
+        android:title="@string/mainmenu_language"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_language_black_24dp"
+        />
+    <item android:id="@+id/action_datetime"
+        android:theme="@style/menuButton"
+        android:orderInCategory="100"
+        android:title="@string/mainmenu_datetime"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_calendar_black_24dp"
+        />
+</menu>

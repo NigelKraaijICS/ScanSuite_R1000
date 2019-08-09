@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="articleimage_radius">40</integer>
+    <integer name="articleimage_margin">80</integer>
+    <integer name="articleimage_resize_height">760</integer>
+    <integer name="articleimage_resize_width">760</integer>
+
+    <integer name="shortAnimationDuration">1000</integer>
+    <integer name="scrollTextDelay">1000</integer>
+
+</resources>

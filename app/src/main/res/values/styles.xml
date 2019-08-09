@@ -1,0 +1,790 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="defaultScreen">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/colorDefaultbackground</item>
+    </style>
+    <style name="imageLogo">
+        <item name="android:layout_width">@dimen/imagelogo_width</item>
+        <item name="android:layout_height">@dimen/imagelogo_height</item>
+        <item name="android:src">@raw/ssu_whs_256</item>
+    </style>
+    <style name="mainTopButton">
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:layout_height">@dimen/maintopbutton_height</item>
+        <item name="android:layout_width">@dimen/maintopbutton_width</item>
+        <item name="android:tint" tools:targetApi="lollipop">@color/colorPrimary</item>
+    </style>
+    <style name="menuButton">
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:paddingTop">@dimen/default_double_padding</item>
+        <item name="android:paddingBottom">@dimen/default_double_padding</item>
+    </style>
+    <style name="header_navigationview">
+        <item name="android:padding">@dimen/default_double_padding</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/colorLogoRed</item>
+    </style>
+    <style name="header_navigationview_logo">
+        <item name="android:layout_height">@dimen/bottombutton_height</item>
+        <item name="android:layout_width">@dimen/bottombutton_width</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorWhite</item>
+        <item name="android:src">@drawable/ic_scansuite_logo</item>
+    </style>
+    <style name="header_navigationview_title">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:color">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:layout_marginTop">@dimen/default_double_margin</item>
+    </style>
+    <style name="header_navigationview_logo_bup">
+        <item name="android:layout_height">@dimen/bottombutton_height</item>
+        <item name="android:layout_width">@dimen/bottombutton_width</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorLogoRed</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:src">@drawable/ic_launcher_foreground</item>
+    </style>
+    <style name="defaultRecyclerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fadeScrollbars">true</item>
+   </style>
+    <style name="settingsRecyclerLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_margin">@dimen/recycleritem_margin</item>
+    </style>
+    <style name="menuRecyclerLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_margin">@dimen/recycleritem_margin</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    <style name="menuText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+
+    <style name="imageviewMenuButton">
+        <item name="android:layout_height">@dimen/imageview_menu_height</item>
+        <item name="android:layout_width">@dimen/imageview_menu_width</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:scaleType">fitStart</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
+    </style>
+
+    <style name="imageviewArticleImage">
+        <item name="android:layout_height">@dimen/imageview_menu_height</item>
+        <item name="android:layout_width">@dimen/imageview_menu_width</item>
+    </style>
+
+    <style name="menuSeparator">
+        <item name="android:background">@color/colorDivider</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/default_divider_height</item>
+    </style>
+
+    <style name="userRecyclerLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/recycleritem_padding</item>
+        <item name="android:layout_margin">@dimen/recycleritem_margin</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    <style name="userNameText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+    <style name="userUserNameText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorNeutral</item>
+    </style>
+    <style name="imageviewUserButton">
+        <item name="android:layout_height">@dimen/imageview_menu_height</item>
+        <item name="android:layout_width">@dimen/imageview_menu_width</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
+    </style>
+    <style name="defaultToolbar">
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/toolbar_elevation</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?android:attr/actionBarSize</item>
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+    <style name="defaultBottomButton">
+        <item name="android:layout_height">@dimen/bottombutton_height</item>
+        <item name="android:layout_width">@dimen/bottombutton_width</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
+    </style>
+    <style name="defaultBottomButtonNoTint">
+        <item name="android:layout_height">@dimen/bottombutton_height</item>
+        <item name="android:layout_width">@dimen/bottombutton_width</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
+    </style>
+    <style name="actionTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:background">@drawable/speech_bubble</item>
+    </style>
+    <style name="actionTextView2">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:background">@drawable/speech_bubble</item>
+    </style>
+    <style name="commentTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:paddingLeft">@dimen/default_double_padding</item>
+        <item name="android:paddingBottom">@dimen/default_double_padding</item>
+        <item name="android:paddingTop">@dimen/default_padding</item>
+        <item name="android:paddingRight">@dimen/default_padding</item>
+        <item name="android:background">@drawable/comment_bubble</item>
+        <item name="android:textColor">@color/colorCommentText</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
+    </style>
+    <style name="smallButton">
+        <item name="android:layout_height">@dimen/smallbutton_height</item>
+        <item name="android:layout_width">@dimen/smallbutton_width</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_marginRight">@dimen/default_margin</item>
+        <item name="android:layout_marginEnd">@dimen/default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_margin</item>
+        <item name="android:layout_marginTop">@dimen/default_margin</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
+    </style>
+    <style name="smallButton.Zerobutton">
+        <item name="android:layout_marginRight">@dimen/zerobutton_marginright</item>
+        <item name="android:layout_marginEnd">@dimen/zerobutton_marginright</item>
+    </style>
+    <style name="defaultBottomRealButton">
+        <item name="android:layout_height">@dimen/bottombutton_height</item>
+        <item name="android:layout_width">@dimen/bottombutton_width</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
+    </style>
+    <style name="recyclerItemImage">
+        <item name="android:tint">@color/colorRecyclerImage</item>
+        <item name="android:layout_width">@dimen/recyclerItemImageWidth</item>
+        <item name="android:layout_height">@dimen/recyclerItemImageHeight</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+    <style name="pickorderRecyclerLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_margin">@dimen/recycleritem_margin</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    <style name="pickorderRecyclerOrdernumberText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+    </style>
+    <style name="pickorderRecyclerUser">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+    </style>
+    <style name="pickorderRecyclerSingleArticles">
+        <item name="android:layout_width">@dimen/orderline_singlearticle_indicator</item>
+        <item name="android:layout_height">@dimen/orderline_singlearticle_indicator</item>
+        <item name="srcCompat">@drawable/ic_circle_one_black_24p</item>
+        <item name="android:tint">@color/colorNeutral</item>
+    </style>
+    <style name="pickorderRecyclerUserImage">
+        <item name="android:layout_width">@dimen/orderline_singlearticle_indicator</item>
+        <item name="android:layout_height">@dimen/orderline_singlearticle_indicator</item>
+        <item name="srcCompat">@drawable/ic_me_black_24dp</item>
+        <item name="android:tint">@color/colorNeutral</item>
+    </style>
+    <style name="pickorderRecyclerProcessedWait">
+        <item name="android:layout_width">@dimen/orderline_singlearticle_indicator</item>
+        <item name="android:layout_height">@dimen/orderline_singlearticle_indicator</item>
+        <item name="srcCompat">@drawable/ic_coffee_black_24dp</item>
+        <item name="android:tint">@color/colorNeutral</item>
+    </style>
+    <style name="pickorderRecyclerQuantityTotal">
+        <item name="android:layout_width">@dimen/orderline_singlearticle_indicator</item>
+        <item name="android:layout_height">@dimen/orderline_singlearticle_indicator</item>
+        <item name="srcCompat">@drawable/ic_counter_black_24dp</item>
+        <item name="android:tint">@color/colorNeutral</item>
+    </style>
+    <style name="pickorderRecyclerExternalreferenceText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+    </style>
+    <style name="pickorderRecyclerQuantityTotalText">
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+    </style>
+    <style name="pickorderRecyclerCurrentLocationText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+    </style>
+    <style name="recyclerSearchView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:queryHint">@string/search</item>
+        <item name="android:background">@color/colorBart</item>
+        <item name="android:imeOptions">actionDone</item>
+    </style>
+
+    <style name="pickorderRecyclerOrdertypeText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorNeutral</item>
+    </style>
+    <style name="pickorderLineRecyclerLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/recycleritem_margin</item>
+        <item name="android:background">@drawable/default_recycler_background</item>
+    </style>
+    <!--<item name="android:background">@drawable/default_recycler_background</item>-->
+    <!--<item name="android:background">?android:attr/selectableItemBackground</item>-->
+    <style name="pickorderLineRecyclerOrdernumberText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+    <style name="pickorderLineRecyclerSourcenoText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+    <style name="pickorderLineRecyclerLocationText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+    <style name="pickorderLineRecyclerQuantityText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+    </style>
+
+    <style name="pickorderLinePackAndShipRecyclerDocumentText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+    <style name="pickorderLinePackAndShipRecyclerQuantityText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+    <style name="pickorderLinePackAndShipRecyclerPack">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+
+
+    <style name="imageviewToolbar">
+        <item name="android:layout_height">@dimen/imageview_toolbar_height</item>
+        <item name="android:layout_width">@dimen/imageview_toolbar_width</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:padding">@dimen/default_padding</item>
+    </style>
+
+    <style name="imageviewToolbarHelp">
+        <item name="android:layout_height">@dimen/imageview_toolbar_height</item>
+        <item name="android:layout_width">@dimen/imageview_toolbar_width</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="srcCompat">@drawable/ic_help_outline_black_24dp</item>
+        <item name="android:tint">@color/colorPrimary</item>
+    </style>
+
+    <style name="cardViewExtraMenu">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/extramenu_card_elevation</item>
+        <item name="android:layout_margin">@dimen/extramenu_card_margin</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="articleInfoContainer">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/extramenu_card_elevation</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+    <style name="cardViewAdviceLocation">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/extramenu_card_elevation</item>
+        <item name="android:layout_margin">@dimen/extramenu_card_margin</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+
+    <style name="addressContainer">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/extramenu_card_elevation</item>
+        <item name="android:layout_margin">@dimen/extramenu_card_margin</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+    <style name="shippingInfoContainer">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/extramenu_card_elevation</item>
+        <item name="android:layout_margin">@dimen/extramenu_card_margin</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+
+    <!--region defaultOrderInfoCardView -->
+    <style name="defaultOrderInfoCardView">
+        <item name="android:animateLayoutChanges">true</item>
+    </style>
+    <style name="defaultOrderInfoCardViewExtraInfoContainer">
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="orderInfo_textViewSourcenumber">
+
+    </style>
+    <style name="addressText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="addressTextNoConstraint">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="shippingInfoText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+
+    <!--endregion defaultOrderInfoCardView -->
+    <style name="articleDescriptionText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_margin">@dimen/default_half_margin</item>
+    </style>
+    <style name="articleDescription2Text">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_margin">@dimen/default_half_margin</item>
+    </style>
+    <style name="articleItemText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_margin">@dimen/default_half_margin</item>
+    </style>
+    <style name="articleBarcodeText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_margin">@dimen/default_half_margin</item>
+    </style>
+    <style name="articleVendorItemText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_margin">@dimen/default_half_margin</item>
+    </style>
+    <style name="genericItemExtraFieldText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_margin">@dimen/default_half_margin</item>
+        <item name="android:layout_marginStart">@dimen/default_half_margin</item>
+        <item name="android:layout_marginLeft">@dimen/default_half_margin</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="defaultinfoText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+    </style>
+    <style name="defaultinfoSmallerText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+    </style>
+    <style name="containerText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="quantityText">
+        <item name="android:layout_height">@dimen/textsize_ludicrous</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_ludicrous</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+    <style name="quantityRequiredText">
+        <item name="android:layout_height">@dimen/textsize_huge</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textColor">@color/colorTextLighter</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+    <style name="countButton">
+        <item name="android:layout_height">@dimen/bottombutton_height</item>
+        <item name="android:layout_width">@dimen/bottombutton_width</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
+    </style>
+    <style name="articleThumbImageView">
+        <item name="android:layout_height">@dimen/articleimage_thumb_height</item>
+        <item name="android:layout_width">@dimen/articleimage_thumb_width</item>
+    </style>
+    <style name="articleFullImageView">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+    <style name="articleFullTextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+    <style name="articleFullImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:tint">@color/colorDivider</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="quantityNumberPicker">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+
+    </style>
+    <style name="pillButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_double_margin</item>
+        <item name="android:background">@drawable/button_pill</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
+    </style>
+    <style name="numPad">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="numPadbutton">
+        <item name="android:layout_gravity">left|top</item>
+        <item name="android:background">@drawable/button_no_background</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/textsize_huge</item>
+    </style>
+    <style name="quantityPickordersText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:background">@drawable/button_pill</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:backgroundTint">@color/colorNeutral</item>
+    </style>
+    <style name="languageText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+    </style>
+    <style name="languageTextLarge">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="android:textSize">@dimen/textsize_ludicrous</item>
+    </style>
+    <style name="textFormLabel">
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/default_margin</item>
+        <item name="android:layout_marginTop">@dimen/default_double_margin</item>
+    </style>
+    <style name="textFormValue">
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="textFormValueConstrained">
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="orderStatusIndicator">
+        <item name="android:layout_width">@dimen/orderstatus_indicator_width</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
+    <!--region Error fragment-->
+    <style name="huge_error_container">
+        <item name="android:background">@color/colorError</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+    </style>
+    <style name="huge_error_image">
+        <item name="android:layout_width">@dimen/huge_error_image_width</item>
+        <item name="android:layout_height">@dimen/huge_error_image_height</item>
+        <item name="android:tint">@color/colorWhite</item>
+        <item name="srcCompat">@drawable/ic_warning_black_24dp</item>
+    </style>
+    <style name="huge_error_ok_button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="srcCompat">@drawable/ic_check_black_24dp</item>
+        <item name="android:tint">@color/colorWhite</item>
+        <item name="android:paddingTop">@dimen/default_double_padding</item>
+        <item name="android:paddingBottom">@dimen/default_double_padding</item>
+        <item name="android:layout_marginTop">@dimen/default_double_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_double_margin</item>
+    </style>
+    <style name="errorMessageText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:paddingTop">@dimen/default_double_padding</item>
+        <item name="android:paddingBottom">@dimen/default_double_padding</item>
+        <item name="android:layout_marginTop">@dimen/default_double_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_double_margin</item>
+    </style>
+    <style name="errorMessageExtraText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:paddingTop">@dimen/default_double_padding</item>
+        <item name="android:paddingBottom">@dimen/default_double_padding</item>
+        <item name="android:layout_marginTop">@dimen/default_double_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_double_margin</item>
+    </style>
+    <!--endregion Error fragment-->
+
+    <!--region orderdone fragment-->
+    <style name="orderDoneContainer">
+        <item name="android:background">@color/colorWhite</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+    <style name="orderDoneHeader">
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+    </style>
+    <style name="orderDoneText">
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="orderDoneImageView">
+        <item name="android:layout_width">@dimen/order_done_image_width</item>
+        <item name="android:layout_height">@dimen/order_done_image_height</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="srcCompat">@drawable/ic_trophy</item>
+    </style>
+    <style name="acceptRejectHeader">
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+    </style>
+    <style name="acceptRejectText">
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="currentLocationImageView">
+        <item name="android:layout_width">@dimen/order_done_image_width</item>
+        <item name="android:layout_height">@dimen/order_done_image_height</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="srcCompat">@drawable/ic_current_location</item>
+    </style>
+    <style name="orderDoneCurrentLocation">
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="orderDoneBincode">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+
+    </style>
+    <!--endregion orderdone fragment-->
+    <style name="textViewChosenOrder">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+    </style>
+
+    <!--region usedUnits-->
+    <style name="usedUnitsImage">
+        <item name="android:layout_height">@dimen/imageview_menu_height</item>
+        <item name="android:layout_width">@dimen/imageview_menu_width</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
+    </style>
+    <style name="usedUnitsDescription">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="usedUnitsUnit">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="usedUnitsQuantity">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+
+    <!--endregion usedUnits-->
+
+    usedUnitsDescription
+
+</resources>
