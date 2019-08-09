@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
 

@@ -1,6 +1,5 @@
 package ICS.Utils;
 
-import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -9,7 +8,7 @@ import android.text.format.Formatter;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
-import SSU_WHS.cAppExtension;
+import SSU_WHS.General.cAppExtension;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 

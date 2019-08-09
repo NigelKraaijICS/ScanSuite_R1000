@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import SSU_WHS.cAppExtension;
+import SSU_WHS.General.cAppExtension;
 
 public class cConnection {
     public enum connectionType {

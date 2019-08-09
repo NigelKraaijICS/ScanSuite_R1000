@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +18,10 @@ import android.widget.EditText;
 
 import ICS.Environments.cEnvironment;
 import ICS.Environments.cEnvironmentEntity;
-import ICS.Environments.cEnvironmentViewModel;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScanDefinitions;
 import ICS.Utils.cUserInterface;
-import SSU_WHS.cAppExtension;
+import SSU_WHS.General.cAppExtension;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;
 

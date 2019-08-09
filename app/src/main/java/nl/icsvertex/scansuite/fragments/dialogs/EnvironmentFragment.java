@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,8 +26,7 @@ import ICS.Environments.cEnvironment;
 import ICS.Environments.cEnvironmentAdapter;
 import ICS.Environments.cEnvironmentEntity;
 import ICS.Environments.cEnvironmentRecyclerItemTouchHelper;
-import ICS.Environments.cEnvironmentViewModel;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.Scanning.cBarcodeScanDefinitions;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;

@@ -19,11 +19,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.ArticleImages.cArticleImageEntity;
-import SSU_WHS.ArticleImages.cArticleImageViewModel;
-import SSU_WHS.PickorderLines.cPickorderLineEntity;
-import SSU_WHS.PickorderLines.cPickorderLineViewModel;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.Basics.ArticleImages.cArticleImageEntity;
+import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineViewModel;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
 public class ArticleFullViewFragment extends DialogFragment implements iICSDefaultFragment {

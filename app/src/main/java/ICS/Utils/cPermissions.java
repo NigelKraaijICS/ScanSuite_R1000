@@ -1,12 +1,11 @@
 package ICS.Utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
-import SSU_WHS.cAppExtension;
+import SSU_WHS.General.cAppExtension;
 
 public class cPermissions {
     public static boolean hasPermissions(Context context, String... permissions) {

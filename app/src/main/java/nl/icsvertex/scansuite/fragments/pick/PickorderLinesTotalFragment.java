@@ -16,10 +16,10 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import SSU_WHS.PickorderLines.cPickorderLineAdapter;
-import SSU_WHS.PickorderLines.cPickorderLineEntity;
-import SSU_WHS.PickorderLines.cPickorderLineViewModel;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineViewModel;
+import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cSharedPreferences;
 import nl.icsvertex.scansuite.R;
 

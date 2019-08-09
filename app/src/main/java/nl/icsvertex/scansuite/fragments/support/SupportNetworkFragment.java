@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.fragments.support;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -14,7 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
 import nl.icsvertex.scansuite.R;

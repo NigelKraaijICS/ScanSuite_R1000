@@ -7,8 +7,8 @@ import java.util.List;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import SSU_WHS.Webservice.cWebservice;
-import SSU_WHS.cAppExtension;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
 public class cEnvironment {

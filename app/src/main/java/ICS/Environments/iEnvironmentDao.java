@@ -8,7 +8,7 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import SSU_WHS.cDatabase;
+import SSU_WHS.General.cDatabase;
 
 @Dao
 public interface iEnvironmentDao {

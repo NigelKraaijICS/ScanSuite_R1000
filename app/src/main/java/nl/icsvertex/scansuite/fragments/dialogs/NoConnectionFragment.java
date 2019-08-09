@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cImages;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;

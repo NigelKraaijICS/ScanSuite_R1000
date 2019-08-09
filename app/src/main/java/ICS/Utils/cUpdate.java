@@ -1,6 +1,5 @@
 package ICS.Utils;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 
 import java.io.File;
 
-import SSU_WHS.cAppExtension;
+import SSU_WHS.General.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 

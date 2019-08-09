@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.Settings.cSettingsViewModel;
+import SSU_WHS.Basics.Settings.cSettingsViewModel;
 import SSU_WHS.Webservice.cWebservice;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cUpdate;

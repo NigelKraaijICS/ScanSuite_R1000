@@ -1,13 +1,10 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +17,7 @@ import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
-import SSU_WHS.cAppExtension;
+import SSU_WHS.General.cAppExtension;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.ship.ShipDetermineTransportActivity;
 

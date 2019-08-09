@@ -1,16 +1,14 @@
 package SSU_WHS.Webservice;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentManager;
 
 import org.json.JSONException;
 
 import java.util.concurrent.ExecutionException;
 
 import ICS.Utils.cUserInterface;
-import SSU_WHS.cAppExtension;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
 public class cWebservice {

@@ -15,14 +15,14 @@ import android.widget.Button;
 
 import java.util.List;
 
-import SSU_WHS.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitAdapter;
-import SSU_WHS.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitEntity;
-import SSU_WHS.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitViewModel;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitAdapter;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitEntity;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitViewModel;
 import nl.icsvertex.scansuite.activities.ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
-import static SSU_WHS.cPublicDefinitions.SHIPPINGUNITFRAGMENT_SHIPPINGAGENT;
-import static SSU_WHS.cPublicDefinitions.SHIPPINGUNITFRAGMENT_SHIPPINGSERVICE;
+import static SSU_WHS.General.cPublicDefinitions.SHIPPINGUNITFRAGMENT_SHIPPINGAGENT;
+import static SSU_WHS.General.cPublicDefinitions.SHIPPINGUNITFRAGMENT_SHIPPINGSERVICE;
 
 public class ShippingUnitFragment extends android.support.v4.app.DialogFragment {
     Context thisContext;

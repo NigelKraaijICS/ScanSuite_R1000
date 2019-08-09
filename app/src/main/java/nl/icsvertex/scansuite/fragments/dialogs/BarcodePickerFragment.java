@@ -16,9 +16,9 @@ import android.widget.Button;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.PickorderBarcodes.cPickorderBarcodeAdapter;
-import SSU_WHS.PickorderBarcodes.cPickorderBarcodeEntity;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeAdapter;
+import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeEntity;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
 

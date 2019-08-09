@@ -1,11 +1,10 @@
 package ICS.Utils;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 
-import SSU_WHS.cAppExtension;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
 
 import static android.content.Context.MODE_PRIVATE;
 

@@ -19,7 +19,7 @@ import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
-import SSU_WHS.cAppExtension;
+import SSU_WHS.General.cAppExtension;
 import nl.icsvertex.scansuite.activities.general.LoginActivity;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;

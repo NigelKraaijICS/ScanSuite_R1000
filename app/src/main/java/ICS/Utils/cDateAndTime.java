@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cPublicDefinitions;
 
 public class cDateAndTime {
     public String mGetLogicalDateStr(Context context, String dateTimeStr) {

@@ -2,7 +2,6 @@ package nl.icsvertex.scansuite.fragments.dialogs;
 
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,10 +15,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.Settings.cSettingsAdapter;
-import SSU_WHS.Settings.cSettingsEntity;
-import SSU_WHS.Settings.cSettingsViewModel;
-import SSU_WHS.cAppExtension;
+import SSU_WHS.Basics.Settings.cSettingsAdapter;
+import SSU_WHS.Basics.Settings.cSettingsEntity;
+import SSU_WHS.Basics.Settings.cSettingsViewModel;
+import SSU_WHS.General.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 

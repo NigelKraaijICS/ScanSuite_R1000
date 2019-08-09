@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.os.Vibrator;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.Animation;
@@ -19,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Weberror.cWeberrorEntity;
-import SSU_WHS.cAppExtension;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.fragments.dialogs.GettingDataFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.HugeErrorFragment;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.fragments.dialogs.WebserviceErrorFragment;
-import nl.icsvertex.scansuite.fragments.main.HomeFragment;
 
 public class cUserInterface {
     public static GettingDataFragment gettingDataFragment;

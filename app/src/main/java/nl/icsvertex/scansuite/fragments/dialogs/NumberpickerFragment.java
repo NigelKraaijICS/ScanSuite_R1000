@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,8 +17,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.cAppExtension;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
 

@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.fragments.main;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
 public class LanguageFragment extends Fragment implements iICSDefaultFragment {

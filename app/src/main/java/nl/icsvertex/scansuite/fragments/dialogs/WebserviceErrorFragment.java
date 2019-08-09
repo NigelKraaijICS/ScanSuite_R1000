@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;

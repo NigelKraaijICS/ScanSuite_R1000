@@ -18,11 +18,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.Comments.cCommentAdapter;
-import SSU_WHS.Comments.cCommentEntity;
-import SSU_WHS.Comments.cCommentViewModel;
-import SSU_WHS.cAppExtension;
-import SSU_WHS.cPublicDefinitions;
+import SSU_WHS.Picken.Comments.cCommentAdapter;
+import SSU_WHS.Picken.Comments.cCommentEntity;
+import SSU_WHS.Picken.Comments.cCommentViewModel;
+import SSU_WHS.General.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cSharedPreferences;
 import nl.icsvertex.scansuite.R;
 

@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
-import SSU_WHS.acScanSuiteDatabase;
+import SSU_WHS.General.acScanSuiteDatabase;
 import ICS.Utils.cDeviceInfo;
 
 public class cScannerLogonRepository {

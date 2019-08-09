@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.support.annotation.NonNull;
 
-import SSU_WHS.cDatabase;
+import SSU_WHS.General.cDatabase;
 
 @Entity(tableName = cDatabase.TABLENAME_ENVIRONMENTS, primaryKeys = {cDatabase.ENVIRONMENT_NAME})
 public class cEnvironmentEntity {
