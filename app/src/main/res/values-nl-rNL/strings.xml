@@ -192,7 +192,7 @@
     <string name="error_no_more_articles_to_pick">Er zijn geen artikelen meer voor deze barcode</string>
     <string name="error_couldnt_lock_order">Deze opdracht kon niet gelocked worden</string>
     <string name="comments">opmerkingen</string>
-    <string name="button_roger">OK</string>
+    <string name="button_roger">OKK</string>
     <string name="lockorder_order_assigned_to_another_user">Deze opdracht is toegewezen aan een andere gebruiker</string>
     <string name="lockorder_order_already_busy_on_other_scanner">Deze opdracht is al gelocked op een andere scanner</string>
     <string name="lockorder_order_already_assigned_to_user">Het lijkt erop dat je deze opdracht al op een andere scanner had geopend, wil je op deze verdergaan?</string>
