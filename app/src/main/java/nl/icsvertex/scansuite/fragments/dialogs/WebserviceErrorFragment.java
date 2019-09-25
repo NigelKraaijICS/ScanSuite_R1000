@@ -2,10 +2,10 @@ package nl.icsvertex.scansuite.fragments.dialogs;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.CardView;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.cardview.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +92,7 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
         imageNoEntry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cUserInterface.doRotate(imageNoEntry, 0);
+                cUserInterface.pDoRotate(imageNoEntry, 0);
                 mShowOrHideDetails();
             }
         });

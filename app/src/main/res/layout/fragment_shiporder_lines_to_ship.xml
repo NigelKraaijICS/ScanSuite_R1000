@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/fragmentShiporderLinesToShip"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.ship.ShiporderLinesToShipFragment"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     >
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewShiporderLinesToship"
         style="@style/defaultRecyclerView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/shipThisView"
         app:layout_constraintStart_toStartOf="parent"
         />
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/pillButton"
         android:id="@+id/shipThisView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +45,7 @@
             app:layout_constraintTop_toBottomOf="@id/textViewShipThis"
             android:paddingRight="@dimen/default_double_padding"
             android:paddingEnd="@dimen/default_double_padding"/>
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:scaleType="fitXY"
             android:tint="@color/colorPrimary"
             android:padding="@dimen/default_padding"
@@ -58,8 +57,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-    </android.support.constraint.ConstraintLayout>
-    <android.support.constraint.ConstraintLayout
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/quickhelp"
         android:id="@+id/quickhelpContainer"
         android:layout_width="wrap_content"
@@ -86,7 +85,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="gone"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/quickhelpIcon"
             android:layout_width="@dimen/quickelp_icon_size"
             android:layout_height="@dimen/quickelp_icon_size"
@@ -96,5 +95,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-    </android.support.constraint.ConstraintLayout>
-</android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

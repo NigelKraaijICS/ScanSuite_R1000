@@ -1,26 +1,34 @@
 package SSU_WHS.Picken.PickorderLineBarcodes;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ICS.Utils.cText;
 import SSU_WHS.General.cDatabase;
 
 @Entity(tableName = cDatabase.TABLENAME_PICKORDERLINEBARCODE, primaryKeys = {cDatabase.PICKORDERLINEBARCODE_LINENO,cDatabase.PICKORDERLINEBARCODE_BARCODE})
 public class cPickorderLineBarcodeEntity {
     @NonNull
     @ColumnInfo(name = cDatabase.PICKORDERLINEBARCODE_LINENO)
-    public String lineno;
+    public String lineNoStr;
+    public String getLineNoStr() {return lineNoStr;}
+
     @NonNull
     @ColumnInfo(name = cDatabase.PICKORDERLINEBARCODE_BARCODE)
-    public String barcode;
+    public String barcodeStr;
+    public String getBarcodeStr() {return barcodeStr;}
+
     @ColumnInfo(name = cDatabase.PICKORDERLINEBARCODE_QUANTITY)
-    public String quantity;
+    public String quantityHandledStr;
+    public String getQuantityhandledStr() {return quantityHandledStr;}
+
     @ColumnInfo(name = cDatabase.PICKORDERLINEBARCODE_ISMANUAL)
-    public Boolean ismanual;
+    public String isManualStr;
+    public String getIsManualStr() {return isManualStr;}
 
     //empty constructor
     public cPickorderLineBarcodeEntity() {
@@ -29,20 +37,19 @@ public class cPickorderLineBarcodeEntity {
 
     public cPickorderLineBarcodeEntity(JSONObject jsonObject) {
         try {
-            lineno = jsonObject.getString(cDatabase.LINENO_NAMESTR);
-            barcode = jsonObject.getString(cDatabase.BARCODE_NAMESTR);
-            quantity = jsonObject.getString(cDatabase.QUANTITYHANDLED_NAMESTR);
+            this.lineNoStr = jsonObject.getString(cDatabase.LINENO_NAMESTR);
+            this.barcodeStr = jsonObject.getString(cDatabase.BARCODE_NAMESTR);
+            this.quantityHandledStr = jsonObject.getString(cDatabase.QUANTITYHANDLED_NAMESTR);
+            this.isManualStr = jsonObject.getString(cDatabase.PICKORDERLINEBARCODE_ISMANUAL);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void setLineno(String pv_lineno) {this.lineno = pv_lineno;}
-    public String getLineno() {return lineno;}
-    public void setBarcode(String pv_barcode) {this.barcode = pv_barcode;}
-    public String getBarcode() {return barcode;}
-    public void setQuantityhandled(String pv_quantityhandled) {this.quantity = pv_quantityhandled;}
-    public String getQuantityhandled() {return quantity;}
-    public boolean getIsmanual() {return ismanual;}
-    public void setIsmanual(boolean ismanual) {this.ismanual = ismanual;}
+    public cPickorderLineBarcodeEntity(Long pvLineNoLng, String pvBarcodeStr) {
+        this.lineNoStr = cText.longToString(pvLineNoLng);
+        this.barcodeStr = pvBarcodeStr;
+        this.quantityHandledStr = "0";
+        this.isManualStr = "N";
+    }
 }

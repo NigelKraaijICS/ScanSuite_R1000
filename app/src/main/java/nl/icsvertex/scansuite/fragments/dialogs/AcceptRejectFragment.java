@@ -2,10 +2,9 @@ package nl.icsvertex.scansuite.fragments.dialogs;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,48 +15,61 @@ import android.widget.TextView;
 import ICS.Interfaces.iICSDefaultFragment;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.pick.PickorderPickActivity;
-import nl.icsvertex.scansuite.activities.ship.ShipDetermineTransportActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderSortActivity;
-
+import nl.icsvertex.scansuite.cAppExtension;
 
 public class AcceptRejectFragment extends DialogFragment implements iICSDefaultFragment {
-    View thisView;
-    Activity callerActivity;
+
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
+
     Button cancelButton;
     ImageView acceptImageView;
     ImageView rejectImageView;
     TextView textReject;
     TextView textAccept;
 
+    //End Region Private Properties
+
+    //Region Constructor
     public AcceptRejectFragment() {
         // Required empty public constructor
     }
+    //End Region Constructor
+
+
+    //Region Default Methods
+    @Override
+    public View onCreateView(LayoutInflater pvInflater, ViewGroup pvViewGroup,
+                             Bundle pvSavedInstanceState) {
+
+        // Inflate the layout for this fragment
+        return pvInflater.inflate(R.layout.fragment_accept_reject, pvViewGroup, false);
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_accept_reject, container, false);
-    }
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mFragmentInitialize();
+        cAppExtension.dialogFragment = this;
+        this.mFragmentInitialize();
     }
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
     }
+
     @Override
     public void mFindViews() {
-        acceptImageView = getView().findViewById(R.id.acceptImageView);
-        rejectImageView = getView().findViewById(R.id.rejectImageView);
-        cancelButton = getView().findViewById(R.id.cancelButton);
-        textReject = getView().findViewById(R.id.textReject);
-        textAccept = getView().findViewById(R.id.textAccept);
+        this.acceptImageView = getView().findViewById(R.id.acceptImageView);
+        this.rejectImageView = getView().findViewById(R.id.rejectImageView);
+        this.cancelButton = getView().findViewById(R.id.cancelButton);
+        this.textReject = getView().findViewById(R.id.textReject);
+        this.textAccept = getView().findViewById(R.id.textAccept);
     }
 
     @Override
@@ -70,12 +82,15 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     }
     @Override
     public void mSetListeners() {
-        mSetAcceptListener();
-        mSetRejectListener();
-        mSetCancelListener();
+        this.mSetAcceptListener();
+        this.mSetRejectListener();
+        this.mSetCancelListener();
     }
+    //End Region Default Methods
+
+
     private void mSetCancelListener() {
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -84,54 +99,68 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     }
     private void mSetAcceptListener() {
 
-        acceptImageView.setOnClickListener(new View.OnClickListener() {
+        this.acceptImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAccept();
             }
         });
-        textAccept.setOnClickListener(new View.OnClickListener() {
+
+        this.textAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAccept();
             }
         });
     }
+
     private void mSetRejectListener() {
-        rejectImageView.setOnClickListener(new View.OnClickListener() {
+        this.rejectImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mReject();
             }
         });
-        textReject.setOnClickListener(new View.OnClickListener() {
+        this.textReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mReject();
             }
         });
     }
+
     private void mAccept() {
-        if (callerActivity instanceof PickorderPickActivity) {
-            ((PickorderPickActivity)callerActivity).m_acceptPickorderLine();
-        }
-        if (callerActivity instanceof SortorderSortActivity) {
-            ((SortorderSortActivity)callerActivity).m_acceptPickorderLine();
-        }
-        if (callerActivity instanceof ShipDetermineTransportActivity) {
 
+        if (cAppExtension.activity instanceof  PickorderPickActivity) {
+            PickorderPickActivity.pAcceptPick();
+            return;
         }
+
+
+        //todo: put this back
+//        if (callerActivity instanceof SortorderSortActivity) {
+//            ((SortorderSortActivity)callerActivity).m_acceptPickorderLine();
+//        }
+//        if (callerActivity instanceof ShipDetermineTransportActivity) {
+//
+//        }
     }
-    private void mReject() {
-        if (callerActivity instanceof PickorderPickActivity) {
-            ((PickorderPickActivity)callerActivity).m_rejectPickorderLine();
-        }
-        if (callerActivity instanceof SortorderSortActivity) {
-            ((SortorderSortActivity)callerActivity).m_rejectPickorderLine();
-        }
-        if (callerActivity instanceof ShipDetermineTransportActivity) {
 
+    private void mReject() {
+
+        if (cAppExtension.activity instanceof  PickorderPickActivity) {
+            PickorderPickActivity.pCancelPick();
+            return;
         }
+
+
+        //todo: put this back
+//        if (callerActivity instanceof SortorderSortActivity) {
+//            ((SortorderSortActivity)callerActivity).m_rejectPickorderLine();
+//        }
+//        if (callerActivity instanceof ShipDetermineTransportActivity) {
+//
+//        }
     }
 
 }

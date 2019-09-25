@@ -35,9 +35,9 @@
 
     <color name="colorShimmer">#FFB84D</color>
 
-    <!--region order status indicators-->
+    <!--region order statusInt indicators-->
     <color name="colorOrderStatusAssignedUser">#fb36d4</color>
-    <!--endregion order status indicators-->
+    <!--endregion order statusInt indicators-->
 
     <color name="colorSpeechBubble">#0096ff</color>
 

@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.support.SupportNetworkFragment"
     android:padding="@dimen/default_padding">
-    <android.support.constraint.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/guideline"
         app:layout_constraintGuide_begin ="120dp"
         android:orientation="vertical"/>
     <TextView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/textViewConnectionTypeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,6 +27,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/textViewConnectionTypeLabel"
         app:layout_constraintLeft_toRightOf="@id/guideline"/>
     <TextView
+        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/textViewSSIDLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,6 +40,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/textViewSSIDLabel"
         app:layout_constraintLeft_toRightOf="@id/guideline"/>
     <TextView
+        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/textViewMyIpLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,6 +53,7 @@
         app:layout_constraintBaseline_toBaselineOf="@id/textViewMyIpLabel"
         app:layout_constraintLeft_toRightOf="@id/guideline"/>
     <TextView
+        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/textViewInternetConnectionLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,4 +73,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
 package SSU_WHS.Basics.ShippingAgentServiceShippingUnits;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,25 +77,25 @@ public class cShippingAgentServiceShippingUnitUsedAdapter extends RecyclerView.A
         if (mShippingAgentServiceShippingUnits != null) {
 
             final cShippingAgentServiceShippingUnitEntity shippingUnitEntity = mShippingAgentServiceShippingUnits.get(position);
-            holder.textViewDescription.setText(shippingUnitEntity.getDescription());
-            holder.textViewShippingUnit.setText(shippingUnitEntity.getShippingunit());
-            holder.textViewQuantityUsed.setText(Integer.toString(shippingUnitEntity.getShippingunitquantityused()));
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX)) {
+            holder.textViewDescription.setText(shippingUnitEntity.getDescriptionStr());
+            holder.textViewShippingUnit.setText(shippingUnitEntity.getShippingunitStr());
+            holder.textViewQuantityUsed.setText(Integer.toString(shippingUnitEntity.getShippingUnitQuantityusedInt()));
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX)) {
                 holder.usedUnitsImage.setImageResource(R.drawable.ic_box);
             }
-            if (shippingUnitEntity.getShippingunit().toLowerCase().contains(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX.toLowerCase())) {
+            if (shippingUnitEntity.getShippingunitStr().toLowerCase().contains(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX.toLowerCase())) {
                 holder.usedUnitsImage.setImageResource(R.drawable.ic_box);
             }
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_PALLET)) {
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_PALLET)) {
                 holder.usedUnitsImage.setImageResource(R.drawable.ic_pallet);
             }
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_CONTAINER)) {
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_CONTAINER)) {
                 holder.usedUnitsImage.setImageResource(R.drawable.ic_container);
             }
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_LETTERBOX)) {
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_LETTERBOX)) {
                 holder.usedUnitsImage.setImageResource(R.drawable.ic_letterbox);
             }
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_HANGING)) {
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_HANGING)) {
                 holder.usedUnitsImage.setImageResource(R.drawable.ic_hanging);
             }
         }

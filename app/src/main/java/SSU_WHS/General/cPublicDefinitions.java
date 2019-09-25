@@ -1,6 +1,5 @@
 package SSU_WHS.General;
 
-import java.util.List;
 
 public class cPublicDefinitions {
     public static String SETTINGS_PASSWORD = "ics";
@@ -13,48 +12,23 @@ public class cPublicDefinitions {
     public static String NUMBERINTENT_EXTRANUMBER = "NUMBERINTENT_EXTRANUMBER";
 
     public static String NUMBERINTENT_CURRENTQUANTITY = "NUMBERINTENT_CURRENTQUANTITY";
-    public static String NUMBERINTENT_MINQUANTITY = "NUMBERINTENT_MINQUANTITY";
     public static String NUMBERINTENT_MAXQUANTITY = "NUMBERINTENT_MAXQUANTITY";
 
-    public static String PICKING_CHOSENORDER = "PICKING_CHOSENORDER";
-    public static String PICKING_CHOSENITEMNO = "PICKING_CHOSENITEMNO";
-    public static String PICKING_CHOSENLOCATION = "PICKING_CHOSENLOCATION";
-    public static String PICKING_SCANNEDBARCODE = "PICKING_SCANNEDBARCODE";
 
-    public static String SORTING_CHOSENORDER = "PICKING_CHOSENORDER";
-    public static String SORTING_SCANNEDBARCODE = "SORTING_SCANNEDBARCODE";
-    public static String SORTING_CHOSENITEMNO = "PICKING_CHOSENITEMNO";
-    public static String SORTING_CHOSENWORKPLACE = "SORTING_CHOSENWORKPLACE";
+    public static String KEY_COMMENTHEADER = "KEY_COMMENTHEADER";
 
-    public static String SHIPPING_CHOSENORDER = "SHIPPING_CHOSENORDER";
-    public static String SHIPPING_SCANNEDBARCODE = "SHIPPING_SCANNEDBARCODE";
-    public static String SHIPPING_CHOSENITEMNO = "SHIPPING_CHOSENITEMNO";
-    public static String SHIPPING_CHOSENWORKPLACE = "SHIPPING_CHOSENWORKPLACE";
-    public static String SHIPPING_CHOSENSOURCENO = "SHIPPING_CHOSENSOURCENO";
 
-    public String GENERICITEMEXTRAFIELD1;
-    public String GENERICITEMEXTRAFIELD2;
-    public String GENERICITEMEXTRAFIELD3;
-    public String GENERICITEMEXTRAFIELD4;
-
-    public static String SHIPPINGUNITFRAGMENT_SHIPPINGAGENT = "SHIPPINGUNITFRAGMENT_SHIPPINGAGENT";
-    public static String SHIPPINGUNITFRAGMENT_SHIPPINGSERVICE = "SHIPPINGUNITFRAGMENT_SHIPPINGSERVICE";
 
     public static int CHANGELANGUAGE_REQUESTCODE = 45;
     public static int CHANGEDATETIME_REQUESTCODE = 46;
     public static int CHANGEWIFI_REQUESTCODE = 47;
 
-    public static String TIMEPATTERNSHOW = "hh:mm";
     public static String DATEPATTERNSHOW = "dd-MM-yyyy";
-    //public static String DATEPATTERNWEBSERVICE = "yyyy/MM/dd HH:mm:ss";
+
     public static String DATEPATTERNWEBSERVICE = "yyyy-MM-dd'T'hh:mm:ss'Z'";
 
 
     public static String SHAREDPREFERENCE_FILE = "SCANSUITE_PREFERENCES";
-    public static String PREFERENCE_CURRENT_USER = "PREFERENCE_CURRENT_USER";
-    public static String PREFERENCE_CURRENT_BRANCH = "PREFERENCE_CURRENT_BRANCH";
-    public static String PREFERENCE_CURRENT_ORDER = "PREFERENCE_CURRENT_ORDER";
-    public static String PREFERENCE_CURRENT_ENVIRONMENT = "PREFERENCE_CURRENT_ENVIRONMENT";
 
     public static String BARCODEFRAGMENT_LIST_TAG = "BARCODEFRAGMENT_LIST_TAG";
     public static String BRANCHFRAGMENT_LIST_TAG = "BRANCHFRAGMENT_LIST_TAG";
@@ -67,6 +41,8 @@ public class cPublicDefinitions {
 
     public static String ORDERDONE_TAG = "ORDERDONE_TAG";
     public static String ORDERDONE_HEADER = "ORDERDONE_ERRORMESSAGE";
+    public static String COMMENTFRAGMENT_TAG = "COMMENTFRAGMENT_TAG";
+    public static String WORKPLACEFRAGMENT_TAG = "WORKPLACEFRAGMENT_TAG";
     public static String ORDERDONE_TEXT = "ORDERDONE_EXTRASTRING";
     public static String ORDERDONE_SHOWCURRENTLOCATION = "ORDERDONE_SHOWCURRENTLOCATION";
 
@@ -74,8 +50,12 @@ public class cPublicDefinitions {
     public static String WEBSERVICEERROR_LIST_TAG = "WEBSERVICEERROR_LIST_TAG";
 
     public static String CURRENTLOCATION_TAG = "ORDERDONE_TAG";
-    public static String CURRENTLOCATION_HEADER = "CURRENTLOCATION_HEADER";
-    public static String CURRENTLOCATION_TEXT = "CURRENTLOCATION_TEXT";
+
+    public static String PASSWORDFRAGMENT_TAG = "PASSWORDFRAGMENT_TAG";
+    public static String PASSWORDFRAGMENT_HEADER = "PASSWORDFRAGMENT_HEADER";
+    public static String PASSWORDFRAGMENT_TEXT = "PASSWORDFRAGMENT_TEXT";
+    public static String PASSWORDFRAGMENT_HINT = "PASSWORDFRAGMENT_HINT";
+    public static String PASSWORDFRAGMENT_ISNUMERIC = "PASSWORDFRAGMENT_ISNUMERIC";
 
 
     public static String ARTICLEFULL_TAG = "ARTICLEFULL_TAG";
@@ -83,6 +63,38 @@ public class cPublicDefinitions {
 
     public static String SHOWCOMMENTS_EXTRA = "SHOWCOMMENTS_EXTRA";
 
-    public static String CURRENT_ACTIVITY = "";
+    public enum Workflows {
+        BC,
+        BM,
+        BP,
+        EOM,
+        EOOM,
+        EOOS,
+        EOR,
+        EOS,
+        ER,
+        IVM,
+        IVS,
+        MAM,
+        MAS,
+        MAT,
+        MI,
+        MO,
+        MT,
+        MV,
+        MVI,
+        OMM,
+        OMOM,
+        OMOS,
+        OMR,
+        OMS,
+        PA,
+        PF,
+        PV,
+        RVR,
+        RVS,
+        SPV,
+        UNKNOWN
+    }
 
 }

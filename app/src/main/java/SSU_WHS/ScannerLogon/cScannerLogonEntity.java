@@ -1,60 +1,81 @@
 package SSU_WHS.ScannerLogon;
 
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.annotation.NonNull;
+
+import java.util.List;
 
 import SSU_WHS.General.cDatabase;
 
 @Entity(tableName = cDatabase.TABLENAME_SCANNERLOGON, primaryKeys = {"ScannerDescription"})
 public class cScannerLogonEntity {
+
+    //Region Public Properties
     @ColumnInfo(name = "FixedScannerBranch")
     public String fixedscannerbranch;
+    public String getFixedscannerBranchStr() {return fixedscannerbranch;}
+
     @NonNull
     @ColumnInfo(name = "ScannerDescription")
     public String scannerdescription;
+    public String getScannerDescriptionStr() {return  scannerdescription;}
+
     @ColumnInfo(name = "RequiredScannerVersion")
     public String requiredscannerversion;
+    public String getRequiredScannerVersionStr() {return requiredscannerversion;}
+
     @ColumnInfo(name = "ApplicationEnvironment")
     public String applicationenvironment;
+    public String getApplicationEnvironmentStr() {return applicationenvironment;}
+
     @ColumnInfo(name = "Languages")
     public String languages;
+    public String getLanguagesStr() {return languages;}
+
     @ColumnInfo(name = "RequiredScannerConfiguration")
     public String requiredscannerconfiguration;
+    public String getRequiredScannerConfigurationStr() {return requiredscannerconfiguration;}
+
     @ColumnInfo(name = "ReapplyScannerConfiguration")
     public String reapplyscannerconfiguration;
+    public String getReapplyScannerConfigurationStr() {return reapplyscannerconfiguration;}
+
     @ColumnInfo(name = "VersionConfigAppCurrentScanner")
     public String versionconfigappcurrentscanner;
+    public String getVersionConfigAppCurrentScannerStr() {return versionconfigappcurrentscanner;}
+
     @ColumnInfo(name = "VersionConfigAppRequiredScanner")
     public String versionconfigapprequiredscanner;
+    public String getVersionConfigAppRequiredScannerStr() {return versionconfigapprequiredscanner;}
+
     @ColumnInfo(name = "ColorSet")
     public String colorset;
+    public String getColorsetStr() {return colorset;}
 
-    //empty constructor
+    //End Region Public Properies
+
+    //Region Constructor
     public cScannerLogonEntity() {
 
     }
-    public String getFixedscannerbranch() {return fixedscannerbranch;}
-    public void setFixedscannerbranch(String pv_fixedscannerbranch) {this.fixedscannerbranch = pv_fixedscannerbranch;}
-    public String getScannerdescription() {return  scannerdescription;}
-    public void setScannerdescription(String pv_scannerdescription) {this.scannerdescription = pv_scannerdescription;}
-    public String getRequiredscannerversion() {return requiredscannerversion;}
-    public void setRequiredscannerversion(String pv_requiredscannerversion) {this.requiredscannerversion = pv_requiredscannerversion;}
-    public String getApplicationenvironment() {return applicationenvironment;}
-    public void setApplicationenvironment(String pv_applicationenvironment) {this.applicationenvironment = pv_applicationenvironment;}
-    public String getLanguages() {return languages;}
-    public void setLanguages(String pv_languages) {this.languages = pv_languages;}
-    public String getRequiredscannerconfiguration() {return requiredscannerconfiguration;}
-    public void setRequiredscannerconfiguration(String pv_requiredscannerconfiguration) {this.requiredscannerconfiguration = pv_requiredscannerconfiguration;}
-    public String getReapplyscannerconfiguration() {return reapplyscannerconfiguration;}
-    public void setReapplyscannerconfiguration(String pv_reapplyscannerconfiguration) {this.reapplyscannerconfiguration = pv_reapplyscannerconfiguration;}
-    public String getVersionconfigappcurrentscanner() {return versionconfigappcurrentscanner;}
-    public void setVersionconfigappcurrentscanner(String pv_versionconfigappcurrentscanner) {this.versionconfigappcurrentscanner = pv_versionconfigappcurrentscanner;}
-    public String getVersionconfigapprequiredscanner() {return versionconfigapprequiredscanner;}
-    public void setVersionconfigapprequiredscanner(String pv_versionconfigapprequiredscanner) {this.versionconfigapprequiredscanner = pv_versionconfigapprequiredscanner;}
-    public String getColorset() {return colorset;}
-    public void setColorset(String pv_colorset) {this.colorset = pv_colorset;}
-}
+
+
+    public cScannerLogonEntity(List<String> pvScannerStringObl) {
+                this.fixedscannerbranch = pvScannerStringObl.get(0);
+                this.scannerdescription = pvScannerStringObl.get(1);
+                this.requiredscannerversion = pvScannerStringObl.get(2);
+                this.applicationenvironment =  pvScannerStringObl.get(3);
+                this.languages =   pvScannerStringObl.get(4);
+                this.requiredscannerconfiguration =  pvScannerStringObl.get(5);
+                this.reapplyscannerconfiguration =  pvScannerStringObl.get(6);
+                this.versionconfigappcurrentscanner =  pvScannerStringObl.get(7);
+                this.versionconfigapprequiredscanner = pvScannerStringObl.get(8);
+                this.colorset =  pvScannerStringObl.get(9);
+        }
+    //End Region Constructor
+    }
+
 
 

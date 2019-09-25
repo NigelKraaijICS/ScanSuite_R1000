@@ -1,84 +1,71 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
-
-import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-
-import java.util.List;
-
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutViewModel;
-import SSU_WHS.Basics.Branches.cBranchAdapter;
-import SSU_WHS.Basics.Branches.cBranchEntity;
-import SSU_WHS.Basics.Branches.cBranchViewModel;
-import SSU_WHS.General.cAppExtension;
-import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.Scanning.cBarcodeScanDefinitions;
+import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.Users.cUser;
+import nl.icsvertex.scansuite.cAppExtension;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.LoginActivity;
 
-public class BranchFragment extends android.support.v4.app.DialogFragment implements iICSDefaultFragment {
-    RecyclerView branchRecyclerview;
-    Button buttonClose;
-    DialogFragment thisFragment = null;
-    cBranchViewModel branchViewModel;
-    cBranchAdapter branchAdapter;
-    List<cBranchEntity> branches;
-    ShimmerFrameLayout shimmerViewContainer;
+public class BranchFragment extends DialogFragment implements iICSDefaultFragment {
 
-    IntentFilter barcodeFragmentIntentFilter;
-    private BroadcastReceiver barcodeFragmentReceiver;
-    cBarcodeLayoutViewModel barcodeLayoutViewModel;
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
+    private static RecyclerView branchRecyclerview;
+    private Button buttonClose;
+
+    private ShimmerFrameLayout shimmerViewContainer;
+
+    //End Region Private Properties
 
 
+    //Region Constructor
     public BranchFragment() {
-        // Required empty public constructor
-    }
 
+    }
+    //End region Constructor
+
+
+    //Region Default Methods
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_branch, container);
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         return rootview;
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        thisFragment = this;
-        Bundle bundle = this.getArguments();
-        branches = (List<cBranchEntity>)bundle.getSerializable(cPublicDefinitions.BRANCHFRAGMENT_LIST_TAG);
-
-        mFragmentInitialize();
-
-        mBarcodeReceiver();
-
+        cAppExtension.dialogFragment = this;
+        this.mFragmentInitialize();
     }
 
     @Override
     public void onPause() {
         shimmerViewContainer.stopShimmerAnimation();
         try {
-            getActivity().unregisterReceiver(barcodeFragmentReceiver);
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,135 +75,144 @@ public class BranchFragment extends android.support.v4.app.DialogFragment implem
     @Override
     public void onDestroy() {
         try {
-            getActivity().unregisterReceiver(barcodeFragmentReceiver);
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
         super.onDestroy();
     }
-    @Override
-    public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
-    }
-
-    @Override
-    public void mFindViews() {
-        branchRecyclerview = getView().findViewById(R.id.branchRecyclerview);
-        buttonClose = getView().findViewById(R.id.buttonClose);
-        shimmerViewContainer = getView().findViewById(R.id.shimmerViewContainer);
-    }
-
-    @Override
-    public void mSetViewModels() {
-        barcodeLayoutViewModel = ViewModelProviders.of(this).get(cBarcodeLayoutViewModel.class);
-        branchViewModel = ViewModelProviders.of(this).get(cBranchViewModel.class);
-    }
-
-    @Override
-    public void mFieldsInitialize() {
-        mFillRecyclerView();
-    }
-
-    @Override
-    public void mSetListeners() {
-        mSetCloseListener();
-    }
-
-    private void mBarcodeReceiver() {
-        barcodeFragmentIntentFilter = new IntentFilter();
-        for (String str : cBarcodeScanDefinitions.getBarcodeActions()) {
-            barcodeFragmentIntentFilter.addAction(str);
-        }
-        for (String str : cBarcodeScanDefinitions.getBarcodeCategories()) {
-            barcodeFragmentIntentFilter.addCategory(str);
-        }
-
-        barcodeFragmentReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.p_GetBarcode(intent, true);
-                if (barcodeStr == null) {
-                    barcodeStr = "";
-                }
-                mHandleScan(barcodeStr);
-            }
-        };
-        //don't forget to unregister on destroy.
-        getActivity().registerReceiver(barcodeFragmentReceiver,barcodeFragmentIntentFilter);
-    }
-    private void mSetCloseListener() {
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (thisFragment != null) {
-                    thisFragment.dismiss();
-                }
-            }
-        });
-    }
-    private void mFillRecyclerView() {
-        branchAdapter = new cBranchAdapter(cAppExtension.context);
-        branchRecyclerview.setHasFixedSize(false);
-        branchRecyclerview.setAdapter(branchAdapter);
-        branchRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-
-        branchAdapter.setBranches(branches);
-            //Stopping Shimmer Effect's animation after data is loaded
-            shimmerViewContainer.stopShimmerAnimation();
-            shimmerViewContainer.setVisibility(View.GONE);
-    }
 
     @Override
     public void onResume() {
-        getActivity().registerReceiver(barcodeFragmentReceiver, barcodeFragmentIntentFilter);
+
         super.onResume();
-        shimmerViewContainer.startShimmerAnimation();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+
+        this.shimmerViewContainer.startShimmerAnimation();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
         getDialog().getWindow().setLayout(width, height);
     }
-    private void mHandleScan(String barcode) {
-        String barcodeWithoutPrefixStr = "";
-        if (cRegex.hasPrefix(barcode)) {
-            String barcodePrefixStr = cRegex.getPrefix(barcode);
-            Boolean foundBin = false;
-            List<cBarcodeLayoutEntity> locationLayouts = barcodeLayoutViewModel.getBarcodeLayoutsOfType(cBarcodeLayout.barcodeLayoutEnu.LOCATION.toString());
-            for (cBarcodeLayoutEntity layout : locationLayouts) {
-                if (cRegex.p_checkRegexBln(layout.getLayoutValue(), barcode)) {
-                    foundBin = true;
+
+    //End Region Default Methods
+
+
+   //Region iICSDefaultFragment defaults
+    @Override
+    public void mFragmentInitialize() {
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+    }
+
+    @Override
+    public void mFindViews() {
+        this.branchRecyclerview = getView().findViewById(R.id.branchRecyclerview);
+        this.buttonClose = getView().findViewById(R.id.buttonClose);
+        this.shimmerViewContainer = getView().findViewById(R.id.shimmerViewContainer);
+    }
+
+    @Override
+    public void mSetViewModels() {
+
+    }
+
+    @Override
+    public void mFieldsInitialize() {
+        this.mFillRecyclerView();
+    }
+
+    @Override
+    public void mSetListeners() {
+        this.mSetCloseListener();
+    }
+
+    //End Region iICSDefaultFragment defaults
+
+    //Region Public Methods
+
+    public static void pHandleScan(String pvBarcodeStr){
+
+        String barcodeWithoutPrefixStr;
+
+        //No prefix
+        if (!cRegex.hasPrefix(pvBarcodeStr)) {
+
+            BranchFragment.mBranchScanned(pvBarcodeStr);
+            return;
+        }
+
+        Boolean foundBln = false;
+
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.LOCATION) == true) {
+            foundBln = true;
+        }
+
+        //has prefix, is branch
+        if (foundBln) {
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeStr);
+            BranchFragment.mBranchScanned(barcodeWithoutPrefixStr);
+            return;
+        }
+        else {
+            //has prefix, isn't branch
+            cUserInterface.pDoNope(branchRecyclerview, true, true);
+            return;
+        }
+    }
+    //End Region Public Methods
+
+    //Region Private Methods
+
+    private static void mBranchScanned(String pvBarcodeStr) {
+
+        cBranch branch = cBranch.pGetBranchByCode(pvBarcodeStr);
+        if (branch == null) {
+            cUserInterface.pDoNope(branchRecyclerview, true, true);
+            return;
+        }
+
+        if (cAppExtension.activity instanceof LoginActivity) {
+            cUser.currentUser.currentBranch = branch;
+            LoginActivity.pBranchSelected(branch);
+        }
+    }
+
+    private void mFillRecyclerView() {
+
+        this.branchRecyclerview.setHasFixedSize(false);
+        this.branchRecyclerview.setAdapter(cBranch.getBranchAdapter());
+        this.branchRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+
+        //Stopping Shimmer Effect's animation after data is loaded
+        this.shimmerViewContainer.stopShimmerAnimation();
+        this.shimmerViewContainer.setVisibility(View.GONE);
+    }
+
+    private void mSetCloseListener() {
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cAppExtension.dialogFragment != null) {
+                    cAppExtension.dialogFragment.dismiss();
                 }
             }
-            if (foundBin) {
-                //has prefix, is location
-                barcodeWithoutPrefixStr = cRegex.p_stripRegexPrefixStr(barcode);
-                branchScanned(barcodeWithoutPrefixStr);
-            }
-            else {
-                //has prefix, isn't location
-                cUserInterface.doNope(branchRecyclerview, true, true);
-            }
-        }
-        else {
-            //no prefix, fine
-            branchScanned(barcode);
-        }
+        });
     }
-    private void branchScanned(String barcode) {
-        cBranchEntity branchEntity = branchViewModel.getBranchByCode(barcode);
-        if (branchEntity != null) {
-            Activity activity = getActivity();
-            if (activity instanceof LoginActivity) {
-                ((LoginActivity)getActivity()).setChosenBranch(branchEntity);
-            }
-        }
-        else {
-            cUserInterface.doNope(branchRecyclerview, true, true);
-        }
 
-    }
+    //End Region Private Methods
+
+
+
+
+
+
+
+
+
 
 }
+
+

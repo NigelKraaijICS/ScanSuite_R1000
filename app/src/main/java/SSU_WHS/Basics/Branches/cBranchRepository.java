@@ -1,98 +1,74 @@
 package SSU_WHS.Basics.Branches;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.ksoap2.serialization.PropertyInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cBranchRepository {
-    private iBranchDao branchDao;
-    private cWebresult webResult;
 
-    cBranchRepository(Application application) {
-        acScanSuiteDatabase db = acScanSuiteDatabase.getDatabase(application);
-        branchDao = db.branchDao();
+    //Region Public Properties
+    public iBranchDao branchDao;
+    //End Region Public Properties
+
+    //Region Private Properties
+    private acScanSuiteDatabase db;
+    //End Region Private Properties
+
+    //Region Constructor
+    cBranchRepository(Application pvApplication) {
+        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.branchDao = db.branchDao();
     }
+    //End Region Constructor
 
-    public LiveData<List<cBranchEntity>> getBranchesForUser(final Boolean forceRefresh, final String user) {
+    //Region Public Methods
+    public cWebresult pGetBranchesFromWebserviceWrs() {
 
-        final MutableLiveData<List<cBranchEntity>> data = new MutableLiveData<>();
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<cBranchEntity> branchessObl = new ArrayList<>();
-                if (forceRefresh) {
-                    try {
-                        deleteAll();
-                        List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
-
-                        PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-                        l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USER;
-                        l_PropertyInfo1Pin.setValue(user);
-                        l_PropertyInfoObl.add(l_PropertyInfo1Pin);
-
-                        webResult = new cWebresult().mGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER, l_PropertyInfoObl);
-                        List<JSONObject> myList = webResult.getResultDtt();
-                        for (int i = 0; i < myList.size(); i++) {
-                            JSONObject jsonObject;
-                            jsonObject = myList.get(i);
-
-                            cBranchEntity branchEntity = new cBranchEntity(jsonObject);
-                            insert(branchEntity);
-                            branchessObl.add(branchEntity);
-                        }
-                        data.postValue(branchessObl);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else { //no refresh, get local database
-                    branchessObl = getAll();
-                    data.postValue(branchessObl);
-                }
-            } //run
-        }).start(); //Thread
-        return data;
-    }
-
-    public List<cBranchEntity> getAll() {
-        List<cBranchEntity> l_branchEntityObl = null;
         try {
-            l_branchEntityObl = new getAllAsyncTask(branchDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            webResultWrs = new branchesFromWebserviceGetAsyncTask().execute().get();
         } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
             e.printStackTrace();
         }
-        return l_branchEntityObl;
-    }
-    private static class getAllAsyncTask extends AsyncTask<Void, Void, List<cBranchEntity>> {
-        private iBranchDao mAsyncTaskDao;
-
-        getAllAsyncTask(iBranchDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cBranchEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getAll();
-        }
+        return webResultWrs;
     }
 
-    public void deleteAll () {
-        new cBranchRepository.deleteAllAsyncTask(branchDao).execute();
+
+    public void pInsert(cBranchEntity branchEntity) {
+        new insertAsyncTask(branchDao).execute(branchEntity);
     }
 
+    public void pDeleteAll() {
+
+        new   cBranchRepository.deleteAllAsyncTask(branchDao).execute();
+    }
+
+    //End Region Public Methods
+
+    //Region Private Methods
     private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private iBranchDao mAsyncTaskDao;
 
@@ -104,10 +80,6 @@ public class cBranchRepository {
             mAsyncTaskDao.deleteAll();
             return null;
         }
-    }
-
-    public void insert (cBranchEntity branchEntity) {
-        new insertAsyncTask(branchDao).execute(branchEntity);
     }
     private static class insertAsyncTask extends AsyncTask<cBranchEntity, Void, Void> {
         private iBranchDao mAsyncTaskDao;
@@ -121,25 +93,30 @@ public class cBranchRepository {
             return null;
         }
     }
-    public cBranchEntity getBranchByCode(String branch) {
-        cBranchEntity branchEntity = null;
-        try {
-            branchEntity = new getBranchByCodeAsyncTask(branchDao).execute(branch).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return branchEntity;
-    }
-    private static class getBranchByCodeAsyncTask extends AsyncTask<String, Void, cBranchEntity> {
-        private iBranchDao mAsyncTaskDao;
 
-        getBranchByCodeAsyncTask(iBranchDao dao) { mAsyncTaskDao = dao; }
+    private static class branchesFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
-        protected cBranchEntity doInBackground(final String... params) {
-            return mAsyncTaskDao.getBranchByCode(params[0]);
+        protected cWebresult doInBackground(final Void... params) {
+            cWebresult WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USER;
+            l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            try {
+                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
         }
     }
+    //End Region Private Methods
 
 }

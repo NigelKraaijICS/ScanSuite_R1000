@@ -2,15 +2,15 @@ package nl.icsvertex.scansuite.fragments.dialogs;
 
 
 import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,39 +19,45 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.List;
-
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutViewModel;
 import ICS.Utils.Scanning.cBarcodeScanDefinitions;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.cAppExtension;
 
-import static ICS.Utils.cUserInterface.mShowKeyboard;
+import static ICS.Utils.cUserInterface.pShowKeyboard;
 
 
 public class CurrentLocationFragment extends DialogFragment implements iICSDefaultFragment {
-    View thisView;
 
+    //Region Public Properties
+
+
+    //End Region Public Properties
+
+    //Region Private Properties
     ConstraintLayout currentLocationContainer;
     TextView textViewCurrentLocationHeader;
     TextView textViewCurrentLocationText;
 
-    EditText editTextCurrentLocation;
-    Button setLocationButton;
+    static EditText editTextCurrentLocation;
+    static Button setLocationButton;
     Button cancelButton;
+    //End Region Private Properties
 
-    IntentFilter barcodeFragmentIntentFilter;
-    private BroadcastReceiver barcodeFragmentReceiver;
-    cBarcodeLayoutViewModel barcodeLayoutViewModel;
 
+    //Region Constructor
     public CurrentLocationFragment() {
         // Required empty public constructor
     }
+    //End Region Constructor
+
+    //Region Default Methods
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,78 +65,82 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_current_location, container, false);
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        thisView = view;
-
-        mFragmentInitialize();
-
-        mBarcodeReceiver();
+        cAppExtension.dialogFragment  = this;
+        this.mFragmentInitialize();
     }
 
     @Override
     public void onDestroy() {
         try {
-            getActivity().unregisterReceiver(barcodeFragmentReceiver);
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
         super.onDestroy();
     }
+
     @Override
     public void onPause() {
         try {
-            getActivity().unregisterReceiver(barcodeFragmentReceiver);
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
         super.onPause();
     }
+
     @Override
     public void onResume() {
-        getActivity().registerReceiver(barcodeFragmentReceiver, barcodeFragmentIntentFilter);
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         super.onResume();
     }
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
     }
+
     @Override
     public void mFindViews() {
-        textViewCurrentLocationHeader = thisView.findViewById(R.id.textViewCurrentLocationHeader);
-        textViewCurrentLocationText = thisView.findViewById(R.id.textViewCurrentLocationText);
-        editTextCurrentLocation = thisView.findViewById(R.id.editTextCurrentLocation);
-        currentLocationContainer = thisView.findViewById(R.id.currentLocationContainer);
-        setLocationButton = thisView.findViewById(R.id.setLocationButton);
-        cancelButton = thisView.findViewById(R.id.cancelButton);
+        this.textViewCurrentLocationHeader = getView().findViewById(R.id.textViewCurrentLocationHeader);
+        this.textViewCurrentLocationText = getView().findViewById(R.id.textViewCurrentLocationText);
+        this.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
+        this.currentLocationContainer = getView().findViewById(R.id.currentLocationContainer);
+        this.setLocationButton = getView().findViewById(R.id.setLocationButton);
+        this.cancelButton = getView().findViewById(R.id.cancelButton);
     }
 
     @Override
     public void mSetViewModels() {
-        barcodeLayoutViewModel = ViewModelProviders.of(this).get(cBarcodeLayoutViewModel.class);
+
     }
     @Override
     public void mFieldsInitialize() {
-        textViewCurrentLocationHeader.setText(R.string.currentlocation_header_default);
-        textViewCurrentLocationText.setText(R.string.currentlocation_text_default);
+        this.textViewCurrentLocationHeader.setText(R.string.currentlocation_header_default);
+        this.textViewCurrentLocationText.setText(R.string.currentlocation_text_default);
 
-            InputFilter[] filterArray = new InputFilter[1];
-            filterArray[0] = new InputFilter.LengthFilter(20);
-            editTextCurrentLocation.setFilters(filterArray);
-            mShowKeyboard(editTextCurrentLocation);
+        InputFilter[] filterArray = new InputFilter[1];
+        filterArray[0] = new InputFilter.LengthFilter(20);
+        this.editTextCurrentLocation.setFilters(filterArray);
+        cUserInterface.pShowKeyboard(editTextCurrentLocation);
     }
+
     @Override
     public void mSetListeners() {
-        mSetSetLocationListener();
-        mSetCancelListener();
+        this.mSetSetLocationListener();
+        this.mSetCancelListener();
     }
 
     private void mSetCancelListener() {
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+       this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -138,70 +148,56 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         });
     }
     private void mSetSetLocationListener() {
-        setLocationButton.setOnClickListener(new View.OnClickListener() {
+        this.setLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Activity activity = getActivity();
-                if (activity instanceof PickorderLinesActivity) {
+
+
+                if (cAppExtension.activity instanceof  PickorderLinesActivity) {
+
                     if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
-                        cUserInterface.doNope(editTextCurrentLocation, true, true);
+                        cUserInterface.pDoNope(editTextCurrentLocation, true, true);
+                        return;
                     }
                     else {
-                        ((PickorderLinesActivity)activity).mSetCurrentLocation(editTextCurrentLocation.getText().toString());
                         dismiss();
+                        PickorderLinesActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
                     }
                 }
             }
         });
     }
-    private void mBarcodeReceiver() {
-        barcodeFragmentIntentFilter = new IntentFilter();
-        for (String str : cBarcodeScanDefinitions.getBarcodeActions()) {
-            barcodeFragmentIntentFilter.addAction(str);
-        }
-        for (String str : cBarcodeScanDefinitions.getBarcodeCategories()) {
-            barcodeFragmentIntentFilter.addCategory(str);
-        }
 
-        barcodeFragmentReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.p_GetBarcode(intent, true);
-                if (barcodeStr == null) {
-                    barcodeStr = "";
-                }
-                mHandleScan(barcodeStr);
-            }
-        };
-        //don't forget to unregister on destroy.
-        getActivity().registerReceiver(barcodeFragmentReceiver,barcodeFragmentIntentFilter);
-    }
 
-    private void mHandleScan(String barcode) {
-        if (cRegex.hasPrefix(barcode)) {
-            String barcodePrefixStr = cRegex.getPrefix(barcode);
-            List<cBarcodeLayoutEntity> binLayouts = barcodeLayoutViewModel.getBarcodeLayoutsOfType(cBarcodeLayout.barcodeLayoutEnu.BIN.toString());
+    public static void pHandleScan(String pvScannedBarcodeStr) {
+
+
+        //Has prefix, so check if this is a BIN
+        if (cRegex.hasPrefix(pvScannedBarcodeStr)) {
+
             Boolean foundBin = false;
-            for (cBarcodeLayoutEntity layout : binLayouts) {
-                if (cRegex.p_checkRegexBln(layout.getLayoutValue(), barcode)) {
-                    foundBin = true;
-                }
+
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN) == true) {
+                foundBin = true;
             }
+
             if (foundBin) {
                 //has prefix, is bin
-                editTextCurrentLocation.setText(cRegex.p_stripRegexPrefixStr(barcode));
+                editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr));
+                setLocationButton.callOnClick();
+                return;
             }
             else {
                 //has prefix, isn't bin
-                cUserInterface.doNope(editTextCurrentLocation, true, true);
+                cUserInterface.pDoNope(editTextCurrentLocation, true, true);
+                return;
             }
+
         }
-        else {
+
             //no prefix, fine
-            editTextCurrentLocation.setText(barcode);
-        }
-
+            editTextCurrentLocation.setText(pvScannedBarcodeStr);
+            setLocationButton.callOnClick();
+            return;
     }
-
-
 }

@@ -1,72 +1,47 @@
 package nl.icsvertex.scansuite.activities.general;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+
+import com.crashlytics.android.Crashlytics;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
-import ICS.Weberror.cWeberrorViewModel;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutViewModel;
-import ICS.Environments.cEnvironmentEntity;
-import SSU_WHS.ScannerLogon.cScannerLogonEntity;
-import SSU_WHS.ScannerLogon.cScannerLogonViewModel;
-import SSU_WHS.Basics.Settings.cSettingsEnums;
-import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitEntity;
-import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitViewModel;
-import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentServiceEntity;
-import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentServiceViewModel;
-import SSU_WHS.Basics.ShippingAgents.cShippingAgentEntity;
-import SSU_WHS.Basics.ShippingAgents.cShippingAgentViewModel;
-import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentServiceShipMethodEntity;
-import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentServiceShipMethodViewModel;
+import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.ItemProperty.cItemProperty;
+import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
+import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
+import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.ScannerLogon.cScannerLogon;
 import SSU_WHS.Webservice.cWebservice;
-import SSU_WHS.General.cAppExtension;
+import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cConnection;
-import ICS.Utils.cDeviceInfo;
-import ICS.Utils.cSharedPreferences;
-import ICS.Utils.cText;
-import ICS.Utils.cUpdate;
 import ICS.Utils.cUserInterface;
-
-import java.util.List;
-
 import ICS.Utils.cPermissions;
 
-import SSU_WHS.Basics.Settings.cSettingsEntity;
-import SSU_WHS.Basics.Settings.cSettingsViewModel;
+import io.fabric.sdk.android.Fabric;
 import nl.icsvertex.scansuite.fragments.dialogs.AddEnvironmentFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.NoConnectionFragment;
@@ -76,108 +51,115 @@ import nl.icsvertex.scansuite.fragments.main.LanguageFragment;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.fragments.support.SupportFragment;
 
-import static ICS.Environments.cEnvironment.pSetEnvironment;
-import static ICS.Utils.cUserInterface.mShowKeyboard;
-import static SSU_WHS.Webservice.cWebservice.mWebserviceIsAvailableAndRightVersion;
-
 public class MainDefaultActivity extends AppCompatActivity implements iICSDefaultActivity {
+
+    //Region Public Properties
     static final int ACTIVITY_WIFI_SETTINGS = 1;
     static final String ENVIRONMENTFRAGMENT_TAG = "ENVIRONMENTFRAGMENT_TAG";
     static final String ADDENVIRONMENTMANUALLYFRAGMENT_TAG = "ADDENVIRONMENTMANUALLYFRAGMENT_TAG";
-    static final String ACTIVITYNAME = "MainDefaultActivity";
+    //End Region Public Properties
 
-
-    //region ViewModels
-    cScannerLogonViewModel scannerLogonViewModel;
-    cSettingsViewModel settingsViewModel;
-    cBarcodeLayoutViewModel barcodeLayoutViewModel;
-
-    cShippingAgentViewModel shippingAgentViewModel;
-    cShippingAgentServiceViewModel shippingAgentServiceViewModel;
-    cShippingAgentServiceShippingUnitViewModel shippingAgentServiceShippingUnitViewModel;
-    cShippingAgentServiceShipMethodViewModel shippingAgentServiceShipMethodViewModel;
-
-
-    cWeberrorViewModel weberrorViewModel;
-    //endregion ViewModels
-
-    //region checkBooleans
-    Boolean gotScannerLogon = false;
-    Boolean gotBarcodeLayout = false;
-    Boolean gotSettings = false;
-    Boolean gotShippingAgent = false;
-    Boolean checkUsers = false;
-    Boolean gotShippingAgentService = false;
-    Boolean gotShippingAgentServiceShippingUnit = false;
-    Boolean gotShippingAgentServiceShipMethod = false;
-    //endregion checkBooleans
-
-    //region settings
-    Boolean needsShippingInfo;
-    //endregion settings
+    //Region Private Properties
 
     //region views
-    ImageView imageHome;
-    ImageView imageEnvironment;
+    private ImageView imageHome;
+    private ImageView imageEnvironment;
 
-    ImageView toolbarImage;
-    TextView toolbarTitle;
-    ImageView toolbarImageHelp;
-    TextView toolbarSubtext;
+    private Toolbar Toolbar;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private ImageView toolbarImageHelp;
+    private TextView toolbarSubtext;
 
-    FrameLayout mainFramelayout;
-    DrawerLayout menuMainDrawer;
-    NavigationView mainmenuNavigation;
-    //endregion views
+    private FrameLayout mainFramelayout;
+    private DrawerLayout menuMainDrawer;
+    private NavigationView mainmenuNavigation;
+    //End region views
+
+    //End Region Private Properties
+
+    //Region Default Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        //Fabric.with(this, new Crashlytics());
-        setContentView(R.layout.activity_main);
+
+        this.setContentView(R.layout.activity_main);
 
         // Standard methods to initialize the Activity
-        mActivityInitialize();
+        this.mActivityInitialize();
 
         //check permissions first
         cPermissions.checkPermissions();
 
         //set environment from preferences/by QR code
-        mSetEnviroment();
+        this.mSetEnviroment();
 
+        //set Crashlytics, otherwise Firebase wont work
+        Fabric.with(this, new Crashlytics());
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        cPublicDefinitions.CURRENT_ACTIVITY = ACTIVITYNAME;
     }
 
-    //region iICSDefaultActivity defaults
+    @Override
+    public void onActivityResult(int pvRequestCodeInt, int pvResultCodeInt, Intent data) {
+
+        super.onActivityResult(pvRequestCodeInt, pvResultCodeInt, data);
+        if (pvRequestCodeInt == cPublicDefinitions.CHANGELANGUAGE_REQUESTCODE) {
+            //we've changed the language, or not, who cares, but go back to language
+            this.setTitle(R.string.screentitle_language);
+            this.toolbarTitle.setText(R.string.screentitle_language);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.mainFramelayout, LanguageFragment.newInstance());
+            transaction.commit();
+        }
+
+        //internet set?
+        if (pvRequestCodeInt == ACTIVITY_WIFI_SETTINGS) {
+
+            if (cConnection.isInternetConnectedBln() == false) {
+                cUserInterface.pCheckAndCloseOpenDialogs();
+                final NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
+                noConnectionFragment.setCancelable(true);
+                noConnectionFragment.show(((MainDefaultActivity) cAppExtension.context).getSupportFragmentManager(), "NOCONNECTION");
+                return;
+            }
+            this.pLetsGetThisPartyStartedOrNot();
+        }
+    }
+    //End Region Default Methods
+
+    //Region iICSDefaultActivity defaults
     @Override
     public void mActivityInitialize() {
+
         //Set App Extensions
-        mSetAppExtensions();
+        this.mSetAppExtensions();
 
         //Find all views in Activity
-        mFindViews();
+        this.mFindViews();
 
         // Set all view models
-        mSetViewModels();
+        this.mSetViewModels();
 
-        mSetSettings();
+        this.mSetSettings();
 
         // Show and set toolbar
-        mSetToolbar(getResources().getString(R.string.screentitle_main));
+        this.mSetToolbar(getResources().getString(R.string.screentitle_main));
 
         // Don't do shit
-        mFieldsInitialize();
+        this.mFieldsInitialize();
 
         // Set event listeners
-        mSetListeners();
+        this.mSetListeners();
 
         // Init screen
-        mInitScreen();
+        this.mInitScreen();
     }
+
     @Override
     public void mSetAppExtensions() {
         cAppExtension.context = this;
@@ -189,31 +171,22 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void mFindViews() {
 
-        toolbarImage = findViewById(R.id.toolbarImage);
-        toolbarTitle = findViewById(R.id.toolbarTitle);
-        toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
-        toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        this.Toolbar = findViewById(R.id.toolbar);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
+        this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-        imageHome = findViewById(R.id.imageHome);
-        imageEnvironment = findViewById(R.id.imageEnvironment);
+        this.imageHome = findViewById(R.id.imageHome);
+        this.imageEnvironment = findViewById(R.id.imageEnvironment);
 
-        mainFramelayout = findViewById(R.id.mainFramelayout);
-        menuMainDrawer = findViewById(R.id.menuMainDrawer);
-        mainmenuNavigation = findViewById(R.id.mainmenuNavigation);
+        this.mainFramelayout = findViewById(R.id.mainFramelayout);
+        this.menuMainDrawer = findViewById(R.id.menuMainDrawer);
+        this.mainmenuNavigation = findViewById(R.id.mainmenuNavigation);
     }
 
     @Override
     public void mSetViewModels() {
-
-        scannerLogonViewModel = ViewModelProviders.of(this).get(cScannerLogonViewModel.class);
-        settingsViewModel = ViewModelProviders.of(this).get(cSettingsViewModel.class);
-        barcodeLayoutViewModel = ViewModelProviders.of(this).get(cBarcodeLayoutViewModel.class);
-        shippingAgentViewModel =ViewModelProviders.of(this).get(cShippingAgentViewModel.class);
-        shippingAgentServiceViewModel =ViewModelProviders.of(this).get(cShippingAgentServiceViewModel.class);
-        shippingAgentServiceShippingUnitViewModel =ViewModelProviders.of(this).get(cShippingAgentServiceShippingUnitViewModel.class);
-        shippingAgentServiceShipMethodViewModel =ViewModelProviders.of(this).get(cShippingAgentServiceShipMethodViewModel.class);
-        weberrorViewModel = ViewModelProviders.of(this).get(cWeberrorViewModel.class);
-
     }
 
     @Override
@@ -223,11 +196,12 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        toolbarImageHelp.setVisibility(View.INVISIBLE);
-        toolbarTitle.setText(pvScreenTitle);
-        toolbarImage.setImageResource(R.drawable.ic_welcome);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        this.toolbarImageHelp.setVisibility(View.INVISIBLE);
+        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarImage.setImageResource(R.drawable.ic_welcome);
+
+        setSupportActionBar(this.Toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -242,452 +216,170 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     @Override
     public void mSetListeners() {
-        mSetHomeListener();
-        mSetEnvironmentListener();
-        mSetMenuListener();
+        this.mSetHomeListener();
+        this.mSetEnvironmentListener();
+        this.mSetMenuListener();
     }
 
     @Override
     public void mInitScreen() {
-
-        mSetDefaultScreen();
-
+        this.mSetDefaultScreen();
     }
-    //endregion iICSDefaultActivity defaults
 
-    public void mLetsGetThisPartyStartedOrNot() {
+    //End Region iICSDefaultActivity defaults
 
-        if (!mWebserviceIsAvailableAndRightVersion()) {
+
+    //Region Public Methods
+    public void pLetsGetThisPartyStartedOrNot() {
+
+        // If scanner had different interface version then web service, then stop
+        if (cWebservice.pWebserviceIsAvailableAndRightVersionBln() == false) {
             return;
         }
-        //if this works, wel'll get settings
-        //when we have settings, we'll get the rest of the data
-        mGetBasics();
+
+        // If we already have everything we need, then next fragment
+        if (this.mAllBasicsAvailableBln() == true) {
+            HomeFragment.pFragmentDone();
+            return;
         }
 
-
-    private void mGetBasics() {
-        scannerLogonViewModel.getScannerLogons(true).observe(this, new Observer<List<cScannerLogonEntity>>() {
-            @Override
-            public void onChanged(@Nullable final List<cScannerLogonEntity> scannerLogonEntities) {
-
-                if (scannerLogonEntities != null && scannerLogonEntities.size() > 0) {
-                    gotScannerLogon = true;
-                    cScannerLogonEntity scannerLogonEntity = scannerLogonEntities.get(0);
-                    String currentAppversion = cDeviceInfo.getAppVersion();
-                    String requiredVersion = scannerLogonEntity.getRequiredscannerversion();
-                    if (!requiredVersion.equalsIgnoreCase(currentAppversion)) {
-                        //update!
-                        String subdir = requiredVersion.replaceAll("\\.", "");
-                        String URL = cPublicDefinitions.UPDATE_BASE_URL + "/" + subdir + "/" + cPublicDefinitions.UPDATE_PACKAGE_NAME;
-                        cUpdate.mUpdateBln(mainFramelayout, URL);
-                        return;
-                    }
-                    mCheckAllDone();
-                    mGetSettings();
-                }
-                else {
-                    //todo: needs scannerlogon, doesn't
-                }
-            }
-        });
-    }
-
-    private void mGetBarcodeLayouts() {
-        //barcodeLayoutViewModel.deleteAll();
-        barcodeLayoutViewModel.getBarcodeLayouts().observe(this, new Observer<List<cBarcodeLayoutEntity>>() {
-            @Override
-            public void onChanged(@Nullable final List<cBarcodeLayoutEntity> barcodeLayoutEntities) {
-                if (barcodeLayoutEntities != null && barcodeLayoutEntities.size() > 0) {
-                    gotBarcodeLayout = true;
-                    mCheckAllDone();
-                }
-                else {
-                    //todo:needs barcodelayouts, doesn't
-                }
-            }
-        });
-    }
-
-    private void mGetShippingInfo() {
-        shippingAgentViewModel.getShippingAgents(true).observe(this, new Observer<List<cShippingAgentEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<cShippingAgentEntity> shippingAgentEntities) {
-                if (shippingAgentEntities != null) {
-                    if (needsShippingInfo) {
-                        if (shippingAgentEntities.size() > 0) {
-                            gotShippingAgent = true;
-                            mCheckAllDone();
-                            return;
-                        }
-                        else {
-                            //todo: must have shippingagents, doesn't
-                        }
-                    }
-                    else {
-                        gotShippingAgent = true;
-                        mCheckAllDone();
-                    }
-                }
-            }
-        });
-
-        shippingAgentServiceViewModel.getShippingAgentServicess(true).observe(this, new Observer<List<cShippingAgentServiceEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<cShippingAgentServiceEntity> shippingAgentServiceEntities) {
-                if (shippingAgentServiceEntities != null) {
-                    if (needsShippingInfo) {
-                        if (shippingAgentServiceEntities.size() > 0) {
-                            gotShippingAgentService = true;
-                            mCheckAllDone();
-                            return;
-                        }
-                        else {
-                            //todo: must have shippingagentservicess, doesn't
-                        }
-                    }
-                    else {
-                        gotShippingAgentService = true;
-                        mCheckAllDone();
-                    }
-                }
-            }
-        });
-
-        shippingAgentServiceShippingUnitViewModel.getShippingAgentServicesShippingUnits(true).observe(this, new Observer<List<cShippingAgentServiceShippingUnitEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<cShippingAgentServiceShippingUnitEntity> shippingAgentServiceShippingUnitEntities) {
-                if (shippingAgentServiceShippingUnitEntities != null) {
-                    if (needsShippingInfo) {
-                        if (shippingAgentServiceShippingUnitEntities.size() > 0) {
-                            gotShippingAgentServiceShippingUnit = true;
-                            mCheckAllDone();
-                            return;
-                        }
-                        else {
-                            //todo: must have shippingagentservicess, doesn't
-                        }
-                    }
-                    else {
-                        gotShippingAgentServiceShippingUnit = true;
-                        mCheckAllDone();
-                    }
-                }
-            }
-        });
-
-        shippingAgentServiceShipMethodViewModel.getShippingAgentServicesShipMethods(true).observe(this, new Observer<List<cShippingAgentServiceShipMethodEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<cShippingAgentServiceShipMethodEntity> shippingAgentServiceShipMethodEntities) {
-                //no need to check, apparantly
-                gotShippingAgentServiceShipMethod = true;
-                mCheckAllDone();
-
-//                if (shippingAgentServiceShipMethodEntities != null) {
-//                    if (needsShippingInfo) {
-//                        if (shippingAgentServiceShipMethodEntities.size() > 0) {
-//                            gotShippingAgentServiceShipMethod = true;
-//                            mCheckAllDone();
-//                            return;
-//                        }
-//                        else {
-//                            //todo: must have shippingagentservicesshipmethod, doesn't
-//                        }
-//                    }
-//                    else {
-//                        gotShippingAgentServiceShipMethod = true;
-//                        mCheckAllDone();
-//                    }
-//                }
-            }
-        });
-    }
-
-    private void mGetSettings() {
-        cSharedPreferences.setSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_BRANCH, settingsViewModel.getSetting(cSettingsEnums.p_Settings14Enu.SCANNERFIXEDBRANCH.toString()));
-        //settingsViewModel.deleteAll();
-        settingsViewModel.getSettings().observe(this, new Observer<List<cSettingsEntity>>() {
-            @Override
-            public void onChanged(@Nullable final List<cSettingsEntity> settingsEntities) {
-                if (settingsEntities != null && settingsEntities.size() > 0) {
-                    String needShippingInfoSetting = settingsViewModel.getSetting(cSettingsEnums.p_Settings14Enu.PICK_SHIPPING_SALES.toString());
-                    needsShippingInfo = cText.stringToBoolean(needShippingInfoSetting, true);
-                    gotSettings = true;
-                    mGetBarcodeLayouts();
-                    mGetShippingInfo();
-                    mGetUsers();
-                    mCheckAllDone();
-                }
-            }
-        });
-    }
-
-    private void mGetUsers() {
-            String l_branch = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_BRANCH, "");
-            cUser.getUserViewModel().gotUsers(true, l_branch).observe(cAppExtension.fragmentActivity, new Observer<Boolean>() {
-                @Override
-                public void onChanged(@Nullable final Boolean gotUsers) {
-                    checkUsers = gotUsers;
-                    mCheckAllDone();
-                }
-            });
-
-        }
-
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == cPublicDefinitions.CHANGELANGUAGE_REQUESTCODE) {
-            //we've changed the language, or not, who cares, but go back to language
-            setTitle(R.string.screentitle_language);
-            toolbarTitle.setText(R.string.screentitle_language);
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.mainFramelayout, LanguageFragment.newInstance());
-            transaction.commit();
-        }
-        //internet set?
-        if (requestCode == ACTIVITY_WIFI_SETTINGS) {
-            if (cConnection.isInternetConnectedBln()) {
-                mLetsGetThisPartyStartedOrNot();
-            }
-            else {
-                cUserInterface.checkAndCloseOpenDialogs();
-                final NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
-                noConnectionFragment.setCancelable(true);
-                noConnectionFragment.show(((MainDefaultActivity) cAppExtension.context).getSupportFragmentManager(), "NOCONNECTION");
-            }
+        // Get all basic data via webservice, then next fragment
+        if (this.mGetBasicDataBln() == true) {
+            HomeFragment.pFragmentDone();
+            return;
         }
     }
 
-
-
-    private void mCheckAllDone() {
-
-        if (gotScannerLogon &&
-                checkUsers &&
-                gotBarcodeLayout &&
-                gotSettings &&
-                gotShippingAgent &&
-                gotShippingAgentService &&
-                gotShippingAgentServiceShippingUnit &&
-                gotShippingAgentServiceShipMethod) {
-            mAllDone();
-        }
-    }
-
-    private void mAllDone() {
-        //check for errors
-//        if (cPublicDefinitions.weberrors != null) {
-//            String l_message = "";
-//            for (cWeberror weberror : cPublicDefinitions.weberrors) {
-//                l_message += weberror.getError();
-//            }
-//
-//        }
-
-        for (Fragment fragment : cAppExtension.fragmentManager.getFragments()) {
-            if (fragment instanceof HomeFragment) {
-                ((HomeFragment) fragment).doAllDone();
-            }
-        }
-    }
-
-    public void setChosenEnvironment(cEnvironmentEntity environmentEntity) {
-        android.support.v4.app.Fragment l_FragmentFrg = getSupportFragmentManager().findFragmentByTag(ENVIRONMENTFRAGMENT_TAG);
+    public void pSetChosenEnvironment() {
+        Fragment l_FragmentFrg = getSupportFragmentManager().findFragmentByTag(ENVIRONMENTFRAGMENT_TAG);
         if (l_FragmentFrg != null) {
-            android.support.v4.app.DialogFragment l_DialogFragmentDfr = (android.support.v4.app.DialogFragment) l_FragmentFrg;
+            DialogFragment l_DialogFragmentDfr = (DialogFragment) l_FragmentFrg;
             l_DialogFragmentDfr.dismiss();
         }
-        cWebservice.WEBSERVICE_URL = environmentEntity.getWebserviceurl();
-        toolbarSubtext.setText(environmentEntity.getDescription());
-        cSharedPreferences.setSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_ENVIRONMENT, environmentEntity.name);
-        cUserInterface.showSnackbarMessage(imageEnvironment, getString(R.string.environment_set_to_parameter1, environmentEntity.getDescription()), R.raw.goodsound, false );
+
+        toolbarSubtext.setText(cEnvironment.currentEnvironment.getDescriptionStr());
+        cUserInterface.pShowSnackbarMessage(imageEnvironment, getString(R.string.environment_set_to_parameter1, cEnvironment.currentEnvironment.getDescriptionStr()), R.raw.goodsound, false );
+        return;
     }
 
-    @SuppressLint("InflateParams")
-    private void mShowpasswordDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.dialog_password, null);
-        builder.setView(dialogView);
-        builder.setMessage(getString(R.string.dialog_password_settings_text));
-        builder.setTitle(getString(R.string.dialog_password_settings_title));
-        final EditText editPassword = dialogView.findViewById(R.id.editPassword);
-        editPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-        editPassword.setSelectAllOnFocus(true);
-        editPassword.requestFocus();
-        mShowKeyboard(editPassword);
-        final TextView textPasswordIncorrect = dialogView.findViewById(R.id.textPasswordIncorrect);
-        builder.setPositiveButton(R.string.button_login, null);
-        builder.setNeutralButton(R.string.cancel, null);
 
-        editPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public static void pPasswordSuccess(){
+        MainDefaultActivity.mShowEnvironmentPicker();
+        return;
+    }
 
-            }
+    //End Region Public Methods
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                textPasswordIncorrect.setText("");
-            }
+    //Region Private Methods
+    private boolean mAllBasicsAvailableBln() {
+        if (cScannerLogon.scannerLoggedOnBln &&
+                cUser.usersAvailableBln &&
+                cBarcodeLayout.barcodeLayoutsAvailableBln &&
+                cSetting.settingsAvailableBln &&
+                cShippingAgent.shippingAgentsAvailableBln &&
+                cShippingAgentService.shippingAgentServicesAvailableBln &&
+                cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln &&
+                cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln &&
+                cItemProperty.itemPropertiesAvaliableBln )
+        {
+            return true;
+        }
+        else {
+            return  false;
+        }
+    }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+    private boolean mGetBasicDataBln() {
 
-            }
-        });
+        if (cScannerLogon.pScannerLogonViaWebserviceBln() == false) {
+            return  false;
+        }
 
-        final AlertDialog dialog = builder.create();
-        dialog.setIcon(R.drawable.ic_lock_question_black_24dp);
+        if (cScannerLogon.currentScannerLogon.pScannerVersionCheckBln(mainFramelayout) == false ){
+            return  false;
+        }
 
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                mShowKeyboard(editPassword);
 
-                final Button buttonPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        if (cSetting.pGetSettingsViaWebserviceBln(false) == false) {
+            return false;
+        }
 
-                editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                        if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                            buttonPositive.callOnClick();
-                        }
-                        return true;
-                    }
-                });
+        if ( cUser.pGetUsersViaWebserviceBln(false) == false) {
+            return false;
+        }
 
-                buttonPositive.setOnClickListener(new View.OnClickListener() {
+        if ( cBarcodeLayout.pGetBarcodeLayoutsViaWebserviceBln(false) == false) {
+            return false;
+        }
 
-                    @Override
-                    public void onClick(View view) {
-                        if (editPassword.getText().toString().equals(cPublicDefinitions.SETTINGS_PASSWORD)) {
-                            dialog.dismiss();
-                            mShowEnvironmentPicker();
-                        }
-                        else {
-                            Animation shake = AnimationUtils.loadAnimation(cAppExtension.context, R.anim.shake);
-                            editPassword.startAnimation(shake);
-                            editPassword.requestFocus();
-                            editPassword.setSelection(0,editPassword.getText().toString().length());
-                            textPasswordIncorrect.setText(R.string.dialog_password_incorrect);
-                            cUserInterface.playSound( R.raw.headsupsound, null);
-                            mShowKeyboard(editPassword);
-                        }
-                    }
-                });
-            }
-        });
-        dialog.show();
+        if ( cItemProperty.pGetItemPropertiesViaWebserviceBln(  false) == false) {
+            return false;
+        }
+
+        if ( mGetshippingInfoViawebserviceBln(false) == false) {
+            return false;
+        }
+
+        if (mAllBasicsAvailableBln()  == true) {
+            return  true;
+        } else {
+            return  false;
+        }
+    }
+
+    private boolean mGetshippingInfoViawebserviceBln(Boolean pvRefreshBln) {
+
+        cShippingAgent.pGetShippingAgentsViaWebserviceBln(pvRefreshBln);
+        if (cShippingAgent.shippingAgentsAvailableBln == false) {
+            return false;
+        }
+
+        cShippingAgentService.pGetShippingAgentServicesViaWebserviceBln(pvRefreshBln);
+        if (cShippingAgentService.shippingAgentServicesAvailableBln == false) {
+            return false;
+        }
+
+        cShippingAgentServiceShippingUnit.pGetShippingAgentServicesShippingUnitsViaWebserviceBln(pvRefreshBln);
+        if (cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln == false) {
+            return false;
+        }
+
+        cShippingAgentShipMethod.pGetShippingAgentServicesShippingUnitsViaWebserviceBln(pvRefreshBln);
+        if (cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln == false) {
+            return false;
+        }
+
+        return  true;
     }
 
     public void setAddedEnvironment() {
-        cUserInterface.checkAndCloseOpenDialogs();
-        mShowEnvironmentPicker();
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        this.mShowEnvironmentPicker();
     }
+
     public void setAddEnvironmentManually() {
-        cUserInterface.checkAndCloseOpenDialogs();
-        mShowEnvironmentManually();
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        this.mShowEnvironmentManually();
     }
 
     private void mSetEnviroment(){
-        pSetEnvironment();
-        if (cEnvironment.currentEnvironmentEntity != null) {
-            toolbarSubtext.setText(cEnvironment.currentEnvironmentEntity.getDescription());
+        cEnvironment.pSetEnvironment();
+        if (cEnvironment.currentEnvironment != null) {
+            this.toolbarSubtext.setText(cEnvironment.currentEnvironment.getDescriptionStr());
         }
     }
 
-    //region Listeners
-    private void mSetHomeListener() {
-        imageHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSetDefaultScreen();
-            }
-        });
+    private void mSetDefaultScreen() {
+        this.imageHome.setVisibility(View.INVISIBLE);
+        this.imageEnvironment.setVisibility(View.VISIBLE);
+        this.toolbarTitle.setText(R.string.screentitle_main);
+        this.toolbarImage.setImageResource(R.drawable.ic_welcome);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.mainFramelayout, HomeFragment.newInstance());
+        transaction.commit();
     }
 
-    private void mSetEnvironmentListener() {
-        imageEnvironment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mShowpasswordDialog();
-            }
-        });
-    }
-
-    private void mSetMenuListener() {
-        mainmenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment selectedFragment = null;
-                switch (menuItem.getItemId()) {
-                    case R.id.action_home:
-                        imageHome.setVisibility(View.GONE);
-                        imageEnvironment.setVisibility(View.VISIBLE);
-                        selectedFragment = HomeFragment.newInstance();
-                        toolbarTitle.setText(R.string.screentitle_main);
-                        toolbarImage.setImageResource(R.drawable.ic_welcome);
-                        break;
-                    case R.id.action_settings:
-                        imageHome.setVisibility(View.VISIBLE);
-                        imageEnvironment.setVisibility(View.GONE);
-                        toolbarTitle.setText(R.string.screentitle_settings);
-                        toolbarImage.setImageResource(R.drawable.ic_settings);
-                        break;
-                    case R.id.action_support:
-                        imageHome.setVisibility(View.VISIBLE);
-                        imageEnvironment.setVisibility(View.GONE);
-                        selectedFragment = SupportFragment.newInstance();
-                        toolbarTitle.setText(R.string.screentitle_support);
-                        toolbarImage.setImageResource(R.drawable.ic_support);
-                        break;
-                    case R.id.action_language:
-                        imageHome.setVisibility(View.VISIBLE);
-                        imageEnvironment.setVisibility(View.GONE);
-                        selectedFragment = LanguageFragment.newInstance();
-                        toolbarTitle.setText(R.string.screentitle_language);
-                        toolbarImage.setImageResource(R.drawable.ic_language);
-                        break;
-                    case R.id.action_datetime:
-                        imageHome.setVisibility(View.VISIBLE);
-                        imageEnvironment.setVisibility(View.GONE);
-                        selectedFragment = DateTimeFragment.newInstance();
-                        toolbarTitle.setText(R.string.screentitle_datetime);
-                        toolbarImage.setImageResource(R.drawable.ic_calendar);
-                        break;
-                    default:
-                        imageHome.setVisibility(View.INVISIBLE);
-                        imageEnvironment.setVisibility(View.VISIBLE);
-                        selectedFragment = HomeFragment.newInstance();
-                        toolbarTitle.setText(R.string.screentitle_main);
-                        toolbarImage.setImageResource(R.drawable.ic_welcome);
-                }
-                if (selectedFragment != null) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.mainFramelayout, selectedFragment);
-                    transaction.commit();
-                }
-                // deselect everything
-                int size = mainmenuNavigation.getMenu().size();
-                for (int i = 0; i < size; i++) {
-                    mainmenuNavigation.getMenu().getItem(i).setChecked(false);
-                }
-                // set item as selected to persist highlight
-                menuItem.setChecked(true);
-                // close drawer when item is tapped
-                menuMainDrawer.closeDrawers();
-                return true;
-            }
-        });
-    }
-    //endregion Listeners
-
-    //region Event handlers
-    private void mShowEnvironmentPicker() {
+    private static void mShowEnvironmentPicker() {
         final EnvironmentFragment environmentFragment = new EnvironmentFragment();
         environmentFragment.show(cAppExtension.fragmentManager, ENVIRONMENTFRAGMENT_TAG);
     }
@@ -697,24 +389,116 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         addEnvironmentFragment.show(cAppExtension.fragmentManager,ADDENVIRONMENTMANUALLYFRAGMENT_TAG);
     }
 
+    //End Region Private Methods
+
+
+    //Region Listeners
+    private void mSetHomeListener() {
+        this.imageHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSetDefaultScreen();
+            }
+        });
+    }
+
+    private void mSetEnvironmentListener() {
+        this.imageEnvironment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
+                return;
+            }
+        });
+    }
+
+    private void mSetMenuListener() {
+        this.mainmenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Fragment selectedFragment = null;
+                switch (menuItem.getItemId()) {
+
+                    case R.id.action_home:
+                        imageHome.setVisibility(View.GONE);
+                        imageEnvironment.setVisibility(View.VISIBLE);
+                        selectedFragment = HomeFragment.newInstance();
+                        toolbarTitle.setText(R.string.screentitle_main);
+                        toolbarImage.setImageResource(R.drawable.ic_welcome);
+                        break;
+
+                    case R.id.action_settings:
+                        imageHome.setVisibility(View.VISIBLE);
+                        imageEnvironment.setVisibility(View.GONE);
+                        toolbarTitle.setText(R.string.screentitle_settings);
+                        toolbarImage.setImageResource(R.drawable.ic_settings);
+                        break;
+
+                    case R.id.action_support:
+                        imageHome.setVisibility(View.VISIBLE);
+                        imageEnvironment.setVisibility(View.GONE);
+                        selectedFragment = SupportFragment.newInstance();
+                        toolbarTitle.setText(R.string.screentitle_support);
+                        toolbarImage.setImageResource(R.drawable.ic_support);
+                        break;
+
+                    case R.id.action_language:
+                        imageHome.setVisibility(View.VISIBLE);
+                        imageEnvironment.setVisibility(View.GONE);
+                        selectedFragment = LanguageFragment.newInstance();
+                        toolbarTitle.setText(R.string.screentitle_language);
+                        toolbarImage.setImageResource(R.drawable.ic_language);
+                        break;
+
+                    case R.id.action_datetime:
+                        imageHome.setVisibility(View.VISIBLE);
+                        imageEnvironment.setVisibility(View.GONE);
+                        selectedFragment = DateTimeFragment.newInstance();
+                        toolbarTitle.setText(R.string.screentitle_datetime);
+                        toolbarImage.setImageResource(R.drawable.ic_calendar);
+                        break;
+
+                    default:
+                        imageHome.setVisibility(View.INVISIBLE);
+                        imageEnvironment.setVisibility(View.VISIBLE);
+                        selectedFragment = HomeFragment.newInstance();
+                        toolbarTitle.setText(R.string.screentitle_main);
+                        toolbarImage.setImageResource(R.drawable.ic_welcome);
+                        break;
+                }
+
+                if (selectedFragment != null) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.mainFramelayout, selectedFragment);
+                    transaction.commit();
+                }
+
+                // deselect everything
+                int size = mainmenuNavigation.getMenu().size();
+                for (int i = 0; i < size; i++) {
+                    mainmenuNavigation.getMenu().getItem(i).setChecked(false);
+                }
+
+                // set item as selected to persist highlight
+                menuItem.setChecked(true);
+                // close drawer when item is tapped
+                menuMainDrawer.closeDrawers();
+                return true;
+            }
+        });
+    }
+
+
+    //endregion Listeners
+
+    //region Event handlers
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                menuMainDrawer.openDrawer(GravityCompat.START);
+                this.menuMainDrawer.openDrawer(GravityCompat.START);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void mSetDefaultScreen() {
-        imageHome.setVisibility(View.INVISIBLE);
-        imageEnvironment.setVisibility(View.VISIBLE);
-        toolbarTitle.setText(R.string.screentitle_main);
-        toolbarImage.setImageResource(R.drawable.ic_welcome);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainFramelayout, HomeFragment.newInstance());
-        transaction.commit();
-    }
-
 }

@@ -1,25 +1,27 @@
 package SSU_WHS.Picken.SalesOrderPackingTable;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
+import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
 public class cSalesOrderPackingTableViewModel extends AndroidViewModel {
-    private cSalesOrderPackingTableRepository mRepository;
 
-    public cSalesOrderPackingTableViewModel(Application application) {
-        super(application);
-        mRepository = new cSalesOrderPackingTableRepository(application);
+    //Region Public Properties
+    public cSalesOrderPackingTableRepository Repository;
+    //End Region Public Properties
+
+    //Region Constructor
+    public cSalesOrderPackingTableViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cSalesOrderPackingTableRepository(pvApplication);
     }
+    //End Region Constructor
 
-    public void insert(cSalesOrderPackingTableEntity salesOrderPackingTableEntity) {mRepository.insert(salesOrderPackingTableEntity);}
+    //Region Public Methods
+    public void insert(cSalesOrderPackingTableEntity salesOrderPackingTableEntity) {this.Repository .insert(salesOrderPackingTableEntity);}
+    public void deleteAll() {this.Repository .pTruncateTable();}
+    public List<cSalesOrderPackingTableEntity> getAll() {return this.Repository .pGetAllSalesOrderPackingTablesFromDatabaseObl();}
 
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public List<cSalesOrderPackingTableEntity> getAll() {return mRepository.getAll();}
-
-    public cSalesOrderPackingTableEntity getPackingTableForSalesorder(String salesorder) { return mRepository.getPackingTableForSalesorder(salesorder);}
-
-    public cSalesOrderPackingTableEntity getSalesorderForPackingTable(String packingtable) { return mRepository.getSalesorderForPackingTable(packingtable);}
+    //End Region Public Methods
 }

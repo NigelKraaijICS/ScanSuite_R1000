@@ -1,8 +1,7 @@
 package ICS.Environments;
 
-import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +9,14 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;
 
 public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapter.EnvironmentViewHolder>{
-    private Context callerContext;
+
+
+    //Region Public Properties
     public class EnvironmentViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewDescription;
         private TextView textViewName;
@@ -47,44 +47,44 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
         }
     }
 
-    private final LayoutInflater mInflater;
-    public static List<cEnvironmentEntity> mEnvironments; //cached copy of environments
 
-    public cEnvironmentAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        callerContext = context;
+    //End Region Public Properties
+
+    //Region Private Properties
+    private final LayoutInflater LayoutInflaterObject;
+    //End Region Private Properties
+
+    //Region Constructor
+    public cEnvironmentAdapter() {
+        this.LayoutInflaterObject = LayoutInflater.from(cAppExtension.context);
     }
+    //End Region Constructor
+
+    //Region Public Methods
 
     @Override
     public cEnvironmentAdapter.EnvironmentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recycler_environment, parent, false);
+        View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_environment, parent, false);
         return new cEnvironmentAdapter.EnvironmentViewHolder(itemView);
-    }
-
-    public void setEnvironments(List<cEnvironmentEntity> environmentEntities) {
-        mEnvironments = environmentEntities;
-        notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(cEnvironmentAdapter.EnvironmentViewHolder holder, int position) {
-        if (mEnvironments != null) {
-            final cEnvironmentEntity environmentEntity = mEnvironments.get(position);
-            String description = environmentEntity.getDescription();
-            String name = environmentEntity.getName();
-            String url = environmentEntity.getWebserviceurl();
 
-            holder.textViewDescription.setText(description);
-            holder.textViewName.setText(name);
-            holder.textViewURL.setText(url);
+        if (cEnvironment.allEnviroments != null) {
+
+            final cEnvironment environment = cEnvironment.allEnviroments.get(position);
+
+            holder.textViewDescription.setText(environment.getDescriptionStr());
+            holder.textViewName.setText(environment.getNameStr());
+            holder.textViewURL.setText(environment.getWebserviceURLStr());
 
             holder.viewForeground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cEnvironment.mSaveTheEnvironment(environmentEntity );
-                    cEnvironment.mSetWebservice(environmentEntity);
-                    if (callerContext instanceof MainDefaultActivity) {
-                        ((MainDefaultActivity)callerContext).setChosenEnvironment(environmentEntity);
+                    cEnvironment.pSetCurrentEnviroment(environment);
+                    if (cAppExtension.context instanceof MainDefaultActivity) {
+                        ((MainDefaultActivity)cAppExtension.context).pSetChosenEnvironment();
                     }
                 }
             });
@@ -93,20 +93,19 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
 
     @Override
     public int getItemCount () {
-        if (mEnvironments != null)
-            return mEnvironments.size();
+        if (cEnvironment.allEnviroments != null)
+            return cEnvironment.allEnviroments.size();
         else return 0;
     }
-    public void removeItem(int position) {
-        mEnvironments.remove(position);
-        // notify the item removed by position
-        // to perform recycler view delete animations
-        // NOTE: don't call notifyDataSetChanged()
-        notifyItemRemoved(position);
+    public void removeItem(cEnvironment pvEnviroment) {
+        notifyItemRemoved(cEnvironment.allEnviroments.indexOf(pvEnviroment));
+        //todo: item is still visible in recyclerview, maybe because object is not yet removed from cEnvironment.allEnviroments
     }
-    public void restoreItem(cEnvironmentEntity item, int position) {
-        mEnvironments.add(position, item);
-        //notify item added by position
+    public void restoreItem(cEnvironment pvEnviroment) {
+        int position = cEnvironment.allEnviroments.indexOf(pvEnviroment) + 1;
         notifyItemInserted(position);
     }
+
+    //End Region Public Methods
+
 }

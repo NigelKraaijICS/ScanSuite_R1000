@@ -5,10 +5,10 @@
     android:id="@+id/workplaceItemLinearLayout"
     style="@style/userRecyclerLinearLayout"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
             android:id="@+id/imageViewMenuItem"
             app:srcCompat="@drawable/ic_workplace"
@@ -34,10 +34,11 @@
         <View
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"
-            app:layout_constraintStart_toStartOf="@id/textViewName"
+            app:layout_constraintStart_toStartOf="@id/textViewDescription"
+            app:layout_constraintEnd_toEndOf="@id/textViewDescription"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageChevronDown"
@@ -47,5 +48,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

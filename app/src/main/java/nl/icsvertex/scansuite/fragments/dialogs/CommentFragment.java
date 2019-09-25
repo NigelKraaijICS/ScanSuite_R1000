@@ -1,145 +1,80 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.Picken.Comments.cCommentAdapter;
-import SSU_WHS.Picken.Comments.cCommentEntity;
-import SSU_WHS.Picken.Comments.cCommentViewModel;
-import SSU_WHS.General.cAppExtension;
+import SSU_WHS.General.Comments.cComment;
+import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.cSharedPreferences;
 import nl.icsvertex.scansuite.R;
 
 public class CommentFragment extends DialogFragment implements iICSDefaultFragment {
-    TextView textViewCommentHeader;
+
+   //Region Private Properties
+   ImageView toolbarImage;
+    TextView toolbarTitle;
+    ImageView toolbarImageHelp;
+
     RecyclerView commentRecyclerView;
     Button buttonRoger;
-    DialogFragment thisFragment;
-    cCommentViewModel commentViewModel;
-    cCommentAdapter commentAdapter;
 
-    String currentBranch;
-    String currentOrder;
+    List<cComment> localCommentObl;
 
+    String titleStr;
+
+    //End Region Private Properties
+
+
+    //Region Constructor
     public CommentFragment() {
         // Required empty public constructor
     }
 
+    public CommentFragment(List<cComment> pvDataObl) {
+        this.localCommentObl = pvDataObl;
+    }
+    //End Region Constructor
+
+    //Region Default Methods
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_comments, container);
-        thisFragment = this;
+    public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer, Bundle pvSavedInstanceState) {
+        View rootview = pvInflater.inflate(R.layout.fragment_comments, pvContainer);
         return rootview;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        currentBranch = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_BRANCH, "");
-        currentOrder = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_ORDER, "");
 
-        mFragmentInitialize();
-        mGetData();
-    }
-    @Override
-    public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
-    }
+        Bundle args = getArguments();
 
-    @Override
-    public void mFindViews() {
-        textViewCommentHeader = getView().findViewById(R.id.textViewCommentHeader);
-        commentRecyclerView = getView().findViewById(R.id.commentRecyclerview);
-        buttonRoger = getView().findViewById(R.id.buttonRoger);
-    }
+        this.titleStr = cAppExtension.context.getString(R.string.comments);
 
-    @Override
-    public void mSetViewModels() {
-        commentViewModel = ViewModelProviders.of(this).get(cCommentViewModel.class);
-    }
-
-    @Override
-    public void mFieldsInitialize() {
-
-    }
-
-    @Override
-    public void mSetListeners() {
-        mSetHeaderListener();
-        mSetCloseListener();
-    }
-    private void mSetCloseListener() {
-        buttonRoger.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                thisFragment.dismiss();
-            }
-        });
-    }
-    private void mSetHeaderListener() {
-        textViewCommentHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mScrollToBottom();
-            }
-        });
-        textViewCommentHeader.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mScrollToTop();
-                return true;
-            }
-        });
-    }
-    private void mScrollToTop() {
-        commentRecyclerView.smoothScrollToPosition(0);
-    }
-    private void mScrollToBottom() {
-        if (commentAdapter!= null) {
-            if (commentAdapter.getItemCount() > 0) {
-                commentRecyclerView.smoothScrollToPosition(commentAdapter.getItemCount() -1 );
-            }
+        if (args != null) {
+            this.titleStr = args.getString(cPublicDefinitions.KEY_COMMENTHEADER,getResources().getString(R.string.comments));
         }
 
+        cAppExtension.dialogFragment = this;
+        this.mFragmentInitialize();
     }
-    private void mGetData() {
-        Boolean forceRefresh = false;
 
-        commentViewModel.getComments(forceRefresh, currentBranch, currentOrder).observe(this, new Observer<List<cCommentEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<cCommentEntity> commentEntities) {
-                if (commentEntities != null) {
-                    mSetCommentRecycler(commentEntities);
-                }
-            }
-        });
-    }
-    private void mSetCommentRecycler(List<cCommentEntity> commentEntities) {
-        commentAdapter = new cCommentAdapter(cAppExtension.context);
-        commentRecyclerView.setHasFixedSize(false);
-        commentRecyclerView.setAdapter(commentAdapter);
-        commentRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-
-        commentAdapter.setWorkplaces(commentEntities);
-    }
     @Override
     public void onResume() {
         super.onResume();
@@ -148,6 +83,126 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
 
         getDialog().getWindow().setLayout(width, height);
     }
+
+    //End Region Default Methods
+
+    //Region iICSDefaultFragment methods
+
+    @Override
+    public void mFragmentInitialize() {
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+        this.mSetToolbar();
+        this.mSetCommentRecycler(this.localCommentObl);
+    }
+
+    @Override
+    public void mFindViews() {
+        this.toolbarImage = getView().findViewById(R.id.toolbarImage);
+        this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
+        this.toolbarImageHelp = getView().findViewById(R.id.toolbarImageHelp);
+        this.commentRecyclerView = getView().findViewById(R.id.commentRecyclerview);
+        this.buttonRoger = getView().findViewById(R.id.buttonRoger);
+    }
+
+    @Override
+    public void mSetViewModels() {
+
+    }
+
+    @Override
+    public void mFieldsInitialize() {
+
+
+
+    }
+
+    @Override
+    public void mSetListeners() {
+        this.mSetHeaderListener();
+        this.mSetCloseListener();
+    }
+
+    //End Regioni ICSDefaultFragment methods
+
+    //Region Public Methods
+
+    //Region Public Methods
+
+
+    //End Region Public Methods
+    //End Region Public Methods
+
+    //Region Private Methods
+    private void mSetToolbar() {
+
+        this.toolbarTitle.setText(this.titleStr);
+        this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        this.toolbarTitle.setSingleLine(true);
+        this.toolbarTitle.setMarqueeRepeatLimit(5);
+        this.toolbarTitle.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toolbarTitle.setSelected(true);
+            }
+        },1500);
+
+        this.toolbarImage.setImageResource(R.drawable.ic_comment);
+        this.toolbarImageHelp.setVisibility(View.GONE);
+    }
+    private void mSetCloseListener() {
+        this.buttonRoger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cAppExtension.dialogFragment.dismiss();
+            }
+        });
+    }
+
+    private void mSetHeaderListener() {
+        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mScrollToBottom();
+            }
+        });
+
+        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mScrollToTop();
+                return true;
+            }
+        });
+    }
+
+    private void mScrollToTop() {
+        this.commentRecyclerView.smoothScrollToPosition(0);
+    }
+
+    private void mScrollToBottom() {
+        if (cComment.getcommentAdapter()!= null) {
+            if (cComment.getcommentAdapter().getItemCount() > 0) {
+                commentRecyclerView.smoothScrollToPosition(cComment.getcommentAdapter().getItemCount() -1 );
+            }
+        }
+
+    }
+
+
+    private void mSetCommentRecycler(List<cComment> pvDataObl) {
+
+        commentRecyclerView.setHasFixedSize(false);
+        commentRecyclerView.setAdapter(cComment.getcommentAdapter());
+        commentRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        cComment.getcommentAdapter().pFillData(pvDataObl);
+    }
+    //End Region Private Methods
+
+
+
 
 
 }

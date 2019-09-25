@@ -1,252 +1,226 @@
 package SSU_WHS.Picken.PickorderLines;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
+import ICS.Utils.cUserInterface;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
 
 public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAdapter.PickorderLineViewHolder>  {
-    private Context callerContext;
-    private List<LinearLayout> pickorderLineItemLinearLayouts = new ArrayList<>();
-    private RecyclerView thisRecyclerView;
+
+    //Region Public Properties
     public class PickorderLineViewHolder extends RecyclerView.ViewHolder{
+
         private TextView textViewPickorderLineLocation;
         private TextView textViewPickorderLine;
         private TextView textViewPickorderLineQuantity;
         private TextView textViewPickorderLineSourceNo;
-        private ImageView imageViewPickorderLine;
-        public LinearLayout pickorderLineItemLinearLayout;
+        private LinearLayout pickorderLineItemLinearLayout;
 
-
-        public PickorderLineViewHolder(View itemView) {
-            super(itemView);
-            textViewPickorderLineLocation = itemView.findViewById(R.id.textViewPickorderLineLocation);
-            textViewPickorderLineLocation.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewPickorderLineLocation.setSingleLine(true);
-            textViewPickorderLineLocation.setMarqueeRepeatLimit(5);
-            textViewPickorderLineLocation.setSelected(true);
-            textViewPickorderLine = itemView.findViewById(R.id.textViewPickorderLine);
-            textViewPickorderLine.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewPickorderLine.setSingleLine(true);
-            textViewPickorderLine.setMarqueeRepeatLimit(5);
-            textViewPickorderLine.setSelected(true);
-            textViewPickorderLineSourceNo = itemView.findViewById(R.id.textViewPickorderLineSourceNo);
-            textViewPickorderLineSourceNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewPickorderLineSourceNo.setSingleLine(true);
-            textViewPickorderLineSourceNo.setMarqueeRepeatLimit(5);
-            textViewPickorderLineSourceNo.setSelected(true);
-            textViewPickorderLineQuantity = itemView.findViewById(R.id.textViewPickorderLineQuantity);
-            imageViewPickorderLine = itemView.findViewById(R.id.imageViewPickorderLine);
-            pickorderLineItemLinearLayout = itemView.findViewById(R.id.pickorderLineItemLinearLayout);
+        public PickorderLineViewHolder(View pvItemView) {
+            super(pvItemView);
+            this.textViewPickorderLineLocation = pvItemView.findViewById(R.id.textViewPickorderLineLocation);
+            this.textViewPickorderLineLocation.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewPickorderLineLocation.setSingleLine(true);
+            this.textViewPickorderLineLocation.setMarqueeRepeatLimit(5);
+            this.textViewPickorderLineLocation.setSelected(true);
+            this.textViewPickorderLine = pvItemView.findViewById(R.id.textViewPickorderLine);
+            this.textViewPickorderLine.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewPickorderLine.setSingleLine(true);
+            this.textViewPickorderLine.setMarqueeRepeatLimit(5);
+            this.textViewPickorderLine.setSelected(true);
+            this.textViewPickorderLineSourceNo = pvItemView.findViewById(R.id.textViewPickorderLineSourceNo);
+            this.textViewPickorderLineSourceNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewPickorderLineSourceNo.setSingleLine(true);
+            this.textViewPickorderLineSourceNo.setMarqueeRepeatLimit(5);
+            this.textViewPickorderLineSourceNo.setSelected(true);
+            this.textViewPickorderLineQuantity = pvItemView.findViewById(R.id.textViewPickorderLineQuantity);
+            this. pickorderLineItemLinearLayout = pvItemView.findViewById(R.id.pickorderLineItemLinearLayout);
         }
     }
+    //End Region Public Properties
 
-    private final LayoutInflater mInflater;
-    public List<cPickorderLineEntity> mPickorderLines; //cached copy of pickorders
-    public List<cPickorderLineEntity> mAllPickorderLines; //cached copy of pickorders
+    //Region Private Properties
+    private final LayoutInflater LayoutInflaterObject;
+    private List<cPickorderLine> localPickorderLinesObl;
+    //End Region Private Propertiess
 
+    private List<LinearLayout> pickorderLineItemLinearLayouts = new ArrayList<>();
+    private RecyclerView thisRecyclerView;
 
-    public cPickorderLineAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        callerContext = context;
+    //Region Constructor
+    public cPickorderLineAdapter() {
+        this.LayoutInflaterObject = LayoutInflater.from(cAppExtension.context);
     }
+    // End Region Constructor
+
+    //Region Default Methods
 
     @Override
-    public cPickorderLineAdapter.PickorderLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recycler_pickorderline, parent, false);
+    public cPickorderLineAdapter.PickorderLineViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewTypeInt) {
+        View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_pickorderline, pvParent, false);
         return new cPickorderLineAdapter.PickorderLineViewHolder(itemView);
     }
+
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        thisRecyclerView = recyclerView;
-    }
-    public void setPickorderLines(List<cPickorderLineEntity> pickorderlines) {
-        mAllPickorderLines = pickorderlines;
-        mPickorderLines = pickorderlines;
-        //notifyDataSetChanged();
+    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+        this.thisRecyclerView = pvRecyclerView;
+        super.onAttachedToRecyclerView( this.thisRecyclerView);
     }
 
     @Override
-    public void onBindViewHolder(cPickorderLineAdapter.PickorderLineViewHolder holder, final int position) {
-        //if (!pickorderLineItemLinearLayouts.contains(holder.pickorderLineItemLinearLayout)) {
-            pickorderLineItemLinearLayouts.add(holder.pickorderLineItemLinearLayout);
-        //}
+    public void onBindViewHolder(final cPickorderLineAdapter.PickorderLineViewHolder pvHolder, final int pvPositionInt) {
 
-        if (mPickorderLines != null) {
-            final cPickorderLineEntity l_PickorderLineEntity = mPickorderLines.get(position);
-            String l_lineDescriptionStr = l_PickorderLineEntity.getItemno() + "~" + l_PickorderLineEntity.getVariantcode() + ": " + l_PickorderLineEntity.getDescription();
-            String quantityFieldToShow;
-            Double l_quantityDbl = l_PickorderLineEntity.getQuantity();
-            Double l_quantityPickedDbl = l_PickorderLineEntity.getQuantityhandled();
+        this.pickorderLineItemLinearLayouts.add(pvHolder.pickorderLineItemLinearLayout);
 
-            quantityFieldToShow = l_quantityPickedDbl.intValue() + "/" + l_quantityDbl.intValue();
+        if (this.localPickorderLinesObl == null || this.localPickorderLinesObl.size() == 0 ) {
+            return;
+        }
 
-            String l_locationStr = l_PickorderLineEntity.getBincode().trim();
-            String l_sourcenoStr = l_PickorderLineEntity.getSourceno().trim();
+        final cPickorderLine currentPickorderLine = this.localPickorderLinesObl.get(pvPositionInt);
 
-            holder.textViewPickorderLineLocation.setText(l_locationStr);
-            holder.textViewPickorderLine.setText(l_lineDescriptionStr);
-            holder.textViewPickorderLineQuantity.setText(quantityFieldToShow);
-            holder.textViewPickorderLineSourceNo.setText(l_sourcenoStr);
+        String lineDescriptionStr = currentPickorderLine.getItemNoStr() + "~" + currentPickorderLine.getVariantCodeStr() + ": " + currentPickorderLine.getDescriptionStr();
+        String quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
 
-            final int id = thisRecyclerView.getId();
-            holder.pickorderLineItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+        pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
+        pvHolder.textViewPickorderLine.setText(lineDescriptionStr);
+        pvHolder.textViewPickorderLineQuantity.setText(quantityToShowStr);
+        pvHolder.textViewPickorderLineSourceNo.setText(currentPickorderLine.getSourceNoStr());
 
-                @Override
-                public void onClick(View v) {
-                    //deselect all
-                    for (LinearLayout aLayout : pickorderLineItemLinearLayouts) {
-                        aLayout.setSelected(false);
-                    }
-                    //select current
-                    v.setSelected(true);
-                    //wich fragment?
-                    if (id == R.id.recyclerViewPickorderLinesTopick) {
-                        if (callerContext instanceof PickorderLinesActivity) {
-                            ((PickorderLinesActivity) callerContext).setChosenPickorderLine(l_PickorderLineEntity);
-                        }
-                    }
-                    if (id == R.id.recyclerViewPickorderLinesPicked) {
-                        if (callerContext instanceof PickorderLinesActivity) {
-                            ((PickorderLinesActivity) callerContext).setChosenPickorderLineToReset(l_PickorderLineEntity);
-                        }
-                    }
-                    if (id == R.id.recyclerViewSortorderLinesTosort) {
-                        if (callerContext instanceof SortorderLinesActivity) {
-                            ((SortorderLinesActivity) callerContext).setChosenSortorderLine(l_PickorderLineEntity);
-                        }
-                    }
-                    if (id == R.id.recyclerViewSortorderLinesSorted) {
-                        if (callerContext instanceof SortorderLinesActivity) {
-                            ((SortorderLinesActivity) callerContext).setChosenSortorderLineToReset(l_PickorderLineEntity);
-                        }
-                    }
+        //Start On Click Listener
+        pvHolder.pickorderLineItemLinearLayout.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View pvView) {
+
+                //deselect all
+                for (LinearLayout linearLayout : pickorderLineItemLinearLayouts) {
+                    linearLayout.setSelected(false);
                 }
 
-            });
+                //select current
+                pvView.setSelected(true);
 
+                //Kick off correct event at correct activity
+                if (cAppExtension.context instanceof PickorderLinesActivity) {
 
-            if (id == R.id.recyclerViewPickorderLinesTopick) {
-                //select first one
-                if (callerContext instanceof PickorderLinesActivity) {
-                    if (mPickorderLines.size() > 0) {
-                        if (position ==0) {
-                            holder.pickorderLineItemLinearLayout.setSelected(true);
-                        }
-                        final cPickorderLineEntity l_firstPickorderLineEntity = mPickorderLines.get(0);
-                        ((PickorderLinesActivity)callerContext).setChosenPickorderLine(l_firstPickorderLineEntity);
+                    if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
+                        PickorderLinesActivity.pPicklineSelected(currentPickorderLine);
+                    }
+
+                    if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
+                        PickorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
                     }
                 }
+
+                //todo: put this back
+//                if (cAppExtension.context  instanceof SortorderLinesActivity) {
+//
+//                    //todo: reactivate this
+////                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
+////                        ((SortorderLinesActivity) cAppExtension.context ).setChosenSortorderLine(l_PickorderLineEntity);
+////                        return;
+////                    }
+////                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
+////                        ((SortorderLinesActivity) cAppExtension.context ).setChosenSortorderLineToReset(l_PickorderLineEntity);
+////                        return;
+////                    }
+//
+//
+//                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
+//                        pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
+//                    }
+//
+//                }
+
             }
-            if (id == R.id.recyclerViewPickorderLinesPicked) {
-                //select first one
-                if (callerContext instanceof PickorderLinesActivity) {
-                    if (mPickorderLines.size() > 0) {
-                        if (position ==0) {
-                            holder.pickorderLineItemLinearLayout.setSelected(true);
-                        }
-                        final cPickorderLineEntity l_firstPickorderLineEntity = mPickorderLines.get(0);
-                        ((PickorderLinesActivity)callerContext).setChosenPickorderLineToReset(l_firstPickorderLineEntity);
-                    }
-                }
-            }
-            if (id == R.id.recyclerViewSortorderLinesTosort) {
-                //select first one
-                holder.textViewPickorderLineLocation.setVisibility(View.GONE);
-                if (callerContext instanceof SortorderLinesActivity) {
-                    if (mPickorderLines.size() > 0) {
-                        if (position ==0) {
-                            holder.pickorderLineItemLinearLayout.setSelected(true);
-                        }
-                        final cPickorderLineEntity l_firstPickorderLineEntity = mPickorderLines.get(0);
-                        ((SortorderLinesActivity)callerContext).setChosenSortorderLine(l_firstPickorderLineEntity);
-                    }
-                }
-            }
-            if (id == R.id.recyclerViewSortorderLinesSorted) {
-                holder.textViewPickorderLineLocation.setVisibility(View.GONE);
-                //select first one
-                if (callerContext instanceof SortorderLinesActivity) {
-                    if (mPickorderLines.size() > 0) {
-                        if (position ==0) {
-                            holder.pickorderLineItemLinearLayout.setSelected(true);
-                        }
-                        final cPickorderLineEntity l_firstPickorderLineEntity = mPickorderLines.get(0);
-                        ((SortorderLinesActivity)callerContext).setChosenSortorderLineToReset(l_firstPickorderLineEntity);
-                    }
-                }
-            }
-            if (id == R.id.recyclerViewSortorderLinesTotal) {
-                holder.textViewPickorderLineLocation.setVisibility(View.GONE);
-            }
+        });
+        //End On Click Listener
+
+        // If this is the first line, then click it
+        if (pvPositionInt == 0 ) {
+            pvHolder.pickorderLineItemLinearLayout.performClick();
         }
     }
 
     @Override
     public int getItemCount () {
-        if (mPickorderLines != null)
-            return mPickorderLines.size();
+        if (this.localPickorderLinesObl != null)
+            return this.localPickorderLinesObl.size();
         else return 0;
     }
-    public void setFilter(String queryText) {
-        mPickorderLines = filteredList(queryText);
+
+    //End Region Default Methods
+
+    //Region Public Methods
+    public void pFillData(List<cPickorderLine> pvDataObl) {
+        this.localPickorderLinesObl = pvDataObl;
+       }
+
+    public void pSetFilter(String pvQueryTextStr) {
+        this.localPickorderLinesObl = mGetFilteredListObl(pvQueryTextStr);
         notifyDataSetChanged();
     }
-    private List<cPickorderLineEntity> filteredList(String queryText) {
-        queryText = queryText.toLowerCase();
-        List<cPickorderLineEntity> filterPickorderLineList = new ArrayList<>();
-        for (cPickorderLineEntity pickorderline:mAllPickorderLines)
+
+    public void pvShowDefects(Boolean pvShowBlm) {
+        this.localPickorderLinesObl = mGetDefectsListObl(pvShowBlm);
+        notifyDataSetChanged();
+    }
+
+    //End Region Public Methods
+
+    //Region Private Methods
+
+    private List<cPickorderLine> mGetFilteredListObl(String pvQueryTextStr) {
+        pvQueryTextStr = pvQueryTextStr.toLowerCase();
+        List<cPickorderLine> resultObl = new ArrayList<>();
+
+        if (this.localPickorderLinesObl == null || this.localPickorderLinesObl.size() == 0) {
+            return resultObl;
+        }
+
+        for (cPickorderLine pickorderLine :this.localPickorderLinesObl)
         {
-            String bincode = pickorderline.getBincode().toLowerCase();
-            String itemno = pickorderline.getItemno().toLowerCase();
-            String variantcode = pickorderline.getVariantcode().toLowerCase();
-            String description = pickorderline.getDescription().toLowerCase();
-            String sourceno = pickorderline.getSourceno().toLowerCase();
-
-            if (bincode.contains(queryText) || itemno.contains(queryText) || variantcode.contains(queryText) || description.contains(queryText) || sourceno.contains(queryText))
+            if (pickorderLine.getBinCodeStr().toLowerCase().contains(pvQueryTextStr) || pickorderLine.getItemNoStr().toLowerCase().contains(pvQueryTextStr) || pickorderLine.getDescriptionStr().toLowerCase().contains(pvQueryTextStr)|| pickorderLine.getSourceNoStr().contains(pvQueryTextStr))
             {
-                filterPickorderLineList.add(pickorderline);
+                resultObl.add(pickorderLine);
             }
         }
-        return filterPickorderLineList;
-    }
-    public void showDefects(Boolean show) {
-        mPickorderLines = defectsList(show);
-        notifyDataSetChanged();
+        return resultObl;
     }
 
-    private List<cPickorderLineEntity> defectsList(Boolean show) {
-        if (show) {
-            List<cPickorderLineEntity> defectsPickorderLineList = new ArrayList<>();
-            for (cPickorderLineEntity pickorderline:mAllPickorderLines)
+    private List<cPickorderLine> mGetDefectsListObl(Boolean pvShowBln) {
+
+        if (pvShowBln == false) {
+            return  this.localPickorderLinesObl;
+        }
+
+        List<cPickorderLine> resultObl = new ArrayList<>();
+        for (cPickorderLine pickorderLine :this.localPickorderLinesObl)
+        {
+            if (pickorderLine.getQuantityHandledDbl() < pickorderLine.quantityDbl)
             {
-                Double pickedquantity = pickorderline.getQuantityhandled();
-                Double requiredQuantity = pickorderline.getQuantity();
-                if (pickedquantity < requiredQuantity)
-                {
-                    defectsPickorderLineList.add(pickorderline);
-                }
+                resultObl.add(pickorderLine);
             }
-            return defectsPickorderLineList;
         }
-        else {
-            return mAllPickorderLines;
-        }
+        return resultObl;
     }
+
+    //End Region Private Methods
+
+
+
+
+
 
 }

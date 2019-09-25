@@ -1,146 +1,81 @@
 package nl.icsvertex.scansuite.activities.general;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import ICS.Interfaces.iICSDefaultActivity;
-import ICS.Weberror.cWeberrorEntity;
-import ICS.Weberror.cWeberrorViewModel;
-import SSU_WHS.Basics.Branches.cBranchEntity;
-import SSU_WHS.Basics.Branches.cBranchViewModel;
-import SSU_WHS.Basics.Users.cUserAdapter;
-import SSU_WHS.Basics.Users.cUserEntity;
-import SSU_WHS.Basics.Users.cUserViewModel;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebservice;
-import SSU_WHS.Basics.Workplaces.cWorkplaceViewModel;
-import SSU_WHS.General.cAppExtension;
+import ICS.Utils.Scanning.cBarcodeScan;
+import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.Users.cUser;
+import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.Scanning.cBarcodeScanDefinitions;
-import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.fragments.dialogs.BranchFragment;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.fragments.dialogs.WebserviceErrorFragment;
-
-import static ICS.Utils.cUserInterface.mShowKeyboard;
-import static ICS.Weberror.cWeberror.FIREBASE_ACTIVITY;
-import static ICS.Weberror.cWeberror.FIREBASE_DEVICE;
-import static ICS.Weberror.cWeberror.FIREBASE_ISRESULT;
-import static ICS.Weberror.cWeberror.FIREBASE_ISSUCCESS;
-import static ICS.Weberror.cWeberror.FIREBASE_ITEMNAME;
-import static ICS.Weberror.cWeberror.FIREBASE_METHOD;
-import static ICS.Weberror.cWeberror.FIREBASE_PARAMETERS;
-import static ICS.Weberror.cWeberror.FIREBASE_TIMESTAMP;
-import static ICS.Weberror.cWeberror.FIREBASE_URL;
 
 public class LoginActivity extends AppCompatActivity implements iICSDefaultActivity {
+
+    //Region Public Properties
     static final String BRANCHPICKERFRAGMENT_TAG = "BRANCHPICKERFRAGMENT_TAG";
-    static final String ACTIVITYNAME = "LoginActivity";
+    //End Region Public Properties
 
-    private FirebaseAnalytics mFirebaseAnalytics;
-
-    ConstraintLayout container;
-
+    //Region Private Properties
     private RecyclerView recyclerViewUsers;
-    cUserAdapter userAdapter;
 
-    cUserViewModel userViewModel;
-    cWorkplaceViewModel workplaceViewModel;
-    cBranchViewModel branchViewModel;
-    cWeberrorViewModel weberrorViewModel;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private ImageView toolbarImageHelp;
+    //End Region Private Properties
 
-    ImageView toolbarImage;
-    TextView toolbarTitle;
-    ImageView toolbarImageHelp;
-
-    IntentFilter barcodeIntentFilter;
-    private BroadcastReceiver barcodeReceiver;
-
+    //Region Default Methods
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle pvSavedInstanceState) {
+        super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mActivityInitialize();
-
-        mBarcodeReceiver();
+        this.mActivityInitialize();
     }
 
     @Override
     protected void onDestroy() {
-        try {
-            unregisterReceiver(barcodeReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onDestroy();
+        cBarcodeScan.pUnregisterBarcodeReceiver();
     }
     @Override
     public void onResume() {
         super.onResume();
-        registerReceiver(barcodeReceiver, barcodeIntentFilter);
-        cPublicDefinitions.CURRENT_ACTIVITY = ACTIVITYNAME;
+        cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
     @Override
     protected void onPause() {
-        try {
-            unregisterReceiver(barcodeReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onPause();
-    }
 
+        super.onPause();
+        cBarcodeScan.pUnregisterBarcodeReceiver();
+    }
+    //End Region Default Methods
+
+    //Region iICSDefaultActivity defaults
     @Override
     public void mActivityInitialize() {
-        mSetAppExtensions();
 
-        mFindViews();
+        this.mSetAppExtensions();
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mSetSettings();
+        this.mSetToolbar(getResources().getString(R.string.screentitle_login));
+        this.mFieldsInitialize();
+        this.mSetListeners();
+        this.mInitScreen();
 
-        mSetViewModels();
-
-        mSetSettings();
-
-        mSetToolbar(getResources().getString(R.string.screentitle_login));
-
-        mFieldsInitialize();
-
-        mSetListeners();
-
-        mInitScreen();
+        cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
     @Override
@@ -153,19 +88,15 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     @Override
     public void mFindViews() {
-        container = findViewById(R.id.container);
-        toolbarImage = findViewById(R.id.toolbarImage);
-        toolbarTitle = findViewById(R.id.toolbarTitle);
-        toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
-        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
+        this.recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
     }
 
     @Override
     public void mSetViewModels() {
-        userViewModel = ViewModelProviders.of(this).get(cUserViewModel.class);
-        workplaceViewModel = ViewModelProviders.of(this).get(cWorkplaceViewModel.class);
-        branchViewModel = ViewModelProviders.of(this).get(cBranchViewModel.class);
-        weberrorViewModel = ViewModelProviders.of(this).get(cWeberrorViewModel.class);
+
     }
 
     @Override
@@ -175,9 +106,9 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        toolbarImage.setImageResource(R.drawable.ic_login);
-        toolbarTitle.setText(pvScreenTitle);
-        toolbarImageHelp.setVisibility(View.INVISIBLE);
+        this.toolbarImage.setImageResource(R.drawable.ic_login);
+        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarImageHelp.setVisibility(View.INVISIBLE);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -188,251 +119,101 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     @Override
     public void mFieldsInitialize() {
-        List<cUserEntity> userEntities = userViewModel.getLocalUsers();
-        mSetUserRecycler(userEntities);
+        this.mSetUserRecycler();
     }
 
     @Override
     public void mSetListeners() {
-        mSetWeberrorOberver();
+
     }
 
     @Override
     public void mInitScreen() {
 
     }
+    //End Region iICSDefaultActivity defaults
 
-    private void mBarcodeReceiver() {
-        barcodeIntentFilter = new IntentFilter();
-        for (String str : cBarcodeScanDefinitions.getBarcodeActions()) {
-            barcodeIntentFilter.addAction(str);
+    //Region Public Methods
+
+    public static void pHandleScan(String pvScannedBarcodeStr){
+        LoginActivity.pUserSelected(pvScannedBarcodeStr, true);
+        return;
+    }
+
+    public static void pUserSelected(String pvUserStr, Boolean pvScannedBln) {
+
+        cUser User = cUser.pGetUserByName(pvUserStr);
+        // Scanned/selected user doesn't exist, so show message and end void
+        if (User == null){
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_user), pvUserStr, true, true );
+            return;
         }
-        for (String str : cBarcodeScanDefinitions.getBarcodeCategories()) {
-            barcodeIntentFilter.addCategory(str);
+
+        // User is known, so set current user
+        cUser.currentUser = User;
+
+        // If user is scanned, then we don't need a password, show branches fragment and return
+        if (pvScannedBln == true) {
+            LoginActivity.mGetAndShowBranchesForLoggedInUser();
+            return;
         }
 
-        barcodeReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.p_GetBarcode(intent, true);
-                if (barcodeStr == null) {
-                    barcodeStr = "";
-                }
-                mHandleScan(barcodeStr);
-            }
-        };
-        //don't forget to unregister on destroy.
-        registerReceiver(barcodeReceiver,barcodeIntentFilter);
+        // If user is selected, show password dialog and return
+        cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cUser.currentUser.getNameStr(),true );
+        return;
     }
 
-    private void mSetUserRecycler(List<cUserEntity> userEntities) {
-        userAdapter = new cUserAdapter(cAppExtension.context);
-        recyclerViewUsers.setHasFixedSize(false);
-        recyclerViewUsers.setAdapter(userAdapter);
-        recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
-        userAdapter.setUsers(userEntities);
+    public static void pBranchSelected(cBranch pvBranch) {
+
+
+
+        // Branch is known, so set current branch of current user
+        cUser.currentUser.currentBranch = pvBranch;
+        LoginActivity.mStartMenuActivity();
+        return;
     }
 
-    public void setChosenUser(cUserEntity userEntity) {
-        mShowpasswordDialog(userEntity);
+    public static void pLoginSuccess(){
+        cUser.currentUser.loggedInBln = true;
+        LoginActivity.mGetAndShowBranchesForLoggedInUser();
+        return;
     }
+    //End Region Public Methods
 
-    @SuppressLint("InflateParams")
-    private void mShowpasswordDialog(final cUserEntity userEntity) {
-        String l_usernameStr = userEntity.getNameStr();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.dialog_password, null);
-        builder.setView(dialogView);
-        builder.setMessage(getString(R.string.dialog_password_text, l_usernameStr));
-        builder.setTitle(getString(R.string.dialog_password_title));
-        final EditText editPassword = dialogView.findViewById(R.id.editPassword);
-        editPassword.setSelectAllOnFocus(true);
-        editPassword.requestFocus();
-        mShowKeyboard(editPassword);
-        final TextView textPasswordIncorrect = dialogView.findViewById(R.id.textPasswordIncorrect);
-        builder.setPositiveButton(R.string.button_login, null);
-        builder.setNeutralButton(R.string.cancel, null);
+    //Region Private Methods
 
-        editPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    private void mSetUserRecycler() {
+        this.recyclerViewUsers.setHasFixedSize(false);
+        this.recyclerViewUsers.setAdapter(cUser.getUserAdapter());
+        this.recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
+    }
+    private static void mGetAndShowBranchesForLoggedInUser() {
 
+        boolean result = cUser.currentUser.pGetBranchesBln();
+        if (result == true) {
+            if (cUser.currentUser.branchesObl.size() == 1) {
+                cUser.currentUser.currentBranch = cUser.currentUser.branchesObl.get(0);
+                mStartMenuActivity();
+                return;
             }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                textPasswordIncorrect.setText("");
-            }
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(cPublicDefinitions.BRANCHFRAGMENT_LIST_TAG, cUser.currentUser.branchesObl);
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        final AlertDialog dialog = builder.create();
-        dialog.setIcon(R.drawable.ic_lock_question_black_24dp);
-
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                mShowKeyboard(editPassword);
-
-                final Button buttonPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
-                editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                        if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                            buttonPositive.callOnClick();
-                        }
-                        return true;
-                    }
-                });
-
-                buttonPositive.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        cWebresult userLoginWrs = userViewModel.userLogonWrs(userEntity.getUsernameStr(), editPassword.getText().toString(), "");
-                        if (!userLoginWrs.getSuccessBln()) {
-                            ArrayList messages = new ArrayList();
-                            for (String message : userLoginWrs.getResultObl()) {
-                                messages.add(message);
-                            }
-                            Bundle bundle = new Bundle();
-                            bundle.putStringArrayList(cPublicDefinitions.WEBSERVICEERROR_LIST_TAG, messages);
-
-                            WebserviceErrorFragment webserviceErrorFragment = new WebserviceErrorFragment();
-                            webserviceErrorFragment.setArguments(bundle);
-                            webserviceErrorFragment.setCancelable(true);
-                            webserviceErrorFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WEBSERVICEERROR_TAG);
-                            return;
-                        }
-
-                        if (userLoginWrs.getResultBln()) {
-                            dialog.dismiss();
-                            cSharedPreferences.setSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_USER, userEntity.getUsernameStr());
-                            mLogin();
-                        }
-                        else {
-                            cUserInterface.doNope(editPassword, false, false);
-                            cUserInterface.playSound(R.raw.headsupsound, null);
-                            editPassword.requestFocus();
-                            editPassword.setSelection(0,editPassword.getText().toString().length());
-                            textPasswordIncorrect.setText(R.string.dialog_password_incorrect);
-
-                            mShowKeyboard(editPassword);
-                        }
-                    }
-                });
-            }
-        });
-        dialog.show();
+            final BranchFragment branchFragment = new BranchFragment();
+            branchFragment.setArguments(bundle);
+            branchFragment.show(cAppExtension.fragmentManager, BRANCHPICKERFRAGMENT_TAG); }
     }
 
-    private void mLogin() {
-        mGetBranches();
-    }
-    private void mSetWeberrorOberver() {
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        weberrorViewModel.getAllForActivityLive(ACTIVITYNAME).observe(this, new Observer<List<cWeberrorEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<cWeberrorEntity> cWeberrorEntities) {
-                if (cWeberrorEntities != null && cWeberrorEntities.size() > 0) {
 
-                    //only if something is really wrong, else it's just a wrong login, probably
-                    boolean isSuccess = true;
-                    for (cWeberrorEntity weberrorEntity : cWeberrorEntities) {
-                        //send to Firebase
-                        Bundle bundle = new Bundle();
-                        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, FIREBASE_ITEMNAME);
-                        bundle.putString(FIREBASE_ISSUCCESS, weberrorEntity.getIssucess().toString());
-                        bundle.putString(FIREBASE_ISRESULT, weberrorEntity.getIsresult().toString());
-                        bundle.putString(FIREBASE_ACTIVITY, weberrorEntity.getActivity());
-                        bundle.putString(FIREBASE_DEVICE, weberrorEntity.getDevice());
-                        bundle.putString(FIREBASE_PARAMETERS, weberrorEntity.getParameters());
-                        bundle.putString(FIREBASE_METHOD, weberrorEntity.getWebmethod());
-                        bundle.putString(FIREBASE_TIMESTAMP, weberrorEntity.getDatetime());
-                        bundle.putString(FIREBASE_URL, cWebservice.WEBSERVICE_URL);
-                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+    private static void mStartMenuActivity() {
 
-                        if (!weberrorEntity.getIssucess()) {
-                            isSuccess = false;
-                        }
-                    }
-                    if (!isSuccess) {
-                        cUserInterface.doWebserviceError(cWeberrorEntities, false, false );
-                    }
-                }
-                //all right, handled.
-                weberrorViewModel.deleteAll();
-            }
-        });
-    }
+        cUserInterface.pCheckAndCloseOpenDialogs();
 
-    private void mHandleScan(String barcodeStr) {
-        //if branch is active, let that one handle the scan
-        List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof BranchFragment) {
-                    return;
-                }
-            }
-        }
-        cUserInterface.checkAndCloseOpenDialogs();
-        cUserEntity userEntity =  userViewModel.getUserByCode(barcodeStr);
-        if (userEntity != null) {
-            cSharedPreferences.setSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_USER, userEntity.getUsernameStr());
-            mLogin();
-        }
-        else {
-            //unknown user
-            doUnknownScan(getString(R.string.error_unknown_user), barcodeStr);
-        }
-    }
-    private void doUnknownScan(String errormessage, String barcode) {
-        cUserInterface.doExplodingScreen( errormessage, barcode, true, true );
-    }
-    public void mGetBranches() {
-        String currentUser = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_USER, "");
-
-        branchViewModel.getBranchesForUser(true, currentUser).observe(this, new Observer<List<cBranchEntity>>() {
-            @Override
-            public void onChanged(@Nullable final List<cBranchEntity> branchEntities) {
-                if (branchEntities != null) {
-                    if (branchEntities.size() == 1) {
-                        cSharedPreferences.setSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_BRANCH, branchEntities.get(0).getBranch());
-                        gotoMenu();
-                    }
-                    else {
-                        ArrayList<cBranchEntity> showBranches = new ArrayList<>(branchEntities.size());
-                        showBranches.addAll(branchEntities);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable(cPublicDefinitions.BRANCHFRAGMENT_LIST_TAG, showBranches);
-                        final android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                        final BranchFragment branchFragment = new BranchFragment();
-                        branchFragment.setArguments(bundle);
-                        branchFragment.show(fragmentManager, BRANCHPICKERFRAGMENT_TAG);
-                    }
-                }
-            }
-        });
-    }
-    public void setChosenBranch(cBranchEntity branchEntity) {
-        android.support.v4.app.Fragment l_FragmentFrg = getSupportFragmentManager().findFragmentByTag(BRANCHPICKERFRAGMENT_TAG);
-        if (l_FragmentFrg != null) {
-            android.support.v4.app.DialogFragment l_DialogFragmentDfr = (android.support.v4.app.DialogFragment) l_FragmentFrg;
-            l_DialogFragmentDfr.dismiss();
-        }
-        cSharedPreferences.setSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_BRANCH, branchEntity.getBranch());
-        gotoMenu();
-    }
-    private void gotoMenu() {
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        startActivity(intent);
+        cAppExtension.activity.startActivity(intent);
+        return;
     }
+    //End Region Private Methods
 
 }

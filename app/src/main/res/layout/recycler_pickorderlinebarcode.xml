@@ -5,10 +5,10 @@
     android:id="@+id/pickorderLineBarcodeItemLinearLayout"
     style="@style/pickorderLineRecyclerLinearLayout"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/smallButton"
             android:id="@+id/imageButtonBarcode"
             app:srcCompat="@drawable/ic_barcode_black_24dp"
@@ -32,6 +32,8 @@
             />
         <TextView
             style="@style/pickorderLineRecyclerQuantityText"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
             android:id="@+id/textViewPickorderLineBarcodeQuantity"
             app:layout_constraintStart_toEndOf="@id/textViewQuantityLabel"
             app:layout_constraintTop_toBottomOf="@id/textViewPickorderLineBarcode"
@@ -42,5 +44,5 @@
             app:layout_constraintStart_toStartOf="@id/textViewPickorderLineBarcode"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

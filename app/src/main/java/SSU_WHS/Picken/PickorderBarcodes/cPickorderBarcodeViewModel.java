@@ -1,31 +1,29 @@
 package SSU_WHS.Picken.PickorderBarcodes;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
 public class cPickorderBarcodeViewModel extends AndroidViewModel {
-    private cPickorderBarcodeRepository mRepository;
 
-    public cPickorderBarcodeViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cPickorderBarcodeRepository pickorderBarcodeRepository;
+    //End Region Public Properties
 
-        mRepository = new cPickorderBarcodeRepository(application);
+    //Region Constructor
+    public cPickorderBarcodeViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.pickorderBarcodeRepository = new cPickorderBarcodeRepository(pvApplication);
     }
+    //End Region Constructor
 
-    public List<cPickorderBarcodeEntity> getPickorderBarcodesForItemVariantCode(String itemno, String variantcode) {return mRepository.getPickorderBarcodesForItemVariantCode(itemno, variantcode);}
 
-    public void insert(cPickorderBarcodeEntity pickorderBarcodeEntity) {mRepository.insert(pickorderBarcodeEntity);}
+    public void insert(cPickorderBarcodeEntity pvPickorderBarcodeEntity) {this.pickorderBarcodeRepository.pInsert(pvPickorderBarcodeEntity);}
+    public void deleteAll() {this.pickorderBarcodeRepository .pDeleteAll();}
 
-    public LiveData<List<cPickorderBarcodeEntity>> getPickorderBarcodes(Boolean forcerefresh, String branchStr, String ordernumberStr) {return mRepository.getPickorderBarcodes(forcerefresh, branchStr, ordernumberStr);}
 
-    //public List<cPickorderBarcodeEntity> getPickorderBarcodesLocal(String branchStr, String ordernumberStr) {return mRepository.getPickorderBarcodesLocal(branchStr, ordernumberStr);}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public cPickorderBarcodeEntity getPickOrderBarcodeByBarcode(String barcode) {return mRepository.getPickOrderBarcodeByBarcode(barcode); }
 
 
 }

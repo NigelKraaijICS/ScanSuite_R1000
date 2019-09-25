@@ -5,7 +5,7 @@
     android:id="@+id/settingItemLinearLayout"
     style="@style/menuRecyclerLinearLayout"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -23,8 +23,8 @@
         <View
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"
-            app:layout_constraintStart_toStartOf="@id/textViewAuthorisationItem"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

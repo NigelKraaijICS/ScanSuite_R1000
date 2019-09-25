@@ -8,7 +8,7 @@
     xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     app:layout_constraintTop_toBottomOf="@id/toolbar"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <!-- Adding 5 rows of placeholders -->
@@ -26,5 +26,5 @@
             <include layout="@layout/shimmer_placeholder_layout" />
             <include layout="@layout/shimmer_placeholder_layout" />
         </LinearLayout>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.facebook.shimmer.ShimmerFrameLayout>

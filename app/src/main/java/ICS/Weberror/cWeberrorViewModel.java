@@ -1,33 +1,41 @@
 package ICS.Weberror;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
 public class cWeberrorViewModel extends AndroidViewModel {
-    private cWeberrorRepository mRepository;
 
-    public cWeberrorViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cWeberrorRepository Repository;
+    //End Region Public Properties
 
-        mRepository = new cWeberrorRepository(application);
+
+    //Region Constructor
+    public cWeberrorViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cWeberrorRepository(pvApplication);
     }
-    public void insert(cWeberrorEntity weberrorEntity) {mRepository.insert(weberrorEntity);}
+    //End Region Constructor
 
-    public LiveData<List<cWeberrorEntity>> getAllForActivityLive(String activity) {return mRepository.getAllForActivityLive(activity); }
+    public void insert(cWeberrorEntity weberrorEntity) {Repository.insert(weberrorEntity);}
 
-    public List<cWeberrorEntity> getAllForActivity(String activity) {return mRepository.getAllForActivity(activity); }
+    public List<cWeberrorEntity> getAllWebErrors() {return  Repository.getAllWebErrorsFromDatabase();}
+    public List<cWeberrorEntity> getAllByStatus(String status) {return Repository.getAllByStatus(status); }
 
-    public LiveData<List<cWeberrorEntity>> getAllLive() { return mRepository.getAllLive();}
+    public List<cWeberrorEntity> getAllForWebMethod(String pvMethodStr) {return Repository.getAllForWebMethodStr(pvMethodStr); }
+    public List<cWeberrorEntity> getAllForActivity(String pvActivityStr) {return Repository.getAllWebErrorsForActivityFromDatabase(pvActivityStr); }
+    public List<cWeberrorEntity> getAllForActivityAndStatus(String activity, String status) {return Repository.getAllForActivityAndStatus(activity, status); }
 
-    public void deleteAll() {mRepository.deleteAll();}
+    public void delete(cWeberrorEntity weberrorEntity) {Repository.delete(weberrorEntity);}
+    public void deleteAll() {Repository.deleteAll();}
+    public void deleteAllForActivity(String pvActivityStr) {Repository.deleteAllForActivity(pvActivityStr);}
 
-    public void deleteAllForActivity(String activity) {mRepository.deleteAllForActivity(activity);}
+    //Region Public Methods
 
-    public LiveData<List<cWeberrorEntity>> getAllForActivityAndStatusLive(String activity, String status) {return mRepository.getAllForActivityAndStatusLive(activity, status); }
+    //End Public Methods
 
-    public LiveData<List<cWeberrorEntity>> getAllByStatusLive(String status) {return mRepository.getAllByStatusLive(status); }
 
 }

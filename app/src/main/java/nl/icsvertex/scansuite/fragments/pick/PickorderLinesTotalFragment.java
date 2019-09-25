@@ -1,42 +1,42 @@
 package nl.icsvertex.scansuite.fragments.pick;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
 
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
-import SSU_WHS.Picken.PickorderLines.cPickorderLineViewModel;
-import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.cSharedPreferences;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.cAppExtension;
 
 public class PickorderLinesTotalFragment extends Fragment {
-    Context thisContext;
 
-    String currentUser;
-    String currentBranch;
-    String chosenOrder;
 
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
     RecyclerView recyclerViewPickorderLinesTotal;
-    private cPickorderLineViewModel pickorderLineViewModel;
-    private cPickorderLineAdapter pickorderLineAdapter;
+    //End Region Private Properties
 
+    //Region Constructor
     public PickorderLinesTotalFragment() {
-        // Required empty public constructor
+
     }
+    //End Region Constructor
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,38 +44,37 @@ public class PickorderLinesTotalFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pickorder_lines_total, container, false);
     }
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        thisContext = this.getContext();
-        currentUser = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_USER, "");
-        currentBranch = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_BRANCH, "");
 
-        Intent intent = getActivity().getIntent();
-        chosenOrder = intent.getStringExtra(cPublicDefinitions.PICKING_CHOSENORDER);
-
-        m_findViews();
-        m_getData();
+        this.mFindViews();
+        this.mSetPickorderLineRecycler();
     }
 
-    private void m_findViews() {
-        recyclerViewPickorderLinesTotal = getView().findViewById(R.id.recyclerViewPickorderLinesTotal);
-    }
-    private void m_getData() {
-        pickorderLineViewModel = ViewModelProviders.of(this).get(cPickorderLineViewModel.class);
-        pickorderLineViewModel.getTotalPickorderLineEntities().observe(this, new Observer<List<cPickorderLineEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<cPickorderLineEntity> cPickorderLineEntities) {
-                m_setPickorderLineRecycler(cPickorderLineEntities);
-            }
-        });
+    @Override
+    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
+        super.setUserVisibleHint(pvIsVisibleToUserBln);
+
+        if (pvIsVisibleToUserBln) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.detach(this).attach(this).commit();
+        }
     }
 
-    private void m_setPickorderLineRecycler(List<cPickorderLineEntity> pickorderLinesEntities) {
-        pickorderLineAdapter = new cPickorderLineAdapter(thisContext);
+
+    private void mFindViews() {
+        this.recyclerViewPickorderLinesTotal = getView().findViewById(R.id.recyclerViewPickorderLinesTotal);
+    }
+
+
+    private void mSetPickorderLineRecycler() {
+
         recyclerViewPickorderLinesTotal.setHasFixedSize(false);
-        recyclerViewPickorderLinesTotal.setAdapter(pickorderLineAdapter);
-        recyclerViewPickorderLinesTotal.setLayoutManager(new LinearLayoutManager(thisContext));
+        recyclerViewPickorderLinesTotal.setAdapter(cPickorderLine.getPickorderLineTotalAdapter());
+        recyclerViewPickorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        pickorderLineAdapter.setPickorderLines(pickorderLinesEntities);
+        cPickorderLine.getPickorderLineTotalAdapter().pFillData(cPickorder.currentPickOrder.linesObl());
     }
 }

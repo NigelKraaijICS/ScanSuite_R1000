@@ -1,32 +1,42 @@
 package nl.icsvertex.scansuite.fragments;
 
-
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
+
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.activities.ship.ShiporderSelectActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.cAppExtension;
 
 
-public class NoOrdersFragment extends Fragment {
-    Fragment thisFragment;
+public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
+
+    //Region Public Properties
+
+
+    //End Region Public Properties
+
+    //Region Private Properties
     ImageView imageNoOrders;
     ImageButton buttonRefreshOrders;
+    //End Region Private Properties
 
+    //Region Constructor
     public NoOrdersFragment() {
         // Required empty public constructor
     }
+    //End Region Constructor
+
+    //Region Default Methods
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,36 +44,66 @@ public class NoOrdersFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_no_orders, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        thisFragment = this;
-        m_findViews();
-        m_setListeners();
+        this.mFragmentInitialize();
     }
-    private void m_findViews() {
-        imageNoOrders = getView().findViewById(R.id.imageNoOrders);
-        buttonRefreshOrders = getView().findViewById(R.id.buttonRefreshOrders);
+
+    //End Region Default Methods
+
+    @Override
+    public void mFragmentInitialize() {
+
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
     }
-    private void m_setListeners() {
-        buttonRefreshOrders.setOnClickListener(new View.OnClickListener() {
+
+    @Override
+    public void mFindViews() {
+        this.imageNoOrders = getView().findViewById(R.id.imageNoOrders);
+        this.buttonRefreshOrders = getView().findViewById(R.id.buttonRefreshOrders);
+    }
+
+
+    @Override
+    public void mSetViewModels() {
+
+    }
+
+    @Override
+    public void mFieldsInitialize() {
+
+
+    }
+
+    @Override
+    public void mSetListeners() {
+
+        this.buttonRefreshOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cUserInterface.doRotate(buttonRefreshOrders, 2 );
-                m_getData();
+                cUserInterface.pDoRotate(buttonRefreshOrders, 2);
+                if (cAppExtension.activity instanceof PickorderSelectActivity) {
+                    PickorderSelectActivity.pFillOrders();
+                    return;
+                }
+
+                //todo: put this back
+                //todo: make sure rotation animation works again
+
+//        if (activity instanceof ShiporderSelectActivity) {
+//            ((ShiporderSelectActivity)getActivity()).mGetData();
+//        }
+//        if (activity instanceof SortorderSelectActivity) {
+//            ((SortorderSelectActivity)getActivity()).mGetData();
+//        }
+
             }
         });
-    }
-    private void m_getData() {
-        Activity activity = getActivity();
-        if (activity instanceof PickorderSelectActivity) {
-            ((PickorderSelectActivity)getActivity()).mGetData();
-        }
-        if (activity instanceof ShiporderSelectActivity) {
-            ((ShiporderSelectActivity)getActivity()).mGetData();
-        }
-        if (activity instanceof SortorderSelectActivity) {
-            ((SortorderSelectActivity)getActivity()).mGetData();
-        }
 
     }
 }
+

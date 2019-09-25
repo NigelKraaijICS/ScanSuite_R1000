@@ -1,26 +1,28 @@
 package SSU_WHS.Basics.ShippingAgentServices;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cShippingAgentServiceViewModel extends AndroidViewModel {
-    private cShippingAgentServiceRepository mRepository;
 
-    public cShippingAgentServiceViewModel(Application application) {
-        super(application);
 
-        mRepository = new cShippingAgentServiceRepository(application);
+    //Region Public Properties
+    public cShippingAgentServiceRepository Repository;
+    //End Region Public Properties
+
+    //Region Constructor
+    public cShippingAgentServiceViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cShippingAgentServiceRepository(pvApplication);
     }
+    //End Region Constructor
 
-    public void insert(cShippingAgentServiceEntity shippingAgentServiceEntity) {mRepository.insert(shippingAgentServiceEntity);}
-
-    public LiveData<List<cShippingAgentServiceEntity>> getShippingAgentServicess(Boolean forcerefresh) {return mRepository.getShippingAgentServices(forcerefresh);}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public cShippingAgentServiceEntity getShippingAgentServiceByServiceCode(String servicecode) {return mRepository.getShippingAgentServiceByServiceCode(servicecode);}
+    //Region Public Methods
+    public cWebresult pGetShippingAgentServicesFromWebserviceWrs() {return this.Repository.pGetShippingAgentServicesFromWebserviceWrs(); }
+    public void insert(cShippingAgentServiceEntity pvShippingAgentServiceEntity) {this.Repository.pInsert(pvShippingAgentServiceEntity);}
+    public void deleteAll() {Repository.pDeleteAll();}
+    //End Region Public Methods
 
 }

@@ -1,7 +1,5 @@
 package ICS.Utils;
 
-import android.content.Context;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,44 +10,34 @@ import java.util.TimeZone;
 import SSU_WHS.General.cPublicDefinitions;
 
 public class cDateAndTime {
-    public String mGetLogicalDateStr(Context context, String dateTimeStr) {
-        String l_resultStr;
-        l_resultStr = "";
-        return l_resultStr;
+
+    public static String pGetCurrentTimeStr() {
+        String resultStr;
+        long milliSecondsLng = new Date().getTime();
+        resultStr = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.getDefault()).format(milliSecondsLng);
+        return resultStr;
     }
-    public static String m_GetCurrentTime() {
-        String l_resultStr;
-        long millis = new Date().getTime();
-        String timeStr = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.getDefault()).format(millis);
-        l_resultStr = timeStr;
-        return l_resultStr;
-    }
-    public static String m_GetCurrentLongDate() {
-        String l_resultStr;
+
+    public static String pGetCurrentLongDateStr() {
+        String resultStr;
         Calendar calendar = new GregorianCalendar();
         String dayLongStr = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
         String dateStr = new SimpleDateFormat(cPublicDefinitions.DATEPATTERNSHOW,Locale.getDefault()).format(calendar.getTime());
-        String showDateStr = dayLongStr + " " + dateStr;
-        l_resultStr = showDateStr;
-        return l_resultStr;
+        resultStr = dayLongStr + " " + dateStr;
+        return resultStr;
     }
-    public static String m_GetCurrentDateTimeForWebservice() {
-        String l_resultStr;
+
+    public static String pGetCurrentDateTimeForWebserviceStr() {
+        String resultStr;
         Calendar calendar = new GregorianCalendar();
-        String dateStr = new SimpleDateFormat(cPublicDefinitions.DATEPATTERNWEBSERVICE,Locale.getDefault()).format(calendar.getTime());
-        l_resultStr = dateStr;
-        return l_resultStr;
+        resultStr = new SimpleDateFormat(cPublicDefinitions.DATEPATTERNWEBSERVICE,Locale.getDefault()).format(calendar.getTime());
+        return resultStr;
     }
 
-    public static String m_getCurrentTimeZone() {
-        String l_resultStr;
-        l_resultStr = TimeZone.getDefault().getDisplayName(Locale.getDefault());
-
-        return l_resultStr;
+    public static String pGetCurrentTimeZoneStr() {
+        String resultStr;
+        resultStr = TimeZone.getDefault().getDisplayName(Locale.getDefault());
+        return resultStr;
     }
-
-
-
-
 
 }

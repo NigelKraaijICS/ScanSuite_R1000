@@ -412,4 +412,51 @@
 
     <string name="choose_barcode_first">Please choose a barcode first</string>
     <string name="manual_input_only_barcodenumber_bigger1">Manual input is only allowed when barcode quantity is 1</string>
+    <string name="couldnt_send_line">Could\'t send line</string>
+    <string name="all_orders_sent">All orders are sent</string>
+    <string name="order_done_button">Order done!</string>
+    <string name="order_done_close">Close</string>
+    <string name="message_couldnt_unlock_order">Could\'t unlock order</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="password_header_default">Password</string>
+    <string name="password_text_default">Enter password</string>
+    <string name="password_hint_default">password</string>
+    <string name="error_unknown_branch">Unknown branch</string>
+    <string name="error_get_autorisations_failed">Getting Autorisations failed</string>
+    <string name="error_no_autorisations_available">No autorisations available for this user in this location</string>
+    <string name="error_get_workplaces_failed">Getting workplaces failed</string>
+    <string name="error_no_workplaces_available">There are no workplaces available for this location</string>
+    <string name="error_unknown_autorisation">Autorisation is unknown</string>
+    <string name="error_get_pickorders_failed">Getting pickorders from server failed</string>
+    <string name="error_couldnt_delete_details">Could not delete pickorder details</string>
+    <string name="error_get_picklines_failed">Getting lines from server failed</string>
+    <string name="error_couldnt_unlock_order">Couldn\'t unlock order</string>
+    <string name="error_get_article_images_failed">Getting article images failed</string>
+    <string name="error_couldnt_release_lock_order">Couln\'t release order lock</string>
+    <string name="error_get_barcodes_failed">Getting barcodes failed</string>
+    <string name="error_getting_sort_lines_failed">Could not get sort lines</string>
+    <string name="error_get_adresses_failed">Getting adresses failed</string>
+    <string name="error_get_comments_failed">Getting comments failed</string>
+    <string name="error_couldnt_reset_line">Couldn\'t reset line</string>
+    <string name="error_couldnt_abort_order">Could not abort order</string>
+    <string name="error_article_scan_not_allowed">Article scan not allowed here</string>
+    <string name="nothing_more_todo_for_article">Nothing todo for scanned article</string>
+    <string name="lines_to_be_send">There are still unsend lines</string>
+    <string name="error_couldnt_set_line_on_busy">Couldn\'t set line on status busy</string>
+    <string name="no_barcodes_availabe_for_this_line">No barcodes available for this line</string>
+    <string name="mutiple_barcodes_posible">Multiple barcodes possible</string>
+    <string name="could_not_get_article_image">Could not get article image</string>
+    <string name="message_unknown_barcode">Unknown/unexppected barcode</string>
+    <string name="error_inserting_salesorderpackingtable">Could not add salesorder packing table</string>
+    <string name="error_updating_processing_sequence">Could not update processing sequence</string>
+    <string name="previous_barcode_could_not_be_deleted">Previous barcodes could not be deleted</string>
+    <string name="message_select_one_of_multiple_barcodes">Multiple barcodes available, please select one</string>
+    <string name="invalid_user_not_assigned">invalid_user_not_assigned</string>
+    <string name="message_meant_for_other_user">This assignment is assigned to another user:</string>
+    <string name="message_another_user_already_started">Another user already started:</string>
+    <string name="order_will_be_deleted">Order will be deleted</string>
+    <string name="order_cant_be_started">Order cant be started</string>
+    <string name="feedback">Feedback</string>
 </resources>

@@ -1,93 +1,173 @@
 package ICS.Environments;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.v4.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import SSU_WHS.Webservice.cWebservice;
-import SSU_WHS.General.cAppExtension;
-import SSU_WHS.General.cPublicDefinitions;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 public class cEnvironment {
-    private static cEnvironmentViewModel environmentViewModel;
-    public static cEnvironmentEntity currentEnvironmentEntity;
+
+    //region Public Properties
+
+    public String nameStr;
+    public String getNameStr() {
+        return nameStr;
+    }
+
+    public String descriptionStr;
+    public String getDescriptionStr() {
+        return descriptionStr;
+    }
+
+    public String webserviceURLStr;
+    public String getWebserviceURLStr() {
+        return webserviceURLStr;
+    }
+
+    public boolean isDefaultBln;
+    public boolean isDefaultBln() {
+        return isDefaultBln;
+    }
+
+    public cEnvironmentEntity environmentEntity;
+    public boolean inDatabaseBln;
+
+    public static cEnvironmentViewModel gEnviromentViewModel;
+
+    public static cEnvironmentViewModel getEnviromementViewModel() {
+        if (gEnviromentViewModel == null) {
+            gEnviromentViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cEnvironmentViewModel.class);
+        }
+        return gEnviromentViewModel;
+    }
+
+    public static List<cEnvironment> allEnviroments;
+    public static cEnvironment currentEnvironment;
+
+    //Region Constructor
+    public cEnvironment(cEnvironmentEntity pvEnviromentEntity) {
+        this.environmentEntity = pvEnviromentEntity;
+        this.nameStr = this.environmentEntity.getNameStr();
+        this.descriptionStr =  this.environmentEntity.getDescriptionStr();
+        this.webserviceURLStr = this.environmentEntity.getWebserviceURLStr();
+        this.isDefaultBln = this.environmentEntity.getIsdefaultBln();
+    }
+    //End Region Constructor
 
     public static void pSetEnvironment() {
 
-        environmentViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cEnvironmentViewModel.class);
-        String currentEnvironment = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_ENVIRONMENT, "").trim();
-        if (currentEnvironment.isEmpty()) {
+        cEnvironment.pGetEnviromentsFromDatabase();
 
+
+        if (cEnvironment.currentEnvironment == null) {
             //Do we have environments at all?
-            if (environmentViewModel.getNumberOfEnvironments() == 0) {
+            if (cEnvironment.allEnviroments.size() == 0) {
                 mDoNoEnvironments();
                 return;
             }
-            currentEnvironmentEntity = environmentViewModel.getDefaultEnvironment();
-            //we have a default environment
-            if (currentEnvironmentEntity != null) {
-                mSaveTheEnvironment(currentEnvironmentEntity);
-                mSetWebservice(currentEnvironmentEntity);
-                return;
-            }
-            //we don't have a default environment, set the first one
-            currentEnvironmentEntity = environmentViewModel.getFirst();
-            if (currentEnvironmentEntity != null) {
-                mSaveTheEnvironment(currentEnvironmentEntity);
-                mSetWebservice(currentEnvironmentEntity);
-                return;
-            }
-            //something is terribly wrong!
-            mDoNoEnvironments();
-        } else {
-            //we have a set environment!
-            currentEnvironmentEntity = environmentViewModel.getEnvironmentByName(currentEnvironment);
-            if (currentEnvironmentEntity != null) {
-                mSetWebservice(currentEnvironmentEntity);
-                return;
-            }
-            //something is terribly wrong!
-            mDoNoEnvironments();
-        }
 
+            cEnvironment defaultEnviroment = cEnvironment.getDefaultEnvironment();
+
+            if (defaultEnviroment == null && cEnvironment.allEnviroments.size() == 1) {
+                cEnvironment.pSetCurrentEnviroment(cEnvironment.allEnviroments.get(0));
+                return;
+            }
+            else
+                {
+                 cEnvironment.pSetCurrentEnviroment(defaultEnviroment);
+            }
+        }
     }
+
+
+    public static void pSetCurrentEnviroment(cEnvironment pvEnvironment){
+        cEnvironment.currentEnvironment = pvEnvironment;
+        cWebservice.WEBSERVICE_URL = cEnvironment.currentEnvironment.webserviceURLStr;
+        pvEnvironment.pSetAsDefaultBln();
+     }
 
     private static void mDoNoEnvironments() {
-        cUserInterface.doExplodingScreen(cAppExtension.context.getResources().getString(R.string.error_no_environments), "", true, false);
+        cUserInterface.pDoExplodingScreen(cAppExtension.context.getResources().getString(R.string.error_no_environments), "", true, false);
     }
 
-    public static void mSaveTheEnvironment(cEnvironmentEntity pvEnvironmentEntity) {
-        cSharedPreferences.setSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_ENVIRONMENT, pvEnvironmentEntity.getName());
+    public static void pGetEnviromentsFromDatabase() {
+
+        cEnvironment.allEnviroments = new ArrayList<>();
+
+        List<cEnvironmentEntity> EnviromentsFromdatabaseObl =   cEnvironment.getEnviromementViewModel().getAll();
+
+        for (cEnvironmentEntity environmentEntity : EnviromentsFromdatabaseObl) {
+            cEnvironment environment = new cEnvironment(environmentEntity);
+            environment.inDatabaseBln = true;
+            cEnvironment.allEnviroments.add(environment);
+        }
     }
 
-    public static void mSetWebservice(cEnvironmentEntity pvEnvironmentEntity) {
-        cWebservice.WEBSERVICE_URL = pvEnvironmentEntity.getWebserviceurl();
-    }
-    public static List<cEnvironmentEntity> mGetAll(FragmentActivity pvFragmentActivity) {
-        if (environmentViewModel == null) {
-            environmentViewModel = ViewModelProviders.of(pvFragmentActivity).get(cEnvironmentViewModel.class);
+    public static cEnvironment getEnvironmentByName(String pvEnvironmentName) {
+
+        if (cEnvironment.allEnviroments == null){
+            return null;
         }
-        return environmentViewModel.getAll();
-    }
-    public static cEnvironmentEntity getEnvironmentByName(FragmentActivity pvFragmentActivity, String pvEnvironmentName) {
-        if (environmentViewModel == null) {
-            environmentViewModel = ViewModelProviders.of(pvFragmentActivity).get(cEnvironmentViewModel.class);
+
+        for (cEnvironment environment : cEnvironment.allEnviroments) {
+            if (environment.nameStr.equalsIgnoreCase(pvEnvironmentName)) {
+                return  environment;
+            }
         }
-        return environmentViewModel.getEnvironmentByName(pvEnvironmentName);
-    }
-    public static void insert(FragmentActivity pvFragmentActivity, cEnvironmentEntity pvEnvironmentEntity) {
-        if (environmentViewModel == null) {
-            environmentViewModel = ViewModelProviders.of(pvFragmentActivity).get(cEnvironmentViewModel.class);
+                return  null;
+     }
+
+    public static cEnvironment getDefaultEnvironment() {
+
+        if (cEnvironment.allEnviroments == null){
+            return null;
         }
-        environmentViewModel.insert(pvEnvironmentEntity);
-    }
-    public static void delete(FragmentActivity pvFragmentActivity, cEnvironmentEntity pvEnvironmentEntity) {
-        if (environmentViewModel == null) {
-            environmentViewModel = ViewModelProviders.of(pvFragmentActivity).get(cEnvironmentViewModel.class);
+
+        for (cEnvironment environment : cEnvironment.allEnviroments) {
+            if (environment.isDefaultBln == true) {
+                return  environment;
+            }
         }
-        environmentViewModel.delete(pvEnvironmentEntity);
+        return  null;
+    }
+
+    public boolean pDeleteFromDatabaseBln() {
+        cEnvironment.getEnviromementViewModel().delete(this.environmentEntity);
+        this.inDatabaseBln = false;
+        cEnvironment.allEnviroments.remove(this);
+        return true;
+    }
+
+    public boolean pSetAsDefaultBln() {
+
+        this.isDefaultBln = true;
+
+        for (cEnvironment environment : cEnvironment.allEnviroments) {
+            if (environment.nameStr.equalsIgnoreCase(this.nameStr)) {
+                cEnvironment.getEnviromementViewModel().updateDefaultBln( this.isDefaultBln, this.nameStr);
+            }  else {
+                cEnvironment.getEnviromementViewModel().updateDefaultBln(false, environment.nameStr);
+            }
+        }
+        return true;
+    }
+
+
+    public boolean pInsertInDatabaseBln() {
+        cEnvironment.getEnviromementViewModel().insert(this.environmentEntity);
+        this.inDatabaseBln = true;
+        this.isDefaultBln = false;
+
+        if (cEnvironment.allEnviroments == null){
+            cEnvironment.allEnviroments = new ArrayList<>();
+        }
+
+        cEnvironment.allEnviroments.add(this);
+        return true;
     }
 }

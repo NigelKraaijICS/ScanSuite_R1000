@@ -9,41 +9,53 @@ import java.util.concurrent.ExecutionException;
 import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cSalesOrderPackingTableRepository {
-    private iSalesOrderPackingTableDao salesOrderPackingTableDao;
 
-    cSalesOrderPackingTableRepository(Application application) {
-        acScanSuiteDatabase db = acScanSuiteDatabase.getDatabase(application);
-        salesOrderPackingTableDao = db.salesOrderPackingTableDao();
+    //Region Public Properties
+    public iSalesOrderPackingTableDao salesOrderPackingTableDao;
+    //End Region Public Properties
+
+    //Region Private Properties
+    private acScanSuiteDatabase db;
+        //End Region Private Properties
+
+    //Region Constructor
+    cSalesOrderPackingTableRepository(Application pvApplication) {
+        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.salesOrderPackingTableDao = this.db.salesOrderPackingTableDao();
+    }
+    //End Region Constructor
+
+    //Region Public Methods
+
+    public void insert (cSalesOrderPackingTableEntity salesOrderPackingTableEntity) {
+        new insertAsyncTask(salesOrderPackingTableDao).execute(salesOrderPackingTableEntity);
     }
 
-    public List<cSalesOrderPackingTableEntity> getAll() {
-        List<cSalesOrderPackingTableEntity> salesOrderPackingTableEntities = null;
+    public List<cSalesOrderPackingTableEntity> pGetAllSalesOrderPackingTablesFromDatabaseObl() {
+
+        List<cSalesOrderPackingTableEntity> resultObl = null;
         try {
-            salesOrderPackingTableEntities = new getAllAsyncTask(salesOrderPackingTableDao).execute().get();
+            resultObl = new mGetAllSalesOrderPackingTablesFromDatabaseAsyncTask(salesOrderPackingTableDao).execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return salesOrderPackingTableEntities;
+        return resultObl;
     }
-    private static class getAllAsyncTask extends AsyncTask<Void, Void, List<cSalesOrderPackingTableEntity>> {
+
+    public void pTruncateTable() {
+        new mTruncateTableAsyncTask(salesOrderPackingTableDao).execute();
+    }
+
+    //End Region Public Methods
+
+    // Region Private Methods
+
+    private static class mTruncateTableAsyncTask extends AsyncTask<Void, Void, Void> {
         private iSalesOrderPackingTableDao mAsyncTaskDao;
 
-        getAllAsyncTask(iSalesOrderPackingTableDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cSalesOrderPackingTableEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getAll();
-        }
-    }
-    public void deleteAll () {
-        new deleteAllAsyncTask(salesOrderPackingTableDao).execute();
-    }
-
-    private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private iSalesOrderPackingTableDao mAsyncTaskDao;
-
-        deleteAllAsyncTask(iSalesOrderPackingTableDao dao) {
+        mTruncateTableAsyncTask(iSalesOrderPackingTableDao dao) {
             mAsyncTaskDao = dao;
         }
         @Override
@@ -52,9 +64,21 @@ public class cSalesOrderPackingTableRepository {
             return null;
         }
     }
-    public void insert (cSalesOrderPackingTableEntity salesOrderPackingTableEntity) {
-        new insertAsyncTask(salesOrderPackingTableDao).execute(salesOrderPackingTableEntity);
+
+    private  class mGetAllSalesOrderPackingTablesFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cSalesOrderPackingTableEntity>> {
+        private iSalesOrderPackingTableDao mAsyncTaskDao;
+
+        mGetAllSalesOrderPackingTablesFromDatabaseAsyncTask(iSalesOrderPackingTableDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected List<cSalesOrderPackingTableEntity> doInBackground(final Void... params) {
+            return mAsyncTaskDao.getAll();
+        }
     }
+
+
+    // End Region Private Methods
+
+
     private static class insertAsyncTask extends AsyncTask<cSalesOrderPackingTableEntity, Void, Void> {
         private iSalesOrderPackingTableDao mAsyncTaskDao;
 
@@ -67,44 +91,5 @@ public class cSalesOrderPackingTableRepository {
             return null;
         }
     }
-    public cSalesOrderPackingTableEntity getPackingTableForSalesorder(String pv_salesorder) {
-        cSalesOrderPackingTableEntity salesOrderPackingTableEntity = null;
-        try {
-            salesOrderPackingTableEntity = new getPackingTableForSalesorderAsyncTask(salesOrderPackingTableDao).execute(pv_salesorder).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return salesOrderPackingTableEntity;
-    }
-    private static class getPackingTableForSalesorderAsyncTask extends AsyncTask<String, Void, cSalesOrderPackingTableEntity> {
-        private iSalesOrderPackingTableDao mAsyncTaskDao;
 
-        getPackingTableForSalesorderAsyncTask(iSalesOrderPackingTableDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected cSalesOrderPackingTableEntity doInBackground(final String... params) {
-            return mAsyncTaskDao.getPackingTableForSalesOrder(params[0]);
-        }
-    }
-    public cSalesOrderPackingTableEntity getSalesorderForPackingTable(String pv_packingtable) {
-        cSalesOrderPackingTableEntity salesOrderPackingTableEntity = null;
-        try {
-            salesOrderPackingTableEntity = new getSalesorderForPackingTableAsyncTask(salesOrderPackingTableDao).execute(pv_packingtable).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return salesOrderPackingTableEntity;
-    }
-    private static class getSalesorderForPackingTableAsyncTask extends AsyncTask<String, Void, cSalesOrderPackingTableEntity> {
-        private iSalesOrderPackingTableDao mAsyncTaskDao;
-
-        getSalesorderForPackingTableAsyncTask(iSalesOrderPackingTableDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected cSalesOrderPackingTableEntity doInBackground(final String... params) {
-            return mAsyncTaskDao.getSalesorderForPackingTable(params[0]);
-        }
-    }
 }

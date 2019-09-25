@@ -1,7 +1,6 @@
 package SSU_WHS.Basics.Authorisations;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +9,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
-import nl.icsvertex.scansuite.activities.general.MenuActivity;
+import SSU_WHS.Basics.Users.cUser;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.activities.general.MenuActivity;
 
 public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAdapter.AuthorisationViewHolder> {
-    private Context callerContext;
+
+    //Region Public Properties
     public class AuthorisationViewHolder extends RecyclerView.ViewHolder{
+
         private TextView textViewAuthorisation;
         private ImageView imageViewAuthorisation;
         public LinearLayout authorisationItemLinearLayout;
@@ -38,126 +39,149 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             authorisationItemLinearLayout = itemView.findViewById(R.id.authorisationItemLinearLayout);
         }
     }
+    //End Region Public Properties
 
-    private final LayoutInflater mInflater;
-    public static List<cAuthorisationEntity> mAuthorisations; //cached copy of authorisations
+    //Region Private Properties
+    private final LayoutInflater LayoutInflaterObject;
+    //End Region Private Properties
 
-    public cAuthorisationAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        callerContext = context;
+    //Region Constructor
+    public cAuthorisationAdapter() {
+        this.LayoutInflaterObject = LayoutInflater.from(cAppExtension.context);
     }
+    //End Region Constructor
 
+    //Region Public Methods
     @Override
-    public cAuthorisationAdapter.AuthorisationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recycler_authorisation, parent, false);
+    public cAuthorisationAdapter.AuthorisationViewHolder onCreateViewHolder(ViewGroup pvViewGroup, int pvViewTypeInt) {
+        View itemView = LayoutInflaterObject.inflate(R.layout.recycler_authorisation, pvViewGroup, false);
         return new cAuthorisationAdapter.AuthorisationViewHolder(itemView);
     }
 
-    public void setAuthorisations(List<cAuthorisationEntity> authorisations) {
-        mAuthorisations = authorisations;
-        notifyDataSetChanged();
+    public void setAuthorisations() {
+       notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(cAuthorisationAdapter.AuthorisationViewHolder holder, int position) {
-        if (mAuthorisations != null) {
-            final cAuthorisationEntity l_AuthorisationEntity = mAuthorisations.get(position);
-            String l_authorisationStr = l_AuthorisationEntity.getAuthorisationStr();
+    public void onBindViewHolder(cAuthorisationAdapter.AuthorisationViewHolder pvHolder, int pvPositionInt) {
+        if (cUser.currentUser.autorisationObl != null) {
+            final cAuthorisation authorisation = cUser.currentUser.autorisationObl.get(pvPositionInt);
 
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.EXTERNAL_RETURN.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_external_return);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_external_return);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.INTAKE.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_intake);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.INTAKE_EO.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_intake_eo);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_eo);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.INTAKE_MA.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_intake_ma);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_ma);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.INTAKE_OM.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_intake_om);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_om);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.INTAKECLOSE.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_intake_close);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intakeclose);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.INVENTORY.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_inventory);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_inventory);
-                holder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_INVENTORY);
-                holder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_INVENTORY);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.INVENTORYCLOSE.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_inventoryclose);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_inventoryclose);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.MOVE.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_move);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.MOVE_MI.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_move_mi);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mi);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.MOVE_MO.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_move_mo);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mo);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.MOVE_MV.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_move_mv);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mv);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.MOVEITEM.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_moveitem);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_moveitem);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.PICK.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_pick);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_pick);
-                holder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_PICK);
-                holder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_PICK);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.SORTING.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_sort);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_sort);
-                holder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_SORT);
-                holder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_SORT);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.SHIPPING.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_ship);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_ship);
-                holder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_SHIP);
-                holder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_SHIP);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.PICK_PF.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_pick_pf);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_pick_pf);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.PICK_PV.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_pick_pv);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_pick_pv);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.RETURN.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_return);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_return);
-            }
-            if (l_authorisationStr.equalsIgnoreCase(cAuthorisation.g_eAuthorisation.SELFPICK.toString())) {
-                holder.textViewAuthorisation.setText(R.string.menuitem_selfpick);
-                holder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_selfpick);
+
+            //todo: put this back, but differently
+            if (authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.EXTERNAL_RETURN) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_external_return);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_external_return);
             }
 
-            holder.authorisationItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKE) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_intake);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKE_EO) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_intake_eo);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_eo);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKE_MA) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_intake_ma);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_ma);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKE_OM) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_intake_om);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_om);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKECLOSE) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_intake_close);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intakeclose);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INVENTORY) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_inventory);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_inventory);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_INVENTORY);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_INVENTORY);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INVENTORYCLOSE) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_inventoryclose);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_inventoryclose);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_move);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MI) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_move_mi);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mi);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MO) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_move_mo);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mo);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MV) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_move_mv);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mv);
+            }
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVEITEM) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_moveitem);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_moveitem);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PICK) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_pick);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_pick);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_PICK);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_PICK);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.SORTING) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_sort);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_sort);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_SORT);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_SORT);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.SHIPPING) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_ship);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_ship);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_SHIP);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_SHIP);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PICK_PF) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_pick_pf);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_pick_pf);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PICK_PV) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_pick_pv);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_pick_pv);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.RETURN) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_return);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_return);
+            }
+
+            if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.SELFPICK) {
+                pvHolder.textViewAuthorisation.setText(R.string.menuitem_selfpick);
+                pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_selfpick);
+            }
+
+            pvHolder.authorisationItemLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (callerContext instanceof MenuActivity) {
-                        ((MenuActivity)callerContext).setChosenAuthorization(l_AuthorisationEntity);
+                    if (cAppExtension.context instanceof MenuActivity) {
+                        cUser.currentUser.currentAuthorisation = authorisation;
+                        MenuActivity.pAuthorisationSelected();
                     }
                 }
             });
@@ -166,8 +190,9 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
 
     @Override
     public int getItemCount () {
-        if (mAuthorisations != null)
-            return mAuthorisations.size();
+        if (cUser.currentUser.autorisationObl != null)
+            return cUser.currentUser.autorisationObl.size();
         else return 0;
     }
+    //End Region Public Methods
 }

@@ -4,9 +4,9 @@ package nl.icsvertex.scansuite.fragments.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,9 +66,9 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFieldsInitialize() {
-        textViewCurrentTime.setText(cDateAndTime.m_GetCurrentTime());
-        textViewCurrentDate.setText(cDateAndTime.m_GetCurrentLongDate());
-        textViewTimeZone.setText(cDateAndTime.m_getCurrentTimeZone());
+        textViewCurrentTime.setText(cDateAndTime.pGetCurrentTimeStr());
+        textViewCurrentDate.setText(cDateAndTime.pGetCurrentLongDateStr());
+        textViewTimeZone.setText(cDateAndTime.pGetCurrentTimeZoneStr());
     }
 
     @Override

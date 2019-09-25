@@ -6,30 +6,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.List;
-
 import ICS.Environments.cEnvironment;
 import ICS.Environments.cEnvironmentAdapter;
 import ICS.Environments.cEnvironmentEntity;
 import ICS.Environments.cEnvironmentRecyclerItemTouchHelper;
-import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.Scanning.cBarcodeScanDefinitions;
-import ICS.Utils.cSharedPreferences;
-import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;
@@ -45,14 +40,8 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     Button buttonAddManually;
     TextView textViewCurrentEnvironment;
     DialogFragment thisFragment;
-
     cEnvironmentAdapter environmentAdapter;
-
     FragmentActivity fragmentActivity;
-
-    cEnvironmentEntity currentEnvironmentEntity;
-    cEnvironmentEntity swipedEnvironment;
-
     IntentFilter barcodeFragmentIntentFilter;
     private BroadcastReceiver barcodeFragmentReceiver;
 
@@ -130,7 +119,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         barcodeFragmentReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.p_GetBarcode(intent, false);
+                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.pGetBarcode(intent, false);
                 if (barcodeStr == null) {
                     barcodeStr = "";
                 }
@@ -164,30 +153,29 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         });
     }
     private void mGetData() {
-        List<cEnvironmentEntity> environmentEntities = cEnvironment.mGetAll(fragmentActivity);
 
-        if (environmentEntities != null) {
-            mSetEnvironmentRecycler(environmentEntities);
-        }
+        cEnvironment.pGetEnviromentsFromDatabase();
+        mSetEnvironmentRecycler();
 
         //get current environment
-        String currentEnvironment = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_ENVIRONMENT, "").trim();
-        currentEnvironmentEntity = cEnvironment.getEnvironmentByName(fragmentActivity, currentEnvironment);
-        if (currentEnvironmentEntity != null) {
-            textViewCurrentEnvironment.setText(currentEnvironmentEntity.getDescription());
+        cEnvironment.currentEnvironment = cEnvironment.getDefaultEnvironment();
+
+        if (cEnvironment.currentEnvironment != null) {
+            textViewCurrentEnvironment.setText(cEnvironment.currentEnvironment.getDescriptionStr());
         }
         else {
             textViewCurrentEnvironment.setText(R.string.current_environment_unknown);
         }
     }
 
-    private void mSetEnvironmentRecycler(List<cEnvironmentEntity> environmentEntities) {
-        environmentAdapter = new cEnvironmentAdapter(thisContext);
-        environmentRecyclerView.setHasFixedSize(false);
-        environmentRecyclerView.setAdapter(environmentAdapter);
-        environmentRecyclerView.setLayoutManager(new LinearLayoutManager(thisContext));
+    private void mSetEnvironmentRecycler() {
+        this.environmentAdapter = new cEnvironmentAdapter();
+        this.environmentRecyclerView.setHasFixedSize(false);
+        this.environmentRecyclerView.setAdapter(environmentAdapter);
+        this.environmentRecyclerView.setLayoutManager(new LinearLayoutManager(thisContext));
 
-        environmentAdapter.setEnvironments(environmentEntities);
+        // todo: check if this is neccesary
+//        this.environmentAdapter.setEnvironments(environmentEntities);
     }
     private void mHandleScan(String barcode) {
         if (mCheckEnvironmentBarcode(barcode)) {
@@ -220,14 +208,18 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
                 return;
             }
 
-            Boolean isDefault = cText.stringToBoolean(cText.cleanString(defaultFields[1]) , false);
-
             cEnvironmentEntity environmentEntity = new cEnvironmentEntity();
-            environmentEntity.setName(name);
-            environmentEntity.setDescription(description);
-            environmentEntity.setWebserviceurl(url);
-            environmentEntity.setIsdefault(isDefault);
-            cEnvironment.insert(fragmentActivity, environmentEntity);
+            environmentEntity.name = name;
+            environmentEntity.description = description;
+            environmentEntity.webserviceurl = url;
+            environmentEntity.isdefault  = false;
+
+            cEnvironment environment = new cEnvironment(environmentEntity);
+            environment.pInsertInDatabaseBln();
+
+            if (cEnvironment.allEnviroments.size() == 1 ) {
+                cEnvironment.pSetCurrentEnviroment(environment);
+            }
             mGetData();
         }
         else {
@@ -254,52 +246,45 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         return true;
     }
     private void mDoWrongBarcode() {
-        cUserInterface.doNope(environmentRecyclerView, true, false);
+        cUserInterface.pDoNope(environmentRecyclerView, true, false);
     }
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof cEnvironmentAdapter.EnvironmentViewHolder) {
-            String nameToShow = cEnvironmentAdapter.mEnvironments.get(viewHolder.getAdapterPosition()).getDescription();
-            String name = cEnvironmentAdapter.mEnvironments.get(viewHolder.getAdapterPosition()).getName();
 
-            //backup of removed item for undo purpose
-            final cEnvironmentEntity deletedLine = cEnvironmentAdapter.mEnvironments.get(viewHolder.getAdapterPosition());
-            swipedEnvironment = deletedLine;
-            final int deletedIndex = viewHolder.getAdapterPosition();
 
-            //if it's the active environment, don't delete
-            if (name.equalsIgnoreCase(currentEnvironmentEntity.getName())) {
+            final cEnvironment selectedEnviroment = cEnvironment.allEnviroments.get(viewHolder.getAdapterPosition());
+            //if it's the active environment, don't pDelete
+            if (selectedEnviroment.getNameStr().equalsIgnoreCase(cEnvironment.currentEnvironment.getNameStr())) {
                 Snackbar snackbar = Snackbar
                         .make(environmentRecyclerView, getString(R.string.message_cant_delete_active_environment), Snackbar.LENGTH_LONG );
                 snackbar.show();
-                environmentAdapter.removeItem(viewHolder.getAdapterPosition());
-                environmentAdapter.restoreItem(deletedLine, deletedIndex);
-                cUserInterface.playSound(R.raw.headsupsound, 0);
+                cUserInterface.pPlaySound(R.raw.headsupsound, 0);
                 return;
             }
 
             //remove the item from recyclerview
-            environmentAdapter.removeItem(viewHolder.getAdapterPosition());
+            environmentAdapter.removeItem(selectedEnviroment);
 
             //show snackbar with undo
-            String l_messageStr = getString(R.string.parameter1_is_removed, nameToShow);
+            String l_messageStr = getString(R.string.parameter1_is_removed, selectedEnviroment.getNameStr());
 
             Snackbar snackbar = Snackbar
                     .make(environmentRecyclerView, l_messageStr, Snackbar.LENGTH_LONG );
             snackbar.setAction(R.string.undo, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    environmentAdapter.restoreItem(deletedLine, deletedIndex);
-                    cUserInterface.playSound(R.raw.hsart, 1000);
+                    environmentAdapter.restoreItem(selectedEnviroment);
+                    cUserInterface.pPlaySound(R.raw.hsart, 1000);
                 }
             });
             snackbar.show();
-            cUserInterface.playSound(R.raw.trash, 0);
+            cUserInterface.pPlaySound(R.raw.trash, 0);
             snackbar.addCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
                     if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                        cEnvironment.delete(fragmentActivity, swipedEnvironment);
+                        selectedEnviroment.pDeleteFromDatabaseBln();
                     }
                 }
             });

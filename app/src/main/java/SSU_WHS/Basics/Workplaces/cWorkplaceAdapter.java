@@ -1,7 +1,6 @@
 package SSU_WHS.Basics.Workplaces;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +8,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
-import nl.icsvertex.scansuite.activities.pick.PickorderPickActivity;
-import nl.icsvertex.scansuite.activities.ship.ShiporderLinesActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
+import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.WorkplaceViewHolder>{
-    private Context callerContext;
+
+    //Region Public Properties
     public class WorkplaceViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewDescription;
         private TextView textViewWorkplace;
@@ -35,47 +32,54 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
         }
     }
 
-    private final LayoutInflater mInflater;
-    public static List<cWorkplaceEntity> mWorkplaces; //cached copy of pickorders
+    //End Region Public Properties
 
-    public cWorkplaceAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        callerContext = context;
+    //Region Constructor
+
+    public cWorkplaceAdapter() {
+        this.LayoutInflaterObject = LayoutInflater.from(cAppExtension.context);
     }
+
+    //Region Private Properties
+    private final LayoutInflater LayoutInflaterObject;
+    //End Region Private Propertoes
 
     @Override
     public cWorkplaceAdapter.WorkplaceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recycler_workplace, parent, false);
+        View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_workplace, parent, false);
         return new cWorkplaceAdapter.WorkplaceViewHolder(itemView);
     }
 
-    public void setWorkplaces(List<cWorkplaceEntity> workplaces) {
-        mWorkplaces = workplaces;
-        notifyDataSetChanged();
-    }
 
     @Override
     public void onBindViewHolder(cWorkplaceAdapter.WorkplaceViewHolder holder, int position) {
-        if (mWorkplaces != null) {
-            final cWorkplaceEntity l_WorkplaceEntity = mWorkplaces.get(position);
-            String l_descriptionStr = l_WorkplaceEntity.getDescription();
-            String l_workplaceStr = l_WorkplaceEntity.getWorkplace();
+        if (cWorkplace.allWorkplacesObl != null) {
+            final cWorkplace workplace = cWorkplace.allWorkplacesObl.get(position);
 
-            holder.textViewDescription.setText(l_descriptionStr);
-            holder.textViewWorkplace.setText(l_workplaceStr);
+            holder.textViewDescription.setText(workplace.getDescriptionStr());
+            holder.textViewWorkplace.setText(workplace.getWorkplaceStr());
 
+            //todo: put this back
+            //TODO: do this in a different shared way
             holder.workplaceItemLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (callerContext instanceof PickorderPickActivity) {
-                        ((PickorderPickActivity)callerContext).setChosenWorkplace(l_WorkplaceEntity);
+
+                    //Set the current workplace
+                    cWorkplace.currentWorkplace = workplace;
+
+                    if (cAppExtension.context instanceof PickorderLinesActivity) {
+                        PickorderLinesActivity.pClosePickAndDecideNextStep();
+                        return;
                     }
-                    if (callerContext instanceof SortorderLinesActivity) {
-                        ((SortorderLinesActivity)callerContext).setChosenWorkplace(l_WorkplaceEntity);
-                    }
-                    if (callerContext instanceof ShiporderLinesActivity) {
-                        ((ShiporderLinesActivity)callerContext).setChosenWorkplace(l_WorkplaceEntity);
-                    }
+
+//                    if (cAppExtension.context instanceof SortorderLinesActivity) {
+//                        SortorderLinesActivity.closeWorkplaceFragment();
+//                    }
+
+//                    if (cAppExtension.context instanceof ShiporderLinesActivity) {
+//                        ShiporderLinesActivity.closeWorkplaceFragment();
+//                    }
                 }
             });
         }
@@ -83,8 +87,8 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
 
     @Override
     public int getItemCount () {
-        if (mWorkplaces != null)
-            return mWorkplaces.size();
+        if (cWorkplace.allWorkplacesObl != null)
+            return cWorkplace.allWorkplacesObl.size();
         else return 0;
     }
 }

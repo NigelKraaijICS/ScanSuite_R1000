@@ -8,7 +8,7 @@ import android.text.format.Formatter;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
-import SSU_WHS.General.cAppExtension;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 

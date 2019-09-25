@@ -3,8 +3,8 @@ package nl.icsvertex.scansuite.fragments.dialogs;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +15,14 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.DialogFragment;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
-import SSU_WHS.General.cAppExtension;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.activities.ship.ShipDetermineTransportActivity;
 
-public class SendingFragment extends android.support.v4.app.DialogFragment implements iICSDefaultFragment {
+public class SendingFragment extends DialogFragment implements iICSDefaultFragment {
 
     ImageView imageRocket;
     ImageView imageCloud;
@@ -91,13 +92,17 @@ public class SendingFragment extends android.support.v4.app.DialogFragment imple
             @Override
             public void onClick(View v) {
                 dismiss();
-                if (cAppExtension.activity instanceof ShipDetermineTransportActivity) {
-                    try {
-                        ((ShipDetermineTransportActivity) getActivity()).trySendAgain();
-                    } catch (NullPointerException e) {
 
-                    }
-                }
+                //todo: put this back
+//                if (cAppExtension.activity instanceof ShipDetermineTransportActivity) {
+//                    try {
+//                        ((ShipDetermineTransportActivity) getActivity()).trySendAgain();
+//                    } catch (NullPointerException e) {
+//
+//                    }
+//                }
+
+
             }
         });
     }
@@ -111,7 +116,7 @@ public class SendingFragment extends android.support.v4.app.DialogFragment imple
         animationSet.addAnimation(anim1);
         imageCloud.startAnimation(animationSet);
 
-        cUserInterface.doWobble(imageRocket);
+        cUserInterface.pDoWobble(imageRocket);
 
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -169,9 +174,10 @@ public class SendingFragment extends android.support.v4.app.DialogFragment imple
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                if (cAppExtension.activity instanceof ShipDetermineTransportActivity) {
-                    ((ShipDetermineTransportActivity)getActivity()).goLines();
-                }
+                //todo: put this back
+//                if (cAppExtension.activity instanceof ShipDetermineTransportActivity) {
+//                    ((ShipDetermineTransportActivity)getActivity()).goLines();
+//                }
                 dismiss();
             }
 
@@ -191,7 +197,7 @@ public class SendingFragment extends android.support.v4.app.DialogFragment imple
                 textDots.setVisibility(View.INVISIBLE);
             }
         });
-        cUserInterface.playSound( R.raw.badsound, null);
+        cUserInterface.pPlaySound( R.raw.badsound, null);
 
         TranslateAnimation anim1 = new TranslateAnimation(0f,1400f,0f,1400f);
         anim1.setInterpolator(new LinearInterpolator());

@@ -1,9 +1,9 @@
 package SSU_WHS.Basics.Users;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
 import java.util.List;
 
@@ -19,10 +19,4 @@ public interface iUserDao {
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_USERS)
     List<cUserEntity> getAll();
-
-    @Query("SELECT * FROM " + cDatabase.TABLENAME_USERS)
-    List<cUserEntity> getLocalUsers();
-
-    @Query("SELECT * FROM " + cDatabase.TABLENAME_USERS + " WHERE Username =:username LIMIT 1")
-    cUserEntity getUserByCode(String username);
 }

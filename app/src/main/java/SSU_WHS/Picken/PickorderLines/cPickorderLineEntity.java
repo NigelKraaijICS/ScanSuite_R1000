@@ -1,12 +1,14 @@
 package SSU_WHS.Picken.PickorderLines;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
 
 @Entity(tableName="Pickorderlines")
@@ -40,7 +42,7 @@ public class cPickorderLineEntity {
     @ColumnInfo(name = "QuantityHandled")
     public Double quantityhandled;
     @ColumnInfo(name = "QuantityRejected")
-    public String quantityrejected;
+    public Double quantityrejected;
     @ColumnInfo(name = "SourceNo")
     public String sourceno;
     @ColumnInfo(name = "DestinationNo")
@@ -67,14 +69,18 @@ public class cPickorderLineEntity {
     public String printdocuments;
     @ColumnInfo(name = "Status")
     public Integer status;
+    @ColumnInfo(name = "StatusShipping")
+    public Integer statusShipping;
+    @ColumnInfo(name = "StatusPacking")
+    public Integer statusPacking;
     @ColumnInfo(name = "LineNoTake")
-    public String linenotake;
+    public int linenotake;
     @ColumnInfo(name = "QuantityTaken")
-    public String quantitytaken;
+    public double quantitytaken;
     @ColumnInfo(name = "TakenTimestamp")
     public String takentimestamp;
     @ColumnInfo(name = "Localstatus")
-    public Integer localstatus;
+    public int localstatus;
     @ColumnInfo(name = "LocalSortLocation")
     public String localsortlocation;
     @ColumnInfo(name = "ExtraField1")
@@ -98,189 +104,187 @@ public class cPickorderLineEntity {
     public cPickorderLineEntity() {
 
     }
-    public enum pickOrderTypeEnu {
-        PICK,
-        SORT
-    }
 
-    public cPickorderLineEntity(JSONObject jsonObject,
-                                String pickOrderType,
-                                final String ExtraField1,
-                                final String ExtraField2,
-                                final String ExtraField3,
-                                final String ExtraField4,
-                                final String ExtraField5,
-                                final String ExtraField6,
-                                final String ExtraField7,
-                                final String ExtraField8) {
+    public cPickorderLineEntity(JSONObject pvJsonObject,
+                                String pvPickOrderTypeStr) {
         try {
-            lineno = jsonObject.getInt(cDatabase.LINENO_NAMESTR);
-            itemno = jsonObject.getString(cDatabase.ITEMNO_NAMESTR);
-            variantcode = jsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
-            description = jsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
-            description2 = jsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
-            bincode = jsonObject.getString(cDatabase.BINCODE_NAMESTR);
-            container = jsonObject.getString(cDatabase.CONTAINER_NAMESTR);
-            containertype = jsonObject.getString(cDatabase.CONTAINERTYPE_NAMESTR);
-            containerinput = jsonObject.getString(cDatabase.CONTAINERINPUT_NAMESTR);
-            containerhandled = jsonObject.getString(cDatabase.CONTAINERHANDLED_NAMESTR);
-            quantity = jsonObject.getDouble(cDatabase.QUANTITY_NAMESTR);
-            quantityhandled = jsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
-            quantityrejected = jsonObject.getString(cDatabase.QUANTITYREJECTED_NAMESTR);
-            sourceno = jsonObject.getString(cDatabase.SOURCENO_NAMESTR);
-            destinationno = jsonObject.getString(cDatabase.DESTINATIONNO_NAMESTR);
-            ispartofmultilineorder = jsonObject.getString(cDatabase.ISPARTOFMULTILINEORDER_NAMESTR);
-            shippingadvice = jsonObject.getString(cDatabase.SHIPPINGADVICE_NAMESTR);
-            processingsequence = jsonObject.getString(cDatabase.PROCESSINGSEQUENCE_NAMESTR);
-            storesourceopdracht = jsonObject.getString(cDatabase.STORESOURCEORDER_NAMESTR);
-            storagebincode = jsonObject.getString(cDatabase.STORAGEBINCODE_NAMESTR);
-            vendoritemno = jsonObject.getString(cDatabase.VENDORITEMNO_NAMESTR);
-            vendoritemdescription = jsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
-            component10 = jsonObject.getString(cDatabase.COMPONENT10_NAMESTR);
-            //brand = jsonObject.getString(cDatabase.BRAND_NAMESTR);
-            printdocuments = jsonObject.getString(cDatabase.PRINTDOCUMENTS_NAMESTR);
-            status = jsonObject.getInt(cDatabase.STATUS_NAMESTR);
-            if (pickOrderType.equalsIgnoreCase(pickOrderTypeEnu.PICK.toString())) {
+            this.lineno = pvJsonObject.getInt(cDatabase.LINENO_NAMESTR);
+            this.itemno = pvJsonObject.getString(cDatabase.ITEMNO_NAMESTR);
+            this.variantcode = pvJsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
+            this.description = pvJsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
+            this.description2 = pvJsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
+            this.bincode = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
+            this.container = pvJsonObject.getString(cDatabase.CONTAINER_NAMESTR);
+            this.containertype = pvJsonObject.getString(cDatabase.CONTAINERTYPE_NAMESTR);
+            this.containerinput = pvJsonObject.getString(cDatabase.CONTAINERINPUT_NAMESTR);
+            this.containerhandled = pvJsonObject.getString(cDatabase.CONTAINERHANDLED_NAMESTR);
+            this.quantity = pvJsonObject.getDouble(cDatabase.QUANTITY_NAMESTR);
+            this.quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
+            this.quantityrejected = pvJsonObject.getDouble(cDatabase.QUANTITYREJECTED_NAMESTR);
+            this.sourceno = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
+            this.destinationno = pvJsonObject.getString(cDatabase.DESTINATIONNO_NAMESTR);
+            this.ispartofmultilineorder = pvJsonObject.getString(cDatabase.ISPARTOFMULTILINEORDER_NAMESTR);
+            this.shippingadvice = pvJsonObject.getString(cDatabase.SHIPPINGADVICE_NAMESTR);
+            this.processingsequence = pvJsonObject.getString(cDatabase.PROCESSINGSEQUENCE_NAMESTR);
+            this.storesourceopdracht = pvJsonObject.getString(cDatabase.STORESOURCEORDER_NAMESTR);
+            this.storagebincode = pvJsonObject.getString(cDatabase.STORAGEBINCODE_NAMESTR);
+            this.vendoritemno = pvJsonObject.getString(cDatabase.VENDORITEMNO_NAMESTR);
+            this.vendoritemdescription = pvJsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
+            this.component10 = pvJsonObject.getString(cDatabase.COMPONENT10_NAMESTR);
+
+            this.printdocuments = pvJsonObject.getString(cDatabase.PRINTDOCUMENTS_NAMESTR);
+            this.status = pvJsonObject.getInt(cDatabase.STATUS_NAMESTR);
+            this.statusShipping = pvJsonObject.getInt(cDatabase.STATUSSHIPPING_NAMESTR);
+            this.statusPacking = pvJsonObject.getInt(cDatabase.STATUSPACKING_NAMESTR);
+
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
                 switch (status) {
                     case cPickorderLine.STATUS_STEP1:
-                        localstatus = cPickorderLine.LOCALSTATUS_NEW;
+                        this.localstatus = cPickorderLine.LOCALSTATUS_NEW;
                         break;
-                    case cPickorderLine.STATUS_STEP1_TOREPORT:
-                        localstatus = cPickorderLine.LOCALSTATUS_DONE_SENT;
+
+                    case cPickorderLine.STATUS_STEP1_PICKED:
+                        this.localstatus = cPickorderLine.LOCALSTATUS_DONE_NOTSENT;
                         break;
+
                     default:
-                        localstatus = cPickorderLine.LOCALSTATUS_DONE_SENT;
+                        this.localstatus = cPickorderLine.LOCALSTATUS_DONE_SENT;
                         break;
                 }
             }
-            else if (pickOrderType.equalsIgnoreCase(pickOrderTypeEnu.SORT.toString())) {
-                linenotake = jsonObject.getString(cDatabase.LINENOTAKE_NAMESTR);
-                quantitytaken = jsonObject.getString(cDatabase.QUANTITYTAKEN_NAMESTR);
-                takentimestamp = jsonObject.getString(cDatabase.TAKENTIMESTAMP_NAMESTR);
-                //localstatus = cPickorderLine.LOCALSTATUS_NEW;
-                switch (status) {
+
+
+            else if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.SORT.toString())) {
+
+                this.linenotake = pvJsonObject.getInt(cDatabase.LINENOTAKE_NAMESTR);
+                this.quantitytaken = pvJsonObject.getDouble(cDatabase.QUANTITYTAKEN_NAMESTR);
+                this.takentimestamp = pvJsonObject.getString(cDatabase.TAKENTIMESTAMP_NAMESTR);
+
+                switch (this.status) {
                     case cPickorderLine.STATUS_STEP1:
-                        localstatus = cPickorderLine.LOCALSTATUS_NEW;
+                        this.localstatus = cPickorderLine.LOCALSTATUS_NEW;
                         break;
-                    case cPickorderLine.STATUS_STEP1_TOREPORT:
-                        localstatus = cPickorderLine.LOCALSTATUS_DONE_SENT;
+                    case cPickorderLine.STATUS_STEP1_PICKED:
+                        this.localstatus = cPickorderLine.LOCALSTATUS_DONE_NOTSENT;
                         break;
                     default:
-                        localstatus = cPickorderLine.LOCALSTATUS_DONE_SENT;
+                        this.localstatus = cPickorderLine.LOCALSTATUS_DONE_SENT;
                         break;
                 }
             }
-            //region extrafield1
-            if (!ExtraField1.trim().isEmpty()) {
-                try {
-                    extrafield1 = jsonObject.getString(ExtraField1);
-                }
-                catch (JSONException e) {
-                    extrafield1 = "";
-                }
-            }
-            else {
-                extrafield1 = "";
-            }
-            //endregion extrafield1
 
-            //region extrafield2
-            if (!ExtraField2.trim().isEmpty()) {
-                try {
-                    extrafield2 = jsonObject.getString(ExtraField2);
-                }
-                catch (JSONException e) {
-                    extrafield2 = "";
-                }
-            }
-            else {
-                extrafield2 = "";
-            }
-            //endregion extrafield2
 
-            //region extrafield3
-            if (!ExtraField3.trim().isEmpty()) {
+            //region extraField1Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {
                 try {
-                    extrafield3 = jsonObject.getString(ExtraField3);
+                    this.extrafield1 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD1());
                 }
                 catch (JSONException e) {
-                    extrafield3 = "";
+                    this.extrafield1 = "";
                 }
             }
             else {
-                extrafield3 = "";
+                this.extrafield1 = "";
             }
-            //endregion extrafield3
+            //endregion extraField1Str
 
-            //region extrafield4
-            if (!ExtraField4.trim().isEmpty()) {
+            //region extraField2Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD2().trim().isEmpty()) {
                 try {
-                    extrafield4 = jsonObject.getString(ExtraField4);
+                    this.extrafield2 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD2());
                 }
                 catch (JSONException e) {
-                    extrafield4 = "";
+                    this.extrafield2 = "";
                 }
             }
             else {
-                extrafield4 = "";
+                this.extrafield2 = "";
             }
-            //endregion extrafield4
+            //endregion extraField2Str
 
-            //region extrafield5
-            if (!ExtraField5.trim().isEmpty()) {
+            //region extraField3Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD3().trim().isEmpty()) {
                 try {
-                    extrafield5 = jsonObject.getString(ExtraField5);
+                    this.extrafield3 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD3());
                 }
                 catch (JSONException e) {
-                    extrafield5 = "";
+                    this.extrafield3 = "";
                 }
             }
             else {
-                extrafield5 = "";
+                this.extrafield3 = "";
             }
-            //endregion extrafield5
+            //endregion extraField3Str
 
-            //region extrafield6
-            if (!ExtraField6.trim().isEmpty()) {
+            //region extraField4Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD4().trim().isEmpty()) {
                 try {
-                    extrafield6 = jsonObject.getString(ExtraField6);
+                    this.extrafield4 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD4());
                 }
                 catch (JSONException e) {
-                    extrafield6 = "";
+                    this.extrafield4 = "";
                 }
             }
             else {
-                extrafield6 = "";
+                this.extrafield4 = "";
             }
-            //endregion extrafield6
+            //endregion extraField4Str
 
-            //region extrafield7
-            if (!ExtraField7.trim().isEmpty()) {
+            //region extraField5Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD5().trim().isEmpty()) {
                 try {
-                    extrafield7 = jsonObject.getString(ExtraField7);
+                    this.extrafield5 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD5());
                 }
                 catch (JSONException e) {
-                    extrafield7 = "";
+                    this.extrafield5 = "";
                 }
             }
             else {
-                extrafield7 = "";
+                this.extrafield5 = "";
             }
-            //endregion extrafield7
+            //endregion extraField5Str
 
-            //region extrafield8
-            if (!ExtraField8.trim().isEmpty()) {
+            //region extraField6Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD6().trim().isEmpty()) {
                 try {
-                    extrafield8 = jsonObject.getString(ExtraField8);
+                    this.extrafield6 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD6());
                 }
                 catch (JSONException e) {
-                    extrafield8 = "";
+                    this.extrafield6 = "";
                 }
             }
             else {
-                extrafield8 = "";
+                this.extrafield6 = "";
             }
-            //endregion extrafield8
+            //endregion extraField6Str
+
+            //region extraField7Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD7().trim().isEmpty()) {
+                try {
+                    this.extrafield7 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD7());
+                }
+                catch (JSONException e) {
+                    this.extrafield7 = "";
+                }
+            }
+            else {
+                this.extrafield7 = "";
+            }
+            //endregion extraField7Str
+
+            //region extraField8Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD8().trim().isEmpty()) {
+                try {
+                    this.extrafield8 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD8());
+                }
+                catch (JSONException e) {
+                    this.extrafield8 = "";
+                }
+            }
+            else {
+                this.extrafield8 = "";
+            }
+            //endregion extraField8Str
 
 
         } catch (JSONException e) {
@@ -288,44 +292,46 @@ public class cPickorderLineEntity {
         }
     }
 
-    public Integer getRecordid() {return this.recordid;}
-    public Integer getLineNo() {return this.lineno;}
-    public String getItemno() {return this.itemno;}
-    public String getVariantcode() {return this.variantcode;}
-    public String getDescription() {return this.description;}
-    public String getDescription2() {return this.description2;}
-    public String getBincode() {return this.bincode;}
-    public String getContainer() {return this.container;}
-    public String getContainertype() {return this.containertype;}
-    public String getContainerinput() {return this.containerinput;}
-    public String getContainerhandled() {return this.containerhandled;}
-    public Double getQuantity() {return this.quantity;}
-    public Double getQuantityhandled() {return this.quantityhandled;}
-    public String getQuantityrejected() {return this.quantityrejected;}
-    public String getSourceno() {return this.sourceno;}
-    public String getDestinationno() {return this.destinationno;}
-    public String getIspartofmultilineorder() {return this.ispartofmultilineorder;}
-    public String getShippingadvice() {return this.shippingadvice;}
-    public String getProcessingsequence() {return this.processingsequence;}
-    public String getStoresourceopdracht() {return this.storesourceopdracht;}
-    public String getStoragebincode() {return this.storagebincode;}
-    public String getVendoritemno() {return this.vendoritemno;}
-    public String getVendoritemdescription() {return this.vendoritemdescription;}
-    public String getComponent10() {return this.component10;}
-    //public String getBrand() {return this.brand;}
-    public String getPrintdocuments() {return this.printdocuments;}
-    public Integer getStatus() {return this.status;}
-    public String getLinenotake() {return this.linenotake;}
-    public String getQuantitytaken() {return this.quantitytaken;}
-    public String getTakentimestamp() {return this.takentimestamp;}
-    public Integer getLocalstatus() {return this.localstatus;}
-    public String getLocalSortLocation() {return this.localsortlocation;}
-    public String getExtrafield1() {return this.extrafield1;}
-    public String getExtrafield2() {return this.extrafield2;}
-    public String getExtrafield3() {return this.extrafield3;}
-    public String getExtrafield4() {return this.extrafield4;}
-    public String getExtrafield5() {return this.extrafield5;}
-    public String getExtrafield6() {return this.extrafield6;}
-    public String getExtrafield7() {return this.extrafield7;}
-    public String getExtrafield8() {return this.extrafield8;}
+    public Integer getRecordidInt() {return this.recordid;}
+    public Integer getLineNoInt() {return this.lineno;}
+    public String getItemNoStr() {return this.itemno;}
+    public String getVariantCodeStr() {return this.variantcode;}
+    public String getDescriptionStr() {return this.description;}
+    public String getDescription2Str() {return this.description2;}
+    public String getBincodeStr() {return this.bincode;}
+    public String getContainerStr() {return this.container;}
+    public String getContainerTypeStr() {return this.containertype;}
+    public String getContainerinputsStr() {return this.containerinput;}
+    public String getContainerHandledStr() {return this.containerhandled;}
+    public Double getQuantityDbl() {return this.quantity;}
+    public Double getQuantityHandledDbl() {return this.quantityhandled;}
+    public Double getQuantityRejectedDbl() {return this.quantityrejected;}
+    public String getSourceNoStr() {return this.sourceno;}
+    public String getDestinationNoStr() {return this.destinationno;}
+    public String getIspartOfMultilLneOrderStr() {return this.ispartofmultilineorder;}
+    public String getShippingAdviceStr() {return this.shippingadvice;}
+    public String getProcessingSequenceStr() {return this.processingsequence;}
+    public String getStoreSourceOpdrachtStr() {return this.storesourceopdracht;}
+    public String getStorageBinCodeStr() {return this.storagebincode;}
+    public String getVendorItemNoStr() {return this.vendoritemno;}
+    public String getVendorItemDescriptionStr() {return this.vendoritemdescription;}
+    public String getComponent10Str() {return this.component10;}
+    public String getBrandStr(){return  this.brand;}
+    public String getPrintdocumentsStr() {return this.printdocuments;}
+    public int getStatusInt() {return this.status;}
+    public int getStatusShippingInt() {return this.statusShipping;}
+    public int getStatusPackingInt() {return this.statusPacking;}
+    public int getLinenoTakeInt() {return this.linenotake;}
+    public Double getQuantityTakenDbl() {return this.quantitytaken;}
+    public String getTakenTimestampStr() {return this.takentimestamp;}
+    public int getLocalstatusInt() {return this.localstatus;}
+    public String getLocalSortLocationStr() {return this.localsortlocation;}
+    public String getExtraField1Str() {return this.extrafield1;}
+    public String getExtraField2Str() {return this.extrafield2;}
+    public String getExtraField3Str() {return this.extrafield3;}
+    public String getExtraField4Str() {return this.extrafield4;}
+    public String getExtraField5Str() {return this.extrafield5;}
+    public String getExtraField6Str() {return this.extrafield6;}
+    public String getExtraField7Str() {return this.extrafield7;}
+    public String getExtraField8Str() {return this.extrafield8;}
 }

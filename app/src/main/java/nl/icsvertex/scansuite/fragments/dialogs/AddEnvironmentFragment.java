@@ -6,10 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,21 +20,20 @@ import ICS.Environments.cEnvironmentEntity;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScanDefinitions;
 import ICS.Utils.cUserInterface;
-import SSU_WHS.General.cAppExtension;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;
 
 public class AddEnvironmentFragment extends DialogFragment implements iICSDefaultFragment {
+
     Button buttonCancel;
     Button buttonSave;
     EditText editTextEnvironmentName;
     EditText editTextEnvironmentDescription;
     EditText editTextEnvironmentUrl;
-
     DialogFragment thisFragment;
-    FragmentActivity fragmentActivity;
-
     IntentFilter barcodeFragmentIntentFilter;
+
     private BroadcastReceiver barcodeFragmentReceiver;
 
     public AddEnvironmentFragment() {
@@ -49,6 +47,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
         thisFragment = this;
         return rootview;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mFragmentInitialize();
@@ -61,9 +60,9 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         super.onPause();
     }
+
     @Override
     public void onDestroy() {
         try {
@@ -73,6 +72,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
         }
         super.onDestroy();
     }
+
     @Override
     public void onResume() {
         getActivity().registerReceiver(barcodeFragmentReceiver, barcodeFragmentIntentFilter);
@@ -90,6 +90,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
         mBarcodeReceiver();
         mSetListeners();
     }
+
     @Override
     public void mFindViews() {
         buttonCancel = getView().findViewById(R.id.buttonCancel);
@@ -98,6 +99,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
         editTextEnvironmentDescription = getView().findViewById(R.id.editTextEnvironmentDescription);
         editTextEnvironmentUrl = getView().findViewById(R.id.editTextEnvironmentUrl);
     }
+
     @Override
     public void mSetViewModels() {
 
@@ -107,11 +109,13 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     public void mFieldsInitialize() {
 
     }
+
     @Override
     public void mSetListeners() {
         mSetCancelListener();
         mSetSaveListener();
     }
+
     private void mBarcodeReceiver() {
         barcodeFragmentIntentFilter = new IntentFilter();
         for (String str : cBarcodeScanDefinitions.getBarcodeActions()) {
@@ -124,7 +128,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
         barcodeFragmentReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.p_GetBarcode(intent, false);
+                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.pGetBarcode(intent, false);
                 if (barcodeStr == null) {
                     barcodeStr = "";
                 }
@@ -150,27 +154,29 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
 
                 String name = editTextEnvironmentName.getText().toString().trim();
                 if (name.isEmpty()) {
-                    cUserInterface.doNope(editTextEnvironmentName, true, false);
+                    cUserInterface.pDoNope(editTextEnvironmentName, true, false);
                     return;
                 }
                 String description = editTextEnvironmentDescription.getText().toString().trim();
                 if (description.isEmpty()) {
-                    cUserInterface.doNope(editTextEnvironmentDescription, true, false);
+                    cUserInterface.pDoNope(editTextEnvironmentDescription, true, false);
                     return;
                 }
                 String url = editTextEnvironmentUrl.getText().toString().trim();
                 if (url.isEmpty()) {
-                    cUserInterface.doNope(editTextEnvironmentUrl, true, false);
+                    cUserInterface.pDoNope(editTextEnvironmentUrl, true, false);
                     return;
                 }
                 cEnvironmentEntity environmentEntity = new cEnvironmentEntity();
-                environmentEntity.setName(name);
-                environmentEntity.setDescription(description);
-                environmentEntity.setWebserviceurl(url);
-                environmentEntity.setIsdefault(false);
-                cEnvironment.insert(fragmentActivity, environmentEntity);
+                environmentEntity.name = name;
+                environmentEntity.description = description;
+                environmentEntity.webserviceurl =url;
+                environmentEntity.isdefault = false;
 
-                cUserInterface.showToastMessage( getString(R.string.environment_parameter1_saved, description), null);
+                cEnvironment environment = new cEnvironment(environmentEntity);
+                environment.pInsertInDatabaseBln();
+
+                cUserInterface.pShowToastMessage( getString(R.string.environment_parameter1_saved, description), null);
                 if (cAppExtension.context instanceof MainDefaultActivity) {
                     ((MainDefaultActivity)cAppExtension.context).setAddedEnvironment();
                 }
@@ -199,7 +205,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
         }
     }
     private void mDoWrongBarcode() {
-        cUserInterface.doNope(buttonSave, true, false);
+        cUserInterface.pDoNope(buttonSave, true, false);
     }
 
 }

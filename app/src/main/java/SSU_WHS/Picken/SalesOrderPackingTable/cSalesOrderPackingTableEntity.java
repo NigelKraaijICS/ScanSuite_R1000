@@ -1,41 +1,45 @@
 package SSU_WHS.Picken.SalesOrderPackingTable;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.annotation.NonNull;
 
 import SSU_WHS.General.cDatabase;
 
     @Entity(tableName = cDatabase.TABLENAME_SALESORDERPACKINGTABLE, primaryKeys = {"SalesOrder"})
+
     public class cSalesOrderPackingTableEntity {
+
+        //Region Public Properties
+
         @NonNull
         @ColumnInfo(name="SalesOrder")
         public String salesorder;
         @NonNull
-        @ColumnInfo(name="Packingtable")
-        public String packingtable;
-
-        //empty constructor
-        public cSalesOrderPackingTableEntity() {
-
-        }
-
-        @NonNull
-        public String getSalesorder() {
+        public String getSalesOrderStr() {
             return salesorder;
         }
 
-        public void setSalesorder(@NonNull String salesorder) {
-            this.salesorder = salesorder;
-        }
-
-        public String getPackingtable() {
+        @NonNull
+        @ColumnInfo(name="Packingtable")
+        public String packingtable;
+        public String getPackingTableStr() {
             return packingtable;
         }
 
-        public void setPackingtable(String packingtable) {
-            this.packingtable = packingtable;
+        // End Region Public Properties
+
+        // Region Constructor
+
+        cSalesOrderPackingTableEntity(){
+            // empty constructor
         }
+
+        public cSalesOrderPackingTableEntity(String pvSalesOrderStr, String pvPackingTableStr) {
+            this.salesorder = pvSalesOrderStr;
+            this.packingtable = pvPackingTableStr;
+        }
+                //End Region Constructor
 
     }
 

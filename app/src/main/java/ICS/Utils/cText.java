@@ -107,6 +107,25 @@ public class cText {
                 return defaultBln;
         }
     }
+
+    public static Long stringToLong(String pvInput) {
+        Long lResultLng;
+        if (pvInput.trim().isEmpty()) {
+            return 0L;
+        }
+        try {
+            lResultLng = Long.parseLong(pvInput);
+        } catch (NumberFormatException e) {
+            lResultLng = 0L;
+        }
+        return lResultLng;
+    }
+
+    public static String longToString(Long inputLng) {
+        String helpStr = Long.toString(inputLng);
+        return !helpStr.contains(".") ? helpStr : helpStr.replaceAll("0*$", "").replaceAll("\\.$", "");
+    }
+
     public static String addSingleQuotes(String inputStr) {
         return "'" + inputStr + "'";
     }

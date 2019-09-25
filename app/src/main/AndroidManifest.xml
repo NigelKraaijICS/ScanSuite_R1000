@@ -16,7 +16,7 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:name="SSU_WHS.General.cAppExtension"
+        android:name=".cAppExtension"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,20 +24,7 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".activities.sort.SortorderPackingTableActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activities.sort.SortorderSelectActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.general.MenuActivity" />
-        </activity>
+
         <activity
             android:name=".activities.general.MainDefaultActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -54,33 +41,6 @@
             android:parentActivityName=".activities.general.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activities.inventory.InventoryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.general.MenuActivity" />
-        </activity>
-        <activity
-            android:name=".activities.sort.SortorderLinesActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.sort.SortorderSelectActivity" />
-        </activity>
-        <activity
-            android:name=".activities.sort.SortorderSortActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity" />
-        </activity>
         <activity
             android:name=".activities.general.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -116,32 +76,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity" />
-        </activity>
-        <activity
-            android:name=".activities.ship.ShiporderSelectActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.general.MenuActivity" />
-        </activity>
-        <activity
-            android:name=".activities.ship.ShiporderLinesActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.ship.ShiporderSelectActivity" />
-        </activity>
-        <activity android:name=".activities.ship.ShipDetermineTransportActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.ship.ShiporderLinesActivity" />
         </activity>
         <meta-data
             android:name="io.fabric.ApiKey"

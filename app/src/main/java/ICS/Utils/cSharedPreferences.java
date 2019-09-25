@@ -1,40 +1,60 @@
 package ICS.Utils;
 
 import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
+import android.preference.PreferenceManager;
 
-import SSU_WHS.General.cAppExtension;
+import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
+import nl.icsvertex.scansuite.R;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class cSharedPreferences {
-    public static void setSharedPreferenceString(String pv_KeyStr, String pv_ValueStr) {
-        SharedPreferences l_sharedPref = cAppExtension.context.getSharedPreferences(cPublicDefinitions.SHAREDPREFERENCE_FILE, MODE_PRIVATE);
-        SharedPreferences.Editor l_editorEdt = l_sharedPref.edit();
-        l_editorEdt.putString(pv_KeyStr, pv_ValueStr);
-        //commit is direct
-        //l_editorEdt.commit();
-        //apply is asynch
-        l_editorEdt.apply();
+
+    public static Boolean userFilterBln(){
+       return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key), false);
     }
-    public static String getSharedPreferenceString(String pv_KeyStr, String pv_DefaultValueStr) {
-        SharedPreferences l_sharedPref = cAppExtension.context.getSharedPreferences(cPublicDefinitions.SHAREDPREFERENCE_FILE, MODE_PRIVATE);
-        String l_ResultStr = l_sharedPref.getString(pv_KeyStr, pv_DefaultValueStr);
-        return l_ResultStr;
+
+    public static Boolean showProcessedWaitBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_processing_key), false);
     }
-    public static void setSharedPreferenceBoolean(String pv_KeyStr, Boolean pv_ValueBln) {
-        SharedPreferences l_sharedPref = cAppExtension.context.getSharedPreferences(cPublicDefinitions.SHAREDPREFERENCE_FILE, MODE_PRIVATE);
-        SharedPreferences.Editor l_editorEdt = l_sharedPref.edit();
-        l_editorEdt.putBoolean(pv_KeyStr, pv_ValueBln);
-        //commit is direct
-        //l_editorEdt.commit();
-        //apply is asynch
-        l_editorEdt.apply();
+
+    public static Boolean showSingleArticlesBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_singlearticles_key), false);
     }
-    public static Boolean getDefaultSharedPreferenceBoolean(String pv_KeyStr, Boolean pv_DefaultValueBln) {
-        SharedPreferences l_sharedPref = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
-        Boolean l_ResultBln = l_sharedPref.getBoolean(pv_KeyStr, pv_DefaultValueBln);
-        return l_ResultBln;
+
+    public static Boolean showAssignedToMeBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_my_orders_key), false);
+    }
+
+    public static Boolean showAssignedToOthersBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_their_orders_key), false);
+    }
+
+    public static Boolean showNotAssignedBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_nobodys_orders_key), false);
+    }
+
+    private static SharedPreferences gSharedPreferences;
+
+    private static SharedPreferences getSharedPreferences() {
+        if (gSharedPreferences == null) {
+            gSharedPreferences = cAppExtension.context.getSharedPreferences(cPublicDefinitions.SHAREDPREFERENCE_FILE, MODE_PRIVATE);
+        }
+        return gSharedPreferences;
+    }
+
+    public static void pSetSharedPreferenceString(String pvKeyStr, String pvValueStr) {
+        SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
+        editor.putString(pvKeyStr, pvValueStr);
+        editor.apply();
+    }
+    private static String mGetSharedPreferenceString(String pvKeyStr, String pvDefaultValueStr) {
+
+        return cSharedPreferences.getSharedPreferences().getString(pvKeyStr, pvDefaultValueStr);
+    }
+    private static Boolean mGetDefaultSharedPreferenceBoolean(String pv_KeyStr, Boolean pv_DefaultValueBln) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
+        return sharedPreferences.getBoolean(pv_KeyStr, pv_DefaultValueBln);
     }
 }

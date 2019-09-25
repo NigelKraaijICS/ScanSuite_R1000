@@ -1,33 +1,27 @@
 package SSU_WHS.Basics.ShippingAgentServiceShippingUnits;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cShippingAgentServiceShippingUnitViewModel extends AndroidViewModel {
-    private cShippingAgentServiceShippingUnitRepository mRepository;
 
-    public cShippingAgentServiceShippingUnitViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cShippingAgentServiceShippingUnitRepository Repository;
+    //End Region Public Properties
 
-        mRepository = new cShippingAgentServiceShippingUnitRepository(application);
+    //Region Constructor
+    public cShippingAgentServiceShippingUnitViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cShippingAgentServiceShippingUnitRepository(pvApplication);
     }
+    //End Region Constructor
 
-    public void insert(cShippingAgentServiceShippingUnitEntity shippingAgentServiceShippingUnitEntity) {mRepository.insert(shippingAgentServiceShippingUnitEntity);}
+    //Region Public Methods
+    public cWebresult pGetShippingAgentServiceShippingUnitsFromWebserviceWrs() {return this.Repository.pGetShippingAgentServiceShippingUnitsFromWebserviceWrs(); }
+    public void insert(cShippingAgentServiceShippingUnitEntity pvShippingAgentServiceShippingUnitEntity) {Repository.pInsert(pvShippingAgentServiceShippingUnitEntity);}
+    public void deleteAll() {Repository.pDeleteAll();}
 
-    public LiveData<List<cShippingAgentServiceShippingUnitEntity>> getShippingAgentServicesShippingUnits(Boolean forcerefresh) {return mRepository.getShippingAgentServiceShippingUnits(forcerefresh);}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public List<cShippingAgentServiceShippingUnitEntity> getShippingUnitsByAgentAndService(String shippingAgent, String shippingService) {return mRepository.getShippingUnitsByAgentAndService(shippingAgent, shippingService);}
-
-    public LiveData<List<cShippingAgentServiceShippingUnitEntity>> getShippingUnitsByAgentAndServiceLive(String shippingAgent, String shippingService) {return mRepository.getShippingUnitsByAgentAndServiceLive(shippingAgent, shippingService);}
-
-    public void updateShippingUnitQuantityUsed(Integer newQuantity,cShippingAgentServiceShippingUnitEntity shippingAgentServiceShippingUnitEntity) {mRepository.updateShippingUnitQuantityUsed(newQuantity,shippingAgentServiceShippingUnitEntity);}
-
-    public void resetShippingUnitQuantityUsed() {mRepository.resetShippingUnitQuantityUsed();}
-
-    public cShippingAgentServiceShippingUnitEntity getShippingUnitsByAgentAndServiceAndShippingUnit(String shippingAgent, String shippingService, String shippingUnit) {return mRepository.getShippingUnitsByAgentAndServiceAndShippingUnit(shippingAgent, shippingService, shippingUnit);}
+    //End Region Public Methods
 }

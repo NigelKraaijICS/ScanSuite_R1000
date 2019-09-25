@@ -5,10 +5,10 @@
     android:id="@+id/pickorderLineItemLinearLayout"
     style="@style/pickorderLineRecyclerLinearLayout"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewArticleImage"
             android:id="@+id/imageViewPickorderLine"
             app:srcCompat="@drawable/ic_menu_demo"
@@ -50,5 +50,5 @@
             app:layout_constraintStart_toStartOf="@id/textViewPickorderLine"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

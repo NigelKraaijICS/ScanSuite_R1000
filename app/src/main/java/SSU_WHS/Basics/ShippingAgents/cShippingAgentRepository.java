@@ -1,12 +1,10 @@
 package SSU_WHS.Basics.ShippingAgents;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
+
 import android.os.AsyncTask;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.ksoap2.serialization.PropertyInfo;
 
 import java.util.ArrayList;
@@ -18,75 +16,57 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cShippingAgentRepository {
-    private iShippingAgentDao shippingAgentDao;
-    private cWebresult webResult;
 
-    cShippingAgentRepository(Application application) {
-        acScanSuiteDatabase db = acScanSuiteDatabase.getDatabase(application);
-        shippingAgentDao = db.shippingAgentDao();
+    //Region Public Properties
+    public iShippingAgentDao shippingAgentDao;
+    //End Region Public Properties
+
+    //Region Private Properties
+    private acScanSuiteDatabase db;
+    //End Region Private Properties
+
+    //Region Constructor
+    cShippingAgentRepository(Application pvApplication) {
+        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.shippingAgentDao = db.shippingAgentDao();
     }
+    //End Region Constructor
 
-    public LiveData<List<cShippingAgentEntity>> getShippingAgents(final Boolean forcerefresh) {
+    //Region Public Methods
 
-        final MutableLiveData<List<cShippingAgentEntity>> data = new MutableLiveData<>();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    public cWebresult pGetShippingAgentsFromWebserviceWrs() {
 
-                List<cShippingAgentEntity> shippingAgentsObl = new ArrayList<>();
-                if (forcerefresh) {
-                    try {
-                        deleteAll();
-                        List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
 
-                        webResult = new cWebresult().mGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETSHIPPINGAGENTS, l_PropertyInfoObl);
-                        List<JSONObject> myList = webResult.getResultDtt();
-                        for (int i = 0; i < myList.size(); i++) {
-                            JSONObject jsonObject;
-                            jsonObject = myList.get(i);
-
-                            cShippingAgentEntity shippingAgentEntity = new cShippingAgentEntity(jsonObject);
-                            insert(shippingAgentEntity);
-                            shippingAgentsObl.add(shippingAgentEntity);
-                        }
-                        data.postValue(shippingAgentsObl);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }//forcerefresh
-                else {
-                    shippingAgentsObl = getAll();
-                    data.postValue(shippingAgentsObl);
-                }
-            } //run
-        }).start(); //Thread
-        return data;
-    }
-    public List<cShippingAgentEntity> getAll() {
-        List<cShippingAgentEntity> shippingAgentEntitiesObl = null;
         try {
-            shippingAgentEntitiesObl = new getAllAsyncTask(shippingAgentDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            webResultWrs = new cShippingAgentRepository.shippingAgentsFromWebserviceGetAsyncTask().execute().get();
         } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
             e.printStackTrace();
         }
-        return shippingAgentEntitiesObl;
+        return webResultWrs;
     }
-    private static class getAllAsyncTask extends AsyncTask<Void, Void, List<cShippingAgentEntity>> {
-        private iShippingAgentDao mAsyncTaskDao;
-
-        getAllAsyncTask(iShippingAgentDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cShippingAgentEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getAll();
-        }
-    }
-    public void deleteAll () {
-        new deleteAllAsyncTask(shippingAgentDao).execute();
+    public void pInsert(cShippingAgentEntity shippingAgentEntity) {
+        new  cShippingAgentRepository.insertAsyncTask(shippingAgentDao).execute(shippingAgentEntity);
     }
 
+    public void pDeleteAll() {
+        new cShippingAgentRepository.deleteAllAsyncTask(shippingAgentDao).execute();
+    }
+    //End Region Public Methods
+
+    //Region Private Methods
     private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private iShippingAgentDao mAsyncTaskDao;
 
@@ -98,9 +78,6 @@ public class cShippingAgentRepository {
             mAsyncTaskDao.deleteAll();
             return null;
         }
-    }
-    public void insert(cShippingAgentEntity shippingAgentEntity) {
-        new insertAsyncTask(shippingAgentDao).execute(shippingAgentEntity);
     }
     private static class insertAsyncTask extends AsyncTask<cShippingAgentEntity, Void, Void> {
         private iShippingAgentDao mAsyncTaskDao;
@@ -114,25 +91,24 @@ public class cShippingAgentRepository {
             return null;
         }
     }
-    public cShippingAgentEntity getShippingAgentByAgentName(String agentname) {
-        cShippingAgentEntity shippingAgentEntity = null;
-        try {
-            shippingAgentEntity = new getShippingAgentByAgentNameAsyncTask(shippingAgentDao).execute(agentname).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return shippingAgentEntity;
-    }
-    private static class getShippingAgentByAgentNameAsyncTask extends AsyncTask<String, Void, cShippingAgentEntity> {
-        private iShippingAgentDao mAsyncTaskDao;
 
-        getShippingAgentByAgentNameAsyncTask(iShippingAgentDao dao) { mAsyncTaskDao = dao; }
+    private static class shippingAgentsFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
-        protected cShippingAgentEntity doInBackground(final String... params) {
-            return mAsyncTaskDao.getShippingAgentEntityByAgentName(params[0]);
+        protected cWebresult doInBackground(final Void... params) {
+            cWebresult l_WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+            try {
+                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETSHIPPINGAGENTS, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                l_WebresultWrs.setResultBln(false);
+                l_WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return l_WebresultWrs;
         }
     }
 
+    //End Region Private Methods
 }

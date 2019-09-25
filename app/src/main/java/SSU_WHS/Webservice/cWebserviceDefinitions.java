@@ -7,7 +7,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETSETTINGS = "p_InstellingenGetJsonStr";
     public static String WEBMETHOD_GET14SETTINGS = "p_Instellingen14GetJsonStr";
     public static String WEBMETHOD_GETBARCODELAYOUTS = "p_BarcodelayoutGetJsonStr";
-    public static String WEBMETHOD_GETAUTHORISATIONS = "p_GebruikerVestigingAutorisatieGetJsonStr";
+    public static String WEBMETHOD_GETAUTHORISATIONSFORUSERINLOCATION = "p_GebruikerVestigingAutorisatieGetJsonStr";
     //Used to be different for Android
     //public static String WEBMETHOD_GETUSERS = "p_AndroidGebruikersGetJsonStr";
     public static String WEBMETHOD_GETUSERS = "p_GebruikersGetJsonStr";
@@ -22,7 +22,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETWAREHOUSELOCATIONS = "p_MagazijnlocatieGetSubsetJsonStr";
     public static String WEBMETHOD_GETPICKORDERBARCODES = "p_PickorderBarcodesGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINEBARCODES = "p_PickorderRegelBarcodesGetJsonStr";
-    public static String WEBMETHOD_GETARTICLEIMAGES = "p_ArtikelImageGetJsonStr";
+    public static String WEBMETHOD_GETARTICLEIMAGE = "p_ArtikelImageGetJsonStr";
     public static String WEBMETHOD_PICKORDERLINE_HANDLED = "p_PickorderRegelTakeHandledJsonStr";
     public static String WEBMETHOD_GETPICKORDERCOMMENTS = "p_PickorderCommentsGetJsonStr";
     public static String WEBMETHOD_PICKORDERSTEPHANDLED = "p_PickorderStapHandledJsonStr";
@@ -43,6 +43,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETSORTLOCATIONADVICE = "p_WarehouseopdrachtSortLocationAdviceGetJsonStr";
     public static String WEBMETHOD_GETARTICLEIMAGESMULTIPLE = "p_ArtikelenImageGetJsonStr";
     public static String WEBMETHOD_USERLOGIN = "p_GebruikerLoginJsonStr";
+    public static String WEBMETHOD_GETITEMPROPERTY = "p_ItemPropertyGetJsonStr";
     //endregion Methods
 
     //region Properties
@@ -50,12 +51,13 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_USERNAME = "pv_UsernameStr";
     public static String WEBPROPERTY_USERNAMEDUNGLISH = "pv_GebruikersnameStr";
     public static String WEBPROPERTY_USERNAMEDUTCH = "pv_GebruikersnaamStr";
-    public static String WEBPROPERTY_BRANCH = "pv_VestigingStr";
+    public static String WEBPROPERTY_LOCATION_NL = "pv_VestigingStr";
     public static String WEBPROPERTY_INPROGRESS = "pv_InBehandelingBln";
     public static String WEBPROPERTY_SEARCHTEXT = "pv_ZoekTekstStr";
     public static String WEBPROPERTY_MAINTYPE = "pv_MainTypeStr";
     public static String WEBPROPERTY_ORDERNUMBER = "pv_OpdrachtnummerStr";
     public static String WEBPROPERTY_SOURCENO = "pv_SourceNoStr";
+
 
     public static String WEBPROPERTY_ACTIONTYPECODE = "pv_ActiontypecodeStr";
     public static String WEBPROPERTY_SCANNER = "pv_ScannerStr";

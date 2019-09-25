@@ -1,11 +1,11 @@
-<android.support.v7.widget.Toolbar
+<androidx.appcompat.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     style="@style/defaultToolbar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -35,14 +35,14 @@
             app:layout_constraintStart_toStartOf="@id/toolbarTitle"
             app:layout_constraintEnd_toEndOf="@id/toolbarTitle"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewToolbar"
             android:id="@+id/toolbarImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewToolbarHelp"
             android:visibility="gone"
             android:id="@+id/toolbarImageHelp"
@@ -51,5 +51,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.Toolbar>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.Toolbar>

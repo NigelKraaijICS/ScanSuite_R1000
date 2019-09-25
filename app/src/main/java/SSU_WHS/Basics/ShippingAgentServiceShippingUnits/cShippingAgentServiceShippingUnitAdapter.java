@@ -1,10 +1,9 @@
 package SSU_WHS.Basics.ShippingAgentServiceShippingUnits;
 
-import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.RecyclerView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +19,17 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.activities.ship.ShipDetermineTransportActivity;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapter<cShippingAgentServiceShippingUnitAdapter.ShippingAgentServiceShippingUnitViewHolder> {
-    private Context callerContext;
-    private List<LinearLayout> shippingUnitItemLinearLayouts = new ArrayList<>();
+
+
+    //Region Public Properties
+      private List<LinearLayout> shippingUnitItemLinearLayouts = new ArrayList<>();
     private RecyclerView thisRecyclerView;
+
+    //End Region Public Properties
 
 
     class ShippingAgentServiceShippingUnitViewHolder extends RecyclerView.ViewHolder{
@@ -70,10 +73,9 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
     private final LayoutInflater mInflater;
     public List<cShippingAgentServiceShippingUnitEntity> mShippingAgentServiceShippingUnits; //cached copy of pickorders
 
-    public cShippingAgentServiceShippingUnitAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        callerContext = context;
-    }
+    public cShippingAgentServiceShippingUnitAdapter() {
+        mInflater = LayoutInflater.from(cAppExtension.context);
+      }
 
     @Override
     public cShippingAgentServiceShippingUnitAdapter.ShippingAgentServiceShippingUnitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -98,31 +100,31 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
         if (mShippingAgentServiceShippingUnits != null) {
 
             final cShippingAgentServiceShippingUnitEntity shippingUnitEntity = mShippingAgentServiceShippingUnits.get(position);
-            holder.textViewDescription.setText(shippingUnitEntity.getDescription());
-            holder.textViewShippingUnit.setText(shippingUnitEntity.getShippingunit());
-            holder.textViewQuantityUsed.setText(Integer.toString(shippingUnitEntity.getShippingunitquantityused()));
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX)) {
+            holder.textViewDescription.setText(shippingUnitEntity.getDescriptionStr());
+            holder.textViewShippingUnit.setText(shippingUnitEntity.getShippingunitStr());
+            holder.textViewQuantityUsed.setText(Integer.toString(shippingUnitEntity.getShippingUnitQuantityusedInt()));
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX)) {
                 holder.imageViewShippingUnit.setImageResource(R.drawable.ic_box);
             }
-            if (shippingUnitEntity.getShippingunit().toLowerCase().contains(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX.toLowerCase())) {
+            if (shippingUnitEntity.getShippingunitStr().toLowerCase().contains(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX.toLowerCase())) {
                 holder.imageViewShippingUnit.setImageResource(R.drawable.ic_box);
             }
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_PALLET)) {
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_PALLET)) {
                 holder.imageViewShippingUnit.setImageResource(R.drawable.ic_pallet);
             }
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_CONTAINER)) {
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_CONTAINER)) {
                 holder.imageViewShippingUnit.setImageResource(R.drawable.ic_container);
             }
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_LETTERBOX)) {
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_LETTERBOX)) {
                 holder.imageViewShippingUnit.setImageResource(R.drawable.ic_letterbox);
             }
-            if (shippingUnitEntity.getShippingunit().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_HANGING)) {
+            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_HANGING)) {
                 holder.imageViewShippingUnit.setImageResource(R.drawable.ic_hanging);
             }
             holder.primaryContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Animation animation = AnimationUtils.loadAnimation(callerContext.getApplicationContext(), R.anim.rotate_180);
+                    Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.rotate_180);
                     //Close all others
                     for (LinearLayout aLayout : shippingUnitItemLinearLayouts) {
                         ConstraintLayout secondaryLayout = aLayout.findViewById(R.id.secondaryContent);
@@ -159,7 +161,7 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
                         holder.secondaryContent.animate().scaleY(1).start();
                         holder.secondaryContent.setVisibility(View.VISIBLE);
                     }
-                    //we want this to animate, but it does nasty things to the quantity textview
+                    //we want this to animate, but it does nasty things to the quantityDbl textview
                     //notifyItemChanged(position);
                 }
             });
@@ -177,7 +179,7 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
                 public void onClick(View view) {
                     Integer currentQuantity = cText.stringToInteger(holder.textViewQuantityUsed.getText().toString());
                     if (currentQuantity == 0) {
-                        cUserInterface.doNope(holder.textViewQuantityUsed, true, false);
+                        cUserInterface.pDoNope(holder.textViewQuantityUsed, true, false);
                         return;
                     }
                     Integer newQuantity = currentQuantity - 1;
@@ -196,9 +198,10 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
         }
     }
     private void mUpdateNumber(Integer newQuantity, cShippingAgentServiceShippingUnitEntity shippingAgentServiceShippingUnit) {
-        if (callerContext instanceof ShipDetermineTransportActivity) {
-            ((ShipDetermineTransportActivity) callerContext).updateShippingUnitUsed(newQuantity, shippingAgentServiceShippingUnit);
-        }
+      //  todo: put this back
+//        if (cAppExtension.context instanceof ShipDetermineTransportActivity) {
+//            ((ShipDetermineTransportActivity) cAppExtension.context).updateShippingUnitUsed(newQuantity, shippingAgentServiceShippingUnit);
+//        }
     }
     @Override
     public int getItemCount () {

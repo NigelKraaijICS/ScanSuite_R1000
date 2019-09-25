@@ -5,16 +5,16 @@
     android:id="@+id/shippingUnitItemLinearLayout"
     style="@style/userRecyclerLinearLayout"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/allContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/primaryContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
             android:id="@+id/imageViewShippingUnit"
             app:srcCompat="@drawable/ic_bag"
@@ -50,7 +50,7 @@
             app:layout_constraintStart_toStartOf="@id/textViewShippingUnit"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageChevronDown"
@@ -60,36 +60,36 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-        </android.support.constraint.ConstraintLayout>
-        <android.support.constraint.ConstraintLayout
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/secondaryContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/primaryContent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="@dimen/default_double_margin">
-            <android.support.constraint.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/guidelineMiddle"
                 app:layout_constraintGuide_percent="0.5"
                 android:orientation="vertical"
                 />
-            <android.support.v7.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 style="@style/smallButton"
                 android:id="@+id/imageButtonMinus"
                 app:srcCompat="@drawable/ic_remove_black_24dp"
                 app:layout_constraintEnd_toStartOf="@id/imageButtonPlus"
                 app:layout_constraintTop_toTopOf="parent"
                 />
-            <android.support.v7.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 style="@style/smallButton"
                 android:id="@+id/imageButtonPlus"
                 app:srcCompat="@drawable/ic_add_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 />
-            <android.support.v7.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 style="@style/smallButton.Zerobutton"
                 android:id="@+id/imageButtonZero"
                 app:srcCompat="@drawable/ic_close_black_24dp"
@@ -100,6 +100,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
 
                 />
-        </android.support.constraint.ConstraintLayout>
-    </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

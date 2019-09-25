@@ -1,36 +1,28 @@
 package SSU_WHS.Basics.Users;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-
-import java.util.List;
-
+import androidx.lifecycle.AndroidViewModel;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cUserViewModel extends AndroidViewModel {
-    private cUserRepository mRepository;
 
-    public cUserViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cUserRepository Repository;
+    //End Region Public Properties
 
-        mRepository = new cUserRepository(application);
+    //Region Constructor
+    public cUserViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cUserRepository(pvApplication);
     }
-    public void insert(cUserEntity userEntity) {mRepository.insert(userEntity);}
+    //End Region Constructor
 
-    //public LiveData<List<cUserEntity>> getUsers(Boolean forcerefresh, String branch) {return mRepository.getUsers(forcerefresh, branch); }
-    //public LiveData<List<cUser>> getUsers(Boolean forcerefresh, String branch) {return mRepository.getUsers(forcerefresh, branch); }
-
-    public LiveData<Boolean> gotUsers(Boolean forcerefresh, String branch) {return mRepository.gotUsers(forcerefresh, branch); }
-
-    public List<cUserEntity> getLocalUsers() {return mRepository.getLocalUsers();}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public cUserEntity getUserByCode(String username) {return mRepository.getUserByCode(username);}
-
-    public cWebresult userLogonWrs(String user, String password, String culture) {return mRepository.userLogonWrs(user, password, culture);}
-
+    //Region Public Methods
+    public cWebresult pGetUsersFromWebserviceWrs() {return this.Repository.pGetUsersFromWebserviceWrs(); }
+    public void insert(cUserEntity pvUserEntity) {this.Repository.pInsert(pvUserEntity);}
+    public void deleteAll() {Repository.pDeleteAll();}
+    public cWebresult pUserLoginViaWebserviceWrs(String pvPassword) {return this.Repository.userLogonWrs(pvPassword);}
+    //End Region Public Methods
 
 }
 

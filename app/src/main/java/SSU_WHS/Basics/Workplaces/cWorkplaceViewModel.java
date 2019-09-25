@@ -1,26 +1,25 @@
 package SSU_WHS.Basics.Workplaces;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-
-import java.util.List;
-
+import androidx.lifecycle.AndroidViewModel;
+import SSU_WHS.Webservice.cWebresult;
 public class cWorkplaceViewModel extends AndroidViewModel {
-    private cWorkplaceRepository mRepository;
 
-    public cWorkplaceViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cWorkplaceRepository Repository;
+    //End Region Public Properties
 
-        mRepository = new cWorkplaceRepository(application);
+    //Region Constructor
+    public cWorkplaceViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cWorkplaceRepository(pvApplication);
     }
-    public void insert(cWorkplaceEntity workplaceEntity) {mRepository.insert(workplaceEntity);}
+    //End Region Constructor
 
-    public LiveData<List<cWorkplaceEntity>> getWorkplaces(Boolean forcerefresh, String branch) {return mRepository.getWorkplaces(forcerefresh, branch); }
+    //Region Public Methods
+    public cWebresult pGetWorkplacesFromWebserviceWrs() {return this.Repository.pGetWorkplacesFromWebserviceWrs(); }
+    public void insert(cWorkplaceEntity workplaceEntity) {this.Repository.insert(workplaceEntity);}
+    public void deleteAll() {Repository.deleteAll();}
+    //End Region Public Methods
 
-    public List<cWorkplaceEntity> getLocalWorkplaces() {return mRepository.getAll();}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public cWorkplaceEntity getWorkplaceByCode(String workplace) {return mRepository.getWorkplaceByCode(workplace);}
 }

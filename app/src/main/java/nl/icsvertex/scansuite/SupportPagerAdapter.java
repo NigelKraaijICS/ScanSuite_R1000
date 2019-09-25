@@ -1,8 +1,8 @@
 package nl.icsvertex.scansuite;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import nl.icsvertex.scansuite.fragments.support.SupportApplicationFragment;
 import nl.icsvertex.scansuite.fragments.support.SupportDeviceFragment;

@@ -3,11 +3,11 @@ package ICS.Utils;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.os.Vibrator;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,51 +17,60 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Weberror.cWeberrorEntity;
-import SSU_WHS.General.cAppExtension;
+import ICS.Weberror.cWeberror;
+import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
+import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.fragments.dialogs.GettingDataFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.HugeErrorFragment;
-import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.fragments.dialogs.PasswordFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.WebserviceErrorFragment;
 
-public class cUserInterface {
-    public static GettingDataFragment gettingDataFragment;
+import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HEADER;
+import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HINT;
+import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_ISNUMERIC;
+import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TAG;
+import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TEXT;
 
-    public static void showToastMessage(String pv_messageStr, Integer pv_soundInt) {
-        if (pv_soundInt != null && pv_soundInt != 0) {
-            playSound(pv_soundInt, null);
+public class cUserInterface {
+    private static GettingDataFragment gettingDataFragment;
+
+    public static void pShowToastMessage(String pvMessageStr, Integer pvSoundInt) {
+        if (pvSoundInt != null && pvSoundInt != 0) {
+            pPlaySound(pvSoundInt, null);
         }
-        Toast.makeText(cAppExtension.context, pv_messageStr, Toast.LENGTH_SHORT).show();
+        Toast.makeText(cAppExtension.context, pvMessageStr, Toast.LENGTH_SHORT).show();
     }
-    public static void showSnackbarMessage(View pv_viewVew, String pv_messageStr, Integer pv_soundInt, Boolean pv_VibrateBln) {
-        if (pv_soundInt != null && pv_soundInt != 0) {
-            playSound(pv_soundInt, null);
+    public static void pShowSnackbarMessage(View pvView, String pvMessageStr, Integer pvSoundInt, Boolean pvVibrateBln) {
+        if (pvSoundInt != null && pvSoundInt != 0) {
+            pPlaySound(pvSoundInt, null);
         }
-        if (pv_VibrateBln) {
-            vibrate();
+        if (pvVibrateBln) {
+            pDoVibrate();
         }
-        Snackbar.make(pv_viewVew, pv_messageStr, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(pvView, pvMessageStr, Snackbar.LENGTH_LONG).show();
     }
-    public static void showActionSnackbar(View pv_viewVew, String pv_messageStr, Integer pv_soundInt, Boolean pv_VibrateBln) {
-        if (pv_soundInt != null && pv_soundInt != 0) {
-            playSound(pv_soundInt, null);
+    public static void pShowActionSnackbar(View pvView, String pvMessageStr, Integer pvSoundInt, Boolean pvVibrateBln) {
+        if (pvSoundInt != null && pvSoundInt != 0) {
+            pPlaySound(pvSoundInt, null);
         }
-        if (pv_VibrateBln) {
-            vibrate();
+        if (pvVibrateBln) {
+            pDoVibrate();
         }
-        Snackbar snackbar =  Snackbar.make(pv_viewVew, pv_messageStr, Snackbar.LENGTH_LONG);
+        Snackbar snackbar =  Snackbar.make(pvView, pvMessageStr, Snackbar.LENGTH_LONG);
         View sbView = snackbar.getView();
         sbView.setBackgroundColor(ContextCompat.getColor(cAppExtension.context, R.color.colorError));
         snackbar.show();
     }
 
-    public static void playSound(final Integer pv_soundInt, final Integer pv_startAtMsInt) {
+
+
+    public static void pPlaySound(final Integer pvSoundInt, final Integer pvStartAtMsInt) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (pv_soundInt != null && pv_soundInt != 0) {
-                    final MediaPlayer mp = MediaPlayer.create(cAppExtension.context, pv_soundInt);
+                if (pvSoundInt != null && pvSoundInt != 0) {
+                    final MediaPlayer mp = MediaPlayer.create(cAppExtension.context, pvSoundInt);
                     if (mp != null) {
                         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
@@ -71,8 +80,8 @@ public class cUserInterface {
                                 mp.release();
                             }
                         });
-                        if (pv_startAtMsInt != null && pv_startAtMsInt != 0) {
-                            mp.seekTo(pv_startAtMsInt);
+                        if (pvStartAtMsInt != null && pvStartAtMsInt != 0) {
+                            mp.seekTo(pvStartAtMsInt);
                         }
                         mp.start();
                     }
@@ -81,89 +90,96 @@ public class cUserInterface {
             }).start(); //thread
     }
 
-    public static void vibrate() {
+    public static void pDoVibrate() {
         // Get instance of Vibrator from current Context
         Vibrator v = (Vibrator) cAppExtension.context.getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 300 milliseconds
         if (v!= null) {
             if (v.hasVibrator()) {
                 v.vibrate(300);
-                //star wars
-                //v.vibrate(new long[]{0, 500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500}, -1);
             }
         }
     }
 
-    public static void doNope(View view, Boolean playsound, Boolean vibrate) {
+    public static void pDoNope(View pvView, Boolean pvPlaySoundBln, Boolean pvVibrateBln) {
         Animation shake = AnimationUtils.loadAnimation(cAppExtension.context, R.anim.shake);
-        view.startAnimation(shake);
-        if (playsound) {
-            playSound( R.raw.badsound, null);
+        pvView.startAnimation(shake);
+        if (pvPlaySoundBln) {
+            pPlaySound( R.raw.badsound, null);
         }
-        if (vibrate) {
-            vibrate();
+        if (pvVibrateBln) {
+            pDoVibrate();
         }
     }
 
-    public static void doYep(View view, Boolean playsound, Boolean vibrate) {
+    public static void pDoYep(View pvView, Boolean pvPlaySoundBln, Boolean pvVibrateBln) {
         Animation nod = AnimationUtils.loadAnimation(cAppExtension.context, R.anim.nod);
-        view.startAnimation(nod);
-        if (playsound) {
-            playSound(R.raw.goodsound, null);
+        pvView.startAnimation(nod);
+        if (pvPlaySoundBln) {
+            pPlaySound(R.raw.goodsound, null);
         }
-        if (vibrate) {
-            vibrate();
+        if (pvVibrateBln) {
+            pDoVibrate();
         }
     }
-    public static void doWobble(View view) {
+    public static void pDoWobble(View pvView) {
         Animation wobble = AnimationUtils.loadAnimation(cAppExtension.context, R.anim.wobble);
-        view.startAnimation(wobble);
+        pvView.startAnimation(wobble);
     }
-    public static void doRotate(View view, int repeatcount) {
-        Animation rotate = AnimationUtils.loadAnimation(cAppExtension.context, R.anim.rotate);
-        if (repeatcount == -1) {
-            rotate.setRepeatCount(Animation.INFINITE);
-        }
-        else {
-            rotate.setRepeatCount(repeatcount);
-        }
-        view.startAnimation(rotate);
+    public static void pDoRotate(final View pvView, final int pvRepeatCountInt) {
+
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Animation rotate = AnimationUtils.loadAnimation(cAppExtension.context, R.anim.rotate);
+                if (pvRepeatCountInt == -1) {
+                    rotate.setRepeatCount(Animation.INFINITE);
+                }
+                else {
+                    rotate.setRepeatCount(pvRepeatCountInt);
+                }
+                pvView.startAnimation(rotate);
+            }
+        });
+
+
     }
-    public static void doBoing(View view) {
+    public static void pDoBoing(View pvView) {
         final Animation animation = AnimationUtils.loadAnimation(cAppExtension.context, R.anim.bounce);
         // Use bounce interpolator with amplitude 0.2 and frequency 20
         ICS.Utils.cBounceInterpolator interpolator = new ICS.Utils.cBounceInterpolator(0.2,20);
         animation.setInterpolator(interpolator);
-        view.startAnimation(animation);
+        pvView.startAnimation(animation);
     }
 
-    public static void doExplodingScreen(String errormesssage, String message2, Boolean playsound, Boolean vibrate) {
-        if (playsound) {
-            playSound(R.raw.badsound, null);
+    public static void pDoExplodingScreen(String pvErrorMesssageStr, String pvMessage2Str, Boolean pvPlaysoundBln, Boolean pvVibrateBln) {
+        if (pvPlaysoundBln) {
+            pPlaySound(R.raw.badsound, null);
         }
-        if (vibrate) {
-            vibrate();
+        if (pvVibrateBln) {
+            pDoVibrate();
         }
         final HugeErrorFragment hugeErrorFragment = new HugeErrorFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(cPublicDefinitions.HUGEERROR_ERRORMESSAGE, errormesssage);
-        bundle.putString(cPublicDefinitions.HUGEERROR_EXTRASTRING, message2);
+        bundle.putString(cPublicDefinitions.HUGEERROR_ERRORMESSAGE, pvErrorMesssageStr);
+        bundle.putString(cPublicDefinitions.HUGEERROR_EXTRASTRING, pvMessage2Str);
         hugeErrorFragment.setArguments(bundle);
         hugeErrorFragment.setCancelable(true);
         hugeErrorFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.HUGEERROR_TAG);
-        checkAndCloseOpenDialogs();
+        pCheckAndCloseOpenDialogs();
     }
-    public static void doWebserviceError(List<cWeberrorEntity> weberrorEntities, Boolean playsound, Boolean vibrate) {
-        if (playsound) {
-            playSound(R.raw.badsound, null);
+    public static void pDoWebserviceError(List<cWeberror> pvWeberrorsObl, Boolean pvPlaySoundBln, Boolean pvVibrateBln) {
+        if (pvPlaySoundBln) {
+            pPlaySound(R.raw.badsound, null);
         }
-        if (vibrate) {
-            vibrate();
+        if (pvVibrateBln) {
+            pDoVibrate();
         }
         ArrayList messages = new ArrayList();
-        for (cWeberrorEntity weberrorEntity: weberrorEntities) {
-            messages.add(weberrorEntity.getWebmethod());
-            //messages.add(weberrorEntity.getResult());
+
+        for (cWeberror weberror: pvWeberrorsObl) {
+            messages.add(weberror.getWebmethodStr());
         }
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(cPublicDefinitions.WEBSERVICEERROR_LIST_TAG, messages);
@@ -173,9 +189,9 @@ public class cUserInterface {
         webserviceErrorFragment.setCancelable(true);
         webserviceErrorFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WEBSERVICEERROR_TAG);
     }
-    public static void checkAndCloseOpenDialogs() {
+    public static void pCheckAndCloseOpenDialogs() {
         //todo: this is dumb
-        mHideGettingData();
+        pHideGettingData();
         //todo: should be in here
         List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
         if (fragments != null) {
@@ -186,14 +202,23 @@ public class cUserInterface {
             }
         }
     }
-    public static void mShowKeyboard(View pvView) {
-        InputMethodManager imm2 = (InputMethodManager) cAppExtension.context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm2 != null) {
-            imm2.showSoftInput(pvView, InputMethodManager.SHOW_IMPLICIT);
-        }
+
+    public static void pShowKeyboard(final View pvView) {
+        pvView.post(new Runnable() {
+            @Override
+            public void run() {
+                pvView.requestFocus();
+                InputMethodManager imgr = (InputMethodManager) cAppExtension.activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imgr != null) {
+                    imgr.showSoftInput(pvView, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        });
     }
 
-    public static void mShowGettingData() {
+
+
+    public static void pShowGettingData() {
         gettingDataFragment = new GettingDataFragment();
         gettingDataFragment.setCancelable(true);
             cAppExtension.activity.runOnUiThread(new Runnable() {
@@ -202,17 +227,31 @@ public class cUserInterface {
                     gettingDataFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.GETTING_DATA_TAG);
                 }
             });
-
         }
-
-        public static void mHideGettingData() {
-            if (gettingDataFragment != null) {
-                try {
-                    gettingDataFragment.dismiss();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+    public static void pHideGettingData() {
+        if (gettingDataFragment != null) {
+            try {
+                gettingDataFragment.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
+    }
+
+    public static void pShowpasswordDialog(String pvHeaderStr, String pvTextStr, Boolean pvIsNumericBln) {
+
+        PasswordFragment passwordFragment = new PasswordFragment();
+        Bundle bundle = new Bundle();
+
+        bundle.putString(PASSWORDFRAGMENT_HEADER, pvHeaderStr);
+        bundle.putString(PASSWORDFRAGMENT_TEXT, pvTextStr);
+        bundle.putString(PASSWORDFRAGMENT_HINT, cAppExtension.context.getString(R.string.hint_password));
+        bundle.putBoolean(PASSWORDFRAGMENT_ISNUMERIC, pvIsNumericBln);
+
+        passwordFragment.setArguments(bundle);
+        passwordFragment.show(cAppExtension.fragmentManager, PASSWORDFRAGMENT_TAG);
+    }
+
+
 }

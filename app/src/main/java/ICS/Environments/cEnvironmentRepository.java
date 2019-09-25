@@ -6,22 +6,30 @@ import android.os.AsyncTask;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import SSU_WHS.Webservice.cWebresult;
 import ICS.acICSDatabase;
 
 public class cEnvironmentRepository {
-    private iEnvironmentDao environmentDao;
-    private cWebresult webResult;
 
-    cEnvironmentRepository(Application application) {
-        acICSDatabase db = acICSDatabase.getDatabase(application);
-        environmentDao = db.environmentDao();
+    //Region Public Properties
+    public iEnvironmentDao environmentDao;
+    //End Region Public Properties
+
+    //Region Private Properties
+    private acICSDatabase db;
+    //End Region Private Properties
+
+    //Region Constructor
+    cEnvironmentRepository(Application pvApplication) {
+        this.db = acICSDatabase.getDatabase(pvApplication);
+        this.environmentDao = db.environmentDao();
     }
+    //End Region Constructor
 
-    public List<cEnvironmentEntity> getAll() {
+    //Region Public Methods
+    public List<cEnvironmentEntity> getAllEnviromentsFromDatabase() {
         List<cEnvironmentEntity> environmentEntities = null;
         try {
-            environmentEntities = new getAllAsyncTask(environmentDao).execute().get();
+            environmentEntities = new getAllEnviromentsFromDatabaseAsyncTask(environmentDao).execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -29,39 +37,43 @@ public class cEnvironmentRepository {
         }
         return environmentEntities;
     }
-    private static class getAllAsyncTask extends AsyncTask<Void, Void, List<cEnvironmentEntity>> {
-        private iEnvironmentDao mAsyncTaskDao;
 
-        getAllAsyncTask(iEnvironmentDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cEnvironmentEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getAll();
-        }
+    public void insert(cEnvironmentEntity environmentEntity) {
+        new insertAsyncTask(environmentDao).execute(environmentEntity);
     }
 
-    public cEnvironmentEntity getFirst() {
-        cEnvironmentEntity environmentEntity = null;
+    public void deleteAll () {
+        new deleteAllAsyncTask(environmentDao).execute();
+    }
+
+    public void delete(cEnvironmentEntity environmentEntity) {
+        new deleteAsyncTask(environmentDao).execute(environmentEntity);
+    }
+
+    public int updateDefault(Boolean pvDefaultBln, String pvNameStr) {
+        Integer integerValue = 0;
+        UpdateDefaultParams updateDefaultParams = new UpdateDefaultParams(pvDefaultBln, pvNameStr);
         try {
-            environmentEntity = new getFirstAsyncTask(environmentDao).execute().get();
+            integerValue = new updateDefaultBlnAsyncTask(environmentDao).execute(updateDefaultParams).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return environmentEntity;
+        return integerValue;
     }
-    private static class getFirstAsyncTask extends AsyncTask<Void, Void, cEnvironmentEntity> {
+
+    //End Region Private Methods
+
+
+    private static class getAllEnviromentsFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cEnvironmentEntity>> {
         private iEnvironmentDao mAsyncTaskDao;
 
-        getFirstAsyncTask(iEnvironmentDao dao) { mAsyncTaskDao = dao; }
+        getAllEnviromentsFromDatabaseAsyncTask(iEnvironmentDao dao) { mAsyncTaskDao = dao; }
         @Override
-        protected cEnvironmentEntity doInBackground(final Void... params) {
-            return mAsyncTaskDao.getFirst();
+        protected List<cEnvironmentEntity> doInBackground(final Void... params) {
+            return mAsyncTaskDao.getAll();
         }
-    }
-
-    public void deleteAll () {
-        new deleteAllAsyncTask(environmentDao).execute();
     }
 
     private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -76,9 +88,7 @@ public class cEnvironmentRepository {
             return null;
         }
     }
-    public void delete(cEnvironmentEntity environmentEntity) {
-        new deleteAsyncTask(environmentDao).execute(environmentEntity);
-    }
+
     private static class deleteAsyncTask extends AsyncTask<cEnvironmentEntity, Void, Void> {
         private iEnvironmentDao mAsyncTaskDao;
 
@@ -88,11 +98,6 @@ public class cEnvironmentRepository {
             mAsyncTaskDao.delete(params[0]);
             return null;
         }
-    }
-
-
-    public void insert(cEnvironmentEntity environmentEntity) {
-        new insertAsyncTask(environmentDao).execute(environmentEntity);
     }
     private static class insertAsyncTask extends AsyncTask<cEnvironmentEntity, Void, Void> {
         private iEnvironmentDao mAsyncTaskDao;
@@ -107,66 +112,24 @@ public class cEnvironmentRepository {
         }
     }
 
-    public cEnvironmentEntity getEnvironmentByName(String name) {
-        cEnvironmentEntity environmentEntity = null;
-        try {
-            environmentEntity = new getEnvironmentsByNameAsyncTask(environmentDao).execute(name).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+    private static class UpdateDefaultParams {
+        Boolean defaultBln;
+        String namestr;
+
+        UpdateDefaultParams(Boolean pvDefaultBln, String pvNameStr) {
+            this.defaultBln = pvDefaultBln;
+            this.namestr = pvNameStr;
         }
-        return environmentEntity;
+
     }
-    private static class getEnvironmentsByNameAsyncTask extends AsyncTask<String, Void, cEnvironmentEntity> {
+
+    private static class updateDefaultBlnAsyncTask extends AsyncTask<UpdateDefaultParams, Void, Integer> {
         private iEnvironmentDao mAsyncTaskDao;
-
-        getEnvironmentsByNameAsyncTask(iEnvironmentDao dao) { mAsyncTaskDao = dao; }
+        updateDefaultBlnAsyncTask(iEnvironmentDao dao) { mAsyncTaskDao = dao; }
         @Override
-        protected cEnvironmentEntity doInBackground(final String... params) {
-            return mAsyncTaskDao.getEnvironmentByName(params[0]);
+        protected Integer doInBackground(UpdateDefaultParams... params) {
+            return mAsyncTaskDao.updateDefault(params[0].defaultBln, params[0].namestr);
         }
     }
-    public cEnvironmentEntity getDefaultEnvironment() {
-        cEnvironmentEntity environmentEntity = null;
-        try {
-            environmentEntity = new getDefaultEnvironmentAsyncTask(environmentDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return environmentEntity;
-    }
-    private static class getDefaultEnvironmentAsyncTask extends AsyncTask<Void, Void, cEnvironmentEntity> {
-        private iEnvironmentDao mAsyncTaskDao;
-
-        getDefaultEnvironmentAsyncTask(iEnvironmentDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected cEnvironmentEntity doInBackground(final Void... params) {
-            return mAsyncTaskDao.getDefaultEnvironment();
-        }
-    }
-
-    public int getNumberOfEnvironments() {
-        Integer integerValue = 0;
-        try {
-            integerValue = new getNumberOfEnvironmentsAsyncTask(environmentDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return integerValue;
-    }
-    private static class getNumberOfEnvironmentsAsyncTask extends AsyncTask<Void, Void, Integer> {
-        private iEnvironmentDao mAsyncTaskDao;
-        getNumberOfEnvironmentsAsyncTask(iEnvironmentDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Integer doInBackground(Void... params) {
-            return mAsyncTaskDao.getNumberOfEnvironments();
-        }
-    }
-
 
 }

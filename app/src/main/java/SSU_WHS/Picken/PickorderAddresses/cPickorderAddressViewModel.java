@@ -1,25 +1,22 @@
 package SSU_WHS.Picken.PickorderAddresses;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cPickorderAddressViewModel extends AndroidViewModel {
-    private cPickorderAddressRepository mRepository;
 
-    public cPickorderAddressViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cPickorderAddressRepository repository;
+    //END Region Public Properties
 
-        mRepository = new cPickorderAddressRepository(application);
+    //Region Constructor
+    public cPickorderAddressViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.repository = new cPickorderAddressRepository(pvApplication);
     }
-
-    public void insert(cPickorderAddressEntity pickorderAddressEntity) {mRepository.insert(pickorderAddressEntity);}
-
-    public LiveData<List<cPickorderAddressEntity>> getPickorderAddresses(Boolean forcerefresh, String branchStr, String ordernumberStr) {return mRepository.getPickorderAddresses(forcerefresh, branchStr, ordernumberStr);}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public cPickorderAddressEntity getAddressByAddresCode(String addresscode) {return mRepository.getAddressByAddresCode(addresscode);}
+    //End Region Constructor
+    public void insert(cPickorderAddressEntity pvPickorderAddressEntity) {repository.pInsert(pvPickorderAddressEntity);}
+    public void deleteAll() {repository.pDeleteAll();}
 }

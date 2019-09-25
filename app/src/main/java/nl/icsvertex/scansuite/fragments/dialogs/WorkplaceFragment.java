@@ -1,91 +1,75 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
 
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import java.util.List;
-
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutViewModel;
-import SSU_WHS.Basics.Workplaces.cWorkplaceAdapter;
-import SSU_WHS.Basics.Workplaces.cWorkplaceEntity;
-import SSU_WHS.Basics.Workplaces.cWorkplaceViewModel;
-import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.Scanning.cBarcodeScanDefinitions;
+import SSU_WHS.Basics.Workplaces.cWorkplace;
+import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.cAppExtension;
 import ICS.Utils.cRegex;
-import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.activities.ship.ShiporderLinesActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
 
-public class WorkplaceFragment extends android.support.v4.app.DialogFragment implements iICSDefaultFragment {
-    RecyclerView workplaceRecyclerView;
-    Button buttonClose;
-    DialogFragment thisFragment;
-    cWorkplaceViewModel workplaceViewModel;
-    cWorkplaceAdapter workplaceAdapter;
+public class WorkplaceFragment extends DialogFragment implements iICSDefaultFragment {
 
-    IntentFilter barcodeFragmentIntentFilter;
-    private BroadcastReceiver barcodeFragmentReceiver;
-    cBarcodeLayoutViewModel barcodeLayoutViewModel;
+    //Region Public Properties
 
-    Context thisContext;
-    String currentBranch;
 
-    public WorkplaceFragment() {
-        // Required empty public constructor
+    //End Region Public Properties
+
+    //Region Private Properties
+    private static RecyclerView workplaceRecyclerView;
+    //End Region Private Properties
+
+
+    //Region Constructor
+        public WorkplaceFragment() {
+
     }
+    //End Region Constructor
 
+
+    //Region Default Methods
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_workplaces, container);
-        thisFragment = this;
+    public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer, Bundle pvSavedInstanceState) {
+        View rootview = pvInflater.inflate(R.layout.fragment_workplaces, pvContainer);
+        cAppExtension.dialogFragment = this;
         return rootview;
     }
+
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        thisContext = this.getContext();
-        currentBranch = cSharedPreferences.getSharedPreferenceString(cPublicDefinitions.PREFERENCE_CURRENT_BRANCH, "");
-
-        mFragmentInitialize();
-
-        mBarcodeReceiver();
-
+    public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
+        this.mFragmentInitialize();
     }
+
     @Override
     public void onPause() {
         try {
-            getActivity().unregisterReceiver(barcodeFragmentReceiver);
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         super.onPause();
     }
+
     @Override
     public void onDestroy() {
         try {
-            getActivity().unregisterReceiver(barcodeFragmentReceiver);
+           cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,18 +77,33 @@ public class WorkplaceFragment extends android.support.v4.app.DialogFragment imp
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
+
+        getDialog().getWindow().setLayout(width, height);
+    }
+
+    //End Region Default Methods
+
+    //Region iICSDefaultFragment methods
+    @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
     }
 
     @Override
     public void mFindViews() {
-        workplaceRecyclerView = getView().findViewById(R.id.workplaceRecyclerview);
-        buttonClose = getView().findViewById(R.id.buttonClose);
-    }
+        this.workplaceRecyclerView = getView().findViewById(R.id.workplaceRecyclerview);
+     }
 
     @Override
     public void mSetViewModels() {
@@ -113,115 +112,88 @@ public class WorkplaceFragment extends android.support.v4.app.DialogFragment imp
 
     @Override
     public void mFieldsInitialize() {
-        mGetData();
+        this.mGetData();
     }
 
     @Override
     public void mSetListeners() {
-        m_setCloseListener();
-    }
-    private void mBarcodeReceiver() {
-        barcodeFragmentIntentFilter = new IntentFilter();
-        for (String str : cBarcodeScanDefinitions.getBarcodeActions()) {
-            barcodeFragmentIntentFilter.addAction(str);
-        }
-        for (String str : cBarcodeScanDefinitions.getBarcodeCategories()) {
-            barcodeFragmentIntentFilter.addCategory(str);
-        }
 
-        barcodeFragmentReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.p_GetBarcode(intent, true);
-                if (barcodeStr == null) {
-                    barcodeStr = "";
-                }
-                mHandleScan(barcodeStr);
-            }
-        };
-        //don't forget to unregister on destroy.
-        getActivity().registerReceiver(barcodeFragmentReceiver,barcodeFragmentIntentFilter);
     }
-    private void mHandleScan(String barcode) {
-        String barcodeWithoutPrefixStr = "";
-        if (cRegex.hasPrefix(barcode)) {
-            String barcodePrefixStr = cRegex.getPrefix(barcode);
+
+    //End Region iICSDefaultFragment methods
+
+    //Region Private Methods
+
+    public static void pHandleScan(String pvBarcodeStr) {
+        String barcodeWithoutPrefixStr ;
+        if (cRegex.hasPrefix(pvBarcodeStr)) {
             Boolean foundBin = false;
-            List<cBarcodeLayoutEntity> workplaceLayouts = barcodeLayoutViewModel.getBarcodeLayoutsOfType(cBarcodeLayout.barcodeLayoutEnu.WORKPLACE.toString());
-            for (cBarcodeLayoutEntity layout : workplaceLayouts) {
-                if (cRegex.p_checkRegexBln(layout.getLayoutValue(), barcode)) {
-                    foundBin = true;
-                }
+
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.WORKPLACE) == true) {
+                foundBin = true;
             }
+
             if (foundBin) {
-                //has prefix, is workplace
-                barcodeWithoutPrefixStr = cRegex.p_stripRegexPrefixStr(barcode);
-                workplaceScanned(barcodeWithoutPrefixStr);
+                //has prefix, is workPlaceStr
+                barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeStr);
+                mWorkplaceScanned(barcodeWithoutPrefixStr);
             }
             else {
-                //has prefix, isn't workplace
-                cUserInterface.doNope(workplaceRecyclerView, true, true);
+                //has prefix, isn't workPlaceStr
+                cUserInterface.pDoNope(workplaceRecyclerView, true, true);
             }
         }
         else {
             //no prefix, fine
-            workplaceScanned(barcode);
+            mWorkplaceScanned(pvBarcodeStr);
         }
     }
-    private void workplaceScanned(String barcode) {
-        cWorkplaceEntity workplaceEntity = workplaceViewModel.getWorkplaceByCode(barcode);
-        if (workplaceEntity != null) {
-            Activity activity = getActivity();
-            if (activity instanceof SortorderLinesActivity) {
-                ((SortorderLinesActivity)getActivity()).setChosenWorkplace(workplaceEntity);
+
+    private static void mWorkplaceScanned(String pvBarcodeStr) {
+
+        cWorkplace Workplace = cWorkplace.pGetWorkplaceByName(pvBarcodeStr);
+
+        if (Workplace != null) {
+
+            cWorkplace.currentWorkplace = Workplace;
+
+            if (cAppExtension.activity instanceof PickorderLinesActivity) {
+                cAppExtension.dialogFragment.dismiss();
+                PickorderLinesActivity.pClosePickAndDecideNextStep();
             }
-            if (activity instanceof ShiporderLinesActivity) {
-                ((ShiporderLinesActivity)getActivity()).setChosenWorkplace(workplaceEntity);
-            }
+
+            //todo: put this back
+//            if (cAppExtension.activity instanceof SortorderLinesActivity) {
+//                SortorderLinesActivity.closeWorkplaceFragment();
+//            }
+//            if (cAppExtension.activity instanceof ShiporderLinesActivity) {
+//                SortorderLinesActivity.closeWorkplaceFragment();
+//            }
         }
         else {
-            cUserInterface.doNope(workplaceRecyclerView, true, true);
+            cUserInterface.pDoNope(workplaceRecyclerView, true, true);
+        }
+    }
+    private void mGetData() {
+
+        boolean webserviceResult;
+        webserviceResult = cWorkplace.pGetWorkplacesViaWebserviceBln();
+
+        if (webserviceResult == true) {
+            mSetWorkplaceRecycler();
         }
     }
 
-    private void m_setCloseListener() {
-        buttonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                thisFragment.dismiss();
-            }
-        });
+    private void mSetWorkplaceRecycler() {
+        this.workplaceRecyclerView.setHasFixedSize(false);
+        this.workplaceRecyclerView.setAdapter(cWorkplace.getWorkplaceAdapter());
+        this.workplaceRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
-    private void mGetData() {
-        Boolean forceRefresh = false;
-        barcodeLayoutViewModel = ViewModelProviders.of(this).get(cBarcodeLayoutViewModel.class);
-        workplaceViewModel = ViewModelProviders.of(this).get(cWorkplaceViewModel.class);
-        workplaceViewModel.getWorkplaces(forceRefresh, currentBranch).observe(this, new Observer<List<cWorkplaceEntity>>() {
-            @Override
-            public void onChanged(@Nullable List<cWorkplaceEntity> workplaceEntities) {
-                if (workplaceEntities != null) {
-                    m_setWorkplaceRecycler(workplaceEntities);
-                }
-            }
-        });
-    }
-    private void m_setWorkplaceRecycler(List<cWorkplaceEntity> workplaceEntities) {
-        workplaceAdapter = new cWorkplaceAdapter(thisContext);
-        workplaceRecyclerView.setHasFixedSize(false);
-        workplaceRecyclerView.setAdapter(workplaceAdapter);
-        workplaceRecyclerView.setLayoutManager(new LinearLayoutManager(thisContext));
 
-        workplaceAdapter.setWorkplaces(workplaceEntities);
-    }
-    @Override
-    public void onResume() {
-        getActivity().registerReceiver(barcodeFragmentReceiver, barcodeFragmentIntentFilter);
-        super.onResume();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
+    //End Region Private Methods
 
-        getDialog().getWindow().setLayout(width, height);
-    }
+
+
 
 
 }

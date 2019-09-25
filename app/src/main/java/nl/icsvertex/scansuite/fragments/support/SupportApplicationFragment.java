@@ -2,8 +2,10 @@ package nl.icsvertex.scansuite.fragments.support;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,20 +103,20 @@ public class SupportApplicationFragment extends Fragment implements iICSDefaultF
         testWebserviceImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (cWebservice.mGetWebserviceAvailableBln()) {
-                    cUserInterface.showToastMessage(getString(R.string.message_webservice_live) , null);
-                    cUserInterface.doYep(textViewWebservice, true, false);
+                if (cWebservice.pGetWebserviceAvailableBln()) {
+                    cUserInterface.pShowToastMessage(getString(R.string.message_webservice_live) , null);
+                    cUserInterface.pDoYep(textViewWebservice, true, false);
                 }
                 else {
-                    cUserInterface.showToastMessage( getString(R.string.message_webservice_not_live) , null);
-                    cUserInterface.doNope(textViewWebservice, true,false);
+                    cUserInterface.pShowToastMessage( getString(R.string.message_webservice_not_live) , null);
+                    cUserInterface.pDoNope(textViewWebservice, true,false);
                 }
             }
         });
     }
 
     private void m_showSettings() {
-        final android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        final FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         final BasicsFragment basicsFragment = new BasicsFragment();
         basicsFragment.show(fragmentManager, SETTINGSFRAGMENT_TAG);
     }

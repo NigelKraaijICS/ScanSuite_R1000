@@ -1,23 +1,28 @@
 package nl.icsvertex.scansuite;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import nl.icsvertex.scansuite.fragments.pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.fragments.pick.PickorderLinesToPickFragment;
 import nl.icsvertex.scansuite.fragments.pick.PickorderLinesTotalFragment;
 
-public class PickorderLinesPagerAdapter extends FragmentStatePagerAdapter {
-    int l_numberOfTabsInt;
+import static nl.icsvertex.scansuite.cAppExtension.fragmentManager;
 
-    public PickorderLinesPagerAdapter(FragmentManager fm, int numOfTabs) {
-        super(fm);
-        this.l_numberOfTabsInt = numOfTabs;
+public class PickorderLinesPagerAdapter extends FragmentStatePagerAdapter {
+
+    //Region Private Properties
+    private int numberOfTabsInt;
+    //End Region Private Properties
+
+    public PickorderLinesPagerAdapter(int pvNumberOfTabsInt) {
+        super(fragmentManager);
+        this.numberOfTabsInt = pvNumberOfTabsInt;
     }
+
     @Override
-    public Fragment getItem(int position) {
-        switch(position) {
+    public Fragment getItem(int pvPositionInt) {
+        switch(pvPositionInt) {
             case 0:
                 PickorderLinesToPickFragment tab1 = new PickorderLinesToPickFragment();
                 return tab1;
@@ -32,5 +37,5 @@ public class PickorderLinesPagerAdapter extends FragmentStatePagerAdapter {
         }
     }
     @Override
-    public int getCount() {return l_numberOfTabsInt;}
+    public int getCount() {return numberOfTabsInt;}
 }

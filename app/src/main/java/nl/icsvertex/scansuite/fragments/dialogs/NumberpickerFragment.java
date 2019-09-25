@@ -3,9 +3,9 @@ package nl.icsvertex.scansuite.fragments.dialogs;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.General.cAppExtension;
+import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
@@ -96,7 +96,7 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
 
     @Override
     public void mFieldsInitialize() {
-//this order is important
+//this orderInt is important
         quantityNumberPicker.setMaxValue(maxQuantityInt);
         quantityNumberPicker.setValue(currentQuantity);
     }
@@ -136,7 +136,7 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
             @Override
             public void onClick(View view) {
                 if (quantityNumberPicker.getValue() == quantityNumberPicker.getMaxValue()) {
-                    cUserInterface.doNope(quantityNumberPicker, true, true);
+                    cUserInterface.pDoNope(quantityNumberPicker, true, true);
                 }
                 else {
                     changeValueByOne(quantityNumberPicker, true);
@@ -147,7 +147,7 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
             @Override
             public void onClick(View view) {
                 if (quantityNumberPicker.getValue() < 1) {
-                    cUserInterface.doNope(quantityNumberPicker, true, true);
+                    cUserInterface.pDoNope(quantityNumberPicker, true, true);
                 }
                 else {
                     changeValueByOne(quantityNumberPicker, false);

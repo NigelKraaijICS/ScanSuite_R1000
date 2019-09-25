@@ -1,42 +1,53 @@
 package SSU_WHS.Basics.Users;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import SSU_WHS.General.cDatabase;
 
-@Entity(tableName=cDatabase.TABLENAME_USERS)
+@Entity(tableName= cDatabase.TABLENAME_USERS)
 public class cUserEntity {
+
+    //Region Public Properties
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name="Username")
+    @ColumnInfo(name = cDatabase.USERNAME_NAMESTR)
     public String username;
-    @ColumnInfo(name="Name")
-    public String name;
-    @ColumnInfo(name="Importfile")
-    public String importfile;
+    public String getUsernameStr() {return this.username;}
 
-    //empty constructor
+    @ColumnInfo(name= cDatabase.NAME_NAMESTR)
+    public String name;
+    public String getNameStr() {return this.name;}
+
+    @ColumnInfo(name= cDatabase.IMPORTFILE_NAMESTR)
+    public String importfile;
+    public String getImportfileStr() {return this.importfile;}
+    //End Region Public Properties
+
+    //Region Constructor
     public cUserEntity() {
 
     }
-    public cUserEntity(JSONObject jsonObject) {
+
+    public cUserEntity(JSONObject pvJsonObject) {
         try {
-            username = jsonObject.getString(cDatabase.USERNAME_NAMESTR);
-            name = jsonObject.getString(cDatabase.NAME_NAMESTR);
-            importfile = jsonObject.getString(cDatabase.IMPORTFILE_NAMESTR);
+            this.username = pvJsonObject.getString(cDatabase.USERNAME_NAMESTR);
+            this.name = pvJsonObject.getString(cDatabase.NAME_NAMESTR);
+            this.importfile = pvJsonObject.getString(cDatabase.IMPORTFILE_NAMESTR);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+    //End Region Constructor
 
-    public String getUsernameStr() {return this.username;}
-    public String getNameStr() {return this.name;}
-    public String getImportfileStr() {return this.importfile;}
+
+
+
 
 }

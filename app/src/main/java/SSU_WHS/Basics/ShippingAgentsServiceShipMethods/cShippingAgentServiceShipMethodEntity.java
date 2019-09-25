@@ -1,8 +1,8 @@
 package SSU_WHS.Basics.ShippingAgentsServiceShipMethods;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,75 +14,42 @@ public class cShippingAgentServiceShipMethodEntity {
     @NonNull
     @ColumnInfo(name = cDatabase.SHIPPINGAGENT_NAMESTR)
     public String shippingagent;
+    public String getShippingagentStr() {
+        return shippingagent;
+    }
     @NonNull
     @ColumnInfo(name = cDatabase.SERVICE_NAMESTR)
     public String service;
+    public String getServiceStr() {
+        return service;
+    }
     @NonNull
     @ColumnInfo(name = cDatabase.SHIPPINGMETHOD_NAMESTR)
     public String shippingmethod;
-    @ColumnInfo(name = cDatabase.DESCRIPTION_DUTCH_NAMESTR)
-    public String description;
-    @ColumnInfo(name = cDatabase.VALUETYPE_NAMESTR)
-    public String valuetype;
-    @ColumnInfo(name = cDatabase.DEFAULTVALUE_NAMESTR)
-    public String defaultvalue;
-    @ColumnInfo(name = cDatabase.ENUMERATIONVALUES_NAMESTR)
-    public String enumerationvalues;
-
-    @NonNull
-    public String getShippingagent() {
-        return shippingagent;
-    }
-
-    public void setShippingagent(@NonNull String shippingagent) {
-        this.shippingagent = shippingagent;
-    }
-
-    @NonNull
-    public String getService() {
-        return service;
-    }
-
-    public void setService(@NonNull String service) {
-        this.service = service;
-    }
-
-    @NonNull
-    public String getShippingmethod() {
+    public String getShippingmethodStr() {
         return shippingmethod;
     }
-
-    public void setShippingmethod(@NonNull String shippingmethod) {
-        this.shippingmethod = shippingmethod;
-    }
-
-    public String getDescription() {
+    @ColumnInfo(name = cDatabase.DESCRIPTION_DUTCH_NAMESTR)
+    public String description;
+    public String getDescriptionStr() {
         return description;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getValuetype() {
+    @ColumnInfo(name = cDatabase.VALUETYPE_NAMESTR)
+    public String valuetype;
+    public String getValuetypeStr() {
         return valuetype;
     }
-
-    public void setValuetype(String valuetype) {
-        this.valuetype = valuetype;
-    }
-
+    @ColumnInfo(name = cDatabase.DEFAULTVALUE_NAMESTR)
+    public String defaultvalue;
     public String getDefaultvalue() {
         return defaultvalue;
     }
-
-    public void setDefaultvalue(String defaultvalue) {
-        this.defaultvalue = defaultvalue;
-    }
-
-    public String getEnumerationvalues() {
+    @ColumnInfo(name = cDatabase.ENUMERATIONVALUES_NAMESTR)
+    public String enumerationvalues;
+    public String getEnumerationValuesStr() {
         return enumerationvalues;
     }
+
 
     public void setEnumerationvalues(String enumerationvalues) {
         this.enumerationvalues = enumerationvalues;

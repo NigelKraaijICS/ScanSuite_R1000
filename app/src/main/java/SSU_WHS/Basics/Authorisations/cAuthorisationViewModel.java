@@ -1,23 +1,27 @@
 package SSU_WHS.Basics.Authorisations;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cAuthorisationViewModel  extends AndroidViewModel {
-    private cAuthorisationRepository mRepository;
+    //Region Public Properties
+    public cAuthorisationRepository Repository;
+    //End Region Public Properties
 
-    public cAuthorisationViewModel(Application application) {
-        super(application);
-
-        mRepository = new cAuthorisationRepository(application);
+    //Region Constructor
+    public cAuthorisationViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cAuthorisationRepository(pvApplication);
     }
-    public void insert(cAuthorisationEntity authorisationEntity) {mRepository.insert(authorisationEntity);}
+    //End Region Constructor
 
-    public LiveData<List<cAuthorisationEntity>> getAuthorisations(Boolean forcerefresh, String username, String branch) {return mRepository.getAuthorisations(forcerefresh, username, branch);}
+    //Region Public Methods
+    public cWebresult pGetAutorisationsFromWebserviceWrs() {return this.Repository.pGetAutorisationsFromWebserviceWrs(); }
+    public void insert(cAuthorisationEntity pvAuthorisationEntity) {this.Repository.pInsert(pvAuthorisationEntity);}
+    public void deleteAll() {Repository.pDeleteAll();}
 
-    public void deleteAll() {mRepository.deleteAll();}
+    //End Region Public Methods
 }
 

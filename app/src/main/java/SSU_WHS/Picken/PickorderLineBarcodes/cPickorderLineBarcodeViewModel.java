@@ -1,33 +1,21 @@
 package SSU_WHS.Picken.PickorderLineBarcodes;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
+import ICS.Utils.cText;
 
 public class cPickorderLineBarcodeViewModel extends AndroidViewModel {
-    private cPickorderLineBarcodeRepository mRepository;
+    public cPickorderLineBarcodeRepository pickorderLineBarcodeRepository;
 
-    public cPickorderLineBarcodeViewModel(Application application) {
-        super(application);
-
-        mRepository = new cPickorderLineBarcodeRepository(application);
+    public cPickorderLineBarcodeViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.pickorderLineBarcodeRepository = new cPickorderLineBarcodeRepository(pvApplication);
     }
 
+    public void deleteAll() { this.pickorderLineBarcodeRepository.pDeleteAll(); }
+    public void pDeleteForLineNo(Integer pvLineNoInt) {this.pickorderLineBarcodeRepository.pDeleteForLineNo(pvLineNoInt);}
+    public void pUpdateAmountForLineNo(String pvBarcodeStr, Double pvAmoundDbl) {this.pickorderLineBarcodeRepository.updateBarcodeAmount(pvBarcodeStr,pvAmoundDbl);}
 
-    public void delete(cPickorderLineBarcodeEntity pickorderLineBarcodeEntity) {mRepository.delete(pickorderLineBarcodeEntity);}
-
-    public void insert(cPickorderLineBarcodeEntity pickorderLineBarcodeEntity) {mRepository.insert(pickorderLineBarcodeEntity);}
-
-    public LiveData<List<cPickorderLineBarcodeEntity>> getPickorderLineBarcodes(Boolean forcerefresh, String branchStr, String ordernumberStr, String actiontypeStr) {return mRepository.getPickorderLineBarcodes(forcerefresh, branchStr, ordernumberStr, actiontypeStr);}
-
-    public List<cPickorderLineBarcodeEntity> getPickorderLineBarcodesForLineNo(Integer lineno) {return mRepository.getPickorderLineBarcodesForLineNo(lineno);}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public cPickorderLineBarcodeEntity getPickorderLineBarcodeByBarcode(String barcode) {return mRepository.getPickorderLineBarcodeByBarcode(barcode);}
-
-    public void updateBarcodeAmount(String barcode, int newAmount) { mRepository.updateBarcodeAmount(barcode, newAmount);}
-
+    public void insert(cPickorderLineBarcodeEntity pvPickorderLineBarcodeEntity) { pickorderLineBarcodeRepository.pInsert(pvPickorderLineBarcodeEntity); }
 }

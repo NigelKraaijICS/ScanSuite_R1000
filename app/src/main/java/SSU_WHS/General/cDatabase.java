@@ -15,6 +15,7 @@ public class cDatabase {
     public static final String TABLENAME_PICKORDERLINEBARCODE = "PickorderLineBarcode";
     public static final String TABLENAME_ARTICLEIMAGE = "ArticleImage";
     public static final String TABLENAME_COMMENT = "Comment";
+    public static final String TABLENAME_AUTHORISATIONS = "Authorisations";
     public static final String TABLENAME_SALESORDERPACKINGTABLE = "SalesOrderPackingTable";
     public static final String TABLENAME_PICKORDERADDRESS = "PickorderAddress";
     public static final String TABLENAME_SHIPPINGAGENTS = "ShippingAgents";
@@ -24,7 +25,6 @@ public class cDatabase {
     public static final String TABLENAME_PICKORDERSHIPMETHODS = "PickorderShipMethods";
     public static final String TABLENAME_PICKORDERSHIPPACKAGES = "PickorderShipPackages";
     public static final String TABLENAME_PICKORDERLINEPACKANDSHIP = "PickorderLinePackAndShip";
-    public static final String TABLENAME_ORDERSETTINGS = "OrderSettings";
     //endregion Tables
 
     //region localtables
@@ -55,7 +55,6 @@ public class cDatabase {
     public static final String BRANCH_NAMESTR = "Vestiging";
     public static final String BRANCHTYPE_NAMESTR = "Vestigingtype";
     public static final String BRANCHNAME_NAMESTR = "Name";
-    public static final String BRAND_NAMESTR = "Brand";
     //endregion B
 
     //region C
@@ -75,7 +74,6 @@ public class cDatabase {
     //endregion C
 
     //region D
-    public static final String DATATIMESTAMP_NAMESTR = "Omschrijving";
     public static final String DESCRIPTION_DUTCH_NAMESTR = "Omschrijving";
     public static final String DESCRIPTION_NAMESTR = "Description";
     public static final String DESCRIPTION2_NAMESTR = "Description2";
@@ -95,10 +93,8 @@ public class cDatabase {
     public static final String EXTERNALREFERENCE_NAMESTR = "ExternalReference";
     public static final String ENUMERATIONVALUES_NAMESTR = "EnumerationValues";
 
-    public static final String ENVIRONMENT_RECORDID = "RecordId";
     public static final String ENVIRONMENT_DEFAULT = "IsDefault";
     public static final String ENVIRONMENT_NAME = "Name";
-    public static final String ENVIRONMENT_CLIENT = "Client";
     public static final String ENVIRONMENT_DESCRIPTION = "Description";
     public static final String ENVIRONMENT_WEBSERVICEURL = "Webserviceurl";
     //endregion E
@@ -109,12 +105,14 @@ public class cDatabase {
     public static final String INTERFACERESULTMETHOD_NAMESTR = "Interface_result_method";
     public static final String ISPARTOFMULTILINEORDER_NAMESTR = "IsPartOfMultiLineOrder";
     public static final String ISUNIQUEBARCODE_NAMESTR = "IsUniqueBarcode";
+    public static final String ISUNIQUE_NAMESTR = "IsUnique";
     public static final String ITEMNO_NAMESTR = "ItemNo";
     //endregion I
 
     //region L
     public static final String LAYOUTVALUE_NAMESTR = "Layout";
-    public static final String LICENSE_NAMESTR = "Licentie";
+    public static final String LICENSE_NAMESTR = "License";
+    public static final String LICENSE_NL_NAMESTR = "Licentie";
     public static final String LINENO_NAMESTR = "LineNo";
     public static final String LINENOTAKE_NAMESTR = "LineNoTake";
     public static final String LOCALSTATUS_NAMESTR = "LocalStatus";
@@ -133,9 +131,9 @@ public class cDatabase {
 
     //region O
     public static final String ORDER_NAMESTR = "Volgorde";
+    public static final String OMSCHRIJVING_NAMESTR = "Omschrijving";
     public static final String ORDERNUMBER_NAMESTR = "Opdrachtnummer";
     public static final String ORDERTYPE_NAMESTR = "Opdrachttype";
-    public static final String OWNER_NAMESTR = "Owner";
     //endregion O
 
     //region P
@@ -153,10 +151,14 @@ public class cDatabase {
     public static final String PICKPICKTOCONTAINERTYPE_NAMESTR = "Pick_Pick_to_container_type";
     public static final String PICKPRINTADDRESSLABEL_NAMESTR = "Pick_Print_adreslabel";
     public static final String PICKPRINTCONTENTLABEL_NAMESTR = "Pick_Print_contentlabel";
-    public static final String PINCODE_NAMESTR = "Pincode";
+    public static final String PICKPRINTWITHPICTURE_NAMESTR = "Pick_with_picture";
+    public static final String PICKPRINTWITHPICTURE_AUTO_OPEN_NAMESTR = "Pick_with_picture_auto_open";
+    public static final String PICKPRINTWITHPICTURE_PREFETCH_NAMESTR = "Pick_with_picture_prefetch";
+    public static final String PICKACTIVITYBINREQUIRED_NAMESTR = "Pick_Activity_bin_required";
+
     public static final String PRINTDOCUMENTS_NAMESTR = "PrintDocuments";
     public static final String PROCESSINGSEQUENCE_NAMESTR = "ProcessingSequence";
-
+    public static final String PROPERTY_NAMESTR = "Property";
     public static final String PICKORDERLINEBARCODE_LINENO = "LineNo";
     public static final String PICKORDERLINEBARCODE_BARCODE = "Barcode";
     public static final String PICKORDERLINEBARCODE_QUANTITY = "Quantity";
@@ -176,6 +178,7 @@ public class cDatabase {
     //region R
     public static final String RECEIVEDEFAULTBIN_NAMESTR = "Receive_default_bin";
     public static final String REQUESTENDDATETIME_NAMESTR = "RequestedEndDateTime";
+    public static final String REMEMBERVALUE_NAMESTR = "RememberValue";
     public static final String RETURNDEFAULTBIN_NAMESTR = "Retour_default_bin";
     //endregion R
 
@@ -196,6 +199,7 @@ public class cDatabase {
     public static final String STORAGEBINCODE_NAMESTR = "StorageBinCode";
     public static final String STORESOURCEORDER_NAMESTR = "StoreSourceOpdracht";
     public static final String STREET_NAMESTR = "Straat";
+    public static final String SEQUENCE_NAMESTR = "Order";
     public static final String SHIPPINGAGENT_NAMESTR = "Expediteur";
     public static final String SERVICE_NAMESTR = "Service";
     public static final String SERVICECOUNTRIES_NAMESTR = "ServiceCountries";
@@ -217,6 +221,7 @@ public class cDatabase {
     //region U
     public static final String USEFORSTORAGE_NAMESTR = "UseForStorage";
     public static final String USEFORRETURNSALES_NAMESTR = "UseForReturnSales";
+    public static final String UNIQUNESS_NAMESTR = "Uniqueness";
     public static final String USERNAME_NAMESTR = "Gebruikersnaam";
     //endregion U
 

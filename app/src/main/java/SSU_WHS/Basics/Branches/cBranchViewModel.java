@@ -1,27 +1,28 @@
 package SSU_WHS.Basics.Branches;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cBranchViewModel extends AndroidViewModel {
-    private cBranchRepository mRepository;
 
-    public cBranchViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cBranchRepository Repository;
+    //End Region Public Properties
 
-        mRepository = new cBranchRepository(application);
+    //Region Constructor
+    public cBranchViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cBranchRepository(pvApplication);
     }
-    public void insert(cBranchEntity branchEntity) {mRepository.insert(branchEntity);}
+    //End Region Constructor
 
-    public LiveData<List<cBranchEntity>> getBranchesForUser(Boolean forcerefresh, String user) {return mRepository.getBranchesForUser(forcerefresh, user); }
+    //Region Public Methods
+    public cWebresult pGetBranchesFromWebserviceWrs() {return this.Repository.pGetBranchesFromWebserviceWrs(); }
+    public void insert(cBranchEntity pvBranchEntity) {this.Repository.pInsert(pvBranchEntity);}
+    public void deleteAll() {Repository.pDeleteAll();}
 
-    public List<cBranchEntity> getLocalBranches() {return mRepository.getAll();}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public cBranchEntity getBranchByCode(String branch) {return mRepository.getBranchByCode(branch);}
+    //End Region Public Methods
 
 }

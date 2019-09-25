@@ -1,9 +1,9 @@
 package SSU_WHS.Picken.Pickorders;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,152 +12,214 @@ import SSU_WHS.General.cDatabase;
 
 @Entity(tableName="Pickorders")
 public class cPickorderEntity {
+
+    //Region Public Properties
     @PrimaryKey @NonNull
     @ColumnInfo(name="Ordernumber")
     public String ordernumber;
+    public String getOrdernumberStr() {return this.ordernumber;}
+
     @ColumnInfo(name="Ordertype")
     public String ordertype;
+    public String getOrderTypeStr() {return this.ordertype;}
+
     @ColumnInfo(name="Number_of_Bins")
     public String numberofBins;
+    public String getNumberofBinsStr() {return this.numberofBins;}
+
     @ColumnInfo(name="QuantityTotal")
     public String quantitytotal;
+    public String getQuantityTotalStr() {return this.quantitytotal;}
+
     @ColumnInfo(name="SingleArticleOrders")
     public String singleArticleOrders;
+    public String getSingleArticleOrdersStr() {return this.singleArticleOrders;}
+
     @ColumnInfo(name="Pick_Reject_during_pick")
     public String pickRejectduringpick;
+    public String getPickRejectDuringpickStr() {return this.pickRejectduringpick;}
+
     @ColumnInfo(name="Pick_Reject_during_sort")
     public String pickRejectduringsort;
+    public String getPickRejectDuringSortStr() {return this.pickRejectduringsort;}
+
     @ColumnInfo(name="Pick_Sales_ask_workplace")
     public String pickSalesaskworkplace;
+    public String getPickSalesAskWorkplaceStr() {return this.pickSalesaskworkplace;}
+
     @ColumnInfo(name="Pick_Transfer_ask_workplace")
     public String pickTransferaskworkplace;
+    public String getPickTransferAskWorkplaceStr() {return this.pickTransferaskworkplace;}
+
     @ColumnInfo(name="Pick_Barcode_check")
     public String pickBarcodecheck;
+    public String getPickBarcodeCheckStr() {return this.pickBarcodecheck;}
+
     @ColumnInfo(name="Pick_Pick_PV_VKO_each_piece")
     public String pickPickPVVKOeachpiece;
+    public String getPickPickPVVKOEachPieceStr() {return this.pickPickPVVKOeachpiece;}
+
     @ColumnInfo(name="Pick_Pick_to_container")
     public String pickPicktocontainer;
+    public String getPickPickToContainerStr() {return this.pickPicktocontainer;}
+
     @ColumnInfo(name="Pick_Pick_to_container_type")
     public String pickPicktocontainertype;
+    public String getPickPickToContainerTypeStr() {return this.pickPicktocontainertype;}
+
     @ColumnInfo(name="Pick_Print_addresslabel")
     public String pickPrintaddresslabel;
+    public String getPickPrintAddresslabelStr() {return this.pickPrintaddresslabel;}
+
     @ColumnInfo(name="Pick_Print_contentlabel")
     public String pickPrintcontentlabel;
+    public String getPickPrintContentLabelStr() {return this.pickPrintcontentlabel;}
+
+    @ColumnInfo(name="Pick_with_picture")
+    public String pickWithPicture;
+    public String getpickWithPictureStr() {return this.pickWithPicture;}
+
+    @ColumnInfo(name="Pick_with_picture_auto_open")
+    public String pickWithPictureAutoOpen;
+    public String getPickWithPictureAutoOpenStr() {return this.pickWithPictureAutoOpen;}
+
+    @ColumnInfo(name="Pick_with_picture_prefetch")
+    public String pickWithPicturePrefetch;
+    public String getPickWithPicturePrefetchStr() {return this.pickWithPicturePrefetch;}
+
+    @ColumnInfo(name="Pick_activity_bin_required")
+    public String pickActivityBinRequired;
+    public String getPickActivityBinRequired() {return this.pickActivityBinRequired;}
+
     @ColumnInfo(name="AssignedUserId")
     public String assignedUserId;
+    public String getAssignedUserIdStr() {return this.assignedUserId;}
+
     @ColumnInfo(name="CurrentUserId")
     public String currentUserId;
+    public String getCurrentUserIdStr() {return this.currentUserId;}
+
     @ColumnInfo(name="Status")
     public String status;
+    public String getStatusStr() {return this.status;}
+
     @ColumnInfo(name="StatusPrintAtStart")
     public String statusPrintAtStart;
+    public String getStatusPrintAtStartStr() {return this.statusPrintAtStart;}
+
     @ColumnInfo(name="ExternalReference")
     public String externalReference;
+    public String getExternalReferenceStr() {return this.externalReference;}
+
     @ColumnInfo(name="Workplace")
     public String workplace;
+    public String getWorkplaceStr() {return this.workplace;}
+
     @ColumnInfo(name="StockOwner")
     public String stockOwner;
+    public String getStockOwnerStr() {return this.stockOwner;}
+
     @ColumnInfo(name="RequestedEndDateTime")
     public String requestedEndDateTime;
+    public String getRequestedEndDateTimeStr() {return this.requestedEndDateTime;}
+
     @ColumnInfo(name="SourceDocument")
     public String sourceDocument;
+    public String getSourceDocumentStr() {return this.sourceDocument;}
+
     @ColumnInfo(name="Document")
     public String document;
+    public String getDocumentStr() {return this.document;}
+
     @ColumnInfo(name="DocumentType")
     public String documentType;
+    public String getDocumentTypeStr() {return this.documentType;}
+
     @ColumnInfo(name="Document2")
     public String document2;
+    public String getDocument2Str() {return this.document2;}
+
     @ColumnInfo(name="DocumentType2")
     public String documentType2;
+    public String getDocumentType2Str() {return this.documentType2;}
+
     @ColumnInfo(name="Webservice_timeout_erp_in_s")
     public String webservicetimeouterpins;
+    public String getWebserviceTimeOutERPInsStr() {return this.webservicetimeouterpins;}
+
     @ColumnInfo(name="Currentlocation")
     public String currentlocation;
+    public String getCurrentLocationStr() {return this.currentlocation;}
+
     @ColumnInfo(name="Interface_result_method")
     public String interfaceresultmethod;
+    public String getInterfaceResultMethodStr() {return this.interfaceresultmethod;}
+
     @ColumnInfo(name="Sorting")
     public String sorting;
+    public String getSortingStr() {return this.sorting;}
+
     @ColumnInfo(name="IsProcessingOrParked")
     public Boolean isprocessingorparked;
+    public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
 
+    //End Region Public Properties
 
-    //empty constructor
+    //Region Constructor
     public cPickorderEntity() {
 
     }
 
-    public cPickorderEntity(JSONObject jsonObject, Boolean inProgress) {
+    public cPickorderEntity(JSONObject pvJsonObject, Boolean pvInProgressBln) {
         try {
-            ordernumber = jsonObject.getString(cDatabase.ORDERNUMBER_NAMESTR);
-            ordertype = jsonObject.getString(cDatabase.ORDERTYPE_NAMESTR);
-            numberofBins = jsonObject.getString(cDatabase.NUMBEROFBINS_NAMESTR);
-            quantitytotal = jsonObject.getString(cDatabase.QUANTITYTOTAL_NAMESTR);
-            singleArticleOrders = jsonObject.getString(cDatabase.SINGLEARTICLEORDERS_NAMESTR);
-            pickRejectduringpick = jsonObject.getString(cDatabase.PICKREJECTDURINGPICK_NAMESTR);
-            pickRejectduringsort = jsonObject.getString(cDatabase.PICKREJECTDURINGSORT_NAMESTR);
-            pickSalesaskworkplace = jsonObject.getString(cDatabase.PICKSALESASKWORKPLACE_NAMESTR);
-            pickTransferaskworkplace = jsonObject.getString(cDatabase.PICKTRANSFERASKWORKPLACE_NAMESTR);
-            pickBarcodecheck = jsonObject.getString(cDatabase.PICKBARCODECHECK_NAMESTR);
-            pickPickPVVKOeachpiece = jsonObject.getString(cDatabase.PICKPICKPVVKKOEACHPIECE_NAMESTR);
-            pickPicktocontainer = jsonObject.getString(cDatabase.PICKPICKTOCONTAINER_NAMESTR);
-            pickPicktocontainertype = jsonObject.getString(cDatabase.PICKPICKTOCONTAINERTYPE_NAMESTR);
-            pickPrintaddresslabel = jsonObject.getString(cDatabase.PICKPRINTADDRESSLABEL_NAMESTR);
-            pickPrintcontentlabel = jsonObject.getString(cDatabase.PICKPRINTCONTENTLABEL_NAMESTR);
-            assignedUserId = jsonObject.getString(cDatabase.ASSIGNEDUSERID_NAMESTR);
-            currentUserId = jsonObject.getString(cDatabase.CURRENTUSERID_NAMESTR);
-            status = jsonObject.getString(cDatabase.STATUS_NAMESTR);
-            statusPrintAtStart = jsonObject.getString(cDatabase.STATUSPRINTATSTART_NAMESTR);
-            externalReference = jsonObject.getString(cDatabase.EXTERNALREFERENCE_NAMESTR);
-            workplace = jsonObject.getString(cDatabase.WORKPLACE_NAMESTR);
-            stockOwner = jsonObject.getString(cDatabase.STOCKOWNER_NAMESTR);
-            requestedEndDateTime = jsonObject.getString(cDatabase.REQUESTENDDATETIME_NAMESTR);
-            sourceDocument = jsonObject.getString(cDatabase.SOURCEDOCUMENT_NAMESTR);
-            document = jsonObject.getString(cDatabase.DOCUMENT_NAMESTR);
-            documentType = jsonObject.getString(cDatabase.DOCUMENTTYPE_NAMESTR);
-            document2 = jsonObject.getString(cDatabase.DOCUMENT2_NAMESTR);
-            documentType2 = jsonObject.getString(cDatabase.DOCUMENTTYPE2_NAMESTR);
-            currentlocation = jsonObject.getString(cDatabase.CURRENTLOCATION_NAMESTR);
-            webservicetimeouterpins = jsonObject.getString(cDatabase.WEBSERVICETIMEOUTERPINS_NAMESTR);
-            interfaceresultmethod = jsonObject.getString(cDatabase.INTERFACERESULTMETHOD_NAMESTR);
-            sorting = jsonObject.getString(cDatabase.SORTING_NAMESTR);
-            isprocessingorparked = inProgress;
+            this.ordernumber = pvJsonObject.getString(cDatabase.ORDERNUMBER_NAMESTR);
+            this.ordertype = pvJsonObject.getString(cDatabase.ORDERTYPE_NAMESTR);
+            this.numberofBins = pvJsonObject.getString(cDatabase.NUMBEROFBINS_NAMESTR);
+            this.quantitytotal = pvJsonObject.getString(cDatabase.QUANTITYTOTAL_NAMESTR);
+            this.singleArticleOrders = pvJsonObject.getString(cDatabase.SINGLEARTICLEORDERS_NAMESTR);
+
+            this.assignedUserId = pvJsonObject.getString(cDatabase.ASSIGNEDUSERID_NAMESTR);
+            this.currentUserId = pvJsonObject.getString(cDatabase.CURRENTUSERID_NAMESTR);
+            this.status = pvJsonObject.getString(cDatabase.STATUS_NAMESTR);
+            this.statusPrintAtStart = pvJsonObject.getString(cDatabase.STATUSPRINTATSTART_NAMESTR);
+            this.externalReference = pvJsonObject.getString(cDatabase.EXTERNALREFERENCE_NAMESTR);
+            this.workplace = pvJsonObject.getString(cDatabase.WORKPLACE_NAMESTR);
+            this.stockOwner = pvJsonObject.getString(cDatabase.STOCKOWNER_NAMESTR);
+            this.requestedEndDateTime = pvJsonObject.getString(cDatabase.REQUESTENDDATETIME_NAMESTR);
+            this.sourceDocument = pvJsonObject.getString(cDatabase.SOURCEDOCUMENT_NAMESTR);
+            this.document = pvJsonObject.getString(cDatabase.DOCUMENT_NAMESTR);
+            this.documentType = pvJsonObject.getString(cDatabase.DOCUMENTTYPE_NAMESTR);
+            this.document2 = pvJsonObject.getString(cDatabase.DOCUMENT2_NAMESTR);
+            this.documentType2 = pvJsonObject.getString(cDatabase.DOCUMENTTYPE2_NAMESTR);
+            this.currentlocation = pvJsonObject.getString(cDatabase.CURRENTLOCATION_NAMESTR);
+            this.webservicetimeouterpins = pvJsonObject.getString(cDatabase.WEBSERVICETIMEOUTERPINS_NAMESTR);
+            this.interfaceresultmethod = pvJsonObject.getString(cDatabase.INTERFACERESULTMETHOD_NAMESTR);
+            this.sorting = pvJsonObject.getString(cDatabase.SORTING_NAMESTR);
+            this.isprocessingorparked = pvInProgressBln;
+
+            //Settings
+            this.pickRejectduringpick = pvJsonObject.getString(cDatabase.PICKREJECTDURINGPICK_NAMESTR);
+            this.pickRejectduringsort = pvJsonObject.getString(cDatabase.PICKREJECTDURINGSORT_NAMESTR);
+            this.pickSalesaskworkplace = pvJsonObject.getString(cDatabase.PICKSALESASKWORKPLACE_NAMESTR);
+            this.pickTransferaskworkplace = pvJsonObject.getString(cDatabase.PICKTRANSFERASKWORKPLACE_NAMESTR);
+            this.pickBarcodecheck = pvJsonObject.getString(cDatabase.PICKBARCODECHECK_NAMESTR);
+            this.pickPickPVVKOeachpiece = pvJsonObject.getString(cDatabase.PICKPICKPVVKKOEACHPIECE_NAMESTR);
+            this.pickPicktocontainer = pvJsonObject.getString(cDatabase.PICKPICKTOCONTAINER_NAMESTR);
+            this.pickPicktocontainertype = pvJsonObject.getString(cDatabase.PICKPICKTOCONTAINERTYPE_NAMESTR);
+            this.pickPrintaddresslabel = pvJsonObject.getString(cDatabase.PICKPRINTADDRESSLABEL_NAMESTR);
+            this.pickPrintcontentlabel = pvJsonObject.getString(cDatabase.PICKPRINTCONTENTLABEL_NAMESTR);
+            this.pickWithPicture = pvJsonObject.getString(cDatabase.PICKPRINTWITHPICTURE_NAMESTR);
+            this.pickWithPictureAutoOpen = pvJsonObject.getString(cDatabase.PICKPRINTWITHPICTURE_AUTO_OPEN_NAMESTR);
+            this.pickWithPicturePrefetch = pvJsonObject.getString(cDatabase.PICKPRINTWITHPICTURE_PREFETCH_NAMESTR);
+            this.pickActivityBinRequired = pvJsonObject.getString(cDatabase.PICKACTIVITYBINREQUIRED_NAMESTR);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    public String getOrdernumber() {return this.ordernumber;}
-    public String getOrdertype() {return this.ordertype;}
-    public String getNumberofBins() {return this.numberofBins;}
-    public String getQuantitytotal() {return this.quantitytotal;}
-    public String getSingleArticleOrders() {return this.singleArticleOrders;}
-    public String getPickRejectduringpick() {return this.pickRejectduringpick;}
-    public String getPickRejectduringsort() {return this.pickRejectduringsort;}
-    public String getPickSalesaskworkplace() {return this.pickSalesaskworkplace;}
-    public String getPickTransferaskworkplace() {return this.pickTransferaskworkplace;}
-    public String getPickBarcodecheck() {return this.pickBarcodecheck;}
-    public String getPickPickPVVKOeachpiece() {return this.pickPickPVVKOeachpiece;}
-    public String getPickPicktocontainer() {return this.pickPicktocontainer;}
-    public String getPickPicktocontainertype() {return this.pickPicktocontainertype;}
-    public String getPickPrintaddresslabel() {return this.pickPrintaddresslabel;}
-    public String getPickPrintcontentlabel() {return this.pickPrintcontentlabel;}
-    public String getAssignedUserId() {return this.assignedUserId;}
-    public String getCurrentUserId() {return this.currentUserId;}
-    public String getStatus() {return this.status;}
-    public String getStatusPrintAtStart() {return this.statusPrintAtStart;}
-    public String getExternalReference() {return this.externalReference;}
-    public String getWorkplace() {return this.workplace;}
-    public String getStockOwner() {return this.stockOwner;}
-    public String getRequestedEndDateTime() {return this.requestedEndDateTime;}
-    public String getSourceDocument() {return this.sourceDocument;}
-    public String getDocument() {return this.document;}
-    public String getDocumentType() {return this.documentType;}
-    public String getDocument2() {return this.document2;}
-    public String getDocumentType2() {return this.documentType2;}
-    public String getCurrentlocation() {return this.currentlocation;}
-    public String getWebservicetimeouterpins() {return this.webservicetimeouterpins;}
-    public String getInterfaceresultmethod() {return this.interfaceresultmethod;}
-    public String getSorting() {return this.sorting;}
-    public Boolean getIsprocessingorparked() {return this.isprocessingorparked;}
+
+    //End Region Constructor
+
 }
 
 

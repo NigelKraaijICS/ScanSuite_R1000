@@ -1,50 +1,55 @@
 package SSU_WHS.Basics.BarcodeLayouts;
 
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import SSU_WHS.General.cDatabase;
 
-@Entity(tableName = cDatabase.TABLENAME_BARCODELAYOUTS, primaryKeys = {"BarcodeLayout", "LayoutValue"})
+@Entity(tableName = cDatabase.TABLENAME_BARCODELAYOUTS, primaryKeys = {cDatabase.BARCODELAYOUT_NAMESTR, cDatabase.LAYOUTVALUE_NAMESTR})
 public class cBarcodeLayoutEntity {
-    @NonNull
-    @ColumnInfo(name = "BarcodeLayout")
-    public String barcodelayout;
-    @NonNull
-    @ColumnInfo(name = "LayoutValue")
-    public String layoutvalue;
-    @ColumnInfo(name = "SortOrder")
-    public String sortorder;
-    @ColumnInfo(name = "ImportFile")
-    public String importfile;
 
-    //empty constructor
+    //Region Public Properties
+    @NonNull
+    @ColumnInfo(name = cDatabase.BARCODELAYOUT_NAMESTR)
+    public String barcodelayout;
+    public String getBarcodelayoutStr() {return barcodelayout;}
+
+    @NonNull
+    @ColumnInfo(name = cDatabase.LAYOUTVALUE_NAMESTR)
+    public String layoutvalue;
+    public String getLayoutValueStr() {return layoutvalue;}
+
+    @ColumnInfo(name = cDatabase.SORTORDER_NAMESTR)
+    public String sortorder;
+    public String getSortOrderStr() {return sortorder;}
+
+    @ColumnInfo(name = cDatabase.IMPORTFILE_NAMESTR)
+    public String importfile;
+    public String getImportfileStr() {return importfile;}
+
+    //End Region Public Properies
+
+    //Region Constructor
     public cBarcodeLayoutEntity() {
 
     }
-    public String getBarcodelayout() {return barcodelayout;}
+
     public cBarcodeLayoutEntity(JSONObject jsonObject) {
         try {
-            barcodelayout = jsonObject.getString(cDatabase.BARCODELAYOUT_NAMESTR);
-            layoutvalue = jsonObject.getString(cDatabase.LAYOUTVALUE_NAMESTR);
-            sortorder = jsonObject.getString(cDatabase.SORTORDER_NAMESTR);
-            importfile = jsonObject.getString(cDatabase.IMPORTFILE_NAMESTR);
+            this.barcodelayout = jsonObject.getString(cDatabase.BARCODELAYOUT_NAMESTR);
+            this.layoutvalue = jsonObject.getString(cDatabase.LAYOUTVALUE_NAMESTR);
+            this.sortorder = jsonObject.getString(cDatabase.SORTORDER_NAMESTR);
+            this.importfile = jsonObject.getString(cDatabase.IMPORTFILE_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    public void setBarcodelayout(String pv_barcodelayout) {this.barcodelayout = pv_barcodelayout;}
-    public String getLayoutValue() {return layoutvalue;}
-    public void setLayoutValue(String pv_layoutvalue) {this.layoutvalue = pv_layoutvalue;}
-    public String getSortOrder() {return sortorder;}
-    public void setSortOrder(String pv_sortorder) {this.sortorder = pv_sortorder;}
-    public String getImportfile() {return importfile;}
-    public void setImportfile(String pv_importfile) {this.importfile = pv_importfile;}
+    //End Region Constructor
 }
 
 

@@ -1,11 +1,6 @@
 package SSU_WHS.Webservice;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,29 +24,6 @@ import java.util.List;
 
 import ICS.Weberror.cWeberror;
 import ICS.Weberror.cWeberrorEntity;
-import ICS.Weberror.iWeberrorDao;
-import ICS.Weberror.iWeberrorDao_Impl;
-import ICS.acICSDatabase;
-import ICS.Complex_types.c_BarcodeHandledUwbh;
-import ICS.Complex_types.c_InterfaceShippingPackageIesp;
-import SSU_WHS.General.cAppExtension;
-import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.cDateAndTime;
-import ICS.Utils.cDeviceInfo;
-import okhttp3.OkHttpClient;
-
-import static ICS.Weberror.cWeberror.FIREBASE_ACTIVITY;
-import static ICS.Weberror.cWeberror.FIREBASE_DEVICE;
-import static ICS.Weberror.cWeberror.FIREBASE_ISRESULT;
-import static ICS.Weberror.cWeberror.FIREBASE_ISSUCCESS;
-import static ICS.Weberror.cWeberror.FIREBASE_KEY_IP;
-import static ICS.Weberror.cWeberror.FIREBASE_KEY_LANGUAGE;
-import static ICS.Weberror.cWeberror.FIREBASE_KEY_SSID;
-import static ICS.Weberror.cWeberror.FIREBASE_MESSAGE;
-import static ICS.Weberror.cWeberror.FIREBASE_METHOD;
-import static ICS.Weberror.cWeberror.FIREBASE_PARAMETERS;
-import static ICS.Weberror.cWeberror.FIREBASE_URL;
-
 
 public class cWebresult {
 
@@ -60,7 +32,6 @@ public class cWebresult {
     private List<String> vResultObl;
     private Long vResultLng;
     private List<JSONObject> vResultDtt;
-    private OkHttpClient okHttpClient;
 
     public Boolean getSuccessBln ( )
     {
@@ -97,21 +68,13 @@ public class cWebresult {
     {
         return vResultLng;
     }
-    public void setResultLng (Long pv_ResultLng)
-    {
-        vResultLng = pv_ResultLng;
-    }
 
     public List<JSONObject> getResultDtt ( )
     {
         return vResultDtt;
     }
-    public void setResultDtt (List<JSONObject> pv_ResultDtt)
-    {
-        vResultDtt = pv_ResultDtt;
-    }
 
-    public cWebresult mGetwebresultWrs(String pv_methodNameStr, List<PropertyInfo> pv_PropertyInfoObl) throws JSONException {
+    public static cWebresult pGetwebresultWrs(String pv_methodNameStr, List<PropertyInfo> pv_PropertyInfoObl) throws JSONException {
 
         cWebresult l_WebresultWrs = new cWebresult();
         l_WebresultWrs.vResultDtt = new ArrayList<>();
@@ -123,7 +86,7 @@ public class cWebresult {
         boolean isHTTPSBln;
         String hostStr;
         String pathStr;
-        //Boolean isHTTPSBln = cWebservice.WEBSERVICE_URL.toLowerCase().startsWith("https".toLowerCase());
+
         try {
             url = new URL(cWebservice.WEBSERVICE_URL);
         } catch (MalformedURLException e) {
@@ -142,8 +105,6 @@ public class cWebresult {
         else {
             l_WebresultWrs.setSuccessBln(false);
             l_WebresultWrs.setResultBln(false);
-            //todo: uitzoeken
-            //l_WebresultWrs.vResultObl.add(Resources.getSystem().getString(R.string.error_malformed_url));
             l_WebresultWrs.vResultObl.add("not a valid url");
             return l_WebresultWrs;
         }
@@ -155,16 +116,12 @@ public class cWebresult {
             }
         }
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        //SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
 
         new cMarshalDouble().register(envelope);
         new MarshalBase64().register(envelope);
         envelope.dotNet = true;
 
         //region complex types
-        envelope.addMapping(cWebservice.WEBSERVICE_NAMESPACE, "c_InterfaceShippingPackageIesp", new c_InterfaceShippingPackageIesp().getClass());
-        envelope.addMapping(cWebservice.WEBSERVICE_NAMESPACE, "c_BarcodeHandledUwbh", new c_BarcodeHandledUwbh().getClass());
-        //envelope.addMapping(cWebservice.WEBSERVICE_NAMESPACE, "ArrayOfC_InterfaceShippingPackageIesp", new c_InterfaceShippingPackageIesp().getClass());
 
         //endregion complex types
 
@@ -224,24 +181,16 @@ public class cWebresult {
             return l_WebresultWrs;
         }
         JSONObject webserviceobject = null;
-        JSONArray l_WebserviceArray = null;
-        JSONArray l_WebresultArray;
         JSONArray l_ResultOblArray = new JSONArray();
         JSONArray l_WebresultDatatableArray = new JSONArray();
 
         try {
             assert result != null;
-
             webserviceobject = new JSONObject(result.toString());
-            //l_WebserviceArray = new JSONArray(result.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //answer consists of two arrays; first the resultparams, then the data
-        //resultparams
-        //assert l_WebserviceArray != null;
-        //l_WebresultArray = l_WebserviceArray.getJSONArray(0);
-        //JSONObject webResultObj = l_WebresultArray.getJSONObject(0);
+
         assert webserviceobject != null;
         JSONObject webResultObj = webserviceobject;
 
@@ -260,9 +209,6 @@ public class cWebresult {
                 try {
                     String value = l_ResultOblArray.getString(j);
                     l_WebresultWrs.vResultObl.add(value);
-
-//                    obj =  l_ResultOblArray.getJSONObject(j);
-//                    l_WebresultWrs.vResultObl.add(obj.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -292,47 +238,18 @@ public class cWebresult {
         }
         return l_WebresultWrs;
     }
-    private void mHandleWeberror(cWebresult webresult, String webmethod , List<PropertyInfo> propertyInfoList) {
+    private static void mHandleWeberror(cWebresult webresult, String webmethod , List<PropertyInfo> propertyInfoList) {
         if (!webresult.getSuccessBln() || !webresult.getResultBln()) {
             for (String errormessage : webresult.getResultObl()) {
-                final cWeberrorEntity weberrorEntity = new cWeberrorEntity();
-                weberrorEntity.setActivity(cPublicDefinitions.CURRENT_ACTIVITY);
-                weberrorEntity.setWebmethod(webmethod);
+
                 String parameters = "";
                 if (propertyInfoList != null) {
                     parameters = propertyInfoList.toString();
                 }
-                weberrorEntity.setIssucess(webresult.getSuccessBln());
-                weberrorEntity.setIsresult(webresult.getResultBln());
-                weberrorEntity.setParameters(parameters);
-                weberrorEntity.setResult(errormessage);
-                weberrorEntity.setDevice(cDeviceInfo.getSerialnumber());
-                weberrorEntity.setDatetime(cDateAndTime.m_GetCurrentDateTimeForWebservice());
-                weberrorEntity.setLocalstatus(cWeberror.WeberrorStatusEnu.NEW.toString());
 
-                final Context context = cAppExtension.context;
-                AsyncTask.execute(new Runnable() {
-                    @Override public void run() {
-
-                        iWeberrorDao webresultDao = new iWeberrorDao_Impl(acICSDatabase.getDatabase(context));
-                        webresultDao.insert(weberrorEntity);
-                    }
-                });
-
-                Crashlytics.log(Log.INFO,FIREBASE_ISSUCCESS, webresult.getSuccessBln().toString());
-                Crashlytics.log(Log.INFO,FIREBASE_ISRESULT, webresult.getResultBln().toString());
-                Crashlytics.log(Log.INFO,FIREBASE_ACTIVITY, cPublicDefinitions.CURRENT_ACTIVITY);
-                Crashlytics.log(Log.INFO,FIREBASE_MESSAGE, errormessage);
-                Crashlytics.log(Log.INFO,FIREBASE_DEVICE, cDeviceInfo.getSerialnumber());
-                Crashlytics.log(Log.INFO,FIREBASE_PARAMETERS,parameters);
-                Crashlytics.log(Log.INFO,FIREBASE_METHOD,webmethod);
-                Crashlytics.log(Log.INFO,FIREBASE_URL,cWebservice.WEBSERVICE_URL);
-
-                Crashlytics.setString(FIREBASE_KEY_LANGUAGE, cDeviceInfo.getFriendlyLanguage());
-                Crashlytics.setString(FIREBASE_KEY_SSID, cDeviceInfo.getSSID());
-                Crashlytics.setString(FIREBASE_KEY_IP, cDeviceInfo.getIpAddress());
-
-                Crashlytics.logException(new Exception("ICS Webservice error: " + webmethod));
+                 cWeberrorEntity weberrorEntity = new cWeberrorEntity(webmethod,parameters,errormessage,webresult);
+                 cWeberror weberror = new cWeberror(weberrorEntity);
+                 weberror.pInsertInDatabaseBln();
             }
         }
     }

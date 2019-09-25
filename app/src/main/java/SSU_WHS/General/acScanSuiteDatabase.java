@@ -1,8 +1,8 @@
 package SSU_WHS.General;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 import android.content.Context;
 
 import SSU_WHS.Basics.ArticleImages.cArticleImageEntity;
@@ -11,16 +11,18 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
 import SSU_WHS.Basics.BarcodeLayouts.iBarcodeLayoutDao;
 import SSU_WHS.Basics.Branches.cBranchEntity;
 import SSU_WHS.Basics.Branches.iBranchDao;
-import SSU_WHS.Picken.Comments.cCommentEntity;
-import SSU_WHS.Picken.Comments.iCommentDao;
+
+import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
+import SSU_WHS.Basics.ItemProperty.iItemPropertyDao;
+import SSU_WHS.General.Comments.cCommentEntity;
+import SSU_WHS.General.Comments.iCommentDao;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddressEntity;
 import SSU_WHS.Picken.PickorderAddresses.iPickorderAddressDao;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeEntity;
 import SSU_WHS.Picken.PickorderBarcodes.iPickorderBarcodeDao;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcodeEntity;
 import SSU_WHS.Picken.PickorderLineBarcodes.iPickorderLineBarcodeDao;
-import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
-import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
+
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.PickorderShipMethods.cPickorderShipMethodEntity;
@@ -77,8 +79,10 @@ import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
         cShippingAgentServiceShipMethodEntity.class,
         cPickorderShipMethodEntity.class,
         cPickorderShipPackageEntity.class,
-        cPickorderLinePackAndShipEntity.class
-        },version = 64)
+        cItemPropertyEntity.class
+        },version = 66)
+
+
 public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iScannerLogonDao scannerLogonDao();
     public abstract iSettingsDao settingsDao();
@@ -102,7 +106,8 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iShippingAgentServiceShipMethodDao shippingAgentServiceShipMethodDao();
     public abstract iPickorderShipMethodDao pickorderShipMethodDao();
     public abstract iPickorderShipPackageDao pickorderShipPackageDao();
-    public abstract iPickorderLinePackAndShipDao pickorderLinePackAndShipDao();
+    public abstract iItemPropertyDao itemPropertyDao();
+
     //public abstract iEnvironmentDao environmentDao();
 
     private static acScanSuiteDatabase INSTANCE;

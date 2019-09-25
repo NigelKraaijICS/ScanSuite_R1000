@@ -1,15 +1,13 @@
 package SSU_WHS.Basics.ShippingAgents;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
 import java.util.List;
 
 import SSU_WHS.General.cDatabase;
-
-import static SSU_WHS.General.cDatabase.SHIPPINGAGENT_NAMESTR;
 
 @Dao
 public interface iShippingAgentDao {
@@ -21,9 +19,4 @@ public interface iShippingAgentDao {
 
     @Query("SELECT * FROM "+ cDatabase.TABLENAME_SHIPPINGAGENTS)
     List<cShippingAgentEntity> getAll();
-
-    @Query("SELECT * FROM " + cDatabase.TABLENAME_SHIPPINGAGENTS +
-            " WHERE " + SHIPPINGAGENT_NAMESTR + " =:agentname" +
-            " LIMIT 1")
-    cShippingAgentEntity getShippingAgentEntityByAgentName(String agentname);
 }

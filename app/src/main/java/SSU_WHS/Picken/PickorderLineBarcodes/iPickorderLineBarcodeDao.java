@@ -1,10 +1,10 @@
 package SSU_WHS.Picken.PickorderLineBarcodes;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
 import java.util.List;
 
@@ -21,18 +21,21 @@ public interface iPickorderLineBarcodeDao {
     @Query("DELETE FROM " + cDatabase.TABLENAME_PICKORDERLINEBARCODE)
     void deleteAll();
 
+    @Query("DELETE FROM " + cDatabase.TABLENAME_PICKORDERLINEBARCODE + " WHERE " + cDatabase.PICKORDERLINEBARCODE_LINENO + " == :pvLineNoInt")
+    void deleteLinesForLineNo(Integer pvLineNoInt);
+
     @Query("SELECT * FROM "+ cDatabase.TABLENAME_PICKORDERLINEBARCODE)
     List<cPickorderLineBarcodeEntity> getLocalPickorderLineBarcodes();
 
     @Query("SELECT * FROM "+ cDatabase.TABLENAME_PICKORDERLINEBARCODE)
     List<cPickorderLineBarcodeEntity> getAll();
 
-    @Query ("SELECT * FROM " + cDatabase.TABLENAME_PICKORDERLINEBARCODE + " WHERE LineNo == :itemno")
-    List<cPickorderLineBarcodeEntity> getPickorderLineBarcodesForLineNo(Integer itemno);
+    @Query ("SELECT * FROM " + cDatabase.TABLENAME_PICKORDERLINEBARCODE + " WHERE " + cDatabase.PICKORDERLINEBARCODE_LINENO + " == :pvLineNoInt")
+    List<cPickorderLineBarcodeEntity> getPickorderLineBarcodesForLineNo(Integer pvLineNoInt);
 
-    @Query ("SELECT * FROM " + cDatabase.TABLENAME_PICKORDERLINEBARCODE + " WHERE Barcode == :barcode LIMIT 1")
+    @Query ("SELECT * FROM " + cDatabase.TABLENAME_PICKORDERLINEBARCODE + " WHERE " + cDatabase.PICKORDERLINEBARCODE_BARCODE + " == :barcode LIMIT 1")
     cPickorderLineBarcodeEntity getPickorderLineBarcodeByBarcode(String barcode);
 
-    @Query("UPDATE " + cDatabase.TABLENAME_PICKORDERLINEBARCODE + " SET " + cDatabase.PICKORDERLINEBARCODE_QUANTITY + " = :amount WHERE Barcode= :barcode")
-    void updateBarcodeAmount(String barcode, int amount);
+    @Query("UPDATE " + cDatabase.TABLENAME_PICKORDERLINEBARCODE + " SET " + cDatabase.PICKORDERLINEBARCODE_QUANTITY + " = :pvAmountDbl WHERE " + cDatabase.PICKORDERLINEBARCODE_BARCODE + " = :pvBarcodeStr")
+    void updateBarcodeAmount(String pvBarcodeStr, double pvAmountDbl);
 }

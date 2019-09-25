@@ -3,10 +3,10 @@ package nl.icsvertex.scansuite.fragments.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.cardview.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,7 @@ import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
-import SSU_WHS.General.cAppExtension;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.activities.general.LoginActivity;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;
@@ -27,11 +27,14 @@ import nl.icsvertex.scansuite.fragments.dialogs.NoConnectionFragment;
 
 public class HomeFragment extends Fragment implements iICSDefaultFragment {
 
-    ImageView imageLogo;
-    TextView textViewDevicedetails;
-    CardView cardViewDeviceDetails;
-    Button buttonLogin;
+    //region Private Properties
+    private ImageView imageLogo;
+    private TextView textViewDevicedetails;
+    private CardView cardViewDeviceDetails;
+    private Button buttonLogin;
+    //end region Private Properties
 
+    //region Constructor
     public static HomeFragment newInstance() {
         return new HomeFragment();
     }
@@ -39,32 +42,38 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     public HomeFragment() {
         // Required empty public constructor
     }
+    // end region Constructor
 
+    //Region Default Methods
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mFragmentInitialize();
-    }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        this.mFragmentInitialize();
+    }
+
+    //End Region Default Methods
+
+   //Region iICSDefaultFragment Methods
+    @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
     }
 
     @Override
     public void mFindViews() {
-        imageLogo = getView().findViewById(R.id.imageLogo);
-        cardViewDeviceDetails = getView().findViewById(R.id.cardViewDeviceDetails);
-        textViewDevicedetails = getView().findViewById(R.id.textViewDeviceDetails);
-        buttonLogin = getView().findViewById(R.id.buttonLogin);
+        this.imageLogo = getView().findViewById(R.id.imageLogo);
+        this.cardViewDeviceDetails = getView().findViewById(R.id.cardViewDeviceDetails);
+        this.textViewDevicedetails = getView().findViewById(R.id.textViewDeviceDetails);
+        this.buttonLogin = getView().findViewById(R.id.buttonLogin);
     }
 
     @Override
@@ -74,19 +83,31 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFieldsInitialize() {
-        mSetDeviceInfo();
-        buttonLogin.setVisibility(View.VISIBLE);
-        mBounceLogo();
+        this.mSetDeviceInfo();
+        this.buttonLogin.setVisibility(View.VISIBLE);
+        this.mBounceLogo();
     }
 
     @Override
     public void mSetListeners() {
-        mSetLogoListener();
-        mSetLoginButtonListener();
+        this.mSetLogoListener();
+        this.mSetLoginButtonListener();
     }
 
+    //End Region iICSDefaultFragment Methods
+
+    //Region Public Methods
+
+    public static void pFragmentDone() {
+        HomeFragment.mStartLoginActivity();
+    }
+
+    //End Region Public Methods
+
+    //Region Private Methods
+
     private void mBounceLogo() {
-        cUserInterface.doBoing(imageLogo);
+        cUserInterface.pDoBoing(imageLogo);
     }
 
     private void mSetDeviceInfo() {
@@ -96,15 +117,21 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
         l_deviceInfoStr += getString(R.string.device_model)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceModel() + cText.NEWLINE;
         l_deviceInfoStr += getString(R.string.device_serialnumber)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getSerialnumber() + cText.NEWLINE;
         l_deviceInfoStr += getString(R.string.application_version)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getAppVersion();
-
-        textViewDevicedetails.setText(l_deviceInfoStr);
+        this.textViewDevicedetails.setText(l_deviceInfoStr);
     }
 
+    private static void mStartLoginActivity() {
+        Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
+        cAppExtension.context.startActivity(intent);
+
+    }
+
+    //Region Listeners
     private void mSetLogoListener() {
-        imageLogo.setOnClickListener(new View.OnClickListener() {
+        this.imageLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mBounceLogo();
+               mBounceLogo();
                 if (cardViewDeviceDetails.getVisibility() == View.VISIBLE) {
                     cardViewDeviceDetails.setVisibility(View.INVISIBLE);
                 }
@@ -114,39 +141,36 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
             }
         });
     }
+
     private void mSetLoginButtonListener() {
-       buttonLogin.setOnClickListener(new View.OnClickListener() {
+        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cUserInterface.mShowGettingData();
-
 
                 if (cAppExtension.context instanceof MainDefaultActivity) {
 
-                    if (cConnection.isInternetConnectedBln()) {
-                        new Thread(new Runnable() {
-                            public void run() {
-                                ((MainDefaultActivity)cAppExtension.context).mLetsGetThisPartyStartedOrNot();
-                            }
-                        }).start();
-                    }
-                    else {
+                    if (cConnection.isInternetConnectedBln() == false) {
                         final NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
                         noConnectionFragment.setCancelable(true);
                         noConnectionFragment.show(((MainDefaultActivity) cAppExtension.context).getSupportFragmentManager(), "NOCONNECTION");
+                        return;
                     }
+
+                    cUserInterface.pShowGettingData();
+
+                    new Thread(new Runnable() {
+                        public void run() {
+                            ((MainDefaultActivity)cAppExtension.context).pLetsGetThisPartyStartedOrNot();
+                        }
+                    }).start();
                 }
             }
         });
     }
-    private void goLogin() {
-        Intent intent = new Intent(getContext(), LoginActivity.class);
-        startActivity(intent);
-    }
 
-    public void doAllDone() {
-        goLogin();
-    }
+    //endregion Listeners
+
+
 
 }
 

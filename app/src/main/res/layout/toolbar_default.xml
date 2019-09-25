@@ -1,11 +1,11 @@
-<android.support.v7.widget.Toolbar
+<androidx.appcompat.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     style="@style/defaultToolbar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -19,17 +19,19 @@
             android:layout_marginLeft="@dimen/default_double_margin"
             android:layout_marginStart="@dimen/default_double_margin"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
+            app:layout_constraintTop_toTopOf="parent"
             style="@style/imageviewToolbar"
             android:id="@+id/toolbarImage"
             app:layout_constraintStart_toStartOf="parent"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
+            app:layout_constraintTop_toTopOf="parent"
             style="@style/imageviewToolbarHelp"
             android:visibility="gone"
             android:id="@+id/toolbarImageHelp"
             app:layout_constraintEnd_toEndOf="parent"
             />
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.Toolbar>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.Toolbar>

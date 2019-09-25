@@ -1,23 +1,12 @@
 package ICS.Utils;
 
-import android.content.Context;
+
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-
-import SSU_WHS.General.cAppExtension;
+import androidx.core.app.ActivityCompat;
+import nl.icsvertex.scansuite.cAppExtension;
 
 public class cPermissions {
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public static void checkPermissions() {
         PackageInfo info;

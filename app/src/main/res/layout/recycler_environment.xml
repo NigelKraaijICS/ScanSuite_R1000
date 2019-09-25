@@ -37,14 +37,14 @@
             android:textColor="@color/colorWhite"
             android:textSize="13dp" />
     </RelativeLayout>
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="1dp"
         android:id="@+id/view_foreground"
         android:background="@drawable/menu_row"
         >
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
             android:id="@+id/imageViewMenuItem"
             app:srcCompat="@drawable/ic_environment"
@@ -73,7 +73,7 @@
             app:layout_constraintEnd_toEndOf="@id/textViewDescription"
             app:layout_constraintTop_toBottomOf="@id/textViewName"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageChevronDown"
@@ -83,5 +83,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -1,28 +1,28 @@
 package SSU_WHS.Basics.BarcodeLayouts;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-
-import java.util.List;
+import androidx.lifecycle.AndroidViewModel;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cBarcodeLayoutViewModel extends AndroidViewModel{
-    private cBarcodeLayoutRepository mRepository;
-    private LiveData<List<cBarcodeLayoutEntity>> mAllBarcodeLayouts;
+    //Region Public Properties
+    public cBarcodeLayoutRepository Repository;
+    //End Region Public Properties
 
-    public cBarcodeLayoutViewModel(Application application) {
-        super(application);
-
-        mRepository = new cBarcodeLayoutRepository(application);
+    //Region Constructor
+    public cBarcodeLayoutViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cBarcodeLayoutRepository(pvApplication);
     }
+    //End Region Constructor
 
-    public void insert(cBarcodeLayoutEntity barcodeLayoutEntity) {mRepository.insert(barcodeLayoutEntity);}
+    //Region Public Methods
+    public cWebresult pGetBarcodeLayoutsFromWebserviceWrs() {return this.Repository.pGetBarcodeLayoutsFromWebserviceWrs(); }
+    public void insert(cBarcodeLayoutEntity pvBarcodeLayoutEntity) {this.Repository.pInsert(pvBarcodeLayoutEntity);}
+    public void deleteAll() {Repository.pDeleteAll();}
+    //End Region Public Methods
 
-    public LiveData<List<cBarcodeLayoutEntity>> getBarcodeLayouts() {return mRepository.getBarcodeLayouts();}
-
-    public List<cBarcodeLayoutEntity> getLocalBarcodeLAyouts() {return mRepository.getLocalBarcodeLayouts();}
-
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public List<cBarcodeLayoutEntity> getBarcodeLayoutsOfType(String barcodeLayoutType) {return mRepository.getBarcodeLayoutsOfType(barcodeLayoutType);}
 }
+
+
+

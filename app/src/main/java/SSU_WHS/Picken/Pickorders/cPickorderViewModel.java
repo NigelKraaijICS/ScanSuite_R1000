@@ -1,43 +1,64 @@
 package SSU_WHS.Picken.Pickorders;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-
+import androidx.lifecycle.AndroidViewModel;
 import java.util.List;
 
-import ICS.Complex_types.c_InterfaceShippingPackageIesp;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
+import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackageEntity;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cPickorderViewModel extends AndroidViewModel {
-    private cPickorderRepository mRepository;
 
-    public cPickorderViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cPickorderRepository PickorderRepository;
+    //End Region Public Properties
 
-        mRepository = new cPickorderRepository(application);
+
+    //Region Constructor
+    public cPickorderViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.PickorderRepository = new cPickorderRepository(pvApplication);
     }
-    public void insert(cPickorderEntity pickorderEntity) {mRepository.insert(pickorderEntity);}
+    //End Region Constructor
 
-    public LiveData<List<cPickorderEntity>> getPickorders(Boolean forcerefresh, String user, String branch, Boolean processingorparked, String searchtext, String maintype) {return mRepository.getPickorders(forcerefresh, user,branch,processingorparked,searchtext,maintype);}
+    //Region Public Methods
+    public void insert(cPickorderEntity pvPickorderEntity) {this.PickorderRepository.insert(pvPickorderEntity);}
+    public void deleteAll() {this.PickorderRepository.deleteAll();}
+    public void pAbortOrder() {this.PickorderRepository.pAbortOrder();}
 
-    public Boolean getProcessingOrParkedOrdersBln(String user, String branch, String maintype) { return mRepository.getProcessingOrParkedOrdersBln(user, branch, maintype);}
+    public cWebresult pGetPickordersFromWebserviceWrs(Boolean pvProcessingOrParkedBln, String pvSearchTextStr) {return this.PickorderRepository.pGetPickordersFromWebserviceWrs(pvProcessingOrParkedBln,pvSearchTextStr);}
+    public List<cPickorderEntity> pGetPickordersFromDatabaseObl() {return this.PickorderRepository.pGetPickordersFromDatabaseObl();}
+    public cWebresult pGetSortOrShipordersFromWebserviceWrs(String pvUserStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {return this.PickorderRepository.pGetPickordersToShipFromWebserviceWrs(pvUserStr,pvStepCodeEnu,pvSearchTextStr);}
+    public List<cPickorderEntity> pGetPickordersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln, Boolean pvShowProcessedWaitBln, Boolean pvShowSingleArticlesBln, Boolean pvShowAssignedToMeBln, Boolean pvShowAssignedToOthersBln, Boolean pvShowNotAssignedBln) {return this.PickorderRepository.pGetPickordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln, pvShowProcessedWaitBln,pvShowSingleArticlesBln,  pvShowAssignedToMeBln, pvShowAssignedToOthersBln, pvShowNotAssignedBln);}
 
-    public List<cPickorderEntity> getLocalPickorders() {return mRepository.getLocalPickorders();}
+    public Boolean pPickenHandledViaWebserviceBln(String pvWorkplaceStr) { return this.PickorderRepository.pPickenHandledViaWebserviceBln(pvWorkplaceStr);}
+    public Boolean pPickorderSourceDocumentShippedViaWebserviceBln(String pvSourceNoStr, String pvShippingAgentStr, String pvShippingServiceStr, List<cPickorderShipPackageEntity> pvPackagesObl) { return this.PickorderRepository.pPickorderSourceDocumentShippedViaWebserviceBln(pvSourceNoStr, pvShippingAgentStr, pvShippingServiceStr, pvPackagesObl);}
+    public Boolean pPickorderUpdateWorkplaceViaWebserviceBln() { return this.PickorderRepository.pPickorderUpdateWorkplaceViaWebserviceBln();}
+    public Boolean pUpdatePickorderWorkplaceInDatabaseInt() {return this.PickorderRepository.pPickorderUpdateWorkplaceInDatabaseBln();}
 
-    public void deleteAll() {mRepository.deleteAll();}
 
-    public LiveData<List<cPickorderEntity>> getFilteredPickorders(String currentUser, Boolean useFilters, Boolean showProcessedWait, Boolean showSingleArticles, Boolean showAssignedToMe, Boolean showAssignedToOthers, Boolean showNotAssigned) {return mRepository.getFilteredPickorders(currentUser, useFilters, showProcessedWait,showSingleArticles,  showAssignedToMe, showAssignedToOthers, showNotAssigned);}
+    public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {return this.PickorderRepository.pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);}
+    public Boolean pUpdatePickorderCurrentLocationInDatabaseBln(String pvCurrentLocationStr) {return this.PickorderRepository.pPickorderUpdatCurrentLocationInDatabaseBln(pvCurrentLocationStr);}
 
-    public Boolean pickorderStepHandled(String user, String language, String branch, String orderNumber, String device, String workplace, String workflowStepcode, Integer workflowStep, String culture) { return mRepository.pickorderStepHandled(user, language,branch, orderNumber,device,workplace,workflowStepcode, workflowStep, culture);}
+    public Double pQuantityNotHandledDbl() {return this.PickorderRepository.pNumberNotHandledDbl();}
+    public Double pQuantityHandledCounterDbl() {return this.PickorderRepository.pNumberHandledDbl();}
+    public Double pGetNumberTotalForCounterDbl() {return this.PickorderRepository.pGetTotalQuantityDbl();}
 
-    public LiveData<List<cPickorderEntity>> getSortOrShiporders(Boolean forcerefresh, String user, String branch, Integer pickstep, String searchtext, String maintype) {return mRepository.getSortOrShiporders(forcerefresh, user,branch,pickstep,searchtext,maintype);}
+    public cWebresult pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu ) {return this.PickorderRepository.pGetLinesFromWebserviceWrs(pvActionTypeEnu);}
+    public List<cPickorderLineEntity> pGetAllLinesFromDatabaseObl(){return  this.PickorderRepository.pGetAllLinesFromDatabaseObl();}
+    public List<cPickorderLineEntity> pGetPickorderLinesToSendFromDatabaseObl(){return  this.PickorderRepository.pGetPickorderLinesToSendFromDatabaseObl();}
+    public List<cPickorderLineEntity> pGetLinesNotHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesNotHandledFromDatabaseObl();}
+    public List<cPickorderLineEntity> pGetLinesHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesHandledFromDatabaseObl();}
 
-    public cPickorderEntity getPickorderByOrderNumber(String ordernumber) { return mRepository.getPickorderByOrderNumber(ordernumber);}
+    public cWebresult pGetAdressesFromWebserviceWrs() {return this.PickorderRepository.pGetAddressesFromWebserviceWrs();}
 
-    public Boolean pickorderSourceDocumentShipped(String user, String branch, String ordernumber, String sourceno, String culture, String shippingagent, String shippingservice, List<c_InterfaceShippingPackageIesp> packages) { return mRepository.pickorderSourceDocumentShipped(user, branch, ordernumber, sourceno, culture, shippingagent, shippingservice, packages);}
-    //public void pickorderSourceDocumentShipped(String user, String branch, String ordernumber, String sourceno, String culture, String shippingagent, String shippingservice, c_InterfaceShippingPackageIesp packages) {mRepository.pickorderSourceDocumentShipped(user, branch, ordernumber, sourceno, culture, shippingagent, shippingservice, packages);}
+    public cWebresult pGetArticleImagesFromWebserviceWrs(List<String> pvItemNoAndVariantObl) {return this.PickorderRepository.pGetArticleImagesFromWebserviceWrs(pvItemNoAndVariantObl);}
 
-    public Boolean pickorderUpdateWorkplace(String user, String branch, String ordernumber, String workplace) { return mRepository.pickorderUpdateWorkplace(user, branch, ordernumber, workplace);}
+    public cWebresult pGetBarcodesFromWebserviceWrs() {return this.PickorderRepository.pGetBarcodesFromWebservice(); }
 
-    public int updatePickorderWorkplaceLocal(String ordernumber, String workplace) {return mRepository.updatePickorderWorkplaceLocal(ordernumber, workplace);}
+    public cWebresult pGetCommentsFromWebserviceWrs() {return this.PickorderRepository.pGetCommentsFromWebservice(); }
+
+    //End Region Public Methods
 }

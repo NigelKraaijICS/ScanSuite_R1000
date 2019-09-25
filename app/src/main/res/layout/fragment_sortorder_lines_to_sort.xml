@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/fragmentSortorderLinesToSort"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.sort.SortorderLinesToSortFragment"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     >
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSortorderLinesTosort"
         style="@style/defaultRecyclerView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/packingTableView"
         app:layout_constraintStart_toStartOf="parent"
         />
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/pillButton"
         android:id="@+id/packingTableView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +36,7 @@
             app:layout_constraintBottom_toBottomOf="@id/imagePackingTable"
             android:paddingRight="@dimen/default_double_padding"
             android:paddingEnd="@dimen/default_double_padding"/>
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:scaleType="fitXY"
             android:tint="@color/colorPrimary"
             android:padding="@dimen/default_padding"
@@ -49,5 +48,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-    </android.support.constraint.ConstraintLayout>
-</android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

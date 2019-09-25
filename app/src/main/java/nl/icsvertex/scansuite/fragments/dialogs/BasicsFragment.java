@@ -1,32 +1,25 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import ICS.Interfaces.iICSDefaultFragment;
-import SSU_WHS.Basics.Settings.cSettingsAdapter;
-import SSU_WHS.Basics.Settings.cSettingsEntity;
-import SSU_WHS.Basics.Settings.cSettingsViewModel;
-import SSU_WHS.General.cAppExtension;
+import SSU_WHS.Basics.Settings.cSetting;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 
 public class BasicsFragment extends DialogFragment implements iICSDefaultFragment {
 
     RecyclerView recyclerViewSettings;
-    private cSettingsViewModel settingsViewModel;
-    private cSettingsAdapter settingsAdapter;
 
     public BasicsFragment() {
         // Required empty public constructor
@@ -57,7 +50,7 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
 
     @Override
     public void mSetViewModels() {
-        settingsViewModel = ViewModelProviders.of(this).get(cSettingsViewModel.class);
+
     }
 
     @Override
@@ -71,15 +64,12 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
     private void mFillRecycler() {
-        settingsAdapter = new cSettingsAdapter(cAppExtension.context);
-        List<cSettingsEntity> settingEntities = settingsViewModel.getLocalSettings();
-        m_setSettingsRecycler(settingEntities);
+        mSetSettingsRecycler();
     }
-    private void m_setSettingsRecycler(List<cSettingsEntity> settingsEntities) {
+    private void mSetSettingsRecycler() {
         recyclerViewSettings.setHasFixedSize(false);
-        recyclerViewSettings.setAdapter(settingsAdapter);
+        recyclerViewSettings.setAdapter(cSetting.getSettingsAdapter());
         recyclerViewSettings.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        settingsAdapter.setSettings(settingsEntities);
     }
 
 

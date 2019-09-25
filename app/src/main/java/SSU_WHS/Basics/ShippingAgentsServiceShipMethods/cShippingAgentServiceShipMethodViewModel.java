@@ -1,24 +1,25 @@
 package SSU_WHS.Basics.ShippingAgentsServiceShipMethods;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cShippingAgentServiceShipMethodViewModel extends AndroidViewModel {
-    private cShippingAgentServiceShipMethodRepository mRepository;
 
-    public cShippingAgentServiceShipMethodViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cShippingAgentServiceShipMethodRepository Repository;
+    //End Region Public Properties
 
-        mRepository = new cShippingAgentServiceShipMethodRepository(application);
+    //Region Constructor
+    public cShippingAgentServiceShipMethodViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cShippingAgentServiceShipMethodRepository(pvApplication);
     }
+    //End Region Constructor
 
-    public void insert(cShippingAgentServiceShipMethodEntity shippingAgentServiceShipMethodEntity) {mRepository.insert(shippingAgentServiceShipMethodEntity);}
-
-    public LiveData<List<cShippingAgentServiceShipMethodEntity>> getShippingAgentServicesShipMethods(Boolean forcerefresh) {return mRepository.getShippingAgentServiceShipMethods(forcerefresh);}
-
-    public void deleteAll() {mRepository.deleteAll();}
+    public cWebresult pGetShippingAgentServiceShipMethodsFromWebserviceWrs() {return this.Repository.pGetShippingAgentServiceShipMethodsFromWebserviceWrs(); }
+    public void insert(cShippingAgentServiceShipMethodEntity pvShippingAgentServiceShipMethodEntity) {Repository.pInsert(pvShippingAgentServiceShipMethodEntity);}
+    public void deleteAll() {Repository.pDeleteAll();}
 
 }

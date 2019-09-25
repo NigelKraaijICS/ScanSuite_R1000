@@ -5,10 +5,10 @@
     android:id="@+id/pickorderItemLinearLayout"
     style="@style/pickorderRecyclerLinearLayout"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewMenuButton"
             android:id="@+id/imageViewPickorder"
             app:srcCompat="@drawable/ic_menu_demo"
@@ -23,7 +23,7 @@
             app:layout_constraintStart_toEndOf="@id/imageViewPickorder"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageOrdernumber"
             style="@style/recyclerItemImage"
             app:srcCompat="@drawable/ic_document_black_24dp"
@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toStartOf="@id/textViewOrderUser"
             app:layout_constraintTop_toTopOf="parent"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewUser"
             style="@style/pickorderRecyclerUserImage"
             app:layout_constraintTop_toTopOf="@id/textViewOrderUser"
@@ -50,21 +50,21 @@
             app:layout_constraintTop_toTopOf="@id/textViewOrdernumber"
             app:layout_constraintEnd_toStartOf="@id/imageViewUser"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewIsSingleArticle"
             style="@style/pickorderRecyclerSingleArticles"
             app:layout_constraintTop_toBottomOf="@id/textViewOrderUser"
             app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
             android:visibility="gone"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewIsProcessedOrWait"
             style="@style/pickorderRecyclerProcessedWait"
             app:layout_constraintTop_toBottomOf="@id/imageViewIsSingleArticle"
             app:layout_constraintStart_toStartOf="@id/imageViewIsSingleArticle"
             android:visibility="gone"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewQuantityTotal"
             style="@style/pickorderRecyclerQuantityTotal"
             app:layout_constraintTop_toTopOf="@id/textViewQuantityTotal"
@@ -79,7 +79,7 @@
             app:layout_constraintTop_toBottomOf="@id/imageViewIsProcessedOrWait"
             app:layout_constraintEnd_toStartOf="@id/imageViewQuantityTotal"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageExternalReference"
             style="@style/recyclerItemImage"
             app:srcCompat="@drawable/ic_external_black_24dp"
@@ -93,7 +93,7 @@
             app:layout_constraintEnd_toEndOf="@id/textViewOrdernumber"
             app:layout_constraintTop_toBottomOf="@id/textViewOrdernumber"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageCurrentLocation"
             style="@style/recyclerItemImage"
             app:srcCompat="@drawable/ic_location_black_24dp"
@@ -107,7 +107,7 @@
             app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
             app:layout_constraintEnd_toEndOf="@id/textViewOrdernumber"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageOrderType"
             style="@style/recyclerItemImage"
             app:srcCompat="@drawable/ic_ordertype_black_24dp"
@@ -127,7 +127,7 @@
             app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageChevronDown"
@@ -137,5 +137,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

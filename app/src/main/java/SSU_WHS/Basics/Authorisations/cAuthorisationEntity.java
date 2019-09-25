@@ -1,49 +1,49 @@
 package SSU_WHS.Basics.Authorisations;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import SSU_WHS.General.cDatabase;
 
-@Entity(tableName="Authorisations")
+@Entity(tableName=cDatabase.TABLENAME_AUTHORISATIONS)
+
+//Region Public Properties
     public class cAuthorisationEntity {
     @PrimaryKey @NonNull
-    @ColumnInfo(name="Authorisation")
+    @ColumnInfo(name=cDatabase.AUTHORISATION_NAMESTR)
     public String authorisation;
-    @ColumnInfo(name="Order")
-    public Integer order;
-    @ColumnInfo(name="License")
-    public String license;
+    public String getAuthorisationStr() {return this.authorisation;}
 
-    //empty constructor
+    @ColumnInfo(name=cDatabase.SEQUENCE_NAMESTR)
+    public Integer order;
+    public Integer getOrderInt() {return this.order;}
+
+    @ColumnInfo(name=cDatabase.LICENSE_NAMESTR)
+    public String license;
+    public String getLicenseStr() {return this.authorisation;}
+
+    //End Region Public Properies
+
+    //Region Constructor
         public cAuthorisationEntity() {
 
         }
 
         public cAuthorisationEntity(JSONObject jsonObject) {
             try {
-                authorisation = jsonObject.getString(cDatabase.AUTHORISATION_NAMESTR);
-                order = jsonObject.getInt(cDatabase.ORDER_NAMESTR);
-                license = jsonObject.getString(cDatabase.LICENSE_NAMESTR);
+                this.authorisation = jsonObject.getString(cDatabase.AUTHORISATION_NAMESTR);
+                this.order = jsonObject.getInt(cDatabase.ORDER_NAMESTR);
+                this.license = jsonObject.getString(cDatabase.LICENSE_NL_NAMESTR);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        public String getAuthorisationStr() {return this.authorisation;}
-        public Integer getOrderInt() {return this.order;}
-        public String getLicenseStr() {return this.authorisation;}
+    //End Region Constructor
 
-        @Ignore
-        public cAuthorisationEntity(String authorisation, Integer order, String license) {
-            this.authorisation = authorisation;
-            this.order = order;
-            this.license = license;
-        }
     }
 

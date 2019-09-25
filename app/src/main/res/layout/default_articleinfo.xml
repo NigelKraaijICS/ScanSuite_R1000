@@ -1,4 +1,4 @@
-<android.support.v7.widget.CardView android:id="@+id/addressContainer"
+<androidx.cardview.widget.CardView android:id="@+id/addressContainer"
     style="@style/articleInfoContainer"
     app:layout_constraintTop_toBottomOf="@id/toolbar"
     android:layout_width="match_parent"
@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
@@ -19,6 +19,7 @@
             android:contentDescription="@string/articleimage_thumb_description"
             />
         <TextView
+            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/articleDescriptionText"
             style="@style/articleDescriptionText"
             app:layout_constraintStart_toStartOf="parent"
@@ -98,12 +99,12 @@
             app:layout_constraintTop_toBottomOf="@id/genericItemExtraField7Text"
             app:layout_constraintStart_toStartOf="parent"
             />
-        <android.support.v7.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             style="@style/smallButton"
             android:id="@+id/imageButtonBarcode"
             app:srcCompat="@drawable/ic_barcodescan_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/articleThumbImageView"
             />
-    </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

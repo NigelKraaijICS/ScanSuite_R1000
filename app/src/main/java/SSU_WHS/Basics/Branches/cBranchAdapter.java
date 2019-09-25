@@ -1,7 +1,6 @@
 package SSU_WHS.Basics.Branches;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +9,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
+import SSU_WHS.Basics.Users.cUser;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.activities.general.LoginActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchViewHolder>{
-    private Context callerContext;
+
+    //Region Public Properties
     public class BranchViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewDescription;
         private TextView textViewBranch;
@@ -35,56 +35,54 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
             branchItemLinearLayout = itemView.findViewById(R.id.branchItemLinearLayout);
         }
     }
+    //End Region Public Properties
 
-    private final LayoutInflater mInflater;
-    public static List<cBranchEntity> mBranches; //cached copy of pickorders
+    //Region Private Properties
+    private final LayoutInflater LayoutInflaterObject;
+    //End Region Private Propertoes
 
-    public cBranchAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        callerContext = context;
+    //Region Constructor
+    public cBranchAdapter() {
+        this.LayoutInflaterObject = LayoutInflater.from(cAppExtension.context);
     }
+    //End Region Constructor
 
     @Override
-    public cBranchAdapter.BranchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recycler_branch, parent, false);
+    public cBranchAdapter.BranchViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewType) {
+        View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_branch, pvParent, false);
         return new cBranchAdapter.BranchViewHolder(itemView);
-    }
-
-    public void setBranches(List<cBranchEntity> branches) {
-        mBranches = branches;
-        notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(cBranchAdapter.BranchViewHolder holder, int position) {
-        if (mBranches != null) {
-            final cBranchEntity l_BranchEntity = mBranches.get(position);
-            String l_descriptionStr = l_BranchEntity.getBranchname();
-            String l_BranchStr = l_BranchEntity.getBranch();
-            String l_branchTypeStr = l_BranchEntity.getBranchtype();
+        if (cUser.currentUser != null && cUser.currentUser.branchesObl != null) {
 
-            if (l_branchTypeStr.equalsIgnoreCase(cBranch.brachTypeEnum.UNKNOWN.toString())) {
+            final cBranch branch = cUser.currentUser.branchesObl.get(position);
+
+
+            if (branch.getBranchTypeStr().equalsIgnoreCase(cBranch.brachTypeEnum.UNKNOWN.toString())) {
                 holder.imageViewMenuItem.setImageResource(R.drawable.ic_unknown);
             }
-            if (l_branchTypeStr.equalsIgnoreCase(cBranch.brachTypeEnum.STORE.toString())) {
+            if (branch.getBranchTypeStr().equalsIgnoreCase(cBranch.brachTypeEnum.STORE.toString())) {
                 holder.imageViewMenuItem.setImageResource(R.drawable.ic_store);
             }
-            if (l_branchTypeStr.equalsIgnoreCase(cBranch.brachTypeEnum.WAREHOUSE.toString())) {
+            if (branch.getBranchTypeStr().equalsIgnoreCase(cBranch.brachTypeEnum.WAREHOUSE.toString())) {
                 holder.imageViewMenuItem.setImageResource(R.drawable.ic_warehouse);
             }
-            if (l_branchTypeStr.equalsIgnoreCase(cBranch.brachTypeEnum.INTRANSIT.toString())) {
+            if (branch.getBranchTypeStr().equalsIgnoreCase(cBranch.brachTypeEnum.INTRANSIT.toString())) {
                 holder.imageViewMenuItem.setImageResource(R.drawable.ic_transit);
             }
 
-            holder.textViewDescription.setText(l_descriptionStr);
-            holder.textViewBranch.setText(l_BranchStr);
+            holder.textViewDescription.setText(branch.getBranchNameStr());
+            holder.textViewBranch.setText(branch.getBranchStr());
 
             holder.branchItemLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    if (callerContext instanceof LoginActivity) {
-                        ((LoginActivity)callerContext).setChosenBranch(l_BranchEntity);
+                    if (cAppExtension.context instanceof LoginActivity) {
+                        cUser.currentUser.currentBranch = branch;
+                         LoginActivity.pBranchSelected(branch);
                     }
                 }
             });
@@ -93,8 +91,8 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
 
     @Override
     public int getItemCount () {
-        if (mBranches != null)
-            return mBranches.size();
+        if (cUser.currentUser != null && cUser.currentUser.branchesObl != null)
+            return cUser.currentUser.branchesObl.size();
         else return 0;
     }
 }

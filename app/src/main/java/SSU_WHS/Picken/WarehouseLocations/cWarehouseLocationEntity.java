@@ -1,9 +1,9 @@
 package SSU_WHS.Picken.WarehouseLocations;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,35 +12,52 @@ import SSU_WHS.General.cDatabase;
 
 @Entity(tableName=cDatabase.TABLENAME_WAREHOUSELOCATIONS)
 public class cWarehouseLocationEntity {
+
+    //Region Public Properties
+
     @PrimaryKey
     @NonNull
     @ColumnInfo(name="WarehouseLocation")
     public String warehouselocation;
+    public String getWarehouseLocationStr() {return this.warehouselocation;}
+
     @ColumnInfo(name="Zone")
     public String zone;
+    public String getZoneStr() {return this.zone;}
+
     @ColumnInfo(name="BinType")
     public String bintype;
+    public String getBintypeStr() {return this.bintype;}
+
     @ColumnInfo(name="UseForStorage")
     public String useforstorage;
+    public String getUseForStorageStr() {return this.useforstorage;}
+
     @ColumnInfo(name="UseForReturnSales")
     public String useforreturnsales;
+    public String getUseForReturnSalesStr() {return this.useforreturnsales;}
+
     @ColumnInfo(name="Description")
     public String description;
+    public String getDescriptionStr() {return this.description;}
 
-    //empty constructor
+    //End Region Public Properties
+
+    //Region Constructor
+
     public cWarehouseLocationEntity() {
 
     }
-    public cWarehouseLocationEntity(JSONObject jsonObject) {
+    public cWarehouseLocationEntity(JSONObject pvJsonObject) {
         try {
-            warehouselocation = jsonObject.getString(cDatabase.WAREHOUSELOCATION_NAMESTR);
-            zone = jsonObject.getString(cDatabase.ZONE_NAMESTR);
-            bintype = jsonObject.getString(cDatabase.BINTYPE_NAMESTR);
-            useforstorage = jsonObject.getString(cDatabase.USEFORSTORAGE_NAMESTR);
-            useforreturnsales = jsonObject.getString(cDatabase.USEFORRETURNSALES_NAMESTR);
+            this.warehouselocation = pvJsonObject.getString(cDatabase.WAREHOUSELOCATION_NAMESTR);
+            this.zone = pvJsonObject.getString(cDatabase.ZONE_NAMESTR);
+            this.bintype = pvJsonObject.getString(cDatabase.BINTYPE_NAMESTR);
+            this.useforstorage = pvJsonObject.getString(cDatabase.USEFORSTORAGE_NAMESTR);
+            this.useforreturnsales = pvJsonObject.getString(cDatabase.USEFORRETURNSALES_NAMESTR);
             //apparantly there is a setting: GENERIC_SHOW_BIN_DESCRIPTION, for whatever reason
             try {
-                description = jsonObject.getString(cDatabase.DESCRIPTION_DUTCH_NAMESTR);
+                description = pvJsonObject.getString(cDatabase.DESCRIPTION_DUTCH_NAMESTR);
             } catch (JSONException e) {
                 description = "";
             }
@@ -48,17 +65,6 @@ public class cWarehouseLocationEntity {
             e.printStackTrace();
         }
     }
-    public String getWarehouselocation() {return this.warehouselocation;}
-    public void setWarehouselocation(String pv_warehouselocation) {this.warehouselocation = pv_warehouselocation;}
-    public String getZone() {return this.zone;}
-    public void setZone(String pv_zone) {this.zone = pv_zone;}
-    public String getBintype() {return this.bintype;}
-    public void setBintype(String pv_bintype) {this.bintype = pv_bintype;}
-    public String getUseforstorage() {return this.useforstorage;}
-    public void setUseforstorage(String pv_useforstorage) {this.useforstorage = pv_useforstorage;}
-    public String getUseforreturnsales() {return this.useforreturnsales;}
-    public void setUseforreturnsales(String pv_useforreturnsales) {this.useforreturnsales = pv_useforreturnsales;}
-    public String getDescription() {return this.description;}
-    public void setDescription(String pv_description) {this.description = pv_description;}
 
+    //End Region Constructor
 }

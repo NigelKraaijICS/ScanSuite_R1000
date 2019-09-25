@@ -1,16 +1,10 @@
 package nl.icsvertex.scansuite.fragments.dialogs;
 
 
-import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,66 +13,57 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.List;
-
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutViewModel;
-import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.Scanning.cBarcodeScanDefinitions;
+
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
-import nl.icsvertex.scansuite.activities.ship.ShiporderLinesActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.R;
-
-import static ICS.Utils.cUserInterface.mShowKeyboard;
+import nl.icsvertex.scansuite.cAppExtension;
 
 
 public class OrderDoneFragment extends DialogFragment implements iICSDefaultFragment {
-    String orderDoneHeader;
-    String orderDoneText;
 
-    ConstraintLayout orderDoneContainer;
-    TextView textViewOrderDoneHeader;
-    TextView textViewOrderDoneText;
-    Boolean showCurrentLocation;
-    EditText editTextCurrentLocation;
-    Button closeOrderButton;
-    Button cancelButton;
+    //Region Private Properties
 
-    IntentFilter barcodeFragmentIntentFilter;
-    private BroadcastReceiver barcodeFragmentReceiver;
-    cBarcodeLayoutViewModel barcodeLayoutViewModel;
+    static private ConstraintLayout orderDoneContainer;
+    private TextView textViewOrderDoneHeader;
+    private TextView textViewOrderDoneText;
+    static private EditText editTextCurrentLocation;
+    static private Button closeOrderButton;
+    static private Button cancelButton;
 
+    //End Region private Properties
+
+
+    //Region Constructor
     public OrderDoneFragment() {
-        // Required empty public constructor
+
     }
+    //End Region Constructor
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer,
+                             Bundle pvSavedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order_done, container, false);
+        View rootview = pvInflater.inflate(R.layout.fragment_order_done, pvContainer, false);
+        cAppExtension.dialogFragment = this;
+        return rootview;
+
     }
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        orderDoneHeader = args.getString(cPublicDefinitions.ORDERDONE_HEADER, getString(R.string.orderdone_header_default));
-        orderDoneText = args.getString(cPublicDefinitions.ORDERDONE_TEXT, getString(R.string.orderdone_text_default));
-        showCurrentLocation = args.getBoolean(cPublicDefinitions.ORDERDONE_SHOWCURRENTLOCATION, true);
-
-        mFragmentInitialize();
-
-        mBarcodeReceiver();
+    public void onViewCreated(View pvView, @Nullable Bundle pvSavedInstanceState) {
+        this.mFragmentInitialize();
     }
 
     @Override
     public void onDestroy() {
         try {
-            getActivity().unregisterReceiver(barcodeFragmentReceiver);
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,7 +72,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void onPause() {
         try {
-            getActivity().unregisterReceiver(barcodeFragmentReceiver);
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,136 +80,132 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     }
     @Override
     public void onResume() {
-        getActivity().registerReceiver(barcodeFragmentReceiver, barcodeFragmentIntentFilter);
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         super.onResume();
     }
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+
     }
 
     @Override
     public void mFindViews() {
-        textViewOrderDoneHeader = getView().findViewById(R.id.textViewOrderDoneHeader);
-        textViewOrderDoneText = getView().findViewById(R.id.textViewOrderDoneText);
-        editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
-        orderDoneContainer = getView().findViewById(R.id.orderDoneContainer);
-        closeOrderButton = getView().findViewById(R.id.closeOrderButton);
-        cancelButton = getView().findViewById(R.id.cancelButton);
+        this.textViewOrderDoneHeader = getView().findViewById(R.id.textViewOrderDoneHeader);
+        this.textViewOrderDoneText = getView().findViewById(R.id.textViewOrderDoneText);
+        this.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
+        this.orderDoneContainer = getView().findViewById(R.id.orderDoneContainer);
+        this.closeOrderButton = getView().findViewById(R.id.closeOrderButton);
+        this.cancelButton = getView().findViewById(R.id.cancelButton);
     }
 
     @Override
     public void mSetViewModels() {
-        barcodeLayoutViewModel = ViewModelProviders.of(this).get(cBarcodeLayoutViewModel.class);
+
     }
 
     @Override
     public void mFieldsInitialize() {
-        textViewOrderDoneHeader.setText(orderDoneHeader);
-        textViewOrderDoneText.setText(orderDoneText);
-        if (!showCurrentLocation) {
+
+        this.textViewOrderDoneHeader.setText(cAppExtension.context.getString(R.string.orderdone_header_default));
+        this.textViewOrderDoneText.setText(cAppExtension.context.getString(R.string.orderdone_text_default));
+
+        if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 && cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty() == false ) {
             editTextCurrentLocation.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             InputFilter[] filterArray = new InputFilter[1];
             filterArray[0] = new InputFilter.LengthFilter(20);
             editTextCurrentLocation.setFilters(filterArray);
-            mShowKeyboard(editTextCurrentLocation);
+            cUserInterface.pShowKeyboard(editTextCurrentLocation);
         }
     }
     @Override
     public void mSetListeners() {
-        mSetCloseListener();
-        mSetCancelListener();
+        this.mSetCloseListener();
+        this.mSetCancelListener();
     }
 
     private void mSetCancelListener() {
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View pvView) {
                 dismiss();
             }
         });
     }
 
     private void mSetCloseListener() {
-        closeOrderButton.setOnClickListener(new View.OnClickListener() {
+        this.closeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Activity activity = getActivity();
-                if (activity instanceof PickorderLinesActivity) {
-                    if (showCurrentLocation) {
+            public void onClick(View pvView) {
+
+
+                if (cAppExtension.activity instanceof PickorderLinesActivity) {
+                    if (cPickorder.currentPickOrder.pQuantityHandledDbl() > 0 && cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty() == true) {
                         //we need a location
                         if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
-                            cUserInterface.doNope(editTextCurrentLocation, true, true);
+                            cUserInterface.pDoNope(editTextCurrentLocation, true, true);
                             return;
                         }
                     }
-                    String currentLocation = editTextCurrentLocation.getText().toString().trim();
-                    ((PickorderLinesActivity)activity).closeCurrentOrder(currentLocation);
                     dismiss();
+                    PickorderLinesActivity.pPickingDone(editTextCurrentLocation.getText().toString().trim());
                 }
-                if (activity instanceof SortorderLinesActivity) {
-                    ((SortorderLinesActivity)activity).closeCurrentOrder();
-                }
-                if (activity instanceof ShiporderLinesActivity) {
-                    ((ShiporderLinesActivity)activity).closeCurrentOrder();
-                }
+
+                //todo: put this back
+                //todo: call static method
+//                if (cAppExtension.activity  instanceof SortorderLinesActivity) {
+//                    ((SortorderLinesActivity)cAppExtension.activity ).closeCurrentOrder();
+//                }
+//
+//                //todo: call static method
+//                if (cAppExtension.activity  instanceof ShiporderLinesActivity) {
+//                    ((ShiporderLinesActivity)cAppExtension.activity ).closeCurrentOrder();
+//                }
+
+
             }
         });
     }
-    private void mBarcodeReceiver() {
-        barcodeFragmentIntentFilter = new IntentFilter();
-        for (String str : cBarcodeScanDefinitions.getBarcodeActions()) {
-            barcodeFragmentIntentFilter.addAction(str);
-        }
-        for (String str : cBarcodeScanDefinitions.getBarcodeCategories()) {
-            barcodeFragmentIntentFilter.addCategory(str);
+
+    public static void pHandleScan(String pvScannedBarcodeStr) {
+
+
+        String barcodeWithoutPrefixStr;
+
+        //No prefix
+        if (!cRegex.hasPrefix(pvScannedBarcodeStr)) {
+            editTextCurrentLocation.setText(pvScannedBarcodeStr);
+            closeOrderButton.callOnClick();
+            return;
         }
 
-        barcodeFragmentReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String barcodeStr = ICS.Utils.Scanning.cBarcodeScan.p_GetBarcode(intent, true);
-                if (barcodeStr == null) {
-                    barcodeStr = "";
-                }
-                mHandleScan(barcodeStr);
-            }
-        };
-        //don't forget to unregister on destroy.
-        getActivity().registerReceiver(barcodeFragmentReceiver,barcodeFragmentIntentFilter);
-    }
+        Boolean foundBln = false;
 
-    private void mHandleScan(String barcode) {
-        if (cRegex.hasPrefix(barcode)) {
-            String barcodePrefixStr = cRegex.getPrefix(barcode);
-            List<cBarcodeLayoutEntity> binLayouts = barcodeLayoutViewModel.getBarcodeLayoutsOfType(cBarcodeLayout.barcodeLayoutEnu.BIN.toString());
-            Boolean foundBin = false;
-            for (cBarcodeLayoutEntity layout : binLayouts) {
-                if (cRegex.p_checkRegexBln(layout.getLayoutValue(), barcode)) {
-                    foundBin = true;
-                }
-            }
-            if (foundBin) {
-                //has prefix, is bin
-                editTextCurrentLocation.setText(cRegex.p_stripRegexPrefixStr(barcode));
-                closeOrderButton.callOnClick();
-            }
-            else {
-                //has prefix, isn't bin
-                cUserInterface.doNope(editTextCurrentLocation, true, true);
-            }
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN) == true) {
+            foundBln = true;
+        }
+
+        //has prefix, is BIN
+        if (foundBln) {
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+            editTextCurrentLocation.setText(barcodeWithoutPrefixStr);
+            closeOrderButton.callOnClick();
+            return;
         }
         else {
-            //no prefix, fine
-            editTextCurrentLocation.setText(barcode);
-            closeOrderButton.callOnClick();
+            //has prefix, isn't branch
+            cUserInterface.pDoNope(orderDoneContainer, true, true);
+            return;
         }
-
     }
+
+
+
 }

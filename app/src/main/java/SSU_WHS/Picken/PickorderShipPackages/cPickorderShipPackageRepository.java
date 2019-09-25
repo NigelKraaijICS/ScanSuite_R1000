@@ -1,8 +1,8 @@
 package SSU_WHS.Picken.PickorderShipPackages;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
 import org.json.JSONException;
@@ -41,7 +41,7 @@ public class cPickorderShipPackageRepository {
                         List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
 
                         PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-                        l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_BRANCH;
+                        l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
                         l_PropertyInfo1Pin.setValue(branch);
                         l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
@@ -50,7 +50,7 @@ public class cPickorderShipPackageRepository {
                         l_PropertyInfo2Pin.setValue(ordernumber);
                         l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
-                        webResult = new cWebresult().mGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERSHIPPACKAGES, l_PropertyInfoObl);
+                        webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERSHIPPACKAGES, l_PropertyInfoObl);
                         List<JSONObject> myList = webResult.getResultDtt();
                         for (int i = 0; i < myList.size(); i++) {
                             JSONObject jsonObject;

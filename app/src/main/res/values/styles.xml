@@ -314,6 +314,7 @@
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
     <style name="pickorderLineRecyclerLocationText">
+        <item name="android:textStyle">bold</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textsize_big</item>
@@ -783,8 +784,35 @@
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
 
-    <!--endregion usedUnits-->
-
-    usedUnitsDescription
-
+    <!--region passworddialog-->
+    <style name="passworddialog_container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+    </style>
+    <style name="passworddialog_header">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="passworddialog_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextLighter</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="passworddialog_password">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:importantForAutofill" tools:targetApi="o">no</item>
+    </style>
+    <!--endregion passworddialog-->
 </resources>

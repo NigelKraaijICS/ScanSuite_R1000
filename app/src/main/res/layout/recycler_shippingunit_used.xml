@@ -7,12 +7,12 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/primaryContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             style="@style/usedUnitsImage"
             android:id="@+id/usedUnitsImage"
             app:srcCompat="@drawable/ic_bag"
@@ -49,5 +49,5 @@
         app:layout_constraintStart_toStartOf="@id/textViewShippingUnit"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-   </android.support.constraint.ConstraintLayout>
+   </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

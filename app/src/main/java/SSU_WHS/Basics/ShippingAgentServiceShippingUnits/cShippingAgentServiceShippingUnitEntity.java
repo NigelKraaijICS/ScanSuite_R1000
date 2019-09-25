@@ -1,9 +1,8 @@
 package SSU_WHS.Basics.ShippingAgentServiceShippingUnits;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
-
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,98 +10,77 @@ import SSU_WHS.General.cDatabase;
 
 @Entity(tableName = cDatabase.TABLENAME_SHIPPINGAGENTSERVICESHIPPINGUNITS, primaryKeys = {cDatabase.SHIPPINGAGENT_NAMESTR, cDatabase.SERVICE_NAMESTR, cDatabase.SHIPPINGUNIT_NAMESTR})
 public class cShippingAgentServiceShippingUnitEntity {
+
+    //Region Public Properties
     @NonNull
     @ColumnInfo(name = cDatabase.SHIPPINGAGENT_NAMESTR)
     public String shippingagent;
     @NonNull
-    @ColumnInfo(name = cDatabase.SERVICE_NAMESTR)
-    public String service;
-    @NonNull
-    @ColumnInfo(name = cDatabase.SHIPPINGUNIT_NAMESTR)
-    public String shippingunit;
-    @ColumnInfo(name = cDatabase.DESCRIPTION_DUTCH_NAMESTR)
-    public String description;
-    @ColumnInfo(name = cDatabase.DEFAULTWEIGHTINGRAMS_NAMESTR)
-    public String defaultweightingrams;
-    @ColumnInfo(name = cDatabase.CONTAINERTYPE_DUTCH_NAMESTR)
-    public String containertype;
-    @ColumnInfo(name = cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR)
-    public Integer shippingunitquantityused;
-
-    @NonNull
-    public String getShippingagent() {
+    public String getShippingAgentStr() {
         return shippingagent;
     }
 
-    public void setShippingagent(@NonNull String shippingagent) {
-        this.shippingagent = shippingagent;
-    }
-
     @NonNull
-    public String getService() {
+    @ColumnInfo(name = cDatabase.SERVICE_NAMESTR)
+    public String service;
+    @NonNull
+    public String getServiceStr() {
         return service;
     }
 
-    public void setService(@NonNull String service) {
-        this.service = service;
-    }
 
     @NonNull
-    public String getShippingunit() {
+    @ColumnInfo(name = cDatabase.SHIPPINGUNIT_NAMESTR)
+    public String shippingunit;
+    @NonNull
+    public String getShippingunitStr() {
         return shippingunit;
     }
 
-    public void setShippingunit(@NonNull String shippingunit) {
-        this.shippingunit = shippingunit;
-    }
+    @ColumnInfo(name = cDatabase.DESCRIPTION_DUTCH_NAMESTR)
+    public String description;
 
-    public String getDescription() {
+    public String getDescriptionStr() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @ColumnInfo(name = cDatabase.DEFAULTWEIGHTINGRAMS_NAMESTR)
+    public String defaultweightingrams;
 
-    public String getDefaultweightingrams() {
+    public String getDefaultWeightInGramStr() {
         return defaultweightingrams;
     }
 
-    public void setDefaultweightingrams(String defaultweightingrams) {
-        this.defaultweightingrams = defaultweightingrams;
-    }
-
+    @ColumnInfo(name = cDatabase.CONTAINERTYPE_DUTCH_NAMESTR)
+    public String containertype;
     public String getContainertype() {
         return containertype;
     }
 
-    public Integer getShippingunitquantityused() {
+    @ColumnInfo(name = cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR)
+    public Integer shippingunitquantityused;
+    public Integer getShippingUnitQuantityusedInt() {
         return shippingunitquantityused;
     }
 
-    public void setShippingunitquantityused(Integer shippingunitquantityused) {
-        this.shippingunitquantityused = shippingunitquantityused;
-    }
+    //End Region Public Properties
 
-    public void setContainertype(String containertype) {
-        this.containertype = containertype;
-    }
-
-    //empty constructor
+    //Region Constructor
     public cShippingAgentServiceShippingUnitEntity() {
 
     }
     public cShippingAgentServiceShippingUnitEntity(JSONObject jsonObject) {
         try {
-            shippingagent = jsonObject.getString(cDatabase.SHIPPINGAGENT_NAMESTR);
-            service = jsonObject.getString(cDatabase.SERVICE_NAMESTR);
-            shippingunit = jsonObject.getString(cDatabase.SHIPPINGUNIT_NAMESTR);
-            description = jsonObject.getString(cDatabase.DESCRIPTION_DUTCH_NAMESTR);
-            defaultweightingrams = jsonObject.getString(cDatabase.DEFAULTWEIGHTINGRAMS_NAMESTR);
-            containertype = jsonObject.getString(cDatabase.CONTAINERTYPE_DUTCH_NAMESTR);
-            shippingunitquantityused = 0;
+            this.shippingagent = jsonObject.getString(cDatabase.SHIPPINGAGENT_NAMESTR);
+            this.service = jsonObject.getString(cDatabase.SERVICE_NAMESTR);
+            this.shippingunit = jsonObject.getString(cDatabase.SHIPPINGUNIT_NAMESTR);
+            this.description = jsonObject.getString(cDatabase.DESCRIPTION_DUTCH_NAMESTR);
+            this.defaultweightingrams = jsonObject.getString(cDatabase.DEFAULTWEIGHTINGRAMS_NAMESTR);
+            this.containertype = jsonObject.getString(cDatabase.CONTAINERTYPE_DUTCH_NAMESTR);
+            this.shippingunitquantityused = jsonObject.getInt(cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+    //End Region Constructor
 }

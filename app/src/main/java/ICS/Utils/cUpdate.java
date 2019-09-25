@@ -8,13 +8,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
+
+import androidx.core.content.FileProvider;
 import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
 
-import SSU_WHS.General.cAppExtension;
+import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 
@@ -46,7 +47,7 @@ public class cUpdate {
         //Delete update file if exists
         final File file = new File(destination);
         if (file.exists())
-            //file.delete() - test this, I think sometimes it doesnt work
+            //file.pDelete() - test this, I think sometimes it doesnt work
             file.delete();
 
         //get url of app on server
@@ -60,7 +61,7 @@ public class cUpdate {
         //set destination
         request.setDestinationUri(uri);
 
-        // get download service and enqueue file
+        // get download ShippingAgentServiceStr and enqueue file
         final DownloadManager manager = (DownloadManager) cAppExtension.context.getSystemService(Context.DOWNLOAD_SERVICE);
         final long downloadId = manager.enqueue(request);
 
@@ -75,8 +76,8 @@ public class cUpdate {
                         dialog.dismiss();
                     }
                     String message = context.getResources().getString(R.string.update_file_not_found) + cText.NEWLINE + url;
-                    //cUserInterface.showSnackbarMessage(context,errorView,message, R.raw.badsound, true);
-                    cUserInterface.showActionSnackbar(errorView,message, R.raw.badsound, false);
+                    //cUserInterface.pShowSnackbarMessage(context,errorView,message, R.raw.badsound, true);
+                    cUserInterface.pShowActionSnackbar(errorView,message, R.raw.badsound, false);
                     return;
                 }
                 Intent install = new Intent(Intent.ACTION_VIEW);

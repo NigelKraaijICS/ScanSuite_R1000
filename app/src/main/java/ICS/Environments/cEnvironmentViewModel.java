@@ -1,33 +1,30 @@
 package ICS.Environments;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
+import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
 public class cEnvironmentViewModel extends AndroidViewModel {
-    private cEnvironmentRepository mRepository;
 
-    public cEnvironmentViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cEnvironmentRepository Repository;
+    //End Region Public Properties
 
-        mRepository = new cEnvironmentRepository(application);
+    //Region Constructor
+    public cEnvironmentViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cEnvironmentRepository(pvApplication);
     }
-    public void insert(cEnvironmentEntity environmentEntity) {mRepository.insert(environmentEntity);}
+   //End Region Constructor
 
-    public void delete(cEnvironmentEntity environmentEntity) {mRepository.delete(environmentEntity);}
+    //Region Public Methods
+    public List<cEnvironmentEntity> getAll() {return Repository.getAllEnviromentsFromDatabase();}
+    public void insert(cEnvironmentEntity environmentEntity) {Repository.insert(environmentEntity);}
+    public void delete(cEnvironmentEntity environmentEntity) {Repository.delete(environmentEntity);}
+    public Integer updateDefaultBln(Boolean pvDefaultBln, String pvNameStr) {return Repository.updateDefault(pvDefaultBln, pvNameStr);}
+    public void deleteAll() {Repository.deleteAll();}
 
-    public void deleteAll() {mRepository.deleteAll();}
-
-    public List<cEnvironmentEntity> getAll() {return mRepository.getAll();}
-
-    public cEnvironmentEntity getFirst() {return mRepository.getFirst(); }
-
-    public cEnvironmentEntity getEnvironmentByName(String name) {return mRepository.getEnvironmentByName(name);}
-
-    public cEnvironmentEntity getDefaultEnvironment() {return mRepository.getDefaultEnvironment();}
-
-    public int getNumberOfEnvironments() {return mRepository.getNumberOfEnvironments();}
-
+    //End Region Public Methods
 
 }

@@ -1,27 +1,28 @@
 package SSU_WHS.Basics.Settings;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cSettingsViewModel extends AndroidViewModel {
-    private cSettingsRepository mRepository;
-    private LiveData<List<cSettingsEntity>> mAllSettings;
 
-    public cSettingsViewModel(Application application) {
-        super(application);
+    //Region Public Properties
+    public cSettingsRepository Repository;
+    //End Region Public Properties
 
-        mRepository = new cSettingsRepository(application);
+    //Region Constructor
+    public cSettingsViewModel(Application pvApplication) {
+        super(pvApplication);
+        this.Repository = new cSettingsRepository(pvApplication);
     }
-    public LiveData<List<cSettingsEntity>> getSettings() {return mRepository.getSettings();}
+    //End Region Constructor
 
-    public void insert(cSettingsEntity settingsEntity) {mRepository.insert(settingsEntity);}
+    //Region Public Methods
+    public cWebresult pGetSettingsFromWebserviceWrs() {return this.Repository.pGetSettingsFromWebserviceWrs(); }
+    public void insert(cSettingsEntity pvSettingsEntity) {this.Repository.pInsert(pvSettingsEntity);}
+    public void deleteAll() {Repository.pDeleteAll();}
+    //End Region Public Methods
 
-    public String getSetting(String key) {return mRepository.getSetting(key);}
-
-    public List<cSettingsEntity> getLocalSettings() {return mRepository.getLocalSettings();}
-
-    public void deleteAll() {mRepository.deleteAll();}
 }
+

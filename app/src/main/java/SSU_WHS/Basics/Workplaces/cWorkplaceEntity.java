@@ -1,9 +1,9 @@
 package SSU_WHS.Basics.Workplaces;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,10 +14,12 @@ import SSU_WHS.General.cDatabase;
 public class cWorkplaceEntity {
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name="Workplace")
+    @ColumnInfo(name=cDatabase.WORKPLACE_DUTCH_NAMESTR)
     public String workplace;
-    @ColumnInfo(name="Description")
+    public String getWorkplaceStr() {return this.workplace;}
+    @ColumnInfo(name=cDatabase.DESCRIPTION_DUTCH_NAMESTR)
     public String description;
+    public String getDescriptionStr() {return this.description;}
 
     //empty constructor
     public cWorkplaceEntity() {
@@ -31,9 +33,4 @@ public class cWorkplaceEntity {
             e.printStackTrace();
         }
     }
-    public String getWorkplace() {return this.workplace;}
-    public void setWorkplace(String pv_workplace) {this.workplace = pv_workplace;}
-    public String getDescription() {return this.description;}
-    public void setDescription(String pv_description) {this.workplace = pv_description;}
-
 }

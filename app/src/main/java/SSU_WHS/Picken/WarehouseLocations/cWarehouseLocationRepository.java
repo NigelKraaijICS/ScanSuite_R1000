@@ -1,8 +1,8 @@
 package SSU_WHS.Picken.WarehouseLocations;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
 import org.json.JSONException;
@@ -44,7 +44,7 @@ public class cWarehouseLocationRepository {
                         List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
 
                         PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-                        l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_BRANCH;
+                        l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
                         l_PropertyInfo1Pin.setValue(branch);
                         l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
@@ -53,7 +53,7 @@ public class cWarehouseLocationRepository {
                         l_PropertyInfo2Pin.setValue(soapBins);
                         l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
-                        webResult = new cWebresult().mGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSELOCATIONS, l_PropertyInfoObl);
+                        webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSELOCATIONS, l_PropertyInfoObl);
                         List<JSONObject> myList = webResult.getResultDtt();
                         for (int i = 0; i < myList.size(); i++) {
                             JSONObject jsonObject;
