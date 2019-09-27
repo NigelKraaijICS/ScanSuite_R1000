@@ -92,6 +92,11 @@ public class cText {
         return !helpStr.contains(".") ? helpStr : helpStr.replaceAll("0*$", "").replaceAll("\\.$", "");
     }
 
+    public static String intToString(int inputInt) {
+        String helpStr = Integer.toString(inputInt);
+        return helpStr;
+    }
+
     public static Boolean stringToBoolean(String inputStr, Boolean defaultBln) {
         switch (inputStr.toUpperCase()) {
             case "N":

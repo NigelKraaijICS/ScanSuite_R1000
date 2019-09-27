@@ -24,9 +24,6 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
     TextView textViewTimeZone;
     ImageButton buttonChangeDateTime;
 
-    public static DateTimeFragment newInstance() {
-        return new DateTimeFragment();
-    }
 
     public DateTimeFragment() {
         // Required empty public constructor

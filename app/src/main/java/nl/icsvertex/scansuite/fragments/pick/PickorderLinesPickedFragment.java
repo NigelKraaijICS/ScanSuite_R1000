@@ -30,22 +30,23 @@ import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.fragments.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.fragments.SendOrderFragment;
 
 public class PickorderLinesPickedFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Public Properties
-    static public TextView textViewSelectedLine;
     //End Region Public Properties
 
     //Region Private Properties
 
-    RecyclerView recyclerViewPickorderLinesPicked;
+    static RecyclerView recyclerViewPickorderLinesPicked;
     androidx.appcompat.widget.SearchView recyclerSearchView;
-    Switch switchDefects;
+    static Switch switchDefects;
 
     ConstraintLayout fragmentPickorderLinesToPick;
-    ConstraintLayout resetPicklineView;
-    ConstraintLayout abortOrderView;
+    static private TextView textViewSelectedLine;
+    static ConstraintLayout resetPicklineView;
+    static ConstraintLayout abortOrderView;
 
     //End Region Private Properties
 
@@ -76,6 +77,9 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         super.setUserVisibleHint(pvIsVisibleToUserBln);
 
         if (pvIsVisibleToUserBln) {
+
+            PickorderLinesActivity.currentLineFragment = this;
+
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();
         }
@@ -92,7 +96,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.mGetData();
+        this.pGetData();
     }
 
     @Override
@@ -138,31 +142,31 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     //Region Private Methods
 
-    private void mGetData() {
+    public static void pGetData() {
 
         List<cPickorderLine> HandledLinesObl = cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl();
-        this.mFillRecycler(HandledLinesObl);
+        PickorderLinesPickedFragment.mFillRecycler(HandledLinesObl);
 
     }
 
-    private void mFillRecycler(List<cPickorderLine> pvDataObl) {
+    private static void mFillRecycler(List<cPickorderLine> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            this.mNoLinesAvailable(true);
+            PickorderLinesPickedFragment.pNoLinesAvailable(true);
             return;
         }
 
-        this.mNoLinesAvailable(false);
+        PickorderLinesPickedFragment.pNoLinesAvailable(false);
 
-        this.switchDefects.setVisibility(View.VISIBLE);
-        this.resetPicklineView.setVisibility(View.VISIBLE);
-        this.abortOrderView.setVisibility(View.VISIBLE);
+        PickorderLinesPickedFragment.switchDefects.setVisibility(View.VISIBLE);
+        PickorderLinesPickedFragment.resetPicklineView.setVisibility(View.VISIBLE);
+        PickorderLinesPickedFragment.abortOrderView.setVisibility(View.VISIBLE);
 
         cPickorderLine.getPickorderLinePickedAdapter().pFillData(pvDataObl);
-        this.recyclerViewPickorderLinesPicked.setHasFixedSize(false);
-        this.recyclerViewPickorderLinesPicked.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
-        this.recyclerViewPickorderLinesPicked.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        this.recyclerViewPickorderLinesPicked.setVisibility(View.VISIBLE);
+        PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked.setHasFixedSize(false);
+        PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
+        PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked.setVisibility(View.VISIBLE);
 
         PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
 
@@ -250,7 +254,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             return;
         }
 
-        this.mGetData();
+        this.pGetData();
         return;
 
     }
@@ -320,26 +324,27 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         });
     }
 
-    private void mNoLinesAvailable(Boolean pvEnabledBln) {
+    public static void pNoLinesAvailable(Boolean pvEnabledBln) {
+
+        if (PickorderLinesActivity.currentLineFragment != null && PickorderLinesActivity.currentLineFragment instanceof PickorderLinesPickedFragment) {
 
         if (pvEnabledBln == false) {
-            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof NothingHereFragment) {
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    fragmentTransaction.remove(fragment);
-                    fragmentTransaction.commit();
+
+
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                    }
                 }
+                return;
             }
 
-            return;
-
-        }
-
-            this.switchDefects.setVisibility(View.INVISIBLE);
-            this.resetPicklineView.setVisibility(View.INVISIBLE);
-            this.abortOrderView.setVisibility(View.INVISIBLE);
-            this.recyclerViewPickorderLinesPicked.setVisibility(View.INVISIBLE);
+            PickorderLinesPickedFragment.abortOrderView.setVisibility(View.INVISIBLE);
+            PickorderLinesPickedFragment.resetPicklineView.setVisibility(View.INVISIBLE);
+            PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked.setVisibility(View.INVISIBLE);
 
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
             NothingHereFragment fragment = new NothingHereFragment();
@@ -347,8 +352,12 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             fragmentTransaction.commit();
 
             PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-
             return;
+
+        }
+
+
+
 
 
     }

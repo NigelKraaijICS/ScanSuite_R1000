@@ -1,6 +1,5 @@
 package nl.icsvertex.scansuite.fragments.support;
 
-
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,17 +14,26 @@ import ICS.Interfaces.iICSDefaultFragment;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.SupportPagerAdapter;
 
-
 public class SupportFragment extends Fragment implements iICSDefaultFragment {
+
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
     TabLayout supportTabLayout;
     ViewPager supportViewPager;
     SupportPagerAdapter supportPagerAdapter;
+    //End Region Private Properties
 
-    public static SupportFragment newInstance() { return new SupportFragment(); }
+
+    //Region Constructor
 
     public SupportFragment() {
         // Required empty public constructor
     }
+
+    //End Region Constructor
 
 
     @Override
@@ -34,24 +42,27 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_support, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mFragmentInitialize();
+        this.mFragmentInitialize();
     }
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
     }
 
     @Override
     public void mFindViews() {
-        supportViewPager = getView().findViewById(R.id.supportViewpager);
-        supportPagerAdapter = new SupportPagerAdapter(getActivity().getSupportFragmentManager(), supportTabLayout.getTabCount());
-        supportTabLayout = getView().findViewById(R.id.supportTabLayout);
+        this.supportViewPager = getView().findViewById(R.id.supportViewpager);
+        this.supportTabLayout = getView().findViewById(R.id.supportTabLayout);
+
+
+
     }
 
     @Override
@@ -61,22 +72,24 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFieldsInitialize() {
-        supportViewPager.setAdapter(supportPagerAdapter);
 
-        supportTabLayout.addTab(supportTabLayout.newTab().setText(R.string.tab_support_network));
-        supportTabLayout.addTab(supportTabLayout.newTab().setText(R.string.tab_support_device));
-        supportTabLayout.addTab(supportTabLayout.newTab().setText(R.string.tab_support_application));
+        this.supportTabLayout.addTab(this.supportTabLayout.newTab().setText(R.string.tab_support_network));
+        this.supportTabLayout.addTab(this.supportTabLayout.newTab().setText(R.string.tab_support_device));
+        this.supportTabLayout.addTab(this.supportTabLayout.newTab().setText(R.string.tab_support_application));
+        this.supportPagerAdapter = new SupportPagerAdapter(this.supportTabLayout.getTabCount());
+
+        this.supportViewPager.setAdapter(this.supportPagerAdapter);
 
     }
 
     @Override
     public void mSetListeners() {
-        mSetTabListener();
+        this.mSetTabListener();
     }
 
     private void mSetTabListener() {
-        supportViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(supportTabLayout));
-        supportTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        this.supportViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.supportTabLayout));
+        this.supportTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 supportViewPager.setCurrentItem(tab.getPosition());
@@ -93,6 +106,5 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
             }
         });
     }
-
 
 }

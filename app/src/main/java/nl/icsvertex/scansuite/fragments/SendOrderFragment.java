@@ -1,24 +1,25 @@
 package nl.icsvertex.scansuite.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
-
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 
 
-public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
+public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Public Properties
 
@@ -26,12 +27,12 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     //End Region Public Properties
 
     //Region Private Properties
-    ImageView imageNoOrders;
-    ImageButton buttonRefreshOrders;
+    ImageView imageSendOrder;
+    ImageButton buttonSendOrder;
     //End Region Private Properties
 
     //Region Constructor
-    public NoOrdersFragment() {
+    public SendOrderFragment() {
         // Required empty public constructor
     }
     //End Region Constructor
@@ -42,7 +43,7 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_no_orders, container, false);
+        return inflater.inflate(R.layout.fragment_send_order, container, false);
     }
 
     @Override
@@ -63,8 +64,8 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFindViews() {
-        this.imageNoOrders = getView().findViewById(R.id.imageNoOrders);
-        this.buttonRefreshOrders = getView().findViewById(R.id.buttonRefreshOrders);
+        this.imageSendOrder = getView().findViewById(R.id.imageSendOrder);
+        this.buttonSendOrder = getView().findViewById(R.id.buttonSendOrder);
     }
 
 
@@ -82,25 +83,14 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mSetListeners() {
 
-        this.buttonRefreshOrders.setOnClickListener(new View.OnClickListener() {
+        this.buttonSendOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cUserInterface.pDoRotate(buttonRefreshOrders, 2);
-                if (cAppExtension.activity instanceof PickorderSelectActivity) {
-                    PickorderSelectActivity.pFillOrders();
+                cUserInterface.pDoRotate(buttonSendOrder, 2);
+                if (cAppExtension.activity instanceof PickorderLinesActivity) {
+                    PickorderLinesActivity.pPickingDone("");
                     return;
                 }
-
-                //todo: put this back
-                //todo: make sure rotation animation works again
-
-//        if (activity instanceof ShiporderSelectActivity) {
-//            ((ShiporderSelectActivity)getActivity()).pGetData();
-//        }
-//        if (activity instanceof SortorderSelectActivity) {
-//            ((SortorderSelectActivity)getActivity()).pGetData();
-//        }
-
             }
         });
 

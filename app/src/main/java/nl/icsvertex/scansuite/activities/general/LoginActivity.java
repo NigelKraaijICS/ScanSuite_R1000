@@ -165,8 +165,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     public static void pBranchSelected(cBranch pvBranch) {
 
-
-
         // Branch is known, so set current branch of current user
         cUser.currentUser.currentBranch = pvBranch;
         LoginActivity.mStartMenuActivity();

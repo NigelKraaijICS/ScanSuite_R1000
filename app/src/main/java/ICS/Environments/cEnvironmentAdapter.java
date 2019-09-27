@@ -25,29 +25,27 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
         public RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
 
-        public EnvironmentViewHolder(View itemView) {
-            super(itemView);
-            textViewDescription = itemView.findViewById(R.id.textViewDescription);
-            textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewDescription.setSingleLine(true);
-            textViewDescription.setMarqueeRepeatLimit(5);
-            textViewDescription.setSelected(true);
-            textViewName = itemView.findViewById(R.id.textViewName);
-            textViewName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewName.setSingleLine(true);
-            textViewName.setMarqueeRepeatLimit(5);
-            textViewName.setSelected(true);
-            textViewURL = itemView.findViewById(R.id.textViewURL);
-            textViewURL.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewURL.setSingleLine(true);
-            textViewURL.setMarqueeRepeatLimit(5);
-            textViewURL.setSelected(true);
-            viewBackground = itemView.findViewById(R.id.view_background);
-            viewForeground = itemView.findViewById(R.id.view_foreground);
+        public EnvironmentViewHolder(View pvItemView) {
+            super(pvItemView);
+            this.textViewDescription = pvItemView.findViewById(R.id.textViewDescription);
+            this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDescription.setSingleLine(true);
+            this.textViewDescription.setMarqueeRepeatLimit(5);
+            this.textViewDescription.setSelected(true);
+            this.textViewName = pvItemView.findViewById(R.id.textViewName);
+            this.textViewName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewName.setSingleLine(true);
+            this.textViewName.setMarqueeRepeatLimit(5);
+            this.textViewName.setSelected(true);
+            this.textViewURL = pvItemView.findViewById(R.id.textViewURL);
+            this.textViewURL.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewURL.setSingleLine(true);
+            this.textViewURL.setMarqueeRepeatLimit(5);
+            this.textViewURL.setSelected(true);
+            this.viewBackground = pvItemView.findViewById(R.id.view_background);
+            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
         }
     }
-
-
     //End Region Public Properties
 
     //Region Private Properties
@@ -60,52 +58,52 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
     }
     //End Region Constructor
 
-    //Region Public Methods
+    //Region Default Methods
 
     @Override
-    public cEnvironmentAdapter.EnvironmentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_environment, parent, false);
+    public cEnvironmentAdapter.EnvironmentViewHolder onCreateViewHolder(ViewGroup pvViewGroup, int pbViewTypeInt) {
+        View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_environment, pvViewGroup, false);
         return new cEnvironmentAdapter.EnvironmentViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(cEnvironmentAdapter.EnvironmentViewHolder holder, int position) {
+    public void onBindViewHolder(cEnvironmentAdapter.EnvironmentViewHolder pvHolder, int pvPositionInt) {
 
         if (cEnvironment.allEnviroments != null) {
 
-            final cEnvironment environment = cEnvironment.allEnviroments.get(position);
+            final cEnvironment environment = cEnvironment.allEnviroments.get(pvPositionInt);
 
-            holder.textViewDescription.setText(environment.getDescriptionStr());
-            holder.textViewName.setText(environment.getNameStr());
-            holder.textViewURL.setText(environment.getWebserviceURLStr());
+            pvHolder.textViewDescription.setText(environment.getDescriptionStr());
+            pvHolder.textViewName.setText(environment.getNameStr());
+            pvHolder.textViewURL.setText(environment.getWebserviceURLStr());
 
-            holder.viewForeground.setOnClickListener(new View.OnClickListener() {
+            pvHolder.viewForeground.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     cEnvironment.pSetCurrentEnviroment(environment);
+
                     if (cAppExtension.context instanceof MainDefaultActivity) {
-                        ((MainDefaultActivity)cAppExtension.context).pSetChosenEnvironment();
+                        MainDefaultActivity.pSetChosenEnvironment();
                     }
+
                 }
             });
         }
     }
 
     @Override
-    public int getItemCount () {
+     public int getItemCount () {
         if (cEnvironment.allEnviroments != null)
             return cEnvironment.allEnviroments.size();
         else return 0;
     }
-    public void removeItem(cEnvironment pvEnviroment) {
-        notifyItemRemoved(cEnvironment.allEnviroments.indexOf(pvEnviroment));
-        //todo: item is still visible in recyclerview, maybe because object is not yet removed from cEnvironment.allEnviroments
-    }
-    public void restoreItem(cEnvironment pvEnviroment) {
-        int position = cEnvironment.allEnviroments.indexOf(pvEnviroment) + 1;
-        notifyItemInserted(position);
-    }
 
-    //End Region Public Methods
+    //End Region Default Methods
+
+    //Region Private Methods
+
+
+    //End Region Private Methods
+
 
 }

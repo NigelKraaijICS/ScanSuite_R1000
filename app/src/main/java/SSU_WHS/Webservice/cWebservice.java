@@ -65,7 +65,6 @@ public class cWebservice {
 
         if (webresult == null ||!webresult.getSuccessBln() || !webresult.getResultBln()) {
             cUserInterface.pDoExplodingScreen( cAppExtension.context.getResources().getString(R.string.message_webservice_not_live), "", true,true);
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_SERVICEAVAILABLE);
             return false;
         }
         if (!Long.toString(webresult.getResultLng()).equalsIgnoreCase(cPublicDefinitions.INTERFACE_VERSION)) {

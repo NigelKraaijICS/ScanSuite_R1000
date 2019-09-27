@@ -14,6 +14,7 @@ import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.fragments.dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.BranchFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.CurrentLocationFragment;
+import nl.icsvertex.scansuite.fragments.dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.OrderDoneFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.WorkplaceFragment;
 
@@ -76,7 +77,6 @@ public class cBarcodeScan {
                         PickorderPickActivity.pHandleScan(barcodeStr);
                     }
 
-
                 }
             };
         }
@@ -110,7 +110,6 @@ public class cBarcodeScan {
                         return;
                     }
 
-
                     if(cAppExtension.dialogFragment instanceof CurrentLocationFragment) {
                         CurrentLocationFragment.pHandleScan(barcodeStr);
                         return;
@@ -120,6 +119,11 @@ public class cBarcodeScan {
                         ArticleFullViewFragment.pHandleScan(barcodeStr);
                         return;
                     }
+
+                    if (cAppExtension.dialogFragment instanceof EnvironmentFragment) {
+                        EnvironmentFragment.pHandleScan(barcodeStr);
+                    }
+
 
                 }
 

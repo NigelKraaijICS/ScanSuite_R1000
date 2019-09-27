@@ -23,11 +23,7 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
     TextView textViewCurrentLanguage;
     ImageButton buttonChangeLanguage;
 
-    public static LanguageFragment newInstance() {
-        return new LanguageFragment();
-    }
-
-    public LanguageFragment() {
+     public LanguageFragment() {
         // Required empty public constructor
     }
 

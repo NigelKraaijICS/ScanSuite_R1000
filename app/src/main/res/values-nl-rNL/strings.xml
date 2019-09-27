@@ -356,4 +356,11 @@
     <string name="password_hint_default">wachtwoord</string>
     <string name="password_text_default">Geef wachtwoord in</string>
     <string name="previous_barcode_could_not_be_deleted">Bekende barcodes konden niet verwijderd worden</string>
+    <string name="send_order">Resultaten (opnieuw) versturen</string>
+    <string name="error_couldnt_handle_step">Deze stap kon niet afgehandeld worden</string>
+    <string name="hold_the_order">Order tegengehouden</string>
+    <string name="message_empty_description">Omschrijving is niet gevuld</string>
+    <string name="message_empty_isdefault">Default waarde niet gevuld</string>
+    <string name="message_empty_name">Naam is niet gevuld</string>
+    <string name="message_empty_URL">URL is niet gevuld</string>
 </resources>

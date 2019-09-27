@@ -178,7 +178,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
 
                 cUserInterface.pShowToastMessage( getString(R.string.environment_parameter1_saved, description), null);
                 if (cAppExtension.context instanceof MainDefaultActivity) {
-                    ((MainDefaultActivity)cAppExtension.context).setAddedEnvironment();
+                    ((MainDefaultActivity)cAppExtension.context).pSetAddedEnvironment();
                 }
             }
         });

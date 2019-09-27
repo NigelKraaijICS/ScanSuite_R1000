@@ -281,6 +281,16 @@ public class cPickorder {
 
     }
 
+    public boolean SortNeededBln(){
+
+        if (this.isBPBln() || this.isBCBln()) {
+            return  true;
+        }
+
+        return  false;
+
+    }
+
     public cPickorderEntity pickorderEntity;
     public boolean indatabaseBln;
 
@@ -450,6 +460,14 @@ public class cPickorder {
         }
 
         Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),this.getOrderNumberStr(), cDeviceInfo.getSerialnumber(),pvStepCodeEnu.toString(),pvWorkFlowStepInt, ignoreBusyBln);
+
+        //No result, so something really went wrong
+        if (Webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_lock_order));
+            return result;
+        }
 
         //Everything was fine, so we are done
         if (Webresult.getSuccessBln() == true && Webresult.getResultBln() == true) {
@@ -824,8 +842,74 @@ public class cPickorder {
         }
     }
 
-    public boolean pPickHanledViaWebserviceBln() {
-            return  cPickorder.getPickorderViewModel().pPickenHandledViaWebserviceBln(cWorkplace.currentWorkplace.getWorkplaceStr());
+    public cResult pPickHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        String workplaceStr = "";
+
+        cWebresult webresult;
+
+        if (cWorkplace.currentWorkplace != null) {
+            workplaceStr = cWorkplace.currentWorkplace.getWorkplaceStr();
+        }
+
+        webresult =  cPickorder.getPickorderViewModel().pPickenHandledViaWebserviceWrs(workplaceStr);
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (webresult.getSuccessBln() == false ) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+
+            Long actionLng = Long.valueOf(0);
+
+            if (webresult.getResultLng() < 10 ) {
+                actionLng = webresult.getResultLng();
+            }
+
+            if (webresult.getResultLng() > 100) {
+                actionLng  = (long)(webresult.getResultLng()/100);
+            }
+
+            //Try to convert action long to action enumerate
+            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            result.resultBln = false;
+            result.activityActionEnu = activityActionEnu;
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+            }
+
+            cPickorder.currentPickOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            return result;
+        }
+
+        return  result;
+
+
     }
 
     public static List<cPickorder> pGetPicksFromDatabasObl() {

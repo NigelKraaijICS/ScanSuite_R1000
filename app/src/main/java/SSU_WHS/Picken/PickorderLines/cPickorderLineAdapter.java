@@ -11,10 +11,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.fragments.pick.PickorderLinesPickedFragment;
 
 public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAdapter.PickorderLineViewHolder>  {
 
@@ -89,8 +92,23 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
         final cPickorderLine currentPickorderLine = this.localPickorderLinesObl.get(pvPositionInt);
 
+
         String lineDescriptionStr = currentPickorderLine.getItemNoStr() + "~" + currentPickorderLine.getVariantCodeStr() + ": " + currentPickorderLine.getDescriptionStr();
-        String quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+        String quantityToShowStr = "";
+
+        if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
+           quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+        }
+
+        if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
+           quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+        }
+
+        if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTotal) {
+           quantityToShowStr  = cText.intToString( currentPickorderLine.getQuantityDbl().intValue());
+        }
+
+
 
         pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
         pvHolder.textViewPickorderLine.setText(lineDescriptionStr);
@@ -174,6 +192,21 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
     public void pvShowDefects(Boolean pvShowBlm) {
         this.localPickorderLinesObl = mGetDefectsListObl(pvShowBlm);
+
+        //if PickorderLinesPickedFragment is the current fragment
+        if (PickorderLinesActivity.currentLineFragment instanceof PickorderLinesPickedFragment ) {
+
+            //if there are no defects, then show no lines fragment
+            if (this.localPickorderLinesObl.size() == 0 ) {
+                PickorderLinesPickedFragment.pNoLinesAvailable(true);
+            }
+            // There are lines to show, so refresh the fragent then all lines are shown again
+            else {
+               PickorderLinesPickedFragment.pGetData();
+            }
+
+        }
+
         notifyDataSetChanged();
     }
 
@@ -202,6 +235,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     private List<cPickorderLine> mGetDefectsListObl(Boolean pvShowBln) {
 
         if (pvShowBln == false) {
+            this.localPickorderLinesObl = cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl();
             return  this.localPickorderLinesObl;
         }
 

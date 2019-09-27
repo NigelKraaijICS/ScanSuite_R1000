@@ -35,10 +35,6 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     //end region Private Properties
 
     //region Constructor
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
-    }
-
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -111,13 +107,13 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     }
 
     private void mSetDeviceInfo() {
-        String l_deviceInfoStr = "";
-        l_deviceInfoStr += getString(R.string.device_manufacturer) + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceManufacturer() + cText.NEWLINE;
-        l_deviceInfoStr += getString(R.string.device_brand)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceBrand() + cText.NEWLINE;
-        l_deviceInfoStr += getString(R.string.device_model)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceModel() + cText.NEWLINE;
-        l_deviceInfoStr += getString(R.string.device_serialnumber)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getSerialnumber() + cText.NEWLINE;
-        l_deviceInfoStr += getString(R.string.application_version)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getAppVersion();
-        this.textViewDevicedetails.setText(l_deviceInfoStr);
+        String DeviceInfoStr = "";
+        DeviceInfoStr += getString(R.string.device_manufacturer) + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceManufacturer() + cText.NEWLINE;
+        DeviceInfoStr += getString(R.string.device_brand)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceBrand() + cText.NEWLINE;
+        DeviceInfoStr += getString(R.string.device_model)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceModel() + cText.NEWLINE;
+        DeviceInfoStr += getString(R.string.device_serialnumber)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getSerialnumber() + cText.NEWLINE;
+        DeviceInfoStr += getString(R.string.application_version)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getAppVersion();
+        this.textViewDevicedetails.setText(DeviceInfoStr);
     }
 
     private static void mStartLoginActivity() {

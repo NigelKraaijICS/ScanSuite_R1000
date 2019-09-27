@@ -68,7 +68,11 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
         this.titleStr = cAppExtension.context.getString(R.string.comments);
 
         if (args != null) {
-            this.titleStr = args.getString(cPublicDefinitions.KEY_COMMENTHEADER,getResources().getString(R.string.comments));
+            this.titleStr = args.getString(cPublicDefinitions.KEY_COMMENTHEADER,"");
+        }
+
+        if (this.titleStr == "") {
+            this.titleStr = getResources().getString(R.string.comments);
         }
 
         cAppExtension.dialogFragment = this;

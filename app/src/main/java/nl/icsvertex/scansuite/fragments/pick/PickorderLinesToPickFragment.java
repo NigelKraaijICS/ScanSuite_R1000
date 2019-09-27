@@ -1,7 +1,5 @@
 package nl.icsvertex.scansuite.fragments.pick;
 
-import androidx.fragment.app.DialogFragment;
-
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -31,6 +29,7 @@ import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.fragments.NothingHereFragment;
+import nl.icsvertex.scansuite.fragments.SendOrderFragment;
 
 
 public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefaultFragment {
@@ -46,6 +45,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     ConstraintLayout quickhelpContainer;
     static TextView textViewSelectedBin;
     ConstraintLayout currentLocationView;
+
     RecyclerView recyclerViewPickorderLinesTopick;
 
     //End Region Private Properties
@@ -80,6 +80,9 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         super.setUserVisibleHint(pvIsVisibleToUserBln);
 
         if (pvIsVisibleToUserBln) {
+
+            PickorderLinesActivity.currentLineFragment = this;
+
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();
         }
@@ -133,6 +136,8 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         else {
             this.quickhelpText.setText(R.string.scan_bincode);
         }
+
+
     }
 
     @Override
@@ -140,7 +145,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
         this.mSetQuickHelpListener();
         this.mSetLocationListener();
-
     }
 
     //End Region iICSDefaultFragment defaults
@@ -216,37 +220,44 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     private void mNoOrdersAvailable(Boolean pvEnabledBln) {
 
-        //Close no orders fragment if needed
-        if (pvEnabledBln == false) {
-            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof NothingHereFragment) {
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    fragmentTransaction.remove(fragment);
-                    fragmentTransaction.commit();
+        if (PickorderLinesActivity.currentLineFragment != null && PickorderLinesActivity.currentLineFragment == this) {
+            //Close no orders fragment if needed
+            if (pvEnabledBln == false) {
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                    }
                 }
+
+                this.quickhelpContainer.setVisibility(View.VISIBLE);
+                return;
+
             }
+
+            //Hide the recycler view
+            this.recyclerViewPickorderLinesTopick.setVisibility(View.INVISIBLE);
+
+            //Hide location button and clear text
+            this.currentLocationView.setVisibility(View.INVISIBLE);
+            this.currentLocationView.setClickable(false);
+            PickorderLinesToPickFragment.textViewSelectedBin.setText("");
+            this.quickhelpContainer.setVisibility(View.INVISIBLE);
+
+            //Show nothing there fragment
+            FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+            SendOrderFragment fragment = new SendOrderFragment();
+            fragmentTransaction.replace(R.id.fragmentPickorderLinesToPick, fragment);
+            fragmentTransaction.commit();
+
+            //Change tabcounter text
+            PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
             return;
 
         }
 
-        //Hide the recycler view
-        this.recyclerViewPickorderLinesTopick.setVisibility(View.INVISIBLE);
-
-        //Hide location button and clear text
-        this.currentLocationView.setVisibility(View.INVISIBLE);
-        this.currentLocationView.setClickable(false);
-        PickorderLinesToPickFragment.textViewSelectedBin.setText("");
-
-        //Show nothing there fragment
-        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-        NothingHereFragment fragment = new NothingHereFragment();
-        fragmentTransaction.replace(R.id.fragmentPickorderLinesPicked, fragment);
-        fragmentTransaction.commit();
-
-        //Change tabcounter text
-        PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-        return;
 
 
     }

@@ -18,6 +18,7 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 
 public class PickorderLinesTotalFragment extends Fragment {
@@ -58,6 +59,9 @@ public class PickorderLinesTotalFragment extends Fragment {
         super.setUserVisibleHint(pvIsVisibleToUserBln);
 
         if (pvIsVisibleToUserBln) {
+
+            PickorderLinesActivity.currentLineFragment = this;
+
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();
         }

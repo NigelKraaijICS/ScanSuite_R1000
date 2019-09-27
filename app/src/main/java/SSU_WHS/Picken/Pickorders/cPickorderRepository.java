@@ -308,7 +308,7 @@ public class cPickorderRepository {
         return ResultObl;
     }
 
-    public Boolean pPickenHandledViaWebserviceBln(String pvWorkplaceStr) {
+    public cWebresult pPickenHandledViaWebserviceBln(String pvWorkplaceStr) {
 
         cWebresult webResult;
 
@@ -316,21 +316,18 @@ public class cPickorderRepository {
         pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumber() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), 10, "");
 
         try {
-            webResult = new mPickorderStepHandledAsyncTask().execute(pickorderStepHandledParams).get();
 
-            if (webResult.getSuccessBln() == false || webResult.getResultBln() == false) {
-                return  false;
-            }
-            return  true;
+            webResult = new mPickorderStepHandledAsyncTask().execute(pickorderStepHandledParams).get();
+            return  webResult;
         }
 
         catch (InterruptedException e) {
             e.printStackTrace();
-            return  false;
+            return  null;
 
         } catch (ExecutionException e) {
             e.printStackTrace();
-            return  false;
+            return  null;
 
         }
     }

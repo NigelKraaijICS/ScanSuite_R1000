@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import com.google.android.material.tabs.TabLayout;
 import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -55,7 +57,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     //Region Views
     private TextView textViewChosenOrder;
     static private TextView quantityPickordersText;
-    private TabLayout pickorderLinesTabLayout;
+    static private TabLayout pickorderLinesTabLayout;
     static private ViewPager pickorderLinesViewPager;
 
     private PickorderLinesPagerAdapter pickorderLinesPagerAdapter;
@@ -63,6 +65,8 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private ImageView toolbarImage;
     private TextView toolbarTitle;
+
+    public static Fragment currentLineFragment;
 
     //End Region Views
 
@@ -384,7 +388,9 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Check if we need to select a workplace
-        if (cPickorder.currentPickOrder.PackAndShipNeededBln() == false && cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() == true) {
+        if (cPickorder.currentPickOrder.PackAndShipNeededBln() == false && cPickorder.currentPickOrder.SortNeededBln() == false &&
+            cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() == true && cWorkplace.currentWorkplace == null ) {
+
             mShowWorkplaceFragment();
             return;
         }
@@ -394,10 +400,42 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
+    private static boolean mTryToCloseOrderBln(){
+
+        cResult hulpResult;
+        hulpResult =  hulpResult = cPickorder.currentPickOrder.pPickHandledViaWebserviceRst();
+
+        //Everything was fine, so we are done
+        if (hulpResult.resultBln == true) {
+            return true;
+        }
+
+        //Something went wrong, but no further actions are needed, so ony show reason of failure
+        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+            cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
+            return  false;
+        }
+
+        //Something went wrong, the order has been deleted, so show comments and refresh
+        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
+
+            //If we got any comments, show them
+            if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
+                //Process comments from webresult
+                PickorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+            }
+
+            return  false;
+        }
+
+        return true;
+
+    }
+
+
     public static void pClosePickAndDecideNextStep(){
 
-        if (cPickorder.currentPickOrder.pPickHanledViaWebserviceBln() == false) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_could_not_close_order), "", true, false);
+        if (PickorderLinesActivity.mTryToCloseOrderBln() == false) {
             return;
         }
 
@@ -455,7 +493,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl());
+                mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl(),"");
             }
         });
     }
@@ -465,8 +503,16 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         return;
     }
 
-    private static void mShowCommentsFragment(List<cComment> pvDataObl) {
+    private static void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(cPublicDefinitions.KEY_COMMENTHEADER, pvTitleStr);
+
         CommentFragment commentFragment = new CommentFragment(pvDataObl);
+        commentFragment.setArguments(bundle);
+
         commentFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.COMMENTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
         return;
@@ -776,7 +822,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        PickorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl());
+        PickorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl(),"");
         cComment.commentsShownBln = true;
         return;
     }

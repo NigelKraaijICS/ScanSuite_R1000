@@ -42,7 +42,6 @@ import ICS.Utils.cUserInterface;
 import ICS.Utils.cPermissions;
 
 import io.fabric.sdk.android.Fabric;
-import nl.icsvertex.scansuite.fragments.dialogs.AddEnvironmentFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.NoConnectionFragment;
 import nl.icsvertex.scansuite.fragments.main.DateTimeFragment;
@@ -56,20 +55,20 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     //Region Public Properties
     static final int ACTIVITY_WIFI_SETTINGS = 1;
     static final String ENVIRONMENTFRAGMENT_TAG = "ENVIRONMENTFRAGMENT_TAG";
-    static final String ADDENVIRONMENTMANUALLYFRAGMENT_TAG = "ADDENVIRONMENTMANUALLYFRAGMENT_TAG";
+
     //End Region Public Properties
 
     //Region Private Properties
 
     //region views
-    private ImageView imageHome;
-    private ImageView imageEnvironment;
+    private static ImageView imageHome;
+    private static ImageView imageEnvironment;
 
     private Toolbar Toolbar;
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private ImageView toolbarImageHelp;
-    private TextView toolbarSubtext;
+    private static TextView toolbarSubtext;
 
     private FrameLayout mainFramelayout;
     private DrawerLayout menuMainDrawer;
@@ -113,7 +112,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
             this.setTitle(R.string.screentitle_language);
             this.toolbarTitle.setText(R.string.screentitle_language);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.mainFramelayout, LanguageFragment.newInstance());
+            transaction.replace(R.id.mainFramelayout, new LanguageFragment());
             transaction.commit();
         }
 
@@ -223,7 +222,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     @Override
     public void mInitScreen() {
-        this.mSetDefaultScreen();
+        this.mShowHomeFragment();
     }
 
     //End Region iICSDefaultActivity defaults
@@ -250,21 +249,21 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
     }
 
-    public void pSetChosenEnvironment() {
-        Fragment l_FragmentFrg = getSupportFragmentManager().findFragmentByTag(ENVIRONMENTFRAGMENT_TAG);
-        if (l_FragmentFrg != null) {
-            DialogFragment l_DialogFragmentDfr = (DialogFragment) l_FragmentFrg;
-            l_DialogFragmentDfr.dismiss();
+    public static void pSetChosenEnvironment() {
+        Fragment FragmentFrg = cAppExtension.fragmentManager.findFragmentByTag(ENVIRONMENTFRAGMENT_TAG);
+        if (FragmentFrg != null) {
+            DialogFragment DialogFragmentDfr = (DialogFragment) FragmentFrg;
+            DialogFragmentDfr.dismiss();
         }
 
         toolbarSubtext.setText(cEnvironment.currentEnvironment.getDescriptionStr());
-        cUserInterface.pShowSnackbarMessage(imageEnvironment, getString(R.string.environment_set_to_parameter1, cEnvironment.currentEnvironment.getDescriptionStr()), R.raw.goodsound, false );
+        cUserInterface.pShowSnackbarMessage(imageEnvironment, cAppExtension.context.getString(R.string.environment_set_to_parameter1, cEnvironment.currentEnvironment.getDescriptionStr()), R.raw.goodsound, false );
         return;
     }
 
 
     public static void pPasswordSuccess(){
-        MainDefaultActivity.mShowEnvironmentPicker();
+        MainDefaultActivity.mShowEnvironmentFragment();
         return;
     }
 
@@ -352,14 +351,9 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         return  true;
     }
 
-    public void setAddedEnvironment() {
+    public static void pSetAddedEnvironment() {
         cUserInterface.pCheckAndCloseOpenDialogs();
-        this.mShowEnvironmentPicker();
-    }
-
-    public void setAddEnvironmentManually() {
-        cUserInterface.pCheckAndCloseOpenDialogs();
-        this.mShowEnvironmentManually();
+        MainDefaultActivity.mShowEnvironmentFragment();
     }
 
     private void mSetEnviroment(){
@@ -369,25 +363,22 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
     }
 
-    private void mSetDefaultScreen() {
+    private void mShowHomeFragment() {
         this.imageHome.setVisibility(View.INVISIBLE);
         this.imageEnvironment.setVisibility(View.VISIBLE);
         this.toolbarTitle.setText(R.string.screentitle_main);
         this.toolbarImage.setImageResource(R.drawable.ic_welcome);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.mainFramelayout, HomeFragment.newInstance());
+        FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.mainFramelayout, new HomeFragment());
         transaction.commit();
     }
 
-    private static void mShowEnvironmentPicker() {
+    private static void mShowEnvironmentFragment() {
         final EnvironmentFragment environmentFragment = new EnvironmentFragment();
         environmentFragment.show(cAppExtension.fragmentManager, ENVIRONMENTFRAGMENT_TAG);
     }
 
-    private void mShowEnvironmentManually() {
-        final AddEnvironmentFragment addEnvironmentFragment = new AddEnvironmentFragment();
-        addEnvironmentFragment.show(cAppExtension.fragmentManager,ADDENVIRONMENTMANUALLYFRAGMENT_TAG);
-    }
+
 
     //End Region Private Methods
 
@@ -397,7 +388,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         this.imageHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSetDefaultScreen();
+                mShowHomeFragment();
             }
         });
     }
@@ -422,7 +413,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                     case R.id.action_home:
                         imageHome.setVisibility(View.GONE);
                         imageEnvironment.setVisibility(View.VISIBLE);
-                        selectedFragment = HomeFragment.newInstance();
+                        selectedFragment = new HomeFragment();
                         toolbarTitle.setText(R.string.screentitle_main);
                         toolbarImage.setImageResource(R.drawable.ic_welcome);
                         break;
@@ -437,7 +428,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                     case R.id.action_support:
                         imageHome.setVisibility(View.VISIBLE);
                         imageEnvironment.setVisibility(View.GONE);
-                        selectedFragment = SupportFragment.newInstance();
+                        selectedFragment = new SupportFragment();
                         toolbarTitle.setText(R.string.screentitle_support);
                         toolbarImage.setImageResource(R.drawable.ic_support);
                         break;
@@ -445,7 +436,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                     case R.id.action_language:
                         imageHome.setVisibility(View.VISIBLE);
                         imageEnvironment.setVisibility(View.GONE);
-                        selectedFragment = LanguageFragment.newInstance();
+                        selectedFragment = new LanguageFragment();
                         toolbarTitle.setText(R.string.screentitle_language);
                         toolbarImage.setImageResource(R.drawable.ic_language);
                         break;
@@ -453,7 +444,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                     case R.id.action_datetime:
                         imageHome.setVisibility(View.VISIBLE);
                         imageEnvironment.setVisibility(View.GONE);
-                        selectedFragment = DateTimeFragment.newInstance();
+                        selectedFragment = new DateTimeFragment();
                         toolbarTitle.setText(R.string.screentitle_datetime);
                         toolbarImage.setImageResource(R.drawable.ic_calendar);
                         break;
@@ -461,7 +452,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                     default:
                         imageHome.setVisibility(View.INVISIBLE);
                         imageEnvironment.setVisibility(View.VISIBLE);
-                        selectedFragment = HomeFragment.newInstance();
+                        selectedFragment = new HomeFragment();
                         toolbarTitle.setText(R.string.screentitle_main);
                         toolbarImage.setImageResource(R.drawable.ic_welcome);
                         break;

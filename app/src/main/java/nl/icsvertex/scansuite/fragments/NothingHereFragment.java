@@ -1,6 +1,6 @@
 package nl.icsvertex.scansuite.fragments;
 
-import android.content.Context;
+
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +19,8 @@ import ICS.Utils.cImages;
 import nl.icsvertex.scansuite.R;
 
 public class NothingHereFragment extends Fragment {
-    Fragment thisFragment;
-    Context thisContext;
+
+
     ImageView imageTumbleweed;
     ImageView imageViewWind;
     ImageView imageViewCactus;
@@ -44,7 +44,6 @@ public class NothingHereFragment extends Fragment {
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        thisFragment = this;
         imageTumbleweed = view.findViewById(R.id.imageViewTumbleweed);
         imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
         imageViewWind = view.findViewById(R.id.imageViewWind);
