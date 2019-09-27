@@ -26,13 +26,13 @@ import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;
 
 public class AddEnvironmentFragment extends DialogFragment implements iICSDefaultFragment {
 
-    Button buttonCancel;
-    Button buttonSave;
-    EditText editTextEnvironmentName;
-    EditText editTextEnvironmentDescription;
-    EditText editTextEnvironmentUrl;
-    DialogFragment thisFragment;
-    IntentFilter barcodeFragmentIntentFilter;
+    private  Button buttonCancel;
+    private Button buttonSave;
+    private EditText editTextEnvironmentName;
+    private EditText editTextEnvironmentDescription;
+    private EditText editTextEnvironmentUrl;
+    private DialogFragment thisFragment;
+    private  IntentFilter barcodeFragmentIntentFilter;
 
     private BroadcastReceiver barcodeFragmentReceiver;
 
@@ -185,7 +185,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     }
 
     private void mHandleScan(String barcode) {
-        String scanSplit[] = barcode.split("=");
+        String[] scanSplit = barcode.split("=");
         if (scanSplit.length != 2) {
             mDoWrongBarcode();
             return;

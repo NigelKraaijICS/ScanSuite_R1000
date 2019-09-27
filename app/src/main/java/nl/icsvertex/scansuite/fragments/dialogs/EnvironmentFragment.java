@@ -37,10 +37,10 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
 
     private static String ADDENVIRONMENTMANUALLYFRAGMENT_TAG = "ADDENVIRONMENTMANUALLYFRAGMENT_TAG";
 
-    static RecyclerView environmentRecyclerView;
-    Button buttonClose;
-    Button buttonAddManually;
-    static TextView textViewCurrentEnvironment;
+    private static RecyclerView environmentRecyclerView;
+    private Button buttonClose;
+    private Button buttonAddManually;
+    private   static TextView textViewCurrentEnvironment;
 
     //End Region Private Properties
 
@@ -131,7 +131,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cEnvironmentRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.environmentRecyclerView);
 
-        EnvironmentFragment.pGetData();
+        EnvironmentFragment.mGetData();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         cEnvironment environment = new cEnvironment(pvScannedBarcodeStr);
         cResult hulpResult = environment.pValidateRst();
 
-        if (hulpResult.resultBln == false) {
+        if (!hulpResult.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
             return;
         }
@@ -160,11 +160,11 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
             cEnvironment.pSetCurrentEnviroment(environment);
         }
 
-        EnvironmentFragment.pGetData();
+        EnvironmentFragment.mGetData();
 
     }
 
-    public static void pGetData() {
+    private static void mGetData() {
 
         cEnvironment.pGetEnviromentsFromDatabase();
         EnvironmentFragment.mFillRecyclerView();
@@ -222,7 +222,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     public void onSwiped(RecyclerView.ViewHolder pvViewHolder, int pvDirectionInt, int pvPositionInt) {
 
 
-        if (pvViewHolder instanceof  cEnvironmentAdapter.EnvironmentViewHolder == false) {
+        if (!(pvViewHolder instanceof  cEnvironmentAdapter.EnvironmentViewHolder)) {
             return;
         }
 
@@ -246,7 +246,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         cEnvironment.restorableEnviroment.pDeleteFromDatabaseBln();
 
         //Renew data, so only current enviroments are shown
-        EnvironmentFragment.pGetData();
+        EnvironmentFragment.mGetData();
 
         //Show clickable snackbar message
 
@@ -259,7 +259,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
                 cEnvironment.restorableEnviroment.pInsertInDatabaseBln();
 
                 //Renew data, so all enviroments are shown
-                EnvironmentFragment.pGetData();
+                EnvironmentFragment.mGetData();
 
                 cUserInterface.pPlaySound(R.raw.hsart, 1000);
             }

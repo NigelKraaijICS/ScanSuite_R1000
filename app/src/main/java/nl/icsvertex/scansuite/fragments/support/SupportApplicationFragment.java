@@ -24,16 +24,15 @@ import nl.icsvertex.scansuite.R;
 
 
 public class SupportApplicationFragment extends Fragment implements iICSDefaultFragment {
-    static final String SETTINGSFRAGMENT_TAG = "SETTINGSFRAGMENT_TAG";
 
-    cSettingsViewModel settingsViewModel;
+    private static final String SETTINGSFRAGMENT_TAG = "SETTINGSFRAGMENT_TAG";
 
-    TextView textViewApplicationVersion;
-    TextView textViewWebservice;
-    String updateUrl;
-    ImageButton updateImageButton;
-    ImageButton testWebserviceImageButton;
-    Button buttonMySettings;
+    private TextView textViewApplicationVersion;
+    private  TextView textViewWebservice;
+    private  String updateUrl;
+    private ImageButton updateImageButton;
+    private  ImageButton testWebserviceImageButton;
+    private  Button buttonMySettings;
 
     public SupportApplicationFragment() {
         // Required empty public constructor

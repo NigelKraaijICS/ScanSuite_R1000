@@ -21,9 +21,9 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
     //End Region Public Properties
 
     //Region Private Properties
-    TabLayout supportTabLayout;
-    ViewPager supportViewPager;
-    SupportPagerAdapter supportPagerAdapter;
+    private TabLayout supportTabLayout;
+    private ViewPager supportViewPager;
+    private SupportPagerAdapter supportPagerAdapter;
     //End Region Private Properties
 
 

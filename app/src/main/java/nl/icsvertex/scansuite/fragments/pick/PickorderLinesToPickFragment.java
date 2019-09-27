@@ -40,13 +40,13 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     //Region Private Properties
 
-    TextView quickhelpText;
-    ImageView quickhelpIcon;
-    ConstraintLayout quickhelpContainer;
-    static TextView textViewSelectedBin;
-    ConstraintLayout currentLocationView;
+    private   TextView quickhelpText;
+    private  ImageView quickhelpIcon;
+    private ConstraintLayout quickhelpContainer;
+    private static TextView textViewSelectedBin;
+    private ConstraintLayout currentLocationView;
 
-    RecyclerView recyclerViewPickorderLinesTopick;
+    private RecyclerView recyclerViewPickorderLinesTopick;
 
     //End Region Private Properties
 
@@ -121,7 +121,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     @Override
     public void mFieldsInitialize() {
 
-        if (cSetting.PICK_BIN_MANUAL() == true) {
+        if (cSetting.PICK_BIN_MANUAL()) {
             this.currentLocationView.setVisibility(View.VISIBLE);
             this.currentLocationView.setClickable(true);
         }
@@ -130,7 +130,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
             this.currentLocationView.setClickable(false);
         }
 
-        if (cSetting.PICK_BIN_IS_ITEM() == true) {
+        if (cSetting.PICK_BIN_IS_ITEM()) {
             this.quickhelpText.setText(R.string.scan_article_or_bincode);
         }
         else {
@@ -222,7 +222,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
         if (PickorderLinesActivity.currentLineFragment != null && PickorderLinesActivity.currentLineFragment == this) {
             //Close no orders fragment if needed
-            if (pvEnabledBln == false) {
+            if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
                     if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
@@ -254,8 +254,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
             //Change tabcounter text
             PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-            return;
-
         }
 
 

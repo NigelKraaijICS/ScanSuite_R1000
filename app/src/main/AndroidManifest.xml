@@ -80,15 +80,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0a3a15057e61fb1e84d5024bd01b5657d9a4c76e" />
-        <provider
-            android:name=".cGenericFileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
     </application>
 
 </manifest>

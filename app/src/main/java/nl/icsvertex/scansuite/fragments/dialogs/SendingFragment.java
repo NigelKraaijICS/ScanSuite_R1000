@@ -24,13 +24,13 @@ import nl.icsvertex.scansuite.R;
 
 public class SendingFragment extends DialogFragment implements iICSDefaultFragment {
 
-    ImageView imageRocket;
-    ImageView imageCloud;
-    TextView textSending;
-    TextView textDots;
-    TextView textTryAgain;
-    ImageView imageViewTryAgain;
-    DialogInterface dialogInterface;
+    private  ImageView imageRocket;
+    private ImageView imageCloud;
+    private TextView textSending;
+    private TextView textDots;
+    private  TextView textTryAgain;
+    private  ImageView imageViewTryAgain;
+    private DialogInterface dialogInterface;
 
     public static SendingFragment newInstance() {
         return new SendingFragment();
@@ -145,7 +145,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
                 handler.postDelayed(this, 2 * 600);
             }
         };
-        handler.postDelayed(runnable, 1 * 600);
+        handler.postDelayed(runnable, 600);
     }
     public void flyAway() {
         //new thread, so run in UI

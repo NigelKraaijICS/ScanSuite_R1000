@@ -19,7 +19,7 @@ import nl.icsvertex.scansuite.R;
 
 public class BasicsFragment extends DialogFragment implements iICSDefaultFragment {
 
-    RecyclerView recyclerViewSettings;
+    private  RecyclerView recyclerViewSettings;
 
     public BasicsFragment() {
         // Required empty public constructor

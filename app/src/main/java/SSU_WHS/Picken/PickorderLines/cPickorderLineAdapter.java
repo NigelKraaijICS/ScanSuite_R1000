@@ -234,7 +234,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
     private List<cPickorderLine> mGetDefectsListObl(Boolean pvShowBln) {
 
-        if (pvShowBln == false) {
+        if (!pvShowBln) {
             this.localPickorderLinesObl = cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl();
             return  this.localPickorderLinesObl;
         }

@@ -19,17 +19,13 @@ public class SupportPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int pvPositionInt) {
         switch(pvPositionInt) {
             case 0:
-                SupportNetworkFragment tab1 = new SupportNetworkFragment();
-                return tab1;
+                return  new SupportNetworkFragment();
 
             case 1:
-                SupportDeviceFragment tab2 = new SupportDeviceFragment();
-                return tab2;
+                return new SupportDeviceFragment();
 
             case 2:
-                SupportApplicationFragment tab3 = new SupportApplicationFragment();
-                return tab3;
-
+                return new SupportApplicationFragment();
             default:
                 return null;
         }

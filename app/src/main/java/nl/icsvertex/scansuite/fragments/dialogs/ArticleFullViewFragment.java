@@ -36,15 +36,15 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     //End Region Public Properties
 
     //Region Private Properties
-    ImageView toolbarImage;
-    TextView toolbarTitle;
-    TextView toolbarSubtext;
-    ImageView toolbarImageHelp;
+    private ImageView toolbarImage;
+    private  TextView toolbarTitle;
+    private TextView toolbarSubtext;
+    private ImageView toolbarImageHelp;
 
-    static ConstraintLayout articleFullViewContainer;
-    TextView articleFullItemNoTextView;
-    TextView articleFullVariantTextView;
-    ImageView articleFullImageView;
+    private static ConstraintLayout articleFullViewContainer;
+    private TextView articleFullItemNoTextView;
+    private TextView articleFullVariantTextView;
+    private ImageView articleFullImageView;
     //End Region Private Properties
 
 
@@ -187,7 +187,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
         Boolean foundBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             foundBln = true;
         }
 

@@ -53,7 +53,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     //Region Private Properties
 
-
     //Region Views
     private TextView textViewChosenOrder;
     static private TextView quantityPickordersText;
@@ -233,15 +232,14 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
-        switch (pvMenuItem.getItemId()) {
-            case android.R.id.home:
-                mTryToLeaveActivity();
-                return true;
 
-            default:
+        if (pvMenuItem.getItemId() == android.R.id.home) {
+            mTryToLeaveActivity();
+            return true;
+        }
+
                 return super.onOptionsItemSelected(pvMenuItem);
         }
-    }
 
     //End Region iICSDefaultActivity defaults
 
@@ -249,7 +247,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public static void pChangeTabCounterText(String pvTextStr){
         PickorderLinesActivity.quantityPickordersText.setText(pvTextStr);
-        return;
 
     }
 
@@ -265,7 +262,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public static void pSetCurrentLocation(String pvCurrentLocationStr) {
 
-        if (cPickorder.currentPickOrder.pUpdateCurrentLocationBln(pvCurrentLocationStr) == false) {
+        if (!cPickorder.currentPickOrder.pUpdateCurrentLocationBln(pvCurrentLocationStr)) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_currentlocation_could_not_update), "", true, false);
             return;
         }
@@ -280,10 +277,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         cResult hulpResult;
 
         //BIN button has been pressed, so we already have a current line
-        if (pvBinSelectedBln == true) {
+        if (pvBinSelectedBln) {
 
             hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
-            if (hulpResult.resultBln == false) {
+            if (!hulpResult.resultBln) {
                 mStepFailed(hulpResult.messagesStr());
                 cPickorderLine.currentPickOrderLine = null;
                 return;
@@ -296,7 +293,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
 
         //Check if we have scanned a BIN and check if there are not handled lines for this BIN
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN)) {
 
             String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
 
@@ -307,7 +304,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             }
 
             hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
-            if (hulpResult.resultBln == false) {
+            if (!hulpResult.resultBln) {
                 mStepFailed(hulpResult.messagesStr());
                 cPickorderLine.currentPickOrderLine = null;
                 return;
@@ -319,10 +316,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Check if we have scanned an ARTICLE and check if there are not handled lines for this ARTICLE
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
 
-            if (cSetting.PICK_BIN_IS_ITEM() == false) {
+            if (!cSetting.PICK_BIN_IS_ITEM()) {
                 //unknown scan
                 mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_not_allowed), pvScannedBarcodeStr);
                 return;
@@ -345,7 +342,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             }
 
             hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
-            if (hulpResult.resultBln == false) {
+            if (!hulpResult.resultBln) {
                 mStepFailed(hulpResult.messagesStr());
                 cPickorderLine.currentPickOrderLine = null;
                 return;
@@ -358,7 +355,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //unknown scan
         mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr);
-        return;
 
     }
 
@@ -366,7 +362,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        if (cPickorderLine.currentPickOrderLine.pResetBln() == false) {
+        if (!cPickorderLine.currentPickOrderLine.pResetBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_couldnt_reset_line), cPickorderLine.currentPickOrderLine.getLineNoInt().toString(), true, true );
             return;
         }
@@ -380,44 +376,46 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //If we receiver a current location, then update it via the webservice and locally
         //If we didn't receive a location, then we picked 0 items, so it's oke
-        if (pvCurrentLocationStr.isEmpty() == false ){
-            if (cPickorder.currentPickOrder.pUpdateCurrentLocationBln(pvCurrentLocationStr) == false) {
+        if (!pvCurrentLocationStr.isEmpty()){
+            if (!cPickorder.currentPickOrder.pUpdateCurrentLocationBln(pvCurrentLocationStr)) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_currentlocation_could_not_update), "", true, false);
                 return;
             }
         }
 
         //Check if we need to select a workplace
-        if (cPickorder.currentPickOrder.PackAndShipNeededBln() == false && cPickorder.currentPickOrder.SortNeededBln() == false &&
-            cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() == true && cWorkplace.currentWorkplace == null ) {
+        if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.SortNeededBln()&&
+            cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
 
             mShowWorkplaceFragment();
             return;
         }
 
         PickorderLinesActivity.pClosePickAndDecideNextStep();
-        return;
 
     }
 
     private static boolean mTryToCloseOrderBln(){
 
         cResult hulpResult;
-        hulpResult =  hulpResult = cPickorder.currentPickOrder.pPickHandledViaWebserviceRst();
+        hulpResult = new cResult();
+        hulpResult.resultBln = false;
+
+        hulpResult = cPickorder.currentPickOrder.pPickHandledViaWebserviceRst();
 
         //Everything was fine, so we are done
-        if (hulpResult.resultBln == true) {
+        if (hulpResult.resultBln) {
             return true;
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
+        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
 
             //If we got any comments, show them
             if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
@@ -435,18 +433,16 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public static void pClosePickAndDecideNextStep(){
 
-        if (PickorderLinesActivity.mTryToCloseOrderBln() == false) {
+        if (!PickorderLinesActivity.mTryToCloseOrderBln()) {
             return;
         }
 
-        if (cPickorder.currentPickOrder.isBCBln() == true || cPickorder.currentPickOrder.isBPBln()) {
+        if (cPickorder.currentPickOrder.isBCBln() || cPickorder.currentPickOrder.isBPBln()) {
             mSortNextStap();
-            return;
         }
 
-        if (cPickorder.currentPickOrder.isBMBln() == true ||cPickorder.currentPickOrder.isPVBln() == true ) {
+        if (cPickorder.currentPickOrder.isBMBln() ||cPickorder.currentPickOrder.isPVBln() ) {
             mPackAndShipNextStap();
-            return;
         }
 
     }
@@ -463,7 +459,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         // If not everything is sent, then leave
-        if (this.mCheckAndSentLinesBln() == false) {
+        if (!this.mCheckAndSentLinesBln()) {
             return;
         }
 
@@ -500,7 +496,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private  static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
-        return;
     }
 
     private static void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
@@ -515,7 +510,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         commentFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.COMMENTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
-        return;
     }
 
     private void mShowCurrentLocationFragment() {
@@ -526,8 +520,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         final CurrentLocationFragment currentLocationFragment = new CurrentLocationFragment();
         currentLocationFragment.setCancelable(true);
         currentLocationFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.CURRENTLOCATION_TAG);
-        return;
-
     }
 
     private static void mShowWorkplaceFragment() {
@@ -535,7 +527,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         WorkplaceFragment workplaceFragment = new WorkplaceFragment();
         workplaceFragment.setCancelable(false);
         workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
-        return;
     }
 
     private static void mShowOrderDoneFragment() {
@@ -545,7 +536,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         final OrderDoneFragment orderDoneFragment = new OrderDoneFragment();
         orderDoneFragment.setCancelable(false);
         orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
-        return;
     }
 
     private Boolean mCheckAndSentLinesBln() {
@@ -566,13 +556,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
             //Try to send the line
             hulpBln = pickorderLine.pHandledBln();
-            if ( hulpBln== false) {
+            if ( !hulpBln) {
                 break;
             }
 
         }
 
-        if (hulpBln == false) {
+        if (!hulpBln) {
             this.mShowNotSent();
             return false;
         }
@@ -584,10 +574,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private Boolean mAllLinesDoneBln() {
 
-        if (cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() > 0 ) {
-            return  false;
+        if (cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0) {
+            return true;
         }
-        return true;
+        return  false;
     }
 
     private void mShowSending() {
@@ -616,7 +606,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
         cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
         cUserInterface.pCheckAndCloseOpenDialogs();
-        return ;
     }
 
     private static void mAskSort() {
@@ -676,13 +665,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         // If settings is false, then go back to order select
-        if (cSetting.PICK_SORT_AUTO_START() == false) {
+        if (!cSetting.PICK_SORT_AUTO_START()) {
             mStartOrderSelectActivity();
             return;
         }
 
         // If settings is true, then go  to sort
-        if (cSetting.PICK_SORT_AUTO_START() == true) {
+        if (cSetting.PICK_SORT_AUTO_START()) {
             mStartSortActivity();
             return;
         }
@@ -704,16 +693,15 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         // If settings is false, then go back to order select
-        if (cSetting.PICK_PACK_AND_SHIP_AUTO_START() == false) {
+        if (!cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
             Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
             cAppExtension.activity.startActivity(intent);
             return;
         }
 
         // If settings is true, then go  to ship
-        if (cSetting.PICK_PACK_AND_SHIP_AUTO_START() == true) {
+        if (cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
             mStartShipActivity();
-            return;
         }
 
     }
@@ -730,7 +718,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
                 cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
 
                 //If activity bin is not required, then don't show the fragment
-                if (cPickorder.currentPickOrder.pickActivityBinRequiredBln == false || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty() == false ) {
+                if (!cPickorder.currentPickOrder.pickActivityBinRequiredBln || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
                     mStartOrderSelectActivity();
                     return;
                 }
@@ -750,7 +738,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         alertDialog.setCancelable(true);
         alertDialog.show();
-        return;
     }
 
     private static void mStartOrderSelectActivity() {
@@ -761,13 +748,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     private static void mStartSortActivity() {
 
         //Try to lock the pickorder
-        if (cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Picking, cWarehouseorder.WorkflowPickStepEnu.PickSorting).resultBln == false) {
+        if (!cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Picking, cWarehouseorder.WorkflowPickStepEnu.PickSorting).resultBln) {
             mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_lock_order));
             return;
         }
 
         //Get sort lines
-        if (cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT) == false) {
+        if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT)) {
             mStepFailed(cAppExtension.context.getString(R.string.error_getting_sort_lines_failed));
             return;
         }
@@ -782,13 +769,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     private static void mStartShipActivity() {
 
         //Try to lock the pickorder
-        if (cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Picking, 40).resultBln == false) {
+        if (!cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Picking, 40).resultBln) {
             mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_lock_order));
             return;
         }
 
         //todo: get pack and ship lines
-        if (cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT) == false) {
+        if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT)) {
             mStepFailed(cAppExtension.context.getString(R.string.error_getting_sort_lines_failed));
             return;
         }
@@ -805,7 +792,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         //we have a line to handle, so start Pick activity
         Intent intent = new Intent(cAppExtension.context, PickorderPickActivity.class);
         cAppExtension.activity.startActivity(intent);
-        return;
     }
 
     private static void mShowComments(){
@@ -818,13 +804,12 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         PickorderLinesActivity.imageButtonComments.setVisibility(View.VISIBLE);
 
         //We already showed the comments
-        if (cComment.commentsShownBln == true) {
+        if (cComment.commentsShownBln) {
             return;
         }
 
         PickorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl(),"");
         cComment.commentsShownBln = true;
-        return;
     }
 
 

@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 public class cAppExtension extends Application {
+
     public static Context context;
     public static FragmentActivity fragmentActivity;
     public static FragmentManager fragmentManager;

@@ -13,6 +13,7 @@ import nl.icsvertex.scansuite.R;
 
 
 public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.filter_orders, rootKey);
@@ -27,6 +28,7 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
                 Context callerContext= getActivity();
 
                 if (callerContext instanceof PickorderSelectActivity) {
+
                     //todo:put this back
 //                    ((PickorderSelectActivity)callerContext).mApplyFilter();
                 }
@@ -43,12 +45,7 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
                     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                                           String key) {
                         if (key.equalsIgnoreCase(getString(R.string.filter_orderlines_enable_key))) {
-                            if (sharedPreferences.getBoolean(key, false)) {
 
-                            }
-                            else {
-
-                            }
                         }
                     }
                 };

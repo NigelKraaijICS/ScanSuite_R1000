@@ -19,11 +19,12 @@ import ICS.Utils.cDeviceInfo;
 import nl.icsvertex.scansuite.R;
 
 public class SupportNetworkFragment extends Fragment implements iICSDefaultFragment {
-    TextView textViewConnectionType;
-    TextView textViewSSID;
-    TextView textViewMyIp;
-    TextView textViewInternetConnection;
-    ImageButton buttonWifiSettings;
+
+    private  TextView textViewConnectionType;
+    private TextView textViewSSID;
+    private  TextView textViewMyIp;
+    private TextView textViewInternetConnection;
+    private  ImageButton buttonWifiSettings;
 
     public SupportNetworkFragment() {
         // Required empty public constructor

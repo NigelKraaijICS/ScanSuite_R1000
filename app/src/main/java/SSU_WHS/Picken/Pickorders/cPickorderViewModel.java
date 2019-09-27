@@ -12,7 +12,7 @@ import SSU_WHS.Webservice.cWebresult;
 public class cPickorderViewModel extends AndroidViewModel {
 
     //Region Public Properties
-    public cPickorderRepository PickorderRepository;
+    private cPickorderRepository PickorderRepository;
     //End Region Public Properties
 
 

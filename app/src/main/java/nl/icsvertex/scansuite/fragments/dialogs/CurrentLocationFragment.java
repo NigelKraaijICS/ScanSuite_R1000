@@ -41,13 +41,13 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     //End Region Public Properties
 
     //Region Private Properties
-    ConstraintLayout currentLocationContainer;
-    TextView textViewCurrentLocationHeader;
-    TextView textViewCurrentLocationText;
+    private ConstraintLayout currentLocationContainer;
+    private TextView textViewCurrentLocationHeader;
+    private TextView textViewCurrentLocationText;
 
-    static EditText editTextCurrentLocation;
-    static Button setLocationButton;
-    Button cancelButton;
+    private  static EditText editTextCurrentLocation;
+    private static Button setLocationButton;
+    private Button cancelButton;
     //End Region Private Properties
 
 
@@ -157,7 +157,6 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
                     if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
                         cUserInterface.pDoNope(editTextCurrentLocation, true, true);
-                        return;
                     }
                     else {
                         dismiss();
@@ -177,7 +176,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
             Boolean foundBin = false;
 
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN) == true) {
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN)) {
                 foundBin = true;
             }
 
@@ -198,6 +197,5 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
             //no prefix, fine
             editTextCurrentLocation.setText(pvScannedBarcodeStr);
             setLocationButton.callOnClick();
-            return;
     }
 }

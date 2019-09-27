@@ -29,7 +29,7 @@ public class PickorderLinesTotalFragment extends Fragment {
     //End Region Public Properties
 
     //Region Private Properties
-    RecyclerView recyclerViewPickorderLinesTotal;
+    private  RecyclerView recyclerViewPickorderLinesTotal;
     //End Region Private Properties
 
     //Region Constructor

@@ -27,16 +27,16 @@ import nl.icsvertex.scansuite.R;
 public class CommentFragment extends DialogFragment implements iICSDefaultFragment {
 
    //Region Private Properties
-   ImageView toolbarImage;
-    TextView toolbarTitle;
-    ImageView toolbarImageHelp;
+   private ImageView toolbarImage;
+    private  TextView toolbarTitle;
+    private  ImageView toolbarImageHelp;
 
-    RecyclerView commentRecyclerView;
-    Button buttonRoger;
+    private RecyclerView commentRecyclerView;
+    private Button buttonRoger;
 
-    List<cComment> localCommentObl;
+    private   List<cComment> localCommentObl;
 
-    String titleStr;
+    private String titleStr;
 
     //End Region Private Properties
 
@@ -71,7 +71,7 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
             this.titleStr = args.getString(cPublicDefinitions.KEY_COMMENTHEADER,"");
         }
 
-        if (this.titleStr == "") {
+        if (this.titleStr.equalsIgnoreCase("")) {
             this.titleStr = getResources().getString(R.string.comments);
         }
 

@@ -21,11 +21,11 @@ import nl.icsvertex.scansuite.R;
 public class NothingHereFragment extends Fragment {
 
 
-    ImageView imageTumbleweed;
-    ImageView imageViewWind;
-    ImageView imageViewCactus;
-    Boolean blnToggleGrey;
-    View viewDesert;
+    private ImageView imageTumbleweed;
+    private ImageView imageViewWind;
+    private ImageView imageViewCactus;
+    private Boolean blnToggleGrey;
+    private View viewDesert;
 
     public static NothingHereFragment newInstance() {
         return new NothingHereFragment();

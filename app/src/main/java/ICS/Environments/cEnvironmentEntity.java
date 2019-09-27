@@ -49,7 +49,7 @@ public class cEnvironmentEntity {
             pvEnviromentBarcodeStr =  pvEnviromentBarcodeStr.replace("\\000026","");
         }
 
-        String fieldsObl[] = pvEnviromentBarcodeStr.split("\\|");
+        String[] fieldsObl = pvEnviromentBarcodeStr.split("\\|");
 
         if (fieldsObl.length != 4) {
             return;
@@ -59,7 +59,7 @@ public class cEnvironmentEntity {
             return;
         }
 
-        String nameFields[] = fieldsObl[0].split("=");
+        String[] nameFields = fieldsObl[0].split("=");
         if (nameFields.length != 2) {
             return;
         }
@@ -70,7 +70,7 @@ public class cEnvironmentEntity {
             return;
         }
 
-        String nameFields2[] = fieldsObl[1].split("=");
+        String[] nameFields2 = fieldsObl[1].split("=");
         if (nameFields2.length != 2) {
             return;
         }
@@ -81,7 +81,7 @@ public class cEnvironmentEntity {
             return;
         }
 
-        String nameFields3[] = fieldsObl[2].split("=");
+        String[] nameFields3 = fieldsObl[2].split("=");
         if (nameFields3.length != 2) {
             return;
         }
@@ -93,7 +93,7 @@ public class cEnvironmentEntity {
             return;
         }
 
-        String nameFields4[] = fieldsObl[3].split("=");
+        String[] nameFields4 = fieldsObl[3].split("=");
         if (nameFields4.length != 2) {
             return;
         }

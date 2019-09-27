@@ -23,12 +23,13 @@ import nl.icsvertex.scansuite.R;
 
 
 public class WebserviceErrorFragment extends DialogFragment implements iICSDefaultFragment {
-    List<String> errorList;
-    ImageView imageNoEntry;
-    CardView errorContainer;
-    TextView textErrors;
-    Button buttonCancel;
-    ConstraintLayout webserviceErrorContainer;
+
+    private  List<String> errorList;
+    private ImageView imageNoEntry;
+    private CardView errorContainer;
+    private TextView textErrors;
+    private Button buttonCancel;
+    private ConstraintLayout webserviceErrorContainer;
 
 
     public WebserviceErrorFragment() {
@@ -107,12 +108,7 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
     }
     private void mShowOrHideDetails() {
         Boolean isCurrentlyShown;
-        if (errorContainer.getVisibility() == View.VISIBLE) {
-            isCurrentlyShown = true;
-        }
-        else {
-            isCurrentlyShown = false;
-        }
+        isCurrentlyShown = errorContainer.getVisibility() == View.VISIBLE;
         if (isCurrentlyShown) {
             errorContainer.animate().scaleY(0).withEndAction(new Runnable() {
                 @Override

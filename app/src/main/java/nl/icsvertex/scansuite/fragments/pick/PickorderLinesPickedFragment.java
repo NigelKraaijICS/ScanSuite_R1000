@@ -39,14 +39,14 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     //Region Private Properties
 
-    static RecyclerView recyclerViewPickorderLinesPicked;
-    androidx.appcompat.widget.SearchView recyclerSearchView;
-    static Switch switchDefects;
+    private static RecyclerView recyclerViewPickorderLinesPicked;
+    private androidx.appcompat.widget.SearchView recyclerSearchView;
+    private static Switch switchDefects;
 
-    ConstraintLayout fragmentPickorderLinesToPick;
-    static private TextView textViewSelectedLine;
-    static ConstraintLayout resetPicklineView;
-    static ConstraintLayout abortOrderView;
+    private ConstraintLayout fragmentPickorderLinesToPick;
+    private static  TextView textViewSelectedLine;
+    private  static ConstraintLayout resetPicklineView;
+    private  static ConstraintLayout abortOrderView;
 
     //End Region Private Properties
 
@@ -249,13 +249,12 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     private void mAbortOrder() {
 
-        if (cPickorder.currentPickOrder.pAbortBln() == false) {
+        if (!cPickorder.currentPickOrder.pAbortBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_couldnt_abort_order), cPickorderLine.currentPickOrderLine.getLineNoInt().toString(), true, true );
             return;
         }
 
         this.pGetData();
-        return;
 
     }
 
@@ -328,7 +327,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
         if (PickorderLinesActivity.currentLineFragment != null && PickorderLinesActivity.currentLineFragment instanceof PickorderLinesPickedFragment) {
 
-        if (pvEnabledBln == false) {
+        if (!pvEnabledBln) {
 
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
@@ -352,7 +351,6 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             fragmentTransaction.commit();
 
             PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-            return;
 
         }
 

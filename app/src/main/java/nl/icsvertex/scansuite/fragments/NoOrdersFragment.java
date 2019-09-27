@@ -26,8 +26,8 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     //End Region Public Properties
 
     //Region Private Properties
-    ImageView imageNoOrders;
-    ImageButton buttonRefreshOrders;
+    private ImageView imageNoOrders;
+    private ImageButton buttonRefreshOrders;
     //End Region Private Properties
 
     //Region Constructor
@@ -88,7 +88,6 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
                 cUserInterface.pDoRotate(buttonRefreshOrders, 2);
                 if (cAppExtension.activity instanceof PickorderSelectActivity) {
                     PickorderSelectActivity.pFillOrders();
-                    return;
                 }
 
                 //todo: put this back

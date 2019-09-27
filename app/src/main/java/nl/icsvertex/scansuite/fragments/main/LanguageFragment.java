@@ -20,8 +20,14 @@ import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
 public class LanguageFragment extends Fragment implements iICSDefaultFragment {
-    TextView textViewCurrentLanguage;
-    ImageButton buttonChangeLanguage;
+
+    //Region Private Properties
+
+    private  TextView textViewCurrentLanguage;
+    private ImageButton buttonChangeLanguage;
+
+    //End Region Private Properties
+
 
      public LanguageFragment() {
         // Required empty public constructor

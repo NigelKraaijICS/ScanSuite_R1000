@@ -19,10 +19,21 @@ import ICS.Utils.cDateAndTime;
 import nl.icsvertex.scansuite.R;
 
 public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
-    TextView textViewCurrentDate;
-    TextView textViewCurrentTime;
-    TextView textViewTimeZone;
-    ImageButton buttonChangeDateTime;
+
+    //Region Pubic Properties
+
+    //Region Public Properties
+
+    //Region Private Properties
+
+    private TextView textViewCurrentDate;
+    private TextView textViewCurrentTime;
+    private TextView textViewTimeZone;
+    private ImageButton buttonChangeDateTime;
+
+    //Region Private Properties
+
+
 
 
     public DateTimeFragment() {

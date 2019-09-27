@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import org.json.JSONException;
 import java.util.concurrent.ExecutionException;
 import ICS.Utils.cUserInterface;
-import ICS.Weberror.cWeberror;
 import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -42,7 +41,7 @@ public class cWebservice {
         return l_resultBln;
     }
 
-    public static cWebresult pGetWebserviceAvailableWrs() {
+    private static cWebresult mGetWebserviceAvailableWrs() {
         cWebresult l_webResult = new cWebresult();
         try {
             l_webResult = new getWebserviceAvailableAsyncTask().execute().get();
@@ -61,7 +60,7 @@ public class cWebservice {
     }
 
     public static boolean pWebserviceIsAvailableAndRightVersionBln() {
-        cWebresult webresult = pGetWebserviceAvailableWrs();
+        cWebresult webresult = mGetWebserviceAvailableWrs();
 
         if (webresult == null ||!webresult.getSuccessBln() || !webresult.getResultBln()) {
             cUserInterface.pDoExplodingScreen( cAppExtension.context.getResources().getString(R.string.message_webservice_not_live), "", true,true);
@@ -83,7 +82,7 @@ public class cWebservice {
         protected cWebresult doInBackground(Void... params) {
             cWebresult l_WebresultWrs = new cWebresult();
             try {
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_SERVICEAVAILABLE, null);
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_SERVICEAVAILABLE, null);
             } catch (JSONException e) {
                 l_WebresultWrs.setSuccessBln(false);
                 l_WebresultWrs.setResultBln(false);

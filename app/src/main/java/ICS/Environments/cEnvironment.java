@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cResult;
-import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import SSU_WHS.Webservice.cWebservice;
 import nl.icsvertex.scansuite.cAppExtension;
@@ -16,47 +15,47 @@ public class cEnvironment {
 
     //region Public Properties
 
-    public String nameStr;
+    private String nameStr;
 
     public String getNameStr() {
         return nameStr;
     }
 
-    public String descriptionStr;
+    private String descriptionStr;
 
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    public String webserviceURLStr;
+    private String webserviceURLStr;
 
-    public String getWebserviceURLStr() {
+    String getWebserviceURLStr() {
         return webserviceURLStr;
     }
 
-    public Boolean isDefaultBln;
+    private Boolean isDefaultBln;
 
     public Boolean isDefaultBln() {
-        return isDefaultBln;
+        return getDefaultBln();
     }
 
-    public cEnvironmentEntity environmentEntity;
+    private cEnvironmentEntity environmentEntity;
     public boolean inDatabaseBln;
 
-    public static cEnvironmentViewModel gEnviromentViewModel;
+    private static cEnvironmentViewModel EnviromentViewModel;
     public static cEnvironmentViewModel getEnviromementViewModel() {
-        if (gEnviromentViewModel == null) {
-            gEnviromentViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cEnvironmentViewModel.class);
+        if (EnviromentViewModel == null) {
+            EnviromentViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cEnvironmentViewModel.class);
         }
-        return gEnviromentViewModel;
+        return EnviromentViewModel;
     }
 
-    public static cEnvironmentAdapter gEnviromentAdapter;
+    private static cEnvironmentAdapter EnviromentAdapter;
     public static cEnvironmentAdapter getEnviromementAdapter() {
-        if (gEnviromentAdapter == null) {
-            gEnviromentAdapter = new cEnvironmentAdapter();
+        if (EnviromentAdapter == null) {
+            EnviromentAdapter = new cEnvironmentAdapter();
         }
-        return gEnviromentAdapter;
+        return EnviromentAdapter;
     }
 
     public static List<cEnvironment> allEnviroments;
@@ -67,8 +66,6 @@ public class cEnvironment {
 
     //Region Private Properties
 
-    private static String environmentBarcodeDefaultFieldStr = "DEFAULT";
-
     //End Region Private Properties
 
     //Region Constructor
@@ -77,7 +74,7 @@ public class cEnvironment {
         this.nameStr = this.environmentEntity.getNameStr();
         this.descriptionStr = this.environmentEntity.getDescriptionStr();
         this.webserviceURLStr = this.environmentEntity.getWebserviceURLStr();
-        this.isDefaultBln = this.environmentEntity.getIsdefaultBln();
+        this.setDefaultBln(this.environmentEntity.getIsdefaultBln());
     }
 
     public cEnvironment(String pvEnviromentBarcodeStr) {
@@ -85,7 +82,7 @@ public class cEnvironment {
         this.nameStr = this.environmentEntity.getNameStr();
         this.descriptionStr = this.environmentEntity.getDescriptionStr();
         this.webserviceURLStr = this.environmentEntity.getWebserviceURLStr();
-        this.isDefaultBln = this.environmentEntity.getIsdefaultBln();
+        this.setDefaultBln(this.environmentEntity.getIsdefaultBln());
     }
 
     //End Region Constructor
@@ -106,7 +103,6 @@ public class cEnvironment {
 
             if (defaultEnviroment == null && cEnvironment.allEnviroments.size() == 1) {
                 cEnvironment.pSetCurrentEnviroment(cEnvironment.allEnviroments.get(0));
-                return;
             } else {
                 cEnvironment.pSetCurrentEnviroment(defaultEnviroment);
             }
@@ -158,7 +154,7 @@ public class cEnvironment {
         }
 
         for (cEnvironment environment : cEnvironment.allEnviroments) {
-            if (environment.isDefaultBln == true) {
+            if (environment.getDefaultBln()) {
                 return environment;
             }
         }
@@ -172,13 +168,13 @@ public class cEnvironment {
         return true;
     }
 
-    public boolean pSetAsDefaultBln() {
+    private boolean pSetAsDefaultBln() {
 
-        this.isDefaultBln = true;
+        this.setDefaultBln(true);
 
         for (cEnvironment environment : cEnvironment.allEnviroments) {
             if (environment.nameStr.equalsIgnoreCase(this.nameStr)) {
-                cEnvironment.getEnviromementViewModel().updateDefaultBln(this.isDefaultBln, this.nameStr);
+                cEnvironment.getEnviromementViewModel().updateDefaultBln(this.getDefaultBln(), this.nameStr);
             } else {
                 cEnvironment.getEnviromementViewModel().updateDefaultBln(false, environment.nameStr);
             }
@@ -189,7 +185,7 @@ public class cEnvironment {
     public boolean pInsertInDatabaseBln() {
         cEnvironment.getEnviromementViewModel().insert(this.environmentEntity);
         this.inDatabaseBln = true;
-        this.isDefaultBln = false;
+        this.setDefaultBln(false);
 
         if (cEnvironment.allEnviroments == null) {
             cEnvironment.allEnviroments = new ArrayList<>();
@@ -222,7 +218,7 @@ public class cEnvironment {
             return result;
         }
 
-        if (this.isDefaultBln == null) {
+        if (this.getDefaultBln() == null) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.message_empty_isdefault));
             return result;
@@ -231,4 +227,11 @@ public class cEnvironment {
         return result;
     }
 
+    private Boolean getDefaultBln() {
+        return isDefaultBln;
+    }
+
+    private void setDefaultBln(Boolean defaultBln) {
+        isDefaultBln = defaultBln;
+    }
 }

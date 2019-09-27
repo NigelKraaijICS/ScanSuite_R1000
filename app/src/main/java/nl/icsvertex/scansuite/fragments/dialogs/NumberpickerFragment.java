@@ -24,23 +24,23 @@ import nl.icsvertex.scansuite.R;
 
 public class NumberpickerFragment extends DialogFragment implements iICSDefaultFragment {
 
-    NumberPicker quantityNumberPicker;
-    int currentQuantity;
-    Double maxQuantityDbl;
-    int maxQuantityInt;
+    private  NumberPicker quantityNumberPicker;
+    private  int currentQuantity;
+    private Double maxQuantityDbl;
+    private int maxQuantityInt;
 
-    ImageButton imageButtonPlus;
-    ImageButton imageButtonMinus;
+    private ImageButton imageButtonPlus;
+    private ImageButton imageButtonMinus;
 
-    Button buttonPlus5;
-    Button buttonPlus10;
-    Button buttonMax;
-    Button buttonMinus5;
-    Button buttonMinus10;
-    Button buttonMin;
+    private Button buttonPlus5;
+    private Button buttonPlus10;
+    private Button buttonMax;
+    private Button buttonMinus5;
+    private Button buttonMinus10;
+    private Button buttonMin;
 
-    Button doneButton;
-    Button cancelButton;
+    private  Button doneButton;
+    private Button cancelButton;
 
     public NumberpickerFragment() {
         // Required empty public constructor

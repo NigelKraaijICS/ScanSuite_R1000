@@ -25,18 +25,14 @@ import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;
 
 public class NoConnectionFragment extends DialogFragment implements iICSDefaultFragment {
+
     private ImageView imageViewSatellite;
     private ImageView imageViewEarth;
     private Button openSettingsButton;
     private Button tryAgainButton;
     private Boolean blnToggleGrey;
 
-    public static NoConnectionFragment newInstance() {
-        NoConnectionFragment fragment = new NoConnectionFragment();
-        return fragment;
-    }
-
-    public NoConnectionFragment() {
+   public NoConnectionFragment() {
         // Required empty public constructor
     }
 

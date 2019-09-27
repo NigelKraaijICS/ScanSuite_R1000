@@ -25,11 +25,11 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     //Region Private Properties
 
-    Button cancelButton;
-    ImageView acceptImageView;
-    ImageView rejectImageView;
-    TextView textReject;
-    TextView textAccept;
+    private Button cancelButton;
+    private ImageView acceptImageView;
+    private ImageView rejectImageView;
+    private TextView textReject;
+    private TextView textAccept;
 
     //End Region Private Properties
 
@@ -133,7 +133,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
             PickorderPickActivity.pAcceptPick();
-            return;
         }
 
 
@@ -150,7 +149,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
             PickorderPickActivity.pCancelPick();
-            return;
         }
 
 

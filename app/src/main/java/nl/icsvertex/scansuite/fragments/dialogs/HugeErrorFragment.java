@@ -16,12 +16,13 @@ import nl.icsvertex.scansuite.R;
 
 
 public class HugeErrorFragment extends DialogFragment implements iICSDefaultFragment {
-    String errorMessage;
-    String extraMessage;
 
-    ConstraintLayout containerHugeError;
-    TextView textViewErrorMessage;
-    TextView textViewExtraError;
+    private String errorMessage;
+    private  String extraMessage;
+
+    private ConstraintLayout containerHugeError;
+    private TextView textViewErrorMessage;
+    private TextView textViewExtraError;
 
 
     public HugeErrorFragment() {
