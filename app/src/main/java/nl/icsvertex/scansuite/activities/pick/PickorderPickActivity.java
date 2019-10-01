@@ -599,9 +599,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private static void mTryToChangePickedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
 
-
-
-        final double newQuantityDbl;
+     final double newQuantityDbl;
 
         if (pvIsPositiveBln) {
 
@@ -1065,7 +1063,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 }
 
 
-                mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityHandledDbl());
+                mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
             }
         });
     }
@@ -1104,7 +1102,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 }
 
 
-                mTryToChangePickedQuantity(false, false, cPickorderBarcode.currentPickorderBarcode.getQuantityHandledDbl());
+                mTryToChangePickedQuantity(false, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
             }
         });
     }
