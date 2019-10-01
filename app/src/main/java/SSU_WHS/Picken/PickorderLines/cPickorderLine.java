@@ -775,8 +775,7 @@ public class cPickorderLine {
     }
 
     private  boolean mDeleteLineBarcodes(){
-
-        cPickorderLineBarcode.getPickorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
+        cPickorderLineBarcode.pTruncateTableBln();
         return true;
 
     }

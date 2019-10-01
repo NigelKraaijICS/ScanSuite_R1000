@@ -75,12 +75,13 @@ public class cPickorderLineBarcode {
     }
 
     public boolean pUpdateAmountInDatabaseBln(){
-        cPickorderLineBarcode.getPickorderLineBarcodeViewModel().pUpdateAmountForLineNo(this.pickorderLineBarcodeEntity.getBarcodeStr(), cText.stringToDouble(this.pickorderLineBarcodeEntity.getQuantityhandledStr()));
+        cPickorderLineBarcode.getPickorderLineBarcodeViewModel().pUpdateAmountForLineNo(this.getBarcodeStr(), this.getQuantityhandledDbl());
         return true;
     }
 
     public static boolean pTruncateTableBln() {
         cPickorderLineBarcode.getPickorderLineBarcodeViewModel().deleteAll();
+        cPickorderLineBarcode.allLineBarcodesObl = null;
         return true;
     }
 

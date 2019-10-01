@@ -39,6 +39,7 @@ import ICS.Utils.cUserInterface;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.cAppExtension;
@@ -599,7 +600,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private static void mTryToChangePickedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
 
-     final double newQuantityDbl;
+      double newQuantityDbl;
 
         if (pvIsPositiveBln) {
 
@@ -845,6 +846,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //Set the current line, and update it to busy
         cPickorderLine.currentPickOrderLine = nextLine;
+
         hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
         if (hulpResult.resultBln == false) {
             cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
