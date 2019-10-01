@@ -8,6 +8,8 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+
 @Dao
 public interface iPickorderLineDao {
     @Delete
@@ -28,31 +30,31 @@ public interface iPickorderLineDao {
     @Query("SELECT SUM(QuantityHandled) FROM Pickorderlines")
     Double getTotalQuanitityHandledDbl();
 
-    @Query("SELECT SUM(quantity) FROM Pickorderlines WHERE Localstatus = " + cPickorderLine.LOCALSTATUS_NEW )
+    @Query("SELECT SUM(quantity) FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW )
     Double getNumberNotHandledForCounterDbl();
 
-    @Query("SELECT SUM(quantity) FROM Pickorderlines WHERE Localstatus = " + cPickorderLine.LOCALSTATUS_NEW )
+    @Query("SELECT SUM(quantity) FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW )
     Double getNumberTotalNotHandledForCounterDbl();
 
-    @Query("SELECT SUM(quantityhandled) FROM Pickorderlines WHERE Localstatus > " + cPickorderLine.LOCALSTATUS_NEW )
+    @Query("SELECT SUM(quantityhandled) FROM Pickorderlines WHERE Localstatus > " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW )
     Double getNumberHandledForCounterDbl();
 
-    @Query("SELECT * FROM Pickorderlines WHERE Localstatus > " + cPickorderLine.LOCALSTATUS_NEW)
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus > " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)
     List<cPickorderLineEntity> getHandledPickorderLineEntities();
 
-    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cPickorderLine.LOCALSTATUS_DONE_NOTSENT)
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)
     List<cPickorderLineEntity> getPickorderLineEntitiesToSend();
 
-    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cPickorderLine.LOCALSTATUS_NEW)
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)
     List<cPickorderLineEntity> getNotHandledPickorderLineEntitiesLin();
 
-    @Query("SELECT * FROM Pickorderlines WHERE bincode = :pvBinCodeStr AND Localstatus = " + cPickorderLine.LOCALSTATUS_NEW + " LIMIT 1 ")
+    @Query("SELECT * FROM Pickorderlines WHERE bincode = :pvBinCodeStr AND Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW + " LIMIT 1 ")
     cPickorderLineEntity getPickorderLineNotHandledByBin(String pvBinCodeStr);
 
     @Query("UPDATE Pickorderlines SET QuantityHandled = :pvQuantityHandled WHERE recordid = :pvRecordInt")
     int updateOrderLineQuantity(Integer pvRecordInt, Double pvQuantityHandled);
 
-    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cPickorderLine.LOCALSTATUS_NEW + " AND SourceNo = :pvSourceNoStr ORDER BY recordid")
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW + " AND SourceNo = :pvSourceNoStr ORDER BY recordid")
     List<cPickorderLineEntity>  getPickLinesNotHandledForSourceNo(String pvSourceNoStr);
 
     @Query("UPDATE Pickorderlines SET Localstatus = :pvNewStatusInt WHERE recordid = :pvRecordIdInt")
@@ -67,13 +69,13 @@ public interface iPickorderLineDao {
     @Query("UPDATE Pickorderlines SET QuantityHandled = :pvQuantityHandledDbl, LocalSortLocation = :pvLocationStr WHERE recordid = :pvRecordIDInt")
     int updateSortOrderLine(Integer pvRecordIDInt, Integer pvQuantityHandledDbl, String pvLocationStr);
 
-    @Query("SELECT * FROM Pickorderlines WHERE ItemNo = :pvItemNoStr AND VariantCode = :pvVariantCodeStr AND Localstatus = " + cPickorderLine.LOCALSTATUS_NEW)
+    @Query("SELECT * FROM Pickorderlines WHERE ItemNo = :pvItemNoStr AND VariantCode = :pvVariantCodeStr AND Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)
     List<cPickorderLineEntity> getNotHandledPickorderLinesByItemNoandVariantCode(String pvItemNoStr, String pvVariantCodeStr);
 
-    @Query("UPDATE Pickorderlines SET Localstatus = " + cPickorderLine.LOCALSTATUS_DONE_NOTSENT + " WHERE Localstatus = " + cPickorderLine.LOCALSTATUS_NEW + " OR Localstatus = " + cPickorderLine.LOCALSTATUS_BUSY)
+    @Query("UPDATE Pickorderlines SET Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT + " WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW + " OR Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)
     void abortOrder();
 
-    @Query("SELECT * FROM Pickorderlines WHERE Localstatus <= " + cPickorderLine.LOCALSTATUS_BUSY + " AND ItemNo = :itemno AND VariantCode = :variant ORDER BY Localstatus DESC")
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus <= " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY + " AND ItemNo = :itemno AND VariantCode = :variant ORDER BY Localstatus DESC")
     List<cPickorderLineEntity> getSortorderLinesNotHandledByItemNoAndVariant(String itemno, String variant);
 
 }

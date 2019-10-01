@@ -363,4 +363,6 @@
     <string name="message_empty_isdefault">Default waarde niet gevuld</string>
     <string name="message_empty_name">Naam is niet gevuld</string>
     <string name="message_empty_URL">URL is niet gevuld</string>
+    <string name="error_get_sorting_detals_failed">Sorteer details ophalen mislukt</string>
+    <string name="scan_pickcartbox">Scan bakje</string>
 </resources>

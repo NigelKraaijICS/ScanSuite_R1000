@@ -382,7 +382,7 @@
     <string name="message_salesorder_assigned_different_location">This salesorder is already assigned to %1$s</string>
     <string name="message_wrong_sourceno">Wrong source number</string>
     <string name="message_unknown_pickcartbox">Unknown pickcartbox</string>
-    <string name="message_unknown_salesorder">Unkown salesorder</string>
+    <string name="message_unknown_salesorder">Unknown salesorder</string>
     <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>
     <string name="message_wrong_pickcartbox">Wrong pickcartbox</string>
     <string name="number_cannot_be_higher">Number can not be higher than required number</string>
@@ -457,7 +457,7 @@
     <string name="message_meant_for_other_user">This assignment is assigned to another user:</string>
     <string name="message_another_user_already_started">Another user already started:</string>
     <string name="order_will_be_deleted">Order will be deleted</string>
-    <string name="order_cant_be_started">Order cant be started</string>
+    <string name="order_cant_be_started">Order can\'t be started</string>
     <string name="feedback">Feedback</string>
     <string name="message_empty_name">Name is empty</string>
     <string name="message_empty_description">Description is empty</string>
@@ -466,4 +466,6 @@
     <string name="hold_the_order">Hold this order</string>
     <string name="error_couldnt_handle_step">This step could not be handled</string>
     <string name="send_order">(Re)Send order</string>
+    <string name="error_get_sorting_detals_failed">Getting sort details failed</string>
+    <string name="scan_pickcartbox">Scan pickcartbox</string>
 </resources>

@@ -137,42 +137,11 @@ public class cPickorderLineEntity {
             this.statusShipping = pvJsonObject.getInt(cDatabase.STATUSSHIPPING_NAMESTR);
             this.statusPacking = pvJsonObject.getInt(cDatabase.STATUSPACKING_NAMESTR);
 
-            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
-                switch (status) {
-                    case cPickorderLine.STATUS_STEP1:
-                        this.localstatus = cPickorderLine.LOCALSTATUS_NEW;
-                        break;
+            this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
 
-                    case cPickorderLine.STATUS_STEP1_PICKED:
-                        this.localstatus = cPickorderLine.LOCALSTATUS_DONE_NOTSENT;
-                        break;
-
-                    default:
-                        this.localstatus = cPickorderLine.LOCALSTATUS_DONE_SENT;
-                        break;
-                }
+            if (this.status != cWarehouseorder.PicklineStatusEnu.Needed) {
+                this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
             }
-
-
-            else if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.SORT.toString())) {
-
-                this.linenotake = pvJsonObject.getInt(cDatabase.LINENOTAKE_NAMESTR);
-                this.quantitytaken = pvJsonObject.getDouble(cDatabase.QUANTITYTAKEN_NAMESTR);
-                this.takentimestamp = pvJsonObject.getString(cDatabase.TAKENTIMESTAMP_NAMESTR);
-
-                switch (this.status) {
-                    case cPickorderLine.STATUS_STEP1:
-                        this.localstatus = cPickorderLine.LOCALSTATUS_NEW;
-                        break;
-                    case cPickorderLine.STATUS_STEP1_PICKED:
-                        this.localstatus = cPickorderLine.LOCALSTATUS_DONE_NOTSENT;
-                        break;
-                    default:
-                        this.localstatus = cPickorderLine.LOCALSTATUS_DONE_SENT;
-                        break;
-                }
-            }
-
 
             //region extraField1Str
             if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {

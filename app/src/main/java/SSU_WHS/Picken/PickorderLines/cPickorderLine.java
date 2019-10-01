@@ -281,14 +281,7 @@ public class cPickorderLine {
     public static List<cPickorderLine> allLinesObl;
     public static cPickorderLine currentPickOrderLine;
 
-    public final static int LOCALSTATUS_NEW = 10;
-    public final static int LOCALSTATUS_BUSY = 20;
-    public final static int LOCALSTATUS_DONE_NOTSENT = 30;
-    public final static int LOCALSTATUS_DONE_ERROR_SENDING = 32;
-    public final static int LOCALSTATUS_DONE_SENT = 40;
 
-    public final static int STATUS_STEP1= 10;
-    public final static int STATUS_STEP1_PICKED = 11;
 
     //End Region Public Properties
 
@@ -325,10 +318,16 @@ public class cPickorderLine {
         this.statusShippingInt =  this.PickorderLineEntity.getStatusShippingInt();
         this.statusPackingInt =  this.PickorderLineEntity.getStatusPackingInt();
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
+        this.localStatusInt =  cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
+
+        if (this.statusInt > cWarehouseorder.PicklineStatusEnu.Needed) {
+            this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+        }
+
         this.lineNoTakeInt =  this.PickorderLineEntity.getLinenoTakeInt();
         this.quantityTakenDbl =  this.PickorderLineEntity.getQuantityTakenDbl();
         this.takenTimeStampStr =  this.PickorderLineEntity.takentimestamp;
-        this.localStatusInt =  this.PickorderLineEntity.getLocalstatusInt();
+
         this.localSortLocationStr = this.PickorderLineEntity.getLocalSortLocationStr();
         this.extraField1Str =  this.PickorderLineEntity.getExtraField1Str();
         this.extraField2Str = this.PickorderLineEntity.getExtraField2Str();
@@ -369,11 +368,15 @@ public class cPickorderLine {
         this.brandStr = this.PickorderLineEntity.getBrandStr();
         this.printDocumentsBln= cText.stringToBoolean(this.PickorderLineEntity.getPrintdocumentsStr(), false) ;
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
+
+        if (this.statusInt > cWarehouseorder.PicklineStatusEnu.Needed) {
+            this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+        }
+
         this.lineNoTakeInt =  this.PickorderLineEntity.getLinenoTakeInt();
         this.quantityTakenDbl =  this.PickorderLineEntity.getQuantityTakenDbl();
         this.takenTimeStampStr =  this.PickorderLineEntity.takentimestamp;
-        this.localStatusInt =  this.PickorderLineEntity.getLocalstatusInt();
-        this.localSortLocationStr = this.PickorderLineEntity.getLocalSortLocationStr();
+         this.localSortLocationStr = this.PickorderLineEntity.getLocalSortLocationStr();
         this.extraField1Str =  this.PickorderLineEntity.getExtraField1Str();
         this.extraField2Str = this.PickorderLineEntity.getExtraField2Str();
         this. extraField3Str =  this.PickorderLineEntity.getExtraField3Str();
@@ -466,7 +469,7 @@ public class cPickorderLine {
 
     public boolean pErrorSendingBln() {
 
-        return this.mUpdateLocalStatusBln(cPickorderLine.LOCALSTATUS_DONE_ERROR_SENDING);
+        return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING);
 
     }
 
@@ -476,7 +479,7 @@ public class cPickorderLine {
         WebResult =  cPickorderLine.getPickorderLineViewModel().pResetViaWebserviceWrs();
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
-            this.mUpdateLocalStatusBln(cPickorderLine.LOCALSTATUS_NEW);
+            this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
             this.mUpdateQuanitityHandled(0);
 
 
@@ -497,7 +500,7 @@ public class cPickorderLine {
             return  false;
         }
 
-        if (this.mUpdateLocalStatusBln(cPickorderLine.LOCALSTATUS_DONE_NOTSENT)  == false) {
+        if (this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)  == false) {
             return  false;
         }
 
@@ -518,7 +521,7 @@ public class cPickorderLine {
             return  false;
         }
 
-        if (this.mUpdateLocalStatusBln(cPickorderLine.LOCALSTATUS_NEW)  == false) {
+        if (this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)  == false) {
             return  false;
         }
 
@@ -584,7 +587,7 @@ public class cPickorderLine {
         WebResult =  cPickorderLine.getPickorderLineViewModel().pPickLineHandledViaWebserviceWrs();
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
-           if(this.mUpdateLocalStatusBln( cPickorderLine.LOCALSTATUS_DONE_SENT) == false) {
+           if(this.mUpdateLocalStatusBln( cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) == false) {
                return  false;
            }
             return  true;
@@ -767,7 +770,7 @@ public class cPickorderLine {
     }
 
     private boolean mBusyBln() {
-        return this.mUpdateLocalStatusBln(cPickorderLine.LOCALSTATUS_BUSY);
+        return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY);
 
     }
 

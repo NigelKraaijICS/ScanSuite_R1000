@@ -1118,6 +1118,33 @@ public class cPickorder {
 
     }
 
+    public boolean pGetSortingDetailsBln(){
+
+        if (!cPickorder.currentPickOrder.isPVBln()){
+            return  true;
+        }
+
+        for (cPickorderLine pickorderLine : cPickorder.currentPickOrder.linesObl()) {
+
+
+            if (pickorderLine.processingSequenceStr.isEmpty()) {
+                continue;
+            }
+
+            if (pickorderLine.processingSequenceStr.equalsIgnoreCase(pickorderLine.sourceNoStr)) {
+                continue;
+            }
+
+            cSalesOrderPackingTable salesOrderPackingTable = new cSalesOrderPackingTable(pickorderLine.sourceNoStr,pickorderLine.processingSequenceStr);
+            salesOrderPackingTable.pInsertInDatabaseBln();
+
+        }
+
+
+        return  true;
+
+    }
+
     public cPickorderLine pGetLineNotHandledByBarcode(String pvScannedBarcodeStr) {
 
         if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
@@ -1143,7 +1170,7 @@ public class cPickorder {
         }
 
         for (cPickorderLine pickorderLine : hulpObl) {
-            if (pickorderLine.localStatusInt == cPickorderLine.LOCALSTATUS_NEW && pickorderLine.itemNoStr.equalsIgnoreCase(pickorderBarcodeWithBarcode.itemNoStr) && pickorderLine.variantCodeStr.equalsIgnoreCase((pickorderBarcodeWithBarcode.variantcodeStr))) {
+            if (pickorderLine.localStatusInt == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW && pickorderLine.itemNoStr.equalsIgnoreCase(pickorderBarcodeWithBarcode.itemNoStr) && pickorderLine.variantCodeStr.equalsIgnoreCase((pickorderBarcodeWithBarcode.variantcodeStr))) {
                 return  pickorderLine;
             }
         }
@@ -1158,6 +1185,7 @@ public class cPickorder {
         cPickorder.getPickorderViewModel().deleteAll();
         return true;
     }
+
 
     //End Region Private Methods
 

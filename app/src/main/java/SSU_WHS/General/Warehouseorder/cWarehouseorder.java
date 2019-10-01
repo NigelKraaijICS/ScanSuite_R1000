@@ -55,11 +55,23 @@ public class cWarehouseorder {
 
     }
 
+    public class PicklineStatusEnu {
+        public static final int Needed = 10;
+        public static final int NotNeeded = 11;
+    }
+
     public class PackingAndShippingStatusEnu {
         public static final int Needed = 10;
         public static final int NotNeeded = 92;
     }
 
+    public class PicklineLocalStatusEnu {
+        public final static int LOCALSTATUS_NEW = 10;
+        public final static int LOCALSTATUS_BUSY = 20;
+        public final static int LOCALSTATUS_DONE_NOTSENT = 30;
+        public final static int LOCALSTATUS_DONE_ERROR_SENDING = 32;
+        public final static int LOCALSTATUS_DONE_SENT = 40;
+    }
 
     public enum ActivityActionEnu{
 

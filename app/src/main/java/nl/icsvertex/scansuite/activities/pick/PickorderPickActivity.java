@@ -177,10 +177,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_pickorderpick));
 
-        this.mFieldsInitialize();
-
         this.mInitScreen();
 
+        this.mFieldsInitialize();
 
 
     }
@@ -265,11 +264,19 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cBarcodeScan.pRegisterBarcodeReceiver();
 
+        //We scanned a BIN, so nu current barcode known
         if (cPickorderBarcode.currentPickorderBarcode == null) {
+            //Initialise article scanned boolean
+            articleScannedLastBln = false;
             return;
         }
 
-        this.pHandleScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
+         // We scanned an ARTICLE, so handle barcide
+
+        if (cSetting.PICK_BIN_IS_ITEM()) {
+            articleScannedLastBln = true;
+            this.pHandleScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
+        }
 
     }
 
@@ -488,21 +495,49 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private static void mShowSortingInstruction() {
 
-        //If workflow is not PV, then show SourceNo and we are ready
-        if (cPickorder.currentPickOrder.isPVBln() == false) {
-            PickorderPickActivity.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr());
-            if (cPickorderLine.currentPickOrderLine.getSourceNoStr().trim().isEmpty()) {
-                PickorderPickActivity.sourcenoContainer.setVisibility(View.INVISIBLE);
-            }
+        //First show the SourceNumber
+        PickorderPickActivity.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr());
+        PickorderPickActivity.sourcenoContainer.setVisibility(View.VISIBLE);
+
+        if (cPickorderLine.currentPickOrderLine.getSourceNoStr().trim().isEmpty()) {
+            PickorderPickActivity.sourcenoContainer.setVisibility(View.INVISIBLE);
+        }
+
+        //If workflow is not PV, then d we are ready
+        if (!cPickorder.currentPickOrder.isPVBln()) {
             return;
         }
 
+        //Set scan instruction
         PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
 
         // We already have a processing sequence, show it and insert a SalesOrderPackingTable in database
         if (cPickorderLine.currentPickOrderLine.getProcessingSequenceStr().isEmpty() == false) {
             PickorderPickActivity.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
             PickorderPickActivity.mAddSalesOrderPackingTableBln();
+            return;
+        }
+
+        // We don't have a processing sequence, so look for it in the database
+        if (cPickorder.currentPickOrder.salesOrderPackingTableObl() == null || cPickorder.currentPickOrder.salesOrderPackingTableObl().size() == 0) {
+            return;
+        }
+
+        //Record for Current Sales order
+        cSalesOrderPackingTable recordForSalesOrder = null;
+
+        for (cSalesOrderPackingTable loopRecord : cPickorder.currentPickOrder.salesOrderPackingTableObl()) {
+
+            if (loopRecord.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr()))
+                recordForSalesOrder = loopRecord;
+        }
+
+        //If we found something, show it
+        if (recordForSalesOrder != null) {
+            //Set scan instruction
+            PickorderPickActivity.sourcenoText.setText(recordForSalesOrder.getPackingtableStr());
+            PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_pickcartbox));
+            return;
         }
     }
 
@@ -580,6 +615,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //Check if we would exceed amount, then show message
             if (newQuantityDbl > cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
                 PickorderPickActivity.mShowOverpickNotAllowed();
+                articleScannedLastBln = false;
                 return;
             }
 
@@ -707,7 +743,17 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //We didn't scan an article yet, so handle it as a "normal" scan
         if (articleScannedLastBln == false) {
-            PickorderPickActivity.pHandleScan(pvScannedBarcodeStr);
+
+            if (PickorderPickActivity.mFindBarcodeInOrderline(pvScannedBarcodeStr) == false) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr, true, true);
+                return;
+            }
+
+            //Succesfull article scanned
+            articleScannedLastBln = true;
+
+            //If we found the barcode, currentbarcode is alreay filled, so make this selected
+            PickorderPickActivity.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
             return;
         }
 
@@ -766,8 +812,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 PickorderPickActivity.articleScannedLastBln = true;
             }
 
-            PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
-            return;
+            // We still need to scan a pickkart/sales order so not done
+            if (cPickorderLine.currentPickOrderLine.processingSequenceStr.isEmpty()) {
+                PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
+                return;
+            }
         }
 
 
@@ -776,6 +825,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
+        PickorderPickActivity.articleScannedLastBln = false;
         PickorderPickActivity.mPickDone();
     }
 
@@ -788,7 +838,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
        //There is no next line, so close this activity
         if (nextLine == null) {
+            //Clear current barcode and reset defaults
             cPickorderLine.currentPickOrderLine = null;
+            PickorderPickActivity.articleScannedLastBln = false;
             mGoBackToLinesActivity();
             return;
         }
@@ -813,8 +865,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //Play a sound
         cUserInterface.pPlaySound(R.raw.message, null);
 
-        //Clear current barcode
+        //Clear current barcode and reset defaults
         cPickorderBarcode.currentPickorderBarcode = null;
+        PickorderPickActivity.articleScannedLastBln = false;
 
         //Show animation and initialize fields
         Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.shrink_and_fade);
@@ -894,6 +947,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         if (this.articleScannedLastBln) {
             this.textViewAction.setText(R.string.message_scan_pickcart_or_salesorder);
+            cUserInterface.pShowToastMessage(getString(R.string.message_scan_pickcart_or_salesorder), R.raw.badsound);
             return;
         }
 
@@ -927,10 +981,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //Record for Scanned Barcode
         cSalesOrderPackingTable recordForBarcode = null;
 
-
         for (cSalesOrderPackingTable loopRecord : cPickorder.currentPickOrder.salesOrderPackingTableObl()) {
 
-            if (recordForSalesOrder.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr()))
+            if (loopRecord.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr()))
                 recordForSalesOrder = loopRecord;
 
             if (recordForSalesOrder.getPackingtableStr().equalsIgnoreCase(pvBarcodeStr)) {

@@ -339,6 +339,12 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             return result;
         }
 
+        if (cPickorder.currentPickOrder.pGetSortingDetailsBln() == false) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_sorting_detals_failed));
+            return result;
+        }
+
         return  result;
     }
 

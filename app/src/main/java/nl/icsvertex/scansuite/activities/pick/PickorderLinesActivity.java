@@ -554,8 +554,11 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         // Try to send each line, if one failes then stop
         for (cPickorderLine pickorderLine : linesToSendObl) {
 
+            //Set the current line
+            cPickorderLine.currentPickOrderLine = pickorderLine;
+
             //Try to send the line
-            hulpBln = pickorderLine.pHandledBln();
+            hulpBln = cPickorderLine.currentPickOrderLine .pHandledBln();
             if ( !hulpBln) {
                 break;
             }
