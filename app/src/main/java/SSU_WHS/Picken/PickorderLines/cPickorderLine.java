@@ -13,6 +13,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
@@ -131,7 +132,7 @@ public class cPickorderLine {
     }
 
     public String vendorItemNo;
-    public String getVendorItemNo() {
+    public String getVendorItemNoStr() {
         return vendorItemNo;
     }
 
@@ -466,7 +467,6 @@ public class cPickorderLine {
 
     }
 
-
     public boolean pErrorSendingBln() {
 
         return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING);
@@ -513,6 +513,28 @@ public class cPickorderLine {
         return  true;
 
     }
+
+    public boolean pUpdateSortLineIndatabaseBln(){
+
+
+        if (this.mUpdateQuanitityHandled(this.quantityHandledDbl)  == false) {
+            return  false;
+        }
+
+        if (this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)  == false) {
+            return  false;
+        }
+
+        this.takenTimeStampStr = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
+
+        if (this.mUpdateHandledTimeStampBln(this.takenTimeStampStr)  == false) {
+            return  false;
+        }
+
+        return  true;
+
+    }
+
 
     public boolean pCancelIndatabaseBln(){
 
@@ -645,13 +667,18 @@ public class cPickorderLine {
     }
 
     //todo: move this function to a different class
-    public  List<String> pGetSortLocationAdviceObl(String pvSourceNoStr){
+    public List<String> pGetAdvicedSortLocationsFromWebserviceObl(){
 
         List<String > resultObl;
         resultObl = new ArrayList<>();
 
+        //If we don't need a result from SSU/ERP then we are done
+        if (cSetting.PICK_SORT_LOCATION_ADVICE().isEmpty()) {
+            return resultObl;
+        }
+
         cWebresult WebResult;
-        WebResult =  cPickorderLine.getPickorderLineViewModel().pGetSortLocationAdviceViaWebserviceWrs(pvSourceNoStr);
+        WebResult =  cPickorderLine.getPickorderLineViewModel().pGetSortLocationAdviceViaWebserviceWrs(this.getSourceNoStr());
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
             for (String loopStr : WebResult.getResultObl() ) {

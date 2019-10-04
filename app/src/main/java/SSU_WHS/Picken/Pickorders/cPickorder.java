@@ -654,7 +654,18 @@ public class cPickorder {
                 }
 
                 cPickorderLine pickorderLine = new cPickorderLine(jsonObject,pvPickOrderTypeEnu);
-                pickorderLine.pInsertInDatabaseBln();
+
+                if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK) {
+                    pickorderLine.pInsertInDatabaseBln();
+                    continue;
+                }
+
+
+                //Check the status, so lines that are not picked are ignored
+                if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT && pickorderLine.statusPackingInt == cWarehouseorder.PackingAndShippingStatusEnu.Needed) {
+                    pickorderLine.pInsertInDatabaseBln();
+                    continue;
+                }
             }
 
             if (cPickorderLine.allLinesObl.size() == 0) {

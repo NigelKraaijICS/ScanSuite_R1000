@@ -85,7 +85,6 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         }
     }
 
-
     // End Region Default Methods
 
     //Region iICSDefaultFragment defaults
@@ -316,8 +315,8 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             }
 
             @Override
-            public boolean onQueryTextChange(String queryText) {
-                cPickorderLine.getPickorderLinePickedAdapter().pSetFilter(queryText);
+            public boolean onQueryTextChange(String pvQueryTextStr) {
+                cPickorderLine.getPickorderLinePickedAdapter().pSetFilter(pvQueryTextStr);
                 return true;
             }
         });

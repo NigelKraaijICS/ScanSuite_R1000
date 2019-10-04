@@ -15,7 +15,7 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
-import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 
 
@@ -89,6 +89,10 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
                 cUserInterface.pDoRotate(buttonSendOrder, 2);
                 if (cAppExtension.activity instanceof PickorderLinesActivity) {
                     PickorderLinesActivity.pPickingDone("");
+                    return;
+                }
+                if (cAppExtension.activity instanceof SortorderLinesActivity) {
+                    SortorderLinesActivity.pSortingDone();
                     return;
                 }
             }

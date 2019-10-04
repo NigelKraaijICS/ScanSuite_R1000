@@ -76,7 +76,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     private ConstraintLayout constraintFilterOrders;
     private BottomSheetBehavior bottomSheetBehavior;
 
-    private static Boolean orderDetailsCompleteBln;
 
     // End Region Views
 
@@ -165,9 +164,9 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
+    public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
-        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setText(pvScreenTitleStr);
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -269,7 +268,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         //Try to lock the pickorder
 
         if (PickorderSelectActivity.mTryToLockOrderBln() == false) {
-            PickorderSelectActivity.orderDetailsCompleteBln = false;
             PickorderSelectActivity.pFillOrders();
             return;
         }
@@ -670,8 +668,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cUserInterface.pPlaySound(R.raw.message, 0);
         return;
     }
-
-
 
     // End No orders icon
 

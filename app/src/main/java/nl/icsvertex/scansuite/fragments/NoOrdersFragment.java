@@ -15,6 +15,7 @@ import ICS.Utils.cUserInterface;
 
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.activities.sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 
 
@@ -90,12 +91,12 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
                     PickorderSelectActivity.pFillOrders();
                 }
 
-                //todo: put this back
-                //todo: make sure rotation animation works again
 
-//        if (activity instanceof ShiporderSelectActivity) {
-//            ((ShiporderSelectActivity)getActivity()).pGetData();
-//        }
+                if (cAppExtension.activity instanceof SortorderSelectActivity) {
+                    SortorderSelectActivity.pFillOrders();
+                }
+
+                //todo: put this back
 //        if (activity instanceof SortorderSelectActivity) {
 //            ((SortorderSelectActivity)getActivity()).pGetData();
 //        }

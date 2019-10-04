@@ -306,7 +306,7 @@ public class cSetting {
 
     public static boolean pGetSettingsViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cSetting.allSettingsObl = null;
             cSetting.pTruncateTableBln();
         }
@@ -448,7 +448,31 @@ public class cSetting {
             return  false;
         }
 
-        if (Setting.valueStr == "") {
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
+            return  null;
+        }
+
+        return cText.stringToBoolean(Setting.valueStr,false);
+    }
+
+    public static String PICK_SORT_LOCATION_ADVICE(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SORT_LOCATION_ADVICE);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static Boolean PICK_SORT_LOCATION_ADVICE_MANDATORY(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SORT_LOCATION_ADVICE_MANDATORY);
+        if (Setting == null) {
+            return  false;
+        }
+
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
             return  null;
         }
 
@@ -461,7 +485,7 @@ public class cSetting {
         if (Setting == null) {
             return  false;
         }
-        if (Setting.valueStr == "") {
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
             return  null;
         }
 
@@ -475,7 +499,7 @@ public class cSetting {
         if (Setting == null) {
             return  false;
         }
-        if (Setting.valueStr == "") {
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
             return  null;
         }
 
@@ -573,6 +597,15 @@ public class cSetting {
         return cText.stringToBoolean(Setting.valueStr,false);
     }
 
+    public static boolean PICK_PER_SCAN(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_PER_SCAN);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.stringToBoolean(Setting.valueStr,false);
+    }
 
 
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.icsvertex.scansuite.activities.sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
@@ -224,15 +225,17 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             @Override
             public void onClick(View v) {
 
-                      //todo: kick off correct function in correct activity
+
                 if (cAppExtension.context instanceof PickorderSelectActivity) {
                     PickorderSelectActivity.pPickorderSelected(selectedPickorder);
                     return;
                 }
-//                if (cAppExtension.context instanceof SortorderSelectActivity) {
-//                    ((SortorderSelectActivity)callerContext).setChosenSortorder(l_PickorderEntity);
-//                    return;
-//                }
+                if (cAppExtension.context instanceof SortorderSelectActivity) {
+                    SortorderSelectActivity.pSortorderSelected(selectedPickorder);
+                    return;
+                }
+
+                //todo: kick off correct function in correct activity
 //                if (cAppExtension.context instanceof ShiporderSelectActivity) {
 //                    ((ShiporderSelectActivity)callerContext).setChosenShiporder(l_PickorderEntity);
 //                    return;

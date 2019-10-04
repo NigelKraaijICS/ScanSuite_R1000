@@ -22,6 +22,7 @@ import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 
 
@@ -158,11 +159,9 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
                     PickorderLinesActivity.pPickingDone(editTextCurrentLocation.getText().toString().trim());
                 }
 
-                //todo: put this back
-                //todo: call static method
-//                if (cAppExtension.activity  instanceof SortorderLinesActivity) {
-//                    ((SortorderLinesActivity)cAppExtension.activity ).closeCurrentOrder();
-//                }
+                if (cAppExtension.activity  instanceof SortorderLinesActivity) {
+                    SortorderLinesActivity.pSortingDone();
+                }
 //
 //                //todo: call static method
 //                if (cAppExtension.activity  instanceof ShiporderLinesActivity) {

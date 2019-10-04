@@ -15,6 +15,7 @@ import android.widget.TextView;
 import ICS.Interfaces.iICSDefaultFragment;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.activities.sort.SortorderSortActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 
 public class AcceptRejectFragment extends DialogFragment implements iICSDefaultFragment {
@@ -136,10 +137,11 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
 
+        if (cAppExtension.activity instanceof SortorderSortActivity) {
+            SortorderSortActivity.pAcceptPick();
+        }
+
         //todo: put this back
-//        if (callerActivity instanceof SortorderSortActivity) {
-//            ((SortorderSortActivity)callerActivity).m_acceptPickorderLine();
-//        }
 //        if (callerActivity instanceof ShipDetermineTransportActivity) {
 //
 //        }
@@ -149,6 +151,10 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
             PickorderPickActivity.pCancelPick();
+        }
+
+        if (cAppExtension.activity instanceof SortorderSortActivity) {
+            SortorderSortActivity.pCancelPick();
         }
 
 

@@ -365,4 +365,6 @@
     <string name="message_empty_URL">URL is niet gevuld</string>
     <string name="error_get_sorting_detals_failed">Sorteer details ophalen mislukt</string>
     <string name="scan_pickcartbox">Scan bakje</string>
+    <string name="all_lines_sent">Alle regels zijn verzonden</string>
+    <string name="error_article_scan_mandatory">Alleen artikelscans toegestaan</string>
 </resources>

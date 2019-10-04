@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.activities.pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.activities.sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.activities.sort.SortorderSortActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.activities.general.LoginActivity;
 import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
@@ -75,6 +77,14 @@ public class cBarcodeScan {
 
                     if (cAppExtension.activity instanceof PickorderPickActivity) {
                         PickorderPickActivity.pHandleScan(barcodeStr);
+                    }
+
+                    if (cAppExtension.activity instanceof SortorderSelectActivity){
+                        SortorderSelectActivity.pHandleScan(barcodeStr);
+                    }
+
+                    if (cAppExtension.activity instanceof SortorderSortActivity){
+                        SortorderSortActivity.pHandleScan(barcodeStr);
                     }
 
                 }

@@ -49,6 +49,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     //Region Public Properties
     public static String VIEW_CHOSEN_ORDER = "detail:header:text";
+    public static Fragment currentLineFragment;
     //End Region Public Properties
 
     //Region Private Properties
@@ -65,7 +66,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     private ImageView toolbarImage;
     private TextView toolbarTitle;
 
-    public static Fragment currentLineFragment;
 
     //End Region Views
 
@@ -231,7 +231,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
-
 
         if (pvMenuItem.getItemId() == android.R.id.home) {
             mTryToLeaveActivity();
@@ -430,7 +429,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-
     public static void pClosePickAndDecideNextStep(){
 
         if (!PickorderLinesActivity.mTryToCloseOrderBln()) {
@@ -602,7 +600,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private void mShowSent() {
-        cUserInterface.pShowToastMessage(getString(R.string.all_orders_sent), R.raw.goodsound);
+        cUserInterface.pShowToastMessage(getString(R.string.all_lines_sent), R.raw.goodsound);
     }
 
     private static void mStepFailed(String pvErrorMessageStr){
@@ -697,8 +695,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         // If settings is false, then go back to order select
         if (!cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
-            Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
-            cAppExtension.activity.startActivity(intent);
+            PickorderLinesActivity.mStartOrderSelectActivity();
             return;
         }
 

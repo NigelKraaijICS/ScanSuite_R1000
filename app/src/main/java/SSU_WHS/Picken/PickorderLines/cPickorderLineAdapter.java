@@ -14,6 +14,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -141,25 +142,22 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
                     }
                 }
 
-                //todo: put this back
-//                if (cAppExtension.context  instanceof SortorderLinesActivity) {
-//
-//                    //todo: reactivate this
-////                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
-////                        ((SortorderLinesActivity) cAppExtension.context ).setChosenSortorderLine(l_PickorderLineEntity);
-////                        return;
-////                    }
-////                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
-////                        ((SortorderLinesActivity) cAppExtension.context ).setChosenSortorderLineToReset(l_PickorderLineEntity);
-////                        return;
-////                    }
-//
-//
-//                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
-//                        pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
-//                    }
-//
-//                }
+
+                if (cAppExtension.context  instanceof SortorderLinesActivity) {
+
+                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
+                        SortorderLinesActivity.pPicklineSelected(currentPickorderLine);
+                    }
+                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
+                        SortorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
+                        return;
+                    }
+
+                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
+                        pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
+                    }
+
+                }
 
             }
         });

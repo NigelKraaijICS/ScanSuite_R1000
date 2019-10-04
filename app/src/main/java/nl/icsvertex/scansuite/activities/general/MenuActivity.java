@@ -25,6 +25,7 @@ import ICS.Utils.cUserInterface;
 import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
+import nl.icsvertex.scansuite.activities.sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
@@ -198,12 +199,12 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.SORTING) {
             //todo: put this back
-//            intent  = new Intent(cAppExtension.context, SortorderSelectActivity.class);
-//            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_SORT);
-//            clickedText = container.findViewWithTag(cAuthorisation.TAG_TEXT_SORT);
-//            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedImage, SortorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new Pair<>(clickedText, SortorderSelectActivity.VIEW_NAME_HEADER_TEXT));
-//            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-//            return;
+            intent  = new Intent(cAppExtension.context, SortorderSelectActivity.class);
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_SORT);
+            clickedText = container.findViewWithTag(cAuthorisation.TAG_TEXT_SORT);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedImage, SortorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new Pair<>(clickedText, SortorderSelectActivity.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
         }
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.SHIPPING) {

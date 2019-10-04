@@ -39,7 +39,6 @@ import ICS.Utils.cUserInterface;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
-import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.cAppExtension;
@@ -276,7 +275,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         if (cSetting.PICK_BIN_IS_ITEM()) {
             articleScannedLastBln = true;
-            this.pHandleScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
+
         }
 
     }
@@ -310,7 +309,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        if (PickorderPickActivity.mFindBarcodeInOrderline(pvScannedBarcodeStr) == false) {
+        if (PickorderPickActivity.mFindBarcodeInLineBarcodes(pvScannedBarcodeStr) == false) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr, true, true);
             return;
         }
@@ -349,7 +348,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
         PickorderPickActivity.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
         PickorderPickActivity.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoStr() + " " + cPickorderLine.currentPickOrderLine.getVariantCodeStr());
-        PickorderPickActivity.articleVendorItemText.setText(cPickorderLine.currentPickOrderLine.getVendorItemNo() + ' ' + cPickorderLine.currentPickOrderLine.getVendorItemDescriptionStr());
+        PickorderPickActivity.articleVendorItemText.setText(cPickorderLine.currentPickOrderLine.getVendorItemNoStr() + ' ' + cPickorderLine.currentPickOrderLine.getVendorItemDescriptionStr());
 
         PickorderPickActivity.binText.setText(cPickorderLine.currentPickOrderLine.getBinCodeStr());
         PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
@@ -360,7 +359,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.quantityText.setText("0");
         PickorderPickActivity.quantityRequiredText.setText(cText.doubleToString(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
 
-        PickorderPickActivity.mEnablePlusAndMinusButtons();
+        PickorderPickActivity.mEnablePlusMinusAndBarcodeSelectViews();
         PickorderPickActivity.mShowArticleImage();
         PickorderPickActivity.mShowOrHideGenericExtraFields();
         PickorderPickActivity.mShowBarcodeInfo();
@@ -387,7 +386,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                     return;
                 }
 
-                mEnablePlusAndMinusButtons();
+                mEnablePlusMinusAndBarcodeSelectViews();
 
                 //If we only have one barcode, then automatticaly select that barcode
                 if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
@@ -491,7 +490,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             PickorderPickActivity.mShowFullArticleFragment();
         }
 
-
     }
 
     private static void mShowSortingInstruction() {
@@ -542,15 +540,22 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
     }
 
-    private static void mEnablePlusAndMinusButtons() {
+    private static void mEnablePlusMinusAndBarcodeSelectViews() {
 
-        if (!cSetting.PICK_SELECTEREN_BARCODE()) {
+        if (!cSetting.PICK_PER_SCAN()) {
             PickorderPickActivity.imageButtonMinus.setVisibility(View.INVISIBLE);
             PickorderPickActivity.imageButtonPlus.setVisibility(View.INVISIBLE);
         } else {
             PickorderPickActivity.imageButtonMinus.setVisibility(View.VISIBLE);
             PickorderPickActivity.imageButtonPlus.setVisibility(View.VISIBLE);
         }
+
+        if (!cSetting.PICK_SELECTEREN_BARCODE()) {
+            PickorderPickActivity.imageButtonBarcode.setVisibility(View.INVISIBLE);
+        } else {
+            PickorderPickActivity.imageButtonBarcode.setVisibility(View.VISIBLE);
+        }
+
     }
 
     //Scans and manual input
@@ -581,8 +586,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             this.mTryToChangePickedQuantity(true, true,pvQuantityDbl);
 
         }
-
-
 
     }
 
@@ -743,7 +746,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //We didn't scan an article yet, so handle it as a "normal" scan
         if (articleScannedLastBln == false) {
 
-            if (PickorderPickActivity.mFindBarcodeInOrderline(pvScannedBarcodeStr) == false) {
+            if (PickorderPickActivity.mFindBarcodeInLineBarcodes(pvScannedBarcodeStr) == false) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr, true, true);
                 return;
             }
@@ -768,7 +771,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    public static void mBarcodeSelected(cPickorderBarcode pvBarcode) {
+    private static void mBarcodeSelected(cPickorderBarcode pvBarcode) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -780,7 +783,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     // Lines, Barcodes and Packing Tables
 
-    private static Boolean mFindBarcodeInOrderline(String pvScannedBarcodeStr) {
+    private static Boolean mFindBarcodeInLineBarcodes(String pvScannedBarcodeStr) {
 
         if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
             return false;
@@ -813,14 +816,15 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
             // We still need to scan a pickkart/sales order so not done
             if (cPickorderLine.currentPickOrderLine.processingSequenceStr.isEmpty()) {
+                PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
                 PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
                 return;
             }
         }
 
 
-
         if (cSetting.PICK_AUTO_ACCEPT() == false) {
+            PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
             return;
         }
 
@@ -1124,70 +1128,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         });
     }
 
-    private Runnable mMinusAction = new Runnable() {
-        @Override
-        public void run() {
-            imageButtonMinus.performClick();
-            long millisecs;
-            if (pickCounterMinusHelperInt < 10) {
-                millisecs = 200;
-            } else if (pickCounterMinusHelperInt < 20) {
-                millisecs = 150;
-            } else if (pickCounterMinusHelperInt < 30) {
-                millisecs = 100;
-            } else if (pickCounterMinusHelperInt < 40) {
-                millisecs = 50;
-            } else {
-                millisecs = 50;
-            }
-            mDoDelayedMinus(this, millisecs);
-        }
-    };
 
-    private Runnable mPlusAction = new Runnable() {
-        @Override
-        public void run() {
-            imageButtonPlus.performClick();
-            long millisecs;
-            if (pickCounterPlusHelperInt < 10) {
-                millisecs = 200;
-            } else if (pickCounterPlusHelperInt < 20) {
-                millisecs = 150;
-            } else if (pickCounterPlusHelperInt < 30) {
-                millisecs = 100;
-            } else if (pickCounterPlusHelperInt < 40) {
-                millisecs = 50;
-            } else {
-                millisecs = 50;
-            }
-            mDoDelayedPlus(this, millisecs);
-        }
-    };
-
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int numberChosenInt = 0;
-            Bundle extras = intent.getExtras();
-
-            if (extras != null) {
-                numberChosenInt = extras.getInt(cPublicDefinitions.NUMBERINTENT_EXTRANUMBER);
-            }
-            mHandleQuantityChosen(numberChosenInt);
-        }
-    };
-
-    private void mDoDelayedMinus(Runnable pvRunnable, long pvMilliSecsLng) {
-        this.minusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
-        this.pickCounterMinusHelperInt += 1;
-        return;
-    }
-
-    private void mDoDelayedPlus(Runnable pvRunnable, long pvMilliSecsLng) {
-        this.plusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
-        this.pickCounterPlusHelperInt += 1;
-        return;
-    }
 
     //Dialogs and Activitys
 
@@ -1246,7 +1187,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mShowBarcodeSelectFragment() {
-        final BarcodePickerFragment barcodePickerFragment = new BarcodePickerFragment();
+        BarcodePickerFragment barcodePickerFragment = new BarcodePickerFragment();
         barcodePickerFragment.show(cAppExtension.fragmentManager, BARCODEPICKERFRAGMENT_TAG);
         return;
     }
@@ -1274,6 +1215,75 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pDoNope(quantityRequiredText, false, false);
         return;
     }
+
+    //Region Number Broadcaster
+
+    private Runnable mMinusAction = new Runnable() {
+        @Override
+        public void run() {
+            imageButtonMinus.performClick();
+            long milliSecsLng;
+            if (pickCounterMinusHelperInt < 10) {
+                milliSecsLng = 200;
+            } else if (pickCounterMinusHelperInt < 20) {
+                milliSecsLng = 150;
+            } else if (pickCounterMinusHelperInt < 30) {
+                milliSecsLng = 100;
+            } else if (pickCounterMinusHelperInt < 40) {
+                milliSecsLng = 50;
+            } else {
+                milliSecsLng = 50;
+            }
+            mDoDelayedMinus(this, milliSecsLng);
+        }
+    };
+
+    private Runnable mPlusAction = new Runnable() {
+        @Override
+        public void run() {
+            imageButtonPlus.performClick();
+            long milliSecsLng;
+            if (pickCounterPlusHelperInt < 10) {
+                milliSecsLng = 200;
+            } else if (pickCounterPlusHelperInt < 20) {
+                milliSecsLng = 150;
+            } else if (pickCounterPlusHelperInt < 30) {
+                milliSecsLng = 100;
+            } else if (pickCounterPlusHelperInt < 40) {
+                milliSecsLng = 50;
+            } else {
+                milliSecsLng = 50;
+            }
+            mDoDelayedPlus(this, milliSecsLng);
+        }
+    };
+
+    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int numberChosenInt = 0;
+            Bundle extras = intent.getExtras();
+
+            if (extras != null) {
+                numberChosenInt = extras.getInt(cPublicDefinitions.NUMBERINTENT_EXTRANUMBER);
+            }
+            mHandleQuantityChosen(numberChosenInt);
+        }
+    };
+
+    private void mDoDelayedMinus(Runnable pvRunnable, long pvMilliSecsLng) {
+        this.minusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
+        this.pickCounterMinusHelperInt += 1;
+        return;
+    }
+
+    private void mDoDelayedPlus(Runnable pvRunnable, long pvMilliSecsLng) {
+        this.plusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
+        this.pickCounterPlusHelperInt += 1;
+        return;
+    }
+
+    //End Region Number Broadcaster
 
     //End Regin Private Methods
 

@@ -201,11 +201,11 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     private void mFillRecycler(List<cPickorderLine> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            this.mNoOrdersAvailable(true);
+            this.mNoLinesAvailable(true);
             return;
         }
 
-        this.mNoOrdersAvailable(false);
+        this.mNoLinesAvailable(false);
 
         //Show the recycler view
         cPickorderLine.getPickorderLineToPickAdapter().pFillData(pvDataObl);
@@ -218,7 +218,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     }
 
-    private void mNoOrdersAvailable(Boolean pvEnabledBln) {
+    private void mNoLinesAvailable(Boolean pvEnabledBln) {
 
         if (PickorderLinesActivity.currentLineFragment != null && PickorderLinesActivity.currentLineFragment == this) {
             //Close no orders fragment if needed
@@ -255,9 +255,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
             //Change tabcounter text
             PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
         }
-
-
-
     }
 
     //End Region private Methods

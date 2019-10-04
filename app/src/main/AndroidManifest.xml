@@ -77,6 +77,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity" />
         </activity>
+        <activity android:name=".activities.sort.SortorderSortActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0a3a15057e61fb1e84d5024bd01b5657d9a4c76e" />
