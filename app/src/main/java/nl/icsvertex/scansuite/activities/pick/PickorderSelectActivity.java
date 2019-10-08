@@ -569,7 +569,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
             recyclerViewPickorders.setVisibility(View.INVISIBLE);
 
-
             PickorderSelectActivity.imageViewFilter.setVisibility(View.INVISIBLE);
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
             NoOrdersFragment fragment = new NoOrdersFragment();
