@@ -470,4 +470,6 @@
     <string name="scan_pickcartbox">Scan pickcartbox</string>
     <string name="all_lines_sent">All lines are sent</string>
     <string name="error_article_scan_mandatory">You can only scan articles</string>
+    <string name="message_scan_packinglocation_or_salesorder">Scan packinglocation or salesorder</string>
+    <string name="scan_article_or_sort_location">Scan article or sort location</string>
 </resources>

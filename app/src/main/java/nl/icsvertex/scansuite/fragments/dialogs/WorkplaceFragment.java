@@ -17,6 +17,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
@@ -35,7 +36,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
 
 
     //Region Constructor
-        public WorkplaceFragment() {
+    public WorkplaceFragment() {
 
     }
     //End Region Constructor
@@ -69,7 +70,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void onDestroy() {
         try {
-           cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +104,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void mFindViews() {
         this.workplaceRecyclerView = getView().findViewById(R.id.workplaceRecyclerview);
-     }
+    }
 
     @Override
     public void mSetViewModels() {
@@ -162,10 +163,12 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
                 PickorderLinesActivity.pClosePickAndDecideNextStep();
             }
 
+            if (cAppExtension.activity instanceof SortorderLinesActivity) {
+                SortorderLinesActivity.pCloseSortAndDecideNextStep();
+            }
+
             //todo: put this back
-//            if (cAppExtension.activity instanceof SortorderLinesActivity) {
-//                SortorderLinesActivity.closeWorkplaceFragment();
-//            }
+
 //            if (cAppExtension.activity instanceof ShiporderLinesActivity) {
 //                SortorderLinesActivity.closeWorkplaceFragment();
 //            }
@@ -189,6 +192,8 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         this.workplaceRecyclerView.setAdapter(cWorkplace.getWorkplaceAdapter());
         this.workplaceRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
+
+
 
     //End Region Private Methods
 

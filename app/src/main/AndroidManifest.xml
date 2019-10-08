@@ -78,6 +78,8 @@
                 android:value="nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity" />
         </activity>
         <activity android:name=".activities.sort.SortorderSortActivity" />
+        <activity android:name=".activities.sort.SortorderLinesActivity" />
+        <activity android:name=".activities.sort.SortorderSelectActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

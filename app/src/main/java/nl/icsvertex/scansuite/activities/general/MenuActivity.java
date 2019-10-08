@@ -62,13 +62,13 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     @Override
     public void onResume() {
         super.onResume();
-        shimmerViewContainer.startShimmerAnimation();
+        this.mStartShimmering();
     }
 
     @Override
     protected void onPause() {
-        shimmerViewContainer.stopShimmerAnimation();
         super.onPause();
+        this.mStopShimmering();
     }
 
     //End Region Default Methods
@@ -229,11 +229,20 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         cAuthorisation.getAuthorisationAdapter().setAuthorisations();
     }
 
+    private void mStartShimmering(){
+        //Start Shimmer Effect's animation until data is loaded
+        this.  shimmerViewContainer.startShimmerAnimation();
+}
+
     private void mStopShimmering(){
         //Stopping Shimmer Effect's animation after data is loaded
         this.shimmerViewContainer.stopShimmerAnimation();
         this.shimmerViewContainer.setVisibility(View.GONE);
     }
+
+
+
+
 
     //End Region Private Methods
 

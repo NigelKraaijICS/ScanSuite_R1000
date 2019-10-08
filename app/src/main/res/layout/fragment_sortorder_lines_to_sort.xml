@@ -49,4 +49,49 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/pillButton"
+        android:id="@+id/orderDoneView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        >
+        <TextView
+            android:id="@+id/textViewOrderDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_done_button"
+            android:textSize="@dimen/textsize_big"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintStart_toEndOf="@id/imageOrderDone"
+            app:layout_constraintTop_toTopOf="@id/imageOrderDone"
+            android:paddingRight="@dimen/default_double_padding"
+            android:paddingEnd="@dimen/default_double_padding"/>
+        <TextView
+            android:id="@+id/textViewOrderDone2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textsize_big"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/order_done_close"
+            app:layout_constraintStart_toStartOf="@id/textViewOrderDone"
+            app:layout_constraintTop_toBottomOf="@id/textViewOrderDone"
+            android:paddingRight="@dimen/default_double_padding"
+            android:paddingEnd="@dimen/default_double_padding"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:scaleType="fitXY"
+            android:tint="@color/colorPrimary"
+            android:padding="@dimen/default_padding"
+            android:layout_margin="@dimen/default_margin"
+            android:id="@+id/imageOrderDone"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/ic_thumb_up_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

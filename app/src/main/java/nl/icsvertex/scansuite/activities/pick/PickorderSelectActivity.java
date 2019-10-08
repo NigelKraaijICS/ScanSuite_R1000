@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,6 +48,7 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import nl.icsvertex.scansuite.activities.general.MenuActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import ICS.Utils.cRegex;
 import ICS.Utils.cSharedPreferences;
@@ -93,7 +96,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
     }
 
     @Override
@@ -108,6 +110,23 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
+        if (pvMenuItem.getItemId() == android.R.id.home) {
+            mTryToLeaveActivity();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(pvMenuItem);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mTryToLeaveActivity();
+    }
+
+
 
     //End Region Default Methods
 
@@ -667,6 +686,12 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         commentFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.COMMENTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
         return;
+    }
+
+    private void mTryToLeaveActivity(){
+
+        Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
+        cAppExtension.activity.startActivity(intent);
     }
 
     // End No orders icon

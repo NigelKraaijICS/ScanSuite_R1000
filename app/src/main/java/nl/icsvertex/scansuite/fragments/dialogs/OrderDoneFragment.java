@@ -36,13 +36,14 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     static private EditText editTextCurrentLocation;
     static private Button closeOrderButton;
     static private Button cancelButton;
+    private Boolean showCurrentLocationBln;
 
     //End Region private Properties
 
 
     //Region Constructor
-    public OrderDoneFragment() {
-
+    public OrderDoneFragment(Boolean pvShowCurrentLocationBln) {
+        this.showCurrentLocationBln = pvShowCurrentLocationBln;
     }
     //End Region Constructor
 
@@ -117,6 +118,13 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         this.textViewOrderDoneHeader.setText(cAppExtension.context.getString(R.string.orderdone_header_default));
         this.textViewOrderDoneText.setText(cAppExtension.context.getString(R.string.orderdone_text_default));
 
+
+       if (!this.showCurrentLocationBln) {
+           editTextCurrentLocation.setVisibility(View.INVISIBLE);
+           return;
+       }
+
+
         if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 && cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty() == false ) {
             editTextCurrentLocation.setVisibility(View.INVISIBLE);
         } else {
@@ -126,6 +134,10 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
             cUserInterface.pShowKeyboard(editTextCurrentLocation);
         }
     }
+
+
+
+
     @Override
     public void mSetListeners() {
         this.mSetCloseListener();

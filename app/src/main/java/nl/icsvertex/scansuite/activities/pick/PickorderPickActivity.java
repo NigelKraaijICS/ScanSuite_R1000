@@ -119,14 +119,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     protected void onDestroy() {
-        try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
-        cBarcodeScan.pUnregisterBarcodeReceiver();
         super.onDestroy();
+        LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
     }
 
     @Override
@@ -159,6 +153,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        mShowAcceptFragment();
+    }
+
 
     //End Region Default Methods
 
@@ -275,7 +275,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         if (cSetting.PICK_BIN_IS_ITEM()) {
             articleScannedLastBln = true;
-
         }
 
     }
@@ -330,6 +329,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cPickorderLine.currentPickOrderLine.pCancelIndatabaseBln();
         PickorderPickActivity.mGoBackToLinesActivity();
         return;
+    }
+
+    public  static  void pRegisterBarcodeReceiver(){
+        cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
     //End Region Public Methods
@@ -1132,12 +1135,18 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     //Dialogs and Activitys
 
+
+
+
     private static void mShowFullArticleFragment() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         ArticleFullViewFragment articleFullViewFragment = new ArticleFullViewFragment();
         articleFullViewFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLEFULL_TAG);
+
+
+
     }
 
     private void mShowUnderPickDialog() {

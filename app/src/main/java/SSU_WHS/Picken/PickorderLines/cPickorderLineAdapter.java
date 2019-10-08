@@ -97,21 +97,44 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         String lineDescriptionStr = currentPickorderLine.getItemNoStr() + "~" + currentPickorderLine.getVariantCodeStr() + ": " + currentPickorderLine.getDescriptionStr();
         String quantityToShowStr = "";
 
+        //Pick recyclers
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
+            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
+            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTotal) {
            quantityToShowStr  = cText.intToString( currentPickorderLine.getQuantityDbl().intValue());
+            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
+            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
         }
 
+        //Sort Recyclers
+        if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
+            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            pvHolder.textViewPickorderLineLocation.setText("");
+            pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
+        }
 
+        if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
+            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getProcessingSequenceStr());
+            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
+        }
 
-        pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
+        if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
+            quantityToShowStr  = cText.intToString( currentPickorderLine.getQuantityDbl().intValue());
+            pvHolder.textViewPickorderLineLocation.setText("");
+            pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
+        }
+
         pvHolder.textViewPickorderLine.setText(lineDescriptionStr);
         pvHolder.textViewPickorderLineQuantity.setText(quantityToShowStr);
         pvHolder.textViewPickorderLineSourceNo.setText(currentPickorderLine.getSourceNoStr());

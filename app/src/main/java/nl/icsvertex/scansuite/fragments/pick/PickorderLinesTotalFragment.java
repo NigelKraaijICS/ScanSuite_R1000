@@ -11,11 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
+import ICS.Utils.cText;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
-import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
@@ -51,7 +48,7 @@ public class PickorderLinesTotalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         this.mFindViews();
-        this.mSetPickorderLineRecycler();
+        this.mFillRecycler();
     }
 
     @Override
@@ -73,12 +70,15 @@ public class PickorderLinesTotalFragment extends Fragment {
     }
 
 
-    private void mSetPickorderLineRecycler() {
+    private void mFillRecycler() {
 
         recyclerViewPickorderLinesTotal.setHasFixedSize(false);
         recyclerViewPickorderLinesTotal.setAdapter(cPickorderLine.getPickorderLineTotalAdapter());
         recyclerViewPickorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         cPickorderLine.getPickorderLineTotalAdapter().pFillData(cPickorder.currentPickOrder.linesObl());
+
+        PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+
     }
 }

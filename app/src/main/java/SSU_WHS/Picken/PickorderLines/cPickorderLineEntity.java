@@ -121,6 +121,13 @@ public class cPickorderLineEntity {
             this.quantity = pvJsonObject.getDouble(cDatabase.QUANTITY_NAMESTR);
             this.quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
             this.quantityrejected = pvJsonObject.getDouble(cDatabase.QUANTITYREJECTED_NAMESTR);
+
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
+                this.quantitytaken =  0;
+            } else {
+                this.quantitytaken =  pvJsonObject.getDouble(cDatabase.QUANTITYTAKEN_NAMESTR);
+            }
+
             this.sourceno = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
             this.destinationno = pvJsonObject.getString(cDatabase.DESTINATIONNO_NAMESTR);
             this.ispartofmultilineorder = pvJsonObject.getString(cDatabase.ISPARTOFMULTILINEORDER_NAMESTR);

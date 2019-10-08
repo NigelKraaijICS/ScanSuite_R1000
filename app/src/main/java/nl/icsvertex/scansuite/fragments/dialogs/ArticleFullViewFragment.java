@@ -25,7 +25,6 @@ import ICS.Utils.cUserInterface;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.activities.general.LoginActivity;
 import nl.icsvertex.scansuite.activities.pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 
@@ -75,6 +74,11 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     public void onPause() {
         try {
             cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+
+            if (cAppExtension.activity instanceof  PickorderPickActivity) {
+                PickorderPickActivity.pRegisterBarcodeReceiver();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,6 +89,11 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     public void onDestroy() {
         try {
             cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+
+            if (cAppExtension.activity instanceof  PickorderPickActivity) {
+                PickorderPickActivity.pRegisterBarcodeReceiver();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

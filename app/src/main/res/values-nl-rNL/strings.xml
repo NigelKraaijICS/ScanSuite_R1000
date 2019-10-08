@@ -367,4 +367,6 @@
     <string name="scan_pickcartbox">Scan bakje</string>
     <string name="all_lines_sent">Alle regels zijn verzonden</string>
     <string name="error_article_scan_mandatory">Alleen artikelscans toegestaan</string>
+    <string name="message_scan_packinglocation_or_salesorder">Scan paktafel of verkooporder</string>
+    <string name="scan_article_or_sort_location">Scan artikel of sorteerlocatie</string>
 </resources>

@@ -17,6 +17,8 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
+import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
@@ -94,6 +96,11 @@ public class cPickorderLine {
     public double quantityRejectedDbl;
     public double getQuantityRejectedDbl() {
         return quantityRejectedDbl;
+    }
+
+    public double quantityTakenDbl;
+    public double getQuantityTakenDbl() {
+        return quantityTakenDbl;
     }
 
     public String sourceNoStr;
@@ -174,11 +181,6 @@ public class cPickorderLine {
     public int lineNoTakeInt;
     public int getLineNoTakeInt() {
         return lineNoTakeInt;
-    }
-
-    public double quantityTakenDbl;
-    public double getQuantityTakenDbl() {
-        return quantityTakenDbl;
     }
 
     public String takenTimeStampStr;
@@ -282,8 +284,6 @@ public class cPickorderLine {
     public static List<cPickorderLine> allLinesObl;
     public static cPickorderLine currentPickOrderLine;
 
-
-
     //End Region Public Properties
 
     //Region Constructor
@@ -300,7 +300,15 @@ public class cPickorderLine {
         this.containerTypeStr= this.PickorderLineEntity.getContainerTypeStr();
         this.containerInputStr =this.PickorderLineEntity.getContainerinputsStr();
         this.containerHandled = this.PickorderLineEntity.getContainerHandledStr();
-        this.quantityDbl = this.PickorderLineEntity.getQuantityDbl();
+
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK) {
+            this.quantityDbl = this.PickorderLineEntity.getQuantityDbl();
+        }
+
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT) {
+            this.quantityDbl = this.PickorderLineEntity.getQuantityTakenDbl();
+        }
+
         this.quantityHandledDbl = this.PickorderLineEntity.getQuantityHandledDbl();
         this.quantityRejectedDbl = this.PickorderLineEntity.getQuantityHandledDbl();
         this.sourceNoStr = this.PickorderLineEntity.getSourceNoStr();
@@ -369,6 +377,7 @@ public class cPickorderLine {
         this.brandStr = this.PickorderLineEntity.getBrandStr();
         this.printDocumentsBln= cText.stringToBoolean(this.PickorderLineEntity.getPrintdocumentsStr(), false) ;
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
+        this.localStatusInt = this.PickorderLineEntity.getLocalstatusInt();
 
         if (this.statusInt > cWarehouseorder.PicklineStatusEnu.Needed) {
             this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
@@ -665,6 +674,25 @@ public class cPickorderLine {
         return  false;
 
     }
+
+    public String pGetPackingTableForSourceNoStr() {
+
+        if (cPickorder.currentPickOrder.salesOrderPackingTableObl() == null || cPickorder.currentPickOrder.salesOrderPackingTableObl().size() == 0) {
+            return "";
+        }
+
+        //Record for Current Sales order
+        cSalesOrderPackingTable recordForSalesOrder = null;
+
+        for (cSalesOrderPackingTable loopRecord : cPickorder.currentPickOrder.salesOrderPackingTableObl()) {
+
+            if (loopRecord.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr()))
+                return loopRecord.getPackingtableStr();
+        }
+
+        return "";
+    }
+
 
     //todo: move this function to a different class
     public List<String> pGetAdvicedSortLocationsFromWebserviceObl(){

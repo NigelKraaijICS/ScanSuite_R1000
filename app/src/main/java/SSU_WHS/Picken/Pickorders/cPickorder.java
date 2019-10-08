@@ -640,7 +640,18 @@ public class cPickorder {
         }
 
         cWebresult WebResult;
-        WebResult =  cPickorder.getPickorderViewModel().pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu.TAKE);
+        cWarehouseorder.ActionTypeEnu actionTypeEnu = null;
+
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK) {
+            actionTypeEnu = cWarehouseorder.ActionTypeEnu.TAKE;
+        }
+
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT) {
+            actionTypeEnu = cWarehouseorder.ActionTypeEnu.PLACE;
+        }
+
+
+        WebResult =  cPickorder.getPickorderViewModel().pGetLinesFromWebserviceWrs(actionTypeEnu);
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
 
@@ -660,9 +671,8 @@ public class cPickorder {
                     continue;
                 }
 
-
                 //Check the status, so lines that are not picked are ignored
-                if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT && pickorderLine.statusPackingInt == cWarehouseorder.PackingAndShippingStatusEnu.Needed) {
+                if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT && pickorderLine.quantityTakenDbl >0 ) {
                     pickorderLine.pInsertInDatabaseBln();
                     continue;
                 }
@@ -805,7 +815,7 @@ public class cPickorder {
         }
 
         cWebresult WebResult;
-        WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs("",cWarehouseorder.StepCodeEnu.Pick_Sorting,pvSearchTextStr);
+        WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs(cUser.currentUser.getNameStr(),cWarehouseorder.StepCodeEnu.Pick_Sorting,pvSearchTextStr);
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
 
@@ -833,7 +843,7 @@ public class cPickorder {
         }
 
         cWebresult WebResult;
-        WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs("",cWarehouseorder.StepCodeEnu.Pick_PackAndShip,pvSearchTextStr);
+        WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs(cUser.currentUser.getNameStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip,pvSearchTextStr);
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
 
@@ -1131,8 +1141,8 @@ public class cPickorder {
 
     public boolean pGetSortingDetailsBln(){
 
-        if (!cPickorder.currentPickOrder.isPVBln()){
-            return  true;
+        if (!cPickorder.currentPickOrder.isPVBln() && !cPickorder.currentPickOrder.isBPBln()){
+                return  true;
         }
 
         for (cPickorderLine pickorderLine : cPickorder.currentPickOrder.linesObl()) {
@@ -1181,7 +1191,9 @@ public class cPickorder {
         }
 
         for (cPickorderLine pickorderLine : hulpObl) {
-            if (pickorderLine.localStatusInt == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW && pickorderLine.itemNoStr.equalsIgnoreCase(pickorderBarcodeWithBarcode.itemNoStr) && pickorderLine.variantCodeStr.equalsIgnoreCase((pickorderBarcodeWithBarcode.variantcodeStr))) {
+            if (pickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW &&
+               pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeWithBarcode.getItemNoStr()) &&
+               pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeWithBarcode.getVariantcodeStr()))) {
                 return  pickorderLine;
             }
         }

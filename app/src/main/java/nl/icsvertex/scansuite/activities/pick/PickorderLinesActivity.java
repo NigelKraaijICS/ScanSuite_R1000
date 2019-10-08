@@ -31,6 +31,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cRegex;
@@ -90,11 +91,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     protected void onDestroy() {
-        try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onDestroy();
     }
 
@@ -239,6 +235,12 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
                 return super.onOptionsItemSelected(pvMenuItem);
         }
+
+    @Override
+    public void onBackPressed() {
+        mTryToLeaveActivity();
+    }
+
 
     //End Region iICSDefaultActivity defaults
 
@@ -461,9 +463,15 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        // Show order done fragment
-        PickorderLinesActivity.mShowOrderDoneFragment();
-
+        if (!cPickorder.currentPickOrder.pickActivityBinRequiredBln ||
+           cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 ||
+           !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+            // Show order done fragment
+            PickorderLinesActivity.mShowOrderDoneFragment(false);
+            return;
+        }
+            // Show order done fragment
+            PickorderLinesActivity.mShowOrderDoneFragment(true);
     }
 
     private void mChangeSelectedTab(TabLayout.Tab pvTab) {
@@ -527,11 +535,11 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
     }
 
-    private static void mShowOrderDoneFragment() {
+    private static void mShowOrderDoneFragment(Boolean pvShowCurrentLocationBln) {
 
         cUserInterface.pPlaySound(R.raw.goodsound, null);
 
-        final OrderDoneFragment orderDoneFragment = new OrderDoneFragment();
+        final OrderDoneFragment orderDoneFragment = new OrderDoneFragment(pvShowCurrentLocationBln);
         orderDoneFragment.setCancelable(false);
         orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
@@ -760,10 +768,9 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Show Sort Activity
-        //todo: put this back
-//        Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
-//        cAppExtension.activity.startActivity(intent);
-//        return;
+        Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
+        cAppExtension.activity.startActivity(intent);
+        return;
     }
 
     private static void mStartShipActivity() {
