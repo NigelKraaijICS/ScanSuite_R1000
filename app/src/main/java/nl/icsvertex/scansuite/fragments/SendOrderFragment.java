@@ -23,7 +23,6 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Public Properties
 
-
     //End Region Public Properties
 
     //Region Private Properties

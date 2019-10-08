@@ -203,7 +203,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
             branchFragment.show(cAppExtension.fragmentManager, BRANCHPICKERFRAGMENT_TAG); }
     }
 
-
     private static void mStartMenuActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();

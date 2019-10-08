@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import nl.icsvertex.scansuite.R;
+import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.cAppExtension;
 
 
 public class GettingDataFragment extends DialogFragment implements iICSDefaultFragment {
@@ -40,8 +43,8 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         mFragmentInitialize();
-
         mSetAnimations();
+
     }
 
     @Override
@@ -68,7 +71,6 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     @Override
     public void mFieldsInitialize() {
         progressContainer.setVisibility(View.INVISIBLE);
-
     }
     private void mSetAnimations() {
         mSetDotDotDot();

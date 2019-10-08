@@ -22,8 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -48,7 +46,6 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import nl.icsvertex.scansuite.activities.general.MenuActivity;
 import nl.icsvertex.scansuite.cAppExtension;
 import ICS.Utils.cRegex;
 import ICS.Utils.cSharedPreferences;
@@ -79,6 +76,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     private ConstraintLayout constraintFilterOrders;
     private BottomSheetBehavior bottomSheetBehavior;
 
+    private static Boolean orderDetailsCompleteBln;
 
     // End Region Views
 
@@ -96,6 +94,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        cBarcodeScan.pUnregisterBarcodeReceiver();
     }
 
     @Override
@@ -110,23 +109,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
-        if (pvMenuItem.getItemId() == android.R.id.home) {
-            mTryToLeaveActivity();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(pvMenuItem);
-    }
-
-    @Override
-    public void onBackPressed() {
-        mTryToLeaveActivity();
-    }
-
-
 
     //End Region Default Methods
 
@@ -183,9 +165,9 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitleStr) {
+    public void mSetToolbar(String pvScreenTitle) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
-        this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarTitle.setText(pvScreenTitle);
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -287,6 +269,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         //Try to lock the pickorder
 
         if (PickorderSelectActivity.mTryToLockOrderBln() == false) {
+            PickorderSelectActivity.orderDetailsCompleteBln = false;
             PickorderSelectActivity.pFillOrders();
             return;
         }
@@ -688,11 +671,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         return;
     }
 
-    private void mTryToLeaveActivity(){
 
-        Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
-    }
 
     // End No orders icon
 

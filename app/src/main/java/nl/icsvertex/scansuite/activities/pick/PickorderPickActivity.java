@@ -66,6 +66,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private static Handler minusHandler;
     private static Handler plusHandler;
     private static ConstraintLayout pickorderPickContainer;
+    private static ConstraintLayout probeersel;
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubtext;
@@ -196,6 +197,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     public void mFindViews() {
 
         this.pickorderPickContainer = findViewById(R.id.pickorderPickContainer);
+        this.probeersel = findViewById(R.id.probeersel);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -878,7 +880,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //Show animation and initialize fields
         Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.shrink_and_fade);
-        PickorderPickActivity.pickorderPickContainer.startAnimation(animation);
+        PickorderPickActivity.probeersel.startAnimation(animation);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

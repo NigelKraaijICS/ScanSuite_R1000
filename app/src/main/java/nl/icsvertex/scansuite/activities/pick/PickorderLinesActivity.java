@@ -98,7 +98,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     protected void onResume() {
         cBarcodeScan.pRegisterBarcodeReceiver();
         super.onResume();
-
     }
 
     @Override
@@ -292,7 +291,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-
         //Check if we have scanned a BIN and check if there are not handled lines for this BIN
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN)) {
 
@@ -318,7 +316,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //Check if we have scanned an ARTICLE and check if there are not handled lines for this ARTICLE
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
-
 
             if (!cSetting.PICK_BIN_IS_ITEM()) {
                 //unknown scan

@@ -119,7 +119,6 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     private static void mStartLoginActivity() {
         Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
         cAppExtension.context.startActivity(intent);
-
     }
 
     //Region Listeners

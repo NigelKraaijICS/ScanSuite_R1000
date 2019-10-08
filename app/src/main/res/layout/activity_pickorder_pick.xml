@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +10,20 @@
     tools:context=".activities.pick.PickorderPickActivity"
     android:background="@color/colorBart"
     >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="0dp"
+        android:background="@color/colorAccent"
+        >
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/probeersel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="2dp"
+        android:background="@color/colorBart"
+        >
     <include layout="@layout/toolbar_subtext_default" />
     <include layout="@layout/default_articleinfo" />
     <include layout="@layout/default_locationinfo" />
@@ -102,4 +117,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sourcenoContainer"
         />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
