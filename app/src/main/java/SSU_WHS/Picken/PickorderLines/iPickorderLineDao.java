@@ -39,14 +39,17 @@ public interface iPickorderLineDao {
     @Query("SELECT SUM(quantityhandled) FROM Pickorderlines WHERE Localstatus > " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW )
     Double getNumberHandledForCounterDbl();
 
-    @Query("SELECT * FROM Pickorderlines WHERE Localstatus > " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus <= " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)
+    List<cPickorderLineEntity> getNotHandledPickorderLineEntitiesLin();
+
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)
+    List<cPickorderLineEntity> getBusyPickorderLineEntitiesLin();
+
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus > " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY + " ORDER BY TakenTimestamp DESC ")
     List<cPickorderLineEntity> getHandledPickorderLineEntities();
 
     @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)
     List<cPickorderLineEntity> getPickorderLineEntitiesToSend();
-
-    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)
-    List<cPickorderLineEntity> getNotHandledPickorderLineEntitiesLin();
 
     @Query("SELECT * FROM Pickorderlines WHERE bincode = :pvBinCodeStr AND Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW + " LIMIT 1 ")
     cPickorderLineEntity getPickorderLineNotHandledByBin(String pvBinCodeStr);

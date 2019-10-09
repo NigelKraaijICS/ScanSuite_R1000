@@ -57,7 +57,7 @@ public class cWarehouseorder {
 
     public class PicklineStatusEnu {
         public static final int Needed = 10;
-        public static final int NotNeeded = 11;
+        public static final int DONE = 11;
     }
 
     public class PackingAndShippingStatusEnu {

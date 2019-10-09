@@ -369,4 +369,9 @@
     <string name="error_article_scan_mandatory">Alleen artikelscans toegestaan</string>
     <string name="message_scan_packinglocation_or_salesorder">Scan paktafel of verkooporder</string>
     <string name="scan_article_or_sort_location">Scan artikel of sorteerlocatie</string>
+    <string name="couldnt_update_line">De regel kon niet bijgewerkt worden</string>
+    <string name="error_get_linebarcodes_failed">Ophalen regel barcodes mislukt</string>
+    <string name="message_progress_to_send">Er is nog progressie die overgezonden moet worden</string>
+    <string name="message_send">Verzend</string>
+    <string name="message_send_now">Wil je nu verzenden?</string>
 </resources>

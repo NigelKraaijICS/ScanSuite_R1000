@@ -146,10 +146,20 @@ public class cPickorderLineEntity {
 
             this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
 
-            if (this.status != cWarehouseorder.PicklineStatusEnu.Needed) {
-                this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
+                if (this.status > cWarehouseorder.PicklineStatusEnu.Needed) {
+                    this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+                }
             }
 
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.SORT.toString())) {
+                if (this.status == cWarehouseorder.PicklineStatusEnu.DONE) {
+                    if (Double.compare(this.getQuantityHandledDbl(),this.getQuantityDbl()) == 0) {
+                        this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+                    }
+                }
+            }
+            
             //region extraField1Str
             if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {
                 try {

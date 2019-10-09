@@ -82,6 +82,18 @@ public class cPickorderBarcode {
 
     }
 
+    public boolean pDeleteFromDatabaseBln() {
+        cPickorderBarcode.getPickorderBarcodeViewModel().delete(this.pickorderBarcodeEntity);
+        this.inDatabaseBln = true;
+        if (cPickorderBarcode.allBarcodesObl == null ){
+            cPickorderBarcode.allBarcodesObl = new ArrayList<>();
+
+        }
+        cPickorderBarcode.allBarcodesObl.add(this);
+        return true;
+
+    }
+
     public static boolean pTruncateTableBln(){
         cPickorderBarcode.getPickorderBarcodeViewModel().deleteAll();
         return true;

@@ -311,6 +311,14 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             return result;
         }
 
+
+        //Get TAKE line barcodes for current order
+        if (cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true,cWarehouseorder.ActionTypeEnu.TAKE) == false) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
+            return result;
+        }
+
         // Get all article images, only if neccesary
         if (cPickorder.currentPickOrder.pGetArticleImagesViaWebserviceBln(true) == false) {
             result.resultBln = false;

@@ -14,6 +14,9 @@ public interface iPickorderBarcodeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(cPickorderBarcodeEntity pickorderBarcodeEntity);
 
+    @Query("DELETE FROM " + cDatabase.TABLENAME_PICKORDERBARCODE + " WHERE " + cDatabase.ITEMNO_NAMESTR + " = :itemno AND " + cDatabase.VARIANTCODE_NAMESTR + " = :variantcode")
+    void delete(String itemno, String variantcode);
+
     @Query("DELETE FROM " + cDatabase.TABLENAME_PICKORDERBARCODE)
     void deleteAll();
 

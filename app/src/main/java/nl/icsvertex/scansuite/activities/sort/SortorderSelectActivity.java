@@ -8,12 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -22,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.List;
 
@@ -29,6 +33,7 @@ import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
+import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -42,6 +47,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.activities.general.MenuActivity;
 import nl.icsvertex.scansuite.cAppExtension;
+import nl.icsvertex.scansuite.fragments.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.fragments.NoOrdersFragment;
 import nl.icsvertex.scansuite.fragments.dialogs.CommentFragment;
 
@@ -57,11 +63,14 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     // Region Views
 
-    private static  ShimmerFrameLayout shimmerViewContainer;
     private static  androidx.appcompat.widget.SearchView recyclerSearchView;
     private  ImageView toolbarImage;
     private TextView toolbarTitle;
     static private RecyclerView recyclerViewSortorders;
+
+    private ConstraintLayout constraintFilterOrders;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private static ImageView imageViewFilter;
 
     // End Region Views
 
@@ -80,7 +89,6 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
-        SortorderSelectActivity.mStartShimmering();
     }
 
     @Override
@@ -90,7 +98,6 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         } catch (Exception e) {
             e.printStackTrace();
         }
-        shimmerViewContainer.stopShimmerAnimation();
         super.onPause();
     }
 
@@ -156,7 +163,8 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.recyclerViewSortorders = findViewById(R.id.recyclerViewSortorders);
         this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        this.shimmerViewContainer = findViewById(R.id.shimmerViewContainer);
+        this.imageViewFilter = findViewById(R.id.imageViewFilter);
+        this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
     }
 
     @Override
@@ -185,14 +193,15 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void mFieldsInitialize() {
-
+        this.mInitBottomSheet();
         this.mResetCurrents();
         SortorderSelectActivity.pFillOrders();
     }
 
     @Override
     public void mSetListeners() {
-        mSetSearchListener();
+        this.mSetSearchListener();
+        this.mSetFilterListener();
     }
 
     @Override
@@ -207,9 +216,6 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     //Region Public Methods
     public static void pFillOrders() {
-
-        //Stop shimmer animation
-        SortorderSelectActivity.mStopShimmering();
 
         //First get all sortorders
         if (!cPickorder.pGetSortOrdersViaWebserviceBln(true,"")) {
@@ -316,10 +322,89 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
             @Override
             public boolean onQueryTextChange(String pvQueryTextStr) {
+                mApplyFilter();
                 cPickorder.getPickorderAdapter().pSetFilter((pvQueryTextStr));
                 return true;
             }
         });
+    }
+
+    private void mSetFilterListener() {
+        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mShowHideBottomSheet(true);
+                }
+                else {
+                    mShowHideBottomSheet(false);
+                }
+            }
+        });
+        return;
+    }
+
+    private void mInitBottomSheet() {
+
+        this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
+        this.bottomSheetBehavior.setHideable(true);
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        this.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View pvBottomSheet, int pvNewStateInt) {
+                if (pvNewStateInt == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mApplyFilter();
+                }
+                if (pvNewStateInt == BottomSheetBehavior.STATE_HIDDEN) {
+                    mApplyFilter();
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
+        });
+
+        this.mFillBottomSheet();
+    }
+
+    private void mShowHideBottomSheet(Boolean pvShowBln) {
+
+        if (pvShowBln == true) {
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            return;
+        }
+
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+    }
+
+    private void mApplyFilter() {
+
+        List<cPickorder> filteredPicksObl;
+
+        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+
+        filteredPicksObl = cPickorder.pGetPicksFromDatabasObl();
+        if (filteredPicksObl == null || filteredPicksObl.size() == 0) {
+            return;
+        }
+
+        this.mSetSortorderRecycler(filteredPicksObl);
+    }
+
+    private void mShowThatFiltersInUse(Boolean pvFiltersInUseBln) {
+        if (pvFiltersInUseBln) {
+            imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_filled_black_24dp));
+        }
+        else {
+            imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_black_24dp));
+        }
+    }
+
+    private void mFillBottomSheet() {
+        cAppExtension.fragmentManager.beginTransaction().replace(R.id.constraintFilterOrders, new FilterOrderLinesFragment()).commit();
     }
 
     private  void mResetCurrents(){
@@ -462,10 +547,17 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         result = new cResult();
         result.resultBln = true;
 
-        //Get all TAKE lines for current order, if size = 0 or webservice error then stop
+        //Get all PLACE lines for current order, if size = 0 or webservice error then stop
         if (cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT) == false) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
+            return result;
+        }
+
+        //Get all PLACE lines for current order, if size = 0 or webservice error then stop
+        if (cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true,cWarehouseorder.ActionTypeEnu.PLACE) == false) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
             return result;
         }
 
@@ -517,17 +609,6 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, SortorderLinesActivity.VIEW_CHOSEN_ORDER));
         ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
         return;
-    }
-
-    private static void mStartShimmering(){
-        //Start Shimmer Effect's animation until data is loaded
-        SortorderSelectActivity. shimmerViewContainer.startShimmerAnimation();
-    }
-
-    private static void mStopShimmering(){
-        //Stopping Shimmer Effect's animation after data is loaded
-        SortorderSelectActivity.shimmerViewContainer.stopShimmerAnimation();
-        SortorderSelectActivity.shimmerViewContainer.setVisibility(View.GONE);
     }
 
     private void mTryToLeaveActivity(){

@@ -172,7 +172,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
                 }
 
                 if (cAppExtension.activity  instanceof SortorderLinesActivity) {
-                    SortorderLinesActivity.pSortingDone();
+                    SortorderLinesActivity.pStartOrderSelectActivity();
                 }
 //
 //                //todo: call static method

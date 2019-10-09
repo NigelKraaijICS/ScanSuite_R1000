@@ -42,6 +42,10 @@ public class cPickorderBarcodeRepository {
         new insertAsyncTask(pickorderBarcodeDao).execute(pickorderBarcodeEntity);
     }
 
+    public void pDelete(cPickorderBarcodeEntity pickorderBarcodeEntity) {
+        new deleteAsyncTask(pickorderBarcodeDao).execute(pickorderBarcodeEntity);
+    }
+
     public void pDeleteAll() {
         new cPickorderBarcodeRepository.deleteAllAsyncTask(pickorderBarcodeDao).execute();
     }
@@ -75,6 +79,18 @@ public class cPickorderBarcodeRepository {
         }
     }
 
+    private static class deleteAsyncTask extends AsyncTask<cPickorderBarcodeEntity, Void, Void> {
+        private iPickorderBarcodeDao mAsyncTaskDao;
+
+        deleteAsyncTask(iPickorderBarcodeDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final cPickorderBarcodeEntity... params) {
+            mAsyncTaskDao.delete(params[0].itemno,params[0].variantcode);
+            return null;
+        }
+    }
 
 
 

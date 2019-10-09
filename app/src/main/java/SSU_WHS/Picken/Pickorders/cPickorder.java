@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProviders;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.cDeviceInfo;
@@ -29,7 +30,7 @@ import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
-public class cPickorder {
+public class cPickorder{
 
     //Region Public Properties
 
@@ -743,6 +744,23 @@ public class cPickorder {
         return  resultObl;
     }
 
+    public List<cPickorderLine> pGetLinesBusyFromDatabasObl() {
+
+        List<cPickorderLine> resultObl = new ArrayList<>();
+        List<cPickorderLineEntity> hulpResultObl;
+
+        hulpResultObl =  cPickorder.getPickorderViewModel().pGetLinesBusyFromDatabaseObl();
+        if (hulpResultObl == null || hulpResultObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cPickorderLineEntity pickorderLineEntity : hulpResultObl ) {
+            cPickorderLine PickorderLine = new cPickorderLine(pickorderLineEntity);
+            resultObl.add(PickorderLine);
+        }
+        return  resultObl;
+    }
+
     public List<cPickorderLine> pGetLinesHandledFromDatabasObl() {
 
         List<cPickorderLine> resultObl = new ArrayList<>();
@@ -878,6 +896,76 @@ public class cPickorder {
         }
 
         webresult =  cPickorder.getPickorderViewModel().pPickenHandledViaWebserviceWrs(workplaceStr);
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (webresult.getSuccessBln() == false ) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+
+            Long actionLng = Long.valueOf(0);
+
+            if (webresult.getResultLng() < 10 ) {
+                actionLng = webresult.getResultLng();
+            }
+
+            if (webresult.getResultLng() > 100) {
+                actionLng  = (long)(webresult.getResultLng()/100);
+            }
+
+            //Try to convert action long to action enumerate
+            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            result.resultBln = false;
+            result.activityActionEnu = activityActionEnu;
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+            }
+
+            cPickorder.currentPickOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            return result;
+        }
+
+        return  result;
+
+
+    }
+
+    public cResult pSortHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        String workplaceStr = "";
+
+        cWebresult webresult;
+
+        if (cWorkplace.currentWorkplace != null) {
+            workplaceStr = cWorkplace.currentWorkplace.getWorkplaceStr();
+        }
+
+        webresult =  cPickorder.getPickorderViewModel().pSortHandledViaWebserviceWrs(workplaceStr);
 
         //No result, so something really went wrong
         if (webresult == null) {
@@ -1096,6 +1184,34 @@ public class cPickorder {
         }
     }
 
+    public boolean pGetLineBarcodesViaWebserviceBln(Boolean pvRefreshBln,cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {
+
+        if (pvRefreshBln == true) {
+            cPickorderLineBarcode.allLineBarcodesObl = null;
+            cPickorderLineBarcode.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult =  cPickorder.getPickorderViewModel().pGetLineBarcodesFromWebserviceWrs(pvActionTypeEnu);
+        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+
+            List<JSONObject> myList = WebResult.getResultDtt();
+            for (int i = 0; i < myList.size(); i++) {
+                JSONObject jsonObject;
+                jsonObject = myList.get(i);
+
+                cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(jsonObject);
+                pickorderLineBarcode.pInsertInDatabaseBln();
+            }
+                  return  true;
+
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERBARCODES);
+            return  false;
+        }
+    }
+
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
         if (pvRefeshBln == true) {
             cComment.allCommentsObl = null;
@@ -1190,13 +1306,33 @@ public class cPickorder {
             return  null;
         }
 
+
+        List<cPickorderLine> newLinesObl = new ArrayList<>();
+        List<cPickorderLine> busyLinesObl = new ArrayList<>();
+
         for (cPickorderLine pickorderLine : hulpObl) {
-            if (pickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW &&
-               pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeWithBarcode.getItemNoStr()) &&
+            if (pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeWithBarcode.getItemNoStr()) &&
                pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeWithBarcode.getVariantcodeStr()))) {
-                return  pickorderLine;
+
+                if (pickorderLine.getQuantityHandledDbl() >0 ) {
+                    busyLinesObl.add(pickorderLine);
+                }
+
+                if (pickorderLine.getQuantityHandledDbl() == 0 ) {
+                    newLinesObl.add(pickorderLine);
+                }
             }
         }
+
+        if (busyLinesObl.size() > 0) {
+            return  busyLinesObl.get(0);
+        }
+
+        if (newLinesObl .size() > 0) {
+            return  newLinesObl.get(0);
+        }
+
+
         return null;
     }
 
@@ -1208,6 +1344,8 @@ public class cPickorder {
         cPickorder.getPickorderViewModel().deleteAll();
         return true;
     }
+
+
 
 
     //End Region Private Methods

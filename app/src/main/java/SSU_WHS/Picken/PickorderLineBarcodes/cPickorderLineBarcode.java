@@ -38,9 +38,8 @@ public class cPickorderLineBarcode {
         return pickorderLineBarcodeViewModel;
     }
 
-
     public cPickorderLineBarcode (JSONObject pvJsonObject) {
-        this.pickorderLineBarcodeEntity = new cPickorderLineBarcodeEntity();
+        this.pickorderLineBarcodeEntity = new cPickorderLineBarcodeEntity(pvJsonObject);
         this.barcodeStr = this.pickorderLineBarcodeEntity.getBarcodeStr();
         this.lineNoLng = cText.stringToLong(this.pickorderLineBarcodeEntity.getLineNoStr());
         this.isManualBln = cText.stringToBoolean(this.pickorderLineBarcodeEntity.getIsManualStr(),false);

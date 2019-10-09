@@ -267,7 +267,15 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        PickorderLinesActivity.mStartOrderSelectActivity();
+        //Check if we are done
+        if (cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() > 0 ) {
+            PickorderLinesActivity.mStartOrderSelectActivity();
+            return;
+        }
+
+        //We are done
+        PickorderLinesActivity.pPickingDone("");
+
     }
 
     public static void pHandleScan(String pvScannedBarcodeStr, Boolean pvBinSelectedBln) {
@@ -460,15 +468,31 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        if (!cPickorder.currentPickOrder.pickActivityBinRequiredBln ||
-           cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 ||
-           !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
-            // Show order done fragment
-            PickorderLinesActivity.mShowOrderDoneFragment(false);
-            return;
-        }
+        // If there is no next step, then we are done
+        if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isBPBln() && !cPickorder.currentPickOrder.isBCBln()) {
+            if (!cPickorder.currentPickOrder.pickActivityBinRequiredBln ||
+                    !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+                // Show order done fragment
+                PickorderLinesActivity.mShowOrderDoneFragment(false);
+                return;
+            }
+
             // Show order done fragment
             PickorderLinesActivity.mShowOrderDoneFragment(true);
+        }
+
+        //Show Current Location fragment
+        if (cPickorder.currentPickOrder.pickActivityBinRequiredBln ||
+            cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+            // Show order done fragment
+            this.mShowCurrentLocationFragment();
+            return;
+        }
+
+        //We are done
+        PickorderLinesActivity.pPickingDone("");
+
+
     }
 
     private void mChangeSelectedTab(TabLayout.Tab pvTab) {
@@ -815,7 +839,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         PickorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl(),"");
         cComment.commentsShownBln = true;
     }
-
 
     //End Region Private Methods
 

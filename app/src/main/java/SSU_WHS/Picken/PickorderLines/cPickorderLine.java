@@ -246,7 +246,25 @@ public class cPickorderLine {
     public  List<cPickorderBarcode> barcodesObl;
 
     public List<cPickorderLineBarcode> handledBarcodesObl(){
-                 return  cPickorderLineBarcode.allLineBarcodesObl;
+
+
+        List<cPickorderLineBarcode> resultObl;
+        resultObl = new ArrayList<>();
+
+        if (cPickorderLineBarcode.allLineBarcodesObl == null) {
+            return  resultObl;
+        }
+
+        for (cPickorderLineBarcode pickorderLineBarcode :cPickorderLineBarcode.allLineBarcodesObl ) {
+
+            int result = Long.compare(pickorderLineBarcode.getLineNoLng(), this.getLineNoInt().longValue());
+            if (result == 0) {
+                resultObl.add(pickorderLineBarcode);
+            }
+        }
+
+
+                 return  resultObl;
         }
 
     public static cPickorderLineViewModel gPickorderLineViewModel;
@@ -311,6 +329,7 @@ public class cPickorderLine {
 
         this.quantityHandledDbl = this.PickorderLineEntity.getQuantityHandledDbl();
         this.quantityRejectedDbl = this.PickorderLineEntity.getQuantityHandledDbl();
+        this.quantityTakenDbl =  this.PickorderLineEntity.getQuantityTakenDbl();
         this.sourceNoStr = this.PickorderLineEntity.getSourceNoStr();
         this.destinationNoStr = this.PickorderLineEntity.getDestinationNoStr();
         this.isPartOfMultiLineOrderBln = cText.stringToBoolean(this.PickorderLineEntity.getIspartOfMultilLneOrderStr(), false) ;
@@ -329,18 +348,26 @@ public class cPickorderLine {
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
         this.localStatusInt =  cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
 
-        if (this.statusInt > cWarehouseorder.PicklineStatusEnu.Needed) {
-            this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK) {
+            if (this.statusInt > cWarehouseorder.PicklineStatusEnu.Needed) {
+                this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+            }
+        }
+
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT) {
+            if (this.statusInt == cWarehouseorder.PicklineStatusEnu.DONE) {
+                if (Double.compare(this.getQuantityHandledDbl(),this.getQuantityDbl()) == 0) {
+                    this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+                }
+            }
         }
 
         this.lineNoTakeInt =  this.PickorderLineEntity.getLinenoTakeInt();
-        this.quantityTakenDbl =  this.PickorderLineEntity.getQuantityTakenDbl();
         this.takenTimeStampStr =  this.PickorderLineEntity.takentimestamp;
-
         this.localSortLocationStr = this.PickorderLineEntity.getLocalSortLocationStr();
         this.extraField1Str =  this.PickorderLineEntity.getExtraField1Str();
         this.extraField2Str = this.PickorderLineEntity.getExtraField2Str();
-        this. extraField3Str =  this.PickorderLineEntity.getExtraField3Str();
+        this.extraField3Str =  this.PickorderLineEntity.getExtraField3Str();
         this.extraField4Str =  this.PickorderLineEntity.getExtraField4Str();
         this.extraField5Str =  this.PickorderLineEntity.getExtraField5Str();
         this.extraField6Str =  this.PickorderLineEntity.getExtraField6Str();
@@ -456,12 +483,6 @@ public class cPickorderLine {
             return result;
         }
 
-        if (this.mDeleteLineBarcodes() == false) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.previous_barcode_could_not_be_deleted));
-            return result;
-        }
-
         if (this.mBusyBln() == false) {
 
             result.resultBln = false;
@@ -473,6 +494,31 @@ public class cPickorderLine {
 
         return  result;
 
+    }
+
+    public cResult pSortLineBusyRst(){
+
+
+        cResult result = new cResult();
+        result.resultBln = false;
+
+        if (this.mGetBarcodesObl() == null || cPickorderLine.currentPickOrderLine.mGetBarcodesObl().size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line));
+            return result;
+        }
+
+
+        if (this.mBusyBln() == false) {
+
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_set_line_on_busy));
+            return result;
+        }
+
+        result.resultBln = true;
+
+        return  result;
 
     }
 
@@ -543,7 +589,6 @@ public class cPickorderLine {
         return  true;
 
     }
-
 
     public boolean pCancelIndatabaseBln(){
 
@@ -693,7 +738,6 @@ public class cPickorderLine {
         return "";
     }
 
-
     //todo: move this function to a different class
     public List<String> pGetAdvicedSortLocationsFromWebserviceObl(){
 
@@ -834,6 +878,8 @@ public class cPickorderLine {
         return true;
 
     }
+
+
 
     //End Region Private Methods
 

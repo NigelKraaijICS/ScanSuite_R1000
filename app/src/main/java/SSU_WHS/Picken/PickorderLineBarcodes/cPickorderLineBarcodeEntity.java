@@ -40,7 +40,7 @@ public class cPickorderLineBarcodeEntity {
             this.lineNoStr = jsonObject.getString(cDatabase.LINENO_NAMESTR);
             this.barcodeStr = jsonObject.getString(cDatabase.BARCODE_NAMESTR);
             this.quantityHandledStr = jsonObject.getString(cDatabase.QUANTITYHANDLED_NAMESTR);
-            this.isManualStr = jsonObject.getString(cDatabase.PICKORDERLINEBARCODE_ISMANUAL);
+            this.isManualStr = "false";
         } catch (JSONException e) {
             e.printStackTrace();
         }

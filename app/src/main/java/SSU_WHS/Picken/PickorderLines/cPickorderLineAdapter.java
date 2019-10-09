@@ -119,8 +119,8 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         //Sort Recyclers
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
             quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
-            pvHolder.textViewPickorderLineLocation.setText("");
-            pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
+            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getProcessingSequenceStr());
+            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {

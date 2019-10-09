@@ -85,7 +85,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     protected void onDestroy() {
         super.onDestroy();
-     }
+    }
 
     @Override
     protected void onResume() {
@@ -236,7 +236,6 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         mTryToLeaveActivity();
     }
 
-
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
@@ -255,12 +254,21 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public static void pCloseSortAndDecideNextStep(){
 
+        //Close this step
         if (!SortorderLinesActivity.mTryToCloseOrderBln()) {
             return;
         }
 
+        //If there is nothing more to do, then we are done
+        if (!cPickorder.currentPickOrder.PackAndShipNeededBln()) {
+            mShowOrderDoneFragment();
+            return;
+        }
+
+        //If we have to ship, then start ship/ask if ship has to be started/go back or order select
         if (cPickorder.currentPickOrder.isBCBln() || cPickorder.currentPickOrder.isBPBln()) {
             mPackAndShipNextStap();
+            return;
         }
     }
 
@@ -272,7 +280,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         //BIN button has been pressed, so we already have a current line
         if (pvLineSelectedBln) {
 
-            hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
+            hulpResult = cPickorderLine.currentPickOrderLine.pSortLineBusyRst();
             if (!hulpResult.resultBln) {
                 mStepFailed(hulpResult.messagesStr());
                 cPickorderLine.currentPickOrderLine = null;
@@ -307,7 +315,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
+        hulpResult = cPickorderLine.currentPickOrderLine.pSortLineBusyRst();
         if (!hulpResult.resultBln) {
             mStepFailed(hulpResult.messagesStr());
             cPickorderLine.currentPickOrderLine = null;
@@ -343,6 +351,11 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         SortorderLinesActivity.pCloseSortAndDecideNextStep();
 
+    }
+
+    public static void pStartOrderSelectActivity() {
+        Intent intent = new Intent(cAppExtension.context, SortorderSelectActivity.class);
+        cAppExtension.activity.startActivity(intent);
     }
 
     //End Region Public Methods
@@ -423,34 +436,77 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private void mTryToLeaveActivity(){
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(cAppExtension.context);
+
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(cAppExtension.context);
         alertDialog.setTitle(R.string.message_sure_leave_screen_title);
         alertDialog.setMessage(getString(R.string.message_sure_leave_screen_text));
-        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface pvDialogInterface, int i) {
+        alertDialog.setCancelable(true);
 
-                cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
-                mStartOrderSelectActivity();
+        //If we don't want to leave then we are done
+        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
                 return;
             }
         });
 
 
-        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        //If we want to leave, check if we still need to send progress
+        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing (close the dialog)
+            public void onClick(DialogInterface pvDialogInterface, int i) {
+
+                //Check if there is progress, and ask if user wants to send now
+                if (cPickorder.currentPickOrder.pGetLinesToSendFromDatabasObl().size() > 0 || cPickorder.currentPickOrder.pGetLinesBusyFromDatabasObl().size() >0 ) {
+                    AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(cAppExtension.context);
+                    alertDialog2.setTitle(R.string.message_progress_to_send);
+                    alertDialog2.setMessage(getString(R.string.message_send_now));
+                    alertDialog2.setCancelable(true);
+
+                    // User doesn't wanna send, so we are done
+                    alertDialog2.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            return;
+                        }
+                    });
+
+                    // Try to send everything
+                    alertDialog2.setPositiveButton(R.string.message_send, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface pvDialogInterface, int i) {
+
+                            // Update alle busy lines to status to be send
+                            if (! mHandleBusyLinesBln()) {
+                                return;
+                            }
+
+                            // Check if there are lines to be send, and send them, if we fail we stop
+                            if (! mCheckAndSentLinesToBeSendBln()) {
+                                return;
+                            }
+
+                            //We managed to send everuthing, so we are done
+                            cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
+                            pStartOrderSelectActivity();
+                            return;
+                        }
+                    });
+
+                    alertDialog2.show();
+                }
+                //There is no progress, so we are done
+                else {
+                    cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
+                    pStartOrderSelectActivity();
+                    return;
+                }
+
             }
         });
 
-        alertDialog.setCancelable(true);
         alertDialog.show();
-    }
 
-    private static void mStartOrderSelectActivity() {
-        Intent intent = new Intent(cAppExtension.context, SortorderSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
     }
 
     private static void mStartSortActivity(){
@@ -497,7 +553,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     //End Region Fragments and Activities
 
-    private Boolean mCheckAndSentLinesBln() {
+    private Boolean mCheckAndSentLinesToBeSendBln() {
 
         List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabasObl();
         Boolean hulpBln = false;
@@ -534,11 +590,39 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
+    private Boolean mHandleBusyLinesBln() {
+
+        List<cPickorderLine> busyLinesObl = cPickorder.currentPickOrder.pGetLinesBusyFromDatabasObl();
+
+        // If there is nothing to send, then we are done
+        if (busyLinesObl.size() == 0 ) {
+            return  true;
+        }
+
+        // Try to send each line, if one failes then stop
+        for (cPickorderLine pickorderLine : busyLinesObl) {
+
+            //Set the current line
+            cPickorderLine.currentPickOrderLine = pickorderLine;
+            cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
+
+        }
+
+        return  true;
+
+    }
+
     private static void mPackAndShipNextStap(){
 
         //If activity bin is not required, then don't show the fragment
         if ( cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 ) {
-            mStartOrderSelectActivity();
+            pStartOrderSelectActivity();
+            return;
+        }
+
+        //We are done with this order, so show order done
+        if (!cPickorder.currentPickOrder.PackAndShipNeededBln()) {
+            mShowOrderDoneFragment();
             return;
         }
 
@@ -550,7 +634,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         // If settings is false, then go back to order select
         if (!cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
-            SortorderLinesActivity.mStartOrderSelectActivity();
+            SortorderLinesActivity.pStartOrderSelectActivity();
             return;
         }
 
@@ -569,7 +653,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         // If not everything is sent, then leave
-        if (!this.mCheckAndSentLinesBln()) {
+        if (!this.mCheckAndSentLinesToBeSendBln()) {
             return;
         }
 
@@ -600,7 +684,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mStartOrderSelectActivity();
+                pStartOrderSelectActivity();
             }
         });
         builder.setIcon(R.drawable.ic_menu_ship);
@@ -622,7 +706,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         hulpResult = new cResult();
         hulpResult.resultBln = false;
 
-        hulpResult = cPickorder.currentPickOrder.pPickHandledViaWebserviceRst();
+        hulpResult = cPickorder.currentPickOrder.pSortHandledViaWebserviceRst();
 
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
@@ -657,7 +741,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
-    private  static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
+    private static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 

@@ -347,7 +347,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     public static void pAcceptPick() {
         cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
-        SortorderSortActivity.mSortDone();
+        SortorderSortActivity.mSortDoneForNow();
     }
 
     public static void pCancelPick() {
@@ -355,7 +355,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         cPickorderLine.currentPickOrderLine.pCancelIndatabaseBln();
         SortorderSortActivity.mGoBackToLinesActivity();
     }
-
 
     //End Region Public Methods
 
@@ -370,6 +369,9 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr, true, true);
                 return;
             }
+
+            SortorderSortActivity.imageButtonDone.setVisibility(View.INVISIBLE);
+
 
             //Succesfull article scanned
             articleScannedLastBln = true;
@@ -469,6 +471,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
+        SortorderSortActivity.imageButtonDone.setVisibility(View.VISIBLE);
 
         //Strip barcode from regex
         String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
@@ -516,7 +519,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             }
         }
 
-
         //Set the Processing Sequence
         cPickorderLine.currentPickOrderLine.processingSequenceStr = barcodeWithoutPrefixStr;
 
@@ -543,8 +545,14 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             SortorderSortActivity.articleScannedLastBln = false;
         }
 
-        //Update orderline info (quantity, timestamp, localstatus)
-        cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
+
+        //Check if we complete handled this line, if so then handled else only update it
+        if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() == cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
+            //Update orderline info (quantity, timestamp, localstatus)
+            cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
+        } else {
+            cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln();
+        }
 
         //Check if line is done
         SortorderSortActivity.mCheckLineDone();
@@ -652,7 +660,13 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         imageButtonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SortorderSortActivity.mSortDone();
+
+
+                if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() == cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
+                    SortorderSortActivity.mSortDone();
+                } else {
+                    SortorderSortActivity.mSortDoneForNow();
+                }
             }
         });
     }
@@ -666,6 +680,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         if (!hulpStr.isEmpty()) {
             cPickorderLine.currentPickOrderLine.processingSequenceStr = hulpStr;
             textAdviceLocation.setText(hulpStr);
+            this.sortingAdviceObl = new ArrayList<>();
             return;
         }
 
@@ -688,6 +703,18 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     private static void mSortDone() {
         SortorderSortActivity.mSendPickorderLine();
+        mGoBackToLinesActivity();
+    }
+
+    private static void mSortDoneForNow() {
+
+        if (!cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln()) {
+            //could not send line, let user know but answer succes so user can go to next line
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_update_line), null);
+            return;
+        }
+
+
         mGoBackToLinesActivity();
     }
 
@@ -891,19 +918,32 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     private static void mCheckLineDone() {
 
+        //We scanned a sortlocation
+        SortorderSortActivity.articleScannedLastBln = false;
+
+        //If we didn't complete this line, then show done for now
         if (cPickorderLine.currentPickOrderLine.quantityHandledDbl < cPickorderLine.currentPickOrderLine.quantityDbl) {
             SortorderSortActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
             SortorderSortActivity.imageButtonDone.setVisibility(View.VISIBLE);
+
+            // If auto accept is false or  if we have to scan VKO after each piece , then return
+            if (!cSetting.PICK_AUTO_ACCEPT() || cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() ) {
+                return;
+            }
+
+            // We are done for now
+            SortorderSortActivity.mSortDoneForNow();
             return;
         }
 
+        //We didn complete this line, then show done
         if (!cSetting.PICK_AUTO_ACCEPT()) {
             SortorderSortActivity.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
             SortorderSortActivity.imageButtonDone.setVisibility(View.VISIBLE);
             return;
         }
 
-        SortorderSortActivity.articleScannedLastBln = false;
+        // We are completely done
         SortorderSortActivity.mSortDone();
     }
 

@@ -472,4 +472,9 @@
     <string name="error_article_scan_mandatory">You can only scan articles</string>
     <string name="message_scan_packinglocation_or_salesorder">Scan packinglocation or salesorder</string>
     <string name="scan_article_or_sort_location">Scan article or sort location</string>
+    <string name="couldnt_update_line">Could not update line</string>
+    <string name="message_progress_to_send">There is still progress that needs to be send</string>
+    <string name="message_send_now">Do you want to send the progress now?</string>
+    <string name="message_send">Send now</string>
+    <string name="error_get_linebarcodes_failed">Getting line barcodes failed</string>
 </resources>

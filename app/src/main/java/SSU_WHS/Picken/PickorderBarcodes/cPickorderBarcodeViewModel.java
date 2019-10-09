@@ -21,6 +21,7 @@ public class cPickorderBarcodeViewModel extends AndroidViewModel {
 
 
     public void insert(cPickorderBarcodeEntity pvPickorderBarcodeEntity) {this.pickorderBarcodeRepository.pInsert(pvPickorderBarcodeEntity);}
+    public void delete(cPickorderBarcodeEntity pvPickorderBarcodeEntity) {this.pickorderBarcodeRepository.pDelete(pvPickorderBarcodeEntity);}
     public void deleteAll() {this.pickorderBarcodeRepository .pDeleteAll();}
 
 
