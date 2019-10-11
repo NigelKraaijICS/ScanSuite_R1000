@@ -477,4 +477,10 @@
     <string name="message_send_now">Do you want to send the progress now?</string>
     <string name="message_send">Send now</string>
     <string name="error_get_linebarcodes_failed">Getting line barcodes failed</string>
+    <string name="error_no_shippingagents_available">There are no shipping agents available</string>
+    <string name="error_no_shippingagent_services_available">No shipping agent services available</string>
+    <string name="error_no_shippingagent_services_units_available">No shipping agent service units available</string>
+    <string name="error_getting_pack_and_ship_lines_failed">Getting pack and ship lines failed</string>
+    <string name="error_getting_packages_failed">Getting packages failed</string>
+    <string name="message_article_not_allowed">Article scan not allowed</string>
 </resources>

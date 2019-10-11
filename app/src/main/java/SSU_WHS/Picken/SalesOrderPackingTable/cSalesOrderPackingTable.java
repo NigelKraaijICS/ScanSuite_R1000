@@ -2,12 +2,10 @@ package SSU_WHS.Picken.SalesOrderPackingTable;
 
 import androidx.lifecycle.ViewModelProviders;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 
 
 public class cSalesOrderPackingTable {

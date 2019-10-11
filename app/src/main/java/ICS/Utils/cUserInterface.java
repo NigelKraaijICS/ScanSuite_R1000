@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Weberror.cWeberror;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.fragments.dialogs.GettingDataFragment;
-import nl.icsvertex.scansuite.fragments.dialogs.HugeErrorFragment;
-import nl.icsvertex.scansuite.fragments.dialogs.PasswordFragment;
-import nl.icsvertex.scansuite.fragments.dialogs.WebserviceErrorFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.GettingDataFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.HugeErrorFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.PasswordFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.WebserviceErrorFragment;
 
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HEADER;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HINT;

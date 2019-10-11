@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 
 public class cPickorderLineBarcode {
 

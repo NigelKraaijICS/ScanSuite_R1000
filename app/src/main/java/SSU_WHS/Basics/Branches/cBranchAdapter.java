@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import SSU_WHS.Basics.Users.cUser;
-import nl.icsvertex.scansuite.cAppExtension;
-import nl.icsvertex.scansuite.activities.general.LoginActivity;
+import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.general.LoginActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchViewHolder>{

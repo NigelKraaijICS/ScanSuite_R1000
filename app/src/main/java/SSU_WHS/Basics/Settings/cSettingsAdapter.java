@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 public class cSettingsAdapter extends RecyclerView.Adapter<cSettingsAdapter.SettingsViewHolder>  {

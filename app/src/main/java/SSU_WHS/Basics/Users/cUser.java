@@ -10,7 +10,7 @@ import ICS.Weberror.cWeberror;
 import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 

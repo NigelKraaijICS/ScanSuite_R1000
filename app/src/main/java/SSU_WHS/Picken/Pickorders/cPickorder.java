@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProviders;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.cDeviceInfo;
@@ -20,8 +19,12 @@ import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
+import SSU_WHS.Picken.Shipment.cShipment;
+import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackage;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
@@ -319,6 +322,8 @@ public class cPickorder{
         return  cPickorderLine.allLinesObl;
     }
 
+    public List<cShipment> shipmentObl(){ return  cShipment.allShipmentsObl; }
+
     public List<cPickorderAddress> adressesObl(){
      return  cPickorderAddress.allAdressesObl ;
     }
@@ -587,7 +592,7 @@ public class cPickorder{
 
     public double pQuantityHandledDbl() {
 
-        Double resultDbl = cPickorder.getPickorderViewModel().pQuantityHandledCounterDbl();
+        Double resultDbl = cPickorder.getPickorderViewModel().pQuantityHandledDbl();
 
         if (resultDbl == null) {
             resultDbl  = 0.0;
@@ -597,7 +602,7 @@ public class cPickorder{
     }
 
     public double pQuantityTotalDbl() {
-        return  cPickorder.getPickorderViewModel().pGetNumberTotalForCounterDbl();
+        return  cPickorder.getPickorderViewModel().pGetQuantityTotalDbl();
     }
 
     public List<cComment> pPickCommentObl(){
@@ -618,6 +623,17 @@ public class cPickorder{
         }
 
         List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.SORT);
+        return hulpObl;
+
+    }
+
+    public List<cComment> pShipCommentObl(){
+
+        if (cPickorder.currentPickOrder.commentsObl() == null || cPickorder.currentPickOrder.commentsObl().size() == 0) {
+            return  null;
+        }
+
+        List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.SHIP);
         return hulpObl;
 
     }
@@ -881,6 +897,133 @@ public class cPickorder{
         }
     }
 
+    public boolean pGetPackAndShipLinesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln == true) {
+            cPickorderLinePackAndShip.allPackAndShipLinesObl = null;
+            cPickorderLinePackAndShip.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult =  cPickorder.getPickorderViewModel().pGetPackAndShipLinesFromWebserviceWrs();
+
+        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+
+
+            List<JSONObject> myList = WebResult.getResultDtt();
+            for (int i = 0; i < myList.size(); i++) {
+                JSONObject jsonObject;
+                jsonObject = myList.get(i);
+
+                if (cPickorderLinePackAndShip.allPackAndShipLinesObl == null) {
+                    cPickorderLinePackAndShip.allPackAndShipLinesObl  = new ArrayList<>();
+                }
+
+                cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(jsonObject);
+                pickorderLinePackAndShip.pInsertInDatabaseBln();
+            }
+
+            if (cPickorderLinePackAndShip.allPackAndShipLinesObl.size() == 0) {
+                return  false;
+            }else
+            {
+                return  true;
+            }
+
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
+            return  false;
+        }
+    }
+
+    public List<cShipment> pGetNotHandledShipmentsObl() {
+
+        List<cShipment> resultObl = new ArrayList<>();
+
+        if (this.shipmentObl() == null || this.shipmentObl().size() == 0) {
+            return resultObl;
+        }
+
+        for (cShipment shipment : this.shipmentObl()) {
+
+            if (!shipment.handledBln) {
+                resultObl.add(shipment);
+            }
+
+        }
+        return  resultObl;
+    }
+
+    public List<cShipment> pGetHandledShipmentsObl() {
+
+        List<cShipment> resultObl = new ArrayList<>();
+
+        if (this.shipmentObl() == null || this.shipmentObl().size() == 0) {
+            return resultObl;
+        }
+
+        for (cShipment shipment : this.shipmentObl()) {
+
+            if (shipment.handledBln) {
+                resultObl.add(shipment);
+            }
+
+        }
+        return  resultObl;
+    }
+
+    public List<cPickorderLinePackAndShip> pGetPackAndShipLinesNotHandledFromDatabasObl() {
+
+        List<cPickorderLinePackAndShip> resultObl = new ArrayList<>();
+        List<cPickorderLinePackAndShipEntity> hulpResultObl;
+
+        hulpResultObl =  cPickorder.getPickorderViewModel().pGetPackAndShipLinesNotHandledFromDatabaseObl();
+        if (hulpResultObl == null || hulpResultObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cPickorderLinePackAndShipEntity cPickorderLinePackAndShipEntity : hulpResultObl ) {
+            cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(cPickorderLinePackAndShipEntity);
+            resultObl.add(pickorderLinePackAndShip);
+        }
+        return  resultObl;
+    }
+
+    public List<cPickorderLinePackAndShip> pGetPackAndShipLinesHandledFromDatabasObl() {
+
+        List<cPickorderLinePackAndShip> resultObl = new ArrayList<>();
+        List<cPickorderLinePackAndShipEntity> hulpResultObl;
+
+        hulpResultObl =  cPickorder.getPickorderViewModel().pGetPackAndShipLinesHandledFromDatabaseObl();
+        if (hulpResultObl == null || hulpResultObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cPickorderLinePackAndShipEntity cPickorderLinePackAndShipEntity : hulpResultObl ) {
+            cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(cPickorderLinePackAndShipEntity);
+            resultObl.add(pickorderLinePackAndShip);
+        }
+        return  resultObl;
+    }
+
+    public List<cPickorderLinePackAndShip> pGetPackAndShipLinesFromDatabasObl() {
+
+        List<cPickorderLinePackAndShip> resultObl = new ArrayList<>();
+        List<cPickorderLinePackAndShipEntity> hulpResultObl;
+
+        hulpResultObl =  cPickorder.getPickorderViewModel().pGetAllPackAndShipLinesFromDatabaseObl();
+        if (hulpResultObl == null || hulpResultObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cPickorderLinePackAndShipEntity cPickorderLinePackAndShipEntity : hulpResultObl ) {
+            cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(cPickorderLinePackAndShipEntity);
+            resultObl.add(pickorderLinePackAndShip);
+        }
+        return  resultObl;
+    }
+
     public cResult pPickHandledViaWebserviceRst() {
 
         cResult result;
@@ -966,6 +1109,76 @@ public class cPickorder{
         }
 
         webresult =  cPickorder.getPickorderViewModel().pSortHandledViaWebserviceWrs(workplaceStr);
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (webresult.getSuccessBln() == false ) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+
+            Long actionLng = Long.valueOf(0);
+
+            if (webresult.getResultLng() < 10 ) {
+                actionLng = webresult.getResultLng();
+            }
+
+            if (webresult.getResultLng() > 100) {
+                actionLng  = (long)(webresult.getResultLng()/100);
+            }
+
+            //Try to convert action long to action enumerate
+            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            result.resultBln = false;
+            result.activityActionEnu = activityActionEnu;
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+            }
+
+            cPickorder.currentPickOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            return result;
+        }
+
+        return  result;
+
+
+    }
+
+    public cResult pShipHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        String workplaceStr = "";
+
+        cWebresult webresult;
+
+        if (cWorkplace.currentWorkplace != null) {
+            workplaceStr = cWorkplace.currentWorkplace.getWorkplaceStr();
+        }
+
+        webresult =  cPickorder.getPickorderViewModel().pShipHandledViaWebserviceWrs(workplaceStr);
 
         //No result, so something really went wrong
         if (webresult == null) {
@@ -1215,7 +1428,7 @@ public class cPickorder{
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
         if (pvRefeshBln == true) {
             cComment.allCommentsObl = null;
-            cComment.pTruncateTable();
+            cComment.pTruncateTableBln();
             cComment.commentsShownBln = false;
         }
 
@@ -1231,6 +1444,33 @@ public class cPickorder{
                 jsonObject = myList.get(i);
                 cComment comment = new cComment(jsonObject);
                 comment.pInsertInDatabaseBln();
+            }
+            return true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERCOMMENTS);
+            return false;
+        }
+    }
+
+    public boolean pGetShippingPackagedViaWebserviceBln(Boolean pvRefeshBln) {
+        if (pvRefeshBln == true) {
+            cPickorderShipPackage.allPackagesObl = null;
+            cPickorderShipPackage.pTruncateTableBln();
+        }
+
+        cWebresult webresult;
+        webresult = cPickorder.getPickorderViewModel().pGetPackagesFromWebserviceWrs();
+        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+
+            cComment.allCommentsObl = new ArrayList<>();
+
+            List<JSONObject> myList = webresult.getResultDtt();
+            for (int i = 0; i < myList.size(); i++) {
+                JSONObject jsonObject;
+                jsonObject = myList.get(i);
+                cPickorderShipPackage pickorderShipPackage = new cPickorderShipPackage(jsonObject);
+                pickorderShipPackage.pInsertInDatabaseBln();
             }
             return true;
         }

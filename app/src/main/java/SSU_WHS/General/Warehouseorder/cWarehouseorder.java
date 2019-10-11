@@ -2,10 +2,7 @@ package SSU_WHS.General.Warehouseorder;
 
 import androidx.lifecycle.ViewModelProviders;
 
-import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.cAppExtension;
-import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.R;
+import ICS.cAppExtension;
 
 public class cWarehouseorder {
 
@@ -33,6 +30,7 @@ public class cWarehouseorder {
     public enum CommentTypeEnu {
         PICK,
         SORT,
+        SHIP,
         FEEDBACK
     }
 

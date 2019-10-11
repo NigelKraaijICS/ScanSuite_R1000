@@ -20,7 +20,7 @@ import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 

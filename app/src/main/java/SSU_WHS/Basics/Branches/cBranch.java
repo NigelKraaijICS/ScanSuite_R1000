@@ -9,7 +9,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cBranch {

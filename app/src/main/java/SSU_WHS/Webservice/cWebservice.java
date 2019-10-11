@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import org.json.JSONException;
 import java.util.concurrent.ExecutionException;
 import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 

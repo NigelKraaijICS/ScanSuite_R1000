@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
-import nl.icsvertex.scansuite.cAppExtension;
+import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.WorkplaceViewHolder>{

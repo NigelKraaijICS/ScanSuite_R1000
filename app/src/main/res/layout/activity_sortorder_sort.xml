@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.sort.SortorderSortActivity"
+    tools:context=".Activities.sort.SortorderSortActivity"
     android:background="@color/colorBart"
     >
     <include layout="@layout/toolbar_subtext_default" />

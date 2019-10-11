@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.NoOrdersFragment"
+    tools:context=".Fragments.NoOrdersFragment"
     android:layout_margin="8dp">
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="match_parent"

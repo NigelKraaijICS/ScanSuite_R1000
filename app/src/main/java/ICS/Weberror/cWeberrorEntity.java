@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 import ICS.Utils.cDateAndTime;
 import ICS.Utils.cDeviceInfo;
 import ICS.cICSDatabaseDefinitions;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
 
 @Entity(tableName= cICSDatabaseDefinitions.TABLENAME_WEBERRRORS)

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.support.SupportNetworkFragment"
+    tools:context=".Fragments.support.SupportNetworkFragment"
     android:padding="@dimen/default_padding">
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"

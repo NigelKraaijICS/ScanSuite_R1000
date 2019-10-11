@@ -12,10 +12,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.icsvertex.scansuite.activities.sort.SortorderSelectActivity;
-import nl.icsvertex.scansuite.cAppExtension;
+import nl.icsvertex.scansuite.Activities.ship.ShiporderSelectActivity;
+import nl.icsvertex.scansuite.Activities.sort.SortorderSelectActivity;
+import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.PickorderViewHolder>  {
@@ -225,7 +226,6 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             @Override
             public void onClick(View v) {
 
-
                 if (cAppExtension.context instanceof PickorderSelectActivity) {
                     PickorderSelectActivity.pPickorderSelected(selectedPickorder);
                     return;
@@ -235,11 +235,11 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
                     return;
                 }
 
-                //todo: kick off correct function in correct activity
-//                if (cAppExtension.context instanceof ShiporderSelectActivity) {
-//                    ((ShiporderSelectActivity)callerContext).setChosenShiporder(l_PickorderEntity);
-//                    return;
-//                }
+                if (cAppExtension.context instanceof ShiporderSelectActivity) {
+                    ShiporderSelectActivity.pShiporderSelected(selectedPickorder);
+                    return;
+                }
+
             }
         });
     }

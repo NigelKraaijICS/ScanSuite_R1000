@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 
 public class cConnection {
     public enum connectionType {

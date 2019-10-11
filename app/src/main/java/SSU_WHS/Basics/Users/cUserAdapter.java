@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import nl.icsvertex.scansuite.cAppExtension;
-import nl.icsvertex.scansuite.activities.general.LoginActivity;
+import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.general.LoginActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHolder> {

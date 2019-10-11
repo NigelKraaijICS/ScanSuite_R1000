@@ -19,7 +19,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapter<cShippingAgentServiceShippingUnitAdapter.ShippingAgentServiceShippingUnitViewHolder> {
@@ -199,8 +199,8 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
     }
     private void mUpdateNumber(Integer newQuantity, cShippingAgentServiceShippingUnitEntity shippingAgentServiceShippingUnit) {
       //  todo: put this back
-//        if (cAppExtension.context instanceof ShipDetermineTransportActivity) {
-//            ((ShipDetermineTransportActivity) cAppExtension.context).updateShippingUnitUsed(newQuantity, shippingAgentServiceShippingUnit);
+//        if (cAppExtension.context instanceof ShiporderShipActivity) {
+//            ((ShiporderShipActivity) cAppExtension.context).updateShippingUnitUsed(newQuantity, shippingAgentServiceShippingUnit);
 //        }
     }
     @Override

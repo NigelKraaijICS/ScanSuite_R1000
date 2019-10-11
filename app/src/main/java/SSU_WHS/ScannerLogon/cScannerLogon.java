@@ -9,7 +9,7 @@ import java.util.List;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cText;
 import ICS.Utils.cUpdate;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Webservice.cWebresult;
 

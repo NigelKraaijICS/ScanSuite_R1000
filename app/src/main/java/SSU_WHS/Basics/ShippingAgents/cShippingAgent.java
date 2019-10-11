@@ -10,7 +10,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 

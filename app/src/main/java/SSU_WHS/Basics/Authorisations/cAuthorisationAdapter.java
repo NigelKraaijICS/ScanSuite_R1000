@@ -10,9 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import SSU_WHS.Basics.Users.cUser;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.activities.general.MenuActivity;
+import nl.icsvertex.scansuite.Activities.general.MenuActivity;
 
 public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAdapter.AuthorisationViewHolder> {
 

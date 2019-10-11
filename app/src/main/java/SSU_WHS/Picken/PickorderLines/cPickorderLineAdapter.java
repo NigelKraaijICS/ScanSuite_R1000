@@ -12,13 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
-import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
-import nl.icsvertex.scansuite.cAppExtension;
-import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
+import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.fragments.pick.PickorderLinesPickedFragment;
+import nl.icsvertex.scansuite.Fragments.pick.PickorderLinesPickedFragment;
 
 public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAdapter.PickorderLineViewHolder>  {
 
@@ -92,7 +91,6 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         }
 
         final cPickorderLine currentPickorderLine = this.localPickorderLinesObl.get(pvPositionInt);
-
 
         String lineDescriptionStr = currentPickorderLine.getItemNoStr() + "~" + currentPickorderLine.getVariantCodeStr() + ": " + currentPickorderLine.getDescriptionStr();
         String quantityToShowStr = "";
@@ -204,7 +202,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     //Region Public Methods
     public void pFillData(List<cPickorderLine> pvDataObl) {
         this.localPickorderLinesObl = pvDataObl;
-       }
+    }
 
     public void pSetFilter(String pvQueryTextStr) {
         this.localPickorderLinesObl = mGetFilteredListObl(pvQueryTextStr);

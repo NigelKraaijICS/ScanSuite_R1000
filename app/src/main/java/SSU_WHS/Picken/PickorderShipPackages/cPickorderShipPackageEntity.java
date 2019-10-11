@@ -11,73 +11,65 @@ import SSU_WHS.General.cDatabase;
 
 @Entity(tableName = cDatabase.TABLENAME_PICKORDERSHIPPACKAGES, primaryKeys = {cDatabase.SOURCENO_NAMESTR})
 public class cPickorderShipPackageEntity {
+
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
+
+    //End Region Private Properties
+
     @NonNull
     @ColumnInfo(name = cDatabase.SOURCENO_NAMESTR)
     public String sourceno;
-    @ColumnInfo(name = cDatabase.SHIPPINGAGENTCODE_NAMESTR)
-    public String shipagentcode;
-    @ColumnInfo(name = cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR)
-    public String shipagentservicecode;
-    @ColumnInfo(name = cDatabase.PACKAGETYPE_NAMESTR)
-    public String packagetype;
-    @ColumnInfo(name = cDatabase.PACKAGESEQUENCENUMBER_NAMESTR)
-    public String packagesequencenumber;
-
     @NonNull
-    public String getSourceno() {
+    public String getSourcenoStr() {
         return sourceno;
     }
 
-    public void setSourceno(@NonNull String sourceno) {
-        this.sourceno = sourceno;
-    }
-
-    public String getShipagentcode() {
+    @ColumnInfo(name = cDatabase.SHIPPINGAGENTCODE_NAMESTR)
+    public String shipagentcode;
+    public String getShippingAgentCodeStr() {
         return shipagentcode;
     }
 
-    public void setShipagentcode(String shipagentcode) {
-        this.shipagentcode = shipagentcode;
-    }
-
-    public String getShipagentservicecode() {
+    @ColumnInfo(name = cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR)
+    public String shipagentservicecode;
+    public String getShippingAgentServiceCodeStr() {
         return shipagentservicecode;
     }
 
-    public void setShipagentservicecode(String shipagentservicecode) {
-        this.shipagentservicecode = shipagentservicecode;
-    }
-
-    public String getPackagetype() {
+    @ColumnInfo(name = cDatabase.PACKAGETYPE_NAMESTR)
+    public String packagetype;
+    public String getPackageTypeStr() {
         return packagetype;
     }
 
-    public void setPackagetype(String packagetype) {
-        this.packagetype = packagetype;
-    }
-
-    public String getPackagesequencenumber() {
+    @ColumnInfo(name = cDatabase.PACKAGESEQUENCENUMBER_NAMESTR)
+    public String packagesequencenumber;
+    public String getPackageSequenceNumberStr() {
         return packagesequencenumber;
     }
 
-    public void setPackagesequencenumber(String packagesequencenumber) {
-        this.packagesequencenumber = packagesequencenumber;
-    }
-
-    //empty constructor
+    //Region constructor
     public cPickorderShipPackageEntity() {
-
+        //empty constructor
     }
 
-    public cPickorderShipPackageEntity(JSONObject jsonObject) {
+    public cPickorderShipPackageEntity(JSONObject pvJsonObject) {
         try {
-            sourceno = jsonObject.getString(cDatabase.SOURCENO_NAMESTR);
-            shipagentcode = jsonObject.getString(cDatabase.SHIPPINGAGENTCODE_NAMESTR);
-            shipagentservicecode = jsonObject.getString(cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR);
-            packagetype = jsonObject.getString(cDatabase.PACKAGETYPE_NAMESTR);
-            packagesequencenumber = jsonObject.getString(cDatabase.PACKAGESEQUENCENUMBER_NAMESTR);
+            this.sourceno = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
+            this.shipagentcode = pvJsonObject.getString(cDatabase.SHIPPINGAGENTCODE_NAMESTR);
+            this.shipagentservicecode = pvJsonObject.getString(cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR);
+            this.packagetype = pvJsonObject.getString(cDatabase.PACKAGETYPE_NAMESTR);
+            this.packagesequencenumber = pvJsonObject.getString(cDatabase.PACKAGESEQUENCENUMBER_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+    //End Region Constructor
+
+
+
 }

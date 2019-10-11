@@ -18,6 +18,8 @@ import ICS.Utils.cDeviceInfo;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
+import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackageEntity;
@@ -33,6 +35,7 @@ public class cPickorderRepository {
     //Region Public Properties
     public iPickorderDao pickorderDao;
     public iPickorderLineDao pickorderLineDao;
+    public iPickorderLinePackAndShipDao pickorderLinePackAndShipDao;
     //End Region Public Properties
 
     //Region Private Properties
@@ -157,6 +160,7 @@ public class cPickorderRepository {
         this.db = acScanSuiteDatabase.getDatabase(pvApplication);
         this.pickorderDao = db.pickorderDao();
         this.pickorderLineDao = db.pickorderLineDao();
+        this.pickorderLinePackAndShipDao = db.pickorderLinePackAndShipDao();
     }
     //End Region Constructor
 
@@ -356,6 +360,30 @@ public class cPickorderRepository {
         }
     }
 
+    public cWebresult pShipHandledViaWebserviceBln(String pvWorkplaceStr) {
+
+        cWebresult webResult;
+
+        PickorderStepHandledParams pickorderStepHandledParams;
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumber() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_PackAndShip.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip, "");
+
+        try {
+
+            webResult = new mPickorderStepHandledAsyncTask().execute(pickorderStepHandledParams).get();
+            return  webResult;
+        }
+
+        catch (InterruptedException e) {
+            e.printStackTrace();
+            return  null;
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return  null;
+
+        }
+    }
+
     public Boolean pPickorderSourceDocumentShippedViaWebserviceBln(String pvSourceNoStr, String pvShippingagentStr, String pvShippingServiceStr, List<cPickorderShipPackageEntity> pvPackagesObl) {
 
         cWebresult webResult;
@@ -468,6 +496,7 @@ public class cPickorderRepository {
         }
     }
 
+    //Pick Lines
     public cWebresult pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {
 
         List<String> resultObl = new ArrayList<>();
@@ -552,6 +581,31 @@ public class cPickorderRepository {
         return resultObl;
     }
 
+    //Pick quantity's
+    public Double pQuantityNotHandledDbl() {
+        Double resultDbl = 0.0;
+        try {
+            resultDbl = new mGetQuantityNotHandledAsyncTask(pickorderLineDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultDbl;
+    }
+
+    public Double pQuantityHandledDbl() {
+        Double resultDbl = 0.0;
+        try {
+            resultDbl = new mGetQuantityHandledAsyncTask(pickorderLineDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultDbl;
+    }
+
     public Double pGetTotalQuantityDbl() {
         Double resultDbl = 0.0;
         try {
@@ -564,55 +618,8 @@ public class cPickorderRepository {
         return resultDbl;
     }
 
-    public Double pTotalQuanitityHandledDbl() {
-        Double resultDbl = 0.0;
-        try {
-            resultDbl = new mGetTotalQuanitityHandledAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
 
-        }
-        return resultDbl;
-    }
-
-    public Double pNumberTotalNotHandledDbl() {
-        Double resultDbl = 0.0;
-        try {
-            resultDbl = new mGetNumberTotalNotHandledForCounterAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultDbl;
-    }
-
-    public Double pNumberHandledDbl() {
-        Double resultDbl = 0.0;
-        try {
-            resultDbl = new mGetNumberHandledForCounterAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultDbl;
-    }
-
-    public Double pNumberNotHandledDbl() {
-        Double resultDbl = 0.0;
-        try {
-            resultDbl = new mGetNumberNotHandledForCounterAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultDbl;
-    }
-
+    //Pick Order details
     public cWebresult pGetAddressesFromWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
@@ -723,6 +730,128 @@ public class cPickorderRepository {
             e.printStackTrace();
         }
         return webResultWrs;
+    }
+
+    public cWebresult pGetPackagesFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetPickorderPackagesFromWebserviceTask().execute().get();
+        } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    //Pack and Ship
+
+    public cWebresult pGetPackAndShipLinesFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetPackAndShipLinesViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public List<cPickorderLinePackAndShipEntity> pGetPackAndShipLinesNotHandledFromDatabaseObl() {
+        List<cPickorderLinePackAndShipEntity> resultObl = null;
+        try {
+            resultObl = new mGetNotHandledPackAndShipLinesAsyncTask(pickorderLinePackAndShipDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultObl;
+    }
+
+    public List<cPickorderLinePackAndShipEntity> pGetPackAndShipLinesHandledFromDatabaseObl() {
+        List<cPickorderLinePackAndShipEntity> resultObl = null;
+        try {
+            resultObl = new mGetHandledPackAndShipLinesAsyncTask(pickorderLinePackAndShipDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultObl;
+    }
+
+    public List<cPickorderLinePackAndShipEntity> pGetAllPackAndShipLinesHandledFromDatabaseObl() {
+        List<cPickorderLinePackAndShipEntity> resultObl = null;
+        try {
+            resultObl = new mGetAllPackAndShipLinesAsyncTask(pickorderLinePackAndShipDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultObl;
+    }
+
+
+    //Pack and Ship Quantitiy's
+    public Double pShippingQuantityNotHandledDbl() {
+        Double resultDbl = 0.0;
+        try {
+            resultDbl = new mGetShippingQuantityNotHandledAsyncTask(pickorderLinePackAndShipDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultDbl;
+    }
+
+    public Double pShippingQuantityHandledDbl() {
+        Double resultDbl = 0.0;
+        try {
+            resultDbl = new mGetShippingQuantityHandledAsyncTask(pickorderLinePackAndShipDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultDbl;
+    }
+
+    public Double pShippingQuantityTotalDbl() {
+        Double resultDbl = 0.0;
+        try {
+            resultDbl = new mGetShippingQuantityTotalAsyncTask(pickorderLinePackAndShipDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultDbl;
     }
 
 
@@ -975,8 +1104,8 @@ public class cPickorderRepository {
                 SoapObject shippingpackages = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_SHIPPINGPACKAGES);
                 for (cPickorderShipPackageEntity pickorderShipPackageEntity: params[0].shippingpackages) {
                     SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE);
-                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_PACKAGE, pickorderShipPackageEntity.getPackagetype());
-                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_SEQUENCENUMBER, pickorderShipPackageEntity.getPackagesequencenumber());
+                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_PACKAGE, pickorderShipPackageEntity.getPackageTypeStr());
+                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_SEQUENCENUMBER, pickorderShipPackageEntity.getPackageSequenceNumberStr());
                     soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_WEIGHTING, 0);
                     soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_ITEMCOUNT, 0);
                     soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINERTYPE, "");
@@ -1095,6 +1224,33 @@ public class cPickorderRepository {
         }
     }
 
+    private static class mGetPackAndShipLinesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo2Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
     private static class mGetAllLinesFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cPickorderLineEntity>> {
         private iPickorderLineDao mAsyncTaskDao;
 
@@ -1145,30 +1301,52 @@ public class cPickorderRepository {
         }
     }
 
-    private static class mGetNumberNotHandledForCounterAsyncTask extends AsyncTask<Void, Void, Double> {
-        private iPickorderLineDao mAsyncTaskDao;
-        mGetNumberNotHandledForCounterAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
+    private static class mGetNotHandledPackAndShipLinesAsyncTask extends AsyncTask<Void, Void, List<cPickorderLinePackAndShipEntity>> {
+        private iPickorderLinePackAndShipDao mAsyncTaskDao;
+
+        mGetNotHandledPackAndShipLinesAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
         @Override
-        protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getNumberNotHandledForCounterDbl();
+        protected List<cPickorderLinePackAndShipEntity> doInBackground(final Void... params) {
+            return mAsyncTaskDao.getNotHandledPickorderLinePackAndShipEntities();
         }
     }
 
-    private static class mGetNumberTotalNotHandledForCounterAsyncTask extends AsyncTask<Void, Void, Double> {
-        private iPickorderLineDao mAsyncTaskDao;
-        mGetNumberTotalNotHandledForCounterAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
+    private static class mGetHandledPackAndShipLinesAsyncTask extends AsyncTask<Void, Void, List<cPickorderLinePackAndShipEntity>> {
+        private iPickorderLinePackAndShipDao mAsyncTaskDao;
+
+        mGetHandledPackAndShipLinesAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
         @Override
-        protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getNumberTotalNotHandledForCounterDbl();
+        protected List<cPickorderLinePackAndShipEntity> doInBackground(final Void... params) {
+            return mAsyncTaskDao.getHandledPickorderLinePackAndShipEntities();
         }
     }
 
-    private static class mGetNumberHandledForCounterAsyncTask extends AsyncTask<Void, Void, Double> {
+    private static class mGetAllPackAndShipLinesAsyncTask extends AsyncTask<Void, Void, List<cPickorderLinePackAndShipEntity>> {
+        private iPickorderLinePackAndShipDao mAsyncTaskDao;
+
+        mGetAllPackAndShipLinesAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected List<cPickorderLinePackAndShipEntity> doInBackground(final Void... params) {
+            return mAsyncTaskDao.getAllPickorderLinePackAndShipEntities();
+        }
+    }
+
+
+    private static class mGetQuantityNotHandledAsyncTask extends AsyncTask<Void, Void, Double> {
         private iPickorderLineDao mAsyncTaskDao;
-        mGetNumberHandledForCounterAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
+        mGetQuantityNotHandledAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
         @Override
         protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getNumberHandledForCounterDbl();
+            return mAsyncTaskDao.getQuantityNotHandledDbl();
+        }
+    }
+
+    private static class mGetQuantityHandledAsyncTask extends AsyncTask<Void, Void, Double> {
+        private iPickorderLineDao mAsyncTaskDao;
+        mGetQuantityHandledAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Double doInBackground(Void... params) {
+            return mAsyncTaskDao.getNumberHandledDbl();
         }
     }
 
@@ -1182,15 +1360,33 @@ public class cPickorderRepository {
         }
     }
 
-    private static class mGetTotalQuanitityHandledAsyncTask extends AsyncTask<Void, Void, Double> {
-        private iPickorderLineDao mAsyncTaskDao;
-
-        mGetTotalQuanitityHandledAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
+    private static class mGetShippingQuantityNotHandledAsyncTask extends AsyncTask<Void, Void, Double> {
+        private iPickorderLinePackAndShipDao mAsyncTaskDao;
+        mGetShippingQuantityNotHandledAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
         @Override
         protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getTotalQuanitityHandledDbl();
+            return mAsyncTaskDao.getQuantityNotHandledDbl();
         }
     }
+
+    private static class mGetShippingQuantityHandledAsyncTask extends AsyncTask<Void, Void, Double> {
+        private iPickorderLinePackAndShipDao mAsyncTaskDao;
+        mGetShippingQuantityHandledAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Double doInBackground(Void... params) {
+            return mAsyncTaskDao.getQuantityHandledDbl();
+        }
+    }
+
+    private static class mGetShippingQuantityTotalAsyncTask extends AsyncTask<Void, Void, Double> {
+        private iPickorderLinePackAndShipDao mAsyncTaskDao;
+        mGetShippingQuantityTotalAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Double doInBackground(Void... params) {
+            return mAsyncTaskDao.getTotalQuantityDbl();
+        }
+    }
+
 
     private static class mGetPickorderImagesFromWebserviceTask extends AsyncTask<List<String>, Void, cWebresult> {
         @Override
@@ -1257,6 +1453,36 @@ public class cPickorderRepository {
 
             try {
                 webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERADDRESSES, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webResult.setResultBln(false);
+                webResult.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return webResult;
+        }
+    }
+
+    private static class mGetPickorderPackagesFromWebserviceTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(final Void... params) {
+            cWebresult webResult = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+            l_PropertyInfo2Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            try {
+                webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERSHIPPACKAGES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webResult.setResultBln(false);

@@ -4,7 +4,7 @@ package ICS.Utils;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 
 public class cPermissions {
 

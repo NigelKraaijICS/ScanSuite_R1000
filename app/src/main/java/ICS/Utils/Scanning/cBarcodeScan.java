@@ -6,20 +6,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
-import nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity;
-import nl.icsvertex.scansuite.activities.pick.PickorderPickActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderLinesActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderSelectActivity;
-import nl.icsvertex.scansuite.activities.sort.SortorderSortActivity;
-import nl.icsvertex.scansuite.cAppExtension;
-import nl.icsvertex.scansuite.activities.general.LoginActivity;
-import nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity;
-import nl.icsvertex.scansuite.fragments.dialogs.ArticleFullViewFragment;
-import nl.icsvertex.scansuite.fragments.dialogs.BranchFragment;
-import nl.icsvertex.scansuite.fragments.dialogs.CurrentLocationFragment;
-import nl.icsvertex.scansuite.fragments.dialogs.EnvironmentFragment;
-import nl.icsvertex.scansuite.fragments.dialogs.OrderDoneFragment;
-import nl.icsvertex.scansuite.fragments.dialogs.WorkplaceFragment;
+import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.ship.ShiporderSelectActivity;
+import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.sort.SortorderSortActivity;
+import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.general.LoginActivity;
+import nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Fragments.dialogs.ArticleFullViewFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.BranchFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.CurrentLocationFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.EnvironmentFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.OrderDoneFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.WorkplaceFragment;
 
 public class cBarcodeScan {
 
@@ -62,12 +63,14 @@ public class cBarcodeScan {
                         barcodeStr = "";
                     }
 
-                    // Check current Activity
+
+                    //Login
                     if (cAppExtension.activity instanceof LoginActivity) {
                         LoginActivity.pHandleScan(barcodeStr);
 
                     }
 
+                    //Pick
                     if (cAppExtension.activity instanceof PickorderSelectActivity){
                         PickorderSelectActivity.pHandleScan(barcodeStr);
                     }
@@ -80,6 +83,7 @@ public class cBarcodeScan {
                         PickorderPickActivity.pHandleScan(barcodeStr);
                     }
 
+                    //Sort
                     if (cAppExtension.activity instanceof SortorderSelectActivity){
                         SortorderSelectActivity.pHandleScan(barcodeStr);
                     }
@@ -90,6 +94,11 @@ public class cBarcodeScan {
 
                     if (cAppExtension.activity instanceof SortorderSortActivity){
                         SortorderSortActivity.pHandleScan(barcodeStr);
+                    }
+
+                    //Ship
+                    if (cAppExtension.activity instanceof ShiporderSelectActivity){
+                        ShiporderSelectActivity.pHandleScan(barcodeStr);
                     }
 
                 }

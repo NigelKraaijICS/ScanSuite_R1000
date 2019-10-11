@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 
 public class cArticleImage {
 

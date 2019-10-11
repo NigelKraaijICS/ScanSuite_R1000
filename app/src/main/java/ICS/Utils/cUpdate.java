@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import java.io.File;
 
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 

@@ -8,7 +8,7 @@ import java.util.List;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import SSU_WHS.Webservice.cWebservice;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 public class cEnvironment {

@@ -9,7 +9,7 @@ import java.util.List;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 
 public class cComment {
 
@@ -66,7 +66,7 @@ public class cComment {
         return true;
     }
 
-    public static boolean pTruncateTable () {
+    public static boolean pTruncateTableBln() {
         cComment.getCommentViewModel().deleteAll();
         return true;
     }

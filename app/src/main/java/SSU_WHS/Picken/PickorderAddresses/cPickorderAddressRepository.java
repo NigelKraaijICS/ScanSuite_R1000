@@ -35,6 +35,10 @@ public class cPickorderAddressRepository {
     public void pInsert(cPickorderAddressEntity pickorderAddressEntity){
         new insertAsyncTask(pickorderAddressDao).execute(pickorderAddressEntity);
     }
+    //End Region Public Methods
+
+    //Region Private Methods
+
     private static class insertAsyncTask extends AsyncTask<cPickorderAddressEntity, Void, Void> {
         private iPickorderAddressDao mAsyncTaskDao;
 
@@ -47,6 +51,7 @@ public class cPickorderAddressRepository {
             return null;
         }
     }
+
     private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private iPickorderAddressDao mAsyncTaskDao;
 
@@ -59,5 +64,9 @@ public class cPickorderAddressRepository {
             return null;
         }
     }
+
+    //End Region Private Methods
+
+
 
 }

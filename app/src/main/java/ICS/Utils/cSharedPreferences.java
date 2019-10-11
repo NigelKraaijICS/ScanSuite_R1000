@@ -3,7 +3,7 @@ package ICS.Utils;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 

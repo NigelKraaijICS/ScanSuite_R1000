@@ -16,7 +16,7 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:name=".cAppExtension"
+        android:name="ICS.cAppExtension"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -26,7 +26,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".activities.general.MainDefaultActivity"
+            android:name=".Activities.general.MainDefaultActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -36,50 +36,50 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.general.MenuActivity"
+            android:name=".Activities.general.MenuActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".activities.general.LoginActivity"
+            android:parentActivityName=".Activities.general.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activities.general.LoginActivity"
+            android:name=".Activities.general.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.general.MainDefaultActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.general.MainDefaultActivity" />
         </activity>
         <activity
-            android:name=".activities.pick.PickorderSelectActivity"
+            android:name=".Activities.pick.PickorderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.general.MenuActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.general.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.pick.PickorderLinesActivity"
+            android:name=".Activities.pick.PickorderLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.pick.PickorderSelectActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity" />
         </activity>
         <activity
-            android:name=".activities.pick.PickorderPickActivity"
+            android:name=".Activities.pick.PickorderPickActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.activities.pick.PickorderLinesActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity" />
         </activity>
-        <activity android:name=".activities.sort.SortorderSortActivity" />
-        <activity android:name=".activities.sort.SortorderLinesActivity" />
-        <activity android:name=".activities.sort.SortorderSelectActivity" />
+        <activity android:name=".Activities.sort.SortorderSortActivity" />
+        <activity android:name=".Activities.sort.SortorderLinesActivity" />
+        <activity android:name=".Activities.sort.SortorderSelectActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

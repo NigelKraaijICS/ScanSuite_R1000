@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import ICS.Utils.cText;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 
 
 public class cPickorderLineBarcodeAdapter extends RecyclerView.Adapter<cPickorderLineBarcodeAdapter.pickorderLineBarcodeViewHolder>  {

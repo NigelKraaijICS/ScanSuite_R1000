@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.dialogs.SendingFragment"
+    tools:context=".Fragments.dialogs.SendingFragment"
     android:layout_margin="8dp"
     android:background="@color/colorSky">
     <TextView

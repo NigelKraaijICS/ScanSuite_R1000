@@ -14,7 +14,7 @@ import java.util.List;
 
 import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 
 public class cCommentAdapter extends RecyclerView.Adapter<cCommentAdapter.commentViewHolder>{
 

@@ -374,4 +374,10 @@
     <string name="message_progress_to_send">Er is nog progressie die overgezonden moet worden</string>
     <string name="message_send">Verzend</string>
     <string name="message_send_now">Wil je nu verzenden?</string>
+    <string name="error_no_shippingagents_available">There are no shipping agents available</string>
+    <string name="error_getting_pack_and_ship_lines_failed">Verzendregels ophalen mislukt</string>
+    <string name="error_getting_packages_failed">Verzendeenheden ophalen mislukt</string>
+    <string name="error_no_shippingagent_services_available">Geen vervoerder afdelingen beschikbaar</string>
+    <string name="error_no_shippingagent_services_units_available">Geen vervoerder afdeling verzendeenheden beschikbaar</string>
+    <string name="message_article_not_allowed">Artikel scan niet toegestaan</string>
 </resources>

@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import nl.icsvertex.scansuite.cAppExtension;
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.activities.general.MainDefaultActivity;
+import nl.icsvertex.scansuite.Activities.general.MainDefaultActivity;
 
 public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapter.EnvironmentViewHolder>{
 
