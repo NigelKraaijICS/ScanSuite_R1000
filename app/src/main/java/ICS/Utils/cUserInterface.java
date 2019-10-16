@@ -166,8 +166,6 @@ public class cUserInterface {
 
     }
     public static void pDoRotate(final View pvView, final int pvRepeatCountInt) {
-
-
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -218,39 +216,12 @@ public class cUserInterface {
                 hugeErrorFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.HUGEERROR_TAG);
             }
         });
-
-
     }
-    public static void pDoWebserviceError(final List<cWeberror> pvWeberrorsObl, final Boolean pvPlaySoundBln, final Boolean pvVibrateBln) {
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (pvPlaySoundBln) {
-                    pPlaySound(R.raw.badsound, null);
-                }
-                if (pvVibrateBln) {
-                    pDoVibrate();
-                }
-                ArrayList messages = new ArrayList();
 
-                for (cWeberror weberror: pvWeberrorsObl) {
-                    messages.add(weberror.getWebmethodStr());
-                }
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList(cPublicDefinitions.WEBSERVICEERROR_LIST_TAG, messages);
-
-                WebserviceErrorFragment webserviceErrorFragment = new WebserviceErrorFragment();
-                webserviceErrorFragment.setArguments(bundle);
-                webserviceErrorFragment.setCancelable(true);
-                webserviceErrorFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WEBSERVICEERROR_TAG);
-            }
-        });
-
-    }
     public static void pCheckAndCloseOpenDialogs() {
-        //todo: this is dumb
+
         pHideGettingData();
-        //todo: should be in here
+
         List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
         if (fragments != null) {
             for (Fragment fragment : fragments) {
@@ -273,31 +244,6 @@ public class cUserInterface {
             }
         });
     }
-    //TODO: fix this or delete it
-    public static class pShowGettingDataAsync extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            gettingDataFragment = new GettingDataFragment();
-            gettingDataFragment.setCancelable(true);
-            gettingDataFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.GETTING_DATA_TAG);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            });
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void results) {
-
-        }
-    }
-
 
     public static void pShowGettingData() {
         gettingDataFragment = new GettingDataFragment();
@@ -309,6 +255,7 @@ public class cUserInterface {
                 }
             });
         }
+
     public static void pHideGettingData() {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override

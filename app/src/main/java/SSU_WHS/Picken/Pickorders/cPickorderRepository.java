@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import ICS.Utils.cDeviceInfo;
+import ICS.Utils.cResult;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -23,6 +25,7 @@ import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackageEntity;
+import SSU_WHS.Picken.Shipment.cShipment;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Webservice.cWebresult;
@@ -62,30 +65,6 @@ public class cPickorderRepository {
             this.workflowStepcodeStr = pvWorkflowStepCodeStr;
             this.workflowStepInt = pvWorkflowStepStr;
             this.cultureStr = pvCultureStr;
-        }
-    }
-
-    private class PickorderSourceDocumentShippedParams {
-        String userStr;
-        String branchStr;
-        String orderNumberStr;
-        String sourceNoStr;
-        String cultureStr;
-        String shippingAgentStr;
-        String shippingServiceStr;
-
-        //todo: use normal class here instead of Entitiy class
-        List<cPickorderShipPackageEntity> shippingpackages;
-
-        PickorderSourceDocumentShippedParams(String pvUserStr, String pvBranchStr, String pvOrderNumberStr, String pvSourceNoStr, String pvCultureStr, String pvShippingAgentStr, String pvShippingServiceStr,  List<cPickorderShipPackageEntity> pvShippingPackagesObl) {
-            this.userStr = pvUserStr;
-            this.branchStr = pvBranchStr;
-            this.orderNumberStr = pvOrderNumberStr;
-            this.sourceNoStr = pvSourceNoStr;
-            this.cultureStr = pvCultureStr;
-            this.shippingAgentStr = pvShippingAgentStr;
-            this.shippingServiceStr = pvShippingServiceStr;
-            this.shippingpackages = pvShippingPackagesObl;
         }
     }
 
@@ -360,7 +339,7 @@ public class cPickorderRepository {
         }
     }
 
-    public cWebresult pShipHandledViaWebserviceBln(String pvWorkplaceStr) {
+    public cWebresult pShipHandledViaWebserviceWrs(String pvWorkplaceStr) {
 
         cWebresult webResult;
 
@@ -384,29 +363,27 @@ public class cPickorderRepository {
         }
     }
 
-    public Boolean pPickorderSourceDocumentShippedViaWebserviceBln(String pvSourceNoStr, String pvShippingagentStr, String pvShippingServiceStr, List<cPickorderShipPackageEntity> pvPackagesObl) {
+    public cWebresult pPickorderSourceDocumentShippedViaWebserviceWrs() {
 
         cWebresult webResult;
-        PickorderSourceDocumentShippedParams pickorderSourceDocumentShippedParams;
-        pickorderSourceDocumentShippedParams = new PickorderSourceDocumentShippedParams(cUser.currentUser.getNameStr(), cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), pvSourceNoStr, "", pvShippingagentStr, pvShippingServiceStr, pvPackagesObl);
 
         try {
-            webResult = new mPickorderSourceDocumentShippedAsyncTask().execute(pickorderSourceDocumentShippedParams).get();
+            webResult = new mPickorderSourceDocumentShippedAsyncTask().execute().get();
             if (webResult.getSuccessBln() == false || webResult.getResultBln() == false) {
-                return  false;
+                return  webResult;
             }
-            return  true;
+
         }
 
         catch (InterruptedException e) {
             e.printStackTrace();
-            return  false;
+            return  null;
 
         } catch (ExecutionException e) {
             e.printStackTrace();
-            return  false;
-
+            return  null;
         }
+        return  webResult;
     }
 
     public Boolean pPickorderUpdateWorkplaceViaWebserviceBln() {
@@ -1054,46 +1031,46 @@ public class cPickorderRepository {
         }
     }
 
-    private static class mPickorderSourceDocumentShippedAsyncTask extends AsyncTask<PickorderSourceDocumentShippedParams, Void, cWebresult> {
+    private static class mPickorderSourceDocumentShippedAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
-        protected cWebresult doInBackground(PickorderSourceDocumentShippedParams... params) {
+        protected cWebresult doInBackground(Void... params) {
             cWebresult l_WebresultWrs = new cWebresult();
             try {
                 List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(params[0].userStr);
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
                 l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
-                l_PropertyInfo2Pin.setValue(params[0].branchStr);
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
                 PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
                 l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
-                l_PropertyInfo3Pin.setValue(params[0].orderNumberStr);
+                l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
                 l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_SOURCENO;
-                l_PropertyInfo4Pin.setValue(params[0].sourceNoStr);
+                l_PropertyInfo4Pin.setValue(cShipment.currentShipment.getSourceNoStr());
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
                 l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
-                l_PropertyInfo5Pin.setValue(params[0].cultureStr);
+                l_PropertyInfo5Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
                 l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_SHIPPINGAGENT;
-                l_PropertyInfo6Pin.setValue(params[0].shippingAgentStr);
+                l_PropertyInfo6Pin.setValue(cShipment.currentShipment.shippingAgent().getShippintAgentStr());
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
                 PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
                 l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_SHIPPINGSERVICE;
-                l_PropertyInfo7Pin.setValue(params[0].shippingServiceStr);
+                l_PropertyInfo7Pin.setValue(cShipment.currentShipment.shippingAgentService().getServiceStr());
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
@@ -1102,15 +1079,38 @@ public class cPickorderRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 SoapObject shippingpackages = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_SHIPPINGPACKAGES);
-                for (cPickorderShipPackageEntity pickorderShipPackageEntity: params[0].shippingpackages) {
-                    SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE);
-                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_PACKAGE, pickorderShipPackageEntity.getPackageTypeStr());
-                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_SEQUENCENUMBER, pickorderShipPackageEntity.getPackageSequenceNumberStr());
-                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_WEIGHTING, 0);
-                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_ITEMCOUNT, 0);
-                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINERTYPE, "");
-                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINER, "");
-                    shippingpackages.addSoapObject(soapObject);
+
+                Integer sequencenumberInt = 0;
+                String packageTypeToRememberStr = "";
+                Integer counterForTypeInt = 0;
+
+                for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit : cShipment.currentShipment.shippingAgentService().shippingUnitsObl()) {
+
+                    //If we didn't use this, continue
+                    if (shippingAgentServiceShippingUnit.getShippingUnitQuantityUsedInt() <= 0) {
+                        continue;
+                    }
+
+                    //New packageype, so reset sequenceNumber
+                    if (!packageTypeToRememberStr.equalsIgnoreCase(shippingAgentServiceShippingUnit.getShippingUnitStr())) {
+                        packageTypeToRememberStr = shippingAgentServiceShippingUnit.getShippingUnitStr();
+                        sequencenumberInt = 0;
+                        counterForTypeInt = 0;
+                    }
+
+                    while (counterForTypeInt < shippingAgentServiceShippingUnit.getShippingUnitQuantityUsedInt()) {
+                        counterForTypeInt += 1;
+                        sequencenumberInt += 10;
+
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_PACKAGE, packageTypeToRememberStr);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_SEQUENCENUMBER, sequencenumberInt);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_WEIGHTING, 0);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_ITEMCOUNT, 0);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINERTYPE, "");
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINER, "");
+                        shippingpackages.addSoapObject(soapObject);
+                    }
                 }
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
@@ -1331,7 +1331,6 @@ public class cPickorderRepository {
         }
     }
 
-
     private static class mGetQuantityNotHandledAsyncTask extends AsyncTask<Void, Void, Double> {
         private iPickorderLineDao mAsyncTaskDao;
         mGetQuantityNotHandledAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
@@ -1386,7 +1385,6 @@ public class cPickorderRepository {
             return mAsyncTaskDao.getTotalQuantityDbl();
         }
     }
-
 
     private static class mGetPickorderImagesFromWebserviceTask extends AsyncTask<List<String>, Void, cWebresult> {
         @Override

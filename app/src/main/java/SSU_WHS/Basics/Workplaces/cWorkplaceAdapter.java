@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.ship.ShiporderLinesActivity;
+import nl.icsvertex.scansuite.Activities.ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
@@ -78,9 +80,9 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
                         SortorderLinesActivity.pCloseSortAndDecideNextStep();
                     }
 
-//                    if (cAppExtension.context instanceof ShiporderLinesActivity) {
-//                        ShiporderLinesActivity.closeWorkplaceFragment();
-//                    }
+                    if (cAppExtension.context instanceof ShiporderLinesActivity) {
+                        ShiporderLinesActivity.pShowOrderDoneFragment();
+                    }
                 }
             });
         }

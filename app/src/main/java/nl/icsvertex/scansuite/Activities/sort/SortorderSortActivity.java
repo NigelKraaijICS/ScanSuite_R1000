@@ -301,7 +301,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-
     @Override
     public void mSetListeners() {
         this.mSetArticleImageListener();

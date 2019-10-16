@@ -7,13 +7,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cDateAndTime;
+import ICS.Utils.cResult;
 import ICS.Utils.cText;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.Shipment.cShipment;
 import ICS.cAppExtension;
 
 public class cPickorderLinePackAndShip {
 
     //Region Public Properties
+
 
     public int lineNoInt;
     public int getLineNoInt() {
@@ -234,36 +238,11 @@ public class cPickorderLinePackAndShip {
 
     //Region Public Methods
 
-
-    public boolean pInsertInDatabaseBln() {
-        cPickorderLinePackAndShip.getPickorderLinePackAndShipViewModel().insert(this.pickorderLinePackAndShipEntity);
-        this.inDatabaseBln = true;
-
-        if (cPickorderLinePackAndShip.allPackAndShipLinesObl == null);
-        {cPickorderLinePackAndShip.allPackAndShipLinesObl = new ArrayList<>();
-        }
-        cPickorderLinePackAndShip.allPackAndShipLinesObl .add(this);
-
-
-        cShipment shipment = cShipment.pGetShipment(this.getSourceNoStr());
-
-        if (shipment == null) {
-            cShipment newShipment = new cShipment(this.getSourceNoStr());
-            shipment.pAddPackAndShipLine(this);
-            cShipment.pAddShipment(newShipment);
-        }
-        else {
-            shipment.pAddPackAndShipLine(this);
-        }
-
-        return true;
-    }
-
-    public static boolean pTruncateTableBln(){
-        cPickorderLinePackAndShip.getPickorderLinePackAndShipViewModel().deleteAll();
-        return true;
-    }
-
     //End Region Public Methods
+
+    //Region Private Methods
+
+
+    //End Region Private Methods
 
 }

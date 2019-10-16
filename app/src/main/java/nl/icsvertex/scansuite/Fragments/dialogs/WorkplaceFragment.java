@@ -16,6 +16,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
 import ICS.cAppExtension;
 import ICS.Utils.cRegex;
@@ -166,16 +167,16 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
                 SortorderLinesActivity.pCloseSortAndDecideNextStep();
             }
 
-            //todo: put this back
+            if (cAppExtension.activity instanceof ShiporderLinesActivity) {
+                ShiporderLinesActivity.pShowOrderDoneFragment();
+            }
 
-//            if (cAppExtension.activity instanceof ShiporderLinesActivity) {
-//                SortorderLinesActivity.closeWorkplaceFragment();
-//            }
         }
         else {
             cUserInterface.pDoNope(workplaceRecyclerView, true, true);
         }
     }
+
     private void mGetData() {
 
         boolean webserviceResult;
@@ -191,8 +192,6 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         this.workplaceRecyclerView.setAdapter(cWorkplace.getWorkplaceAdapter());
         this.workplaceRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
-
-
 
     //End Region Private Methods
 

@@ -7,7 +7,6 @@ import java.util.List;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
-import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackageEntity;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cPickorderViewModel extends AndroidViewModel {
@@ -36,8 +35,8 @@ public class cPickorderViewModel extends AndroidViewModel {
 
     public cWebresult pPickenHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pPickHandledViaWebserviceBln(pvWorkplaceStr);}
     public cWebresult pSortHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pSortHandledViaWebserviceBln(pvWorkplaceStr);}
-    public cWebresult pShipHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pShipHandledViaWebserviceBln(pvWorkplaceStr);}
-    public Boolean pPickorderSourceDocumentShippedViaWebserviceBln(String pvSourceNoStr, String pvShippingAgentStr, String pvShippingServiceStr, List<cPickorderShipPackageEntity> pvPackagesObl) { return this.PickorderRepository.pPickorderSourceDocumentShippedViaWebserviceBln(pvSourceNoStr, pvShippingAgentStr, pvShippingServiceStr, pvPackagesObl);}
+    public cWebresult pShipHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pShipHandledViaWebserviceWrs(pvWorkplaceStr);}
+    public cWebresult pPickorderSourceDocumentShippedViaWebserviceBln() { return this.PickorderRepository.pPickorderSourceDocumentShippedViaWebserviceWrs();}
 
     public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {return this.PickorderRepository.pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);}
     public Boolean pUpdatePickorderCurrentLocationInDatabaseBln(String pvCurrentLocationStr) {return this.PickorderRepository.pPickorderUpdatCurrentLocationInDatabaseBln(pvCurrentLocationStr);}

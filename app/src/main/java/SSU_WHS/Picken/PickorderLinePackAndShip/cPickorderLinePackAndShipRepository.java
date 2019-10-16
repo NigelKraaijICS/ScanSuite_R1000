@@ -26,6 +26,29 @@ public class cPickorderLinePackAndShipRepository {
     //Region Private Properties
     private iPickorderLinePackAndShipDao pickorderLinePackAndShipDao;
     private acScanSuiteDatabase db;
+
+    private static class UpdateOrderlineQuantityParams {
+        Integer recordIdint;
+        Double quantityDbl;
+
+        UpdateOrderlineQuantityParams(Integer pvRecordIDInt, Double pvQuantityDbl) {
+            this.recordIdint = pvRecordIDInt;
+            this.quantityDbl = pvQuantityDbl;
+        }
+    }
+
+
+    private static class UpdateOrderlineLocaStatusParams {
+        Integer recordIDInt;
+        Integer newStatusInt;
+
+        UpdateOrderlineLocaStatusParams(Integer pvRecordIDInt, Integer pvNewsStatusInt) {
+            this.recordIDInt = pvRecordIDInt;
+            this.newStatusInt = pvNewsStatusInt;
+        }
+
+    }
+
     //End Region Private Properties
 
 
@@ -45,12 +68,19 @@ public class cPickorderLinePackAndShipRepository {
     public void pInsert(cPickorderLinePackAndShipEntity pickorderLinePackAndShipEntity){
         new insertAsyncTask(this.pickorderLinePackAndShipDao).execute(pickorderLinePackAndShipEntity);
     }
-    //End Region Public Methods
 
 
     public void deleteAll () {
         new deleteAllAsyncTask(pickorderLinePackAndShipDao).execute();
     }
+
+    public void insert(cPickorderLinePackAndShipEntity pickorderLinePackAndShipEntity) {
+        new insertAsyncTask(pickorderLinePackAndShipDao).execute(pickorderLinePackAndShipEntity);
+    }
+
+    //End Region Public Methods
+
+    //Region Private Methods
 
     private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private iPickorderLinePackAndShipDao mAsyncTaskDao;
@@ -64,9 +94,7 @@ public class cPickorderLinePackAndShipRepository {
             return null;
         }
     }
-    public void insert(cPickorderLinePackAndShipEntity pickorderLinePackAndShipEntity) {
-        new insertAsyncTask(pickorderLinePackAndShipDao).execute(pickorderLinePackAndShipEntity);
-    }
+
     private static class insertAsyncTask extends AsyncTask<cPickorderLinePackAndShipEntity, Void, Void> {
         private iPickorderLinePackAndShipDao mAsyncTaskDao;
 
@@ -79,6 +107,12 @@ public class cPickorderLinePackAndShipRepository {
             return null;
         }
     }
+
+
+    //End Region Private Methods
+
+
+
 
 
 

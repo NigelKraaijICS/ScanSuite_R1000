@@ -456,21 +456,6 @@ public class cPickorderLine {
 
     }
 
-    public boolean pUpdateSortOrderLineBln(double pvQuantityHandledDbl, String pvBinCodeStr) {
-
-        boolean resultBln;
-        resultBln =   cPickorderLine.getPickorderLineViewModel().pUpdateSortOrderLineBln((int)pvQuantityHandledDbl,pvBinCodeStr);
-
-        if (resultBln == false) {
-            return  false;
-        }
-
-        this.quantityHandledDbl = pvQuantityHandledDbl;
-        this.binCodeStr = pvBinCodeStr;
-        return  true;
-
-    }
-
     public cResult pLineBusyRst(){
 
 
@@ -674,20 +659,7 @@ public class cPickorderLine {
         }
     }
 
-    public boolean pSortHandledBln(String pvScannedBarcodeStr) {
-
-        cWebresult WebResult;
-        WebResult =  cPickorderLine.getPickorderLineViewModel().pSortLineHandledViaWebserviceWrs(pvScannedBarcodeStr);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_SORTORDERLINE_HANDLED);
-            return  false;
-        }
-    }
-
-    public boolean pGetArticleImageBln(){
+     public boolean pGetArticleImageBln(){
 
         if (this.articleImage != null) {
             return  true;
@@ -873,15 +845,7 @@ public class cPickorderLine {
 
     }
 
-    private  boolean mDeleteLineBarcodes(){
-        cPickorderLineBarcode.pTruncateTableBln();
-        return true;
-
-    }
-
-
-
-    //End Region Private Methods
+     //End Region Private Methods
 
 }
 

@@ -29,11 +29,9 @@ public class cPickorderLineViewModel extends AndroidViewModel {
     public boolean pUpdateQuantityHandledBln(Double pvQuantityHandledDbl) {return this.Repository.pUpdateQuantityHandledBln(pvQuantityHandledDbl);}
     public boolean pUpdateProcessingSequenceBln(String pvProcessingSequenceStr) {return this.Repository.pUpdateProcessingSequenceBln(pvProcessingSequenceStr);}
     public boolean pUpdateLocalStatusBln(Integer pvNewStatusInt) {return this.Repository.pUpdateLocalStatusBln(pvNewStatusInt);}
-    public boolean pUpdateSortOrderLineBln(Integer pvQuantityHandledInt, String pvBinCodeStr) {return this.Repository.pUpdateSortOrderLineBln(pvQuantityHandledInt,pvBinCodeStr);}
     public boolean pUpdateHandledTimeStampBln(String pvHandledTimeStampStr) {return this.Repository.pUpdateLocalHandledTimeStampBln(pvHandledTimeStampStr);}
 
     public cWebresult pPickLineHandledViaWebserviceWrs() {return this.Repository.pPickLineHandledViaWebserviceWrs();}
-    public cWebresult pSortLineHandledViaWebserviceWrs(String pvScannedBarcodeStr) {return this.Repository.pSortLineHandledViaWebserviceWrs(pvScannedBarcodeStr);}
     public cWebresult pResetViaWebserviceWrs() {return this.Repository.pResetViaWebserviceWrs();}
     public cWebresult pGetSortLocationAdviceViaWebserviceWrs(String pvSourceNoStr) {return this.Repository.pGetSortLocationAdviceViaWebserviceWrs(pvSourceNoStr);}
 

@@ -995,7 +995,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             if (loopRecord.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr()))
                 recordForSalesOrder = loopRecord;
 
-            if (recordForSalesOrder.getPackingtableStr().equalsIgnoreCase(pvBarcodeStr)) {
+            if (loopRecord.getPackingtableStr().equalsIgnoreCase(pvBarcodeStr)) {
                 recordForBarcode = loopRecord;
             }
         }

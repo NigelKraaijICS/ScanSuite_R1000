@@ -216,28 +216,19 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     //Region Public Methods
     public static void pFillOrders() {
 
-        //First get all sortorders
-        if (!cPickorder.pGetSortOrdersViaWebserviceBln(true,"")) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
-            return;
-        }
+        // Show that we are getting data
+        cUserInterface.pShowGettingData();
+
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleFillOrders();
+            }
+        }).start();
 
 
-        if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
-            SortorderSelectActivity.mShowNoOrdersIcon(true);
-            return;
-        }
-
-        //Fill and show recycler
-        SortorderSelectActivity.mSetSortorderRecycler(cPickorder.allPickordersObl);
-
-        SortorderSelectActivity.mShowNoOrdersIcon(false);
-        return;
     }
 
     public static void pSortorderSelected(cPickorder pvPickorder) {
-
-        cResult hulpResult;
 
         if (mCheckOrderIsLockableBln(pvPickorder) == false) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
@@ -251,29 +242,11 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         //Set the current pickorder
         cPickorder.currentPickOrder = pvPickorder;
 
-        //Try to lock the pickorder
-
-        if (SortorderSelectActivity.mTryToLockOrderBln() == false) {
-            SortorderSelectActivity.pFillOrders();
-            return;
-        }
-
-        //Delete the detail, so we can get them from the webservice
-        if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-            return;
-
-        }
-
-        hulpResult = SortorderSelectActivity.mGetOrderDetailsRst();
-        if (hulpResult.resultBln == false ) {
-            SortorderSelectActivity.mStepFailed(hulpResult.messagesStr());
-            return;
-        }
-
-        // If everything went well, then start Lines Activity
-        SortorderSelectActivity.mShowSortLinesActivity();
-        return;
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleSortOrderSelected();
+            }
+        }).start();
 
     }
 
@@ -304,6 +277,67 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     //End Region Public Method
 
     //Region Private Method
+
+    private static void mHandleFillOrders(){
+
+        //First get all sortorders
+        if (!cPickorder.pGetSortOrdersViaWebserviceBln(true,"")) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
+            return;
+        }
+
+
+        if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
+            SortorderSelectActivity.mShowNoOrdersIcon(true);
+            return;
+        }
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //Fill and show recycler
+                SortorderSelectActivity.mSetSortorderRecycler(cPickorder.allPickordersObl);
+                SortorderSelectActivity.mShowNoOrdersIcon(false);
+                cUserInterface.pHideGettingData();
+            }
+        });
+
+    }
+
+    private static void mHandleSortOrderSelected(){
+
+        cResult hulpResult;
+
+        //Try to lock the pickorder
+
+        if (SortorderSelectActivity.mTryToLockOrderBln() == false) {
+            SortorderSelectActivity.pFillOrders();
+            return;
+        }
+
+        //Delete the detail, so we can get them from the webservice
+        if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
+            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            return;
+
+        }
+
+        hulpResult = SortorderSelectActivity.mGetOrderDetailsRst();
+        if (hulpResult.resultBln == false ) {
+            SortorderSelectActivity.mStepFailed(hulpResult.messagesStr());
+            return;
+        }
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // If everything went well, then start Lines Activity
+                SortorderSelectActivity.mShowSortLinesActivity();
+            }
+        });
+
+
+    }
 
     private void mSetSearchListener() {
         //make whole view clickable
@@ -416,30 +450,38 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorderBarcode.currentPickorderBarcode = null;
     }
 
-    private static void mShowNoOrdersIcon(Boolean pvShowBln){
+    private static void mShowNoOrdersIcon(final Boolean pvShowBln){
 
-        if (pvShowBln) {
 
-            recyclerViewSortorders.setVisibility(View.INVISIBLE);
-            FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-            NoOrdersFragment fragment = new NoOrdersFragment();
-            fragmentTransaction.replace(R.id.container, fragment);
-            fragmentTransaction.commit();
-            return;
-        }
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-        recyclerViewSortorders.setVisibility(View.VISIBLE);
+                cUserInterface.pHideGettingData();
 
-        List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-        for (Fragment fragment : fragments) {
-            if (fragment instanceof NoOrdersFragment) {
-                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                fragmentTransaction.remove(fragment);
-                fragmentTransaction.commit();
+                if (pvShowBln) {
+
+                    recyclerViewSortorders.setVisibility(View.INVISIBLE);
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    NoOrdersFragment fragment = new NoOrdersFragment();
+                    fragmentTransaction.replace(R.id.container, fragment);
+                    fragmentTransaction.commit();
+                    return;
+                }
+
+                recyclerViewSortorders.setVisibility(View.VISIBLE);
+
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof NoOrdersFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                    }
+                }
+
             }
-        }
-
-        return;
+        });
     }
 
     private static void mSetSortorderRecycler(List<cPickorder> pvPickorderObl) {

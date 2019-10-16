@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cText;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.ship.ShiporderLinesActivity;
 import ICS.cAppExtension;
@@ -91,15 +92,20 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
         final cShipment shipment = this.localShipmentsObl.get(pvPositionInt);
 
-              if (!shipment.getProcessingSequenceStr().isEmpty()) {
+        if (!shipment.getProcessingSequenceStr().isEmpty()) {
             pvHolder.textViewPickorderLinePackAndShipDocument.setText(shipment.getProcessingSequenceStr());
         }
         else {
             pvHolder.textViewPickorderLinePackAndShipDocument.setText(shipment.getSourceNoStr());
         }
 
-        pvHolder.textViewPickorderLinePackAndShipQuantity.setText(shipment.getQuantityDbl().intValue());
+        pvHolder.textViewPickorderLinePackAndShipQuantity.setText(cText.intToString(shipment.getQuantityDbl().intValue()));
         pvHolder.textViewPickorderLinePackAndShipPack.setText("");
+
+        if (pvPositionInt ==0) {
+           ShiporderLinesActivity.pShipmentSelected(shipment);
+        }
+
 
         final int id = thisRecyclerView.getId();
         pvHolder.pickorderLinePackAndShipItemLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +131,7 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
         });
 
-        }
+    }
 
 
     @Override

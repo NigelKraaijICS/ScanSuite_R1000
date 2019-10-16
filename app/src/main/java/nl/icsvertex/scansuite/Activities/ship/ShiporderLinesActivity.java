@@ -39,6 +39,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 
 import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Fragments.dialogs.OrderDoneFragment;
+import nl.icsvertex.scansuite.Fragments.ship.ShiporderLinesToShipFragment;
 import nl.icsvertex.scansuite.R;
 
 import nl.icsvertex.scansuite.PagerAdapters.ShiporderLinesPagerAdapter;
@@ -52,7 +53,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     //Region Public Properties
     public static final String VIEW_CHOSEN_ORDER = "detail:header:text";
-     //End Region Public Properties
+    //End Region Public Properties
 
     //Region Private Properties
 
@@ -91,14 +92,14 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     protected void onDestroy() {
-           super.onDestroy();
+        super.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
-     }
+    }
 
     @Override
     protected void onPause() {
@@ -231,13 +232,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         //Call this here, because this is called everytime the activiy gets shown
         this.mCheckAllDone();
 
-        //Check if we already have a workplace
-        if (cWorkplace.currentWorkplace != null) {
-            return;
-        }
 
-        //Show the workplace fragment
-       this.mShowWorkplaceFragment();
 
     }
 
@@ -259,7 +254,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         if (pvSourceNoSelectedBln) {
 
             //we have a SourceDocument to handle, so start Pick activity
-            ShiporderLinesActivity.mStartOrderSelectActivity();
+            ShiporderLinesActivity.mStartShipActivity();
             return;
         }
 
@@ -292,21 +287,35 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //We found a match in open shipments
-        ShiporderLinesActivity.mStartOrderSelectActivity();
+        ShiporderLinesActivity.mStartShipActivity();
         return;
 
+    }
+
+    public static void pShipmentSelected(cShipment pvShipment) {
+        cShipment.currentShipment = pvShipment;
+        ShiporderLinesToShipFragment.pSetChosenShipment();
     }
 
     public static void pShippingDone() {
 
         //Try to close
-      if (!ShiporderLinesActivity.mTryToCloseOrderBln()){
-          return;
-      }
+        if (!ShiporderLinesActivity.mTryToCloseOrderBln()){
+            return;
+        }
 
-      //Go back to order select activity
-       ShiporderLinesActivity.mStartOrderSelectActivity();
+        //Go back to order select activity
+        ShiporderLinesActivity.mStartOrderSelectActivity();
 
+    }
+
+    public static void pShowOrderDoneFragment() {
+
+        cUserInterface.pPlaySound(R.raw.goodsound, null);
+
+        final OrderDoneFragment orderDoneFragment = new OrderDoneFragment(false);
+        orderDoneFragment.setCancelable(false);
+        orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
     //End Region Public Methods
@@ -318,8 +327,15 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
+        //Check if we need to register a workplace
+        if (cWorkplace.currentWorkplace == null) {
+            //Show the workplace fragment
+            this.mShowWorkplaceFragment();
+            return;
+        }
+
         // Show order done fragment
-        ShiporderLinesActivity.mShowOrderDoneFragment();
+        ShiporderLinesActivity.pShowOrderDoneFragment();
 
 
     }
@@ -391,15 +407,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         WorkplaceFragment workplaceFragment = new WorkplaceFragment();
         workplaceFragment.setCancelable(false);
         workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
-    }
-
-    private static void mShowOrderDoneFragment() {
-
-        cUserInterface.pPlaySound(R.raw.goodsound, null);
-
-        final OrderDoneFragment orderDoneFragment = new OrderDoneFragment(false);
-        orderDoneFragment.setCancelable(false);
-        orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
     private void mTryToLeaveActivity(){
@@ -474,11 +481,10 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         cAppExtension.activity.startActivity(intent);
     }
 
-    //todo: put this back
-//    private static void mStartShipActivity(){
-//        //we have a SourceDocument to handle, so start Ship activity
-//        Intent intent = new Intent(cAppExtension.context, ShiporderShipActivity.class);
-//        cAppExtension.activity.startActivity(intent);
-//    }
+    private static void mStartShipActivity(){
+        //we have a SourceDocument to handle, so start Ship activity
+        Intent intent = new Intent(cAppExtension.context, ShiporderShipActivity.class);
+        cAppExtension.activity.startActivity(intent);
+    }
 
 }

@@ -218,30 +218,23 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
+
     public static void pFillOrders() {
 
-        //First get all sortorders
-        if (!cPickorder.pGetPackAndShipOrdersViaWebserviceBln(true, "")) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true);
-            return;
-        }
+        // Show that we are getting data
+        cUserInterface.pShowGettingData();
+
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleFillOrders();
+            }
+        }).start();
 
 
-        if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
-            ShiporderSelectActivity.mShowNoOrdersIcon(true);
-            return;
-        }
-
-        //Fill and show recycler
-        ShiporderSelectActivity.mSetSortorderRecycler(cPickorder.allPickordersObl);
-
-        ShiporderSelectActivity.mShowNoOrdersIcon(false);
-        return;
     }
 
     public static void pShiporderSelected(cPickorder pvPickorder) {
 
-        cResult hulpResult;
 
         if (mCheckOrderIsLockableBln(pvPickorder) == false) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
@@ -255,29 +248,13 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         //Set the current pickorder
         cPickorder.currentPickOrder = pvPickorder;
 
-        //Try to lock the pickorder
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleSortOrderSelected();
+            }
+        }).start();
 
-        if (ShiporderSelectActivity.mTryToLockOrderBln() == false) {
-            ShiporderSelectActivity.pFillOrders();
-            return;
-        }
 
-        //Delete the detail, so we can get them from the webservice
-        if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-            return;
-
-        }
-
-        hulpResult = ShiporderSelectActivity.mGetOrderDetailsRst();
-        if (hulpResult.resultBln == false) {
-            ShiporderSelectActivity.mStepFailed(hulpResult.messagesStr());
-            return;
-        }
-
-        // If everything went well, then start Lines Activity
-        ShiporderSelectActivity.mShowShipLinesActivity();
-        return;
     }
 
     public static void pHandleScan(String pvBarcodeStr) {
@@ -307,6 +284,66 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     //End Region Public Methods
 
     //Region Private Method
+
+    private static void mHandleFillOrders(){
+
+        //First get all sortorders
+        if (!cPickorder.pGetPackAndShipOrdersViaWebserviceBln(true, "")) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true);
+            return;
+        }
+
+
+        if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
+            ShiporderSelectActivity.mShowNoOrdersIcon(true);
+            return;
+        }
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //Fill and show recycler
+                ShiporderSelectActivity.mSetSortorderRecycler(cPickorder.allPickordersObl);
+                ShiporderSelectActivity.mShowNoOrdersIcon(false);
+            }
+        });
+
+    }
+
+    private static void mHandleSortOrderSelected(){
+
+        cResult hulpResult;
+
+
+        //Try to lock the pickorder
+
+        if (ShiporderSelectActivity.mTryToLockOrderBln() == false) {
+            ShiporderSelectActivity.pFillOrders();
+            return;
+        }
+
+        //Delete the detail, so we can get them from the webservice
+        if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
+            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            return;
+
+        }
+
+        hulpResult = ShiporderSelectActivity.mGetOrderDetailsRst();
+        if (hulpResult.resultBln == false) {
+            ShiporderSelectActivity.mStepFailed(hulpResult.messagesStr());
+            return;
+        }
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // If everything went well, then start Lines Activity
+                ShiporderSelectActivity.mShowShipLinesActivity();
+            }
+        });
+
+    }
 
     private void mSetSearchListener() {
         //make whole view clickable
@@ -349,7 +386,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mInitBottomSheet() {
 
-        this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
+        this.bottomSheetBehavior = BottomSheetBehavior.from(this.constraintFilterOrders);
         this.bottomSheetBehavior.setHideable(true);
         this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         this.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -417,30 +454,36 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorderBarcode.currentPickorderBarcode = null;
     }
 
-    private static void mShowNoOrdersIcon(Boolean pvShowBln) {
+    private static void mShowNoOrdersIcon(final Boolean pvShowBln) {
 
-        if (pvShowBln) {
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-            recyclerViewShiporders.setVisibility(View.INVISIBLE);
-            FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-            NoOrdersFragment fragment = new NoOrdersFragment();
-            fragmentTransaction.replace(R.id.container, fragment);
-            fragmentTransaction.commit();
-            return;
-        }
+                cUserInterface.pHideGettingData();
 
-        recyclerViewShiporders.setVisibility(View.VISIBLE);
+                if (pvShowBln) {
 
-        List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-        for (Fragment fragment : fragments) {
-            if (fragment instanceof NoOrdersFragment) {
-                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                fragmentTransaction.remove(fragment);
-                fragmentTransaction.commit();
+                    recyclerViewShiporders.setVisibility(View.INVISIBLE);
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    NoOrdersFragment fragment = new NoOrdersFragment();
+                    fragmentTransaction.replace(R.id.container, fragment);
+                    fragmentTransaction.commit();
+                    return;
+                }
+
+                recyclerViewShiporders.setVisibility(View.VISIBLE);
+
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof NoOrdersFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                    }
+                }
             }
-        }
-
-        return;
+        });
     }
 
     private static void mSetSortorderRecycler(List<cPickorder> pvPickorderObl) {
@@ -629,4 +672,5 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         cAppExtension.activity.startActivity(intent);
     }
 }
+
 //End Region Private Methods

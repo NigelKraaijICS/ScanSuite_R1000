@@ -28,6 +28,9 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
+import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -37,6 +40,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
+import nl.icsvertex.scansuite.Activities.ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.PagerAdapters.SortorderLinesPagerAdapter;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.dialogs.CommentFragment;
@@ -517,22 +521,28 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private static void mStartShipActivity() {
 
-        //Try to lock the pickorder
-        if (!cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Sorting, 40).resultBln) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_lock_order));
+        cResult hulpResult;
+
+       if (! mTryToLockShipOrderBln()) {
+           return;
+       }
+
+        //Delete the detail, so we can get them from the webservice
+        if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
+            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
             return;
         }
 
-        if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT)) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_getting_sort_lines_failed));
+        //Get all new details
+        hulpResult = SortorderLinesActivity.mGetShipOrderDetailsRst();
+        if (hulpResult.resultBln == false ) {
+            SortorderLinesActivity.mStepFailed(hulpResult.messagesStr());
             return;
         }
 
-        //show Shiporder lines
-        //todo: put this back
-//        Intent intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
-//        cAppExtension.activity.startActivity(intent);
-//        return;
+        //Show Ship activity
+        mStartShipActivity();
+
 
     }    private void mSetTabselected(TabLayout.Tab pvTab) {
 
@@ -743,6 +753,109 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
+    }
+
+    private static boolean mTryToLockShipOrderBln(){
+
+        cResult hulpResult;
+        hulpResult = cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+
+        //Everything was fine, so we are done
+        if (hulpResult.resultBln == true) {
+            return true;
+        }
+
+        //Something went wrong, but no further actions are needed, so ony show reason of failure
+        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+            mStepFailed(hulpResult.messagesStr());
+            return  false;
+        }
+
+        //Something went wrong, the order has been deleted, so show comments and refresh
+        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
+                hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
+
+
+            //If we got any comments, show them
+            if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
+                //Process comments from webresult
+                SortorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+            }
+
+            return  false;
+        }
+
+
+        return true;
+
+    }
+
+    private static cResult mGetShipOrderDetailsRst() {
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Check all ShippingAgents
+        if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagents_available));
+            return result;
+        }
+
+        //Check all ShippingAgents
+        if (cShippingAgentService.allShippingAgentServicesObl == null || cShippingAgentService.allShippingAgentServicesObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_available));
+            return result;
+        }
+
+        //Check all ShippingAgent Shipping Units
+        if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null || cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_units_available));
+            return result;
+        }
+
+        // Get all lines, if zero than there is something wrong
+        if (cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true) == false) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));
+            return result;
+        }
+
+        // Get all packages
+        if (cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true) == false) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
+            return result;
+        }
+
+        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
+        if (cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true) == false) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true) == false) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        //If this is single article, then get barcodes
+        if (cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
+            if (cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true) == false) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+                return result;
+            }
+        }
+
+        return result;
     }
 
     //End Region Private Methods

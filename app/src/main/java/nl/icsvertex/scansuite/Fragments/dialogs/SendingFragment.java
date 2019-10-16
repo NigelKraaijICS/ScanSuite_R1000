@@ -17,32 +17,44 @@ import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
+import java.util.List;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.R;
 
 public class SendingFragment extends DialogFragment implements iICSDefaultFragment {
 
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
+
     private  ImageView imageRocket;
     private ImageView imageCloud;
     private TextView textSending;
+    private TextView textError;
     private TextView textDots;
     private  TextView textTryAgain;
     private  ImageView imageViewTryAgain;
     private DialogInterface dialogInterface;
 
-    public static SendingFragment newInstance() {
-        return new SendingFragment();
-    }
+    //End Region Private Properties
 
+    //Region Contsructor
     public SendingFragment() {
         // Required empty public constructor
     }
+    //Emd Region Constructor
 
+    //Region Default Methods
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        dialogInterface = getDialog();
+        this.dialogInterface = getDialog();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sending, container, false);
 
@@ -50,41 +62,145 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mFragmentInitialize();
-        mSetAnimations();
+        this.mFragmentInitialize();
+
     }
+
+    //End Region Default Methods
+
+    //Region iICSDefaultActivity defaults
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mSetViewModels();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+        this.mSetAnimations();
     }
+
     @Override
     public void mFindViews() {
-        imageRocket = getView().findViewById(R.id.imageRocket);
-        imageCloud = getView().findViewById(R.id.imageCloud);
-        textSending = getView().findViewById(R.id.textSending);
-        textDots = getView().findViewById(R.id.textDots);
-        textTryAgain = getView().findViewById(R.id.textTryAgain);
-        imageViewTryAgain = getView().findViewById(R.id.imageViewTryAgain);
+        this.imageRocket = getView().findViewById(R.id.imageRocket);
+        this.imageCloud = getView().findViewById(R.id.imageCloud);
+        this.textSending = getView().findViewById(R.id.textSending);
+        this.textError = getView().findViewById(R.id.textErrorDetail);
+        this.textDots = getView().findViewById(R.id.textDots);
+        this.textTryAgain = getView().findViewById(R.id.textTryAgain);
+        this.imageViewTryAgain = getView().findViewById(R.id.imageViewTryAgain);
     }
 
     @Override
     public void mSetViewModels() {
 
     }
+
     @Override
     public void mFieldsInitialize() {
         textSending.setText(R.string.dialog_sending);
         textDots.setVisibility(View.VISIBLE);
-        mHideTryAgain();
+        textError.setVisibility(View.INVISIBLE);
+        mShowHideTryAgain(false);
     }
+
     @Override
     public void mSetListeners() {
         mSetTryAgainListener();
     }
+
+    //End Region iICSDefaultActivity defaults
+
+    //Region Public Methods
+
+    public void pShowFlyAwayAnimation() {
+
+        //new thread, so run in UI
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textSending.setText(R.string.dialog_sent);
+                textDots.setVisibility(View.INVISIBLE);
+                textError.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        TranslateAnimation anim1 = new TranslateAnimation(0f,1400f,0f,-1400f);
+        anim1.setInterpolator(new LinearInterpolator());
+        anim1.setRepeatCount(0);
+        anim1.setDuration(1000);
+
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(anim1);
+        imageRocket.startAnimation(animationSet);
+        animationSet.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+
+                if (cAppExtension.activity instanceof ShiporderShipActivity) {
+                    ShiporderShipActivity.pHandleBackToLines();
+                }
+                dismiss();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void pShowCrashAnimation(final String pvErrorMessageStr) {
+
+        mShowHideTryAgain(true);
+
+        //new thread, so run in UI
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textSending.setText(R.string.dialog_notsent);
+                textDots.setVisibility(View.INVISIBLE);
+                textError.setVisibility(View.VISIBLE);
+                textError.setText(pvErrorMessageStr);
+            }
+        });
+
+        cUserInterface.pPlaySound( R.raw.badsound, null);
+
+        TranslateAnimation anim1 = new TranslateAnimation(0f,1400f,0f,1400f);
+        anim1.setInterpolator(new LinearInterpolator());
+        anim1.setRepeatCount(0);
+        anim1.setDuration(2000);
+
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(anim1);
+        imageRocket.startAnimation(animationSet);
+        animationSet.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                imageRocket.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    //End Region Public Methods
+
+    //Region Private Methods
 
     private void mSetTryAgainListener() {
         imageViewTryAgain.setOnClickListener(new View.OnClickListener() {
@@ -92,20 +208,18 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
             public void onClick(View v) {
                 dismiss();
 
-                //todo: put this back
-//                if (cAppExtension.activity instanceof ShiporderShipActivity) {
-//                    try {
-//                        ((ShiporderShipActivity) getActivity()).trySendAgain();
-//                    } catch (NullPointerException e) {
-//
-//                    }
-//                }
-
-
+                if (cAppExtension.activity instanceof ShiporderShipActivity) {
+                    try {
+                        ShiporderShipActivity.pHandleSourceDocumentDone();
+                    } catch (NullPointerException e) {
+                    }
+                }
             }
         });
     }
+
     private void mSetAnimations() {
+
         TranslateAnimation anim1 = new TranslateAnimation(300f,-1400f,-300f,1400f);
         anim1.setInterpolator(new LinearInterpolator());
         anim1.setRepeatCount(Animation.INFINITE);
@@ -113,9 +227,9 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(anim1);
-        imageCloud.startAnimation(animationSet);
+        this.imageCloud.startAnimation(animationSet);
 
-        cUserInterface.pDoWobble(imageRocket);
+        cUserInterface.pDoWobble(this.imageRocket);
 
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -146,84 +260,20 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         };
         handler.postDelayed(runnable, 600);
     }
-    public void flyAway() {
-        //new thread, so run in UI
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textSending.setText(R.string.dialog_sent);
-                textDots.setVisibility(View.INVISIBLE);
-            }
-        });
 
-        TranslateAnimation anim1 = new TranslateAnimation(0f,1400f,0f,-1400f);
-        anim1.setInterpolator(new LinearInterpolator());
-        anim1.setRepeatCount(0);
-        anim1.setDuration(1000);
+    private void mShowHideTryAgain(Boolean pvShowBln) {
 
-        AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(anim1);
-        imageRocket.startAnimation(animationSet);
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        if (pvShowBln) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textTryAgain.setVisibility(View.VISIBLE);
+                    imageViewTryAgain.setVisibility(View.VISIBLE);
+                    return;
+                }
+            });
+        }
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                //todo: put this back
-//                if (cAppExtension.activity instanceof ShiporderShipActivity) {
-//                    ((ShiporderShipActivity)getActivity()).goLines();
-//                }
-                dismiss();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
-    public void notSendCrash() {
-        mShowTryAgain();
-        //new thread, so run in UI
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textSending.setText(R.string.dialog_notsent);
-                textDots.setVisibility(View.INVISIBLE);
-            }
-        });
-        cUserInterface.pPlaySound( R.raw.badsound, null);
-
-        TranslateAnimation anim1 = new TranslateAnimation(0f,1400f,0f,1400f);
-        anim1.setInterpolator(new LinearInterpolator());
-        anim1.setRepeatCount(0);
-        anim1.setDuration(2000);
-
-        AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(anim1);
-        imageRocket.startAnimation(animationSet);
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                imageRocket.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
-    private void mHideTryAgain() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -231,14 +281,12 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
                 imageViewTryAgain.setVisibility(View.INVISIBLE);
             }
         });
+
     }
-    private void mShowTryAgain() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textTryAgain.setVisibility(View.VISIBLE);
-                imageViewTryAgain.setVisibility(View.VISIBLE);
-            }
-        });
-    }
+
+    //End Region Private Methods
 }
+
+
+
+

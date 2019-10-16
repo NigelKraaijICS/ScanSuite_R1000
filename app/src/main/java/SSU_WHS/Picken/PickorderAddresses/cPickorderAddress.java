@@ -80,9 +80,11 @@ public class cPickorderAddress {
         cPickorderAddress.getPickorderAddressViewModel().insert(this.pickorderAddressEntity);
         this.inDatabaseBln = true;
 
-        if (cPickorderAddress.allAdressesObl == null);
-        {cPickorderAddress.allAdressesObl = new ArrayList<>();
+
+        if (cPickorderAddress.allAdressesObl == null) {
+            cPickorderAddress.allAdressesObl = new ArrayList<>();
         }
+
         cPickorderAddress.allAdressesObl.add(this);
         return true;
     }

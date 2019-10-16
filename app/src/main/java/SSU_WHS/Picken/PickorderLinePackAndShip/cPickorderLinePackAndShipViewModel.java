@@ -23,14 +23,6 @@ public class cPickorderLinePackAndShipViewModel extends AndroidViewModel {
 
     //Region Public Methods
 
-    public void insert(cPickorderLinePackAndShipEntity pickorderLinePackAndShipEntity) {
-        repository.insert(pickorderLinePackAndShipEntity);
-    }
-
-    public void deleteAll() {
-        repository.deleteAll();
-    }
-
     //End Region Public Methods
 
 }

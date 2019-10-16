@@ -39,7 +39,7 @@
     <string name="choose_workplace">Kies werkplek</string>
     <string name="screentitle_main">Welkom</string>
     <string name="screentitle_settings">Instellingen</string>
-    <string name="screentitle_support">Support &amp; info</string>
+    <string name="screentitle_support">Support en info</string>
     <string name="screentitle_language">Taal</string>
     <string name="screentitle_datetime">Datum en tijd</string>
     <string name="logo_description">ScanSuite logo</string>
@@ -380,4 +380,5 @@
     <string name="error_no_shippingagent_services_available">Geen vervoerder afdelingen beschikbaar</string>
     <string name="error_no_shippingagent_services_units_available">Geen vervoerder afdeling verzendeenheden beschikbaar</string>
     <string name="message_article_not_allowed">Artikel scan niet toegestaan</string>
+    <string name="dialog_error">Fout informatie</string>
 </resources>

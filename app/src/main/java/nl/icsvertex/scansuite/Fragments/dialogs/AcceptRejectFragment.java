@@ -140,10 +140,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             SortorderSortActivity.pAcceptPick();
         }
 
-        //todo: put this back
-//        if (callerActivity instanceof ShiporderShipActivity) {
-//
-//        }
     }
 
     private void mReject() {
@@ -156,14 +152,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             SortorderSortActivity.pCancelPick();
         }
 
-
-        //todo: put this back
-//        if (callerActivity instanceof SortorderSortActivity) {
-//            ((SortorderSortActivity)callerActivity).m_rejectPickorderLine();
-//        }
-//        if (callerActivity instanceof ShiporderShipActivity) {
-//
-//        }
     }
 
 }

@@ -33,6 +33,7 @@ import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 
 import ICS.Utils.cResult;
+import ICS.Utils.cText;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
@@ -68,7 +69,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     // Region Views
     private static RecyclerView recyclerViewPickorders;
     private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static TextView toolbarTitle;
     private static androidx.appcompat.widget.SearchView recyclerSearchView;
 
     private static ImageView imageViewFilter;
@@ -201,28 +202,15 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     public static void pFillOrders() {
 
-        //First get all Pickorders that are new
-        if (cPickorder.pGetPickOrdersViaWebserviceBln(true,false,"") == false) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
-            return;
-        }
+        // Show that we are getting data
+        cUserInterface.pShowGettingData();
 
-        //Then get all pickorders that are processing or parked
-        if (cPickorder.pGetPickOrdersViaWebserviceBln(false,true,"") == false) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
-            return;
-        }
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleFillOrders();
+            }
+        }).start();
 
-        if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
-            PickorderSelectActivity.mShowNoOrdersIcon(true);
-            return;
-        }
-
-        //Fill and show recycler
-        PickorderSelectActivity.mSetPickorderRecycler(cPickorder.allPickordersObl);
-
-        PickorderSelectActivity.mShowNoOrdersIcon(false);
-        return;
     }
 
     public static void pHandleScan(String pvBarcodeStr) {
@@ -251,8 +239,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     public static void pPickorderSelected(cPickorder pvPickorder) {
 
-        cResult hulpResult;
-
         if (mCheckOrderIsLockableBln(pvPickorder) == false) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
             cUserInterface.pCheckAndCloseOpenDialogs();
@@ -265,8 +251,53 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         //Set the current pickorder
         cPickorder.currentPickOrder = pvPickorder;
 
-        //Try to lock the pickorder
+        new Thread(new Runnable() {
+            public void run() {
+                mHandlePickorderSelected();
+            }
+        }).start();
 
+    }
+
+    //End Region Public Methods
+
+    // Region Private Methods
+
+    private static void mHandleFillOrders(){
+
+        //First get all Pickorders that are new
+        if (cPickorder.pGetPickOrdersViaWebserviceBln(true,false,"") == false) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
+            return;
+        }
+
+        //Then get all pickorders that are processing or parked
+        if (cPickorder.pGetPickOrdersViaWebserviceBln(false,true,"") == false) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
+            return;
+        }
+
+        if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
+            PickorderSelectActivity.mShowNoOrdersIcon(true);
+            return;
+        }
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //Fill and show recycler
+                PickorderSelectActivity.mSetPickorderRecycler(cPickorder.allPickordersObl);
+                PickorderSelectActivity.mShowNoOrdersIcon(false);
+                cUserInterface.pHideGettingData();
+            }
+        });
+    }
+
+    private static void mHandlePickorderSelected(){
+
+        cResult hulpResult;
+
+        //Try to lock the pickorder
         if (PickorderSelectActivity.mTryToLockOrderBln() == false) {
             PickorderSelectActivity.orderDetailsCompleteBln = false;
             PickorderSelectActivity.pFillOrders();
@@ -274,27 +305,27 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         }
 
         //Delete the detail, so we can get them from the webservice
-       if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
-           mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-           return;
-
-       }
+        if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
+            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            return;
+        }
 
         hulpResult = PickorderSelectActivity.mGetOrderDetailsRst();
-     if (hulpResult.resultBln == false ) {
-         PickorderSelectActivity.mStepFailed(hulpResult.messagesStr());
-         return;
-     }
+        if (hulpResult.resultBln == false ) {
+            PickorderSelectActivity.mStepFailed(hulpResult.messagesStr());
+            return;
+        }
 
-        // If everything went well, then start Lines Activity
-        PickorderSelectActivity.mShowPickLinesActivity();
-        return;
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // If everything went well, then start Lines Activity
+                PickorderSelectActivity.mShowPickLinesActivity();
+            }
+        });
 
     }
-
-    //End Region Public Methods
-
-    // Region Private Methods
 
     private static cResult mGetOrderDetailsRst(){
 
@@ -309,7 +340,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
             return result;
         }
-
 
         //Get TAKE line barcodes for current order
         if (cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true,cWarehouseorder.ActionTypeEnu.TAKE) == false) {
@@ -570,32 +600,41 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     // No orders icon
 
-    private static void mShowNoOrdersIcon(Boolean pvShowBln){
+    private static void mShowNoOrdersIcon(final Boolean pvShowBln){
 
-        if (pvShowBln) {
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-            recyclerViewPickorders.setVisibility(View.INVISIBLE);
+                cUserInterface.pHideGettingData();
 
-            PickorderSelectActivity.imageViewFilter.setVisibility(View.INVISIBLE);
-            FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-            NoOrdersFragment fragment = new NoOrdersFragment();
-            fragmentTransaction.replace(R.id.pickorderContainer, fragment);
-            fragmentTransaction.commit();
-            return;
-        }
+                PickorderSelectActivity.toolbarTitle.setText(cAppExtension.activity.getResources().getString(R.string.screentitle_pickorderselect) + " (" + cText.intToString(cPickorder.allPickordersObl.size()) + ")" );
 
-        recyclerViewPickorders.setVisibility(View.VISIBLE);
 
-        List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-        for (Fragment fragment : fragments) {
-            if (fragment instanceof NoOrdersFragment) {
-                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                fragmentTransaction.remove(fragment);
-                fragmentTransaction.commit();
+                if (pvShowBln) {
+
+                    recyclerViewPickorders.setVisibility(View.INVISIBLE);
+
+                    PickorderSelectActivity.imageViewFilter.setVisibility(View.INVISIBLE);
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    NoOrdersFragment fragment = new NoOrdersFragment();
+                    fragmentTransaction.replace(R.id.pickorderContainer, fragment);
+                    fragmentTransaction.commit();
+                    return;
+                }
+
+                recyclerViewPickorders.setVisibility(View.VISIBLE);
+
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof NoOrdersFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                    }
+                }
             }
-        }
-
-        return;
+            });
     }
 
     private static boolean mCheckOrderIsLockableBln(cPickorder pvPickorder){
@@ -676,8 +715,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cUserInterface.pPlaySound(R.raw.message, 0);
         return;
     }
-
-
 
     // End No orders icon
 

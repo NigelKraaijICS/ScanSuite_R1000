@@ -3,9 +3,16 @@ package SSU_WHS.Picken.Shipment;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cRegex;
+import ICS.Utils.cResult;
+import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cShipment {
 
@@ -30,9 +37,10 @@ public class cShipment {
     public Boolean getHandledBln(){return  this.handledBln;}
 
     public List<cPickorderLinePackAndShip> packAndShipLineObl;
-    public static List<cShipment> allShipmentsObl;
-    public static cShipment currentShipment;
 
+    public static List<cShipment> allShipmentsObl;
+
+    public static cShipment currentShipment;
 
     public static cShipmentAdapter gShipmentsToshipAdapter;
     public static cShipmentAdapter getShipmentsToshipAdapter() {
@@ -58,6 +66,88 @@ public class cShipment {
         return gShipmentsTotalAdapter;
     }
 
+    public cPickorderAddress pickorderAddress () {
+
+        cPickorderAddress resultAddress;
+
+        if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
+            return  null;
+        }
+
+        if (cPickorder.currentPickOrder.adressesObl() == null || cPickorder.currentPickOrder.adressesObl().size() == 0) {
+            return  null;
+        }
+
+        for (cPickorderLinePackAndShip pickorderLinePackAndShip : this.packAndShipLineObl) {
+            for (cPickorderAddress pickorderAddress : cPickorder.currentPickOrder.adressesObl()) {
+                if (pickorderAddress.getAddrescodeStr().equalsIgnoreCase(pickorderLinePackAndShip.getDeliveryAdressCodeStr())) {
+                    resultAddress = pickorderAddress;
+                    return  resultAddress;
+                }
+            }
+        }
+
+        return  null;
+
+    }
+
+    public cShippingAgent shippingAgent () {
+
+        cShippingAgent resultShippingAgent;
+
+        if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
+            return  null;
+        }
+
+        if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
+            return  null;
+        }
+
+        cPickorderLinePackAndShip firstPickLine = this.packAndShipLineObl.get(0);
+
+        for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl) {
+
+
+            if (shippingAgent.getShippintAgentStr().equalsIgnoreCase(firstPickLine.getShippingAgentCodeStr())) {
+                resultShippingAgent = shippingAgent;
+                return  resultShippingAgent;
+            }
+
+        }
+
+        return  null;
+
+    }
+
+    public cShippingAgentService shippingAgentService () {
+
+        cShippingAgentService resultShippingAgentService;
+
+        if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
+            return  null;
+        }
+
+        if (this.shippingAgent() == null || this.shippingAgent().shippingAgentServicesObl() == null || this.shippingAgent().shippingAgentServicesObl().size() == 0) {
+            return  null;
+        }
+
+        cPickorderLinePackAndShip firstPickLine = this.packAndShipLineObl.get(0);
+
+        for (cShippingAgentService shippingAgentService : this.shippingAgent().shippingAgentServicesObl()) {
+
+
+            if (shippingAgentService.getShippingAgentStr().equalsIgnoreCase(firstPickLine.getShippingAgentCodeStr()) && shippingAgentService.getServiceStr().equalsIgnoreCase(firstPickLine.getShippingAgentServiceCodeStr())  ) {
+                resultShippingAgentService = shippingAgentService;
+                return  resultShippingAgentService;
+            }
+
+        }
+
+        return  null;
+
+    }
+
+
 
     //End Region Public Properties
 
@@ -67,11 +157,15 @@ public class cShipment {
         this.sourceNoStr = pvSourceNoStr;
         this.packAndShipLineObl = new ArrayList<>();
         this.handledBln = false;
+        this.quantityDbl = Double.valueOf(0);
+        this.processingSequenceStr = "";
+
     }
 
     //End Region Constructor
 
     //Region Public Methods
+
     public static void pAddShipment(cShipment pvShipment) {
 
         if (cShipment.allShipmentsObl == null) {
@@ -102,6 +196,11 @@ public class cShipment {
 
         if (pvScannedBarcodeStr.isEmpty()) {
             return  null;
+        }
+
+
+        if (cRegex.hasPrefix(pvScannedBarcodeStr)) {
+            pvScannedBarcodeStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
         }
 
         List<cShipment> hulpObl = cPickorder.currentPickOrder.pGetNotHandledShipmentsObl();
@@ -155,8 +254,32 @@ public class cShipment {
         return  null;
     }
 
+    public cResult pShipmentDoneRst() {
 
+        cResult result = new cResult();
 
+        //Call webservice
+        cWebresult webresult =  cPickorder.getPickorderViewModel().pPickorderSourceDocumentShippedViaWebserviceBln();
+
+        //If something went wrong, show this and rest statusses
+        if (! webresult.getResultBln()) {
+
+            result.resultBln = false;
+
+            //Add web errors to result
+            for (String resulStr : webresult.getResultObl()) {
+                result.pAddErrorMessage(resulStr);
+            }
+
+            //Leave, we are done
+            return result;
+        }
+
+        //We are done, so this shipmemt is handled and result is true
+        result.resultBln = true;
+        cShipment.currentShipment.handledBln = true;
+        return  result;
+    }
 
     public void pAddPackAndShipLine(cPickorderLinePackAndShip pvPickorderLinePackAndShip){
         this.packAndShipLineObl.add((pvPickorderLinePackAndShip));
@@ -166,6 +289,10 @@ public class cShipment {
 
     //End Region Public Methods
 
+    //Region Private Methods
+
+
+    //End Region Private Methods
 
 
     //End Region Constructor

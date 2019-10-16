@@ -47,6 +47,8 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
     }
     //End Region Constructor
 
+    // Region Default Methods
+
     @Override
     public cBranchAdapter.BranchViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewType) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_branch, pvParent, false);
@@ -82,7 +84,7 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
 
                     if (cAppExtension.context instanceof LoginActivity) {
                         cUser.currentUser.currentBranch = branch;
-                         LoginActivity.pBranchSelected(branch);
+                        LoginActivity.pBranchSelected(branch);
                     }
                 }
             });
@@ -95,4 +97,8 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
             return cUser.currentUser.branchesObl.size();
         else return 0;
     }
+
+    // End Region Default Methods
+
+
 }

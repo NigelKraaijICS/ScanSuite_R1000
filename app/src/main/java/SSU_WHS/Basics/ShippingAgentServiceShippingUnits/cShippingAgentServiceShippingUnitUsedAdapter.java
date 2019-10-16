@@ -1,6 +1,5 @@
 package SSU_WHS.Basics.ShippingAgentServiceShippingUnits;
 
-import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,97 +12,124 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
 public class cShippingAgentServiceShippingUnitUsedAdapter extends RecyclerView.Adapter<cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder> {
-    private Context callerContext;
-    private List<LinearLayout> shippingUnitItemLinearLayouts = new ArrayList<>();
-    private RecyclerView thisRecyclerView;
 
+    //Region Public Properties
+
+    //End Region Public Properties
 
     class ShippingAgentServiceShippingUnitUsedViewHolder extends RecyclerView.ViewHolder{
-        LinearLayout shippingUnitUsedItemLinearLayout;
-        TextView textViewDescription;
-        TextView textViewShippingUnit;
-        TextView textViewQuantityUsed;
-        ImageView usedUnitsImage;
 
-        ShippingAgentServiceShippingUnitUsedViewHolder(View itemView) {
-        super(itemView);
-        shippingUnitUsedItemLinearLayout = itemView.findViewById(R.id.shippingUnitUsedItemLinearLayout);
-        usedUnitsImage = itemView.findViewById(R.id.usedUnitsImage);
-        textViewDescription = itemView.findViewById(R.id.textViewDescription);
-        textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        textViewDescription.setSingleLine(true);
-        textViewDescription.setMarqueeRepeatLimit(5);
-        textViewDescription.setSelected(true);
-        textViewShippingUnit = itemView.findViewById(R.id.textViewShippingUnit);
-        textViewShippingUnit.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        textViewShippingUnit.setSingleLine(true);
-        textViewShippingUnit.setMarqueeRepeatLimit(5);
-        textViewShippingUnit.setSelected(true);
-        textViewQuantityUsed = itemView.findViewById(R.id.textViewQuantityUsed);
+        private LinearLayout shippingUnitUsedItemLinearLayout;
+        private TextView textViewDescription;
+        private TextView textViewShippingUnit;
+        private TextView textViewQuantityUsed;
+        private ImageView usedUnitsImage;
+
+        ShippingAgentServiceShippingUnitUsedViewHolder(View pvView) {
+            super(pvView);
+            this.shippingUnitUsedItemLinearLayout = pvView.findViewById(R.id.shippingUnitUsedItemLinearLayout);
+            this.usedUnitsImage = pvView.findViewById(R.id.usedUnitsImage);
+            this.textViewDescription = pvView.findViewById(R.id.textViewDescription);
+            this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDescription.setSingleLine(true);
+            this.textViewDescription.setMarqueeRepeatLimit(5);
+            this.textViewDescription.setSelected(true);
+            this.textViewShippingUnit = pvView.findViewById(R.id.textViewShippingUnit);
+            this.textViewShippingUnit.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewShippingUnit.setSingleLine(true);
+            this.textViewShippingUnit.setMarqueeRepeatLimit(5);
+            this.textViewShippingUnit.setSelected(true);
+            this.textViewQuantityUsed = pvView.findViewById(R.id.textViewQuantityUsed);
+        }
     }
-}
 
-    private final LayoutInflater mInflater;
-    public List<cShippingAgentServiceShippingUnitEntity> mShippingAgentServiceShippingUnits; //cached copy of pickorders
+    //Region Private Properties
 
-    public cShippingAgentServiceShippingUnitUsedAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        callerContext = context;
+    private List<LinearLayout> shippingUnitItemLinearLayouts = new ArrayList<>();
+    private RecyclerView thisRecyclerView;
+    private LayoutInflater layoutInflater;
+    private List<cShippingAgentServiceShippingUnit> localShippingUnits;
+
+
+    //End Region Private Properties
+
+    //Region Constructor
+
+    public cShippingAgentServiceShippingUnitUsedAdapter() {
+        this.layoutInflater = LayoutInflater.from(cAppExtension.context);
     }
+
+    // End Region Constructor
+
+    // Region Default Methods
 
     @Override
-    public cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recycler_shippingunit_used, parent, false);
+    public cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder onCreateViewHolder(ViewGroup pvViewgroup, int pvViewTypeInt) {
+        View itemView = layoutInflater.inflate(R.layout.recycler_shippingunit_used, pvViewgroup, false);
         return new cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder(itemView);
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        thisRecyclerView = recyclerView;
-    }
-    public void setShippingUnits(List<cShippingAgentServiceShippingUnitEntity> shippingUnits) {
-        mShippingAgentServiceShippingUnits = shippingUnits;
-        //notifyDataSetChanged();
+    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+        super.onAttachedToRecyclerView(pvRecyclerView);
+        this.thisRecyclerView = pvRecyclerView;
     }
 
     @Override
-    public void onBindViewHolder(final cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder holder, final int position) {
-        shippingUnitItemLinearLayouts.add(holder.shippingUnitUsedItemLinearLayout);
+    public void onBindViewHolder(cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder pvHolder, final int pvPositionInt) {
 
-        if (mShippingAgentServiceShippingUnits != null) {
+        this.shippingUnitItemLinearLayouts.add(pvHolder.shippingUnitUsedItemLinearLayout);
 
-            final cShippingAgentServiceShippingUnitEntity shippingUnitEntity = mShippingAgentServiceShippingUnits.get(position);
-            holder.textViewDescription.setText(shippingUnitEntity.getDescriptionStr());
-            holder.textViewShippingUnit.setText(shippingUnitEntity.getShippingunitStr());
-            holder.textViewQuantityUsed.setText(Integer.toString(shippingUnitEntity.getShippingUnitQuantityusedInt()));
-            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX)) {
-                holder.usedUnitsImage.setImageResource(R.drawable.ic_box);
-            }
-            if (shippingUnitEntity.getShippingunitStr().toLowerCase().contains(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX.toLowerCase())) {
-                holder.usedUnitsImage.setImageResource(R.drawable.ic_box);
-            }
-            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_PALLET)) {
-                holder.usedUnitsImage.setImageResource(R.drawable.ic_pallet);
-            }
-            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_CONTAINER)) {
-                holder.usedUnitsImage.setImageResource(R.drawable.ic_container);
-            }
-            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_LETTERBOX)) {
-                holder.usedUnitsImage.setImageResource(R.drawable.ic_letterbox);
-            }
-            if (shippingUnitEntity.getShippingunitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_HANGING)) {
-                holder.usedUnitsImage.setImageResource(R.drawable.ic_hanging);
-            }
+        if (this.localShippingUnits == null || this.localShippingUnits.size() == 0) {
+            return;
+        }
+
+       cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit = this.localShippingUnits.get(pvPositionInt);
+
+       pvHolder.textViewDescription.setText(shippingAgentServiceShippingUnit.getDescriptionStr());
+       pvHolder.textViewShippingUnit.setText(shippingAgentServiceShippingUnit.getShippingUnitStr());
+       pvHolder.textViewQuantityUsed.setText(Integer.toString(shippingAgentServiceShippingUnit.getShippingUnitQuantityUsedInt()));
+
+        if (shippingAgentServiceShippingUnit.getShippingUnitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX)) {
+            pvHolder.usedUnitsImage.setImageResource(R.drawable.ic_box);
+        }
+        if (shippingAgentServiceShippingUnit.getShippingUnitStr().contains(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX.toLowerCase())) {
+            pvHolder.usedUnitsImage.setImageResource(R.drawable.ic_box);
+        }
+        if (shippingAgentServiceShippingUnit.getShippingUnitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_PALLET)) {
+            pvHolder.usedUnitsImage.setImageResource(R.drawable.ic_pallet);
+        }
+        if (shippingAgentServiceShippingUnit.getShippingUnitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_CONTAINER)) {
+            pvHolder.usedUnitsImage.setImageResource(R.drawable.ic_container);
+        }
+        if (shippingAgentServiceShippingUnit.getShippingUnitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_LETTERBOX)) {
+            pvHolder.usedUnitsImage.setImageResource(R.drawable.ic_letterbox);
+        }
+        if (shippingAgentServiceShippingUnit.getShippingUnitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_HANGING)) {
+            pvHolder.usedUnitsImage.setImageResource(R.drawable.ic_hanging);
         }
     }
+
+
     @Override
     public int getItemCount () {
-        if (mShippingAgentServiceShippingUnits != null)
-            return mShippingAgentServiceShippingUnits.size();
+        if (this.localShippingUnits != null)
+            return this.localShippingUnits.size();
         else return 0;
     }
+
+    //End Region Default Methods
+
+    //Region Public Methods
+
+    public void pFillData(List<cShippingAgentServiceShippingUnit> pvDataObl) {
+        this.localShippingUnits = pvDataObl;
+    }
+
+    //End Region Public Methods
+
 }

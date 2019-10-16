@@ -60,9 +60,9 @@
     <!--region Main screen-->
     <string name="screentitle_main">Welcome</string>
     <string name="screentitle_settings">Settings</string>
-    <string name="screentitle_support">Support &amp; info</string>
+    <string name="screentitle_support">Support and info</string>
     <string name="screentitle_language">Language</string>
-    <string name="screentitle_datetime">Date &amp; time</string>
+    <string name="screentitle_datetime">Date and time</string>
     <string name="logo_description">ScanSuite logo</string>
     <string name="text_gettingready">Just a minute, we\'re getting things ready.</string>
     <string name="button_get_started">Get started</string>
@@ -76,11 +76,11 @@
     <string name="mainmenu_home">Home</string>
     <string name="mainmenu_menu">Menu</string>
     <string name="mainmenu_settings">Settings</string>
-    <string name="mainmenu_support">Support &amp; info</string>
+    <string name="mainmenu_support">Support and info</string>
     <string name="mainmenu_language">Language</string>
-    <string name="mainmenu_datetime">Date &amp; time</string>
+    <string name="mainmenu_datetime">Date and time</string>
     <string name="changelanguage_description">Change language</string>
-    <string name="changedatetime_description">Change date &amp; time</string>
+    <string name="changedatetime_description">Change date and time</string>
     <string name="tab_support_network">Network</string>
     <string name="tab_support_application">Application</string>
     <string name="tab_support_device">Device</string>
@@ -483,4 +483,5 @@
     <string name="error_getting_pack_and_ship_lines_failed">Getting pack and ship lines failed</string>
     <string name="error_getting_packages_failed">Getting packages failed</string>
     <string name="message_article_not_allowed">Article scan not allowed</string>
+    <string name="dialog_error">error detail</string>
 </resources>

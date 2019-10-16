@@ -273,12 +273,14 @@ public class cPickorder{
             return  false;
         }
 
+        if (cPickorder.currentPickOrder.pQuantityHandledDbl() <= 0) {
+            return  false;
+        }
+
         for (cPickorderLine pickorderLine : this.linesObl()) {
 
             if (pickorderLine.statusShippingInt != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded || pickorderLine.statusPackingInt != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded)
-                if (pickorderLine.quantityHandledDbl > 0) {
                     return  true;
-                }
         }
 
         return  false;
@@ -901,7 +903,6 @@ public class cPickorder{
 
         if (pvRefreshBln == true) {
             cPickorderLinePackAndShip.allPackAndShipLinesObl = null;
-            cPickorderLinePackAndShip.pTruncateTableBln();
         }
 
         cWebresult WebResult;
@@ -920,7 +921,26 @@ public class cPickorder{
                 }
 
                 cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(jsonObject);
-                pickorderLinePackAndShip.pInsertInDatabaseBln();
+
+                //Nothing has been picked, so we can skip this line
+                if (pickorderLinePackAndShip.quantityHandledDbl == 0) {
+                    continue;
+                }
+
+                cPickorderLinePackAndShip.allPackAndShipLinesObl.add(pickorderLinePackAndShip);
+
+
+
+                cShipment shipment = cShipment.pGetShipment(pickorderLinePackAndShip.getSourceNoStr());
+                if (shipment == null ) {
+                    cShipment shipmentToAdd = new cShipment(pickorderLinePackAndShip.getSourceNoStr());
+                    cShipment.pAddShipment(shipmentToAdd);
+                    shipmentToAdd.pAddPackAndShipLine(pickorderLinePackAndShip);
+                    continue;
+                }
+
+                shipment.pAddPackAndShipLine(pickorderLinePackAndShip);
+
             }
 
             if (cPickorderLinePackAndShip.allPackAndShipLinesObl.size() == 0) {
@@ -1292,13 +1312,6 @@ public class cPickorder{
 
                 cPickorderAddress pickorderAddress = new cPickorderAddress(jsonObject);
                 pickorderAddress.pInsertInDatabaseBln();
-
-                if ( cPickorderAddress.allAdressesObl  == null) {
-                    cPickorderAddress.allAdressesObl  = new ArrayList<>();
-                }
-
-                cPickorderAddress.allAdressesObl .add((pickorderAddress));
-
             }
             return  true;
         }
@@ -1463,7 +1476,6 @@ public class cPickorder{
         webresult = cPickorder.getPickorderViewModel().pGetPackagesFromWebserviceWrs();
         if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
 
-            cComment.allCommentsObl = new ArrayList<>();
 
             List<JSONObject> myList = webresult.getResultDtt();
             for (int i = 0; i < myList.size(); i++) {

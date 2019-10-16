@@ -80,6 +80,9 @@
         <activity android:name=".Activities.sort.SortorderSortActivity" />
         <activity android:name=".Activities.sort.SortorderLinesActivity" />
         <activity android:name=".Activities.sort.SortorderSelectActivity" />
+        <activity android:name=".Activities.ship.ShiporderSelectActivity" />
+        <activity android:name=".Activities.ship.ShiporderLinesActivity" />
+        <activity android:name=".Activities.ship.ShiporderShipActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

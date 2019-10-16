@@ -36,7 +36,7 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     //Region Private Properties
 
-    private TextView textViewSelectedOrder;
+    private static TextView textViewSelectedOrder;
     private ConstraintLayout shipThisView;
 
     private TextView quickhelpText;
@@ -99,7 +99,7 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
     @Override
     public void mFindViews() {
             this.recyclerViewShiporderLinesToship = getView().findViewById(R.id.recyclerViewShiporderLinesToship);
-            this.textViewSelectedOrder = getView().findViewById(R.id.textViewSelectedOrder);
+            ShiporderLinesToShipFragment.textViewSelectedOrder = getView().findViewById(R.id.textViewSelectedOrder);
             this.shipThisView = getView().findViewById(R.id.shipThisView);
             this.quickhelpText = getView().findViewById(R.id.quickhelpText);
             this.quickhelpContainer = getView().findViewById(R.id.quickhelpContainer);
@@ -125,6 +125,22 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     //End Region iICSDefaultFragment defaults
 
+    //Region Public Methods
+
+    //End Region Public Methods
+
+    public static void pSetChosenShipment(){
+
+        if (!cShipment.currentShipment.getProcessingSequenceStr().isEmpty()) {
+            ShiporderLinesToShipFragment.textViewSelectedOrder.setText(cShipment.currentShipment.getProcessingSequenceStr());
+
+        }
+        else {
+            ShiporderLinesToShipFragment.textViewSelectedOrder.setText(cShipment.currentShipment.getSourceNoStr());
+        }
+
+    }
+
     //Region Private Methods
 
     private void setQuickHelpListener() {
@@ -146,7 +162,6 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
         shipThisView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //todo: call methods in lines activity
              ShiporderLinesActivity.pHandleScan("",true);
             }
         });

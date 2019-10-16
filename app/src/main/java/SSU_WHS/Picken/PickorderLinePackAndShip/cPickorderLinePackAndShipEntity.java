@@ -20,8 +20,8 @@ public class cPickorderLinePackAndShipEntity {
 
     @PrimaryKey(autoGenerate = true)
     public Integer recordid;
-public Integer getRecordInt() { return recordid;
-}
+    public Integer getRecordInt() { return recordid;
+    }
 
     @ColumnInfo(name = cDatabase.LINENO_NAMESTR)
     public Integer lineno;

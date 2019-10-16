@@ -55,6 +55,8 @@ public class cShippingAgentServiceShippingUnit {
     public cShippingAgentServiceShippingUnitEntity shippingAgentServiceShippingUnitEntity;
     public boolean indatabaseBln;
 
+    public static cShippingAgentServiceShippingUnit currentShippingAgentServiceShippingUnit;
+
     public static cShippingAgentServiceShippingUnitViewModel gShippingAgentServiceShippingUnitViewModel;
     public static cShippingAgentServiceShippingUnitViewModel getShippingAgentServiceShippingUnitViewModel() {
         if (gShippingAgentServiceShippingUnitViewModel == null) {
@@ -101,7 +103,7 @@ public class cShippingAgentServiceShippingUnit {
         this.DescriptionStr = this.shippingAgentServiceShippingUnitEntity.getDescriptionStr();
         this.DefaultWeightInGramDbl = cText.stringToDouble(this.shippingAgentServiceShippingUnitEntity.getDefaultWeightInGramStr());
         this.ContainerTypeStr = this.shippingAgentServiceShippingUnitEntity.getContainertype();
-        this.ShippingUnitQuantityUsedInt = this.shippingAgentServiceShippingUnitEntity.getShippingUnitQuantityusedInt();
+        this.ShippingUnitQuantityUsedInt = 0;
     }
     //End Region Constructor
 

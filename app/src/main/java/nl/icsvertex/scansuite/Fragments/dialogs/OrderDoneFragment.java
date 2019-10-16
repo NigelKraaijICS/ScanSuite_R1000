@@ -136,9 +136,6 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         }
     }
 
-
-
-
     @Override
     public void mSetListeners() {
         this.mSetCloseListener();

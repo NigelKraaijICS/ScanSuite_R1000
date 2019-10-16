@@ -15,26 +15,33 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
+import com.google.android.gms.common.api.internal.RegistrationMethods;
+
 import ICS.Utils.cImages;
 import nl.icsvertex.scansuite.R;
 
 public class NothingHereFragment extends Fragment {
 
+    //Region Public Properties
 
+    //End Region Public Properties
+
+    //Region private Properties
     private ImageView imageTumbleweed;
     private ImageView imageViewWind;
     private ImageView imageViewCactus;
     private Boolean blnToggleGrey;
     private View viewDesert;
+    //End Region Private Properties
 
-    public static NothingHereFragment newInstance() {
-        return new NothingHereFragment();
-    }
-
+    //Region Constructor
     public NothingHereFragment() {
         // Required empty public constructor
     }
 
+    //End Region Constructor
+
+    //Region Default Methods
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,18 +49,20 @@ public class NothingHereFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_nothing_here, container, false);
 
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        imageTumbleweed = view.findViewById(R.id.imageViewTumbleweed);
-        imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
-        imageViewWind = view.findViewById(R.id.imageViewWind);
-        imageViewWind.setImageDrawable(cImages.convertToGrayscale(imageViewWind.getDrawable()));
-        imageViewCactus = view.findViewById(R.id.imageViewCactus);
-        imageViewCactus.setImageDrawable(cImages.convertToGrayscale(imageViewCactus.getDrawable()));
-        viewDesert = view.findViewById(R.id.viewDesert);
-        blnToggleGrey = false;
 
-        imageViewCactus.setOnClickListener(new View.OnClickListener() {
+        this.imageTumbleweed = view.findViewById(R.id.imageViewTumbleweed);
+        this.imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
+        this.imageViewWind = view.findViewById(R.id.imageViewWind);
+        this.imageViewWind.setImageDrawable(cImages.convertToGrayscale(imageViewWind.getDrawable()));
+        this.imageViewCactus = view.findViewById(R.id.imageViewCactus);
+        this.imageViewCactus.setImageDrawable(cImages.convertToGrayscale(imageViewCactus.getDrawable()));
+        this.viewDesert = view.findViewById(R.id.viewDesert);
+        this.blnToggleGrey = false;
+
+        this. imageViewCactus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!blnToggleGrey) {
@@ -86,8 +95,13 @@ public class NothingHereFragment extends Fragment {
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(anim);
         animationSet.addAnimation(anim2);
-        imageTumbleweed.startAnimation(animationSet);
-        imageViewWind.startAnimation(anim2);
+        this.imageTumbleweed.startAnimation(animationSet);
+        this.imageViewWind.startAnimation(anim2);
     }
+
+    //End Region Default Methods
+
+
+
 
 }

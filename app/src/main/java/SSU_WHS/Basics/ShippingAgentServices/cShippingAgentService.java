@@ -7,6 +7,7 @@ import java.util.List;
 
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -14,7 +15,7 @@ public class cShippingAgentService {
 
     //Region Public Properties
     public String shippingagentStr;
-    public String getShippingagentStr() {
+    public String getShippingAgentStr() {
         return shippingagentStr;
     }
 
@@ -37,7 +38,7 @@ public class cShippingAgentService {
 
     public static cShippingAgentServiceViewModel gShippingAgentServiceViewModel;
 
-    public static cShippingAgentServiceViewModel getgShippingAgentServiceViewModel() {
+    public static cShippingAgentServiceViewModel getShippingAgentServiceViewModel() {
         if (gShippingAgentServiceViewModel == null) {
             gShippingAgentServiceViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cShippingAgentServiceViewModel.class);
         }
@@ -46,6 +47,30 @@ public class cShippingAgentService {
 
     public static List<cShippingAgentService> allShippingAgentServicesObl;
     public  static  Boolean shippingAgentServicesAvailableBln;
+
+
+    public  List<cShippingAgentServiceShippingUnit>  shippingUnitsObl () {
+
+        List<cShippingAgentServiceShippingUnit> resultObl = new ArrayList<>();
+
+
+        if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null || cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl.size() == 0) {
+            resultObl = null;
+            return  resultObl;
+        }
+
+        for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit : cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl) {
+            if (shippingAgentServiceShippingUnit.getShippingAgentStr().equalsIgnoreCase(this.getShippingAgentStr()) &&
+                shippingAgentServiceShippingUnit.getShippingAgentServiceStr().equalsIgnoreCase(this.getServiceStr())) {
+                resultObl.add(shippingAgentServiceShippingUnit);
+            }
+        }
+
+
+        return  resultObl;
+
+    }
+
     //End Region Public Properties
 
     //Region Constructor
@@ -62,7 +87,7 @@ public class cShippingAgentService {
 
     public boolean pInsertInDatabaseBln() {
 
-        cShippingAgentService.getgShippingAgentServiceViewModel().insert(this.shippingAgentServiceEntity);
+        cShippingAgentService.getShippingAgentServiceViewModel().insert(this.shippingAgentServiceEntity);
         this.indatabaseBln = true;
 
         if (cShippingAgentService.allShippingAgentServicesObl == null){
@@ -73,7 +98,7 @@ public class cShippingAgentService {
     }
 
     public static boolean pTruncateTableBln(){
-        cShippingAgentService.getgShippingAgentServiceViewModel().deleteAll();
+        cShippingAgentService.getShippingAgentServiceViewModel().deleteAll();
         return true;
     }
 
@@ -90,7 +115,7 @@ public class cShippingAgentService {
         }
 
         cWebresult WebResult;
-        WebResult =  cShippingAgentService.getgShippingAgentServiceViewModel().pGetShippingAgentServicesFromWebserviceWrs();
+        WebResult =  cShippingAgentService.getShippingAgentServiceViewModel().pGetShippingAgentServicesFromWebserviceWrs();
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
 
@@ -111,15 +136,18 @@ public class cShippingAgentService {
         }
     }
 
-    public static cShippingAgentService pGetShippingAgentServiceByStr(String pvShippingAgentStr, String pvShippingAgentServiceStr){
-        if(cShippingAgentService.allShippingAgentServicesObl == null){
+    public cShippingAgentServiceShippingUnit pGetShippingAgentShippingUnitByStr(String pvScannedBarcodeStr){
+
+        cShippingAgentServiceShippingUnit resultUnit;
+
+        if(this.shippingUnitsObl() == null || this.shippingUnitsObl().size() == 0){
             return null;
         }
 
-        for (cShippingAgentService shippingAgentService : cShippingAgentService.allShippingAgentServicesObl)
+        for (cShippingAgentServiceShippingUnit  shippingAgentServiceShippingUnit : this.shippingUnitsObl())
         {
-            if(shippingAgentService.getShippingagentStr() == pvShippingAgentStr && shippingAgentService.serviceStr == pvShippingAgentServiceStr){
-                return  shippingAgentService;
+            if(shippingAgentServiceShippingUnit.getShippingUnitStr().equalsIgnoreCase(pvScannedBarcodeStr)){
+                return  shippingAgentServiceShippingUnit;
             }
         }
         return null;

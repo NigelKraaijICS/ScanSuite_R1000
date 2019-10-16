@@ -53,8 +53,7 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mFragmentInitialize();
-
+        this.mFragmentInitialize();
     }
 
     @Override
@@ -85,7 +84,7 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
 
     @Override
     public void mFindViews() {
-            this. recyclerViewShiporderLinesShipped = getView().findViewById(R.id.recyclerViewShiporderLinesShipped);
+            this.recyclerViewShiporderLinesShipped = getView().findViewById(R.id.recyclerViewShiporderLinesShipped);
 
     }
 
@@ -153,7 +152,7 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
             NothingHereFragment fragment = new NothingHereFragment();
-            fragmentTransaction.replace(R.id.recyclerViewShiporderLinesShipped, fragment);
+            fragmentTransaction.replace(R.id.fragmentShiporderLinesShipped, fragment);
             fragmentTransaction.commit();
 
             //Change tabcounter text

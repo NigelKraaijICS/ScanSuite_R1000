@@ -63,7 +63,7 @@ public class cShippingAgent {
 
         for (cShippingAgentService shippingAgentService : cShippingAgentService.allShippingAgentServicesObl)
         {
-            if (shippingAgentService.shippingagentStr == this.shippingAgentStr) {
+            if (shippingAgentService.shippingagentStr.equalsIgnoreCase(this.shippingAgentStr)) {
                 resultObl.add(shippingAgentService);
             }
         }

@@ -34,7 +34,6 @@ import nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity;
 public class MenuActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
-    public static final String ACTIVITYNAME = "MenuActivity";
     //End Region Public Properties
 
     //Region Private Properties

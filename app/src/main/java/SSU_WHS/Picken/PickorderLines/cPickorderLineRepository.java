@@ -311,32 +311,6 @@ public class cPickorderLineRepository {
         }
     }
 
-
-    public boolean pUpdateSortOrderLineBln(Integer pvQuantityHandledInt, String pvBinCodeStr) {
-
-        Integer integerValue;
-
-        UpdateSortOrderLineParams updateSortOrderParams = new UpdateSortOrderLineParams(cPickorderLine.currentPickOrderLine.getRecordIDInt(), pvQuantityHandledInt, pvBinCodeStr);
-
-        try {
-            integerValue = new mUpdateSortOrderLineAsyncTask(pickorderLineDao).execute(updateSortOrderParams).get();
-            if (integerValue != 0) {
-                return  true;}
-            else{
-                return false;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return  false;
-        }
-
-    }
-
-
-
     public List<cPickorderLineEntity> pGetSortLineForItemNoAndVariantCodeObl(String pvItemNoStr, String pvVariantCodeStr) {
 
         List<cPickorderLineEntity>  resultObl;
@@ -611,17 +585,6 @@ public class cPickorderLineRepository {
         @Override
         protected Integer doInBackground(UpdateOrderlineHandledTimeStampParams... params) {
             return mAsyncTaskDao.updateOrderLineLocalHandledTimeStamp(params[0].recordIdint, params[0].handledTimeStampStr);
-        }
-    }
-
-
-    private static class mUpdateSortOrderLineAsyncTask extends AsyncTask<UpdateSortOrderLineParams, Void, Integer> {
-        private iPickorderLineDao mAsyncTaskDao;
-        mUpdateSortOrderLineAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao;}
-        @Override
-        protected Integer doInBackground(UpdateSortOrderLineParams... params) {
-            mAsyncTaskDao.updateSortOrderLine(params[0].recordIdInt, params[0].quantityHandledInt, params[0].binStr);
-            return null;
         }
     }
 
