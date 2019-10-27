@@ -90,7 +90,6 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
@@ -106,10 +105,6 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
             this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {
@@ -185,14 +180,14 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
         this.recyclerViewShiporderLinesToship.setAdapter(cShipment.getShipmentsToshipAdapter());
         this.recyclerViewShiporderLinesToship.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        ShiporderLinesActivity.pChangeTabCounterText(cText.intToString(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.intToString(cPickorder.currentPickOrder.shipmentObl().size()));
+        ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
 
     }
 
     private void mNoLinesAvailable(Boolean pvEnabledBln) {
 
         if (ShiporderLinesActivity.currentLineFragment != null && ShiporderLinesActivity.currentLineFragment == this) {
-            //Close no lines fragment if needed
+            //Close no linesInt fragment if needed
             if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
@@ -217,7 +212,7 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
             fragmentTransaction.commit();
 
             //Change tabcounter text
-            ShiporderLinesActivity.pChangeTabCounterText(cText.intToString(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.intToString(cPickorder.currentPickOrder.shipmentObl().size()));
+            ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
 
         }
     }

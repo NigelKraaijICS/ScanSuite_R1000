@@ -49,7 +49,6 @@ public class SupportApplicationFragment extends Fragment implements iICSDefaultF
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
         mFieldsInitialize();
         mSetListeners();
     }
@@ -61,11 +60,6 @@ public class SupportApplicationFragment extends Fragment implements iICSDefaultF
         updateImageButton = getView().findViewById(R.id.updateImageButton);
         testWebserviceImageButton = getView().findViewById(R.id.testWebserviceImageButton);
         buttonMySettings = getView().findViewById(R.id.buttonMySettings);
-    }
-
-    @Override
-    public void mSetViewModels() {
-
     }
 
     @Override

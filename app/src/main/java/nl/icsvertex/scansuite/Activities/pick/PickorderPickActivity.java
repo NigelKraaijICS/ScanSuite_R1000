@@ -1,11 +1,9 @@
 package nl.icsvertex.scansuite.Activities.pick;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
@@ -32,6 +30,7 @@ import java.util.ArrayList;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cConnection;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
@@ -160,7 +159,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         mShowAcceptFragment();
     }
 
-
     //End Region Default Methods
 
     //Region iICSDefaultActivity Methods
@@ -171,10 +169,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.mSetAppExtensions();
 
         this.mFindViews();
-
-        this.mSetViewModels();
-
-        this.mSetSettings();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_pickorderpick));
 
@@ -235,11 +229,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     @Override
-    public void mSetViewModels() {
-
-    }
-
-    @Override
     public void mSetToolbar(String pvScreenTitle) {
         toolbarImage.setImageResource(R.drawable.ic_menu_pick);
         toolbarTitle.setText(pvScreenTitle);
@@ -249,11 +238,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-    }
-
-    @Override
-    public void mSetSettings() {
-
     }
 
     @Override
@@ -362,7 +346,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.containerText.setText(cPickorderLine.currentPickOrderLine.getContainerStr());
         PickorderPickActivity.containerText.setText("");
         PickorderPickActivity.quantityText.setText("0");
-        PickorderPickActivity.quantityRequiredText.setText(cText.doubleToString(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
+        PickorderPickActivity.quantityRequiredText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
 
         PickorderPickActivity.mEnablePlusMinusAndBarcodeSelectViews();
         PickorderPickActivity.mShowArticleImage();
@@ -628,7 +612,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
             //Set the new quantity and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
-            PickorderPickActivity.quantityText.setText(cText.doubleToString(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
+            PickorderPickActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
             //Add or update line barcode
             cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln();
@@ -662,7 +646,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
         }
 
-        PickorderPickActivity.quantityText.setText(cText.doubleToString(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
+        PickorderPickActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
         PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
 
         //Remove or update line barcode
@@ -796,7 +780,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         for (cPickorderBarcode pickorderBarcode : cPickorderLine.currentPickOrderLine.barcodesObl) {
 
-            if (pickorderBarcode.barcodeStr.equalsIgnoreCase(pvScannedBarcodeStr)) {
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
                 cPickorderBarcode.currentPickorderBarcode = pickorderBarcode;
                 return true;
             }
@@ -902,6 +886,15 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private static Boolean mSendPickorderLine() {
+
+        //If internet is not connected
+        if (!cConnection.isInternetConnectedBln()) {
+            //could not send line, let user know but answer succes so user can go to next line
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), null);
+            cPickorderLine.currentPickOrderLine.pErrorSendingBln();
+            return true;
+        }
+
 
         if (cPickorderLine.currentPickOrderLine.pHandledBln() == false) {
             //could not send line, let user know but answer succes so user can go to next line
@@ -1133,12 +1126,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         });
     }
 
-
-
     //Dialogs and Activitys
-
-
-
 
     private static void mShowFullArticleFragment() {
 
@@ -1155,32 +1143,24 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
-        builder.setTitle(R.string.message_underpick_header);
-        builder.setMessage(getString(R.string.message_underpick_text, cText.doubleToString(cPickorderLine.currentPickOrderLine.getQuantityDbl()), cText.doubleToString(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())));
-        builder.setPositiveButton(R.string.button_close_orderline, new DialogInterface.OnClickListener() {
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_underpick_header),
+                                                                                   cAppExtension.activity.getString(R.string.message_underpick_text, cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()), cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())));
+        acceptRejectFragment.setCancelable(true);
+        runOnUiThread(new Runnable() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
-                mPickDone();
-                return;
+            public void run() {
+                // show my popup
+                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
             }
         });
-
-        builder.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing (close the dialog)
-            }
-        });
-        builder.show();
     }
 
     private void mShowAcceptFragment(){
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment();
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_pickorderbusy_header),
+                                                                                   cAppExtension.activity.getString(R.string.message_pickorderbusy_text));
         acceptRejectFragment.setCancelable(true);
         runOnUiThread(new Runnable() {
             @Override

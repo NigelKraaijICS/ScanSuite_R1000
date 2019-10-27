@@ -102,7 +102,6 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
     }
@@ -114,10 +113,6 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
         this.shimmerViewContainer = getView().findViewById(R.id.shimmerViewContainer);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {

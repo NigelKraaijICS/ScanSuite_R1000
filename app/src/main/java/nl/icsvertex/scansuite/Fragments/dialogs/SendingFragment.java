@@ -73,7 +73,6 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mSetAnimations();
@@ -90,10 +89,6 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         this.imageViewTryAgain = getView().findViewById(R.id.imageViewTryAgain);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {

@@ -54,8 +54,7 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
+         mFieldsInitialize();
         mSetListeners();
     }
     @Override
@@ -66,10 +65,6 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
         tryAgainButton = getView().findViewById(R.id.tryAgainButton);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {

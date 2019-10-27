@@ -11,20 +11,30 @@
     tools:context=".Activities.ship.ShiporderSelectActivity"
     android:id="@+id/container">
     <include layout="@layout/toolbar_default"/>
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/recyclerSearchView"
         style="@style/recyclerSearchView"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        style="@style/defaultSwipeToRefreshLayout"
+        app:layout_constraintTop_toBottomOf="@id/recyclerSearchView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewShiporders"
         style="@style/defaultRecyclerView"
-        app:layout_constraintTop_toBottomOf="@id/recyclerSearchView"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/imageViewFilter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <androidx.appcompat.widget.AppCompatImageView
         style="@style/defaultBottomButton"
         android:id="@+id/imageViewFilter"

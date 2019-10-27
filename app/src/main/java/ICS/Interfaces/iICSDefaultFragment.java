@@ -5,8 +5,6 @@ public interface iICSDefaultFragment {
 
     void mFindViews();
 
-    void mSetViewModels();
-
     void mFieldsInitialize();
 
     void mSetListeners();

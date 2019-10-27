@@ -47,8 +47,7 @@ public class HugeErrorFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
+         mFieldsInitialize();
         mSetListeners();
     }
 
@@ -59,10 +58,7 @@ public class HugeErrorFragment extends DialogFragment implements iICSDefaultFrag
         containerHugeError = getView().findViewById(R.id.containerHugeError);
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
 
     @Override
     public void mFieldsInitialize() {

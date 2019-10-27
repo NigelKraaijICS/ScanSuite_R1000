@@ -74,7 +74,7 @@ public class cUser {
         this.userEntity = new cUserEntity(pvJsonObject);
         this.usernameStr = userEntity.getUsernameStr();
         this.nameStr = userEntity.getNameStr();
-        this.importfileInt = cText.stringToInteger(userEntity.getImportfileStr());
+        this.importfileInt = cText.pStringToIntegerInt(userEntity.getImportfileStr());
     }
     //End Region Constructor
 
@@ -186,21 +186,30 @@ public class cUser {
                 jsonObject = myList.get(i);
 
                 cAuthorisation authorisation = new cAuthorisation(jsonObject);
+
+                if (authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK) {
+                    continue;
+                }
+
                 authorisation.pInsertInDatabaseBln();
                 if(this.autorisationObl == null) {
                     this.autorisationObl =  new ArrayList<>();
                 }
 
                 this.autorisationObl.add((authorisation));
-            }
 
-            if (cSetting.PICK_SHIPPING_SALES() == true) {
+                if (authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK) {
+                    if (cSetting.PICK_SORT_FASE_AVAILABLE()) {
+                        cAuthorisation authorisationSorting = new cAuthorisation(cAuthorisation.AutorisationEnu.SORTING.toString(), this.autorisationObl.size() *10 + 10 );
+                        this.autorisationObl.add(authorisationSorting);
+                    }
 
-                cAuthorisation authorisationSorting = new cAuthorisation(cAuthorisation.AutorisationEnu.SORTING.toString(), this.autorisationObl.size() *10 + 10 );
-                this.autorisationObl.add(authorisationSorting);
+                    if (cSetting.PICK_PACK_AND_SHIP_FASE_AVAILABLE()) {
+                        cAuthorisation authorisationShipping = new cAuthorisation(cAuthorisation.AutorisationEnu.SHIPPING.toString(), this.autorisationObl.size() *10 + 10 );
+                        this.autorisationObl.add(authorisationShipping);
+                    }
+                }
 
-                cAuthorisation authorisationShipping = new cAuthorisation(cAuthorisation.AutorisationEnu.SHIPPING.toString(), this.autorisationObl.size() *10 + 10 );
-                this.autorisationObl.add(authorisationShipping);
             }
 
 

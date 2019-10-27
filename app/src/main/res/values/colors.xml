@@ -13,7 +13,7 @@
     <color name="colorDefaultbackground">#ffffff</color>
 
     <color name="colorLogoRed">#d2232a</color>
-
+    <color name="colorGreen">#228B22</color>
     <color name="colorError">#d2232a</color>
 
     <!--<color name="colorSelected">#89daff</color>-->

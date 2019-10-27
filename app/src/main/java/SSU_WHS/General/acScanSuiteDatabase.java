@@ -16,6 +16,16 @@ import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
 import SSU_WHS.Basics.ItemProperty.iItemPropertyDao;
 import SSU_WHS.General.Comments.cCommentEntity;
 import SSU_WHS.General.Comments.iCommentDao;
+import SSU_WHS.Inventory.InventoryOrders.cInventoryorderEntity;
+import SSU_WHS.Inventory.InventoryOrders.iInventoryorderDao;
+import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcodeEntity;
+import SSU_WHS.Inventory.InventoryorderBarcodes.iInventoryorderBarcodeDao;
+import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinEntity;
+import SSU_WHS.Inventory.InventoryorderBins.iInventoryorderBinDao;
+import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEntity;
+import SSU_WHS.Inventory.InventoryorderLineBarcodes.iInventoryorderLineBarcodeDao;
+import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
+import SSU_WHS.Inventory.InventoryorderLines.iInventoryorderLineDao;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddressEntity;
 import SSU_WHS.Picken.PickorderAddresses.iPickorderAddressDao;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeEntity;
@@ -82,8 +92,13 @@ import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
         cPickorderShipMethodEntity.class,
         cPickorderShipPackageEntity.class,
         cItemPropertyEntity.class,
-        cPickorderLinePackAndShipEntity.class
-        },version = 67)
+        cPickorderLinePackAndShipEntity.class,
+        cInventoryorderEntity.class,
+        cInventoryorderBinEntity.class,
+        cInventoryorderLineEntity.class,
+        cInventoryorderBarcodeEntity.class,
+        cInventoryorderLineBarcodeEntity.class
+        },version = 72)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -111,6 +126,11 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iPickorderShipPackageDao pickorderShipPackageDao();
     public abstract iItemPropertyDao itemPropertyDao();
     public abstract iPickorderLinePackAndShipDao pickorderLinePackAndShipDao();
+    public abstract iInventoryorderDao inventoryorderDao();
+    public abstract iInventoryorderBinDao inventoryorderBinDao();
+    public abstract iInventoryorderLineDao inventoryorderLineDao();
+    public abstract iInventoryorderBarcodeDao inventoryorderBarcodeDao();
+    public abstract iInventoryorderLineBarcodeDao inventoryorderLineBarcodeDao();
 
     //public abstract iEnvironmentDao environmentDao();
 

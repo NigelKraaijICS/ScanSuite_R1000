@@ -64,7 +64,7 @@ public class cPickorderShipPackage {
         this.shippingAgentCodeStr = this.pickorderShipPackageEntity.getShippingAgentCodeStr();
         this.shippingAgentServiceCodeStr = this.pickorderShipPackageEntity.getShippingAgentServiceCodeStr();
         this.packageTypeStr = this.pickorderShipPackageEntity.getPackageTypeStr();
-        this.packageSequenceNoInt = cText.stringToInteger(this.pickorderShipPackageEntity.getPackageSequenceNumberStr());
+        this.packageSequenceNoInt = cText.pStringToIntegerInt(this.pickorderShipPackageEntity.getPackageSequenceNumberStr());
 
     }
 

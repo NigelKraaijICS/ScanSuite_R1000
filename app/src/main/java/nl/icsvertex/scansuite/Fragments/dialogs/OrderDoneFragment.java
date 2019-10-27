@@ -90,7 +90,6 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
 
@@ -106,11 +105,6 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         this.orderDoneContainer = getView().findViewById(R.id.orderDoneContainer);
         this.closeOrderButton = getView().findViewById(R.id.closeOrderButton);
         this.cancelButton = getView().findViewById(R.id.cancelButton);
-    }
-
-    @Override
-    public void mSetViewModels() {
-
     }
 
     @Override

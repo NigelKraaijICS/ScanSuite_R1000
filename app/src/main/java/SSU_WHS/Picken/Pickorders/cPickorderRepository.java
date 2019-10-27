@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import ICS.Utils.cDeviceInfo;
-import ICS.Utils.cResult;
+import ICS.Utils.cSharedPreferences;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
@@ -24,14 +24,13 @@ import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
 import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
-import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackageEntity;
 import SSU_WHS.Picken.Shipment.cShipment;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 
-import static ICS.Utils.cText.addSingleQuotes;
+import static ICS.Utils.cText.pAddSingleQuotesStr;
 
 public class cPickorderRepository {
 
@@ -232,7 +231,7 @@ public class cPickorderRepository {
         return ResultObl;
     }
 
-    public List<cPickorderEntity> pGetPickordersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln, Boolean pvShowProcessedWaitBln, Boolean pvShowSingleArticlesBln, Boolean pvShowAssignedToMeBln, Boolean pvShowAssignedToOthersBln, Boolean pvShowNotAssignedBln) {
+    public List<cPickorderEntity> pGetPickordersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
 
         List<cPickorderEntity> ResultObl = null;
         String SQLStatementStr;
@@ -240,42 +239,45 @@ public class cPickorderRepository {
         SQLStatementStr = "SELECT * FROM Pickorders ";
         if (pvUseFiltersBln) {
 //            TTT
-            if (pvShowAssignedToMeBln && pvShowAssignedToOthersBln && pvShowNotAssignedBln) {
+            if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
                 SQLStatementStr += "WHERE 1=1 ";
             }
 //            TTF
-            else if (pvShowAssignedToMeBln && pvShowAssignedToOthersBln && !pvShowNotAssignedBln) {
+            else if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
                 SQLStatementStr += "WHERE AssignedUserId != '' ";
             }
 //            TFT
-            else if (pvShowAssignedToMeBln && !pvShowAssignedToOthersBln && pvShowNotAssignedBln) {
-                SQLStatementStr += "WHERE AssignedUserId = " + addSingleQuotes(pvCurrentUserStr) + " OR  AssignedUserId = '' " ;
+            else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr += "WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  AssignedUserId = '' " ;
+                SQLStatementStr += "OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  CurrentUserId = '' " ;
             }
 //            FTT
-            else if (!pvShowAssignedToMeBln && pvShowAssignedToOthersBln && pvShowNotAssignedBln) {
-                SQLStatementStr += "WHERE AssignedUserId != " + addSingleQuotes(pvCurrentUserStr) + " ";
+            else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr += "WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
             }
 //            TFF
-            else if (pvShowAssignedToMeBln && !pvShowAssignedToOthersBln && !pvShowNotAssignedBln) {
-                SQLStatementStr += "WHERE AssignedUserId = " + addSingleQuotes(pvCurrentUserStr) + " ";
+            else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr += "WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
+                SQLStatementStr += "OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " " ;
             }
 //            FTF
-            else if (!pvShowAssignedToMeBln && pvShowAssignedToOthersBln && !pvShowNotAssignedBln) {
-                SQLStatementStr += "WHERE AssignedUserId != " + addSingleQuotes(pvCurrentUserStr) + " AND  AssignedUserId != '' ";
+            else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr += "WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " AND  AssignedUserId != '' ";
             }
 //            FFT
-            else if (!pvShowAssignedToMeBln && !pvShowAssignedToOthersBln && pvShowNotAssignedBln) {
-                SQLStatementStr += "WHERE AssignedUserId = '' ";
+            else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr += "WHERE AssignedUserId = '' AND CurrentUserId = ''";
             }
 //            FFF
-            else if (!pvShowAssignedToMeBln && !pvShowAssignedToOthersBln && !pvShowNotAssignedBln) {
-                SQLStatementStr += "WHERE AssignedUserId = 'AJAX_IS_KAMPIOEN' ";
+            else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr += "WHERE AssignedUserId = 'HELEMAALNIEMAND' ";
             }
-            if (pvShowSingleArticlesBln) {
-                SQLStatementStr += " AND SingleArticleOrders != 0 ";
+            if (cSharedPreferences.showSingleArticlesBln()) {
+                SQLStatementStr += " AND SingleArticleOrders = 1 ";
             }
-            if (!pvShowProcessedWaitBln) {
-                SQLStatementStr += " AND NOT(IsProcessingOrParked) ";
+
+            if (cSharedPreferences.showProcessedWaitBln()) {
+                SQLStatementStr += " AND (IsProcessingOrParked) ";
             }
         }
 
@@ -296,7 +298,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumber() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
 
         try {
 
@@ -320,7 +322,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumber() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
 
         try {
 
@@ -344,7 +346,15 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumber() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_PackAndShip.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(),
+                                                                    "",
+                                                                    cUser.currentUser.currentBranch.getBranchStr(),
+                                                                    cPickorder.currentPickOrder.orderNumberStr,
+                                                                    cDeviceInfo.getSerialnumberStr() ,
+                                                                    pvWorkplaceStr,
+                                                                    cWarehouseorder.StepCodeEnu.Pick_PackAndShip.toString(),
+                                                                    cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip,
+                                                                    "");
 
         try {
 
@@ -386,12 +396,12 @@ public class cPickorderRepository {
         return  webResult;
     }
 
-    public Boolean pPickorderUpdateWorkplaceViaWebserviceBln() {
+    public Boolean pPickorderUpdateWorkplaceViaWebserviceBln(String pvWorkplaceStr) {
 
         cWebresult webResult;
 
         PickorderUpdateWorkplaceParams pickorderUpdateWorkplaceParams;
-        pickorderUpdateWorkplaceParams   = new PickorderUpdateWorkplaceParams(cUser.currentUser.getNameStr(), cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cWorkplace.currentWorkplace.getWorkplaceStr());
+        pickorderUpdateWorkplaceParams   = new PickorderUpdateWorkplaceParams(cUser.currentUser.getNameStr(), cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), pvWorkplaceStr);
 
         try {
             webResult = new mPickorderUpdateWorkplaceViaWebserviceAsyncTask().execute(pickorderUpdateWorkplaceParams).get();

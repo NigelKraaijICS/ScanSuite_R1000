@@ -5,100 +5,141 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class cText {
+
+    //Region Public Properties
+
     public static String NEWLINE = "\r\n";
     public static String LABEL_VALUE_SEPARATOR = " - ";
 
-    public static String padRight(String pv_inputStr, int pv_length) {
-        String l_resultStr;
-        String l_helpStr;
-        if (pv_inputStr.length() > pv_length) {
-            l_helpStr = pv_inputStr.substring(0, pv_length);
+    //End Region Public Properties
+
+    //Region Public Methods
+
+    public static String pPadRight(String pvInputStr, int pvLengthInt) {
+        String resultStr;
+        String helpStr;
+
+        if (pvInputStr.length() > pvLengthInt) {
+            helpStr = pvInputStr.substring(0, pvLengthInt);
         }
         else {
-            l_helpStr = pv_inputStr;
+            helpStr = pvInputStr;
         }
-        l_resultStr = String.format("%1$-" + pv_length + "s", l_helpStr);
-        return l_resultStr;
+
+        resultStr = String.format("%1$-" + pvLengthInt + "s", helpStr);
+        return resultStr;
     }
-    public static String padLeft(String pv_inputStr, int pv_length) {
-        String l_resultStr;
-        String l_helpStr;
-        if (pv_inputStr.length() > pv_length) {
-            l_helpStr = pv_inputStr.substring(0, pv_length);
+
+    public static String pPadLeftStr(String pvInputStr, int pvLengthInt) {
+        String resultStr;
+        String helpStr;
+
+        if (pvInputStr.length() > pvLengthInt) {
+            helpStr = pvInputStr.substring(0, pvLengthInt);
         }
         else {
-            l_helpStr = pv_inputStr;
+            helpStr = pvInputStr;
         }
-        l_resultStr = String.format("%1$" + pv_length + "s", l_helpStr);
-        return l_resultStr;
+
+        resultStr = String.format("%1$" + pvLengthInt + "s", helpStr);
+        return resultStr;
     }
-    public static String convertDateFromToFormat(String pv_inputDate, String pv_originalformatStr, String pv_converttoformatStr) {
-        String l_resultStr;
-        Date l_tempDat;
+
+    public static String pConvertDateToFormattedDateStr(String pvInputStr, String pvOriginalFormatStr, String pvConvertToFormatStr) {
+        String resultStr;
+        Date hulpDat;
 
         try {
-            l_tempDat = new SimpleDateFormat(pv_originalformatStr).parse(pv_inputDate);
-            l_resultStr = new SimpleDateFormat(pv_converttoformatStr).format(l_tempDat);
+            hulpDat = new SimpleDateFormat(pvOriginalFormatStr).parse(pvInputStr);
+            resultStr = new SimpleDateFormat(pvConvertToFormatStr).format(hulpDat);
         } catch (ParseException e) {
             //return original string
-            l_resultStr = pv_inputDate;
+            resultStr = pvInputStr;
             e.printStackTrace();
         }
 
-        return l_resultStr;
+        return resultStr;
     }
-    public static String maxLength(String pv_inputStr, int pv_lengthInt) {
-        String l_resultStr;
-        if (pv_inputStr.length() > pv_lengthInt -1) {
-            l_resultStr = pv_inputStr.substring(0, pv_lengthInt-1);
+
+    public static String pShortenStr(String pvInputStr, int pvMaxLengthInt) {
+        String resultStr;
+
+        if (pvInputStr.length() > pvMaxLengthInt -1) {
+            resultStr = pvInputStr.substring(0, pvMaxLengthInt-1);
         }
         else {
-            l_resultStr = pv_inputStr;
+            resultStr = pvInputStr;
         }
 
-        return l_resultStr;
+        return resultStr;
     }
-    public static int stringToInteger(String inputStr) {
-        int l_resultInt;
-        if (inputStr.trim().isEmpty()) {
+
+    public static int pStringToIntegerInt(String pvInputStr) {
+
+        int resultInt;
+
+        if (pvInputStr.trim().isEmpty()) {
             return 0;
         }
+
         try {
-            l_resultInt = (int) Double.parseDouble(inputStr);
+            resultInt = (int) Double.parseDouble(pvInputStr);
         } catch (NumberFormatException e) {
-            l_resultInt = 0;
+            resultInt = 0;
         }
-            return l_resultInt;
+
+        return resultInt;
     }
 
-    public static Double stringToDouble(String inputStr) {
-        Double l_resultDbl;
-        if (inputStr.trim().isEmpty()) {
+    public static Double pStringToDoubleDbl(String pvInputStr) {
+
+        Double resultDbl;
+
+        if (pvInputStr.trim().isEmpty()) {
             return 0d;
         }
+
         try {
-            String inputDotStr = inputStr.replace(",", ".");
-            l_resultDbl = Double.parseDouble(inputDotStr);
+            String inputDotStr = pvInputStr.replace(",", ".");
+            resultDbl = Double.parseDouble(inputDotStr);
         } catch (NumberFormatException e) {
-            l_resultDbl = 0d;
+            resultDbl = 0d;
         }
-        return l_resultDbl;
+
+        return resultDbl;
     }
 
-    public static String doubleToString(Double inputDbl) {
-        String helpStr = Double.toString(inputDbl);
+    public static Date pStringToDateStr(String pvInputStr,String pvConvertToFormatStr) {
+        Date resultDat;
+        try {
+
+        resultDat = new SimpleDateFormat(pvConvertToFormatStr).parse(pvInputStr);
+
+        } catch (ParseException e) {
+            //return original string
+            resultDat = null;
+            e.printStackTrace();
+        }
+
+        return resultDat;
+    }
+
+    public static String pDoubleToStringStr(Double pvInputDbl) {
+
+        String helpStr = Double.toString(pvInputDbl);
         return !helpStr.contains(".") ? helpStr : helpStr.replaceAll("0*$", "").replaceAll("\\.$", "");
     }
 
-    public static String intToString(int inputInt) {
-        String helpStr = Integer.toString(inputInt);
-        return helpStr;
+    public static String pIntToStringStr(int pvInputInt) {
+        return Integer.toString(pvInputInt);
     }
 
-    public static Boolean stringToBoolean(String inputStr, Boolean defaultBln) {
-        switch (inputStr.toUpperCase()) {
+    public static Boolean pStringToBooleanBln(String pvInputStr, Boolean pvDefaultValueBln) {
+
+        switch (pvInputStr.toUpperCase()) {
             case "N":
             case "FALSE":
             case "F":
@@ -109,43 +150,43 @@ public class cText {
             case "T":
                 return true;
             default:
-                return defaultBln;
+                return pvDefaultValueBln;
         }
+
     }
 
-    public static Long stringToLong(String pvInput) {
-        Long lResultLng;
-        if (pvInput.trim().isEmpty()) {
+    public static Long pStringToLongLng(String pvInputStr) {
+
+        Long resultLng;
+
+        if (pvInputStr.trim().isEmpty()) {
             return 0L;
         }
+
         try {
-            lResultLng = Long.parseLong(pvInput);
+            resultLng = Long.parseLong(pvInputStr);
         } catch (NumberFormatException e) {
-            lResultLng = 0L;
+            resultLng = 0L;
         }
-        return lResultLng;
+
+        return resultLng;
     }
 
-    public static String longToString(Long inputLng) {
-        String helpStr = Long.toString(inputLng);
+    public static String pLongToStringStr(Long pvInputLng) {
+        String helpStr = Long.toString(pvInputLng);
         return !helpStr.contains(".") ? helpStr : helpStr.replaceAll("0*$", "").replaceAll("\\.$", "");
     }
 
-    public static String addSingleQuotes(String inputStr) {
-        return "'" + inputStr + "'";
+    public static String pAddSingleQuotesStr(String pvInputStr) {
+        return "'" + pvInputStr + "'";
     }
 
-    public static String cleanString(String dirtyString) {
-        String cleanString = dirtyString.replaceAll("(\\r|\\n|\\t)","");
-        return cleanString;
+    public static String pCleanStringStr(String pvInputStr) {
+        return  pvInputStr.replaceAll("(\\r|\\n|\\t)","");
     }
-    public static boolean isValidURL(String inputStr) {
-        boolean result = true;
-        try {
-            new URL(inputStr);
-        } catch (MalformedURLException e) {
-            result = false;
-        }
-        return result;
-    }
+
+
+    //End Region Public Methods
+
+
 }

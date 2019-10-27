@@ -47,7 +47,6 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
         mFieldsInitialize();
         mSetListeners();
     }
@@ -61,10 +60,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
         buttonCancel = getView().findViewById(R.id.buttonCancel);
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
     @Override
     public void mFieldsInitialize() {
         progressContainer.setVisibility(View.INVISIBLE);

@@ -41,6 +41,10 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             super(pvItemView);
             this.viewOrderStatus = pvItemView.findViewById(R.id.viewOrderStatus);
             this.textViewOrderUser = pvItemView.findViewById(R.id.textViewOrderUser);
+            this.textViewOrderUser.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewOrderUser.setSingleLine(true);
+            this.textViewOrderUser.setMarqueeRepeatLimit(5);
+            this.textViewOrderUser.setSelected(true);
             this.textViewOrdernumber = pvItemView.findViewById(R.id.textViewOrdernumber);
             this.textViewCurrentLocation = pvItemView.findViewById(R.id.textViewCurrentLocation);
             this.textViewOrdernumber.setEllipsize(TextUtils.TruncateAt.MARQUEE);

@@ -132,8 +132,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         this.mSetAppExtensions();
         this.mFindViews();
-        this.mSetViewModels();
-        this.mSetSettings();
         this.mSetToolbar(getResources().getString(R.string.screentitle_shiporderlines));
         this.mFieldsInitialize();
         this.mSetListeners();
@@ -165,17 +163,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
-
-    @Override
-    public void mSetSettings() {
-
-    }
-
-    @Override
+     @Override
     public void mSetToolbar(String pvScreenTitle) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
         this.toolbarTitle.setText(pvScreenTitle);
@@ -229,6 +217,13 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         this.mShowComments();
 
+        //Check if we need to register a workplace
+        if (cWorkplace.currentWorkplace == null) {
+            //Show the workplace fragment
+            this.mShowWorkplaceFragment();
+            return;
+        }
+
         //Call this here, because this is called everytime the activiy gets shown
         this.mCheckAllDone();
 
@@ -258,7 +253,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        //Check if we have scanned an ARTICLE and check if there are not handled lines for this ARTICLE
+        //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
             //Check if article scan is allowed
@@ -318,6 +313,19 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
+    public static void pWorkplaceSelected(){
+
+
+        if (!cPickorder.currentPickOrder.pUpdateWorkplaceViaWebserviceBln(cWorkplace.currentWorkplace.getWorkplaceStr())) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_workplace_not_updated),"",true,true);
+            return;
+        }
+
+
+        cUserInterface.pShowSnackbarMessage(ShiporderLinesActivity.container,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);
+    }
+
+
     //End Region Public Methods
 
     private void mCheckAllDone() {
@@ -327,16 +335,8 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        //Check if we need to register a workplace
-        if (cWorkplace.currentWorkplace == null) {
-            //Show the workplace fragment
-            this.mShowWorkplaceFragment();
-            return;
-        }
-
         // Show order done fragment
         ShiporderLinesActivity.pShowOrderDoneFragment();
-
 
     }
 
@@ -352,13 +352,13 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         switch (pvTab.getPosition()) {
             case 0:
-                ShiporderLinesActivity.pChangeTabCounterText(cText.intToString(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.intToString(cPickorder.currentPickOrder.shipmentObl().size()));
+                ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
                 break;
             case 1:
-                ShiporderLinesActivity.pChangeTabCounterText(cText.intToString(cPickorder.currentPickOrder.pGetHandledShipmentsObl().size()) + "/" + cText.intToString(cPickorder.currentPickOrder.shipmentObl().size()));
+                ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
                 break;
             case 2:
-                ShiporderLinesActivity.pChangeTabCounterText(cText.intToString(cPickorder.currentPickOrder.shipmentObl().size()));
+                ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
                 break;
             default:
 

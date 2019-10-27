@@ -3,12 +3,18 @@ package SSU_WHS.Basics.ArticleImages;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import org.json.JSONException;
+import org.ksoap2.serialization.PropertyInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineRepository;
 import SSU_WHS.Webservice.cWebresult;
+import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cArticleImageRepository {
     //Region Public Properties
@@ -18,6 +24,16 @@ public class cArticleImageRepository {
 
     //Region Private Properties
     private acScanSuiteDatabase db;
+
+    private static class GetByItemnoAndVariantCodeParams {
+        String itemNoStr;
+        String variantCodeStr;
+
+        GetByItemnoAndVariantCodeParams(String pvItemNoStr, String pvVariantCodeStr) {
+            this.itemNoStr = pvItemNoStr;
+            this.variantCodeStr = pvVariantCodeStr;
+        }
+    }
 
     //End Region Private Properties
 
@@ -36,6 +52,31 @@ public class cArticleImageRepository {
 
     public void deleteAll () {
         new cArticleImageRepository.deleteAllAsyncTask(articleImageDao).execute();
+    }
+
+    public cWebresult pGetArticleImageFromWebserviceWrs(String pvItemNoStr, String pvVariantCodeStr) {
+
+        ArrayList<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        cArticleImageRepository.GetByItemnoAndVariantCodeParams getByItemnoAndVariantCodeParams = new cArticleImageRepository.GetByItemnoAndVariantCodeParams(pvItemNoStr,pvVariantCodeStr);
+
+        try {
+            webResultWrs = new cArticleImageRepository.mGetArticleImageFromWebserviceGetAsyncTask().execute(getByItemnoAndVariantCodeParams).get();
+        } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
     }
 
     //End Region Public Methods
@@ -67,6 +108,51 @@ public class cArticleImageRepository {
         protected Void doInBackground(final cArticleImageEntity... params) {
             mAsyncTaskDao.insert(params[0]);
             return null;
+        }
+    }
+
+    private static class mGetArticleImageFromWebserviceGetAsyncTask extends AsyncTask<GetByItemnoAndVariantCodeParams, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(final GetByItemnoAndVariantCodeParams... params) {
+            cWebresult WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+            l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_OWNER;
+            l_PropertyInfo2Pin.setValue("");
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMNO;
+            l_PropertyInfo3Pin.setValue(params[0].itemNoStr);
+            l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+            PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+            l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE;
+            l_PropertyInfo4Pin.setValue(params[0].variantCodeStr);
+            l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+            PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+            l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_REFRESH;
+            l_PropertyInfo5Pin.setValue(false);
+            l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+            try {
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGE, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
         }
     }
 

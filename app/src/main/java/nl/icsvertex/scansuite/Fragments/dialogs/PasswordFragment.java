@@ -65,7 +65,6 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
     }
@@ -79,10 +78,6 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             this.buttonCancel = getView().findViewById(R.id.buttonCancel);
             this.buttonLogin = getView().findViewById(R.id.buttonLogin);
         }
-    }
-    @Override
-    public void mSetViewModels() {
-
     }
 
     @Override

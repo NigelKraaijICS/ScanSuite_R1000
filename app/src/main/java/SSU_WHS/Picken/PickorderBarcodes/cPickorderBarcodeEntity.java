@@ -49,13 +49,13 @@ public class cPickorderBarcodeEntity {
 
     public cPickorderBarcodeEntity(JSONObject jsonObject) {
         try {
-            barcode = jsonObject.getString(cDatabase.BARCODE_NAMESTR);
-            barcodetype = jsonObject.getString(cDatabase.BARCODETYPE_NAMESTR);
-            isuniquebarcode = jsonObject.getString(cDatabase.ISUNIQUEBARCODE_NAMESTR);
-            itemno= jsonObject.getString(cDatabase.ITEMNO_NAMESTR);
-            variantcode= jsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
-            quantityperunitofmeasure= jsonObject.getString(cDatabase.QUANTITYPERUNITOFMEASURE_NAMESTR);
-            quantityhandled = jsonObject.getString(cDatabase.QUANTITYHANDLED_NAMESTR);
+            this.barcode = jsonObject.getString(cDatabase.BARCODE_NAMESTR);
+            this.barcodetype = jsonObject.getString(cDatabase.BARCODETYPE_NAMESTR);
+            this.isuniquebarcode = jsonObject.getString(cDatabase.ISUNIQUEBARCODE_NAMESTR);
+            this.itemno= jsonObject.getString(cDatabase.ITEMNO_NAMESTR);
+            this.variantcode= jsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
+            this.quantityperunitofmeasure= jsonObject.getString(cDatabase.QUANTITYPERUNITOFMEASURE_NAMESTR);
+            this.quantityhandled = jsonObject.getString(cDatabase.QUANTITYHANDLED_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

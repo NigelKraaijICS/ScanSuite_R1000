@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.ship.ShiporderLinesActivity;
-import nl.icsvertex.scansuite.Activities.ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Fragments.dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
 
 public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.WorkplaceViewHolder>{
@@ -57,13 +57,12 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
     @Override
     public void onBindViewHolder(cWorkplaceAdapter.WorkplaceViewHolder holder, int position) {
         if (cWorkplace.allWorkplacesObl != null) {
+
             final cWorkplace workplace = cWorkplace.allWorkplacesObl.get(position);
 
             holder.textViewDescription.setText(workplace.getDescriptionStr());
             holder.textViewWorkplace.setText(workplace.getWorkplaceStr());
 
-            //todo: put this back
-            //TODO: do this in a different shared way
             holder.workplaceItemLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -81,7 +80,13 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
                     }
 
                     if (cAppExtension.context instanceof ShiporderLinesActivity) {
-                        ShiporderLinesActivity.pShowOrderDoneFragment();
+
+                        if (cAppExtension.dialogFragment instanceof WorkplaceFragment) {
+                            cAppExtension.dialogFragment.dismiss();
+                        }
+
+                        ShiporderLinesActivity.pWorkplaceSelected();
+
                     }
                 }
             });

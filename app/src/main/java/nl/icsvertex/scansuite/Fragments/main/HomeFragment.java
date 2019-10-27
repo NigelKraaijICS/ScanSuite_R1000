@@ -59,7 +59,6 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
     }
@@ -70,11 +69,6 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
         this.cardViewDeviceDetails = getView().findViewById(R.id.cardViewDeviceDetails);
         this.textViewDevicedetails = getView().findViewById(R.id.textViewDeviceDetails);
         this.buttonLogin = getView().findViewById(R.id.buttonLogin);
-    }
-
-    @Override
-    public void mSetViewModels() {
-
     }
 
     @Override
@@ -111,7 +105,7 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
         DeviceInfoStr += getString(R.string.device_manufacturer) + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceManufacturer() + cText.NEWLINE;
         DeviceInfoStr += getString(R.string.device_brand)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceBrand() + cText.NEWLINE;
         DeviceInfoStr += getString(R.string.device_model)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceModel() + cText.NEWLINE;
-        DeviceInfoStr += getString(R.string.device_serialnumber)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getSerialnumber() + cText.NEWLINE;
+        DeviceInfoStr += getString(R.string.device_serialnumber)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getSerialnumberStr() + cText.NEWLINE;
         DeviceInfoStr += getString(R.string.application_version)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getAppVersion();
         this.textViewDevicedetails.setText(DeviceInfoStr);
     }

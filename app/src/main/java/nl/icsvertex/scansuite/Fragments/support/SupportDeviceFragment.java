@@ -41,7 +41,7 @@ public class SupportDeviceFragment extends Fragment implements iICSDefaultFragme
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
+
         mFieldsInitialize();
         mSetListeners();
     }
@@ -55,17 +55,14 @@ public class SupportDeviceFragment extends Fragment implements iICSDefaultFragme
         textViewAndroidversion = getView().findViewById(R.id.textViewAndroidversion);
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
 
     @Override
     public void mFieldsInitialize() {
         textViewDeviceManufacturer.setText(cDeviceInfo.getDeviceManufacturer());
         textViewDeviceBrand.setText(cDeviceInfo.getDeviceBrand());
         textViewDeviceModel.setText(cDeviceInfo.getDeviceModel());
-        textViewSerialnumber.setText(cDeviceInfo.getSerialnumber());
+        textViewSerialnumber.setText(cDeviceInfo.getSerialnumberStr());
         textViewAndroidversion.setText(cDeviceInfo.getAndroidBuildVersion());
     }
 

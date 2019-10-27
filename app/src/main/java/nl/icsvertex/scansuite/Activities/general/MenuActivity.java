@@ -21,10 +21,15 @@ import android.widget.TextView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import ICS.Interfaces.iICSDefaultActivity;
+import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.Licenses.cLicense;
+import nl.icsvertex.scansuite.Activities.inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.sort.SortorderSelectActivity;
 import ICS.cAppExtension;
@@ -63,12 +68,14 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     public void onResume() {
         super.onResume();
         this.mStartShimmering();
+        cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         this.mStopShimmering();
+        cBarcodeScan.pUnregisterBarcodeReceiver();
     }
 
     //End Region Default Methods
@@ -81,10 +88,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
         this.mFindViews();
 
-        this.mSetViewModels();
-
-        this.mSetSettings();
-
         this.mSetToolbar(getResources().getString(R.string.screentitle_menu));
 
         this.mFieldsInitialize();
@@ -92,6 +95,9 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         this.mSetListeners();
 
         this.mInitScreen();
+
+        cBarcodeScan.pRegisterBarcodeReceiver();
+
     }
 
     @Override
@@ -109,16 +115,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
         this.recyclerViewMenu = findViewById(R.id.recyclerViewMenu);
         this.shimmerViewContainer = findViewById(R.id.shimmerViewContainer);
-    }
-
-    @Override
-    public void mSetViewModels() {
-
-    }
-
-    @Override
-    public void mSetSettings() {
-
     }
 
     @Override
@@ -189,6 +185,13 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         final ActivityOptionsCompat activityOptions;
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
+            if (!  cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
             intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_PICK);
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_PICK);
@@ -198,6 +201,16 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         }
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.SORTING) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
+            if (!  cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+
             intent  = new Intent(cAppExtension.context, SortorderSelectActivity.class);
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_SORT);
             clickedText = container.findViewWithTag(cAuthorisation.TAG_TEXT_SORT);
@@ -207,6 +220,16 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         }
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.SHIPPING) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
+            if (!  cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+
             intent = new Intent(cAppExtension.context, ShiporderSelectActivity.class);
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_SHIP);
             clickedText = container.findViewWithTag(cAuthorisation.TAG_TEXT_SHIP);
@@ -214,6 +237,31 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;
         }
+
+
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INVENTORY) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Inventory;
+            if (!  cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+            intent = new Intent(cAppExtension.context, InventoryorderSelectActivity.class);
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_INVENTORY);
+            clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INVENTORY);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, PickorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, PickorderSelectActivity.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
+    }
+
+    public static void pHandleScan(cBarcodeScan pvScannedBarcode){
+
+     cArticle article =   cArticle.pGetArticleByBarcodeViaWebservice(pvScannedBarcode);
+     article.pGetBarcodesViaWebserviceBln();
+     article.pGetStockViaWebserviceBln();
     }
 
     //End Region Public Methods

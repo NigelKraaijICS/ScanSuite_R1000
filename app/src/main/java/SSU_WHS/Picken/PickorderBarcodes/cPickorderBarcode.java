@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import ICS.cAppExtension;
@@ -15,6 +16,30 @@ public class cPickorderBarcode {
 
     public String barcodeStr;
     public String getBarcodeStr() {return barcodeStr;}
+
+    public String barcodeWithoutCheckDigitStr;
+    public String getBarcodeWithoutCheckDigitStr() {
+
+        this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
+
+        if (cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN8 && cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN13 ) {
+            return  this.barcodeWithoutCheckDigitStr;
+        }
+
+        if (this.getBarcodeStr().length() != 8 && this.getBarcodeStr().length() != 13 ) {
+            return  this.barcodeWithoutCheckDigitStr;
+        }
+
+        if (this.getBarcodeStr().length() == 8)  {
+            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,7);
+        }
+
+        if (this.getBarcodeStr().length() == 13)  {
+            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,12);
+        }
+
+        return barcodeWithoutCheckDigitStr;
+    }
 
     public String barcodetypeStr;
     public String getBarcodeTypeStr() {return barcodetypeStr;}
@@ -62,11 +87,11 @@ public class cPickorderBarcode {
         this.pickorderBarcodeEntity = new cPickorderBarcodeEntity(pvJsonObject);
         this.barcodeStr = this.pickorderBarcodeEntity.getBarcodeStr();
         this.barcodetypeStr = this.pickorderBarcodeEntity.getBarcodeTypeStr();
-        this.isUniqueBarcodeBln = cText.stringToBoolean(this.pickorderBarcodeEntity.getIsuniquebarcodeStr(),false) ;
+        this.isUniqueBarcodeBln = cText.pStringToBooleanBln(this.pickorderBarcodeEntity.getIsuniquebarcodeStr(),false) ;
         this.itemNoStr = this.pickorderBarcodeEntity.getItemnoStr();
         this.variantcodeStr = this.pickorderBarcodeEntity.getVariantcodeStr();
-        this.quantityPerUnitOfMeasureDbl =  cText.stringToDouble(this.pickorderBarcodeEntity.getQuantityperunitofmeasureStr());
-        this.quantityHandledDbl =  cText.stringToDouble(this.pickorderBarcodeEntity.getQuantityhandledStr());
+        this.quantityPerUnitOfMeasureDbl =  cText.pStringToDoubleDbl(this.pickorderBarcodeEntity.getQuantityperunitofmeasureStr());
+        this.quantityHandledDbl =  cText.pStringToDoubleDbl(this.pickorderBarcodeEntity.getQuantityhandledStr());
     }
     //Region Public Methods
 
@@ -104,7 +129,7 @@ public class cPickorderBarcode {
             return null;
         }
         for (cPickorderBarcode pickorderBarcode : cPickorderBarcode.allBarcodesObl) {
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcode) == true){
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcode) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcode)){
                 return pickorderBarcode;
             }
         }return null;
@@ -117,7 +142,7 @@ public class cPickorderBarcode {
         List <cPickorderBarcode> resultObl = null;
 
         for (cPickorderBarcode pickorderBarcode : cPickorderBarcode.allBarcodesObl) {
-            if (pickorderBarcode.getVariantcodeStr().equalsIgnoreCase(pvVariantcode) == true &&  pickorderBarcode.getItemNoStr().equalsIgnoreCase(pvItemNo) == true){
+            if (pickorderBarcode.getVariantcodeStr().equalsIgnoreCase(pvVariantcode) && pickorderBarcode.getItemNoStr().equalsIgnoreCase(pvItemNo)){
                 if (resultObl == null ){
                     resultObl = new ArrayList<>();
                 }

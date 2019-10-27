@@ -115,15 +115,11 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
 
     @Override
     public void mFieldsInitialize() {

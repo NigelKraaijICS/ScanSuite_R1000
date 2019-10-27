@@ -80,7 +80,7 @@ public class cShippingAgent {
         this.shippingAgentEntity = new cShippingAgentEntity(pvJsonObject);
         this.shippingAgentStr = this.shippingAgentEntity.getShippingagentStr();
         this.descriptionStr = this.shippingAgentEntity.getDescriptionStr();
-        this.importfileInt = cText.stringToInteger(this.shippingAgentEntity.getImportfileStr());
+        this.importfileInt = cText.pStringToIntegerInt(this.shippingAgentEntity.getImportfileStr());
     }
        //End Region Constructor
 
@@ -141,7 +141,7 @@ public class cShippingAgent {
 
         for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl)
         {
-            if(shippingAgent.getShippintAgentStr() == pvShippingAgentStr){
+            if(shippingAgent.getShippintAgentStr().equalsIgnoreCase(pvShippingAgentStr) ){
                 return  shippingAgent;
             }
         }

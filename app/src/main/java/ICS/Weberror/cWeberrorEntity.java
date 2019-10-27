@@ -86,7 +86,7 @@ public class cWeberrorEntity {
         this.isresult = pvWebresultStr.getResultBln();
         this.parameters  = pvParametersStr;
         this.result = pvResultStr;
-        this.device = cDeviceInfo.getSerialnumber();
+        this.device = cDeviceInfo.getSerialnumberStr();
         this.datetime = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
         this.localstatus = cWeberror.WeberrorStatusEnu.NEW.toString();
     }

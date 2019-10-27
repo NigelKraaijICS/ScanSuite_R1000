@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +48,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     private static TextView textViewSelectedBin;
     private ConstraintLayout currentLocationView;
 
-    private RecyclerView recyclerViewPickorderLinesTopick;
+    private static RecyclerView recyclerViewPickorderLinesTopick;
 
     //End Region Private Properties
 
@@ -96,7 +98,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     public void mFragmentInitialize() {
 
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
@@ -113,10 +114,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         this.currentLocationView = getView().findViewById(R.id.currentLocationView);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {
@@ -153,6 +150,17 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     public static void pSetChosenBinCode( ) {
         PickorderLinesToPickFragment.textViewSelectedBin.setText(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+    }
+
+    public static void pSetSelectedIndexInt(final int pvIndexInt) {
+
+        new Handler().postDelayed(new Runnable() {
+                @Override
+               public void run() {
+                    PickorderLinesToPickFragment.recyclerViewPickorderLinesTopick.scrollToPosition(pvIndexInt);
+                }
+           },1);
+
     }
 
     //End Region Public Methods
@@ -214,8 +222,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         this.recyclerViewPickorderLinesTopick.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         this.recyclerViewPickorderLinesTopick.setVisibility(View.VISIBLE);
 
-        PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-
+        PickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
     }
 
     private void mNoLinesAvailable(Boolean pvEnabledBln) {
@@ -253,7 +260,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
             fragmentTransaction.commit();
 
             //Change tabcounter text
-            PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+            PickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
         }
     }
 

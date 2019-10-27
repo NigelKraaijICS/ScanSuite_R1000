@@ -68,7 +68,6 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
@@ -87,10 +86,6 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
 
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mSetListeners() {

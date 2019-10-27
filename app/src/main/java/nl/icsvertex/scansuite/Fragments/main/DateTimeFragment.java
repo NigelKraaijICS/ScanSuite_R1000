@@ -54,7 +54,6 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
         mFieldsInitialize();
         mSetListeners();
     }
@@ -67,10 +66,6 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
         buttonChangeDateTime = getView().findViewById(R.id.buttonChangeDateTime);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {

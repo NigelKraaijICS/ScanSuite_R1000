@@ -119,7 +119,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         //internet set?
         if (pvRequestCodeInt == ACTIVITY_WIFI_SETTINGS) {
 
-            if (cConnection.isInternetConnectedBln() == false) {
+            if (!cConnection.isInternetConnectedBln()) {
                 cUserInterface.pCheckAndCloseOpenDialogs();
                 final NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
                 noConnectionFragment.setCancelable(true);
@@ -140,11 +140,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         //Find all views in Activity
         this.mFindViews();
-
-        // Set all view models
-        this.mSetViewModels();
-
-        this.mSetSettings();
 
         // Show and set toolbar
         this.mSetToolbar(getResources().getString(R.string.screentitle_main));
@@ -184,14 +179,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         this.mainmenuNavigation = findViewById(R.id.mainmenuNavigation);
     }
 
-    @Override
-    public void mSetViewModels() {
-    }
-
-    @Override
-    public void mSetSettings() {
-
-    }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {

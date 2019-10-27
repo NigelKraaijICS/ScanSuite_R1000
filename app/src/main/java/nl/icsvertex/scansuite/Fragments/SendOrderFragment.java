@@ -56,7 +56,6 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
     public void mFragmentInitialize() {
 
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
     }
@@ -68,10 +67,7 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
     }
 
 
-    @Override
-    public void mSetViewModels() {
 
-    }
 
     @Override
     public void mFieldsInitialize() {

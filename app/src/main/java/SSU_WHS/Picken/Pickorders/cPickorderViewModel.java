@@ -31,7 +31,7 @@ public class cPickorderViewModel extends AndroidViewModel {
     public cWebresult pGetPickordersFromWebserviceWrs(Boolean pvProcessingOrParkedBln, String pvSearchTextStr) {return this.PickorderRepository.pGetPickordersFromWebserviceWrs(pvProcessingOrParkedBln,pvSearchTextStr);}
     public List<cPickorderEntity> pGetPickordersFromDatabaseObl() {return this.PickorderRepository.pGetPickordersFromDatabaseObl();}
     public cWebresult pGetSortOrShipordersFromWebserviceWrs(String pvUserStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {return this.PickorderRepository.pGetPickordersToShipFromWebserviceWrs(pvUserStr,pvStepCodeEnu,pvSearchTextStr);}
-    public List<cPickorderEntity> pGetPickordersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln, Boolean pvShowProcessedWaitBln, Boolean pvShowSingleArticlesBln, Boolean pvShowAssignedToMeBln, Boolean pvShowAssignedToOthersBln, Boolean pvShowNotAssignedBln) {return this.PickorderRepository.pGetPickordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln, pvShowProcessedWaitBln,pvShowSingleArticlesBln,  pvShowAssignedToMeBln, pvShowAssignedToOthersBln, pvShowNotAssignedBln);}
+    public List<cPickorderEntity> pGetPickordersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.PickorderRepository.pGetPickordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 
     public cWebresult pPickenHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pPickHandledViaWebserviceBln(pvWorkplaceStr);}
     public cWebresult pSortHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pSortHandledViaWebserviceBln(pvWorkplaceStr);}
@@ -40,6 +40,7 @@ public class cPickorderViewModel extends AndroidViewModel {
 
     public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {return this.PickorderRepository.pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);}
     public Boolean pUpdatePickorderCurrentLocationInDatabaseBln(String pvCurrentLocationStr) {return this.PickorderRepository.pPickorderUpdatCurrentLocationInDatabaseBln(pvCurrentLocationStr);}
+    public Boolean pPickorderUpdateWorkplaceViaWebserviceBln(String pvWorkplaceStr) {return this.PickorderRepository.pPickorderUpdateWorkplaceViaWebserviceBln(pvWorkplaceStr);}
 
     public Double pQuantityNotHandledDbl() {return this.PickorderRepository.pQuantityNotHandledDbl();}
     public Double pQuantityHandledDbl() {return this.PickorderRepository.pQuantityHandledDbl();}

@@ -102,7 +102,7 @@ public class cScannerLogonRepository {
 
             PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
             l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNER;
-            l_PropertyInfo1Pin.setValue(cDeviceInfo.getSerialnumber());
+            l_PropertyInfo1Pin.setValue(cDeviceInfo.getSerialnumberStr());
             l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
             PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();

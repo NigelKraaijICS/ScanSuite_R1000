@@ -47,7 +47,7 @@ public class cPickorderLineBarcodeEntity {
     }
 
     public cPickorderLineBarcodeEntity(Long pvLineNoLng, String pvBarcodeStr) {
-        this.lineNoStr = cText.longToString(pvLineNoLng);
+        this.lineNoStr = cText.pLongToStringStr(pvLineNoLng);
         this.barcodeStr = pvBarcodeStr;
         this.quantityHandledStr = "0";
         this.isManualStr = "N";

@@ -12,14 +12,15 @@ public class cWarehouseorder {
     }
 
     public enum OrderTypeEnu {
-        PICKEN
+        PICKEN,
+        INVENTARISATIE
     }
 
     public enum StepCodeEnu {
         Pick_Picking,
         Pick_Sorting,
-        Pick_PackAndShip
-
+        Pick_PackAndShip,
+        Inventory
     }
 
     public enum PickOrderTypeEnu {
@@ -34,23 +35,35 @@ public class cWarehouseorder {
         FEEDBACK
     }
 
-
-
     public  enum WorkflowEnu{
-
         BM,
         PV,
         BC,
-        BP
-
+        BP,
+        IVS
     }
 
-    public class WorkflowPickStepEnu {
+    public class ItemTypeEnu {
+        public static final int Unknown = 0;
+        public static final int Item = 1;
+        public static final int Box = 20;
+        public static final int Container = 21;
+        public static final int Pallet = 22;
+    }
 
+
+
+    public class WorkflowPickStepEnu {
         public static final int PickPicking = 10;
         public static final int PickSorting = 20;
         public static final int PickPackAndShip = 40;
 
+    }
+
+    public class WorkflowInventoryStepEnu {
+        public static final int Inventory = 10;
+        public static final int InventoryBusy = 11;
+        public static final int InventoryPause = 12;
     }
 
     public class PicklineStatusEnu {
@@ -71,16 +84,41 @@ public class cWarehouseorder {
         public final static int LOCALSTATUS_DONE_SENT = 40;
     }
 
-    public enum ActivityActionEnu{
+    public class InventoryBinStatusEnu {
+        public static final int New = 10;
+        public static final int InventoryPause = 20;
+        public static final int InventoryDone = 30;
+    }
 
+    public enum ActivityActionEnu{
         Unknown,
         Delete,
         NoStart,
         Hold,
         Store,
         Next
-
     }
+
+
+    public class SoureDocumentTypeEnu {
+        public final static int Undefined = 0;
+
+        public final static int Salesorder = 1;
+        public final static int SalesReturnOrder = 4;
+
+        public final static int PurchaseOrder = 5;
+        public final static int PurchaseReturnOrder = 8;
+
+        public final static int InboundTransfer = 9;
+        public final static int OutboundTransfer = 10;
+
+
+        public final static int ProductionConsumption = 11;
+        public final static int ProductionOutput = 12;
+
+        public final static int Generated = 99;
+    }
+
 
     public static cWarehouseorderViewModel gWarehouseorderViewModel;
     public static cWarehouseorderViewModel getWarehouseorderViewModel() {

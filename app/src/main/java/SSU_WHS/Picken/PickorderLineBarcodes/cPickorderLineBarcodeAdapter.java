@@ -23,13 +23,13 @@ public class cPickorderLineBarcodeAdapter extends RecyclerView.Adapter<cPickorde
 
         public pickorderLineBarcodeViewHolder(View itemView) {
             super(itemView);
-            textViewPickorderLineBarcode = itemView.findViewById(R.id.textViewPickorderLineBarcode);
-            textViewPickorderLineBarcode.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewPickorderLineBarcode.setSingleLine(true);
-            textViewPickorderLineBarcode.setMarqueeRepeatLimit(5);
-            textViewPickorderLineBarcode.setSelected(true);
-            textViewPickorderLineBarcodeQuantity = itemView.findViewById(R.id.textViewPickorderLineBarcodeQuantity);
-            pickorderLineBarcodeItemLinearLayout = itemView.findViewById(R.id.pickorderLineBarcodeItemLinearLayout);
+            this.textViewPickorderLineBarcode = itemView.findViewById(R.id.textViewPickorderLineBarcode);
+            this.textViewPickorderLineBarcode.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewPickorderLineBarcode.setSingleLine(true);
+            this.textViewPickorderLineBarcode.setMarqueeRepeatLimit(5);
+            this.textViewPickorderLineBarcode.setSelected(true);
+            this.textViewPickorderLineBarcodeQuantity = itemView.findViewById(R.id.textViewPickorderLineBarcodeQuantity);
+            this.pickorderLineBarcodeItemLinearLayout = itemView.findViewById(R.id.pickorderLineBarcodeItemLinearLayout);
         }
     }
     //End Public Properties
@@ -53,7 +53,7 @@ public class cPickorderLineBarcodeAdapter extends RecyclerView.Adapter<cPickorde
         if (cPickorderLineBarcode.allLineBarcodesObl != null) {
             final cPickorderLineBarcode pickorderLineBarcode = cPickorderLineBarcode.allLineBarcodesObl.get(position);
             final String barcodeStr = pickorderLineBarcode.getBarcodeStr();
-            String quantity = cText.doubleToString(pickorderLineBarcode.getQuantityhandledDbl());
+            String quantity = cText.pDoubleToStringStr(pickorderLineBarcode.getQuantityhandledDbl());
 
             holder.textViewPickorderLineBarcode.setText(barcodeStr);
             holder.textViewPickorderLineBarcodeQuantity.setText(quantity);

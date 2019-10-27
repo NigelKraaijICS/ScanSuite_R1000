@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Fragments.pick.PickorderLinesToPickFragment;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Fragments.pick.PickorderLinesPickedFragment;
 
@@ -106,12 +108,34 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
             pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
             pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
+
+            if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT || (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING)) {
+                pvHolder.textViewPickorderLineLocation.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+                pvHolder.textViewPickorderLine.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+                pvHolder.textViewPickorderLineQuantity.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+                pvHolder.textViewPickorderLineSourceNo.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+            }
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTotal) {
-           quantityToShowStr  = cText.intToString( currentPickorderLine.getQuantityDbl().intValue());
+           quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
             pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
             pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
+
+
+            if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) {
+                pvHolder.textViewPickorderLineLocation.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorGreen));
+                pvHolder.textViewPickorderLine.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorGreen));
+                pvHolder.textViewPickorderLineQuantity.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorGreen));
+                pvHolder.textViewPickorderLineSourceNo.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorGreen));
+            }
+
+            if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT || (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING)) {
+                pvHolder.textViewPickorderLineLocation.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+                pvHolder.textViewPickorderLine.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+                pvHolder.textViewPickorderLineQuantity.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+                pvHolder.textViewPickorderLineSourceNo.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+            }
         }
 
         //Sort Recyclers
@@ -128,7 +152,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
-            quantityToShowStr  = cText.intToString( currentPickorderLine.getQuantityDbl().intValue());
+            quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
             pvHolder.textViewPickorderLineLocation.setText("");
             pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
         }
@@ -184,9 +208,16 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         });
         //End On Click Listener
 
-        // If this is the first line, then click it
-        if (pvPositionInt == 0 ) {
+
+        if (cPickorder.currentPickOrder.lastSelectedIndexInt > this.localPickorderLinesObl.size() -1 ) {
+            cPickorder.currentPickOrder.lastSelectedIndexInt = 0;
+        }
+
+        //Select the first one, or selected index
+        if (pvPositionInt == cPickorder.currentPickOrder.lastSelectedIndexInt && cAppExtension.activity instanceof  PickorderLinesActivity &&  thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
             pvHolder.pickorderLineItemLinearLayout.performClick();
+            PickorderLinesToPickFragment.pSetSelectedIndexInt(pvPositionInt);
+            return;
         }
     }
 
@@ -209,19 +240,19 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         notifyDataSetChanged();
     }
 
-    public void pvShowDefects(Boolean pvShowBlm) {
-        this.localPickorderLinesObl = mGetDefectsListObl(pvShowBlm);
+    public void pShowDefects(Boolean pvShowBln) {
+        this.localPickorderLinesObl = mGetDefectsListObl(pvShowBln);
 
         //if PickorderLinesPickedFragment is the current fragment
         if (PickorderLinesActivity.currentLineFragment instanceof PickorderLinesPickedFragment ) {
 
-            //if there are no defects, then show no lines fragment
+            //if there are no defects, then show no linesInt fragment
             if (this.localPickorderLinesObl.size() == 0 ) {
                 PickorderLinesPickedFragment.pNoLinesAvailable(true);
             }
-            // There are lines to show, so refresh the fragent then all lines are shown again
+            // There are linesInt to show, so refresh the fragent then all linesInt are shown again
             else {
-               PickorderLinesPickedFragment.pGetData();
+               PickorderLinesPickedFragment.pGetData( this.localPickorderLinesObl );
             }
 
         }

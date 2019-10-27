@@ -3,6 +3,8 @@ package SSU_WHS.Basics.ArticleImages;
 import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 
+import SSU_WHS.Webservice.cWebresult;
+
 public class cArticleImageViewModel extends AndroidViewModel {
 
 
@@ -18,5 +20,7 @@ public class cArticleImageViewModel extends AndroidViewModel {
 
     public void deleteAll() {
         Repository.deleteAll();}
+
+    public cWebresult pGetArticleImageFromWebserviceWrs(String pvItemNoStr, String pvVariantCodeStr) {return  this.Repository.pGetArticleImageFromWebserviceWrs(pvItemNoStr,pvVariantCodeStr);}
 
 }

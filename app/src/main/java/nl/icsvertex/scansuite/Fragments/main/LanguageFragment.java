@@ -49,7 +49,6 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
         mFieldsInitialize();
         mSetListeners();
     }
@@ -60,10 +59,6 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
         buttonChangeLanguage = getView().findViewById(R.id.buttonChangeLanguage);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {

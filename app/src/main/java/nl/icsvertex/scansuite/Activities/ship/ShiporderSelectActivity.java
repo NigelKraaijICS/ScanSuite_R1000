@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +41,9 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
+import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cRegex;
@@ -58,7 +61,7 @@ import nl.icsvertex.scansuite.Fragments.NoOrdersFragment;
 import nl.icsvertex.scansuite.R;
 
 
-public class ShiporderSelectActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class ShiporderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
     //Region Public Properties
     public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
@@ -81,6 +84,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     private static RecyclerView recyclerViewShiporders;
 
     private ConstraintLayout constraintFilterOrders;
+    private static SwipeRefreshLayout swipeRefreshLayout;
     private BottomSheetBehavior bottomSheetBehavior;
     private static ImageView imageViewFilter;
 
@@ -130,6 +134,12 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         mTryToLeaveActivity();
     }
 
+    @Override
+    public void onRefresh() {
+        ShiporderSelectActivity.pFillOrders();
+
+    }
+
     //End Region Default Methods
 
 
@@ -140,10 +150,6 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         mSetAppExtensions();
 
         mFindViews();
-
-        mSetViewModels();
-
-        mSetSettings();
 
         mSetToolbar(getResources().getString(R.string.screentitle_shiporderselect));
 
@@ -171,15 +177,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         this.imageViewFilter = findViewById(R.id.imageViewFilter);
         this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
-    }
-
-    @Override
-    public void mSetViewModels() {
-    }
-
-    @Override
-    public void mSetSettings() {
-
+        ShiporderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
     @Override
@@ -207,6 +205,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     public void mSetListeners() {
         this.mSetSearchListener();
         this.mSetFilterListener();
+        this.mSetSwipeRefreshListener();
     }
 
     @Override
@@ -285,7 +284,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     //Region Private Method
 
-    private static void mHandleFillOrders(){
+    private static void mHandleFillOrders() {
 
         //First get all sortorders
         if (!cPickorder.pGetPackAndShipOrdersViaWebserviceBln(true, "")) {
@@ -310,7 +309,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private static void mHandleSortOrderSelected(){
+    private static void mHandleSortOrderSelected() {
 
         cResult hulpResult;
 
@@ -384,6 +383,11 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         return;
     }
 
+    private void mSetSwipeRefreshListener() {
+       ShiporderSelectActivity.swipeRefreshLayout.setOnRefreshListener(this);
+       ShiporderSelectActivity.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
+    }
+
     private void mInitBottomSheet() {
 
         this.bottomSheetBehavior = BottomSheetBehavior.from(this.constraintFilterOrders);
@@ -452,6 +456,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorder.currentPickOrder = null;
         cPickorderLine.currentPickOrderLine = null;
         cPickorderBarcode.currentPickorderBarcode = null;
+        cWorkplace.currentWorkplace = null;
     }
 
     private static void mShowNoOrdersIcon(final Boolean pvShowBln) {
@@ -487,6 +492,8 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private static void mSetSortorderRecycler(List<cPickorder> pvPickorderObl) {
+
+        ShiporderSelectActivity.swipeRefreshLayout.setRefreshing(false);
 
         if (pvPickorderObl == null || pvPickorderObl.size() == 0) {
             return;
@@ -613,7 +620,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
             return result;
         }
 
-        // Get all lines, if zero than there is something wrong
+        // Get all linesInt, if zero than there is something wrong
         if (cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true) == false) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));
@@ -668,8 +675,20 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mTryToLeaveActivity() {
 
+        this.mReleaseLicense();
+
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);
+    }
+
+    private void mReleaseLicense() {
+
+        if (!cLicense.pReleaseLicenseViaWebserviceBln()) {
+            cUserInterface.pShowSnackbarMessage(recyclerViewShiporders, cAppExtension.activity.getString(R.string.message_license_release_error), null, false);
+        }
+
+        cLicense.currentLicenseEnu = cLicense.LicenseEnu.Unknown;
+
     }
 }
 

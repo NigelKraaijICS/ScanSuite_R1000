@@ -1,0 +1,227 @@
+package SSU_WHS.Inventory.InventoryorderLines;
+
+import android.app.Application;
+import android.os.AsyncTask;
+
+import org.json.JSONException;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cDateAndTime;
+import ICS.Utils.cDeviceInfo;
+import ICS.Utils.cText;
+import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.acScanSuiteDatabase;
+import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
+import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Webservice.cWebresult;
+import SSU_WHS.Webservice.cWebservice;
+import SSU_WHS.Webservice.cWebserviceDefinitions;
+
+public class cInventoryorderLineRepository {
+    //Region Public Properties
+    public iInventoryorderLineDao inventoryorderLineDao;
+    //End Region Public Properties
+
+    //Region Private Properties
+    private acScanSuiteDatabase db;
+
+    //Region Constructor
+    cInventoryorderLineRepository(Application pvApplication) {
+        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.inventoryorderLineDao = db.inventoryorderLineDao();
+    }
+    //End Region Constructor
+
+    //Region Public Methods
+
+    public void insert(cInventoryorderLineEntity inventoryorderLineEntity) {
+        new mInsertAsyncTask(inventoryorderLineDao).execute(inventoryorderLineEntity);
+    }
+
+    public void deleteAll() {
+        new mDeleteAllAsyncTask(inventoryorderLineDao).execute();
+    }
+
+    private static class mInsertAsyncTask extends AsyncTask<cInventoryorderLineEntity, Void, Void> {
+        private iInventoryorderLineDao mAsyncTaskDao;
+
+        mInsertAsyncTask(iInventoryorderLineDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final cInventoryorderLineEntity... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
+        private iInventoryorderLineDao mAsyncTaskDao;
+
+        mDeleteAllAsyncTask(iInventoryorderLineDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            mAsyncTaskDao.deleteAll();
+            return null;
+        }
+    }
+
+    public List<cInventoryorderLineEntity> pGetInventoryorderLinesForBincodeFromDatabaseObl(String pvBincode) {
+        List<cInventoryorderLineEntity> ResultObl = null;
+        try {
+            ResultObl = new pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask(inventoryorderLineDao).execute(pvBincode).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return ResultObl;
+    }
+
+    public Double pGetCountForBinCodeDbl(String pvBincode) {
+        Double resultDbl = Double.valueOf(0);
+        try {
+            resultDbl = new pGetCountForBincodeFromDatabaseAsyncTask(inventoryorderLineDao).execute(pvBincode).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultDbl;
+    }
+
+    public cWebresult pSaveLineViaWebserviceWrs() {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mSaveLineViaViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    private static class pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask extends AsyncTask<String, Void, List<cInventoryorderLineEntity>> {
+        private iInventoryorderLineDao mAsyncTaskDao;
+        pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask(iInventoryorderLineDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected List<cInventoryorderLineEntity> doInBackground(final String... params) {
+            return mAsyncTaskDao.getInventoryorderLineForBincode(params[0]);
+        }
+    }
+
+    private static class pGetCountForBincodeFromDatabaseAsyncTask extends AsyncTask<String, Void, Double> {
+        private iInventoryorderLineDao mAsyncTaskDao;
+        pGetCountForBincodeFromDatabaseAsyncTask(iInventoryorderLineDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Double doInBackground(final String... params) {
+            return mAsyncTaskDao.getCountForBincodeDbl(params[0]);
+        }
+    }
+
+    private static class mSaveLineViaViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNERID;
+                l_PropertyInfo2Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo4Pin.setValue(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENO;
+                l_PropertyInfo5Pin.setValue(cInventoryorderLine.currentInventoryOrderLine.getLineNoInt());
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_HANDLEDTIMESTAMP;
+                l_PropertyInfo6Pin.setValue(cDateAndTime.pGetCurrentDateTimeForWebserviceStr());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                SoapObject barcodesHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODESLIST);
+
+                //Only loop through handled barcodes, of there are any
+                if (cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl != null) {
+                    for (cInventoryorderLineBarcode inventoryorderLineBarcode : cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl) {
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, inventoryorderLineBarcode.getBarcodeStr());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, inventoryorderLineBarcode.getQuantityhandledDbl());
+                        barcodesHandledList.addSoapObject(soapObject);
+                    }
+                }
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODELIST;
+                l_PropertyInfo7Pin.setValue(barcodesHandledList);
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+
+
+                SoapObject propertiesHandledObl = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
+//                SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTYHANDLED_COMPLEX);
+//                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, "");
+//                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED, 0);
+//                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, "");
+//                propertiesHandledObl.addSoapObject(soapObject);
+
+
+                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
+                l_PropertyInfo8Pin.setValue(propertiesHandledObl);
+                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
+                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINESAVE, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+}
+

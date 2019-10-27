@@ -7,10 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
+import ICS.Weberror.cWeberror;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
+import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cBranch {
 
@@ -76,6 +80,7 @@ public class cBranch {
         return  cWorkplace.allWorkplacesObl;
 
     }
+    public ArrayList<cBranchBin>  binsObl;
 
     public static cBranchViewModel gBranchViewModel;
     public static cBranchViewModel getBranchViewModel() {
@@ -107,7 +112,7 @@ public class cBranch {
         this.branchStr = branchEntity.getBranchStr();
         this.branchTypeStr = branchEntity.getBranchtypeStr();
         this.branchNameStr = branchEntity.getBranchnameStr();
-        this.binMandatoryBln = cText.stringToBoolean(branchEntity.getBinmandatoryStr(),true);
+        this.binMandatoryBln = cText.pStringToBooleanBln(branchEntity.getBinmandatoryStr(),true);
         this.pickDefaultRejectReasonStr = branchEntity.getPickdefaultrejectreasonStr();
         this.pickDefaultStorageBinStr = branchEntity.getPickdefaultstoragebinStr();
         this.receiveDefaultBinStr = branchEntity.getReceivedefaultbinStr();
@@ -125,19 +130,35 @@ public class cBranch {
         return true;
     }
 
-    public static cBranch pGetBranchByCode(String pvBranch){
+    public static cBranch pGetBranchByCode(String pvBranchStr){
         if(cUser.currentUser == null || cUser.currentUser.branchesObl == null){
             return null;
         }
 
         for (cBranch branch :  cUser.currentUser.branchesObl)
         {
-            if(branch.branchStr.equalsIgnoreCase(pvBranch)){
+            if(branch.branchStr.equalsIgnoreCase(pvBranchStr)){
                 return  branch;
             }
         }
 
         return null;
+    }
+
+    public cBranchBin pGetBinByCode(String pvBinCodeStr){
+
+        //Search for the BIN in the cache
+        if (this.binsObl != null && this.binsObl.size() > 0 ) {
+            for (cBranchBin branchBin : this.binsObl) {
+
+                if (branchBin.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr)) {
+                    return  branchBin;
+                }
+            }
+        }
+
+        cBranchBin branchBin = this.pGetBinViaWebservice(pvBinCodeStr);
+        return  branchBin;
     }
 
     public static boolean pTruncateTableBln(){
@@ -176,6 +197,34 @@ public class cBranch {
 
         }
         return false;
+    }
+
+    public cBranchBin pGetBinViaWebservice(String pvBinCodeStr) {
+
+      cWebresult WebResult;
+        WebResult =  cBranch.getBranchViewModel().pGetBinFromWebserviceWrs(pvBinCodeStr);
+        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+
+            List<JSONObject> myList = WebResult.getResultDtt();
+            for (int i = 0; i < myList.size(); i++) {
+                JSONObject jsonObject;
+                jsonObject = myList.get(i);
+
+                cBranchBin branchBin = new cBranchBin(jsonObject);
+
+                if (this.binsObl == null) {
+                    this.binsObl = new ArrayList<>();
+                }
+
+                this.binsObl.add(branchBin);
+                return  branchBin;
+            }
+            return  null;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSELOCATIONS);
+            return  null;
+        }
     }
 
     //End Region Public Methods

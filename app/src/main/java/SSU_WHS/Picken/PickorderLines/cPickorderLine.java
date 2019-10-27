@@ -332,7 +332,7 @@ public class cPickorderLine {
         this.quantityTakenDbl =  this.PickorderLineEntity.getQuantityTakenDbl();
         this.sourceNoStr = this.PickorderLineEntity.getSourceNoStr();
         this.destinationNoStr = this.PickorderLineEntity.getDestinationNoStr();
-        this.isPartOfMultiLineOrderBln = cText.stringToBoolean(this.PickorderLineEntity.getIspartOfMultilLneOrderStr(), false) ;
+        this.isPartOfMultiLineOrderBln = cText.pStringToBooleanBln(this.PickorderLineEntity.getIspartOfMultilLneOrderStr(), false) ;
         this.shippingAdviceStr= this.PickorderLineEntity.getShippingAdviceStr();
         this.processingSequenceStr = this.PickorderLineEntity.getProcessingSequenceStr();
         this.storeSourceOpdrachtStr = this.PickorderLineEntity.getStoreSourceOpdrachtStr();
@@ -341,7 +341,7 @@ public class cPickorderLine {
         this.vendorItemDescriptionStr =  this.PickorderLineEntity.getVendorItemDescriptionStr();
         this.component10Str =   this.PickorderLineEntity.getComponent10Str();
         this.brandStr = this.PickorderLineEntity.getBrandStr();
-        this.printDocumentsBln= cText.stringToBoolean(this.PickorderLineEntity.getPrintdocumentsStr(), false) ;
+        this.printDocumentsBln= cText.pStringToBooleanBln(this.PickorderLineEntity.getPrintdocumentsStr(), false) ;
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
         this.statusShippingInt =  this.PickorderLineEntity.getStatusShippingInt();
         this.statusPackingInt =  this.PickorderLineEntity.getStatusPackingInt();
@@ -393,7 +393,7 @@ public class cPickorderLine {
         this.quantityRejectedDbl = this.PickorderLineEntity.getQuantityHandledDbl();
         this.sourceNoStr = this.PickorderLineEntity.getSourceNoStr();
         this.destinationNoStr = this.PickorderLineEntity.getDestinationNoStr();
-        this.isPartOfMultiLineOrderBln = cText.stringToBoolean(this.PickorderLineEntity.getIspartOfMultilLneOrderStr(), false) ;
+        this.isPartOfMultiLineOrderBln = cText.pStringToBooleanBln(this.PickorderLineEntity.getIspartOfMultilLneOrderStr(), false) ;
         this.shippingAdviceStr= this.PickorderLineEntity.getShippingAdviceStr();
         this.processingSequenceStr = this.PickorderLineEntity.getProcessingSequenceStr();
         this.storeSourceOpdrachtStr = this.PickorderLineEntity.getStoreSourceOpdrachtStr();
@@ -402,7 +402,7 @@ public class cPickorderLine {
         this.vendorItemDescriptionStr =  this.PickorderLineEntity.getVendorItemDescriptionStr();
         this.component10Str =   this.PickorderLineEntity.getComponent10Str();
         this.brandStr = this.PickorderLineEntity.getBrandStr();
-        this.printDocumentsBln= cText.stringToBoolean(this.PickorderLineEntity.getPrintdocumentsStr(), false) ;
+        this.printDocumentsBln= cText.pStringToBooleanBln(this.PickorderLineEntity.getPrintdocumentsStr(), false) ;
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
         this.localStatusInt = this.PickorderLineEntity.getLocalstatusInt();
 
@@ -462,7 +462,7 @@ public class cPickorderLine {
         cResult result = new cResult();
         result.resultBln = false;
 
-        if (this.mGetBarcodesObl() == null || cPickorderLine.currentPickOrderLine.mGetBarcodesObl().size() == 0) {
+        if (cPickorderLine.currentPickOrderLine.mGetBarcodesObl() == null || cPickorderLine.currentPickOrderLine.mGetBarcodesObl().size() == 0) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line));
             return result;
@@ -659,7 +659,7 @@ public class cPickorderLine {
         }
     }
 
-     public boolean pGetArticleImageBln(){
+    public boolean pGetArticleImageBln(){
 
         if (this.articleImage != null) {
             return  true;
@@ -672,7 +672,7 @@ public class cPickorderLine {
 
         cWebresult Webresult;
 
-        Webresult = cPickorderLine.getPickorderLineViewModel().pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
+        Webresult = cArticleImage.getArticleImageViewModel().pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
         if (Webresult.getSuccessBln() == false || Webresult.getResultBln() == false) {
             return  false;
         }

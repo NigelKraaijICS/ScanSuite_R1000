@@ -92,7 +92,7 @@ public class cScannerLogon {
         this.applicationEnvironmentStr = this.scannerLogonEntity.getApplicationEnvironmentStr();
         this.languagesStr = this.scannerLogonEntity.getLanguagesStr();
         this.requiredScannerConfiguration = this.scannerLogonEntity.getRequiredScannerConfigurationStr();
-        this.reapplyScannerSonfigurationBln = cText.stringToBoolean(this.scannerLogonEntity.getReapplyScannerConfigurationStr(),false);
+        this.reapplyScannerSonfigurationBln = cText.pStringToBooleanBln(this.scannerLogonEntity.getReapplyScannerConfigurationStr(),false);
         this.versionConfigAppCurrentScannerStr = this.scannerLogonEntity.getVersionConfigAppCurrentScannerStr();
         this.versionConfigAppRequiredScannerStr = this.scannerLogonEntity.getVersionConfigAppRequiredScannerStr();
         cScannerLogon.currentScannerLogon = this;
@@ -143,7 +143,6 @@ public class cScannerLogon {
             cScannerLogon.scannerLoggedOnBln = true;
             return  true;
         } else {
-
             String subDirectoryStr =this.getRequiredScannerversionStr().replaceAll("\\.", "");
             String URLStr = cPublicDefinitions.UPDATE_BASE_URL + "/" + subDirectoryStr + "/" + cPublicDefinitions.UPDATE_PACKAGE_NAME;
             cUpdate.mUpdateBln(pvFrameLayout, URLStr);

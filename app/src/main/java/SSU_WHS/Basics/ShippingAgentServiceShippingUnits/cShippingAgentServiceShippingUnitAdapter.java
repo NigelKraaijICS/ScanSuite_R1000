@@ -110,7 +110,7 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
 
         pvHolder.textViewDescription.setText(shippingAgentServiceShippingUnit.getDescriptionStr());
         pvHolder.textViewShippingUnit.setText(shippingAgentServiceShippingUnit.getShippingUnitStr());
-        pvHolder.textViewQuantityUsed.setText(cText.intToString(shippingAgentServiceShippingUnit.getShippingUnitQuantityUsedInt()));
+        pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(shippingAgentServiceShippingUnit.getShippingUnitQuantityUsedInt()));
 
 
         if (shippingAgentServiceShippingUnit.getShippingUnitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX)) {
@@ -187,7 +187,7 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
 
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit = shippingAgentServiceShippingUnit;
 
-                Integer currentQuantity = cText.stringToInteger(pvHolder.textViewQuantityUsed.getText().toString());
+                Integer currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
                 Integer newQuantity = currentQuantity + 1;
                 pvHolder.textViewQuantityUsed.setText(Integer.toString(newQuantity));
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
@@ -201,7 +201,7 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit = shippingAgentServiceShippingUnit;
 
 
-                Integer currentQuantity = cText.stringToInteger(pvHolder.textViewQuantityUsed.getText().toString());
+                Integer currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
                 if (currentQuantity == 0) {
                     cUserInterface.pDoNope(pvHolder.textViewQuantityUsed, true, false);
                     return;

@@ -33,7 +33,7 @@ public class cDeviceInfo {
         return Build.MODEL;
     }
 
-    public static String getSerialnumber ( )
+    public static String getSerialnumberStr( )
     {
         return SERIAL;
     }

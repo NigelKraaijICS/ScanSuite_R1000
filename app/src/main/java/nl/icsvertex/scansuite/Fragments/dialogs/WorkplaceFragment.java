@@ -94,8 +94,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
-        this.mFieldsInitialize();
+         this.mFieldsInitialize();
         this.mSetListeners();
 
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
@@ -106,10 +105,6 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         this.workplaceRecyclerView = getView().findViewById(R.id.workplaceRecyclerview);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {
@@ -168,7 +163,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
             }
 
             if (cAppExtension.activity instanceof ShiporderLinesActivity) {
-                ShiporderLinesActivity.pShowOrderDoneFragment();
+                cAppExtension.dialogFragment.dismiss();
             }
 
         }

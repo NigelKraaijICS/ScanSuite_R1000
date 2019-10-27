@@ -16,6 +16,7 @@ public class cPublicDefinitions {
 
 
     public static String KEY_COMMENTHEADER = "KEY_COMMENTHEADER";
+    public static String ADDBIN_TAG = "ADDBIN_TAG";
 
 
 
@@ -43,6 +44,7 @@ public class cPublicDefinitions {
     public static String ORDERDONE_HEADER = "ORDERDONE_ERRORMESSAGE";
     public static String COMMENTFRAGMENT_TAG = "COMMENTFRAGMENT_TAG";
     public static String WORKPLACEFRAGMENT_TAG = "WORKPLACEFRAGMENT_TAG";
+    public static String ARTICLEDETAILFRAGMENT_TAG = "ARTICLEDETAILFRAGMENT_TAG";
     public static String ORDERDONE_TEXT = "ORDERDONE_EXTRASTRING";
     public static String ORDERDONE_SHOWCURRENTLOCATION = "ORDERDONE_SHOWCURRENTLOCATION";
 

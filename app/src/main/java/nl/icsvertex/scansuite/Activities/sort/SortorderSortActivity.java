@@ -174,10 +174,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         this.mFindViews();
 
-        this.mSetViewModels();
-
-        this.mSetSettings();
-
         this.mSetToolbar(getResources().getString(R.string.screentitle_sortordersort));
 
         this.mFieldsInitialize();
@@ -238,15 +234,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
-
-    @Override
-    public void mSetSettings() {
-
-    }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
@@ -289,7 +277,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.containerText.setText("");
         SortorderSortActivity.quantityText.setText("0");
 
-        SortorderSortActivity.quantityRequiredText.setText(cText.intToString(cPickorderLine.currentPickOrderLine.getQuantityDbl().intValue()));
+        SortorderSortActivity.quantityRequiredText.setText(cText.pIntToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl().intValue()));
         this.textViewPackingTable.setText("");
 
         SortorderSortActivity.imageButtonDone.setVisibility(View.INVISIBLE);
@@ -370,7 +358,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             }
 
             SortorderSortActivity.imageButtonDone.setVisibility(View.INVISIBLE);
-
 
             //Succesfull article scanned
             articleScannedLastBln = true;
@@ -766,7 +753,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
             //Set the new quantity and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
-            SortorderSortActivity.quantityText.setText(cText.doubleToString(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
+            SortorderSortActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
             //Add or update line barcode
             cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln();
@@ -805,7 +792,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
         }
 
-        SortorderSortActivity.quantityText.setText(cText.doubleToString(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
+        SortorderSortActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
         SortorderSortActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
 
         if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
@@ -858,7 +845,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment();
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_pickorderbusy_header),
+                                                                                   cAppExtension.activity.getString(R.string.message_pickorderbusy_text));
         acceptRejectFragment.setCancelable(true);
         runOnUiThread(new Runnable() {
             @Override
@@ -1032,7 +1020,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         for (cPickorderBarcode pickorderBarcode : cPickorderLine.currentPickOrderLine.barcodesObl) {
 
-            if (pickorderBarcode.barcodeStr.equalsIgnoreCase(pvScannedBarcodeStr)) {
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
                 cPickorderBarcode.currentPickorderBarcode = pickorderBarcode;
                 return true;
             }

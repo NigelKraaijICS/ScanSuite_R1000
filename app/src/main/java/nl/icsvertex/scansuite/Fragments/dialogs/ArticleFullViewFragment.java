@@ -113,8 +113,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
-        this.mFieldsInitialize();
+          this.mFieldsInitialize();
         this.mSetListeners();
         this.mSetToolbar();
 
@@ -136,12 +135,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
         this.articleFullImageView = getView().findViewById(R.id.articleFullImageView);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
-
-    @Override
+     @Override
     public void mFieldsInitialize() {
 
         if (!cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {

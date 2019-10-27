@@ -99,7 +99,7 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
             pvHolder.textViewPickorderLinePackAndShipDocument.setText(shipment.getSourceNoStr());
         }
 
-        pvHolder.textViewPickorderLinePackAndShipQuantity.setText(cText.intToString(shipment.getQuantityDbl().intValue()));
+        pvHolder.textViewPickorderLinePackAndShipQuantity.setText(cText.pIntToStringStr(shipment.getQuantityDbl().intValue()));
         pvHolder.textViewPickorderLinePackAndShipPack.setText("");
 
         if (pvPositionInt ==0) {

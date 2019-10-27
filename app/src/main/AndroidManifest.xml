@@ -24,7 +24,15 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <provider
+            android:name=".cGenericFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
         <activity
             android:name=".Activities.general.MainDefaultActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -83,6 +91,27 @@
         <activity android:name=".Activities.ship.ShiporderSelectActivity" />
         <activity android:name=".Activities.ship.ShiporderLinesActivity" />
         <activity android:name=".Activities.ship.ShiporderShipActivity" />
+        <activity
+            android:name=".Activities.inventory.InventoryorderSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.general.MenuActivity" />
+        </activity>
+        <activity android:name=".Activities.inventory.InventoryorderBinsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Activities.inventory.InventoryorderSelectActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity android:name=".Activities.inventory.InventoryorderBinActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Activities.inventory.InventoryorderBinsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"

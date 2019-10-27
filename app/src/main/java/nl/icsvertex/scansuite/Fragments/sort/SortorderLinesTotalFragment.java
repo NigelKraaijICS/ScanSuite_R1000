@@ -82,7 +82,6 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
@@ -91,11 +90,6 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
     @Override
     public void mFindViews() {
         this.recyclerViewSortorderLinesTotal = getView().findViewById(R.id.recyclerViewSortorderLinesTotal);
-    }
-
-    @Override
-    public void mSetViewModels() {
-
     }
 
     @Override
@@ -128,7 +122,7 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
         this.recyclerViewSortorderLinesTotal.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
         this.recyclerViewSortorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        SortorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+        SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
 
     }
 

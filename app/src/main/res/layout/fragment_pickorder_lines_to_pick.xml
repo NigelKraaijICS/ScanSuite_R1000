@@ -15,7 +15,7 @@
         style="@style/defaultRecyclerView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/currentLocationView"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/pillButton"
@@ -38,8 +38,6 @@
             android:paddingEnd="@dimen/default_double_padding"/>
         <TextView
             android:id="@+id/textViewSelectedBin"
-            android:clickable="true"
-            android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize_big"

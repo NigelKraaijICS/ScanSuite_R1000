@@ -41,17 +41,17 @@ public class cPickorderLineBarcode {
     public cPickorderLineBarcode (JSONObject pvJsonObject) {
         this.pickorderLineBarcodeEntity = new cPickorderLineBarcodeEntity(pvJsonObject);
         this.barcodeStr = this.pickorderLineBarcodeEntity.getBarcodeStr();
-        this.lineNoLng = cText.stringToLong(this.pickorderLineBarcodeEntity.getLineNoStr());
-        this.isManualBln = cText.stringToBoolean(this.pickorderLineBarcodeEntity.getIsManualStr(),false);
-        this.quantityHandledDbl = cText.stringToDouble(this.pickorderLineBarcodeEntity.getQuantityhandledStr());
+        this.lineNoLng = cText.pStringToLongLng(this.pickorderLineBarcodeEntity.getLineNoStr());
+        this.isManualBln = cText.pStringToBooleanBln(this.pickorderLineBarcodeEntity.getIsManualStr(),false);
+        this.quantityHandledDbl = cText.pStringToDoubleDbl(this.pickorderLineBarcodeEntity.getQuantityhandledStr());
     }
 
     public cPickorderLineBarcode (Long pvLineNoLng, String pvBarcodeStr) {
         this.pickorderLineBarcodeEntity = new cPickorderLineBarcodeEntity(pvLineNoLng,pvBarcodeStr);
         this.barcodeStr = this.pickorderLineBarcodeEntity.getBarcodeStr();
-        this.lineNoLng = cText.stringToLong(this.pickorderLineBarcodeEntity.getLineNoStr());
-        this.isManualBln = cText.stringToBoolean(this.pickorderLineBarcodeEntity.getIsManualStr(),false);
-        this.quantityHandledDbl = cText.stringToDouble(this.pickorderLineBarcodeEntity.getQuantityhandledStr());
+        this.lineNoLng = cText.pStringToLongLng(this.pickorderLineBarcodeEntity.getLineNoStr());
+        this.isManualBln = cText.pStringToBooleanBln(this.pickorderLineBarcodeEntity.getIsManualStr(),false);
+        this.quantityHandledDbl = cText.pStringToDoubleDbl(this.pickorderLineBarcodeEntity.getQuantityhandledStr());
     }
 
     public boolean pInsertInDatabaseBln() {

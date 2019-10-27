@@ -95,8 +95,7 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
-        this.mFieldsInitialize();
+            this.mFieldsInitialize();
         this.mSetListeners();
         this.mSetToolbar();
         this.mSetCommentRecycler(this.localCommentObl);
@@ -111,10 +110,6 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
         this.buttonRoger = getView().findViewById(R.id.buttonRoger);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {

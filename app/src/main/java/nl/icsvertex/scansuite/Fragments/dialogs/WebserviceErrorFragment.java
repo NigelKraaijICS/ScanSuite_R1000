@@ -53,7 +53,6 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
         mFieldsInitialize();
         mSetListeners();
     }
@@ -66,10 +65,6 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
         buttonCancel = getView().findViewById(R.id.buttonCancel);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
     @Override
     public void mFieldsInitialize() {
         errorContainer.setVisibility(View.INVISIBLE);

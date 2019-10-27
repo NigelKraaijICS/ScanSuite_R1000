@@ -91,7 +91,6 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
 
@@ -108,10 +107,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         this.cancelButton = getView().findViewById(R.id.cancelButton);
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
     @Override
     public void mFieldsInitialize() {
         this.textViewCurrentLocationHeader.setText(R.string.currentlocation_header_default);

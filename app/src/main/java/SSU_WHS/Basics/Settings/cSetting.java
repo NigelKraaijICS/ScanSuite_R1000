@@ -348,7 +348,7 @@ public class cSetting {
                 return  false;
             }
 
-            return cText.stringToBoolean(Setting.valueStr,false);
+            return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_AUTO_ACCEPT(){
@@ -358,7 +358,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_PACK_AND_SHIP_FASE_AVAILABLE(){
@@ -368,7 +368,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_SHIPPING_SALES(){
@@ -378,7 +378,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_SALES_ASK_WORKPLACE(){
@@ -388,7 +388,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_WITH_PICTURE_PREFETCH(){
@@ -398,7 +398,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_WITH_PICTURE_AUTO_OPEN(){
@@ -408,7 +408,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_WITH_PICTURE(){
@@ -418,7 +418,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_BIN_IS_ITEM(){
@@ -428,7 +428,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_BIN_MANUAL(){
@@ -438,7 +438,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static Boolean PICK_SORT_AUTO_START(){
@@ -452,7 +452,7 @@ public class cSetting {
             return  null;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static String PICK_SORT_LOCATION_ADVICE(){
@@ -476,7 +476,7 @@ public class cSetting {
             return  null;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static Boolean PICK_PACK_AND_SHIP_AUTO_START(){
@@ -490,7 +490,7 @@ public class cSetting {
         }
 
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static Boolean GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED(){
@@ -504,7 +504,7 @@ public class cSetting {
         }
 
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static String GENERIC_ITEM_EXTRA_FIELD1(){
@@ -594,7 +594,7 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static boolean PICK_PER_SCAN(){
@@ -604,8 +604,48 @@ public class cSetting {
             return  false;
         }
 
-        return cText.stringToBoolean(Setting.valueStr,false);
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
+
+    public static boolean INV_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+    public static String INV_NEW_WORKFLOWS(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static boolean INV_ADD_EXTRA_BIN(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_ADD_EXTRA_BIN);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean INV_ADD_EXTRA_LINES(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_ADD_EXTRA_LINES);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
 
 
 

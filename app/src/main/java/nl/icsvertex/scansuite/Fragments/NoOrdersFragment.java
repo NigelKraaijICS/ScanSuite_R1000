@@ -58,7 +58,6 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     public void mFragmentInitialize() {
 
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
     }
@@ -70,12 +69,7 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     }
 
 
-    @Override
-    public void mSetViewModels() {
-
-    }
-
-    @Override
+     @Override
     public void mFieldsInitialize() {
 
 

@@ -53,7 +53,6 @@ public class SupportNetworkFragment extends Fragment implements iICSDefaultFragm
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
         mFieldsInitialize();
         mSetListeners();
     }
@@ -67,10 +66,6 @@ public class SupportNetworkFragment extends Fragment implements iICSDefaultFragm
         buttonWifiSettings = getView().findViewById(R.id.buttonWifiSettings);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/acceptRejectContainer"
+    android:padding="@dimen/default_padding"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,7 +13,8 @@
         android:text="@string/message_pickorderbusy_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/textViewAcceptRejectText"
@@ -20,7 +22,8 @@
         android:text="@string/message_pickorderbusy_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectHeader" />
+        app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectHeader"
+        />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/rejectImageView"

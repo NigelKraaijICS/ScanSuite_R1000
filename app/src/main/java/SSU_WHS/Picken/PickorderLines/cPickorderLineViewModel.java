@@ -38,6 +38,4 @@ public class cPickorderLineViewModel extends AndroidViewModel {
     public List<cPickorderLineEntity> pGetLinesForSourceNoObl(String pvSourceNoStr) {return this.Repository.pGetLinesForSourceNoObl(pvSourceNoStr);}
     public List<cPickorderLineEntity> pGetSortLineForItemNoAndVariantCodeObl(String pvItemNoStr, String pvVariantCodeStr) {return this.Repository.pGetSortLineForItemNoAndVariantCodeObl(pvItemNoStr, pvVariantCodeStr);}
 
-    public cWebresult pGetArticleImageFromWebserviceWrs(String pvItemNoStr, String pvVariantCodeStr) {return  this.Repository.pGetArticleImageFromWebserviceWrs(pvItemNoStr,pvVariantCodeStr);}
-
 }

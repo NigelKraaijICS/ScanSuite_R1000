@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ICS.Utils.cText;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
 
 @Entity(tableName="Pickorders")
@@ -170,7 +172,7 @@ public class cPickorderEntity {
 
     }
 
-    public cPickorderEntity(JSONObject pvJsonObject, Boolean pvInProgressBln) {
+    public cPickorderEntity(JSONObject pvJsonObject) {
         try {
             this.ordernumber = pvJsonObject.getString(cDatabase.ORDERNUMBER_NAMESTR);
             this.ordertype = pvJsonObject.getString(cDatabase.ORDERTYPE_NAMESTR);
@@ -195,7 +197,15 @@ public class cPickorderEntity {
             this.webservicetimeouterpins = pvJsonObject.getString(cDatabase.WEBSERVICETIMEOUTERPINS_NAMESTR);
             this.interfaceresultmethod = pvJsonObject.getString(cDatabase.INTERFACERESULTMETHOD_NAMESTR);
             this.sorting = pvJsonObject.getString(cDatabase.SORTING_NAMESTR);
-            this.isprocessingorparked = pvInProgressBln;
+
+            //Is processing
+            this.isprocessingorparked = true;
+
+            if (this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickPicking)) ||
+                this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickSorting)) ||
+                this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip))) {
+                this.isprocessingorparked = false;
+            }
 
             //Settings
             this.pickRejectduringpick = pvJsonObject.getString(cDatabase.PICKREJECTDURINGPICK_NAMESTR);

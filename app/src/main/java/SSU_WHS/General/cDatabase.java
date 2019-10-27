@@ -9,11 +9,15 @@ public class cDatabase {
     public static final String TABLENAME_BARCODELAYOUTS = "BarcodeLayouts";
     public static final String TABLENAME_WORKPLACE = "Workplaces";
     public static final String TABLENAME_BRANCH = "Branches";
+    public static final String TABLENAME_BRANCHBIN = "BranchBin";
     public static final String TABLENAME_WAREHOUSELOCATIONS = "WarehouseLocations";
     public static final String TABLENAME_ITEMPROPERTY = "ItemProperties";
     public static final String TABLENAME_PICKORDERBARCODE = "PickorderBarcode";
     public static final String TABLENAME_PICKORDERLINEBARCODE = "PickorderLineBarcode";
     public static final String TABLENAME_ARTICLEIMAGE = "ArticleImage";
+    public static final String TABLENAME_ARTICLE = "Article" ;
+    public static final String TABLENAME_ARTICLEBARCODE = "ArticleBarcode" ;
+    public static final String TABLENAME_ARTICLESTOCK = "ArticleStock";
     public static final String TABLENAME_COMMENT = "Comment";
     public static final String TABLENAME_AUTHORISATIONS = "Authorisations";
     public static final String TABLENAME_SALESORDERPACKINGTABLE = "SalesOrderPackingTable";
@@ -25,6 +29,11 @@ public class cDatabase {
     public static final String TABLENAME_PICKORDERSHIPMETHODS = "PickorderShipMethods";
     public static final String TABLENAME_PICKORDERSHIPPACKAGES = "PickorderShipPackages";
     public static final String TABLENAME_PICKORDERLINEPACKANDSHIP = "PickorderLinePackAndShip";
+    public static final String TABLENAME_INVENTORYORDER = "InventoryOrder";
+    public static final String TABLENAME_INVENTORYORDERBIN = "InventoryOrderBin";
+    public static final String TABLENAME_INVENTORYORDERLINE = "InventoryOrderLines";
+    public static final String TABLENAME_INVENTORYORDERBARCODE = "InventoryOrderBarcodes";
+    public static final String TABLENAME_INVENTORYORDERLINEBARCODE  = "InventoryOrderLineBarcodes";
     //endregion Tables
 
     //region localtables
@@ -50,6 +59,7 @@ public class cDatabase {
     public static final String BARCODETYPE_NAMESTR = "BarCodeType";
 
     public static final String BINCODE_NAMESTR = "BinCode";
+    public static final String BINCODENL_NAMESTR = "Magazijnlocatie";
     public static final String BINMANDATORY_NAMESTR = "BinMandatory";
     public static final String BINTYPE_NAMESTR = "BinType";
     public static final String BRANCH_NAMESTR = "Vestiging";
@@ -74,6 +84,7 @@ public class cDatabase {
     //endregion C
 
     //region D
+    public static final String DATATIMESTAMP_NAMESTR = "DataTimestamp";
     public static final String DESCRIPTION_DUTCH_NAMESTR = "Omschrijving";
     public static final String DESCRIPTION_NAMESTR = "Description";
     public static final String DESCRIPTION2_NAMESTR = "Description2";
@@ -99,6 +110,11 @@ public class cDatabase {
     public static final String ENVIRONMENT_WEBSERVICEURL = "Webserviceurl";
     //endregion E
 
+    //region H
+    public static final String HANDLEDTIMESTAMP_NAMESTR = "HandledTimestamp";
+    //endregion H
+
+
     //Region I
     public static final String IMAGE_NAMESTR = "Image";
     public static final String IMPORTFILE_NAMESTR = "Importbestand";
@@ -106,13 +122,23 @@ public class cDatabase {
     public static final String ISPARTOFMULTILINEORDER_NAMESTR = "IsPartOfMultiLineOrder";
     public static final String ISUNIQUEBARCODE_NAMESTR = "IsUniqueBarcode";
     public static final String ISUNIQUE_NAMESTR = "IsUnique";
+    public static final String ITEMINFOCODE_NAMESTR = "ItemInfoCode";
     public static final String ITEMNO_NAMESTR = "ItemNo";
+    public static final String ITEMTYPE_NAMESTR = "Itemsoort";
+    public static final String INV_AUTOCLOSE_BIN_NAMESTR = "Inv_auto_close_bin";
+    public static final String INV_PRECOUNT_NAMESTR = "Inv_precount";
+    public static final String INV_AMOUNT_MANUAL_NAMESTR = "Inv_Amount_manual";
+    public static final String INV_BARCODECHECK_NAMESTR = "Inv_barcode_check";
+    public static final String INV_ADD_EXTRA_BIN_NAMESTR = "Inv_add_extra_bin";
+
+
     //endregion I
 
     //region L
     public static final String LAYOUTVALUE_NAMESTR = "Layout";
     public static final String LICENSE_NAMESTR = "License";
     public static final String LICENSE_NL_NAMESTR = "Licentie";
+    public static final String LINES_NAMESTR = "Lines";
     public static final String LINENO_NAMESTR = "LineNo";
     public static final String LINENOTAKE_NAMESTR = "LineNoTake";
     public static final String LOCALSTATUS_NAMESTR = "LocalStatus";
@@ -156,6 +182,7 @@ public class cDatabase {
     public static final String PICKPRINTWITHPICTURE_PREFETCH_NAMESTR = "Pick_with_picture_prefetch";
     public static final String PICKACTIVITYBINREQUIRED_NAMESTR = "Pick_Activity_bin_required";
 
+    public static final String PRICE_NAMESTR = "Price";
     public static final String PRINTDOCUMENTS_NAMESTR = "PrintDocuments";
     public static final String PROCESSINGSEQUENCE_NAMESTR = "ProcessingSequence";
     public static final String PROPERTY_NAMESTR = "Property";
@@ -167,12 +194,15 @@ public class cDatabase {
 
     //region Q
     public static final String QUANTITY_NAMESTR = "Quantity";
+    public static final String QUANTITYAVAILABLE_NAMESTR = "Voorraad_beschikbaar";
     public static final String QUANTITYHANDLED_NAMESTR = "QuantityHandled";
+    public static final String QUANTITYHANDLEDALLSCANNERS_NAMESTR = "QuantityHandledAllScanners";
     public static final String QUANTITYHANDLEDSUM_NAMESTR = "QuantityHandledSum";
     public static final String QUANTITYPERUNITOFMEASURE_NAMESTR = "QtyPerUnitOfMeasure";
     public static final String QUANTITYREJECTED_NAMESTR = "QuantityRejected";
     public static final String QUANTITYTOTAL_NAMESTR = "QuantityTotal";
     public static final String QUANTITYTAKEN_NAMESTR = "QuantityTaken";
+
     //endregion Q
 
     //region R
@@ -196,6 +226,7 @@ public class cDatabase {
     public static final String SORTING_NAMESTR = "Sortering";
     public static final String SOURCEDOCUMENT_NAMESTR = "SourceDocument";
     public static final String SOURCENO_NAMESTR = "SourceNo";
+    public static final String SORTINGSEQUENCENO_NAMESTR = "SortingSequenceNo";
     public static final String STORAGEBINCODE_NAMESTR = "StorageBinCode";
     public static final String STORESOURCEORDER_NAMESTR = "StoreSourceOpdracht";
     public static final String STREET_NAMESTR = "Straat";
@@ -211,6 +242,7 @@ public class cDatabase {
     public static final String SHIPPINGAGENTCODE_NAMESTR = "ShippingAgentCode";
     public static final String SHIPPINGAGENTSERVICECODE_NAMESTR = "ShippingAgentServiceCode";
     public static final String SHOWONTERMINAL_NAMESTR = "ShowOnTerminal";
+    public static final String SOURCETYPE_NAMESTR = "SourceType";
     //endregion S
 
     //region T
@@ -222,6 +254,7 @@ public class cDatabase {
     public static final String USEFORSTORAGE_NAMESTR = "UseForStorage";
     public static final String USEFORRETURNSALES_NAMESTR = "UseForReturnSales";
     public static final String UNIQUNESS_NAMESTR = "Uniqueness";
+    public static final String UNITOFMEASURE_NAMESTR = "UnitOfMeasure";
     public static final String USERNAME_NAMESTR = "Gebruikersnaam";
     //endregion U
 
@@ -244,5 +277,8 @@ public class cDatabase {
     //region Z
     public static final String ZIPCODE_NAMESTR = "Postcode";
     public static final String ZONE_NAMESTR = "Zone";
+
+
+
     //endregion Z
 }

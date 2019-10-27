@@ -1,0 +1,110 @@
+package SSU_WHS.Inventory.InventoryorderLineBarcodes;
+
+import android.app.Application;
+import android.os.AsyncTask;
+
+import SSU_WHS.General.acScanSuiteDatabase;
+
+public class cInventoryorderLineBarcodeRepository {
+    //Public Properties
+
+    public iInventoryorderLineBarcodeDao inventoryorderLineBarcodeDao;
+
+    //End Public Properties
+
+    //Private properties
+    private acScanSuiteDatabase db;
+    //End Private properties
+
+    //Region Constructor
+    cInventoryorderLineBarcodeRepository(Application application) {
+        this.db = acScanSuiteDatabase.getDatabase(application);
+        this.inventoryorderLineBarcodeDao = db.inventoryorderLineBarcodeDao();
+    }
+
+    //End Region Constructor
+
+    //Region public methods
+
+    public void pInsert (cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity) {
+        new insertAsyncTask(inventoryorderLineBarcodeDao).execute(inventoryorderLineBarcodeEntity);
+    }
+
+    public void pDeleteAll () {
+        new deleteAllAsyncTask(inventoryorderLineBarcodeDao).execute();
+    }
+
+    public void pDeleteForLineNo(Integer pvLineNoInt) {
+        new mDeleteAllForLineNoAsyncTask(inventoryorderLineBarcodeDao).execute(pvLineNoInt);
+    }
+
+    public void updateBarcodeAmount(String pvBarcodeStr, double pvAmountDbl) {
+        UpdateBarcodeAmountParams updateBarcodeAmountParams = new UpdateBarcodeAmountParams(pvBarcodeStr, pvAmountDbl);
+        new updateBarcodeAmountAsyncTask(inventoryorderLineBarcodeDao).execute(updateBarcodeAmountParams);
+    }
+
+
+    //End Region Public Methods
+
+    //Region Private methods
+
+
+    private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
+        private iInventoryorderLineBarcodeDao mAsyncTaskDao;
+
+        deleteAllAsyncTask(iInventoryorderLineBarcodeDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final Void... params) {
+            mAsyncTaskDao.deleteAll();
+            return null;
+        }
+    }
+
+    private static class mDeleteAllForLineNoAsyncTask extends AsyncTask<Integer, Void, Void> {
+        private iInventoryorderLineBarcodeDao mAsyncTaskDao;
+
+        mDeleteAllForLineNoAsyncTask(iInventoryorderLineBarcodeDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final Integer... params) {
+            mAsyncTaskDao.deleteLinesForLineNo(params[0]);
+            return null;
+        }
+    }
+
+    private static class insertAsyncTask extends AsyncTask<cInventoryorderLineBarcodeEntity, Void, Void> {
+        private iInventoryorderLineBarcodeDao mAsyncTaskDao;
+
+        insertAsyncTask(iInventoryorderLineBarcodeDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final cInventoryorderLineBarcodeEntity... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateBarcodeAmountParams {
+        String barcodeStr;
+        double amountDbl;
+
+        UpdateBarcodeAmountParams(String pvBarcodeStr, double pvAmountDbl) {
+            this.barcodeStr = pvBarcodeStr;
+            this.amountDbl = pvAmountDbl;
+        }
+    }
+
+    private static class updateBarcodeAmountAsyncTask extends AsyncTask<UpdateBarcodeAmountParams, Void, Void> {
+        private iInventoryorderLineBarcodeDao mAsyncTaskDao;
+        updateBarcodeAmountAsyncTask(iInventoryorderLineBarcodeDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Void doInBackground(UpdateBarcodeAmountParams... params) {
+            mAsyncTaskDao.updateBarcodeAmount(params[0].barcodeStr, params[0].amountDbl);
+            return null;
+        }
+    }
+}

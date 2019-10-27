@@ -8,7 +8,11 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.ship.ShiporderSelectActivity;
+import nl.icsvertex.scansuite.Activities.sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -16,8 +20,25 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.filter_orders, rootKey);
+
+
+        if (cAppExtension.context instanceof PickorderSelectActivity) {
+            setPreferencesFromResource(R.xml.filter_orders, rootKey);
+        }
+
+        if (cAppExtension.context instanceof SortorderSelectActivity) {
+            setPreferencesFromResource(R.xml.filter_orders, rootKey);
+        }
+
+        if (cAppExtension.context instanceof ShiporderSelectActivity) {
+            setPreferencesFromResource(R.xml.filter_orders, rootKey);
+        }
+
+        if (cAppExtension.context instanceof InventoryorderSelectActivity) {
+            setPreferencesFromResource(R.xml.filter_inventoryorders, rootKey);
+        }
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,13 +46,6 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
         applyButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Context callerContext= getActivity();
-
-                if (callerContext instanceof PickorderSelectActivity) {
-
-                    //todo:put this back
-//                    ((PickorderSelectActivity)callerContext).mApplyFilter();
-                }
                 return true;
             }
         });
@@ -49,6 +63,6 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
                         }
                     }
                 };
-        PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).registerOnSharedPreferenceChangeListener(spChanged);
+        PreferenceManager.getDefaultSharedPreferences(cAppExtension.activity.getApplicationContext()).registerOnSharedPreferenceChangeListener(spChanged);
     }
 }

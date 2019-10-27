@@ -98,7 +98,7 @@ public class cEnvironmentEntity {
             return;
         }
 
-        this.isdefault = cText.stringToBoolean(nameFields4[1], false);
+        this.isdefault = cText.pStringToBooleanBln(nameFields4[1], false);
     }
 
 

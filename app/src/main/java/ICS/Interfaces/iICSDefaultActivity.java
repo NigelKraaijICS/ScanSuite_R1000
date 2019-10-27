@@ -7,10 +7,6 @@ public interface iICSDefaultActivity {
 
     void mFindViews();
 
-    void mSetViewModels();
-
-    void mSetSettings();
-
     void mSetToolbar(String pvScreenTitle);
 
     void mFieldsInitialize();

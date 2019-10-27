@@ -4,14 +4,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cDateAndTime;
-import ICS.Utils.cResult;
 import ICS.Utils.cText;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Picken.Shipment.cShipment;
 import ICS.cAppExtension;
 
 public class cPickorderLinePackAndShip {
@@ -168,7 +163,7 @@ public class cPickorderLinePackAndShip {
         this.pickorderLinePackAndShipEntity = new cPickorderLinePackAndShipEntity(pvJsonObject);
 
         this.lineNoInt =  this.pickorderLinePackAndShipEntity.getLineNoInt();
-        this.showOnTerminalBln = cText.stringToBoolean(this.pickorderLinePackAndShipEntity.getShowOnTerminalStr(), false);
+        this.showOnTerminalBln = cText.pStringToBooleanBln(this.pickorderLinePackAndShipEntity.getShowOnTerminalStr(), false);
         this.itemNoStr = this.pickorderLinePackAndShipEntity.getItemNoStr();
         this.variantCodeStr = this.pickorderLinePackAndShipEntity.getVariantCodeStr();
         this.descriptionStr = this.pickorderLinePackAndShipEntity.getDescriptionStr();
@@ -186,7 +181,7 @@ public class cPickorderLinePackAndShip {
 
         this.sourceNoStr = this.pickorderLinePackAndShipEntity.getSourceNoStr();
         this.destinationNoStr = this.pickorderLinePackAndShipEntity.getDestinationNoStr();
-        this.storeSourceNoBln = cText.stringToBoolean(this.pickorderLinePackAndShipEntity.getStoreSourceNoStr(), false);
+        this.storeSourceNoBln = cText.pStringToBooleanBln(this.pickorderLinePackAndShipEntity.getStoreSourceNoStr(), false);
         this.deliveryAdressTypeStr = this.pickorderLinePackAndShipEntity.getDeliveryAdressTypeStr();
         this.deliveryAdressCodeStr = this.pickorderLinePackAndShipEntity.getDeliveryAdressCodeStr();
         this.processingSequenceStr = this.pickorderLinePackAndShipEntity.getProcessingSequenceStr();
@@ -204,7 +199,7 @@ public class cPickorderLinePackAndShip {
         this.pickorderLinePackAndShipEntity =pvPickorderLinePackAndShipEntity;
 
         this.lineNoInt =  this.pickorderLinePackAndShipEntity.getLineNoInt();
-        this.showOnTerminalBln = cText.stringToBoolean(this.pickorderLinePackAndShipEntity.getShowOnTerminalStr(), false);
+        this.showOnTerminalBln = cText.pStringToBooleanBln(this.pickorderLinePackAndShipEntity.getShowOnTerminalStr(), false);
         this.itemNoStr = this.pickorderLinePackAndShipEntity.getItemNoStr();
         this.variantCodeStr = this.pickorderLinePackAndShipEntity.getVariantCodeStr();
         this.descriptionStr = this.pickorderLinePackAndShipEntity.getDescriptionStr();
@@ -222,7 +217,7 @@ public class cPickorderLinePackAndShip {
 
         this.sourceNoStr = this.pickorderLinePackAndShipEntity.getSourceNoStr();
         this.destinationNoStr = this.pickorderLinePackAndShipEntity.getDestinationNoStr();
-        this.storeSourceNoBln = cText.stringToBoolean(this.pickorderLinePackAndShipEntity.getStoreSourceNoStr(), false);
+        this.storeSourceNoBln = cText.pStringToBooleanBln(this.pickorderLinePackAndShipEntity.getStoreSourceNoStr(), false);
         this.deliveryAdressTypeStr = this.pickorderLinePackAndShipEntity.getDeliveryAdressTypeStr();
         this.deliveryAdressCodeStr = this.pickorderLinePackAndShipEntity.getDeliveryAdressCodeStr();
         this.processingSequenceStr = this.pickorderLinePackAndShipEntity.getProcessingSequenceStr();

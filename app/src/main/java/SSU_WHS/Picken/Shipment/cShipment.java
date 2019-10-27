@@ -5,6 +5,7 @@ import java.util.List;
 
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -211,7 +212,7 @@ public class cShipment {
 
         for (cShipment shipment : hulpObl) {
             if (shipment.getSourceNoStr().equalsIgnoreCase(pvScannedBarcodeStr) || shipment.getProcessingSequenceStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
-                return  shipment;
+                               return  shipment;
             }
         }
 
@@ -236,7 +237,7 @@ public class cShipment {
         for (cPickorderBarcode pickorderBarcode : cPickorder.currentPickOrder.barcodesObl() ) {
 
             //We found a match in barcodes of the pickorder
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
 
                 //Get not handled line for this ItemNo and VariantCoce
               for  (cPickorderLinePackAndShip  pickorderLinePackAndShip : hulpObl) {

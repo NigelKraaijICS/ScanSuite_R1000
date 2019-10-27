@@ -101,7 +101,7 @@ public class cShippingAgentServiceShippingUnit {
         this.ShippingAgentServiceStr = this.shippingAgentServiceShippingUnitEntity.getServiceStr();
         this.ShippingUnitStr = this.shippingAgentServiceShippingUnitEntity.getShippingunitStr();
         this.DescriptionStr = this.shippingAgentServiceShippingUnitEntity.getDescriptionStr();
-        this.DefaultWeightInGramDbl = cText.stringToDouble(this.shippingAgentServiceShippingUnitEntity.getDefaultWeightInGramStr());
+        this.DefaultWeightInGramDbl = cText.pStringToDoubleDbl(this.shippingAgentServiceShippingUnitEntity.getDefaultWeightInGramStr());
         this.ContainerTypeStr = this.shippingAgentServiceShippingUnitEntity.getContainertype();
         this.ShippingUnitQuantityUsedInt = 0;
     }

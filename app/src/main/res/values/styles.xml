@@ -235,7 +235,7 @@
         <item name="android:layout_marginLeft">@dimen/default_margin</item>
     </style>
     <style name="pickorderRecyclerUser">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textsize_big</item>
     </style>
@@ -352,6 +352,12 @@
         <item name="android:layout_margin">@dimen/default_margin</item>
         <item name="android:padding">@dimen/default_padding</item>
     </style>
+
+    <style name="defaultSwipeToRefreshLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
 
     <style name="imageviewToolbarHelp">
         <item name="android:layout_height">@dimen/imageview_toolbar_height</item>
@@ -727,7 +733,7 @@
     <style name="acceptRejectText">
         <item name="android:textSize">@dimen/textsize_big</item>
         <item name="android:textColor">@color/colorTextDefault</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
     </style>
@@ -813,6 +819,43 @@
         <item name="android:inputType">textPassword</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:importantForAutofill" tools:targetApi="o">no</item>
+    </style>
+    <style name="addBinImageView">
+        <item name="android:layout_width">@dimen/maintopbutton_width</item>
+        <item name="android:layout_height">@dimen/maintopbutton_height</item>
+        <item name="android:layout_marginEnd">@dimen/default_margin</item>
+        <item name="srcCompat">@drawable/ic_addbin</item>
+    </style>
+    <style name="createInventoryHeader">
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+    </style>
+    <style name="createInventoryText">
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="createInventoryDocument">
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="createInventoryImageView">
+        <item name="android:layout_width">@dimen/order_done_image_width</item>
+        <item name="android:layout_height">@dimen/order_done_image_height</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="srcCompat">@drawable/ic_create</item>
+    </style>
+    <style name="recyclerorderRecyclerLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_margin">@dimen/recycleritem_margin</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
     <!--endregion passworddialog-->
 </resources>

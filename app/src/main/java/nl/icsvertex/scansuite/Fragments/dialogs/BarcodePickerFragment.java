@@ -56,7 +56,6 @@ public class BarcodePickerFragment extends DialogFragment implements iICSDefault
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
     }
@@ -67,10 +66,7 @@ public class BarcodePickerFragment extends DialogFragment implements iICSDefault
         this.buttonClose = getView().findViewById(R.id.buttonClose);
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
 
     @Override
     public void mFieldsInitialize() {

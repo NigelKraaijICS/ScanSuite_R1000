@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -37,7 +38,9 @@ import ICS.Utils.cUserInterface;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
+import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -50,7 +53,7 @@ import nl.icsvertex.scansuite.Fragments.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.CommentFragment;
 
-public class SortorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class SortorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
     //Region Public Properties
     public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
@@ -68,6 +71,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     static private RecyclerView recyclerViewSortorders;
 
     private ConstraintLayout constraintFilterOrders;
+    private static SwipeRefreshLayout swipeRefreshLayout;
     private BottomSheetBehavior bottomSheetBehavior;
     private static ImageView imageViewFilter;
 
@@ -120,6 +124,12 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         mTryToLeaveActivity();
     }
 
+    @Override
+    public void onRefresh() {
+        SortorderSelectActivity.pFillOrders();
+
+    }
+
 
     //End Region Default Methods
 
@@ -131,10 +141,6 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         this.mSetAppExtensions();
 
         this.mFindViews();
-
-        this.mSetViewModels();
-
-        this.mSetSettings();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_sortorderselect));
 
@@ -164,12 +170,9 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         this.imageViewFilter = findViewById(R.id.imageViewFilter);
         this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
+        SortorderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
@@ -186,11 +189,6 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     @Override
-    public void mSetSettings() {
-
-    }
-
-    @Override
     public void mFieldsInitialize() {
         this.mInitBottomSheet();
         this.mResetCurrents();
@@ -201,6 +199,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     public void mSetListeners() {
         this.mSetSearchListener();
         this.mSetFilterListener();
+        this.mSetSwipeRefreshListener();
     }
 
     @Override
@@ -379,6 +378,12 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         return;
     }
 
+    private void mSetSwipeRefreshListener() {
+        SortorderSelectActivity.swipeRefreshLayout.setOnRefreshListener(this);
+        SortorderSelectActivity.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
+    }
+
+
     private void mInitBottomSheet() {
 
         this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
@@ -448,6 +453,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorder.currentPickOrder = null;
         cPickorderLine.currentPickOrderLine = null;
         cPickorderBarcode.currentPickorderBarcode = null;
+        cWorkplace.currentWorkplace = null;
     }
 
     private static void mShowNoOrdersIcon(final Boolean pvShowBln){
@@ -485,6 +491,8 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private static void mSetSortorderRecycler(List<cPickorder> pvPickorderObl) {
+
+        SortorderSelectActivity.swipeRefreshLayout.setRefreshing(false);
 
         if (pvPickorderObl == null || pvPickorderObl.size() == 0) {
             return;
@@ -590,14 +598,14 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         result = new cResult();
         result.resultBln = true;
 
-        //Get all PLACE lines for current order, if size = 0 or webservice error then stop
+        //Get all PLACE linesInt for current order, if size = 0 or webservice error then stop
         if (cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT) == false) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
             return result;
         }
 
-        //Get all PLACE lines for current order, if size = 0 or webservice error then stop
+        //Get all PLACE linesInt for current order, if size = 0 or webservice error then stop
         if (cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true,cWarehouseorder.ActionTypeEnu.PLACE) == false) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
@@ -654,7 +662,19 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         return;
     }
 
+    private void mReleaseLicense() {
+
+        if (! cLicense.pReleaseLicenseViaWebserviceBln()) {
+            cUserInterface.pShowSnackbarMessage(recyclerViewSortorders, cAppExtension.activity.getString(R.string.message_license_release_error),null, false);
+        }
+
+        cLicense.currentLicenseEnu = cLicense.LicenseEnu.Unknown;
+
+    }
+
     private void mTryToLeaveActivity(){
+
+        this.mReleaseLicense();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);

@@ -38,7 +38,6 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
         mFieldsInitialize();
         mSetListeners();
     }
@@ -48,10 +47,7 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
         recyclerViewSettings = getView().findViewById(R.id.recyclerViewSettings);
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
 
     @Override
     public void mFieldsInitialize() {

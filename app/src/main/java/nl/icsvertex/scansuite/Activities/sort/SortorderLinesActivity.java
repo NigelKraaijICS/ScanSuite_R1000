@@ -40,7 +40,6 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.Activities.ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.PagerAdapters.SortorderLinesPagerAdapter;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.dialogs.CommentFragment;
@@ -118,10 +117,6 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         this.mFindViews();
 
-        this.mSetViewModels();
-
-        this.mSetSettings();
-
         this.mSetToolbar(getResources().getString(R.string.screentitle_sortorderlines));
 
         this.mFieldsInitialize();
@@ -153,16 +148,6 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         this.sortorderLinesViewPager = findViewById(R.id.sortorderLinesViewpager);
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
-    }
-
-    @Override
-    public void mSetViewModels() {
-
-    }
-
-    @Override
-    public void mSetSettings() {
-
     }
 
     @Override
@@ -296,7 +281,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        //Check if we have scanned an ARTICLE and check if there are not handled lines for this ARTICLE
+        //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
         if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_article_scan_mandatory), "", true, true);
@@ -480,12 +465,12 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
                         @Override
                         public void onClick(DialogInterface pvDialogInterface, int i) {
 
-                            // Update alle busy lines to status to be send
+                            // Update alle busy linesInt to statusInt to be send
                             if (! mHandleBusyLinesBln()) {
                                 return;
                             }
 
-                            // Check if there are lines to be send, and send them, if we fail we stop
+                            // Check if there are linesInt to be send, and send them, if we fail we stop
                             if (! mCheckAndSentLinesToBeSendBln()) {
                                 return;
                             }
@@ -523,6 +508,9 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         cResult hulpResult;
 
+        //Clear workplace, so you have to select it in the next step
+        cWorkplace.currentWorkplace = null;
+
        if (! mTryToLockShipOrderBln()) {
            return;
        }
@@ -548,13 +536,13 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         switch (pvTab.getPosition()) {
             case 0:
-                SortorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
                 break;
             case 1:
-                SortorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
                 break;
             case 2:
-                SortorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
                 break;
             default:
 
@@ -818,7 +806,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             return result;
         }
 
-        // Get all lines, if zero than there is something wrong
+        // Get all linesInt, if zero than there is something wrong
         if (cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true) == false) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));

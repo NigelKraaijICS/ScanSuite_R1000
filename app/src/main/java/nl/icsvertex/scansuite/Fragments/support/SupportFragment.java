@@ -51,7 +51,6 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
     }
@@ -65,10 +64,6 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
 
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {

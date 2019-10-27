@@ -147,8 +147,8 @@ public class cBarcodeLayout {
         this.barcodeLayoutEntity = new cBarcodeLayoutEntity(pvJsonObject);
         this.barcodeLayoutStr =   this.barcodeLayoutEntity.getBarcodelayoutStr();
         this.layoutValueStr =   this.barcodeLayoutEntity.getLayoutValueStr();
-        this.sortorderInt =  cText.stringToInteger(this.barcodeLayoutEntity.getSortOrderStr());
-        this.importFileInt = cText.stringToInteger(this.barcodeLayoutEntity.getImportfileStr());
+        this.sortorderInt =  cText.pStringToIntegerInt(this.barcodeLayoutEntity.getSortOrderStr());
+        this.importFileInt = cText.pStringToIntegerInt(this.barcodeLayoutEntity.getImportfileStr());
     }
     //End Region Constructor
 

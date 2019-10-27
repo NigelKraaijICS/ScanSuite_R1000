@@ -297,6 +297,11 @@ public class cPickorder{
 
     }
 
+    public int lastSelectedIndexInt;
+    public int lastSelectedIndexInt() {
+        return lastSelectedIndexInt;
+    }
+
     public cPickorderEntity pickorderEntity;
     public boolean indatabaseBln;
 
@@ -346,36 +351,37 @@ public class cPickorder{
         return  cSalesOrderPackingTable.allSalesOrderPackingTabelsObl;
     }
 
+
     //End region Public Properties
 
     //Region Constructor
     cPickorder(JSONObject pvJsonObject){
 
-        this.pickorderEntity = new cPickorderEntity(pvJsonObject, false);
+        this.pickorderEntity = new cPickorderEntity(pvJsonObject);
         this.orderNumberStr = this.pickorderEntity.getOrdernumberStr();
         this.orderTypeStr = this.pickorderEntity.getOrderTypeStr();
-        this.numberOfBinsInt = cText.stringToInteger(this.pickorderEntity.getNumberofBinsStr()) ;
-        this.quantityTotalInt =cText.stringToInteger(this.pickorderEntity.getQuantityTotalStr());
-        this.singleArticleOrdersBln = cText.stringToBoolean(this.pickorderEntity.getSingleArticleOrdersStr(),false) ;
-        this.pickRejectDuringPickBln = cText.stringToBoolean(this.pickorderEntity.getPickRejectDuringpickStr(),false) ;
-        this.pickRejectDuringSortBln = cText.stringToBoolean(this.pickorderEntity.getPickRejectDuringSortStr(),false) ;
-        this.pickSalesAskWorkplaceBln = cText.stringToBoolean(this.pickorderEntity.getPickSalesAskWorkplaceStr(),false) ;
-        this.pickTransferAskWorkplaceBln = cText.stringToBoolean(this.pickorderEntity.getPickTransferAskWorkplaceStr(),false) ;
-        this.pickBarcodeCheckBln  = cText.stringToBoolean(this.pickorderEntity.getPickBarcodeCheckStr(),false) ;
-        this.pickPickPVVKOEachPieceBln = cText.stringToBoolean(this.pickorderEntity.getPickPickPVVKOEachPieceStr(),false) ;
-        this.pickPickToContainerBln = cText.stringToBoolean(this.pickorderEntity.getPickPickToContainerStr(),false) ;
+        this.numberOfBinsInt = cText.pStringToIntegerInt(this.pickorderEntity.getNumberofBinsStr()) ;
+        this.quantityTotalInt =cText.pStringToIntegerInt(this.pickorderEntity.getQuantityTotalStr());
+        this.singleArticleOrdersBln = cText.pStringToBooleanBln(this.pickorderEntity.getSingleArticleOrdersStr(),false) ;
+        this.pickRejectDuringPickBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickRejectDuringpickStr(),false) ;
+        this.pickRejectDuringSortBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickRejectDuringSortStr(),false) ;
+        this.pickSalesAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickSalesAskWorkplaceStr(),false) ;
+        this.pickTransferAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickTransferAskWorkplaceStr(),false) ;
+        this.pickBarcodeCheckBln  = cText.pStringToBooleanBln(this.pickorderEntity.getPickBarcodeCheckStr(),false) ;
+        this.pickPickPVVKOEachPieceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickPVVKOEachPieceStr(),false) ;
+        this.pickPickToContainerBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickToContainerStr(),false) ;
         this.pickPickToContainerTypeStr = this.pickorderEntity.getPickPickToContainerTypeStr();
-        this.pickPrintAddressLabelBln = cText.stringToBoolean(this.pickorderEntity.getPickPrintAddresslabelStr(),false) ;
-        this.pickPrintContentLabelBln = cText.stringToBoolean(this.pickorderEntity.getPickPrintContentLabelStr(),false) ;
-        this.pickPickWithPictureBln = cText.stringToBoolean(this.pickorderEntity.getpickWithPictureStr(),false) ;
-        this.pickPickWithAutoOpenBln = cText.stringToBoolean(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
-        this.pickPickWithPicturePrefetchBln = cText.stringToBoolean(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
-        this.pickActivityBinRequiredBln = cText.stringToBoolean(this.pickorderEntity.getPickActivityBinRequired(),false);
+        this.pickPrintAddressLabelBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPrintAddresslabelStr(),false) ;
+        this.pickPrintContentLabelBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPrintContentLabelStr(),false) ;
+        this.pickPickWithPictureBln = cText.pStringToBooleanBln(this.pickorderEntity.getpickWithPictureStr(),false) ;
+        this.pickPickWithAutoOpenBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
+        this.pickPickWithPicturePrefetchBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
+        this.pickActivityBinRequiredBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickActivityBinRequired(),false);
 
         this.assignedUserIdStr = this.pickorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.pickorderEntity.getCurrentUserIdStr();
-        this.statusInt = cText.stringToInteger(this.pickorderEntity.getStatusStr());
-        this.statusPrintAtStartInt = cText.stringToInteger(this.pickorderEntity.getStatusPrintAtStartStr());
+        this.statusInt = cText.pStringToIntegerInt(this.pickorderEntity.getStatusStr());
+        this.statusPrintAtStartInt = cText.pStringToIntegerInt(this.pickorderEntity.getStatusPrintAtStartStr());
         this.externalReferenceStr = this.pickorderEntity.getExternalReferenceStr();
         this.workPlaceStr = this.pickorderEntity.getWorkplaceStr();
         this.stockOwnerStr = this.pickorderEntity.getStockOwnerStr();
@@ -385,7 +391,7 @@ public class cPickorder{
         this.documentTypeStr = this.pickorderEntity.getDocumentTypeStr();
         this.document2Str = this.pickorderEntity.getDocument2Str();
         this.documentType2Str = this.pickorderEntity.getDocumentType2Str();
-        this.webserviceTimeOutERPInsInt = cText.stringToInteger(this.pickorderEntity.getWebserviceTimeOutERPInsStr());
+        this.webserviceTimeOutERPInsInt = cText.pStringToIntegerInt(this.pickorderEntity.getWebserviceTimeOutERPInsStr());
         this.currentLocationStr = this.pickorderEntity.getCurrentLocationStr();
         this.interfaceResultMethodStr = this.pickorderEntity.getInterfaceResultMethodStr();
         this.sortingStr = this.pickorderEntity.getSortingStr();
@@ -397,27 +403,27 @@ public class cPickorder{
         this.pickorderEntity = pvPickorderEntity;
         this.orderNumberStr = this.pickorderEntity.getOrdernumberStr();
         this.orderTypeStr = this.pickorderEntity.getOrderTypeStr();
-        this.numberOfBinsInt = cText.stringToInteger(this.pickorderEntity.getNumberofBinsStr()) ;
-        this.quantityTotalInt =cText.stringToInteger(this.pickorderEntity.getQuantityTotalStr());
-        this.singleArticleOrdersBln = cText.stringToBoolean(this.pickorderEntity.getSingleArticleOrdersStr(),false) ;
-        this.pickRejectDuringPickBln = cText.stringToBoolean(this.pickorderEntity.getPickRejectDuringpickStr(),false) ;
-        this.pickRejectDuringSortBln = cText.stringToBoolean(this.pickorderEntity.getPickRejectDuringSortStr(),false) ;
-        this.pickSalesAskWorkplaceBln = cText.stringToBoolean(this.pickorderEntity.getPickSalesAskWorkplaceStr(),false) ;
-        this.pickTransferAskWorkplaceBln = cText.stringToBoolean(this.pickorderEntity.getPickTransferAskWorkplaceStr(),false) ;
-        this.pickBarcodeCheckBln  = cText.stringToBoolean(this.pickorderEntity.getPickBarcodeCheckStr(),false) ;
-        this.pickPickPVVKOEachPieceBln = cText.stringToBoolean(this.pickorderEntity.getPickPickPVVKOEachPieceStr(),false) ;
-        this.pickPickToContainerBln = cText.stringToBoolean(this.pickorderEntity.getPickPickToContainerStr(),false) ;
+        this.numberOfBinsInt = cText.pStringToIntegerInt(this.pickorderEntity.getNumberofBinsStr()) ;
+        this.quantityTotalInt =cText.pStringToIntegerInt(this.pickorderEntity.getQuantityTotalStr());
+        this.singleArticleOrdersBln = cText.pStringToBooleanBln(this.pickorderEntity.getSingleArticleOrdersStr(),false) ;
+        this.pickRejectDuringPickBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickRejectDuringpickStr(),false) ;
+        this.pickRejectDuringSortBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickRejectDuringSortStr(),false) ;
+        this.pickSalesAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickSalesAskWorkplaceStr(),false) ;
+        this.pickTransferAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickTransferAskWorkplaceStr(),false) ;
+        this.pickBarcodeCheckBln  = cText.pStringToBooleanBln(this.pickorderEntity.getPickBarcodeCheckStr(),false) ;
+        this.pickPickPVVKOEachPieceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickPVVKOEachPieceStr(),false) ;
+        this.pickPickToContainerBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickToContainerStr(),false) ;
         this.pickPickToContainerTypeStr = this.pickorderEntity.getPickPickToContainerTypeStr();
-        this.pickPrintAddressLabelBln = cText.stringToBoolean(this.pickorderEntity.getPickPrintAddresslabelStr(),false) ;
-        this.pickPrintContentLabelBln = cText.stringToBoolean(this.pickorderEntity.getPickPrintContentLabelStr(),false) ;
-        this.pickPickWithPictureBln = cText.stringToBoolean(this.pickorderEntity.getpickWithPictureStr(),false) ;
-        this.pickPickWithAutoOpenBln = cText.stringToBoolean(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
-        this.pickPickWithPicturePrefetchBln = cText.stringToBoolean(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
-        this.pickActivityBinRequiredBln = cText.stringToBoolean(this.pickorderEntity.getPickActivityBinRequired(),false);
+        this.pickPrintAddressLabelBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPrintAddresslabelStr(),false) ;
+        this.pickPrintContentLabelBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPrintContentLabelStr(),false) ;
+        this.pickPickWithPictureBln = cText.pStringToBooleanBln(this.pickorderEntity.getpickWithPictureStr(),false) ;
+        this.pickPickWithAutoOpenBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
+        this.pickPickWithPicturePrefetchBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
+        this.pickActivityBinRequiredBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickActivityBinRequired(),false);
         this.assignedUserIdStr = this.pickorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.pickorderEntity.getCurrentUserIdStr();
-        this.statusInt = cText.stringToInteger(this.pickorderEntity.getStatusStr());
-        this.statusPrintAtStartInt = cText.stringToInteger(this.pickorderEntity.getStatusPrintAtStartStr());
+        this.statusInt = cText.pStringToIntegerInt(this.pickorderEntity.getStatusStr());
+        this.statusPrintAtStartInt = cText.pStringToIntegerInt(this.pickorderEntity.getStatusPrintAtStartStr());
         this.externalReferenceStr = this.pickorderEntity.getExternalReferenceStr();
         this.workPlaceStr = this.pickorderEntity.getWorkplaceStr();
         this.stockOwnerStr = this.pickorderEntity.getStockOwnerStr();
@@ -427,7 +433,7 @@ public class cPickorder{
         this.documentTypeStr = this.pickorderEntity.getDocumentTypeStr();
         this.document2Str = this.pickorderEntity.getDocument2Str();
         this.documentType2Str = this.pickorderEntity.getDocumentType2Str();
-        this.webserviceTimeOutERPInsInt = cText.stringToInteger(this.pickorderEntity.getWebserviceTimeOutERPInsStr());
+        this.webserviceTimeOutERPInsInt = cText.pStringToIntegerInt(this.pickorderEntity.getWebserviceTimeOutERPInsStr());
         this.currentLocationStr = this.pickorderEntity.getCurrentLocationStr();
         this.interfaceResultMethodStr = this.pickorderEntity.getInterfaceResultMethodStr();
         this.sortingStr = this.pickorderEntity.getSortingStr();
@@ -467,7 +473,7 @@ public class cPickorder{
             }
         }
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),this.getOrderNumberStr(), cDeviceInfo.getSerialnumber(),pvStepCodeEnu.toString(),pvWorkFlowStepInt, ignoreBusyBln);
+        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(),pvStepCodeEnu.toString(),pvWorkFlowStepInt, ignoreBusyBln);
 
         //No result, so something really went wrong
         if (Webresult == null) {
@@ -538,7 +544,7 @@ public class cPickorder{
 
         cWebresult Webresult;
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),this.getOrderNumberStr(),cDeviceInfo.getSerialnumber(),pvStepCodeEnu.toString(), pvWorkFlowStepInt);
+        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),this.getOrderNumberStr(),cDeviceInfo.getSerialnumberStr(),pvStepCodeEnu.toString(), pvWorkFlowStepInt);
 
         if (Webresult.getSuccessBln() == false || Webresult.getResultBln() == false) {
             return  false;
@@ -605,6 +611,32 @@ public class cPickorder{
 
     public double pQuantityTotalDbl() {
         return  cPickorder.getPickorderViewModel().pGetQuantityTotalDbl();
+    }
+
+    public int pGetIndexOfNotHandledLineInt(cPickorderLine pvPickorderLine) {
+
+        int resultInt = -1;
+
+        if (this.pGetLinesNotHandledFromDatabasObl() == null || this.pGetLinesNotHandledFromDatabasObl().size() == 0) {
+            return  resultInt;
+        }
+
+
+        int indexInt = -1;
+
+        for (cPickorderLine pickorderLine : this.pGetLinesNotHandledFromDatabasObl()) {
+
+            indexInt += 1;
+
+            if (cText.pIntToStringStr(pickorderLine.getLineNoInt()).equalsIgnoreCase(cText.pIntToStringStr(pvPickorderLine.getLineNoInt()))  ) {
+
+                resultInt =  indexInt;
+                break;
+            }
+        }
+
+        return  resultInt;
+
     }
 
     public List<cComment> pPickCommentObl(){
@@ -690,7 +722,7 @@ public class cPickorder{
                     continue;
                 }
 
-                //Check the status, so lines that are not picked are ignored
+                //Check the statusInt, so linesInt that are not picked are ignored
                 if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT && pickorderLine.quantityTakenDbl >0 ) {
                     pickorderLine.pInsertInDatabaseBln();
                     continue;
@@ -1277,7 +1309,7 @@ public class cPickorder{
         List<cPickorder> resultObl = new ArrayList<>();
         List<cPickorderEntity> hulpResultObl;
 
-        hulpResultObl =  cPickorder.getPickorderViewModel().pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getNameStr(),cSharedPreferences.userFilterBln(),cSharedPreferences.showProcessedWaitBln(),cSharedPreferences.showSingleArticlesBln(),cSharedPreferences.showAssignedToMeBln(),cSharedPreferences.showAssignedToOthersBln(),cSharedPreferences.showNotAssignedBln());
+        hulpResultObl =  cPickorder.getPickorderViewModel().pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getNameStr(),cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -1395,6 +1427,8 @@ public class cPickorder{
 
                 cPickorderBarcode pickorderBarcode = new cPickorderBarcode(jsonObject);
                 pickorderBarcode.pInsertInDatabaseBln();
+
+
             }
 
             if (cPickorderBarcode.allBarcodesObl.size() == 0) {
@@ -1548,7 +1582,7 @@ public class cPickorder{
         cPickorderBarcode pickorderBarcodeWithBarcode = null;
 
         for (cPickorderBarcode pickorderBarcode : this.barcodesObl()) {
-            if (pickorderBarcode.barcodeStr.toLowerCase().equalsIgnoreCase(pvScannedBarcodeStr.toLowerCase())){
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)){
                 pickorderBarcodeWithBarcode = pickorderBarcode;
                 break;
             }
@@ -1588,6 +1622,12 @@ public class cPickorder{
         return null;
     }
 
+    public Boolean pUpdateWorkplaceViaWebserviceBln(String pvWorkplaceStr) {
+
+        return  cPickorder.getPickorderViewModel().pPickorderUpdateWorkplaceViaWebserviceBln(pvWorkplaceStr);
+
+    }
+
     //End Region Public Methods
 
     //Region Private Methods
@@ -1596,9 +1636,6 @@ public class cPickorder{
         cPickorder.getPickorderViewModel().deleteAll();
         return true;
     }
-
-
-
 
     //End Region Private Methods
 

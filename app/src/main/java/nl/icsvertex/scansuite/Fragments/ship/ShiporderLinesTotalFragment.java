@@ -72,7 +72,6 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
@@ -83,10 +82,7 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
           this.recyclerViewShiporderLinesTotal = getView().findViewById(R.id.recyclerViewShiporderLinesTotal);
     }
 
-    @Override
-    public void mSetViewModels() {
 
-    }
 
     @Override
     public void mFieldsInitialize() {
@@ -112,7 +108,7 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
         this.recyclerViewShiporderLinesTotal.setAdapter(cShipment.getShipmentsTotalAdapter());
         this.recyclerViewShiporderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        ShiporderLinesActivity.pChangeTabCounterText( cText.intToString(pvDataObl.size()));
+        ShiporderLinesActivity.pChangeTabCounterText( cText.pIntToStringStr(pvDataObl.size()));
 
     }
 }

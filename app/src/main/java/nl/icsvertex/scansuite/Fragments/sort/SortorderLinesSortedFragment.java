@@ -82,7 +82,6 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
@@ -95,10 +94,6 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
             this.resetPicklineView = getView().findViewById(R.id.resetPicklineView);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {
@@ -134,7 +129,7 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
         this.recyclerViewSortorderLinesSorted.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
         this.recyclerViewSortorderLinesSorted.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        SortorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+        SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
 
     }
 
@@ -238,7 +233,7 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
     private void mNoLinesAvailable(Boolean pvEnabledBln) {
 
         if (SortorderLinesActivity.currentLineFragment != null && SortorderLinesActivity.currentLineFragment == this) {
-            //Close no lines fragment if needed
+            //Close no linesInt fragment if needed
             if (!pvEnabledBln) {
 
 
@@ -268,7 +263,7 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
             fragmentTransaction.commit();
 
             //Change tabcounter text
-            SortorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+            SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
         }
     }
 

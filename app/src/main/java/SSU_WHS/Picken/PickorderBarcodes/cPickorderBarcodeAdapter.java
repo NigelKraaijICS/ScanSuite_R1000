@@ -25,6 +25,7 @@ public class cPickorderBarcodeAdapter extends RecyclerView.Adapter<cPickorderBar
         public pickorderBarcodeViewHolder(View pvItemView) {
             super(pvItemView);
             this.textViewPickorderLineBarcode = pvItemView.findViewById(R.id.textViewPickorderLineBarcode);
+
             this.textViewPickorderLineBarcode.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewPickorderLineBarcode.setSingleLine(true);
             this.textViewPickorderLineBarcode.setMarqueeRepeatLimit(5);
@@ -61,9 +62,8 @@ public class cPickorderBarcodeAdapter extends RecyclerView.Adapter<cPickorderBar
         }
 
        final cPickorderBarcode pickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(pvPositionInt);
-
         pvHolder.textViewPickorderLineBarcode.setText(pickorderBarcode.getBarcodeStr());
-        pvHolder.textViewPickorderLineBarcodeQuantity.setText(cText.doubleToString(pickorderBarcode.getQuantityPerUnitOfMeasureDbl()));
+        pvHolder.textViewPickorderLineBarcodeQuantity.setText(cText.pDoubleToStringStr(pickorderBarcode.getQuantityPerUnitOfMeasureDbl()));
 
         pvHolder.pickorderLineBarcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

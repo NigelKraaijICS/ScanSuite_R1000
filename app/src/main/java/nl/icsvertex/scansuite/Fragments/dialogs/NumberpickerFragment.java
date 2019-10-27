@@ -67,8 +67,7 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
     @Override
     public void mFragmentInitialize() {
         mFindViews();
-        mSetViewModels();
-        mFieldsInitialize();
+         mFieldsInitialize();
         mSetListeners();
     }
 
@@ -89,12 +88,7 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
         cancelButton = getView().findViewById(R.id.cancelButton);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
-
-    @Override
+     @Override
     public void mFieldsInitialize() {
 //this orderInt is important
         quantityNumberPicker.setMaxValue(maxQuantityInt);

@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +46,8 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     private ConstraintLayout fragmentPickorderLinesToPick;
     private static  TextView textViewSelectedLine;
-    private  static ConstraintLayout resetPicklineView;
-    private  static ConstraintLayout abortOrderView;
+    private static ConstraintLayout resetPicklineView;
+    private static ConstraintLayout abortOrderView;
 
     //End Region Private Properties
 
@@ -92,10 +93,9 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-        this.mSetViewModels();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.pGetData();
+        this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
     }
 
     @Override
@@ -109,10 +109,6 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         this.abortOrderView = getView().findViewById(R.id.abortOrderView);
     }
 
-    @Override
-    public void mSetViewModels() {
-
-    }
 
     @Override
     public void mFieldsInitialize() {
@@ -133,19 +129,13 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     //Region Public Methods
 
-    public static void pSetChosenItemNo() {
-        PickorderLinesPickedFragment.textViewSelectedLine.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
-    }
-
-    //End Region Public Methods
+     //End Region Public Methods
 
     //Region Private Methods
 
-    public static void pGetData() {
+    public static void pGetData(List<cPickorderLine> pvDataObl) {
 
-        List<cPickorderLine> HandledLinesObl = cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl();
-        PickorderLinesPickedFragment.mFillRecycler(HandledLinesObl);
-
+        PickorderLinesPickedFragment.mFillRecycler(pvDataObl);
     }
 
     private static void mFillRecycler(List<cPickorderLine> pvDataObl) {
@@ -167,7 +157,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked.setVisibility(View.VISIBLE);
 
-        PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+        PickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
 
     }
 
@@ -177,7 +167,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         this.switchDefects.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
-                   cPickorderLine.getPickorderLinePickedAdapter().pvShowDefects(show);
+                   cPickorderLine.getPickorderLinePickedAdapter().pShowDefects(show);
                 }
         });
     }
@@ -253,7 +243,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             return;
         }
 
-        this.pGetData();
+        this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
 
     }
 
@@ -349,7 +339,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             fragmentTransaction.replace(R.id.fragmentPickorderLinesPicked, fragment);
             fragmentTransaction.commit();
 
-            PickorderLinesActivity.pChangeTabCounterText(cText.doubleToString(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.doubleToString(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+            PickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
 
         }
 

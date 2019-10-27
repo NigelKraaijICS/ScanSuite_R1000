@@ -484,4 +484,44 @@
     <string name="error_getting_packages_failed">Getting packages failed</string>
     <string name="message_article_not_allowed">Article scan not allowed</string>
     <string name="dialog_error">error detail</string>
+    <string name="shown">shown</string>
+    <string name="orders">orders</string>
+    <string name="dont_care">Don\'t care</string>
+    <string name="show_all">Show all</string>
+    <string name="message_license_error">Getting license failed</string>
+    <string name="message_license_release_error">License release failed</string>
+    <string name="message_workplace_selected">Workplace selected</string>
+
+    <!--region Inventory-->
+    <string name="screentitle_inventoryorderselect">Inventory orders</string>
+    <string name="error_get_inventoryorders_failed">Getting inventoryorders from server failed</string>
+    <string name="error_get_inventorylines_failed">Getting inventorylines from server failed</string>
+    <string name="button_new_inventoryorder">New</string>
+    <string name="hint_document">Document</string>
+    <string name="button_create_inventory">Create</string>
+    <string name="createinventory_header_default">Create inventory</string>
+    <string name="createinventory_text_default">Create new inventory?</string>
+    <string name="screentitle_inventoryorderbins">Inventory bins</string>
+    <string name="tab_inventorybin_todo">open</string>
+    <string name="tab_inventorybin_done">done</string>
+    <string name="tab_inventorybin_total">total</string>
+    <string name="hint_add_bin">Scan or type new bin</string>
+    <string name="add_bin_header_default">Add bin</string>
+    <string name="botton_add_bin">Add bin</string>
+    <string name="message_bin_added">Bin %1$s was added</string>
+    <string name="message_bin_not_added">Bin %1$s was not added</string>
+    <string name="screentitle_inventoryordercount">Inventory count</string>
+    <string name="error_get_line_barcodes_failed">Getting line barcodes failed</string>
+    <string name="message_couldnt_create_order">Order could not be created</string>
+    <string name="message_add_bin_not_allowed">You are not allowed to add a BIN</string>
+    <string name="message_bin_could_not_be_added_via_webservice">Bin could not be added via web service</string>
+    <string name="message_add_article_now_allowed">Adding article not allowed</string>
+    <string name="message_adding_unkown_article_failed">Adding unkown article failed</string>
+    <string name="message_adding_line_failed">Adding line failed</string>
+    <string name="message_adding_erp_article_failed">Adding ERP article failed</string>
+    <string name="message_add_article_for_this_bin_now_allowed">Article belongs to another BIN, adding lines is not allowed</string>
+    <string name="error_barcode_doesnt_belong_to_line">This barcode doesn\'t belong to this line</string>
+    <string name="message_line_save_failed">Saving line failed, please try again</string>
+    <string name="message_workplace_not_updated">Workplace not updated on server</string>
+    <!--endregion Inventory-->
 </resources>

@@ -20,7 +20,7 @@
         style="@style/defaultRecyclerView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recyclerSearchView"
-        app:layout_constraintBottom_toTopOf="@id/resetPicklineView"
+        app:layout_constraintBottom_toTopOf="@id/switchDefects"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/pillButton"
@@ -32,7 +32,7 @@
         >
         <TextView
             android:id="@+id/textViewResetLine"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="@string/reset"
             android:textSize="@dimen/textsize_big"
@@ -108,10 +108,6 @@
             app:srcCompat="@drawable/ic_abort_black_24dp"
             app:layout_constraintStart_toStartOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
 
     <Switch
         android:id="@+id/switchDefects"
