@@ -187,9 +187,9 @@ public class cUser {
 
                 cAuthorisation authorisation = new cAuthorisation(jsonObject);
 
-                if (authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK) {
-                    continue;
-                }
+//                if (authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK) {
+//                    continue;
+//                }
 
                 authorisation.pInsertInDatabaseBln();
                 if(this.autorisationObl == null) {

@@ -288,4 +288,18 @@ public class cInventoryorderLine {
         }
     }
 
+    public boolean pUpdateQuantityInDatabaseBln(){
+
+        boolean resultBln;
+        resultBln =   cInventoryorderLine.getInventoryorderLineViewModel().pUpdateQuantityBln();
+
+        if (resultBln == false) {
+            return  false;
+        }
+
+        return true;
+
+    }
+
+
 }

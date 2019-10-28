@@ -11,15 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cDateAndTime;
 import ICS.Utils.cDeviceInfo;
-import ICS.Utils.cText;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -31,6 +28,18 @@ public class cInventoryorderLineRepository {
 
     //Region Private Properties
     private acScanSuiteDatabase db;
+
+    private static class UpdateInventorylineQuantityParams {
+        Long lineNoLng;
+        Double quantityDbl;
+
+        UpdateInventorylineQuantityParams(Long pvLineNoLng, Double pvQuantityDbl) {
+            this.lineNoLng = pvLineNoLng;
+            this.quantityDbl = pvQuantityDbl;
+        }
+    }
+
+
 
     //Region Constructor
     cInventoryorderLineRepository(Application pvApplication) {
@@ -89,6 +98,18 @@ public class cInventoryorderLineRepository {
         return ResultObl;
     }
 
+    public Double pGetTotalCountDbl() {
+        Double resultDbl = Double.valueOf(0);
+        try {
+            resultDbl = new pGetTotalCountFromDatabaseAsyncTask(inventoryorderLineDao).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultDbl;
+    }
+
     public Double pGetCountForBinCodeDbl(String pvBincode) {
         Double resultDbl = Double.valueOf(0);
         try {
@@ -123,6 +144,31 @@ public class cInventoryorderLineRepository {
         return webResultWrs;
     }
 
+    public boolean pUpdateQuantityBln() {
+
+        Integer integerValue;
+        UpdateInventorylineQuantityParams updateInventorylineQuantityParams = new UpdateInventorylineQuantityParams((long) cInventoryorderLine.currentInventoryOrderLine.getLineNoInt(),
+                                                                                                                     cInventoryorderLine.currentInventoryOrderLine.getQuantityHandledDbl());
+
+
+        try {
+            integerValue = new updateQuantityHandledAsyncTask(inventoryorderLineDao).execute(updateInventorylineQuantityParams).get();
+
+            if (integerValue != 0) {
+                return  true;}
+            else{
+                return false;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return  false;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return  false;
+        }
+    }
+
+
     private static class pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask extends AsyncTask<String, Void, List<cInventoryorderLineEntity>> {
         private iInventoryorderLineDao mAsyncTaskDao;
         pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask(iInventoryorderLineDao dao) {
@@ -142,6 +188,17 @@ public class cInventoryorderLineRepository {
         @Override
         protected Double doInBackground(final String... params) {
             return mAsyncTaskDao.getCountForBincodeDbl(params[0]);
+        }
+    }
+
+    private static class pGetTotalCountFromDatabaseAsyncTask extends AsyncTask<Void, Void, Double> {
+        private iInventoryorderLineDao mAsyncTaskDao;
+        pGetTotalCountFromDatabaseAsyncTask(iInventoryorderLineDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Double doInBackground(final Void... params) {
+            return mAsyncTaskDao.getTotalCountDbl();
         }
     }
 
@@ -200,15 +257,7 @@ public class cInventoryorderLineRepository {
                 l_PropertyInfo7Pin.setValue(barcodesHandledList);
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
-
                 SoapObject propertiesHandledObl = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
-//                SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTYHANDLED_COMPLEX);
-//                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, "");
-//                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED, 0);
-//                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, "");
-//                propertiesHandledObl.addSoapObject(soapObject);
-
-
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
                 l_PropertyInfo8Pin.setValue(propertiesHandledObl);
@@ -221,6 +270,15 @@ public class cInventoryorderLineRepository {
                 webresult.setResultBln(false);
             }
             return webresult;
+        }
+    }
+
+    private static class updateQuantityHandledAsyncTask extends AsyncTask<UpdateInventorylineQuantityParams, Void, Integer> {
+        private iInventoryorderLineDao mAsyncTaskDao;
+        updateQuantityHandledAsyncTask(iInventoryorderLineDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Integer doInBackground(UpdateInventorylineQuantityParams... params) {
+            return mAsyncTaskDao.updateOrderLineQuantity(params[0].lineNoLng, params[0].quantityDbl);
         }
     }
 }

@@ -47,7 +47,7 @@
             />
         <TextView
             android:id="@+id/textViewVendorItemNo"
-            style="@style/pickorderRecyclerUser"
+            style="@style/pickorderRecyclerOrdernumberText"
             app:layout_constraintTop_toBottomOf="@id/textViewArticle"
             app:layout_constraintStart_toEndOf="@id/imageViewVendorItemNo"
             />

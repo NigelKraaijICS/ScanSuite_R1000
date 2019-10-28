@@ -523,5 +523,7 @@
     <string name="error_barcode_doesnt_belong_to_line">This barcode doesn\'t belong to this line</string>
     <string name="message_line_save_failed">Saving line failed, please try again</string>
     <string name="message_workplace_not_updated">Workplace not updated on server</string>
+    <string name="lines">Lines:</string>
+    <string name="items">Items</string>
     <!--endregion Inventory-->
 </resources>

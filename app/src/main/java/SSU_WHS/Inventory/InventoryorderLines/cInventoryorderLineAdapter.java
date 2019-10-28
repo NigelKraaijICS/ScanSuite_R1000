@@ -30,6 +30,7 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
         public InventoryorderLineViewHolder(View pvItemView) {
             super(pvItemView);
             this.inventoryorderBinItemLinearLayout = pvItemView.findViewById(R.id.inventoryorderLineItemLinearLayout);
+
             this.textViewArticle = pvItemView.findViewById(R.id.textViewArticle);
             this.textViewArticle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewArticle.setSingleLine(true);
@@ -40,7 +41,18 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
                     textViewArticle.setSelected(true);
                 }
             },1500);
-            this.textViewVendorItemNo = pvItemView.findViewById(R.id.textViewCounted);
+
+            this.textViewVendorItemNo = pvItemView.findViewById(R.id.textViewVendorItemNo);
+            this.textViewVendorItemNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewVendorItemNo.setSingleLine(true);
+            this.textViewVendorItemNo.setMarqueeRepeatLimit(5);
+            this.textViewVendorItemNo.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    textViewVendorItemNo.setSelected(true);
+                }
+            },1500);
+
             this.textViewCounted = pvItemView.findViewById(R.id.textViewCounted);
         }
         //End Region Public Properties
@@ -83,7 +95,8 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
 
         pvHolder.textViewArticle.setText(inventoryorderLine.getItemNoStr() + " " + inventoryorderLine.getVariantCodeStr());
         pvHolder.textViewVendorItemNo.setText(inventoryorderLine.getDescriptionStr());
-        pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(inventoryorderLine.getQuantityHandledAllScannersDbl()));
+        pvHolder.textViewVendorItemNo.setVisibility(View.VISIBLE);
+        pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(inventoryorderLine.getQuantityHandledDbl()));
 
         pvHolder.inventoryorderBinItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

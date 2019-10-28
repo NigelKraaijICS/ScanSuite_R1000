@@ -30,6 +30,7 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
+import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import nl.icsvertex.scansuite.Fragments.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.NothingHereFragment;
@@ -153,7 +154,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         ViewCompat.setTransitionName(this.imageBinDone, this.VIEW_CHOSEN_BIN_IMAGE);
         ViewCompat.setTransitionName(this.binText, this.VIEW_CHOSEN_BIN);
         this.binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
-        InventoryorderBinActivity.pFillLines();
     }
 
     @Override
@@ -163,7 +163,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     @Override
     public void mInitScreen() {
-
+        InventoryorderBinActivity.pFillLines();
     }
 
     //End Region iICSDefaultActivity defaults
@@ -200,6 +200,18 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     }
 
+    public static void pLineHandled() {
+
+        //Reset currents
+        cInventoryorderLine.currentInventoryOrderLine = null;
+        cInventoryorderBarcode.currentInventoryOrderBarcode = null;
+        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = null;
+
+        //Fill lines of BIN
+        InventoryorderBinActivity.pFillLines();
+
+    }
+
     public static void pLineSelected() {
 
         //Close open Dialogs
@@ -221,11 +233,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        //Strip the prefix if thats neccesary
-        String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-
         //Check if this is a barcode we already know
-        cInventoryorderBarcode inventoryorderBarcode = cInventoryorder.currentInventoryOrder.pGetOrderBarcode(barcodewithoutPrefix);
+        cInventoryorderBarcode inventoryorderBarcode = cInventoryorder.currentInventoryOrder.pGetOrderBarcode(pvBarcodeScan);
 
         //We scanned an unkown barcode
         if (inventoryorderBarcode == null) {
@@ -316,6 +325,11 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         //Add quantity of the current barcode
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandled += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+
+        //Make line barcode the current line barcode
+        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl.get(0);
+
 
         //Open the line, so we can edit it
         InventoryorderBinActivity.mShowArticleDetailFragment();
@@ -338,6 +352,11 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         //Add quantity of the current barcode
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandled += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+
+        //Make line barcode the current line barcode
+        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl.get(0);
+
 
         //Open the line, so we can edit it
         InventoryorderBinActivity.mShowArticleDetailFragment();
@@ -348,7 +367,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
             // Check if we can add a line
             if (! cSetting.INV_ADD_EXTRA_LINES()) {
-
                 InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_now_allowed));
                 return;
             }
@@ -387,6 +405,16 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             }
         }
 
+        //We scanned a barcode that belongs to the current article, so check if we already have a line barcode
+        for (cInventoryorderLineBarcode inventoryorderLineBarcode : cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl) {
+
+            //We have a match, so set the current line barode and raise the quantity
+            if (inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr())) {
+                cInventoryorderLineBarcode.currentInventoryorderLineBarcode = inventoryorderLineBarcode;
+                cInventoryorderLineBarcode.currentInventoryorderLineBarcode.quantityHandledDbl +=  cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+                break;
+            }
+        }
 
         //Open the line (found or created), so we can edit it
         InventoryorderBinActivity.mShowArticleDetailFragment();
@@ -442,7 +470,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     }
 
     private static void mSetToolBarTitleWithCounters(){
-        InventoryorderBinActivity.toolbarSubTitle.setText(cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr())) );
+        InventoryorderBinActivity.toolbarSubTitle.setText(cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr())) );
     }
 
     //End Region Private Methods

@@ -57,6 +57,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     private ImageView toolbarImage;
     private TextView toolbarTitle;
+    private static TextView toolbarSubTitle;
     //End Region Private Properties
 
     //Region Default Methods
@@ -138,6 +139,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         this.inventoryorderBinsTabLayout = findViewById(R.id.inventoryorderBinsTabLayout);
         this.inventoryorderBinsViewpager = findViewById(R.id.inventoryorderBinsViewpager);
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
@@ -149,6 +151,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
         this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarSubTitle.setText(cAppExtension.activity.getString(R.string.items) + ' ' + cInventoryorder.currentInventoryOrder.pGetTotalCountDbl());
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

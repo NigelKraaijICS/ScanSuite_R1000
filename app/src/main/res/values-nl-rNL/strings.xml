@@ -418,4 +418,6 @@
     <string name="message_workplace_not_updated">Werkplek op server bijwerken mislukt</string>
     <string name="message_workplace_selected">Werkplek geselecteerd</string>
     <string name="message_add_bin_not_allowed">Het is niet toegestaan om een locatie toe te voegen</string>
+    <string name="items">Stuks</string>
+    <string name="lines">Regels:</string>
 </resources>

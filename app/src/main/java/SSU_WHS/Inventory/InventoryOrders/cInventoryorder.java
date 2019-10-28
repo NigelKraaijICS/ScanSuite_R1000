@@ -717,9 +717,8 @@ public class cInventoryorder {
                 JSONObject jsonObject;
                 jsonObject = myList.get(i);
 
-                cInventoryorderLine inventoryorderLine = new cInventoryorderLine(jsonObject);
-                inventoryorderLine.pInsertInDatabaseBln();
-                cInventoryorderLine.currentInventoryOrderLine = inventoryorderLine;
+                cInventoryorderLine.currentInventoryOrderLine= new cInventoryorderLine(jsonObject);
+                cInventoryorderLine.currentInventoryOrderLine.pInsertInDatabaseBln();
                 cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcodeBln(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
                 return  true;
             }
@@ -769,6 +768,19 @@ public class cInventoryorder {
         return resultObl;
     }
 
+    public Double  pGetTotalCountDbl() {
+
+        Double resultDbl;
+
+        resultDbl = cInventoryorderLine.getInventoryorderLineViewModel().pGetTotalCountDbl();
+        if (resultDbl == null ) {
+            return Double.valueOf(0);
+        }
+
+        return resultDbl;
+    }
+
+
     public Double  pGetCountForBinDbl(String pvBincodeStr) {
 
       Double resultDbl;
@@ -780,7 +792,6 @@ public class cInventoryorder {
 
         return resultDbl;
     }
-
 
     public static List<cInventoryorder> pGetInventoriesWithFilterFromDatabasObl() {
 
@@ -904,7 +915,7 @@ public class cInventoryorder {
         return  null;
     }
 
-    public cInventoryorderBarcode pGetOrderBarcode(String pvScannedBarcodeStr) {
+    public cInventoryorderBarcode pGetOrderBarcode(cBarcodeScan pvBarcodescan) {
 
         if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
             return  null;
@@ -912,7 +923,7 @@ public class cInventoryorder {
 
         for (cInventoryorderBarcode inventoryorderBarcode : this.barcodesObl()) {
 
-            if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
+            if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeStr()) || inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeOriginalStr())) {
                 return  inventoryorderBarcode;
             }
         }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.cAppExtension;
+import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -84,8 +85,8 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
         pvHolder.textViewBin.setTag( cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
         String imageBinUniqueTag =  cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr() + "_IMG";
         pvHolder.imageBin.setTag(imageBinUniqueTag);
-        pvHolder.textViewCounted.setText("");
-        pvHolder.textViewLines.setText(Integer.toString( cInventoryorderBin.currentInventoryOrderBin.getLinesInt()));
+        pvHolder.textViewCounted.setText(cAppExtension.activity.getString(R.string.lines) + ' ' + cInventoryorderBin.currentInventoryOrderBin.getLinesInt());
+        pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' +  cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()));
 
         pvHolder.inventoryorderBinItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
