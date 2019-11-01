@@ -421,17 +421,17 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         result = new cResult();
         result.resultBln = true;
 
-        //Get all linesInt for current order, if size = 0 or webservice error then stop
-        if (cInventoryorder.currentInventoryOrder.pGetLinesViaWebserviceBln(true) == false) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_inventorylines_failed));
-            return result;
-        }
-
         //Get all bins for current order, if webservice error then stop
         if (cInventoryorder.currentInventoryOrder.pGetBinsViaWebserviceBln(true) == false) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
+            return result;
+        }
+
+        //Get all linesInt for current order, if size = 0 or webservice error then stop
+        if (cInventoryorder.currentInventoryOrder.pGetLinesViaWebserviceBln(true) == false) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_inventorylines_failed));
             return result;
         }
 

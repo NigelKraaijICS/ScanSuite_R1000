@@ -3,14 +3,21 @@ package nl.icsvertex.scansuite.Fragments.inventory;
 
 import android.annotation.SuppressLint;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.text.TextUtils;
 
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,28 +28,31 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Locale;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 
-import ICS.Utils.cRegex;
+import ICS.Utils.cNumberTextWatcher;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
+import nl.icsvertex.scansuite.Fragments.dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryArticleDetailFragment extends DialogFragment implements iICSDefaultFragment {
 
     //Region Public Properties
-
+    static final String NUMBERPICKERFRAGMENT_TAG = "NUMBERPICKERFRAGMENT_TAG";
     //End Region Public Properties
 
     //Region Private Properties
@@ -58,11 +68,10 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     private static ImageView articleThumbImageView;
     private TextView binText;
-    private static TextView quantityText;
+    private static EditText quantityText;
     private static AppCompatImageButton imageButtonMinus;
     private static AppCompatImageButton imageButtonPlus;
 
-    //Region article info
     private TextView articleDescriptionText;
     private TextView articleDescription2Text;
     private TextView articleItemText;
@@ -80,14 +89,14 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     private static ImageView imageButtonDone;
 
-    //End Region article info
+    private static ImageButton imageButtonBarcode;
+
 
     //End Region Private Properties
 
-
     //Region Constructor
     public InventoryArticleDetailFragment() {
-        // Required empty public constructor
+
     }
 
     //End Region Constructor
@@ -177,6 +186,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.quantityText = getView().findViewById(R.id.quantityText);
         this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
+        this.imageButtonBarcode = getView().findViewById(R.id.imageButtonBarcode);
+
 
         this.articleDescriptionText = getView().findViewById(R.id.articleDescriptionText);
         this.articleDescription2Text = getView().findViewById(R.id.articleDescription2Text);
@@ -198,6 +209,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     @Override
     public void mFieldsInitialize() {
+
+        this.imageButtonBarcode.setVisibility(View.INVISIBLE);
 
         this.inventoryCounterPlusHelperInt = 0;
         this. inventoryCounterMinusHelperInt = 0;
@@ -221,18 +234,30 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.articleBarcodeText.setText("");
         this.articleVendorItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getVendorItemNoStr() + ' ' + cInventoryorderLine.currentInventoryOrderLine.getVendorItemDescriptionStr());
 
-        this. binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
-        this.quantityText.setText(cText.pDoubleToStringStr(cInventoryorderLine.currentInventoryOrderLine.getQuantityHandledDbl()));
+        this.binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
+
+        InventoryArticleDetailFragment.quantityText.setSelectAllOnFocus(true);
+        InventoryArticleDetailFragment.quantityText.requestFocus();
+        InventoryArticleDetailFragment.quantityText.setText(cText.pDoubleToStringStr(cInventoryorderLine.currentInventoryOrderLine.getQuantityHandledDbl()));
+        InventoryArticleDetailFragment.quantityText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_NORMAL);
+        InventoryArticleDetailFragment.quantityText.setCursorVisible(false);
+
+        TextWatcher tw = new cNumberTextWatcher(InventoryArticleDetailFragment.quantityText, 2,999999d);
+        InventoryArticleDetailFragment.quantityText.addTextChangedListener((tw));
+
         InventoryArticleDetailFragment.mShowArticleImage();
         InventoryArticleDetailFragment.mShowOrHideGenericExtraFields();
     }
 
     @Override
     public void mSetListeners() {
-        this.mDismissListener();
-        this.mSetPlusListener();
-        this.mSetMinusListener();
-        this.mSetDoneListener();
+             this.mSetDoneListener();
+
+        if (cSetting.INV_AMOUNT_MANUAL() == true) {
+            this.mSetPlusListener();
+            this.mSetMinusListener();
+            this.mSetEditorActionListener();
+        }
     }
 
     //End Region iICSDefaultActivity defaults
@@ -250,7 +275,12 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         //Check if the scanned value belongs to this line
         if (!InventoryArticleDetailFragment.mCheckBarcodeWithLineBarcodesBln(pvBarcodeScan)) {
-            mDoUnknownScan(cAppExtension.context.getString(R.string.error_barcode_doesnt_belong_to_line), pvBarcodeScan.getBarcodeOriginalStr());
+
+            //Close this fragment, we are done here
+            InventoryArticleDetailFragment.mHandleDone();
+
+            //Handle scan in BIN activity,
+            InventoryorderBinActivity.pHandleScan(pvBarcodeScan);
             return;
         }
 
@@ -277,14 +307,12 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         //We scanned a barcode unknown to the order
         if (inventoryorderBarcode == null) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode),"",true,true);
             return false;
         }
 
         //We scanned a barcode for a different article
         if (!inventoryorderBarcode.getItemNoStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getItemNoStr()) ||
             ! inventoryorderBarcode.getVariantCodeStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getVariantCodeStr())) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode),"",true,true);
             return false;
 
         }
@@ -320,15 +348,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         this.toolbarImage.setImageResource(R.drawable.ic_info);
         this.toolbarImageHelp.setVisibility(View.GONE);
-    }
-
-    private void mDismissListener() {
-        getView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -404,6 +423,35 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
                     return;
                 }
                 mTryToChangeInventoryQuantity(false, false, cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            }
+        });
+    }
+
+    private void mSetEditorActionListener() {
+
+
+        InventoryArticleDetailFragment.quantityText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InventoryArticleDetailFragment.quantityText.requestFocus();
+                InventoryArticleDetailFragment.quantityText.setSelection(0,InventoryArticleDetailFragment.quantityText.getText().toString().length());
+            }
+        });
+
+
+        this.quantityText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+
+
+                  InventoryArticleDetailFragment.mTryToChangeInventoryQuantity(true,
+                                                                               true,
+                                                                                cText.pStringToDoubleDbl(String.valueOf(InventoryArticleDetailFragment.quantityText.getText())));
+
+                    InventoryArticleDetailFragment.imageButtonDone.callOnClick();
+                }
+                return true;
             }
         });
     }
@@ -484,28 +532,31 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         //If pick with picture is false, then hide image view
 
-        //todo: do this differently
-        if (cSetting.PICK_WITH_PICTURE() == false) {
-            InventoryArticleDetailFragment.articleThumbImageView.setVisibility(View.INVISIBLE);
-            return;
-        }
+        InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+        return;
 
-        //If picture is not in cache (via webservice) then show no image
-        if (cInventoryorderLine.currentInventoryOrderLine.pGetArticleImageBln()) {
-            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
-            InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
-            return;
-        }
-
-        //If picture is in cache but can't be converted, then show no image
-        if (cInventoryorderLine.currentInventoryOrderLine.articleImage == null ||cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap() == null) {
-            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
-            InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
-            return;
-        }
-
-        //Show the image
-        InventoryArticleDetailFragment.articleThumbImageView.setImageBitmap(cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap());
+        //todo: do this with the correct settings
+//        if (cSetting.PICK_WITH_PICTURE() == false) {
+//            InventoryArticleDetailFragment.articleThumbImageView.setVisibility(View.INVISIBLE);
+//            return;
+//        }
+//
+//        //If picture is not in cache (via webservice) then show no image
+//        if (cInventoryorderLine.currentInventoryOrderLine.pGetArticleImageBln()) {
+//            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
+//            InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+//            return;
+//        }
+//
+//        //If picture is in cache but can't be converted, then show no image
+//        if (cInventoryorderLine.currentInventoryOrderLine.articleImage == null ||cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap() == null) {
+//            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
+//            InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+//            return;
+//        }
+//
+//        //Show the image
+//        InventoryArticleDetailFragment.articleThumbImageView.setImageBitmap(cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap());
 
     }
 
@@ -557,8 +608,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         cInventoryorderLine.currentInventoryOrderLine.pUpdateQuantityInDatabaseBln();
 
        cUserInterface.pHideGettingData();
-        InventoryorderBinActivity.pLineHandled();
-        cAppExtension.dialogFragment.dismiss();
+       InventoryorderBinActivity.pLineHandled();
+       cAppExtension.dialogFragment.dismiss();
 
     }
 
@@ -605,7 +656,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
             mDoDelayedPlus(this, milliSecsLng);
         }
     };
-
 
     //End Region Private Methods
 }

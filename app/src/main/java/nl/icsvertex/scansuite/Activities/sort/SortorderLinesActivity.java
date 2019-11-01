@@ -40,6 +40,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
+import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.PagerAdapters.SortorderLinesPagerAdapter;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.dialogs.CommentFragment;
@@ -805,6 +806,9 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_units_available));
             return result;
         }
+
+        //Clear all shipments
+        cShipment.allShipmentsObl = null;
 
         // Get all linesInt, if zero than there is something wrong
         if (cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true) == false) {

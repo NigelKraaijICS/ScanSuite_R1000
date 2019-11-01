@@ -54,6 +54,10 @@ public class cInventoryorderLineRepository {
         new mInsertAsyncTask(inventoryorderLineDao).execute(inventoryorderLineEntity);
     }
 
+    public void delete(cInventoryorderLineEntity inventoryorderLineEntity) {
+        new mDeleteAsyncTask(inventoryorderLineDao).execute(inventoryorderLineEntity);
+    }
+
     public void deleteAll() {
         new mDeleteAllAsyncTask(inventoryorderLineDao).execute();
     }
@@ -68,6 +72,20 @@ public class cInventoryorderLineRepository {
         @Override
         protected Void doInBackground(final cInventoryorderLineEntity... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class mDeleteAsyncTask extends AsyncTask<cInventoryorderLineEntity, Void, Void> {
+        private iInventoryorderLineDao mAsyncTaskDao;
+
+        mDeleteAsyncTask(iInventoryorderLineDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final cInventoryorderLineEntity... params) {
+            mAsyncTaskDao.delete(params[0]);
             return null;
         }
     }
@@ -144,6 +162,28 @@ public class cInventoryorderLineRepository {
         return webResultWrs;
     }
 
+    public cWebresult pResetLineViaWebserviceWrs() {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mResetLineViaViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     public boolean pUpdateQuantityBln() {
 
         Integer integerValue;
@@ -152,7 +192,7 @@ public class cInventoryorderLineRepository {
 
 
         try {
-            integerValue = new updateQuantityHandledAsyncTask(inventoryorderLineDao).execute(updateInventorylineQuantityParams).get();
+            integerValue = new mUpdateQuantityHandledAsyncTask(inventoryorderLineDao).execute(updateInventorylineQuantityParams).get();
 
             if (integerValue != 0) {
                 return  true;}
@@ -167,7 +207,6 @@ public class cInventoryorderLineRepository {
             return  false;
         }
     }
-
 
     private static class pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask extends AsyncTask<String, Void, List<cInventoryorderLineEntity>> {
         private iInventoryorderLineDao mAsyncTaskDao;
@@ -273,9 +312,53 @@ public class cInventoryorderLineRepository {
         }
     }
 
-    private static class updateQuantityHandledAsyncTask extends AsyncTask<UpdateInventorylineQuantityParams, Void, Integer> {
+    private static class mResetLineViaViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNERID;
+                l_PropertyInfo2Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo4Pin.setValue(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENO;
+                l_PropertyInfo5Pin.setValue(cInventoryorderLine.currentInventoryOrderLine.getLineNoInt());
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+
+                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mUpdateQuantityHandledAsyncTask extends AsyncTask<UpdateInventorylineQuantityParams, Void, Integer> {
         private iInventoryorderLineDao mAsyncTaskDao;
-        updateQuantityHandledAsyncTask(iInventoryorderLineDao dao) { mAsyncTaskDao = dao; }
+        mUpdateQuantityHandledAsyncTask(iInventoryorderLineDao dao) { mAsyncTaskDao = dao; }
         @Override
         protected Integer doInBackground(UpdateInventorylineQuantityParams... params) {
             return mAsyncTaskDao.updateOrderLineQuantity(params[0].lineNoLng, params[0].quantityDbl);

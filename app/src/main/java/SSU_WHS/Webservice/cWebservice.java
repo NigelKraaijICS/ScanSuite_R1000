@@ -14,7 +14,7 @@ public class cWebservice {
     public static String WEBSERVICE_NAMESPACE = "http://www.icsvertex.nl/"; //Include '/' at end
     public static String WEBSERVICE_URL = "";
     public static String WEBSERVICE_WEBSERVICENAME = ""; //Include '/' at end (except when empty))
-    public static Integer WEBSERVICE_HTTPS_PORT = 443;
+    public static Integer WEBSERVICE_HTTPS_PORT = 9443;
     public static Integer WEBSERVICE_HTTPS_TIMEOUT = 60*1000;
     //End Region Public Properties
 

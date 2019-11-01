@@ -596,12 +596,12 @@ public class cPickorderLine {
 
     }
 
-    public boolean pAddOrUpdateLineBarcodeBln(){
+    public boolean pAddOrUpdateLineBarcodeBln(Double pvAmountDbl){
 
         //If there are no line barcodes, then simply add this one
         if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
             cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(cPickorderLine.currentPickOrderLine.getLineNoInt().longValue(), cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
-            pickorderLineBarcode.quantityHandledDbl = cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl();
+            pickorderLineBarcode.quantityHandledDbl = pvAmountDbl;
             pickorderLineBarcode.pInsertInDatabaseBln();
             return true;
         }
@@ -609,7 +609,7 @@ public class cPickorderLine {
         for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
 
             if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
-                pickorderLineBarcode.quantityHandledDbl += cPickorderBarcode.currentPickorderBarcode.quantityPerUnitOfMeasureDbl;
+                pickorderLineBarcode.quantityHandledDbl += pvAmountDbl;
                 pickorderLineBarcode.pUpdateAmountInDatabaseBln();
                 return  true;
             }

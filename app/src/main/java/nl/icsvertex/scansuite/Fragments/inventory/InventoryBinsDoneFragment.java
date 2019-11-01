@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +26,19 @@ import nl.icsvertex.scansuite.Fragments.SendOrderFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFragment {
-    static RecyclerView recyclerViewInventoryBinsDone;
+
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
+
+    private static RecyclerView recyclerViewInventoryBinsDone;
+    private ImageView imageCloseOrder;
+
+    //End Region Private Properties
+
+    //Region Default Methods
 
     @Override
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer,
@@ -42,28 +55,13 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     }
 
     @Override
-    public void mFragmentInitialize() {
-
-        this.mFindViews();
-        this.mFieldsInitialize();
-        this.mSetListeners();
-        this.mGetData();
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
-    public void mFindViews() {
-        recyclerViewInventoryBinsDone = getView().findViewById(R.id.recyclerViewInventoryBinsDone);
-    }
-
-
-    @Override
-    public void mFieldsInitialize() {
-
-    }
-
-    @Override
-    public void mSetListeners() {
-
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -78,10 +76,54 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
             ft.detach(this).attach(this).commit();
         }
     }
-    private void mGetData() {
-        List<cInventoryorderBin> HandledBinsObl = cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl();
-        InventoryBinsDoneFragment.mFillRecycler(HandledBinsObl);
+
+    //End Region Default Methods
+
+    //Region iICSDefaultActivity defaults
+
+    @Override
+    public void mFragmentInitialize() {
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+        this.mGetData();
     }
+
+    @Override
+    public void mFindViews() {
+        InventoryBinsDoneFragment.recyclerViewInventoryBinsDone = getView().findViewById(R.id.recyclerViewInventoryBinsDone);
+        this.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
+    }
+
+    @Override
+    public void mFieldsInitialize() {
+
+        this.imageCloseOrder.setVisibility(View.INVISIBLE);
+
+        if (cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().size() >0 && cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size() == 0 ) {
+            this.imageCloseOrder.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    public void mSetListeners() {
+        this.mSetDoneListener();
+
+    }
+
+    //End Region iICSDefaultActivity defaults
+
+    //Region Public Methods
+
+    //End Region Public Methods
+
+    //Region Private Methods
+
+    private void mGetData() {
+        InventoryBinsDoneFragment.mFillRecycler(cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl());
+    }
+
     private static void mFillRecycler(List<cInventoryorderBin> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
@@ -100,7 +142,8 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         InventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().size()) + "/" + cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
 
     }
-    public static void mNoLinesAvailable(Boolean pvEnabledBln) {
+
+    private static void mNoLinesAvailable(Boolean pvEnabledBln) {
 
         if (InventoryorderBinsActivity.currentBinFragment != null && InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
 
@@ -126,4 +169,16 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
 
         }
     }
+
+    private void mSetDoneListener() {
+        this.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InventoryorderBinsActivity.pHandleOrderCloseClick();
+            }
+        });
+    }
+
+    //End Region Private Methods
+
 }

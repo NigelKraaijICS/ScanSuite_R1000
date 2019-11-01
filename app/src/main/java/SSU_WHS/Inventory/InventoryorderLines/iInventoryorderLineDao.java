@@ -2,6 +2,7 @@ package SSU_WHS.Inventory.InventoryorderLines;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.Delete;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
@@ -11,8 +12,12 @@ import SSU_WHS.General.cDatabase;
 
 @Dao
 public interface iInventoryorderLineDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(cInventoryorderLineEntity inventoryorderLineEntity);
+
+    @Delete
+    void delete(cInventoryorderLineEntity inventoryorderLineEntity);
 
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDERLINE)
     void deleteAll();

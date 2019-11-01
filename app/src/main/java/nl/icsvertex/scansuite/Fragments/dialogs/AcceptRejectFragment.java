@@ -14,6 +14,8 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
+import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.pick.PickorderPickActivity;
@@ -145,7 +147,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     private void mAccept() {
 
-
         if (cAppExtension.activity instanceof PickorderLinesActivity) {
             PickorderLinesActivity.pLeaveActivity();
             this.dismiss();
@@ -158,6 +159,16 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof SortorderSortActivity) {
             SortorderSortActivity.pAcceptPick();
+            this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof InventoryorderBinActivity) {
+            InventoryorderBinActivity.pCloseBin();
+            this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+            InventoryorderBinsActivity.pCloseOrder();
             this.dismiss();
         }
 
@@ -179,7 +190,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             this.dismiss();
         }
 
+        if (cAppExtension.activity instanceof InventoryorderBinActivity) {
+            this.dismiss();
+        }
 
+        if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+            this.dismiss();
+        }
 
     }
 

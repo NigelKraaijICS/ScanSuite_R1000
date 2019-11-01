@@ -26,7 +26,7 @@ public interface iInventoryorderBinDao {
     List<cInventoryorderBinEntity> getInventoryorderBinNotDone();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN +
-            " WHERE " + cDatabase.STATUS_NAMESTR + " = " + cWarehouseorder.InventoryBinStatusEnu.InventoryPause)
+            " WHERE " + cDatabase.STATUS_NAMESTR + " = " + cWarehouseorder.InventoryBinStatusEnu.InventoryDone)
     List<cInventoryorderBinEntity> getInventoryorderBinDone();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN)
@@ -36,4 +36,10 @@ public interface iInventoryorderBinDao {
             " WHERE " + cDatabase.BINCODE_NAMESTR + " =:pvBincode" +
             " AND "+ cDatabase.STATUS_NAMESTR + " =:pvStatus")
     cInventoryorderBinEntity checkBin(String pvBincode, Integer pvStatus);
+
+
+    @Query("UPDATE InventoryOrderBin SET Status = :pvStatusInt   WHERE  BinCode = :pvBinCodeStr")
+    int updateBinStatus(String pvBinCodeStr, int pvStatusInt);
+
+
 }

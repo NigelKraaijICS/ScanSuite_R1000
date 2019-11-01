@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
@@ -30,8 +30,19 @@ import nl.icsvertex.scansuite.R;
 
 public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFragment {
 
-    ImageView imageAddBin;
-    static RecyclerView recyclerViewInventoryBinsToDo;
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
+
+    private ImageView imageAddBin;
+    private static RecyclerView recyclerViewInventoryBinsToDo;
+    //End Region Private Properties
+
+
+    //Region Default Methods
+
     @Override
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer,
                              Bundle pvSavedInstanceState) {
@@ -46,35 +57,26 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
     }
 
     @Override
-    public void mFragmentInitialize() {
-
-        this.mFindViews();
-        this.mFieldsInitialize();
-        this.mSetListeners();
-        this.mGetData();
-    }
-
-    @Override
-    public void mFindViews() {
-        imageAddBin = getView().findViewById(R.id.imageAddBin);
-        recyclerViewInventoryBinsToDo = getView().findViewById(R.id.recyclerViewInventoryBinsToDo);
-    }
-
-
-
-    @Override
-    public void mFieldsInitialize() {
-        if (cInventoryorder.currentInventoryOrder.isGeneratedBln() || cInventoryorder.currentInventoryOrder.isInvAddExtraBinBln()) {
-            imageAddBin.setVisibility(View.VISIBLE);
+    public void onDestroy() {
+        try {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else {
-            imageAddBin.setVisibility(View.INVISIBLE);
-        }
+        super.onDestroy();
     }
 
     @Override
-    public void mSetListeners() {
-        mSetAddBinListener();
+    public void onPause() {
+        try {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -89,18 +91,60 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
             ft.detach(this).attach(this).commit();
         }
     }
-    public static void mGetData() {
-        List<cInventoryorderBin> HandledBinsObl = cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl();
-        mFillRecycler(HandledBinsObl);
+
+
+    //End Region Default Methods
+
+    //Region iICSDefaultActivity defaults
+
+    @Override
+    public void mFragmentInitialize() {
+
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+        this.mGetData();
+
+    }
+
+    @Override
+    public void mFindViews() {
+        this.imageAddBin = getView().findViewById(R.id.imageAddBin);
+        this.recyclerViewInventoryBinsToDo = getView().findViewById(R.id.recyclerViewInventoryBinsToDo);
+    }
+
+    @Override
+    public void mFieldsInitialize() {
+        if (cInventoryorder.currentInventoryOrder.isGeneratedBln() || cInventoryorder.currentInventoryOrder.isInvAddExtraBinBln()) {
+            this.imageAddBin.setVisibility(View.VISIBLE);
+        }
+        else {
+            this.imageAddBin.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void mSetListeners() {
+        this.mSetAddBinListener();
+    }
+
+    //End Region iICSDefaultActivity defaults
+
+    //Region Public Methods
+
+    //End Region Public Methods
+
+    //Region Private Methods
+
+    private static void mGetData() {
+        InventoryBinsToDoFragment.mFillRecycler(cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl());
     }
 
     private void mSetAddBinListener() {
-        imageAddBin.setOnClickListener(new View.OnClickListener() {
+        this.imageAddBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddBinFragment addBinFragment = new AddBinFragment();
-                addBinFragment.setCancelable(true);
-                addBinFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDBIN_TAG);
+               mShowAddBinFragment();
             }
         });
     }
@@ -121,6 +165,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
 
         InventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size()) + "/" + cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
     }
+
     private static void mNoLinesAvailable(Boolean pvEnabledBln) {
 
         if (InventoryorderBinsActivity.currentBinFragment != null && InventoryorderBinsActivity.currentBinFragment  instanceof InventoryBinsToDoFragment) {
@@ -152,6 +197,20 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
             InventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size()) + "/" + cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
         }
     }
+
+    private void mShowAddBinFragment(){
+
+        AddBinFragment addBinFragment = new AddBinFragment();
+        addBinFragment.setCancelable(true);
+        addBinFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDBIN_TAG);
+
+    }
+
+    //End Region Private Methods
 }
+
+
+
+
 
 

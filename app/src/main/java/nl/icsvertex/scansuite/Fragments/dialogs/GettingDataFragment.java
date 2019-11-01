@@ -19,6 +19,13 @@ import nl.icsvertex.scansuite.R;
 
 
 public class GettingDataFragment extends DialogFragment implements iICSDefaultFragment {
+
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
+
     ImageView imageHourglass;
     CardView progressContainer;
     TextView textProgress;
@@ -26,9 +33,17 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     Button buttonCancel;
     ConstraintLayout gettingDataContainer;
 
+    //End Region Private Properties
+
+    //Region Constructor Properties
+
     public GettingDataFragment() {
-        // Required empty public constructor
+
     }
+
+    //End Region Constructor Properties
+
+    //Region Default Methods
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,44 +51,60 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_getting_data, container, false);
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-        mFragmentInitialize();
-        mSetAnimations();
-
+        this.mFragmentInitialize();
+        this.mSetAnimations();
     }
+
+
+    //End Region Default Methods
+
+
+    //Region iICSDefaultFragment defaults
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mFieldsInitialize();
-        mSetListeners();
-    }
-    @Override
-    public void mFindViews() {
-        gettingDataContainer = getView().findViewById(R.id.gettingDataContainer);
-        imageHourglass = getView().findViewById(R.id.imageHourglass);
-        progressContainer = getView().findViewById(R.id.progressContainer);
-        textDots = getView().findViewById(R.id.textDots);
-        textProgress = getView().findViewById(R.id.textProgress);
-        buttonCancel = getView().findViewById(R.id.buttonCancel);
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
     }
 
+    @Override
+    public void mFindViews() {
+        this.gettingDataContainer = getView().findViewById(R.id.gettingDataContainer);
+        this.imageHourglass = getView().findViewById(R.id.imageHourglass);
+        this.progressContainer = getView().findViewById(R.id.progressContainer);
+        this.textDots = getView().findViewById(R.id.textDots);
+        this.textProgress = getView().findViewById(R.id.textProgress);
+        this.buttonCancel = getView().findViewById(R.id.buttonCancel);
+    }
 
     @Override
     public void mFieldsInitialize() {
-        progressContainer.setVisibility(View.INVISIBLE);
+        this.progressContainer.setVisibility(View.INVISIBLE);
     }
-    private void mSetAnimations() {
-        mSetDotDotDot();
-        mAnimateHourglass();
-    }
+
     @Override
     public void mSetListeners() {
-        mSetHourglassImageListener();
-        mSetCancelListener();
+        this.mSetHourglassImageListener();
+        this.mSetCancelListener();
     }
+
+    //End Region iICSDefaultFragment defaults
+
+    //Region Public Methods
+
+        //End Region Public Methods
+
+    //Region Private Methods
+
+    private void mSetAnimations() {
+        this.mSetDotDotDot();
+        this.mAnimateHourglass();
+    }
+
     private void mAnimateHourglass() {
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -98,14 +129,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
         };
         handler.postDelayed(runnable, 1500);
     }
-    public void mShowMessage(final String message) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textProgress.setText(message);
-            }
-        });
-    }
+
     private void mSetHourglassImageListener() {
         imageHourglass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +138,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
             }
         });
     }
+
     private void mSetCancelListener() {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +147,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
             }
         });
     }
+
     private void mToggleDetails() {
         Boolean isCurrentlyShown;
         if (progressContainer.getVisibility() == View.VISIBLE) {
@@ -143,6 +169,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
             progressContainer.setVisibility(View.VISIBLE);
         }
     }
+
     private void mSetDotDotDot() {
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -173,4 +200,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
         };
         handler.postDelayed(runnable, 1 * 600);
     }
+
+    //End Region Private Methods
+
 }

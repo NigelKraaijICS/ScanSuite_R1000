@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,18 @@ import nl.icsvertex.scansuite.R;
 
 public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultFragment {
 
-    static RecyclerView recyclerViewInventoryBinsTotal;
+    //Region Public Properties
+
+    //End Region Public Properties
+
+    //Region Private Properties
+
+    private static RecyclerView recyclerViewInventoryBinsTotal;
+    private ImageView imageCloseOrder;
+
+    //End Region Private Properties
+
+    //Region Default Methods
 
     @Override
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer,
@@ -40,28 +52,15 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
     }
 
     @Override
-    public void mFragmentInitialize() {
-
-        this.mFindViews();
-        this.mFieldsInitialize();
-        this.mSetListeners();
-        this.mGetData();
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
-    public void mFindViews() {
-        recyclerViewInventoryBinsTotal = getView().findViewById(R.id.recyclerViewInventoryBinsTotal);
+    public void onPause() {
+        super.onPause();
     }
 
-      @Override
-    public void mFieldsInitialize() {
-
-    }
-
-    @Override
-    public void mSetListeners() {
-
-    }
 
     @Override
     public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
@@ -75,9 +74,53 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
             ft.detach(this).attach(this).commit();
         }
     }
+
+    //End Region Default Methods
+
+    //Region iICSDefaultActivity defaults
+
+    @Override
+    public void mFragmentInitialize() {
+
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
+        this.mGetData();
+    }
+
+    @Override
+    public void mFindViews() {
+        InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal = getView().findViewById(R.id.recyclerViewInventoryBinsTotal);
+        this.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
+    }
+
+    @Override
+    public void mFieldsInitialize() {
+
+        this.imageCloseOrder.setVisibility(View.INVISIBLE);
+
+
+        if (cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().size() >0 && cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size() == 0 ) {
+            this.imageCloseOrder.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    public void mSetListeners() {
+        this.mSetDoneListener();
+    }
+
+    //End Region iICSDefaultActivity defaults
+
+    //Region Public Methods
+
+    //End Region Public Methods
+
+    //Region Private Methods
+
     private void mGetData() {
-        List<cInventoryorderBin> HandledBinsObl = cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl();
-        mFillRecycler(HandledBinsObl);
+        mFillRecycler(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl());
     }
 
     private static void mFillRecycler(List<cInventoryorderBin> pvDataObl) {
@@ -90,4 +133,16 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
         InventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
 
     }
+
+    private void mSetDoneListener() {
+        this.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InventoryorderBinsActivity.pHandleOrderCloseClick();
+            }
+        });
+    }
+
+    //End Region Private Methods
+
 }

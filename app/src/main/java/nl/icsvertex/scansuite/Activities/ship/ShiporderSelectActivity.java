@@ -52,6 +52,7 @@ import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Activities.general.MenuActivity;
 import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
 import ICS.cAppExtension;
@@ -457,6 +458,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorderLine.currentPickOrderLine = null;
         cPickorderBarcode.currentPickorderBarcode = null;
         cWorkplace.currentWorkplace = null;
+        cShipment.allShipmentsObl = null;
     }
 
     private static void mShowNoOrdersIcon(final Boolean pvShowBln) {

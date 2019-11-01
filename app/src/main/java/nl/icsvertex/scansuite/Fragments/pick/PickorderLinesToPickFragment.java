@@ -111,7 +111,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         this.quickhelpText = getView().findViewById(R.id.quickhelpText);
         this.quickhelpContainer = getView().findViewById(R.id.quickhelpContainer);
         this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
-        this.currentLocationView = getView().findViewById(R.id.currentLocationView);
+        this.currentLocationView = getView().findViewById(R.id.closeOrderView);
     }
 
 

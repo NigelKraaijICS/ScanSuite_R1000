@@ -64,6 +64,7 @@ public class cWarehouseorder {
         public static final int Inventory = 10;
         public static final int InventoryBusy = 11;
         public static final int InventoryPause = 12;
+        public static final int InventoryHandled = 13;
     }
 
     public class PicklineStatusEnu {

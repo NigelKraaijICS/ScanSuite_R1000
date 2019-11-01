@@ -86,6 +86,7 @@ public class cWebresult {
         boolean isHTTPSBln;
         String hostStr;
         String pathStr;
+        int portInt;
 
         try {
             url = new URL(cWebservice.WEBSERVICE_URL);
@@ -101,6 +102,7 @@ public class cWebresult {
             }
             hostStr = url.getHost();
             pathStr = url.getPath();
+            portInt = url.getPort();
         }
         else {
             l_WebresultWrs.setSuccessBln(false);
@@ -129,7 +131,12 @@ public class cWebresult {
 
         try {
             if (isHTTPSBln) {
-                HttpsTransportSE httpsTransport = new HttpsTransportSE(hostStr, cWebservice.WEBSERVICE_HTTPS_PORT, pathStr, cWebservice.WEBSERVICE_HTTPS_TIMEOUT);
+
+                if (portInt == 0) {
+                    portInt = 443;
+                }
+
+                HttpsTransportSE httpsTransport = new HttpsTransportSE(hostStr, portInt, pathStr, cWebservice.WEBSERVICE_HTTPS_TIMEOUT);
                 httpsTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pv_methodNameStr, envelope);
             }
             else {

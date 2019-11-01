@@ -379,7 +379,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
                 //If we only have one barcode, then automatticaly select that barcode
                 if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
-                    mBarcodeSelected(cPickorderLine.currentPickOrderLine.barcodesObl.get(0));
+                    PickorderPickActivity.pHandleScan(cPickorderLine.currentPickOrderLine.barcodesObl.get(0).getBarcodeStr());
                     return;
                 }
 
@@ -598,6 +598,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
             //Determine the new amount
             if (pvAmountFixedBln == true) {
+                articleScannedLastBln = true;
                 newQuantityDbl = pvAmountDbl;
             } else {
                 newQuantityDbl = cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() + pvAmountDbl;
@@ -615,7 +616,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             PickorderPickActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
             //Add or update line barcode
-            cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln();
+            cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln(pvAmountDbl);
 
             //Update orderline info (quantity, timestamp, localstatus)
             cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
@@ -716,12 +717,14 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         // If this is VKO after each piece, then show new instructions
         if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() == true) {
+            PickorderPickActivity.imageButtonDone.setVisibility(View.VISIBLE);
             PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
             PickorderPickActivity.articleScannedLastBln = false;
         }
 
         //Update orderline info (quantity, timestamp, localstatus)
         cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
+        articleScannedLastBln = false;
 
         //Check if line is done
         PickorderPickActivity.mCheckLineDone();
@@ -733,7 +736,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private static void mHandlePVArticleScanned(String pvScannedBarcodeStr) {
 
         //We didn't scan an article yet, so handle it as a "normal" scan
-        if (articleScannedLastBln == false) {
+        //We can scan article multiple times
+        if (articleScannedLastBln == false || !cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() ) {
 
             if (PickorderPickActivity.mFindBarcodeInLineBarcodes(pvScannedBarcodeStr) == false) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr, true, true);
@@ -745,12 +749,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
             //If we found the barcode, currentbarcode is alreay filled, so make this selected
             PickorderPickActivity.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
-            return;
-        }
-
-        //We last scanned an article, but thats oke
-        if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() == false) {
-            PickorderPickActivity.pHandleScan(pvScannedBarcodeStr);
             return;
         }
 
@@ -791,28 +789,81 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private static void mCheckLineDone() {
 
+        //Start with complete
+        Boolean incompleteBln = false;
+        PickorderPickActivity.imageButtonDone.setVisibility(View.VISIBLE);
+
+
+        //Check if quantity is sufficient
         if (cPickorderLine.currentPickOrderLine.quantityHandledDbl < cPickorderLine.currentPickOrderLine.quantityDbl) {
             PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-            return;
+            incompleteBln = true;
         }
 
         //PV
         if (cPickorder.currentPickOrder.isPVBln()) {
 
-            if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() == false) {
-                PickorderPickActivity.articleScannedLastBln = true;
+            if (incompleteBln) {
+                PickorderPickActivity.imageButtonDone.setVisibility(View.INVISIBLE);
             }
 
-            // We still need to scan a pickkart/sales order so not done
+            //We have to scan a pickcart/salesorder after each article scan
+            if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
+
+                //Not complete and article last scanned so we have to scan a pickcart/salesorder, set the instruction
+                if (articleScannedLastBln == true && incompleteBln == true) {
+                    PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+                    PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
+                    return;
+                }
+
+                //Not complete and pickcart/salesorder last scanned so we have to scan an article, set the instruction
+                if (articleScannedLastBln == false && incompleteBln == true) {
+                    PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+                    PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
+                    PickorderPickActivity.imageButtonDone.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                //We have to scan a processingsequence to complete the line, so we are not ready
+                if (articleScannedLastBln == true && incompleteBln == false) {
+                    PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+                    PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
+                    return;
+                }
+
+                //We are complete, so we are done, will be detected later
+
+            }
+
+            //We can scan all articles first and then pickcart/salesorder, so set this as the instruction
+            if (incompleteBln && cPickorderLine.currentPickOrderLine.processingSequenceStr.isEmpty()) {
+                PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article_or_salesorder_or_pickcartbox));
+                return;
+            }
+
+            // We reached the quantity, but still have to scan the pickcart/salesorder, so set the instruction
             if (cPickorderLine.currentPickOrderLine.processingSequenceStr.isEmpty()) {
                 PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
                 PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
+                PickorderPickActivity.imageButtonDone.setVisibility(View.INVISIBLE);
                 return;
             }
+
+            //We picked less then required, and we have a processing sequence so we are done anyway
+            if (incompleteBln && !cPickorderLine.currentPickOrderLine.processingSequenceStr.isEmpty() && !cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() ) {
+                incompleteBln = false;
+            }
+
         }
 
+        //If we are incomplete, we are done here
+        if (incompleteBln)  {
+            return;
+        }
 
         if (cSetting.PICK_AUTO_ACCEPT() == false) {
+            PickorderPickActivity.imageButtonDone.setVisibility(View.VISIBLE);
             PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
             return;
         }
@@ -838,6 +889,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
         //Set the current line, and update it to busy
+
         cPickorderLine.currentPickOrderLine = nextLine;
 
         hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
@@ -1162,6 +1214,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_pickorderbusy_header),
                                                                                    cAppExtension.activity.getString(R.string.message_pickorderbusy_text));
         acceptRejectFragment.setCancelable(true);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

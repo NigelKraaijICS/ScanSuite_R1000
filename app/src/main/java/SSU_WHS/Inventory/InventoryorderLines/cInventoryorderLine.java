@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cResult;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
@@ -16,6 +17,7 @@ import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.R;
 
 
 public class cInventoryorderLine {
@@ -299,6 +301,50 @@ public class cInventoryorderLine {
 
         return true;
 
+    }
+
+    public cInventoryorderLineBarcode pGetLineBarcodeByScannedBarcode(String pvBarcodeStr) {
+
+        //We scanned a barcode that belongs to the current article, so check if we already have a line barcode
+        for (cInventoryorderLineBarcode inventoryorderLineBarcode : this.lineBarcodesObl) {
+
+            //We have a match, so set the current line
+            if (inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr)) {
+                return inventoryorderLineBarcode;
+            }
+        }
+
+        return  null;
+    }
+
+    public cResult pResetRst(){
+
+        //nit the result
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult;
+
+        WebResult =  cInventoryorderLine.getInventoryorderLineViewModel().pResetLineViaWebserviceWrs();
+        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+
+
+            //Remove line barcodes from the database
+            cInventoryorderLineBarcode.getInventoryorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
+
+            //Reset this line
+            this.quantityHandledDbl = 0.0;
+            this.pUpdateQuantityInDatabaseBln();
+            this.lineBarcodesObl.clear();
+
+            return  result;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET);
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed));
+            return  result;
+        }
     }
 
 

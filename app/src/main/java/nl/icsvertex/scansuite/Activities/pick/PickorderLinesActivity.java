@@ -38,6 +38,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Activities.ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
 import ICS.cAppExtension;
@@ -1005,6 +1006,9 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_units_available));
             return result;
         }
+
+        //Clear all shipments
+        cShipment.allShipmentsObl = null;
 
         // Get all linesInt, if zero than there is something wrong
         if (cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true) == false) {

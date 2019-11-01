@@ -85,12 +85,37 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity" />
         </activity>
-        <activity android:name=".Activities.sort.SortorderSortActivity" />
-        <activity android:name=".Activities.sort.SortorderLinesActivity" />
-        <activity android:name=".Activities.sort.SortorderSelectActivity" />
-        <activity android:name=".Activities.ship.ShiporderSelectActivity" />
-        <activity android:name=".Activities.ship.ShiporderLinesActivity" />
-        <activity android:name=".Activities.ship.ShiporderShipActivity" />
+        <activity android:name=".Activities.sort.SortorderSortActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+
+        <activity android:name=".Activities.sort.SortorderLinesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.sort.SortorderSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.ship.ShiporderSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.ship.ShiporderLinesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.ship.ShiporderShipActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
         <activity
             android:name=".Activities.inventory.InventoryorderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

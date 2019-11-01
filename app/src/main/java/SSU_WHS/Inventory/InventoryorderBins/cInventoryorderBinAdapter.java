@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -16,6 +18,9 @@ import java.util.List;
 import ICS.cAppExtension;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsDoneFragment;
+import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsToDoFragment;
+import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsTotalFragment;
 import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryorderBinAdapter.InventoryorderBinViewHolder> {
@@ -28,11 +33,13 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
         private TextView textViewCounted;
         private TextView textViewLines;
         private ImageView imageBin;
-        public LinearLayout inventoryorderBinItemLinearLayout;
+        private ImageView imageChevronDown;
+
+        public RelativeLayout viewBackground;
+        public ConstraintLayout viewForeground;
 
         public InventoryorderBinViewHolder(View pvItemView) {
             super(pvItemView);
-            this.inventoryorderBinItemLinearLayout = pvItemView.findViewById(R.id.inventoryorderBinItemLinearLayout);
             this.viewOrderStatus = pvItemView.findViewById(R.id.viewOrderStatus);
             this.textViewBin = pvItemView.findViewById(R.id.textViewBin);
             this.textViewBin.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -42,6 +49,9 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
             this.textViewCounted = pvItemView.findViewById(R.id.textViewCounted);
             this.textViewLines = pvItemView.findViewById(R.id.textViewLines);
             this.imageBin = pvItemView.findViewById(R.id.imageBin);
+            this.imageChevronDown  = pvItemView.findViewById(R.id.imageChevronDown);
+            this.viewBackground = pvItemView.findViewById(R.id.view_background);
+            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
         }
         //End Region Public Properties
     }
@@ -85,10 +95,24 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
         pvHolder.textViewBin.setTag( cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
         String imageBinUniqueTag =  cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr() + "_IMG";
         pvHolder.imageBin.setTag(imageBinUniqueTag);
-        pvHolder.textViewCounted.setText(cAppExtension.activity.getString(R.string.lines) + ' ' + cInventoryorderBin.currentInventoryOrderBin.getLinesInt());
+        pvHolder.textViewCounted.setText(cAppExtension.activity.getString(R.string.lines) + ' ' + cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).size());
         pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' +  cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()));
 
-        pvHolder.inventoryorderBinItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+
+        if  (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsToDoFragment) {
+            pvHolder.imageChevronDown.setVisibility(View.VISIBLE);
+        }
+
+        if  (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
+            pvHolder.imageChevronDown.setVisibility(View.INVISIBLE);
+        }
+
+        if  (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
+            pvHolder.imageChevronDown.setVisibility(View.INVISIBLE);
+        }
+
+
+        pvHolder.viewForeground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (cAppExtension.context instanceof InventoryorderBinsActivity) {

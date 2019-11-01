@@ -36,8 +36,8 @@
             android:text="@string/reset"
             android:textSize="@dimen/textsize_big"
             android:textColor="@color/colorPrimary"
-            app:layout_constraintStart_toEndOf="@id/imageLocationHere"
-            app:layout_constraintTop_toTopOf="@id/imageLocationHere"
+            app:layout_constraintStart_toEndOf="@id/imageCloseOrder"
+            app:layout_constraintTop_toTopOf="@id/imageCloseOrder"
             android:paddingRight="@dimen/default_double_padding"
             android:paddingEnd="@dimen/default_double_padding"/>
         <TextView
@@ -56,7 +56,7 @@
             android:tint="@color/colorPrimary"
             android:padding="@dimen/default_padding"
             android:layout_margin="@dimen/default_margin"
-            android:id="@+id/imageLocationHere"
+            android:id="@+id/imageCloseOrder"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:srcCompat="@drawable/ic_reset_black_24dp"

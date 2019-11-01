@@ -7,12 +7,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cResult;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
+import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderBin {
     public cInventoryorderBinEntity inventoryorderBinEntity;
@@ -102,6 +106,52 @@ public class cInventoryorderBin {
         cInventoryorderBin.allInventoryorderBinsObl.add(this);
         return  true;
     }
+
+    public boolean pUpdateStatusInDatabaseBln(){
+
+        boolean resultBln;
+        resultBln =   currentInventoryOrderBin.getInventoryorderBinViewModel().pUpdateStatusBln();
+
+        if (resultBln == false) {
+            return  false;
+        }
+
+        return true;
+
+    }
+
+    public cResult pResetRst(){
+
+        //nit the result
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult;
+
+        WebResult =  cInventoryorderBin.getInventoryorderBinViewModel().pResetBinViaWebserviceWrs();
+        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+
+
+           // Reset all lines and details via webservice
+           List<cInventoryorderLine> hulpObl =cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(this.getBinCodeStr());
+           for (cInventoryorderLine inventoryorderLine : hulpObl) {
+               inventoryorderLine.pResetRst();
+           }
+
+           //Reset status
+           this.statusInt = cWarehouseorder.InventoryBinStatusEnu.New;
+           this.pUpdateStatusInDatabaseBln();
+
+            return  result;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET);
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_bin_via_webservice_failed));
+            return  result;
+        }
+    }
+
 
     public static cInventoryorderBinAdapter gInventoryorderBinAdapter;
     public static cInventoryorderBinAdapter getInventoryorderBinAdapter() {

@@ -73,7 +73,7 @@ public class cInventoryorderLineBarcode {
         return  true;
     }
 
-    public static boolean pTruncateTableBln(){
+   public static boolean pTruncateTableBln(){
         cInventoryorderLineBarcode.getInventoryorderLineBarcodeViewModel().deleteAll();
         return true;
     }

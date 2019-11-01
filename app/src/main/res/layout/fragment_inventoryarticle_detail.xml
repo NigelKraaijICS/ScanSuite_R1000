@@ -26,34 +26,31 @@
     <include layout="@layout/toolbar_subtext_default" />
     <include layout="@layout/default_articleinfo" />
     <include layout="@layout/default_locationinfo" />
-    <TextView
+    <EditText
         android:id="@+id/quantityText"
-        style="@style/quantityText"
+        style="@style/quantityTextInventory"
         app:layout_constraintTop_toBottomOf="@id/locationContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
-    <TextView
-        android:id="@+id/quantityRequiredText"
-        style="@style/quantityRequiredText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/quantityText"
         />
     <androidx.appcompat.widget.AppCompatImageButton
         style="@style/countButton"
         android:id="@+id/imageButtonMinus"
         app:srcCompat="@drawable/ic_remove_black_24dp"
-        app:layout_constraintEnd_toStartOf="@id/numberLeftBarrier"
-        app:layout_constraintTop_toTopOf="@id/quantityText"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonPlus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/quantityText"
         />
 
     <androidx.appcompat.widget.AppCompatImageButton
         style="@style/countButton"
         android:id="@+id/imageButtonPlus"
         app:srcCompat="@drawable/ic_add_black_24dp"
-        app:layout_constraintStart_toEndOf="@id/numberRightBarrier"
-        app:layout_constraintTop_toTopOf="@id/quantityText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonMinus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintTop_toTopOf="@id/imageButtonMinus"
         />
     <androidx.appcompat.widget.AppCompatImageButton
         style="@style/defaultBottomButton"
@@ -62,23 +59,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/numberRightBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="end"
-        app:constraint_referenced_ids="quantityText,quantityRequiredText"/>
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/numberLeftBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="start"
-        app:constraint_referenced_ids="quantityText,quantityRequiredText"/>
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/numberAndButtonBottomBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="quantityRequiredText,imageButtonPlus,imageButtonMinus"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

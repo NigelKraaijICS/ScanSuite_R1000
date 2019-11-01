@@ -149,7 +149,6 @@ public class cShipment {
     }
 
 
-
     //End Region Public Properties
 
     //Region Constructor
@@ -212,7 +211,7 @@ public class cShipment {
 
         for (cShipment shipment : hulpObl) {
             if (shipment.getSourceNoStr().equalsIgnoreCase(pvScannedBarcodeStr) || shipment.getProcessingSequenceStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
-                               return  shipment;
+                return  shipment;
             }
         }
 

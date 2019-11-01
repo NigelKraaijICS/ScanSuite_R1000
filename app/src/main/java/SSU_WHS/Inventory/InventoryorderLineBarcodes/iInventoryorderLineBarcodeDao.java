@@ -10,11 +10,13 @@ import SSU_WHS.General.cDatabase;
 
 @Dao
 public interface iInventoryorderLineBarcodeDao {
-    @Delete
-    void delete(cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity);
+
+    @Delete
+    void delete(cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity);
+
 
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDERLINEBARCODE)
     void deleteAll();

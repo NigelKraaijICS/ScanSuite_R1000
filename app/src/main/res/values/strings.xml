@@ -493,7 +493,7 @@
     <string name="message_workplace_selected">Workplace selected</string>
 
     <!--region Inventory-->
-    <string name="screentitle_inventoryorderselect">Inventory orders</string>
+    <string name="screentitle_inventoryorderselect">Inventory</string>
     <string name="error_get_inventoryorders_failed">Getting inventoryorders from server failed</string>
     <string name="error_get_inventorylines_failed">Getting inventorylines from server failed</string>
     <string name="button_new_inventoryorder">New</string>
@@ -516,7 +516,7 @@
     <string name="message_add_bin_not_allowed">You are not allowed to add a BIN</string>
     <string name="message_bin_could_not_be_added_via_webservice">Bin could not be added via web service</string>
     <string name="message_add_article_now_allowed">Adding article not allowed</string>
-    <string name="message_adding_unkown_article_failed">Adding unkown article failed</string>
+    <string name="message_adding_unkown_article_failed">Adding unknown article failed</string>
     <string name="message_adding_line_failed">Adding line failed</string>
     <string name="message_adding_erp_article_failed">Adding ERP article failed</string>
     <string name="message_add_article_for_this_bin_now_allowed">Article belongs to another BIN, adding lines is not allowed</string>
@@ -525,5 +525,14 @@
     <string name="message_workplace_not_updated">Workplace not updated on server</string>
     <string name="lines">Lines:</string>
     <string name="items">Items</string>
+    <string name="message_bin_close_failed">Closing BIN failed</string>
+    <string name="message_close_bin">Close BIN</string>
+    <string name="message_bin_text_sure">There are no lines in this BIN. Are you sure you want to close it?</string>
+    <string name="message_bin_already_closed">This BIN has already been closed, scan another BIN</string>
+    <string name="message_close_order">Close order</string>
+    <string name="message_close_order_text">You are about to close the order, are you sure?</string>
+    <string name="message_removing_line_failed">Removing line failed</string>
+    <string name="message_reset_line_via_webservice_failed">Resetting line via webservice failed</string>
+    <string name="message_reset_bin_via_webservice_failed">Resetting BIN via webservice failed</string>
     <!--endregion Inventory-->
 </resources>

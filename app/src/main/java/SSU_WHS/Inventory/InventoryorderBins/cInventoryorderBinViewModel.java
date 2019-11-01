@@ -20,6 +20,8 @@ public class cInventoryorderBinViewModel extends AndroidViewModel {
 
     //Region Public Methods
     public void insert(cInventoryorderBinEntity pvInventoryorderBinEntity) {this.Repository.insert(pvInventoryorderBinEntity);}
+    public  Boolean pUpdateStatusBln() {return  this.Repository.pUpdateStatusBln();}
     public void deleteAll() {this.Repository.deleteAll();}
+    public cWebresult  pResetBinViaWebserviceWrs() {return this.Repository.pResetBinViaWebserviceWrs();}
 
 }

@@ -188,6 +188,8 @@ public class cInventoryorder {
 
     public List<cInventoryorderLine> linesObl () {return  cInventoryorderLine.allLinesObl;}
 
+    public List<cInventoryorderBin> binsObl () {return  cInventoryorderBin.allInventoryorderBinsObl;}
+
     public static List<cInventoryorder> allInventoryordersObl;
     public static cInventoryorder currentInventoryOrder;
 
@@ -475,8 +477,21 @@ public class cInventoryorder {
                 jsonObject = myList.get(i);
 
                 cInventoryorderLine inventoryorderLine = new cInventoryorderLine(jsonObject);
-
                 inventoryorderLine.pInsertInDatabaseBln();
+
+                if (! inventoryorderLine.getHandeledTimeStampStr().isEmpty()) {
+
+                  cInventoryorderBin.currentInventoryOrderBin  =   cInventoryorder.currentInventoryOrder.pGetBin(inventoryorderLine.getBinCodeStr());
+                    if ( cInventoryorderBin.currentInventoryOrderBin == null) {
+                        continue;
+                    }
+
+                    cInventoryorderBin.currentInventoryOrderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
+                    cInventoryorderBin.currentInventoryOrderBin.pUpdateStatusInDatabaseBln();
+                    cInventoryorderBin.currentInventoryOrderBin = null;
+                }
+
+
                 continue;
             }
 
@@ -706,6 +721,23 @@ public class cInventoryorder {
         return  true;
     }
 
+    public boolean pCloseBinBln(String pvBinCodeStr) {
+
+        cWebresult webresult;
+        webresult = cInventoryorder.getInventoryorderViewModel().pCloseBinViaWebserviceWrs(pvBinCodeStr);
+        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+
+            cInventoryorderBin.currentInventoryOrderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
+            cInventoryorderBin.currentInventoryOrderBin.pUpdateStatusInDatabaseBln();
+            cInventoryorderBin.currentInventoryOrderBin = null;
+            return true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINCLOSE);
+            return false;
+        }
+    }
+
     public boolean pAddLineBln() {
 
         cWebresult WebResult;
@@ -779,7 +811,6 @@ public class cInventoryorder {
 
         return resultDbl;
     }
-
 
     public Double  pGetCountForBinDbl(String pvBincodeStr) {
 
@@ -954,6 +985,71 @@ public class cInventoryorder {
         }
 
         return  null;
+    }
+
+    public cResult pOrderHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+
+        cWebresult webresult;
+
+        webresult =  cInventoryorder.getInventoryorderViewModel().pHandledViaWebserviceWrs();
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (webresult.getSuccessBln() == false ) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+
+            Long actionLng = Long.valueOf(0);
+
+            if (webresult.getResultLng() < 10 ) {
+                actionLng = webresult.getResultLng();
+            }
+
+            if (webresult.getResultLng() > 100) {
+                actionLng  = (long)(webresult.getResultLng()/100);
+            }
+
+            //Try to convert action long to action enumerate
+            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            result.resultBln = false;
+            result.activityActionEnu = activityActionEnu;
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+            }
+
+            cInventoryorder.currentInventoryOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            return result;
+        }
+
+        return  result;
+
+
     }
 
     //Region Public Methods

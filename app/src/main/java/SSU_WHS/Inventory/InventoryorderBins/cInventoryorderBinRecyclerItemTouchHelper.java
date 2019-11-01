@@ -1,11 +1,14 @@
-package ICS.Environments;
+package SSU_WHS.Inventory.InventoryorderBins;
 
 import android.graphics.Canvas;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.View;
 
-public class cEnvironmentRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
+import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineAdapter;
+
+public class cInventoryorderBinRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
 
     //Region Public Properties
 
@@ -13,13 +16,13 @@ public class cEnvironmentRecyclerItemTouchHelper extends ItemTouchHelper.SimpleC
 
     //Region Private Properties
 
-    private cEnvironmentRecyclerItemTouchHelper.RecyclerItemTouchHelperListener listener;
+    private cInventoryorderBinRecyclerItemTouchHelper.RecyclerItemTouchHelperListener listener;
 
     //End Region Private Properties
 
     //Region Constructor
 
-    public cEnvironmentRecyclerItemTouchHelper(int pvDragDirsInt, int pvSwipeDirsInt, cEnvironmentRecyclerItemTouchHelper.RecyclerItemTouchHelperListener pvListener) {
+    public cInventoryorderBinRecyclerItemTouchHelper(int pvDragDirsInt, int pvSwipeDirsInt, cInventoryorderBinRecyclerItemTouchHelper.RecyclerItemTouchHelperListener pvListener) {
         super(pvDragDirsInt, pvSwipeDirsInt);
         this.listener = pvListener;
     }
@@ -38,7 +41,7 @@ public class cEnvironmentRecyclerItemTouchHelper extends ItemTouchHelper.SimpleC
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if (viewHolder != null) {
-            final View foregroundView = ((cEnvironmentAdapter.EnvironmentViewHolder) viewHolder).viewForeground;
+            final View foregroundView = ((cInventoryorderBinAdapter.InventoryorderBinViewHolder) viewHolder).viewForeground;
 
             getDefaultUIUtil().onSelected(foregroundView);
         }
@@ -48,14 +51,14 @@ public class cEnvironmentRecyclerItemTouchHelper extends ItemTouchHelper.SimpleC
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                 int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((cEnvironmentAdapter.EnvironmentViewHolder) viewHolder).viewForeground;
+        final View foregroundView = ((cInventoryorderBinAdapter.InventoryorderBinViewHolder) viewHolder).viewForeground;
         getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
                 actionState, isCurrentlyActive);
     }
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        final View foregroundView = ((cEnvironmentAdapter.EnvironmentViewHolder) viewHolder).viewForeground;
+        final View foregroundView = ((cInventoryorderBinAdapter.InventoryorderBinViewHolder) viewHolder).viewForeground;
         getDefaultUIUtil().clearView(foregroundView);
     }
 
@@ -63,7 +66,7 @@ public class cEnvironmentRecyclerItemTouchHelper extends ItemTouchHelper.SimpleC
     public void onChildDraw(Canvas c, RecyclerView recyclerView,
                             RecyclerView.ViewHolder viewHolder, float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((cEnvironmentAdapter.EnvironmentViewHolder) viewHolder).viewForeground;
+        final View foregroundView = ((cInventoryorderBinAdapter.InventoryorderBinViewHolder) viewHolder).viewForeground;
 
         getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                 actionState, isCurrentlyActive);
@@ -71,7 +74,7 @@ public class cEnvironmentRecyclerItemTouchHelper extends ItemTouchHelper.SimpleC
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        listener.onSwiped(viewHolder, direction, viewHolder.getAdapterPosition());
+        this.listener.onSwiped(viewHolder, direction, viewHolder.getAdapterPosition());
     }
 
     @Override

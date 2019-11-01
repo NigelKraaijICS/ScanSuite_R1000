@@ -587,9 +587,9 @@ public class cSetting {
         return Setting.valueStr;
     }
 
-    public static boolean PICK_SELECTEREN_BARCODE(){
+    public static boolean INV_AMOUNT_MANUAL(){
 
-        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SELECTEREN_BARCODE);
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_AMOUNT_MANUAL);
         if (Setting == null) {
             return  false;
         }
@@ -646,6 +646,15 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean PICK_SELECTEREN_BARCODE(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SELECTEREN_BARCODE);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
 
 
 

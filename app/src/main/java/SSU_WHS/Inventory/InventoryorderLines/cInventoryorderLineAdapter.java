@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -23,15 +25,15 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
     public class InventoryorderLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewArticle;
-        private TextView textViewVendorItemNo;
+        private TextView textViewDescription;
         private TextView textViewCounted;
-        public LinearLayout inventoryorderBinItemLinearLayout;
+
+        public RelativeLayout viewBackground;
+        public ConstraintLayout viewForeground;
 
         public InventoryorderLineViewHolder(View pvItemView) {
             super(pvItemView);
-            this.inventoryorderBinItemLinearLayout = pvItemView.findViewById(R.id.inventoryorderLineItemLinearLayout);
-
-            this.textViewArticle = pvItemView.findViewById(R.id.textViewArticle);
+                   this.textViewArticle = pvItemView.findViewById(R.id.textViewArticle);
             this.textViewArticle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewArticle.setSingleLine(true);
             this.textViewArticle.setMarqueeRepeatLimit(5);
@@ -42,25 +44,27 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
                 }
             },1500);
 
-            this.textViewVendorItemNo = pvItemView.findViewById(R.id.textViewVendorItemNo);
-            this.textViewVendorItemNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewVendorItemNo.setSingleLine(true);
-            this.textViewVendorItemNo.setMarqueeRepeatLimit(5);
-            this.textViewVendorItemNo.postDelayed(new Runnable() {
+            this.textViewDescription = pvItemView.findViewById(R.id.textViewDescription);
+            this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDescription.setSingleLine(true);
+            this.textViewDescription.setMarqueeRepeatLimit(5);
+            this.textViewDescription.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    textViewVendorItemNo.setSelected(true);
+                    textViewDescription.setSelected(true);
                 }
             },1500);
 
             this.textViewCounted = pvItemView.findViewById(R.id.textViewCounted);
+            this.viewBackground = pvItemView.findViewById(R.id.view_background);
+            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
         }
         //End Region Public Properties
     }
 
     //Region Private Properties
     private final LayoutInflater LayoutInflaterObject;
-    private List<cInventoryorderLine> localInventoryorderLineObl;
+    private static List<cInventoryorderLine> localInventoryorderLineObl;
     private RecyclerView thisRecyclerView;
 
     //End Region Private Properties
@@ -94,20 +98,9 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
         final cInventoryorderLine inventoryorderLine = localInventoryorderLineObl.get(pvPositionInt);
 
         pvHolder.textViewArticle.setText(inventoryorderLine.getItemNoStr() + " " + inventoryorderLine.getVariantCodeStr());
-        pvHolder.textViewVendorItemNo.setText(inventoryorderLine.getDescriptionStr());
-        pvHolder.textViewVendorItemNo.setVisibility(View.VISIBLE);
+        pvHolder.textViewDescription.setText(inventoryorderLine.getDescriptionStr());
+        pvHolder.textViewDescription.setVisibility(View.VISIBLE);
         pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(inventoryorderLine.getQuantityHandledDbl()));
-
-        pvHolder.inventoryorderBinItemLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cAppExtension.context instanceof InventoryorderBinActivity) {
-                        cInventoryorderLine.currentInventoryOrderLine = inventoryorderLine;
-                        InventoryorderBinActivity.pLineSelected();
-                }
-            }
-        });
-
     }
 
     @Override
@@ -121,25 +114,37 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
 
     //Region Public Methods
     public void pFillData(List<cInventoryorderLine> pvDataObl) {
-        localInventoryorderLineObl = pvDataObl;
+        cInventoryorderLineAdapter.localInventoryorderLineObl = pvDataObl;
         notifyDataSetChanged();
     }
 
     public void pSetFilter(String pvQueryTextStr) {
-        localInventoryorderLineObl = this.mGetFilteredListObl(pvQueryTextStr);
+        this. localInventoryorderLineObl = this.mGetFilteredListObl(pvQueryTextStr);
         notifyDataSetChanged();
     }
+
+    public  void pRemoveItem(int pvPositionInt) {
+        cInventoryorderLineAdapter.localInventoryorderLineObl.remove(cInventoryorderLine.currentInventoryOrderLine);
+        notifyItemRemoved(pvPositionInt);
+    }
+    public  void pRestoreItem(int pvPositionInt) {
+        cInventoryorderLineAdapter.localInventoryorderLineObl.add(pvPositionInt, cInventoryorderLine.currentInventoryOrderLine);
+
+        notifyItemInserted(pvPositionInt);
+    }
+
 
     //End Region Public Methods
 
 
     //Region Private Methods
+
     private List<cInventoryorderLine> mGetFilteredListObl(String pvQueryTextStr) {
 
         pvQueryTextStr = pvQueryTextStr.toLowerCase();
         List<cInventoryorderLine> resultObl = new ArrayList<>();
 
-        if (localInventoryorderLineObl == null || localInventoryorderLineObl.size() == 0) {
+        if (this.localInventoryorderLineObl == null || this.localInventoryorderLineObl.size() == 0) {
             return resultObl;
         }
 
@@ -153,5 +158,8 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
         }
         return resultObl;
     }
+
+
+
     //End Region Private Methods
 }

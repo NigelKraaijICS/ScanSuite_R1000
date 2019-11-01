@@ -961,8 +961,6 @@ public class cPickorder{
 
                 cPickorderLinePackAndShip.allPackAndShipLinesObl.add(pickorderLinePackAndShip);
 
-
-
                 cShipment shipment = cShipment.pGetShipment(pickorderLinePackAndShip.getSourceNoStr());
                 if (shipment == null ) {
                     cShipment shipmentToAdd = new cShipment(pickorderLinePackAndShip.getSourceNoStr());

@@ -35,7 +35,6 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     private ConstraintLayout addBinContainer;
     private TextView textViewAddBinHeader;
     private TextView textViewAddBinText;
-    private ImageView addBinImageView;
     private  static EditText editTextAddBin;
     private static Button addBinButton;
     private Button cancelButton;
@@ -44,7 +43,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
 
     //Region Constructor
     public AddBinFragment() {
-        // Required empty public constructor
+
     }
     //End Region Constructor
 
@@ -66,7 +65,6 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public void onDestroy() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }

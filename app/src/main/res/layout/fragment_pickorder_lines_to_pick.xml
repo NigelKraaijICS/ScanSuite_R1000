@@ -15,25 +15,25 @@
         style="@style/defaultRecyclerView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/currentLocationView"
+        app:layout_constraintBottom_toTopOf="@id/closeOrderView"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/pillButton"
-        android:id="@+id/currentLocationView"
+        android:id="@+id/closeOrderView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:clickable="true"
         android:focusable="true"
         >
         <TextView
-            android:id="@+id/textViewImAt"
+            android:id="@+id/textViewCloseOrder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/im_at"
             android:textSize="@dimen/textsize_big"
             android:textColor="@color/colorPrimary"
-            app:layout_constraintStart_toEndOf="@id/imageLocationHere"
-            app:layout_constraintTop_toTopOf="@id/imageLocationHere"
+            app:layout_constraintStart_toEndOf="@id/imageCloseOrder"
+            app:layout_constraintTop_toTopOf="@id/imageCloseOrder"
             android:paddingRight="@dimen/default_double_padding"
             android:paddingEnd="@dimen/default_double_padding"/>
         <TextView
@@ -42,8 +42,8 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize_big"
             android:textColor="@color/colorPrimary"
-            app:layout_constraintStart_toStartOf="@id/textViewImAt"
-            app:layout_constraintTop_toBottomOf="@id/textViewImAt"
+            app:layout_constraintStart_toStartOf="@id/textViewCloseOrder"
+            app:layout_constraintTop_toBottomOf="@id/textViewCloseOrder"
             android:paddingRight="@dimen/default_double_padding"
             android:paddingEnd="@dimen/default_double_padding"/>
         <androidx.appcompat.widget.AppCompatImageView
@@ -51,7 +51,7 @@
             android:tint="@color/colorPrimary"
             android:padding="@dimen/default_padding"
             android:layout_margin="@dimen/default_margin"
-            android:id="@+id/imageLocationHere"
+            android:id="@+id/imageCloseOrder"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:srcCompat="@drawable/ic_mapmarker_check_black_24dp"

@@ -756,7 +756,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             SortorderSortActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
             //Add or update line barcode
-            cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln();
+            cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln(pvAmountDbl);
 
             //Update orderline info (quantity, timestamp, localstatus)
             cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln();

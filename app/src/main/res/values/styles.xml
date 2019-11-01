@@ -234,6 +234,18 @@
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_marginLeft">@dimen/default_margin</item>
     </style>
+    <style name="inventoryorderRecyclerOrdernumberText">
+        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+    </style>
+    <style name="inventoryRecyclerDescriptionText">
+        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textColor">@color/colorTextLighter</item>
+    </style>
     <style name="pickorderRecyclerUser">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -534,6 +546,16 @@
         <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+    <style name="quantityTextInventory">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_ludicrous</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
     <style name="quantityRequiredText">
         <item name="android:layout_height">@dimen/textsize_huge</item>
@@ -840,6 +862,13 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="inventoryRecyclerDescrptionText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textColor">@color/colorTextLightest</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
     </style>
     <style name="createInventoryDocument">
         <item name="android:layout_margin">@dimen/default_double_margin</item>

@@ -61,6 +61,11 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_INVENTORYBARCODECREATE = "p_InventoryBarcodeCreateJsonStr";
     public static String WEBMETHOD_INVENTORYLINECREATE = "p_InventoryRegelCreateJsonStr";
     public static String WEBMETHOD_INVENTORYLINESAVE = "p_InventoryRegelTellingOpslaanJsonStr";
+    public static String WEBMETHOD_INVENTORYLINERESET = "p_InventoryRegelResetJsonStr";
+    public static String WEBMETHOD_INVENTORYBINCLOSE = "p_InventoryOrderBinCloseJsonStr";
+    public static String WEBMETHOD_INVENTORYHANDLED = "p_InventoryOrderHandledJsonStr";
+    public static String WEBMETHOD_INVENTORYBINRESET = "p_InventoryRegelResetJsonStr";
+
 
     //endregion Methods
 
