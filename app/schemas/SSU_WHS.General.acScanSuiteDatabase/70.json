@@ -1,0 +1,2081 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 70,
+    "identityHash": "3e3ebb5f186aa6c3d30eaac1c8746982",
+    "entities": [
+      {
+        "tableName": "ScannerLogon",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`FixedScannerBranch` TEXT, `ScannerDescription` TEXT NOT NULL, `RequiredScannerVersion` TEXT, `ApplicationEnvironment` TEXT, `Languages` TEXT, `RequiredScannerConfiguration` TEXT, `ReapplyScannerConfiguration` TEXT, `VersionConfigAppCurrentScanner` TEXT, `VersionConfigAppRequiredScanner` TEXT, `ColorSet` TEXT, PRIMARY KEY(`ScannerDescription`))",
+        "fields": [
+          {
+            "fieldPath": "fixedscannerbranch",
+            "columnName": "FixedScannerBranch",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "scannerdescription",
+            "columnName": "ScannerDescription",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "requiredscannerversion",
+            "columnName": "RequiredScannerVersion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "applicationenvironment",
+            "columnName": "ApplicationEnvironment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "languages",
+            "columnName": "Languages",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "requiredscannerconfiguration",
+            "columnName": "RequiredScannerConfiguration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reapplyscannerconfiguration",
+            "columnName": "ReapplyScannerConfiguration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "versionconfigappcurrentscanner",
+            "columnName": "VersionConfigAppCurrentScanner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "versionconfigapprequiredscanner",
+            "columnName": "VersionConfigAppRequiredScanner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "colorset",
+            "columnName": "ColorSet",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ScannerDescription"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Workplaces",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Werkplek` TEXT NOT NULL, `Omschrijving` TEXT, PRIMARY KEY(`Werkplek`))",
+        "fields": [
+          {
+            "fieldPath": "workplace",
+            "columnName": "Werkplek",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Omschrijving",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Werkplek"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "BarcodeLayouts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Barcodelayout` TEXT NOT NULL, `Layout` TEXT NOT NULL, `Volgorde` TEXT, `Importbestand` TEXT, PRIMARY KEY(`Barcodelayout`, `Layout`))",
+        "fields": [
+          {
+            "fieldPath": "barcodelayout",
+            "columnName": "Barcodelayout",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "layoutvalue",
+            "columnName": "Layout",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortorder",
+            "columnName": "Volgorde",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "importfile",
+            "columnName": "Importbestand",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Barcodelayout",
+            "Layout"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Authorisations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Autorisatie` TEXT NOT NULL, `Order` INTEGER, `License` TEXT, PRIMARY KEY(`Autorisatie`))",
+        "fields": [
+          {
+            "fieldPath": "authorisation",
+            "columnName": "Autorisatie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "Order",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "license",
+            "columnName": "License",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Autorisatie"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Gebruikersnaam` TEXT NOT NULL, `Naam` TEXT, `Importbestand` TEXT, PRIMARY KEY(`Gebruikersnaam`))",
+        "fields": [
+          {
+            "fieldPath": "username",
+            "columnName": "Gebruikersnaam",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "Naam",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "importfile",
+            "columnName": "Importbestand",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Gebruikersnaam"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Branches",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Vestiging` TEXT NOT NULL, `Vestigingtype` TEXT, `Name` TEXT, `BinMandatory` TEXT, `Pick_default_reject_reden` TEXT, `Pick_default_storage_bin` TEXT, `Receive_default_bin` TEXT, `Retour_default_bin` TEXT, `Move_default_bin` TEXT, `Ship_default_bin` TEXT, PRIMARY KEY(`Vestiging`))",
+        "fields": [
+          {
+            "fieldPath": "branch",
+            "columnName": "Vestiging",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "branchtype",
+            "columnName": "Vestigingtype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "branchname",
+            "columnName": "Name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "binmandatory",
+            "columnName": "BinMandatory",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickdefaultrejectreason",
+            "columnName": "Pick_default_reject_reden",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickdefaultstoragebin",
+            "columnName": "Pick_default_storage_bin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "receivedefaultbin",
+            "columnName": "Receive_default_bin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "returndefaultbin",
+            "columnName": "Retour_default_bin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "movedefaultbin",
+            "columnName": "Move_default_bin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shipdefaultbin",
+            "columnName": "Ship_default_bin",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Vestiging"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Settings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Instelling` TEXT NOT NULL, `Waarde` TEXT, PRIMARY KEY(`Instelling`))",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "Instelling",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "Waarde",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Instelling"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Pickorders",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Ordernumber` TEXT NOT NULL, `Ordertype` TEXT, `Number_of_Bins` TEXT, `QuantityTotal` TEXT, `SingleArticleOrders` TEXT, `Pick_Reject_during_pick` TEXT, `Pick_Reject_during_sort` TEXT, `Pick_Sales_ask_workplace` TEXT, `Pick_Transfer_ask_workplace` TEXT, `Pick_Barcode_check` TEXT, `Pick_Pick_PV_VKO_each_piece` TEXT, `Pick_Pick_to_container` TEXT, `Pick_Pick_to_container_type` TEXT, `Pick_Print_addresslabel` TEXT, `Pick_Print_contentlabel` TEXT, `Pick_with_picture` TEXT, `Pick_with_picture_auto_open` TEXT, `Pick_with_picture_prefetch` TEXT, `Pick_activity_bin_required` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `StatusPrintAtStart` TEXT, `ExternalReference` TEXT, `Workplace` TEXT, `StockOwner` TEXT, `RequestedEndDateTime` TEXT, `SourceDocument` TEXT, `Document` TEXT, `DocumentType` TEXT, `Document2` TEXT, `DocumentType2` TEXT, `Webservice_timeout_erp_in_s` TEXT, `Currentlocation` TEXT, `Interface_result_method` TEXT, `Sorting` TEXT, `IsProcessingOrParked` INTEGER, PRIMARY KEY(`Ordernumber`))",
+        "fields": [
+          {
+            "fieldPath": "ordernumber",
+            "columnName": "Ordernumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ordertype",
+            "columnName": "Ordertype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "numberofBins",
+            "columnName": "Number_of_Bins",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantitytotal",
+            "columnName": "QuantityTotal",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "singleArticleOrders",
+            "columnName": "SingleArticleOrders",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickRejectduringpick",
+            "columnName": "Pick_Reject_during_pick",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickRejectduringsort",
+            "columnName": "Pick_Reject_during_sort",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickSalesaskworkplace",
+            "columnName": "Pick_Sales_ask_workplace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickTransferaskworkplace",
+            "columnName": "Pick_Transfer_ask_workplace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickBarcodecheck",
+            "columnName": "Pick_Barcode_check",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPickPVVKOeachpiece",
+            "columnName": "Pick_Pick_PV_VKO_each_piece",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPicktocontainer",
+            "columnName": "Pick_Pick_to_container",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPicktocontainertype",
+            "columnName": "Pick_Pick_to_container_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPrintaddresslabel",
+            "columnName": "Pick_Print_addresslabel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPrintcontentlabel",
+            "columnName": "Pick_Print_contentlabel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickWithPicture",
+            "columnName": "Pick_with_picture",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickWithPictureAutoOpen",
+            "columnName": "Pick_with_picture_auto_open",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickWithPicturePrefetch",
+            "columnName": "Pick_with_picture_prefetch",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickActivityBinRequired",
+            "columnName": "Pick_activity_bin_required",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "assignedUserId",
+            "columnName": "AssignedUserId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentUserId",
+            "columnName": "CurrentUserId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "statusPrintAtStart",
+            "columnName": "StatusPrintAtStart",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "externalReference",
+            "columnName": "ExternalReference",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "workplace",
+            "columnName": "Workplace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stockOwner",
+            "columnName": "StockOwner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "requestedEndDateTime",
+            "columnName": "RequestedEndDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sourceDocument",
+            "columnName": "SourceDocument",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "document",
+            "columnName": "Document",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "documentType",
+            "columnName": "DocumentType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "document2",
+            "columnName": "Document2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "documentType2",
+            "columnName": "DocumentType2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "webservicetimeouterpins",
+            "columnName": "Webservice_timeout_erp_in_s",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentlocation",
+            "columnName": "Currentlocation",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "interfaceresultmethod",
+            "columnName": "Interface_result_method",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sorting",
+            "columnName": "Sorting",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isprocessingorparked",
+            "columnName": "IsProcessingOrParked",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Ordernumber"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Pickorderlines",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER, `ItemNo` TEXT, `VariantCode` TEXT, `Description` TEXT, `Description2` TEXT, `BinCode` TEXT, `Container` TEXT, `ContainerType` TEXT, `ContainerInput` TEXT, `ContainerHandled` TEXT, `Quantity` REAL, `QuantityHandled` REAL, `QuantityRejected` REAL, `SourceNo` TEXT, `DestinationNo` TEXT, `IsPartOfMultiLineOrder` TEXT, `ShippingAdvice` TEXT, `ProcessingSequence` TEXT, `StoreSourceOpdracht` TEXT, `StorageBinCode` TEXT, `VendorItemNo` TEXT, `VendorItemDescription` TEXT, `Component10` TEXT, `Brand` TEXT, `PrintDocuments` TEXT, `Status` INTEGER, `StatusShipping` INTEGER, `StatusPacking` INTEGER, `LineNoTake` INTEGER NOT NULL, `QuantityTaken` REAL NOT NULL, `TakenTimestamp` TEXT, `Localstatus` INTEGER NOT NULL, `LocalSortLocation` TEXT, `ExtraField1` TEXT, `ExtraField2` TEXT, `ExtraField3` TEXT, `ExtraField4` TEXT, `ExtraField5` TEXT, `ExtraField6` TEXT, `ExtraField7` TEXT, `ExtraField8` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "recordid",
+            "columnName": "recordid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lineno",
+            "columnName": "LineNo",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemno",
+            "columnName": "ItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "variantcode",
+            "columnName": "VariantCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description2",
+            "columnName": "Description2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bincode",
+            "columnName": "BinCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "container",
+            "columnName": "Container",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "containertype",
+            "columnName": "ContainerType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "containerinput",
+            "columnName": "ContainerInput",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "containerhandled",
+            "columnName": "ContainerHandled",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "Quantity",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityhandled",
+            "columnName": "QuantityHandled",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityrejected",
+            "columnName": "QuantityRejected",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sourceno",
+            "columnName": "SourceNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "destinationno",
+            "columnName": "DestinationNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ispartofmultilineorder",
+            "columnName": "IsPartOfMultiLineOrder",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shippingadvice",
+            "columnName": "ShippingAdvice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "processingsequence",
+            "columnName": "ProcessingSequence",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storesourceopdracht",
+            "columnName": "StoreSourceOpdracht",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storagebincode",
+            "columnName": "StorageBinCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vendoritemno",
+            "columnName": "VendorItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vendoritemdescription",
+            "columnName": "VendorItemDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "component10",
+            "columnName": "Component10",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "brand",
+            "columnName": "Brand",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "printdocuments",
+            "columnName": "PrintDocuments",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "statusShipping",
+            "columnName": "StatusShipping",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "statusPacking",
+            "columnName": "StatusPacking",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "linenotake",
+            "columnName": "LineNoTake",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantitytaken",
+            "columnName": "QuantityTaken",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "takentimestamp",
+            "columnName": "TakenTimestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localstatus",
+            "columnName": "Localstatus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localsortlocation",
+            "columnName": "LocalSortLocation",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield1",
+            "columnName": "ExtraField1",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield2",
+            "columnName": "ExtraField2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield3",
+            "columnName": "ExtraField3",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield4",
+            "columnName": "ExtraField4",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield5",
+            "columnName": "ExtraField5",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield6",
+            "columnName": "ExtraField6",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield7",
+            "columnName": "ExtraField7",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield8",
+            "columnName": "ExtraField8",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "recordid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "WarehouseLocations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`WarehouseLocation` TEXT NOT NULL, `Zone` TEXT, `BinType` TEXT, `UseForStorage` TEXT, `UseForReturnSales` TEXT, `Description` TEXT, PRIMARY KEY(`WarehouseLocation`))",
+        "fields": [
+          {
+            "fieldPath": "warehouselocation",
+            "columnName": "WarehouseLocation",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zone",
+            "columnName": "Zone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bintype",
+            "columnName": "BinType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "useforstorage",
+            "columnName": "UseForStorage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "useforreturnsales",
+            "columnName": "UseForReturnSales",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "WarehouseLocation"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PickorderLineBarcode",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`LineNo` TEXT NOT NULL, `Barcode` TEXT NOT NULL, `Quantity` TEXT, `IsManual` TEXT, PRIMARY KEY(`LineNo`, `Barcode`))",
+        "fields": [
+          {
+            "fieldPath": "lineNoStr",
+            "columnName": "LineNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "barcodeStr",
+            "columnName": "Barcode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantityHandledStr",
+            "columnName": "Quantity",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isManualStr",
+            "columnName": "IsManual",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "LineNo",
+            "Barcode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticleImage",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Itemno` TEXT NOT NULL, `Variantcode` TEXT NOT NULL, `Image` TEXT, `Datatimestamp` TEXT, PRIMARY KEY(`Itemno`, `Variantcode`))",
+        "fields": [
+          {
+            "fieldPath": "itemno",
+            "columnName": "Itemno",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "variantcode",
+            "columnName": "Variantcode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "Image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "datatimestamp",
+            "columnName": "Datatimestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Itemno",
+            "Variantcode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PickorderBarcode",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Barcode` TEXT NOT NULL, `BarCodeType` TEXT NOT NULL, `IsUniqueBarcode` TEXT, `ItemNo` TEXT NOT NULL, `VariantCode` TEXT NOT NULL, `QtyPerUnitOfMeasure` TEXT, `QuantityHandled` TEXT, PRIMARY KEY(`Barcode`, `BarCodeType`, `ItemNo`, `VariantCode`))",
+        "fields": [
+          {
+            "fieldPath": "barcode",
+            "columnName": "Barcode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "barcodetype",
+            "columnName": "BarCodeType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isuniquebarcode",
+            "columnName": "IsUniqueBarcode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemno",
+            "columnName": "ItemNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "variantcode",
+            "columnName": "VariantCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantityperunitofmeasure",
+            "columnName": "QtyPerUnitOfMeasure",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityhandled",
+            "columnName": "QuantityHandled",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Barcode",
+            "BarCodeType",
+            "ItemNo",
+            "VariantCode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Comment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`CommentLineNo` INTEGER NOT NULL, `CommentCode` TEXT, `CommentText` TEXT, PRIMARY KEY(`CommentLineNo`))",
+        "fields": [
+          {
+            "fieldPath": "commentLineNoLng",
+            "columnName": "CommentLineNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "commentcodeStr",
+            "columnName": "CommentCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "commentTextStr",
+            "columnName": "CommentText",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "CommentLineNo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "SalesOrderPackingTable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`SalesOrder` TEXT NOT NULL, `Packingtable` TEXT NOT NULL, PRIMARY KEY(`SalesOrder`))",
+        "fields": [
+          {
+            "fieldPath": "salesorder",
+            "columnName": "SalesOrder",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packingtable",
+            "columnName": "Packingtable",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "SalesOrder"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PickorderAddress",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Adrescode` TEXT NOT NULL, `Naam` TEXT, `Naamtoevoeging` TEXT, `Adres` TEXT, `Adrestoevoeging` TEXT, `Straat` TEXT, `Huisnummer` TEXT, `Huisnummertoevoeging` TEXT, `Postcode` TEXT, `Plaats` TEXT, `Land` TEXT, PRIMARY KEY(`Adrescode`))",
+        "fields": [
+          {
+            "fieldPath": "addrescode",
+            "columnName": "Adrescode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "Naam",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nameAddition",
+            "columnName": "Naamtoevoeging",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "Adres",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "addressAddition",
+            "columnName": "Adrestoevoeging",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "street",
+            "columnName": "Straat",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "addressNumber",
+            "columnName": "Huisnummer",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "addressNumberAddition",
+            "columnName": "Huisnummertoevoeging",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "zipcode",
+            "columnName": "Postcode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "city",
+            "columnName": "Plaats",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "Land",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Adrescode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ShippingAgents",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Expediteur` TEXT NOT NULL, `Omschrijving` TEXT, `Importbestand` TEXT, PRIMARY KEY(`Expediteur`))",
+        "fields": [
+          {
+            "fieldPath": "shippingagent",
+            "columnName": "Expediteur",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Omschrijving",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "importfile",
+            "columnName": "Importbestand",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Expediteur"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ShippingAgentServices",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Expediteur` TEXT NOT NULL, `Service` TEXT NOT NULL, `Omschrijving` TEXT, `ServiceCountries` TEXT, PRIMARY KEY(`Expediteur`, `Service`))",
+        "fields": [
+          {
+            "fieldPath": "shippingagent",
+            "columnName": "Expediteur",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "service",
+            "columnName": "Service",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Omschrijving",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "servicecountries",
+            "columnName": "ServiceCountries",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Expediteur",
+            "Service"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ShippingAgentServiceShippingUnits",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Expediteur` TEXT NOT NULL, `Service` TEXT NOT NULL, `Verzendeenheid` TEXT NOT NULL, `Omschrijving` TEXT, `DefaultWeightInG` TEXT, `Containersoort` TEXT, `Verzendmethode` INTEGER, PRIMARY KEY(`Expediteur`, `Service`, `Verzendeenheid`))",
+        "fields": [
+          {
+            "fieldPath": "shippingagent",
+            "columnName": "Expediteur",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "service",
+            "columnName": "Service",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shippingunit",
+            "columnName": "Verzendeenheid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Omschrijving",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "defaultweightingrams",
+            "columnName": "DefaultWeightInG",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "containertype",
+            "columnName": "Containersoort",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shippingunitquantityused",
+            "columnName": "Verzendmethode",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Expediteur",
+            "Service",
+            "Verzendeenheid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ShippingAgentServiceShipMethods",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Expediteur` TEXT NOT NULL, `Service` TEXT NOT NULL, `Verzendmethode` TEXT NOT NULL, `Omschrijving` TEXT, `ValueType` TEXT, `DefaultValue` TEXT, `EnumerationValues` TEXT, PRIMARY KEY(`Expediteur`, `Service`, `Verzendmethode`))",
+        "fields": [
+          {
+            "fieldPath": "shippingagent",
+            "columnName": "Expediteur",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "service",
+            "columnName": "Service",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shippingmethod",
+            "columnName": "Verzendmethode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Omschrijving",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "valuetype",
+            "columnName": "ValueType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "defaultvalue",
+            "columnName": "DefaultValue",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "enumerationvalues",
+            "columnName": "EnumerationValues",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Expediteur",
+            "Service",
+            "Verzendmethode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PickorderShipMethods",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`SourceNo` TEXT NOT NULL, `ShippingMethodCode` TEXT, `ShippingMethodValue` TEXT, PRIMARY KEY(`SourceNo`))",
+        "fields": [
+          {
+            "fieldPath": "sourceno",
+            "columnName": "SourceNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shipmethodcode",
+            "columnName": "ShippingMethodCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shipmethodvalue",
+            "columnName": "ShippingMethodValue",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "SourceNo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PickorderShipPackages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`SourceNo` TEXT NOT NULL, `ShippingAgentCode` TEXT, `ShippingAgentServiceCode` TEXT, `PackageType` TEXT, `PackageSequenceNumber` TEXT, PRIMARY KEY(`SourceNo`))",
+        "fields": [
+          {
+            "fieldPath": "sourceno",
+            "columnName": "SourceNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shipagentcode",
+            "columnName": "ShippingAgentCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shipagentservicecode",
+            "columnName": "ShippingAgentServiceCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "packagetype",
+            "columnName": "PackageType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "packagesequencenumber",
+            "columnName": "PackageSequenceNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "SourceNo"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ItemProperties",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Property` TEXT NOT NULL, `Layout` TEXT, `Omschrijving` TEXT, `IsUnique` INTEGER, `Uniqueness` TEXT, `RememberValue` INTEGER, `ValueType` TEXT, PRIMARY KEY(`Property`))",
+        "fields": [
+          {
+            "fieldPath": "property",
+            "columnName": "Property",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "layout",
+            "columnName": "Layout",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "omschrijving",
+            "columnName": "Omschrijving",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isUnique",
+            "columnName": "IsUnique",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uniqueness",
+            "columnName": "Uniqueness",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rememberValue",
+            "columnName": "RememberValue",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "valueType",
+            "columnName": "ValueType",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Property"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PickorderLinePackAndShip",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER, `ShowOnTerminal` TEXT, `Status` INTEGER NOT NULL, `SourceNo` TEXT, `DestinationNo` TEXT, `StoreSourceOpdracht` TEXT, `DeliveryAddressType` TEXT, `DeliveryAddressCode` TEXT, `ProcessingSequence` TEXT, `StatusShipping` INTEGER NOT NULL, `StatusPacking` INTEGER NOT NULL, `ShippingAgentCode` TEXT, `ShippingAgentServiceCode` TEXT, `ActualShippingAgentCode` TEXT, `ActualShippingAgentServiceCode` TEXT, `ItemNo` TEXT, `VariantCode` TEXT, `Description` TEXT, `Description2` TEXT, `VendorItemNo` TEXT, `VendorItemDescription` TEXT, `Component10` TEXT, `Quantity` REAL, `QuantityHandled` REAL, `LocalStatus` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "recordid",
+            "columnName": "recordid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lineno",
+            "columnName": "LineNo",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "showonterminal",
+            "columnName": "ShowOnTerminal",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceno",
+            "columnName": "SourceNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "destinationno",
+            "columnName": "DestinationNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storesourceno",
+            "columnName": "StoreSourceOpdracht",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deliveryaddresstype",
+            "columnName": "DeliveryAddressType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deliveryaddresscode",
+            "columnName": "DeliveryAddressCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "processingsequence",
+            "columnName": "ProcessingSequence",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "statusshipping",
+            "columnName": "StatusShipping",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statuspacking",
+            "columnName": "StatusPacking",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shippingagentcode",
+            "columnName": "ShippingAgentCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shippingagentservicecode",
+            "columnName": "ShippingAgentServiceCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actualshippingagentcode",
+            "columnName": "ActualShippingAgentCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actualshippingagentservicecode",
+            "columnName": "ActualShippingAgentServiceCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemno",
+            "columnName": "ItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "variantcode",
+            "columnName": "VariantCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description2",
+            "columnName": "Description2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vendoritemno",
+            "columnName": "VendorItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vendoritemdescription",
+            "columnName": "VendorItemDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "component10",
+            "columnName": "Component10",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "Quantity",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityhandled",
+            "columnName": "QuantityHandled",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localstatus",
+            "columnName": "LocalStatus",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "recordid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "InventoryOrder",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `Aantal_bins` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `Inv_auto_close_bin` TEXT, `Inv_precount` TEXT, `Inv_Amount_manual` TEXT, `Inv_barcode_check` TEXT, `Inv_add_extra_bin` TEXT, `ExternalReference` TEXT, `Workplace` TEXT, `StockOwner` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Webservice_timeout_erp_in_s` TEXT, `Interface_result_method` TEXT, `IsProcessingOrParked` INTEGER, PRIMARY KEY(`Opdrachtnummer`))",
+        "fields": [
+          {
+            "fieldPath": "ordernumber",
+            "columnName": "Opdrachtnummer",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ordertype",
+            "columnName": "Opdrachttype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "numberofBins",
+            "columnName": "Aantal_bins",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "assignedUserId",
+            "columnName": "AssignedUserId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentUserId",
+            "columnName": "CurrentUserId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "invAutoCloseBin",
+            "columnName": "Inv_auto_close_bin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "invPrecount",
+            "columnName": "Inv_precount",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "invAmountManual",
+            "columnName": "Inv_Amount_manual",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "invBarcodeCheck",
+            "columnName": "Inv_barcode_check",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "invAddExtraBin",
+            "columnName": "Inv_add_extra_bin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "externalReference",
+            "columnName": "ExternalReference",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "workplace",
+            "columnName": "Workplace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stockOwner",
+            "columnName": "StockOwner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sourceDocument",
+            "columnName": "SourceDocument",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "document",
+            "columnName": "Document",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "document2",
+            "columnName": "Document2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "webservicetimeouterpins",
+            "columnName": "Webservice_timeout_erp_in_s",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "interfaceresultmethod",
+            "columnName": "Interface_result_method",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isprocessingorparked",
+            "columnName": "IsProcessingOrParked",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Opdrachtnummer"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "InventoryOrderBin",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`BinCode` TEXT NOT NULL, `Lines` INTEGER NOT NULL, `HandledTimestamp` TEXT, `Status` INTEGER NOT NULL, `SortingSequenceNo` INTEGER NOT NULL, PRIMARY KEY(`BinCode`))",
+        "fields": [
+          {
+            "fieldPath": "bincode",
+            "columnName": "BinCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lines",
+            "columnName": "Lines",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "handledTimeStamp",
+            "columnName": "HandledTimestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortingSequenceNo",
+            "columnName": "SortingSequenceNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "BinCode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "InventoryOrderLines",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER NOT NULL, `ItemNo` TEXT, `VariantCode` TEXT, `Itemsoort` TEXT, `Description` TEXT, `Description2` TEXT, `BinCode` TEXT, `Quantity` REAL, `VendorItemNo` TEXT, `VendorItemDescription` TEXT, `SortingSequenceNo` INTEGER NOT NULL, `Status` INTEGER NOT NULL, `SourceType` INTEGER NOT NULL, `HandledTimestamp` TEXT, `QuantityHandled` REAL, `QuantityHandledAllScanners` REAL, `ExtraField1` TEXT, `ExtraField2` TEXT, `ExtraField3` TEXT, `ExtraField4` TEXT, `ExtraField5` TEXT, `ExtraField6` TEXT, `ExtraField7` TEXT, `ExtraField8` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "recordid",
+            "columnName": "recordid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lineno",
+            "columnName": "LineNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemno",
+            "columnName": "ItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "variantcode",
+            "columnName": "VariantCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemtype",
+            "columnName": "Itemsoort",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description2",
+            "columnName": "Description2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bincode",
+            "columnName": "BinCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "Quantity",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vendoritemno",
+            "columnName": "VendorItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "vendoritemdescription",
+            "columnName": "VendorItemDescription",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sortingsequenceno",
+            "columnName": "SortingSequenceNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourcetype",
+            "columnName": "SourceType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "handledtimestamp",
+            "columnName": "HandledTimestamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityhandled",
+            "columnName": "QuantityHandled",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityhandledAllScanners",
+            "columnName": "QuantityHandledAllScanners",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield1",
+            "columnName": "ExtraField1",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield2",
+            "columnName": "ExtraField2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield3",
+            "columnName": "ExtraField3",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield4",
+            "columnName": "ExtraField4",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield5",
+            "columnName": "ExtraField5",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield6",
+            "columnName": "ExtraField6",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield7",
+            "columnName": "ExtraField7",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extrafield8",
+            "columnName": "ExtraField8",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "recordid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "InventoryOrderBarcodes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Barcode` TEXT NOT NULL, `BarCodeType` TEXT, `IsUniqueBarcode` INTEGER, `ItemNo` TEXT, `VariantCode` TEXT, `Itemsoort` TEXT, `QtyPerUnitOfMeasure` REAL, `UnitOfMeasure` TEXT, `QuantityHandled` REAL, `Inv_Amount_manual` INTEGER, PRIMARY KEY(`Barcode`))",
+        "fields": [
+          {
+            "fieldPath": "barcode",
+            "columnName": "Barcode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "barcodetype",
+            "columnName": "BarCodeType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isuniquebarcode",
+            "columnName": "IsUniqueBarcode",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemno",
+            "columnName": "ItemNo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "variantCode",
+            "columnName": "VariantCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemType",
+            "columnName": "Itemsoort",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityPerUnitOfMeasure",
+            "columnName": "QtyPerUnitOfMeasure",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unitOfMeasure",
+            "columnName": "UnitOfMeasure",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "quantityHandled",
+            "columnName": "QuantityHandled",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "invAmountManual",
+            "columnName": "Inv_Amount_manual",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Barcode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "InventoryOrderLineBarcodes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`LineNo` TEXT NOT NULL, `Barcode` TEXT NOT NULL, `QuantityHandled` TEXT, PRIMARY KEY(`LineNo`, `Barcode`))",
+        "fields": [
+          {
+            "fieldPath": "lineNoStr",
+            "columnName": "LineNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "barcodeStr",
+            "columnName": "Barcode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantityHandledStr",
+            "columnName": "QuantityHandled",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "LineNo",
+            "Barcode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3e3ebb5f186aa6c3d30eaac1c8746982\")"
+    ]
+  }
+}
