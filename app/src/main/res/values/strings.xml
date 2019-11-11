@@ -507,7 +507,7 @@
     <string name="tab_inventorybin_total">total</string>
     <string name="hint_add_bin">Scan or type new bin</string>
     <string name="add_bin_header_default">Add bin</string>
-    <string name="botton_add_bin">Add bin</string>
+    <string name="button_add_bin">Add bin</string>
     <string name="message_bin_added">Bin %1$s was added</string>
     <string name="message_bin_not_added">Bin %1$s was not added</string>
     <string name="screentitle_inventoryordercount">Inventory count</string>
@@ -534,5 +534,21 @@
     <string name="message_removing_line_failed">Removing line failed</string>
     <string name="message_reset_line_via_webservice_failed">Resetting line via webservice failed</string>
     <string name="message_reset_bin_via_webservice_failed">Resetting BIN via webservice failed</string>
+    <string name="screentitle_intakeorderselect">Intake</string>
+    <string name="error_get_intakeorders_failed">Getting orders failed</string>
+    <string name="error_get_intakelines_failed">Getting lines failed</string>
+    <string name="screentitle_intakeorderlines">Lines</string>
+    <string name="message_cancel_line">Cancel scans</string>
+    <string name="message_accept_line">Accept scans</string>
+    <string name="message_cancel">Cancel</string>
+    <string name="message_leave">Leave</string>
+    <string name="message_close">Close</string>
+    <string name="message_shipping_basics_invalid">Shipping basics for this order are invalid, order can\'t be shipped</string>
+    <string name="tab_todo">Todo</string>
+    <string name="tab_done">Todo</string>
+    <string name="tab_total">Total</string>
+    <string name="hint_add_article">Scan or type article</string>
+    <string name="button_add_article">Add article</string>
+    <string name="add_article_header_default">Add Article</string>
     <!--endregion Inventory-->
 </resources>

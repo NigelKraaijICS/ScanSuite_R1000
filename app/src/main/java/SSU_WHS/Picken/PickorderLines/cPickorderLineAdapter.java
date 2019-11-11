@@ -39,17 +39,17 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
             this.textViewPickorderLineLocation.setSingleLine(true);
             this.textViewPickorderLineLocation.setMarqueeRepeatLimit(5);
             this.textViewPickorderLineLocation.setSelected(true);
-            this.textViewPickorderLine = pvItemView.findViewById(R.id.textViewPickorderLine);
+            this.textViewPickorderLine = pvItemView.findViewById(R.id.textViewLine);
             this.textViewPickorderLine.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewPickorderLine.setSingleLine(true);
             this.textViewPickorderLine.setMarqueeRepeatLimit(5);
             this.textViewPickorderLine.setSelected(true);
-            this.textViewPickorderLineSourceNo = pvItemView.findViewById(R.id.textViewPickorderLineSourceNo);
+            this.textViewPickorderLineSourceNo = pvItemView.findViewById(R.id.textViewSourceNo);
             this.textViewPickorderLineSourceNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewPickorderLineSourceNo.setSingleLine(true);
             this.textViewPickorderLineSourceNo.setMarqueeRepeatLimit(5);
             this.textViewPickorderLineSourceNo.setSelected(true);
-            this.textViewPickorderLineQuantity = pvItemView.findViewById(R.id.textViewPickorderLineQuantity);
+            this.textViewPickorderLineQuantity = pvItemView.findViewById(R.id.textViewQuantity);
             this. pickorderLineItemLinearLayout = pvItemView.findViewById(R.id.pickorderLineItemLinearLayout);
         }
     }

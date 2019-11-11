@@ -310,6 +310,18 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
          PickorderPickActivity.mPickDone();
     }
 
+    public static void pAcceptRejectDialogDismissed() {
+
+        if (!cPickorderLine.currentPickOrderLine.processingSequenceStr.isEmpty() && !cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
+            cPickorderLine.currentPickOrderLine.processingSequenceStr = "";
+            cPickorderLine.currentPickOrderLine.pUpdateProcessingSequenceBln("");
+            articleScannedLastBln = true;
+            return;
+        }
+
+    }
+
+
     public static void pCancelPick() {
         cPickorderLine.currentPickOrderLine.quantityHandledDbl = Double.valueOf(0);
         cPickorderLine.currentPickOrderLine.pCancelIndatabaseBln();
@@ -499,7 +511,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //Set scan instruction
         PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
 
-        // We already have a processing sequence, show it and insert a SalesOrderPackingTable in database
+        // We already have a processing sequence, show it and pInsertInDatabase a SalesOrderPackingTable in database
         if (cPickorderLine.currentPickOrderLine.getProcessingSequenceStr().isEmpty() == false) {
             PickorderPickActivity.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
             PickorderPickActivity.mAddSalesOrderPackingTableBln();
@@ -585,7 +597,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        PickorderPickActivity.mHandleSalesOrderOrPickCartScanned(pvScannedBarcodeStr);
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.SALESORDER) || cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.PICKCARTBOX) ) {
+            PickorderPickActivity.mHandleSalesOrderOrPickCartScanned(pvScannedBarcodeStr);
+            return;
+        }
+
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode),"",true,true);
         return;
 
     }
@@ -607,18 +624,24 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //Check if we would exceed amount, then show message
             if (newQuantityDbl > cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
                 PickorderPickActivity.mShowOverpickNotAllowed();
+
+                if (cPickorderLine.currentPickOrderLine.getQuantityDbl() > 0) {
+                    articleScannedLastBln = true;
+                    return;
+                }
+
                 articleScannedLastBln = false;
                 return;
             }
 
-            //Set the new quantity and show in Activity
+            //Set the new quantityDbl and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
             PickorderPickActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
             //Add or update line barcode
             cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln(pvAmountDbl);
 
-            //Update orderline info (quantity, timestamp, localstatus)
+            //Update orderline info (quantityDbl, timestamp, localStatusInt)
             cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
 
             //Check if this line is done
@@ -643,7 +666,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         if (newQuantityDbl <= 0) {
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = Double.valueOf(0);
         }else {
-            //Set the new quantity and show in Activity
+            //Set the new quantityDbl and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
         }
 
@@ -722,9 +745,18 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             PickorderPickActivity.articleScannedLastBln = false;
         }
 
-        //Update orderline info (quantity, timestamp, localstatus)
+        //Update orderline info (quantityDbl, timestamp, localStatusInt)
         cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
         articleScannedLastBln = false;
+
+
+        //Check if quantityDbl is sufficient
+        if (cPickorderLine.currentPickOrderLine.quantityHandledDbl < cPickorderLine.currentPickOrderLine.quantityDbl) {
+            PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+            PickorderPickActivity.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+            return;
+        }
+
 
         //Check if line is done
         PickorderPickActivity.mCheckLineDone();
@@ -794,7 +826,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.imageButtonDone.setVisibility(View.VISIBLE);
 
 
-        //Check if quantity is sufficient
+        //Check if quantityDbl is sufficient
         if (cPickorderLine.currentPickOrderLine.quantityHandledDbl < cPickorderLine.currentPickOrderLine.quantityDbl) {
             PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
             incompleteBln = true;
@@ -842,7 +874,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 return;
             }
 
-            // We reached the quantity, but still have to scan the pickcart/salesorder, so set the instruction
+            // We reached the quantityDbl, but still have to scan the pickcart/salesorder, so set the instruction
             if (cPickorderLine.currentPickOrderLine.processingSequenceStr.isEmpty()) {
                 PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
                 PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
@@ -972,7 +1004,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return true;
         }
 
-        // Does not exist, so insert in database
+        // Does not exist, so pInsertInDatabase in database
         salesOrderPackingTable.pInsertInDatabaseBln();
         return true;
 
@@ -988,7 +1020,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //Check if we picked less then asked, if so then show dialog
         if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() != cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
-            this.mShowUnderPickDialog();
+            this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
             return;
         }
 
@@ -1007,7 +1039,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //If we picked less then asked, show dialog
         if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() != cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
-            this.mShowUnderPickDialog();
+            this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
             return;
         }
 
@@ -1191,14 +1223,14 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private void mShowUnderPickDialog() {
+    private static void mShowUnderPickDialog(String pvRejectStr,String pvAcceptStr) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_underpick_header),
-                                                                                   cAppExtension.activity.getString(R.string.message_underpick_text, cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()), cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())));
+                                                                                   cAppExtension.activity.getString(R.string.message_underpick_text, cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()), cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())),pvRejectStr,pvAcceptStr );
         acceptRejectFragment.setCancelable(true);
-        runOnUiThread(new Runnable() {
+        cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // show my popup
@@ -1212,7 +1244,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_pickorderbusy_header),
-                                                                                   cAppExtension.activity.getString(R.string.message_pickorderbusy_text));
+                                                                                   cAppExtension.activity.getString(R.string.message_pickorderbusy_text),
+                                                                                   cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
         acceptRejectFragment.setCancelable(true);
 
         runOnUiThread(new Runnable() {

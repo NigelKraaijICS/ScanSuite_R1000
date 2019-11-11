@@ -281,6 +281,15 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
+        //Check if we have everything we need to ship the order before showing next activity
+        if (cShipment.currentShipment.shippingAgent() == null ||
+            cShipment.currentShipment.shippingAgentService() == null ||
+            cShipment.currentShipment.shippingAgentService().shippingUnitsObl() == null ||
+            cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 0 ) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_shipping_basics_invalid),"",true,true);
+            return;
+        }
+
         //We found a match in open shipments
         ShiporderLinesActivity.mStartShipActivity();
         return;

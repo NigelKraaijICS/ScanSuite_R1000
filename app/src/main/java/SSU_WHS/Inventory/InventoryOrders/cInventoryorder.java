@@ -721,23 +721,6 @@ public class cInventoryorder {
         return  true;
     }
 
-    public boolean pCloseBinBln(String pvBinCodeStr) {
-
-        cWebresult webresult;
-        webresult = cInventoryorder.getInventoryorderViewModel().pCloseBinViaWebserviceWrs(pvBinCodeStr);
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
-
-            cInventoryorderBin.currentInventoryOrderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
-            cInventoryorderBin.currentInventoryOrderBin.pUpdateStatusInDatabaseBln();
-            cInventoryorderBin.currentInventoryOrderBin = null;
-            return true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINCLOSE);
-            return false;
-        }
-    }
-
     public boolean pAddLineBln() {
 
         cWebresult WebResult;

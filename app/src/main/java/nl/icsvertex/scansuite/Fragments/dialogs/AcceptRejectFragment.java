@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import ICS.Interfaces.iICSDefaultFragment;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
@@ -40,13 +38,18 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     private String  titleStr;
     private String  messageStr;
+    private String  acceptStr;
+    private String rejectStr;
 
     //End Region Private Properties
 
     //Region Constructor
-    public AcceptRejectFragment(String pvTitleStr, String pvMessageStr) {
+    public AcceptRejectFragment(String pvTitleStr, String pvMessageStr, String pvRejectStr, String pvAcceptStr) {
         this.titleStr = pvTitleStr;
         this.messageStr = pvMessageStr;
+
+        this.acceptStr = pvAcceptStr;
+        this.rejectStr = pvRejectStr;
     }
     //End Region Constructor
 
@@ -92,6 +95,8 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             public void run() {
                 acceptRejectHeader.setText(titleStr);
                 acceptRejectText.setText(messageStr);
+                textReject.setText(rejectStr);
+                textAccept.setText(acceptStr);
             }
         });
     }
@@ -109,6 +114,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                if (cAppExtension.activity instanceof  PickorderPickActivity) {
+                    PickorderPickActivity.pAcceptRejectDialogDismissed();
+                }
+
+
                 dismiss();
             }
         });

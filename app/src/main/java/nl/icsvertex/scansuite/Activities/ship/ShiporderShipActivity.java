@@ -347,7 +347,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        //Set the description for the shipping agent
+        //Set the descriptionStr for the shipping agent
         this.shippingAgentText.setText(cShipment.currentShipment.shippingAgent().getDescriptionStr());
 
         //If service is unknown, then exit
@@ -355,7 +355,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        //Set the description for the shipping agent
+        //Set the descriptionStr for the shipping agent
         this.shippingServiceText.setText(cShipment.currentShipment.shippingAgentService().getDescriptionStr());
     }
 

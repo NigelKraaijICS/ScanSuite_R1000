@@ -382,7 +382,7 @@
     <string name="message_article_not_allowed">Artikel scan niet toegestaan</string>
     <string name="dialog_error">Fout informatie</string>
     <string name="add_bin_header_default">Locatie toevoegen</string>
-    <string name="botton_add_bin">Toevoegen</string>
+    <string name="button_add_bin">Toevoegen</string>
     <string name="button_create_inventory">Aanmaken</string>
     <string name="button_new_inventoryorder">Nieuw</string>
     <string name="createinventory_header_default">Inventarisatie aanmaken</string>
@@ -429,4 +429,20 @@
     <string name="message_bin_close_failed">Locatie afsluiten mislukt.</string>
     <string name="message_close_order">Sluit opdracht</string>
     <string name="message_close_bin">Sluit locatie</string>
+    <string name="add_article_header_default">Voeg artikel toe</string>
+    <string name="button_add_article">Voeg artikel toe</string>
+    <string name="error_get_intakelines_failed">Regels ophalen mislukt</string>
+    <string name="error_get_intakeorders_failed">Orders ophalen mislukt</string>
+    <string name="hint_add_article">Scan of typ artikel</string>
+    <string name="message_accept_line">Accepteer scans</string>
+    <string name="message_cancel">Annuleer</string>
+    <string name="message_cancel_line">Annuleer scans</string>
+    <string name="message_close">Sluit</string>
+    <string name="message_leave">Verlaat</string>
+    <string name="screentitle_intakeorderselect">Ontvangst</string>
+    <string name="screentitle_intakeorderlines">Regels</string>
+    <string name="message_shipping_basics_invalid">Stamgegevens voor deze order ontbreken, kan daardoor niet verzonden worden</string>
+    <string name="tab_done">Te doen</string>
+    <string name="tab_todo">Te doen</string>
+    <string name="tab_total">Totaal</string>
 </resources>

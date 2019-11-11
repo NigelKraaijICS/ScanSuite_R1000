@@ -9,6 +9,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.intake.IntakeorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.ship.ShiporderSelectActivity;
@@ -35,6 +36,10 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
         }
 
         if (cAppExtension.context instanceof InventoryorderSelectActivity) {
+            setPreferencesFromResource(R.xml.filter_inventoryorders, rootKey);
+        }
+
+        if (cAppExtension.context instanceof IntakeorderSelectActivity) {
             setPreferencesFromResource(R.xml.filter_inventoryorders, rootKey);
         }
     }

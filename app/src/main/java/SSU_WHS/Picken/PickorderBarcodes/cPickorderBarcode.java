@@ -135,7 +135,7 @@ public class cPickorderBarcode {
         }return null;
     }
 
-    public static List <cPickorderBarcode> pGetPickbarcodeViaVariantAndItemNoObl(String pvItemNo, String pvVariantcode) {
+    public static List <cPickorderBarcode> pGetPickbarcodesViaVariantAndItemNoObl(String pvItemNo, String pvVariantcode) {
         if (cPickorderBarcode.allBarcodesObl == null || cPickorderBarcode.allBarcodesObl.size() == 0){
             return null;
         }

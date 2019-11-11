@@ -568,7 +568,7 @@ public class cPickorderRepository {
         return resultObl;
     }
 
-    //Pick quantity's
+    //Pick quantityDbl's
     public Double pQuantityNotHandledDbl() {
         Double resultDbl = 0.0;
         try {
@@ -778,69 +778,6 @@ public class cPickorderRepository {
         }
         return resultObl;
     }
-
-    public List<cPickorderLinePackAndShipEntity> pGetPackAndShipLinesHandledFromDatabaseObl() {
-        List<cPickorderLinePackAndShipEntity> resultObl = null;
-        try {
-            resultObl = new mGetHandledPackAndShipLinesAsyncTask(pickorderLinePackAndShipDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultObl;
-    }
-
-    public List<cPickorderLinePackAndShipEntity> pGetAllPackAndShipLinesHandledFromDatabaseObl() {
-        List<cPickorderLinePackAndShipEntity> resultObl = null;
-        try {
-            resultObl = new mGetAllPackAndShipLinesAsyncTask(pickorderLinePackAndShipDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultObl;
-    }
-
-
-    //Pack and Ship Quantitiy's
-    public Double pShippingQuantityNotHandledDbl() {
-        Double resultDbl = 0.0;
-        try {
-            resultDbl = new mGetShippingQuantityNotHandledAsyncTask(pickorderLinePackAndShipDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultDbl;
-    }
-
-    public Double pShippingQuantityHandledDbl() {
-        Double resultDbl = 0.0;
-        try {
-            resultDbl = new mGetShippingQuantityHandledAsyncTask(pickorderLinePackAndShipDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultDbl;
-    }
-
-    public Double pShippingQuantityTotalDbl() {
-        Double resultDbl = 0.0;
-        try {
-            resultDbl = new mGetShippingQuantityTotalAsyncTask(pickorderLinePackAndShipDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultDbl;
-    }
-
 
     //End Region Public Methods
 
@@ -1321,26 +1258,6 @@ public class cPickorderRepository {
         }
     }
 
-    private static class mGetHandledPackAndShipLinesAsyncTask extends AsyncTask<Void, Void, List<cPickorderLinePackAndShipEntity>> {
-        private iPickorderLinePackAndShipDao mAsyncTaskDao;
-
-        mGetHandledPackAndShipLinesAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cPickorderLinePackAndShipEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getHandledPickorderLinePackAndShipEntities();
-        }
-    }
-
-    private static class mGetAllPackAndShipLinesAsyncTask extends AsyncTask<Void, Void, List<cPickorderLinePackAndShipEntity>> {
-        private iPickorderLinePackAndShipDao mAsyncTaskDao;
-
-        mGetAllPackAndShipLinesAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cPickorderLinePackAndShipEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getAllPickorderLinePackAndShipEntities();
-        }
-    }
-
     private static class mGetQuantityNotHandledAsyncTask extends AsyncTask<Void, Void, Double> {
         private iPickorderLineDao mAsyncTaskDao;
         mGetQuantityNotHandledAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
@@ -1363,33 +1280,6 @@ public class cPickorderRepository {
         private iPickorderLineDao mAsyncTaskDao;
 
         mGetTotalQuanitityAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getTotalQuantityDbl();
-        }
-    }
-
-    private static class mGetShippingQuantityNotHandledAsyncTask extends AsyncTask<Void, Void, Double> {
-        private iPickorderLinePackAndShipDao mAsyncTaskDao;
-        mGetShippingQuantityNotHandledAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getQuantityNotHandledDbl();
-        }
-    }
-
-    private static class mGetShippingQuantityHandledAsyncTask extends AsyncTask<Void, Void, Double> {
-        private iPickorderLinePackAndShipDao mAsyncTaskDao;
-        mGetShippingQuantityHandledAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getQuantityHandledDbl();
-        }
-    }
-
-    private static class mGetShippingQuantityTotalAsyncTask extends AsyncTask<Void, Void, Double> {
-        private iPickorderLinePackAndShipDao mAsyncTaskDao;
-        mGetShippingQuantityTotalAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
         @Override
         protected Double doInBackground(Void... params) {
             return mAsyncTaskDao.getTotalQuantityDbl();

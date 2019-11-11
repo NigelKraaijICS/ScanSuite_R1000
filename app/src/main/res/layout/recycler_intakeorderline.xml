@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/pickorderLineItemLinearLayout"
+    android:id="@+id/intakeorderLineItemLinearLayout"
     style="@style/pickorderLineRecyclerLinearLayout"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewArticleImage"
-            android:id="@+id/imageViewPickorderLine"
+            android:id="@+id/imageViewIntakeorderLine"
             app:srcCompat="@drawable/ic_menu_demo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -19,22 +19,22 @@
             />
         <TextView
             style="@style/pickorderLineRecyclerBINText"
-            android:id="@+id/textViewPickorderLineLocation"
-            app:layout_constraintStart_toEndOf="@id/imageViewPickorderLine"
+            android:id="@+id/textViewBIN"
+            app:layout_constraintStart_toEndOf="@id/imageViewIntakeorderLine"
             app:layout_constraintEnd_toStartOf="@id/textViewQuantity"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
             style="@style/pickorderLineRecyclerOrdernumberText"
             android:id="@+id/textViewLine"
-            app:layout_constraintStart_toEndOf="@id/imageViewPickorderLine"
+            app:layout_constraintStart_toEndOf="@id/imageViewIntakeorderLine"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewPickorderLineLocation"
+            app:layout_constraintTop_toBottomOf="@id/textViewBIN"
             />
         <TextView
             style="@style/pickorderLineRecyclerSourcenoText"
             android:id="@+id/textViewSourceNo"
-            app:layout_constraintStart_toEndOf="@id/imageViewPickorderLine"
+            app:layout_constraintStart_toEndOf="@id/imageViewIntakeorderLine"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewLine"
             />

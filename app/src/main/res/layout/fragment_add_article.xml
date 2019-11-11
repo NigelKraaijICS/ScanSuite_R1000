@@ -3,54 +3,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/addBinContainer"
+    android:id="@+id/addArticleContainer"
     android:padding="@dimen/default_double_padding"
     >
     <TextView
-        android:id="@+id/textViewAddBinHeader"
+        android:id="@+id/textViewAddArticleHeader"
         style="@style/orderDoneHeader"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/addBinImageView"
-        style="@style/addBinImageView"
-        app:layout_constraintTop_toTopOf="@id/textViewAddBinHeader"
-        app:layout_constraintBottom_toBottomOf="@id/textViewAddBinHeader"
-        app:layout_constraintEnd_toStartOf="@id/textViewAddBinHeader"
+        android:id="@+id/addArticleView"
+        style="@style/addArticleImageView"
+        app:layout_constraintTop_toTopOf="@id/textViewAddArticleHeader"
+        app:layout_constraintBottom_toBottomOf="@id/textViewAddArticleHeader"
+        app:layout_constraintEnd_toStartOf="@id/textViewAddArticleHeader"
         />
     <EditText
         android:imeOptions="actionDone"
         android:singleLine="true"
-        android:id="@+id/editTextAddBin"
+        android:id="@+id/editTextAddArticle"
         style="@style/orderDoneCurrentLocation"
-        android:hint="@string/hint_add_bin"
+        android:hint="@string/hint_add_article"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewAddBinHeader"/>
+        app:layout_constraintTop_toBottomOf="@id/textViewAddArticleHeader"/>
     <TextView
-        android:id="@+id/textViewAddBinText"
+        android:id="@+id/textViewAddArticleText"
         android:textSize="@dimen/textsize_big"
         android:textColor="@color/colorTextDefault"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_double_margin"
-        app:layout_constraintTop_toBottomOf="@id/editTextAddBin"
+        app:layout_constraintTop_toBottomOf="@id/editTextAddArticle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
 
     <Button
-        android:id="@+id/addBinButton"
+        android:id="@+id/addArticleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_double_margin"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
-        android:text="@string/button_add_bin"
-        app:layout_constraintTop_toBottomOf="@id/textViewAddBinText"
+        android:text="@string/button_add_article"
+        app:layout_constraintTop_toBottomOf="@id/textViewAddArticleText"
         app:layout_constraintEnd_toEndOf="parent"
         />
     <Button
@@ -60,7 +60,7 @@
         android:layout_margin="@dimen/default_double_margin"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:text="@string/cancel"
-        app:layout_constraintTop_toBottomOf="@id/textViewAddBinText"
+        app:layout_constraintTop_toBottomOf="@id/textViewAddArticleText"
         app:layout_constraintStart_toStartOf="parent"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

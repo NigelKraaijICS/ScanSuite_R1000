@@ -1,4 +1,4 @@
-package nl.icsvertex.scansuite.Fragments.dialogs;
+package nl.icsvertex.scansuite.Fragments.inventory;
 
 
 import android.os.Bundle;
@@ -21,7 +21,6 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -63,30 +62,23 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
 
     @Override
     public void onDestroy() {
-        try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onDestroy();
     }
+
     @Override
     public void onPause() {
-        try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onPause();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
     }
     @Override
     public void onResume() {
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         super.onResume();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
     }
 
     @Override
     public void mFragmentInitialize() {
+
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
@@ -166,7 +158,8 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
 
         //No prefix
         if (!cRegex.hasPrefix(pvScannedBarcodeStr)) {
-            editTextDocument.setText(pvScannedBarcodeStr);
+            CreateInventoryFragment.editTextDocument.setText(pvScannedBarcodeStr);
+            CreateInventoryFragment.createInventoryButton.performClick();
             return;
         }
 
@@ -179,7 +172,8 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
         //has prefix, is DOCUMENT
         if (foundBln) {
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
-            editTextDocument.setText(barcodeWithoutPrefixStr);
+            CreateInventoryFragment.editTextDocument.setText(barcodeWithoutPrefixStr);
+            CreateInventoryFragment.createInventoryButton.performClick();
             return;
         }
         else {

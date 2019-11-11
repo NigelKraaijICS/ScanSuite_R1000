@@ -116,7 +116,7 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
             @Override
             public void onClick(View v) {
                 if (cAppExtension.context instanceof InventoryorderBinsActivity) {
-                    if (thisRecyclerView.getId() == R.id.recyclerViewInventoryBinsToDo) {
+                    if (thisRecyclerView.getId() == R.id.recyclerViewInventoryBinsToDo || thisRecyclerView.getId() == R.id.recyclerViewInventoryBinsDone) {
                         InventoryorderBinsActivity.pInventoryorderBinSelected();
                     }
                 }

@@ -63,7 +63,6 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.mFragmentInitialize();
-
     }
 
     //End Region Default Methods
@@ -125,29 +124,35 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         anim1.setDuration(1000);
 
         AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(anim1);
-        imageRocket.startAnimation(animationSet);
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
 
 
-                if (cAppExtension.activity instanceof ShiporderShipActivity) {
-                    ShiporderShipActivity.pHandleBackToLines();
+        if (animationSet != null) {
+            animationSet.addAnimation(anim1);
+            imageRocket.startAnimation(animationSet);
+            animationSet.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
                 }
-                dismiss();
-            }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationEnd(Animation animation) {
 
-            }
-        });
+
+                    if (cAppExtension.activity instanceof ShiporderShipActivity) {
+                        ShiporderShipActivity.pHandleBackToLines();
+                    }
+                    dismiss();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
+
+
     }
 
     public void pShowCrashAnimation(final String pvErrorMessageStr) {
@@ -173,24 +178,27 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         anim1.setDuration(2000);
 
         AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(anim1);
-        imageRocket.startAnimation(animationSet);
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
 
-            }
+        if (animationSet != null) {
+            animationSet.addAnimation(anim1);
+            imageRocket.startAnimation(animationSet);
+            animationSet.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                imageRocket.setVisibility(View.INVISIBLE);
-            }
+                }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    imageRocket.setVisibility(View.INVISIBLE);
+                }
 
-            }
-        });
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
     }
 
     //End Region Public Methods

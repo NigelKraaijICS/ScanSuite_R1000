@@ -821,7 +821,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_sure_leave_screen_title),
-                cAppExtension.activity.getString(R.string.message_sure_leave_screen_text));
+                cAppExtension.activity.getString(R.string.message_sure_leave_screen_text),cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_leave));
         acceptRejectFragment.setCancelable(true);
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override

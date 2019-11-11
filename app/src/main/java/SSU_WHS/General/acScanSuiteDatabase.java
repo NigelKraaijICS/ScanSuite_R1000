@@ -16,6 +16,14 @@ import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
 import SSU_WHS.Basics.ItemProperty.iItemPropertyDao;
 import SSU_WHS.General.Comments.cCommentEntity;
 import SSU_WHS.General.Comments.iCommentDao;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcodeEntity;
+import SSU_WHS.Intake.IntakeorderBarcodes.iIntakeorderBarcodeDao;
+import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcodeEntity;
+import SSU_WHS.Intake.IntakeorderMATLineBarcodes.iIntakeorderMATLineBarcodeDao;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineEntity;
+import SSU_WHS.Intake.IntakeorderMATLines.iIntakeorderMATLineDao;
+import SSU_WHS.Intake.Intakeorders.cIntakeorderEntity;
+import SSU_WHS.Intake.Intakeorders.iIntakeorderDao;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorderEntity;
 import SSU_WHS.Inventory.InventoryOrders.iInventoryorderDao;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcodeEntity;
@@ -97,8 +105,12 @@ import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
         cInventoryorderBinEntity.class,
         cInventoryorderLineEntity.class,
         cInventoryorderBarcodeEntity.class,
-        cInventoryorderLineBarcodeEntity.class
-        },version = 72)
+        cInventoryorderLineBarcodeEntity.class,
+        cIntakeorderEntity.class,
+        cIntakeorderMATLineEntity.class,
+        cIntakeorderBarcodeEntity.class,
+        cIntakeorderMATLineBarcodeEntity.class
+        },version = 74)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -131,6 +143,10 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iInventoryorderLineDao inventoryorderLineDao();
     public abstract iInventoryorderBarcodeDao inventoryorderBarcodeDao();
     public abstract iInventoryorderLineBarcodeDao inventoryorderLineBarcodeDao();
+    public abstract iIntakeorderMATLineDao intakeorderMATLineDao();
+    public abstract iIntakeorderDao intakeorderDao();
+    public abstract iIntakeorderBarcodeDao intakeorderBarcodeDao();
+    public abstract iIntakeorderMATLineBarcodeDao intakeorderMATLineBarcodeDao();
 
     //public abstract iEnvironmentDao environmentDao();
 

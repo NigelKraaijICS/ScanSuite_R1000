@@ -17,11 +17,16 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cResult;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
+import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinAdapter;
+import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinRecyclerItemTouchHelper;
+import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Fragments.NothingHereFragment;
 import nl.icsvertex.scansuite.Fragments.SendOrderFragment;
@@ -58,20 +63,12 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
 
     @Override
     public void onDestroy() {
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onPause();
+           super.onPause();
     }
 
     @Override
@@ -91,6 +88,8 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
             ft.detach(this).attach(this).commit();
         }
     }
+
+
 
 
     //End Region Default Methods
@@ -205,6 +204,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
         addBinFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDBIN_TAG);
 
     }
+
 
     //End Region Private Methods
 }

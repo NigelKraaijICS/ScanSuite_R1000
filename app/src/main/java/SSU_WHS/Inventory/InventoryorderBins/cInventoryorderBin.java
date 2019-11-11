@@ -138,7 +138,7 @@ public class cInventoryorderBin {
                inventoryorderLine.pResetRst();
            }
 
-           //Reset status
+           //Reset statusInt
            this.statusInt = cWarehouseorder.InventoryBinStatusEnu.New;
            this.pUpdateStatusInDatabaseBln();
 
@@ -149,6 +149,28 @@ public class cInventoryorderBin {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_bin_via_webservice_failed));
             return  result;
+        }
+    }
+
+    public boolean pCloseBln(Boolean pvCloseViaWebserviceBln) {
+
+        if (!pvCloseViaWebserviceBln) {
+            this.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
+            this.pUpdateStatusInDatabaseBln();
+            return true;
+        }
+
+        cWebresult webresult;
+        webresult = cInventoryorder.getInventoryorderViewModel().pCloseBinViaWebserviceWrs(this.getBinCodeStr());
+        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+
+            this.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
+            this.pUpdateStatusInDatabaseBln();
+            return true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINCLOSE);
+            return false;
         }
     }
 

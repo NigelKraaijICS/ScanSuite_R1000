@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
         app:layout_constraintEnd_toEndOf="parent"
         />
-    <androidx.viewpager.widget.ViewPager
+    <ICS.Utils.cNoSwipeViewPager
         android:id="@+id/inventoryorderBinsViewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"

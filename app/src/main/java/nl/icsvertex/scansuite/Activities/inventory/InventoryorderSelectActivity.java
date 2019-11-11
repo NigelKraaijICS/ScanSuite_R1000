@@ -47,7 +47,7 @@ import nl.icsvertex.scansuite.Activities.general.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.CommentFragment;
-import nl.icsvertex.scansuite.Fragments.dialogs.CreateInventoryFragment;
+import nl.icsvertex.scansuite.Fragments.inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.R;
 
 

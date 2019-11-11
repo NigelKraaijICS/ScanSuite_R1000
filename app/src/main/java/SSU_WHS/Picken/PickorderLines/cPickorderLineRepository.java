@@ -149,29 +149,6 @@ public class cPickorderLineRepository {
         return webResultWrs;
     }
 
-    public cWebresult pSortLineHandledViaWebserviceWrs(String pvScannedBarcodeStr) {
-
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mPickorderSortLineHandledViaWebserviceAsyncTask().execute(pvScannedBarcodeStr).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
-
     public cWebresult pResetViaWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();

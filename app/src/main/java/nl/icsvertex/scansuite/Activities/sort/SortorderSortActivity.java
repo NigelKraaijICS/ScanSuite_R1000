@@ -442,7 +442,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             return true;
         }
 
-        // Does not exist, so insert in database
+        // Does not exist, so pInsertInDatabase in database
         salesOrderPackingTable.pInsertInDatabaseBln();
         return true;
 
@@ -534,7 +534,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         //Check if we complete handled this line, if so then handled else only update it
         if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() == cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
-            //Update orderline info (quantity, timestamp, localstatus)
+            //Update orderline info (quantityDbl, timestamp, localStatusInt)
             cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
         } else {
             cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln();
@@ -751,14 +751,14 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
                 return;
             }
 
-            //Set the new quantity and show in Activity
+            //Set the new quantityDbl and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
             SortorderSortActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
             //Add or update line barcode
             cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln(pvAmountDbl);
 
-            //Update orderline info (quantity, timestamp, localstatus)
+            //Update orderline info (quantityDbl, timestamp, localStatusInt)
             cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln();
 
             if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
@@ -788,7 +788,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         if (newQuantityDbl <= 0) {
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = (double) 0;
         }else {
-            //Set the new quantity and show in Activity
+            //Set the new quantityDbl and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
         }
 
@@ -846,7 +846,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_pickorderbusy_header),
-                                                                                   cAppExtension.activity.getString(R.string.message_pickorderbusy_text));
+                                                                                   cAppExtension.activity.getString(R.string.message_pickorderbusy_text),cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
         acceptRejectFragment.setCancelable(true);
         runOnUiThread(new Runnable() {
             @Override

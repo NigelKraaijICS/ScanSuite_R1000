@@ -21,9 +21,12 @@ import nl.icsvertex.scansuite.Activities.sort.SortorderSortActivity;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.general.LoginActivity;
 import nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Fragments.dialogs.AddArticleFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.AddBinFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.AddEnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.BranchFragment;
+import nl.icsvertex.scansuite.Fragments.inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.OrderDoneFragment;
@@ -232,10 +235,22 @@ public class cBarcodeScan {
                         AddEnvironmentFragment.pHandleScan(barcodeStr);
                     }
 
+
+                    if (cAppExtension.dialogFragment instanceof CreateInventoryFragment) {
+                        CreateInventoryFragment.pHandleScan(barcodeStr);
+                    }
+
+                    if (cAppExtension.dialogFragment instanceof AddBinFragment) {
+                        AddBinFragment.pHandleScan(barcodeStr);
+                    }
+
+                    if (cAppExtension.dialogFragment instanceof AddArticleFragment) {
+                        AddArticleFragment.pHandleScan(barcodeStr);
+                    }
+
                     if (cAppExtension.dialogFragment instanceof InventoryArticleDetailFragment) {
                         InventoryArticleDetailFragment.pHandleScan(barcodeScan);
                     }
-
 
                 }
             };

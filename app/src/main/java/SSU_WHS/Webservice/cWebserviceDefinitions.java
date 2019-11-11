@@ -64,10 +64,16 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_INVENTORYLINERESET = "p_InventoryRegelResetJsonStr";
     public static String WEBMETHOD_INVENTORYBINCLOSE = "p_InventoryOrderBinCloseJsonStr";
     public static String WEBMETHOD_INVENTORYHANDLED = "p_InventoryOrderHandledJsonStr";
-    public static String WEBMETHOD_INVENTORYBINRESET = "p_InventoryRegelResetJsonStr";
+    public static String WEBMETHOD_INVENTORYBINRESET = "p_InventoryBinResetJsonStr";
+    public static String WEBMETHOD_GETINTAKEORDERS = "p_ReceiveOrdersGetJsonStr";
+    public static String WEBMETHOD_GETINTAKEORDERMATLINES = "p_ReceiveMATRegelsGetJsonStr";
+    public static String WEBMETHOD_GETINTAKEORDERMATLINEBARCODES = "p_ReceiveMATRegelBarcodesGetJsonStr";
+    public static String WEBMETHOD_GETINTAKEARCODES = "p_ReceiveOrderBarcodesGetJsonStr";
+    public static String WEBMETHOD_INTAKELINEMATRESET = "p_ReceiveMATRegelResetJsonStr";
+    public static String WEBMETHOD_INTAKELINEMATHANDLED = "p_ReceiveMATLineHandledJsonStr";
 
 
-    //endregion Methods
+       //endregion Methods
 
     //region Properties
     public static String WEBPROPERTY_USER = "pv_GebruikerStr";
@@ -125,6 +131,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_PASSWORD = "pv_PasswordStr";
     public static String WEBPROPERTY_BINCODE = "pv_BinCodeStr";
     public static String WEBPROPERTY_BINCODETINY = "pv_BincodeStr";
+    public static String WEBPROPERTY_BINCODEHANDLED = "pv_BincodeHandledStr";
     public static String WEBPROPERTY_STOCKOWNER = "pv_StockOwnerStr";
     public static String WEBPROPERTY_WORKFLOW = "pv_WorkflowStr";
     public static String WEBPROPERTY_DOCUMENT = "pv_DocumentStr";

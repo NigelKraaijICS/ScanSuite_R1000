@@ -325,7 +325,7 @@
         <item name="android:textSize">@dimen/textsize_normal</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
-    <style name="pickorderLineRecyclerLocationText">
+    <style name="pickorderLineRecyclerBINText">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -847,6 +847,12 @@
         <item name="android:layout_height">@dimen/maintopbutton_height</item>
         <item name="android:layout_marginEnd">@dimen/default_margin</item>
         <item name="srcCompat">@drawable/ic_addbin</item>
+    </style>
+    <style name="addArticleImageView">
+        <item name="android:layout_width">@dimen/maintopbutton_width</item>
+        <item name="android:layout_height">@dimen/maintopbutton_height</item>
+        <item name="android:layout_marginEnd">@dimen/default_margin</item>
+        <item name="srcCompat">@drawable/ic_price_tag</item>
     </style>
     <style name="createInventoryHeader">
         <item name="android:textSize">@dimen/textsize_enormous</item>

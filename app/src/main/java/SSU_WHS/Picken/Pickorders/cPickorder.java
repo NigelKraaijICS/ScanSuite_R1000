@@ -641,7 +641,7 @@ public class cPickorder{
 
     public List<cComment> pPickCommentObl(){
 
-        if (cPickorder.currentPickOrder.commentsObl() == null || cPickorder.currentPickOrder.commentsObl().size() == 0) {
+        if (this.commentsObl() == null || this.commentsObl().size() == 0) {
             return  null;
         }
 
@@ -652,7 +652,7 @@ public class cPickorder{
 
     public List<cComment> pSortCommentObl(){
 
-        if (cPickorder.currentPickOrder.commentsObl() == null || cPickorder.currentPickOrder.commentsObl().size() == 0) {
+        if (this.commentsObl() == null || this.commentsObl().size() == 0) {
             return  null;
         }
 
@@ -663,7 +663,7 @@ public class cPickorder{
 
     public List<cComment> pShipCommentObl(){
 
-        if (cPickorder.currentPickOrder.commentsObl() == null || cPickorder.currentPickOrder.commentsObl().size() == 0) {
+        if (this.commentsObl() == null || this.commentsObl().size() == 0) {
             return  null;
         }
 
@@ -964,6 +964,12 @@ public class cPickorder{
                 cShipment shipment = cShipment.pGetShipment(pickorderLinePackAndShip.getSourceNoStr());
                 if (shipment == null ) {
                     cShipment shipmentToAdd = new cShipment(pickorderLinePackAndShip.getSourceNoStr());
+                    shipmentToAdd.handledBln = true;
+
+                    if (pickorderLinePackAndShip.localStatusInt == cWarehouseorder.PackingAndShippingStatusEnu.Needed) {
+                        shipmentToAdd.handledBln = false;
+                    }
+
                     cShipment.pAddShipment(shipmentToAdd);
                     shipmentToAdd.pAddPackAndShipLine(pickorderLinePackAndShip);
                     continue;
@@ -1029,40 +1035,6 @@ public class cPickorder{
         List<cPickorderLinePackAndShipEntity> hulpResultObl;
 
         hulpResultObl =  cPickorder.getPickorderViewModel().pGetPackAndShipLinesNotHandledFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cPickorderLinePackAndShipEntity cPickorderLinePackAndShipEntity : hulpResultObl ) {
-            cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(cPickorderLinePackAndShipEntity);
-            resultObl.add(pickorderLinePackAndShip);
-        }
-        return  resultObl;
-    }
-
-    public List<cPickorderLinePackAndShip> pGetPackAndShipLinesHandledFromDatabasObl() {
-
-        List<cPickorderLinePackAndShip> resultObl = new ArrayList<>();
-        List<cPickorderLinePackAndShipEntity> hulpResultObl;
-
-        hulpResultObl =  cPickorder.getPickorderViewModel().pGetPackAndShipLinesHandledFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cPickorderLinePackAndShipEntity cPickorderLinePackAndShipEntity : hulpResultObl ) {
-            cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(cPickorderLinePackAndShipEntity);
-            resultObl.add(pickorderLinePackAndShip);
-        }
-        return  resultObl;
-    }
-
-    public List<cPickorderLinePackAndShip> pGetPackAndShipLinesFromDatabasObl() {
-
-        List<cPickorderLinePackAndShip> resultObl = new ArrayList<>();
-        List<cPickorderLinePackAndShipEntity> hulpResultObl;
-
-        hulpResultObl =  cPickorder.getPickorderViewModel().pGetAllPackAndShipLinesFromDatabaseObl();
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }

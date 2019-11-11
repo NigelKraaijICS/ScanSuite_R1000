@@ -113,7 +113,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-          this.mFieldsInitialize();
+        this.mFieldsInitialize();
         this.mSetListeners();
         this.mSetToolbar();
 

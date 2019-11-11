@@ -10,20 +10,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cResult;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
+import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinAdapter;
+import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinRecyclerItemTouchHelper;
+import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.R;
 
-public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultFragment {
+public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultFragment,   cInventoryorderBinRecyclerItemTouchHelper.RecyclerItemTouchHelperListener  {
 
     //Region Public Properties
 
@@ -75,6 +81,19 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
         }
     }
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder pvViewHolder, int pvDirectionInt, int pvPositionInt) {
+        if (!(pvViewHolder instanceof cInventoryorderBinAdapter.InventoryorderBinViewHolder)) {
+            return;
+        }
+
+        cInventoryorderBin.currentInventoryOrderBin = cInventoryorderBin.allInventoryorderBinsObl.get(pvPositionInt);
+
+        //Remove the enviroment
+        this.mRemoveAdapterFromFragment();
+
+    }
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -103,6 +122,10 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
         if (cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().size() >0 && cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size() == 0 ) {
             this.imageCloseOrder.setVisibility(View.VISIBLE);
         }
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cInventoryorderBinRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewInventoryBinsTotal);
+
 
     }
 
@@ -142,6 +165,21 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
             }
         });
     }
+
+    private void mRemoveAdapterFromFragment(){
+
+        //remove the item from recyclerview
+        cResult hulpRst = cInventoryorderBin.currentInventoryOrderBin.pResetRst();
+        if (! hulpRst.resultBln) {
+            cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
+            return;
+        }
+
+        //Renew data, so only current lines are shown
+        InventoryorderBinActivity.pFillLines();
+
+    }
+
 
     //End Region Private Methods
 

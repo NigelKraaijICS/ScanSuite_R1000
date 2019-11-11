@@ -17,7 +17,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
         <TextView
-            style="@style/pickorderLineRecyclerLocationText"
+            style="@style/pickorderLineRecyclerBINText"
             android:id="@+id/textViewPickorderLineBarcode"
             app:layout_constraintStart_toEndOf="@id/imageButtonBarcode"
             app:layout_constraintEnd_toEndOf="parent"

@@ -250,7 +250,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
         new Thread(new Runnable() {
             public void run() {
-                mHandleSortOrderSelected();
+                mHandleShipOrderSelected();
             }
         }).start();
 
@@ -310,7 +310,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private static void mHandleSortOrderSelected() {
+    private static void mHandleShipOrderSelected() {
 
         cResult hulpResult;
 

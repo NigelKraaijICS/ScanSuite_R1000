@@ -832,7 +832,7 @@ public class cPickorderLine {
         }
 
         // Get barcodes via PickorderBarcode class
-        this.barcodesObl = cPickorderBarcode.pGetPickbarcodeViaVariantAndItemNoObl(this.getItemNoStr(),this.getVariantCodeStr());
+        this.barcodesObl = cPickorderBarcode.pGetPickbarcodesViaVariantAndItemNoObl(this.getItemNoStr(),this.getVariantCodeStr());
         if (this.barcodesObl == null || this.barcodesObl.size() == 0) {
             return  null;
         }

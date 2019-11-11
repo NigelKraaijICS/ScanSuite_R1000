@@ -8,6 +8,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 
 public class cPickorderLinePackAndShip {
 
@@ -177,6 +178,11 @@ public class cPickorderLinePackAndShip {
         this.statusInt = this.pickorderLinePackAndShipEntity.getStatusInt();
         this.statusShippingInt =  this.pickorderLinePackAndShipEntity.getStatusShippingInt();
         this.statusPackingInt= this.pickorderLinePackAndShipEntity.getStatusPackingInt();
+
+        if (this.statusShippingInt == 90) {
+            this.localStatusInt = cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded;
+        }
+
         this.localStatusInt = pickorderLinePackAndShipEntity.getLocalStatusInt();
 
         this.sourceNoStr = this.pickorderLinePackAndShipEntity.getSourceNoStr();

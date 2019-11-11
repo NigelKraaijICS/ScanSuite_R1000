@@ -29,6 +29,7 @@ import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
+import nl.icsvertex.scansuite.Activities.intake.IntakeorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.sort.SortorderSelectActivity;
@@ -250,7 +251,23 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             intent = new Intent(cAppExtension.context, InventoryorderSelectActivity.class);
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_INVENTORY);
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INVENTORY);
-            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, PickorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, PickorderSelectActivity.VIEW_NAME_HEADER_TEXT));
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, InventoryorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, InventoryorderSelectActivity.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Intake;
+            if (!  cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+            intent = new Intent(cAppExtension.context, IntakeorderSelectActivity.class);
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_INVENTORY);
+            clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INVENTORY);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, IntakeorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, IntakeorderSelectActivity.VIEW_NAME_HEADER_TEXT));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;
         }

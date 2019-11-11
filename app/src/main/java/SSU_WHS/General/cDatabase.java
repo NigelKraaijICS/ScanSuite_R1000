@@ -34,6 +34,12 @@ public class cDatabase {
     public static final String TABLENAME_INVENTORYORDERLINE = "InventoryOrderLines";
     public static final String TABLENAME_INVENTORYORDERBARCODE = "InventoryOrderBarcodes";
     public static final String TABLENAME_INVENTORYORDERLINEBARCODE  = "InventoryOrderLineBarcodes";
+    public static final String TABLENAME_INTAKEORDERMATLINES  = "IntakeLinesMAT";
+    public static final String TABLENAME_INTAKEORDER  = "IntakeOrders";
+    public static final String TABLENAME_INTAKEORDERBARCODE  = "IntakeOrderBarcodes";
+    public static final String TABLENAME_INTAKEORDERMATLINEBARCODE  = "IntakeOrderMATLineBarcodes";
+
+
     //endregion Tables
 
     //region localtables
@@ -42,6 +48,7 @@ public class cDatabase {
 
 
     //region A
+    public static final String ACTIONTYPECODE_NAMESTR = "ActionTypeCode";
     public static final String ASSIGNEDUSERID_NAMESTR = "AssignedUserId";
     public static final String AUTHORISATION_NAMESTR = "Autorisatie";
     public static final String ADDRESSCODE_NAMESTR = "Adrescode";
@@ -59,6 +66,7 @@ public class cDatabase {
     public static final String BARCODETYPE_NAMESTR = "BarCodeType";
 
     public static final String BINCODE_NAMESTR = "BinCode";
+    public static final String BINCODEHANDLED_NAMESTR = "BinCodeHandled";
     public static final String BINCODENL_NAMESTR = "Magazijnlocatie";
     public static final String BINMANDATORY_NAMESTR = "BinMandatory";
     public static final String BINTYPE_NAMESTR = "BinType";
@@ -108,6 +116,15 @@ public class cDatabase {
     public static final String ENVIRONMENT_NAME = "Name";
     public static final String ENVIRONMENT_DESCRIPTION = "Description";
     public static final String ENVIRONMENT_WEBSERVICEURL = "Webserviceurl";
+
+    public static final String EXTRAFIELD1_NAMESTR = "ExtraField1";
+    public static final String EXTRAFIELD2_NAMESTR = "ExtraField2";
+    public static final String EXTRAFIELD3_NAMESTR = "ExtraField3";
+    public static final String EXTRAFIELD4_NAMESTR = "ExtraField4";
+    public static final String EXTRAFIELD5_NAMESTR = "ExtraField5";
+    public static final String EXTRAFIELD6_NAMESTR = "ExtraField6";
+    public static final String EXTRAFIELD7_NAMESTR = "ExtraField7";
+    public static final String EXTRAFIELD8_NAMESTR = "ExtraField8";
     //endregion E
 
     //region H
@@ -157,6 +174,7 @@ public class cDatabase {
 
     //region O
     public static final String ORDER_NAMESTR = "Volgorde";
+    public static final String ORIGINNO_NAMESTR = "OriginNo";
     public static final String OMSCHRIJVING_NAMESTR = "Omschrijving";
     public static final String ORDERNUMBER_NAMESTR = "Opdrachtnummer";
     public static final String ORDERTYPE_NAMESTR = "Opdrachttype";
@@ -208,8 +226,24 @@ public class cDatabase {
     //region R
     public static final String RECEIVEDEFAULTBIN_NAMESTR = "Receive_default_bin";
     public static final String REQUESTENDDATETIME_NAMESTR = "RequestedEndDateTime";
+    public static final String REQUESTEDENDDATETIME_NAMESTR = "RequestedEndDateTime";
+    public static final String REQUESTEDSTARTDATETIME_NAMESTR = "RequestedStartDateTime";
     public static final String REMEMBERVALUE_NAMESTR = "RememberValue";
     public static final String RETURNDEFAULTBIN_NAMESTR = "Retour_default_bin";
+
+    public static final String RECEIVEDDATETIME_NAMESTR = "ReceivedDateTime";
+    public static final String RECEIVEEXPORTPART_NAMESTR = "Receive_export_part";
+    public static final String RECEIVE_AMOUNT_MANUAL_NAMESTR = "Receive_Amount_manual";
+    public static final String RECEIVEAMOUNTMANUAL_EO_NAMESTR = "Receive_Amount_manual_eo";
+    public static final String RECEIVEAMOUNTMANUAL_OM_NAMESTR = "Receive_Amount_manual_om";
+    public static final String RECEIVEAMOUNTMANUAL_MA_NAMESTR = "Receive_Amount_manual_ma";
+    public static final String RECEIVEBARCODECHECK_NAMESTR = "Receive_Barcode_check";
+    public static final String RECEIVESTOREAUTOACCEPTATREQUESTED_NAMESTR = "Receive_store_auto_accept_at_requested";
+    public static final String RECEIVESTOREAUTOACCEPTVALIDATIONMESSAGE_NAMESTR = "Receive_store_auto_accept_validation_message";
+    public static final String RECEIVENOEXTRABINS_NAMESTR = "Receive_no_extra_bins";
+    public static final String RECEIVENOEXTRAITEMS_NAMESTR = "Receive_no_extra_items";
+    public static final String RECEIVENOEXTRAPIECES_NAMESTR = "Receive_no_extra_pieces";
+    public static final String RECEIVEMATAUTOSPLITINCOMPLETELINE_NAMESTR = "Receive_mat_auto_split_incomplete_line";
     //endregion R
 
     //region S
