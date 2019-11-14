@@ -3,11 +3,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pickorderPickContainer"
+    android:id="@+id/intakeorderIntakeContainer"
     android:layout_width="match_parent"
     android:translationZ="2dp"
     android:layout_height="match_parent"
-    tools:context=".Activities.pick.PickorderPickActivity"
+    tools:context=".Activities.intake.IntakeOrderIntakeActivity"
     android:background="@color/colorBart"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
     <include layout="@layout/default_articleinfo" />
     <include layout="@layout/default_locationinfo" />
     <include layout="@layout/default_sourcenoinfo" />
-    <TextView
+     <TextView
         android:id="@+id/containerText"
         style="@style/containerText"
         app:layout_constraintTop_toBottomOf="@id/locationContainer"

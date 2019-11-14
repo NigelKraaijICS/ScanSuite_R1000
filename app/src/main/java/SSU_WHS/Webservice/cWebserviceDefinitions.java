@@ -71,6 +71,9 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETINTAKEARCODES = "p_ReceiveOrderBarcodesGetJsonStr";
     public static String WEBMETHOD_INTAKELINEMATRESET = "p_ReceiveMATRegelResetJsonStr";
     public static String WEBMETHOD_INTAKELINEMATHANDLED = "p_ReceiveMATLineHandledJsonStr";
+    public static String WEBMETHOD_INTAKELINEMATHANDLEDPART = "p_ReceiveRegelHandledPartPlaceMATJsonStr";
+    public static String WEBMETHOD_INTAKEHANLED= "p_ReceiveMATOrderHandledJsonStr";
+
 
 
        //endregion Methods

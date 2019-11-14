@@ -545,10 +545,19 @@
     <string name="message_close">Close</string>
     <string name="message_shipping_basics_invalid">Shipping basics for this order are invalid, order can\'t be shipped</string>
     <string name="tab_todo">Todo</string>
-    <string name="tab_done">Todo</string>
+    <string name="tab_done">Done</string>
     <string name="tab_total">Total</string>
     <string name="hint_add_article">Scan or type article</string>
     <string name="button_add_article">Add article</string>
     <string name="add_article_header_default">Add Article</string>
+    <string name="screentitle_intake">Intake</string>
+    <string name="message_bin_not_valid">Invalid BIN</string>
+    <string name="message_no_lines_for_this_bin">There are no lines for this BIN</string>
+    <string name="message_wrong_bin">Wrong bin</string>
+    <string name="message_extra_pieces_not_allowed">Extra pieces are not allowed</string>
+    <string name="message_extra_items_not_allowed">Extra items are not allowed</string>
+    <string name="message_current_line_missing">Current line is missing</string>
+    <string name="message_bin_or_item_missing">Bin or item missing</string>
+    <string name="message_bin_wrong">Bin is wrong</string>
     <!--endregion Inventory-->
 </resources>

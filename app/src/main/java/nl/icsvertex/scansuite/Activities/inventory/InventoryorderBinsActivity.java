@@ -347,14 +347,6 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         //We found a BIN so we are done
         if (cInventoryorderBin.currentInventoryOrderBin  != null) {
-
-
-            if (cInventoryorderBin.currentInventoryOrderBin.getStatusInt() == cWarehouseorder.InventoryBinStatusEnu.InventoryDone) {
-                result.resultBln = false;
-                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_already_closed));
-                return  result;
-            }
-
             return result;
         }
 
@@ -369,7 +361,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         cBranchBin branchBin = cUser.currentUser.currentBranch.pGetBinByCode(pvBinCodeStr);
         if (branchBin == null) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_not_added));
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_not_added,pvBinCodeStr));
             return result;
         }
 
@@ -413,13 +405,19 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
 
-        Intent intent = new Intent(cAppExtension.context, InventoryorderBinActivity.class);
-        View clickedBin = container.findViewWithTag(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
-        View clickedBinImage = container.findViewWithTag(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr() + "_IMG");
+        final Intent intent = new Intent(cAppExtension.context, InventoryorderBinActivity.class);
+        final View clickedBin = container.findViewWithTag(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
+        final View clickedBinImage = container.findViewWithTag(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr() + "_IMG");
         if (clickedBin != null &&clickedBinImage != null) {
-            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedBin, InventoryorderBinActivity.VIEW_CHOSEN_BIN),new Pair<>(clickedBinImage, InventoryorderBinActivity.VIEW_CHOSEN_BIN_IMAGE) );
-            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-            return;
+            cAppExtension.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedBin, InventoryorderBinActivity.VIEW_CHOSEN_BIN),new Pair<>(clickedBinImage, InventoryorderBinActivity.VIEW_CHOSEN_BIN_IMAGE) );
+                    ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+                    return;
+                }
+            });
+
         }
         else {
             cAppExtension.activity.startActivity(intent);

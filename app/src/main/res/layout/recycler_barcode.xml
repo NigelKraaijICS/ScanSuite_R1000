@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/pickorderLineBarcodeItemLinearLayout"
+    android:id="@+id/barcodeLinearLayout"
     style="@style/pickorderLineRecyclerLinearLayout"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
             />
         <TextView
             style="@style/pickorderLineRecyclerBINText"
-            android:id="@+id/textViewPickorderLineBarcode"
+            android:id="@+id/textViewBarcode"
             app:layout_constraintStart_toEndOf="@id/imageButtonBarcode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,21 +27,21 @@
             style="@style/pickorderLineRecyclerQuantityText"
             android:id="@+id/textViewQuantityLabel"
             android:text="@string/number_per_scan"
-            app:layout_constraintStart_toStartOf="@id/textViewPickorderLineBarcode"
-            app:layout_constraintTop_toBottomOf="@id/textViewPickorderLineBarcode"
+            app:layout_constraintStart_toStartOf="@id/textViewBarcode"
+            app:layout_constraintTop_toBottomOf="@id/textViewBarcode"
             />
         <TextView
             style="@style/pickorderLineRecyclerQuantityText"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
-            android:id="@+id/textViewPickorderLineBarcodeQuantity"
+            android:id="@+id/textViewQuantity"
             app:layout_constraintStart_toEndOf="@id/textViewQuantityLabel"
-            app:layout_constraintTop_toBottomOf="@id/textViewPickorderLineBarcode"
+            app:layout_constraintTop_toBottomOf="@id/textViewBarcode"
             />
         <View
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"
-            app:layout_constraintStart_toStartOf="@id/textViewPickorderLineBarcode"
+            app:layout_constraintStart_toStartOf="@id/textViewBarcode"
             app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

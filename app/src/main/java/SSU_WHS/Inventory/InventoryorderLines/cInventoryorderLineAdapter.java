@@ -33,7 +33,7 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
 
         public InventoryorderLineViewHolder(View pvItemView) {
             super(pvItemView);
-                   this.textViewArticle = pvItemView.findViewById(R.id.textViewArticle);
+           this.textViewArticle = pvItemView.findViewById(R.id.textViewArticle);
             this.textViewArticle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewArticle.setSingleLine(true);
             this.textViewArticle.setMarqueeRepeatLimit(5);
@@ -121,16 +121,6 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
     public void pSetFilter(String pvQueryTextStr) {
         this. localInventoryorderLineObl = this.mGetFilteredListObl(pvQueryTextStr);
         notifyDataSetChanged();
-    }
-
-    public  void pRemoveItem(int pvPositionInt) {
-        cInventoryorderLineAdapter.localInventoryorderLineObl.remove(cInventoryorderLine.currentInventoryOrderLine);
-        notifyItemRemoved(pvPositionInt);
-    }
-    public  void pRestoreItem(int pvPositionInt) {
-        cInventoryorderLineAdapter.localInventoryorderLineObl.add(pvPositionInt, cInventoryorderLine.currentInventoryOrderLine);
-
-        notifyItemInserted(pvPositionInt);
     }
 
 

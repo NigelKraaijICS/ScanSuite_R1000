@@ -333,7 +333,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public static void pSortingDone() {
 
-        //Check if we need to select a workplace
+        //Check if we need to select a workplaceStr
         if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
             mShowWorkplaceFragment();
             return;
@@ -509,7 +509,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         cResult hulpResult;
 
-        //Clear workplace, so you have to select it in the next step
+        //Clear workplaceStr, so you have to select it in the next step
         cWorkplace.currentWorkplace = null;
 
        if (! mTryToLockShipOrderBln()) {

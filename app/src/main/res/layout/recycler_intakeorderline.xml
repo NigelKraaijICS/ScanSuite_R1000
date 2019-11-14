@@ -21,7 +21,7 @@
             style="@style/pickorderLineRecyclerBINText"
             android:id="@+id/textViewBIN"
             app:layout_constraintStart_toEndOf="@id/imageViewIntakeorderLine"
-            app:layout_constraintEnd_toStartOf="@id/textViewQuantity"
+            app:layout_constraintEnd_toStartOf="@id/textViewQuantityLabel"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
@@ -40,7 +40,7 @@
             />
         <TextView
             style="@style/pickorderLineRecyclerQuantityText"
-            android:id="@+id/textViewQuantity"
+            android:id="@+id/textViewQuantityLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />

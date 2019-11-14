@@ -9,6 +9,7 @@ import java.util.List;
 
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -17,12 +18,19 @@ public class cInventoryorderBarcode {
     public boolean indatabaseBln;
 
     public static cInventoryorderBarcodeViewModel gInventoryorderBarcodeViewModel;
-
     public static cInventoryorderBarcodeViewModel getInventoryorderBarcodeViewModel() {
         if (gInventoryorderBarcodeViewModel == null) {
             gInventoryorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cInventoryorderBarcodeViewModel.class);
         }
         return gInventoryorderBarcodeViewModel;
+    }
+
+    public static cInventoryorderBarcodeAdapter gInventoryorderBarcodeAdapter;
+    public static cInventoryorderBarcodeAdapter getInventoryorderBarcodeAdapter() {
+        if (gInventoryorderBarcodeAdapter == null) {
+            gInventoryorderBarcodeAdapter = new cInventoryorderBarcodeAdapter();
+        }
+        return gInventoryorderBarcodeAdapter;
     }
 
     public static List<cInventoryorderBarcode> allInventoryorderBarcodesObl;
@@ -95,6 +103,7 @@ public class cInventoryorderBarcode {
         this.quantityHandled = this.inventoryorderBarcodeEntity.getQuantityHandled();
         this.invAmountManual = this.inventoryorderBarcodeEntity.getInvAmountManualBln();
     }
+
     public cInventoryorderBarcode(cInventoryorderBarcodeEntity inventoryorderBarcodeEntity) {
         this.inventoryorderBarcodeEntity = inventoryorderBarcodeEntity;
         this.barcode = this.inventoryorderBarcodeEntity.getBarcodeStr();
@@ -108,6 +117,21 @@ public class cInventoryorderBarcode {
         this.quantityHandled = this.inventoryorderBarcodeEntity.getQuantityHandled();
         this.invAmountManual = this.inventoryorderBarcodeEntity.getInvAmountManualBln();
     }
+
+    public cInventoryorderBarcode(cArticleBarcode pvArticleBarcode) {
+        this.inventoryorderBarcodeEntity = new cInventoryorderBarcodeEntity(pvArticleBarcode);
+        this.barcode = this.inventoryorderBarcodeEntity.getBarcodeStr();
+        this.barcodetype = this.inventoryorderBarcodeEntity.getBarcodeTypesStr();
+        this.isuniquebarcode = this.inventoryorderBarcodeEntity.getIsUniqueBarcodeBln();
+        this.itemno = this.inventoryorderBarcodeEntity.getItemNoStr();
+        this.variantCode = this.inventoryorderBarcodeEntity.getVariantCodeStr();
+        this.itemType = this.inventoryorderBarcodeEntity.getItemTypeStr();
+        this.quantityPerUnitOfMeasure = this.inventoryorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
+        this.unitOfMeasure = this.inventoryorderBarcodeEntity.getUnitOfMeasureStr();
+        this.quantityHandled = this.inventoryorderBarcodeEntity.getQuantityHandled();
+        this.invAmountManual = this.inventoryorderBarcodeEntity.getInvAmountManualBln();
+    }
+
     public cInventoryorderBarcode() {
 
     }
@@ -129,19 +153,6 @@ public class cInventoryorderBarcode {
         }
         cInventoryorderBarcode.allInventoryorderBarcodesObl.add(this);
         return  true;
-    }
-    public boolean pCreateBarcodesViaWebserviceBln() {
-
-        cWebresult WebResult;
-
-        WebResult =  cInventoryorderBarcode.getInventoryorderBarcodeViewModel().pCreateBarcodeViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ) {
-            return true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERS);
-            return  false;
-        }
     }
 
 }

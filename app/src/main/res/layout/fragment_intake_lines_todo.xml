@@ -17,6 +17,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/quickhelpContainer"
         />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        style="@style/defaultBottomButton"
+        android:id="@+id/imageViewStart"
+        app:srcCompat="@drawable/ic_start_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/quickhelp"
         android:id="@+id/quickhelpContainer"

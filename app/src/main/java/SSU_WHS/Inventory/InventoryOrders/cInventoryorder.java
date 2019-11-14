@@ -627,7 +627,7 @@ public class cInventoryorder {
                 }
 
                 //Add barcode to line
-                inventoryorderLine.pAddLineBarcodeBln(inventoryorderLineBarcode.getBarcodeStr(),inventoryorderLineBarcode.getQuantityhandledDbl());
+                inventoryorderLine.pAddLineBarcode(inventoryorderLineBarcode.getBarcodeStr(),inventoryorderLineBarcode.getQuantityhandledDbl());
             }
         }
         else {
@@ -701,16 +701,14 @@ public class cInventoryorder {
         cWebresult WebResult;
         WebResult =  cInventoryorder.getInventoryorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+                for (cArticleBarcode articleBarcode :  cArticle.currentArticle.barcodesObl) {
+                    cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(articleBarcode);
+                    inventoryorderBarcode.pInsertInDatabaseBln();
 
-                cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(jsonObject);
-                inventoryorderBarcode.pInsertInDatabaseBln();
-                cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
-                return  true;
-            }
+                    if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeStr())) {
+                        cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
+                    }
+                }
         }
         else {
             cInventoryorder.currentInventoryOrder.unknownVariantCounterInt -= 1;
@@ -734,7 +732,7 @@ public class cInventoryorder {
 
                 cInventoryorderLine.currentInventoryOrderLine= new cInventoryorderLine(jsonObject);
                 cInventoryorderLine.currentInventoryOrderLine.pInsertInDatabaseBln();
-                cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcodeBln(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+                cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
                 return  true;
             }
         }

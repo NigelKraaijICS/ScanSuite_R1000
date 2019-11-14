@@ -410,7 +410,7 @@
     <string name="message_couldnt_create_order">Order kon niet aangemaakt worden</string>
     <string name="orders">opdrachten</string>
     <string name="message_line_save_failed">Opslaan van regel mislukt, probeer het nogmaals</string>
-    <string name="hint_add_bin">Scan-/of geef een nieuwe locatie in</string>
+    <string name="hint_add_bin">Geef locatie in</string>
     <string name="show_all">Toon alles</string>
     <string name="shown">getoond</string>
     <string name="error_barcode_doesnt_belong_to_line">Deze barcode hoort niet bij deze regel</string>
@@ -433,7 +433,7 @@
     <string name="button_add_article">Voeg artikel toe</string>
     <string name="error_get_intakelines_failed">Regels ophalen mislukt</string>
     <string name="error_get_intakeorders_failed">Orders ophalen mislukt</string>
-    <string name="hint_add_article">Scan of typ artikel</string>
+    <string name="hint_add_article">Geef artikel in</string>
     <string name="message_accept_line">Accepteer scans</string>
     <string name="message_cancel">Annuleer</string>
     <string name="message_cancel_line">Annuleer scans</string>
@@ -442,7 +442,16 @@
     <string name="screentitle_intakeorderselect">Ontvangst</string>
     <string name="screentitle_intakeorderlines">Regels</string>
     <string name="message_shipping_basics_invalid">Stamgegevens voor deze order ontbreken, kan daardoor niet verzonden worden</string>
-    <string name="tab_done">Te doen</string>
+    <string name="tab_done">Gedaan</string>
     <string name="tab_todo">Te doen</string>
     <string name="tab_total">Totaal</string>
+    <string name="message_bin_not_valid">Onbekende BIN</string>
+    <string name="message_bin_or_item_missing">BIN of artikel ontbreekt</string>
+    <string name="message_bin_wrong">BIN verkeerd</string>
+    <string name="message_current_line_missing">Huidige regel niet bekend</string>
+    <string name="message_extra_items_not_allowed">Nieuwe items niet toegestaan</string>
+    <string name="message_extra_pieces_not_allowed">Extra aantallen niet toegestaan</string>
+    <string name="message_no_lines_for_this_bin">Er zijn geen regels bekend voor deze BIN</string>
+    <string name="message_wrong_bin">BIN verkeerd</string>
+    <string name="screentitle_intake">Ontvangst/Opslag</string>
 </resources>

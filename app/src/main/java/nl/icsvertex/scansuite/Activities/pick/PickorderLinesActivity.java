@@ -25,6 +25,7 @@ import java.util.concurrent.Future;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cNoSwipeViewPager;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
@@ -70,7 +71,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     private TextView textViewChosenOrder;
     static private TextView quantityPickordersText;
     static private TabLayout pickorderLinesTabLayout;
-    static private ViewPager pickorderLinesViewPager;
+    static private cNoSwipeViewPager pickorderLinesViewPager;
 
     private PickorderLinesPagerAdapter pickorderLinesPagerAdapter;
     static private ImageView imageButtonComments;
@@ -396,7 +397,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             }
         }
 
-        //Check if we need to select a workplace
+        //Check if we need to select a workplaceStr
         if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.SortNeededBln()&&
                 cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
             mShowWorkplaceFragment();
@@ -858,7 +859,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private static void mHandleStartSortActivity(){
 
-        //Clear workplace, so you have to select it in the next step
+        //Clear workplaceStr, so you have to select it in the next step
         cWorkplace.currentWorkplace = null;
 
         //Try to lock the pickorder
@@ -983,7 +984,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         result = new cResult();
         result.resultBln = true;
 
-        //Clear workplace, so you have to select it in the next step
+        //Clear workplaceStr, so you have to select it in the next step
         cWorkplace.currentWorkplace = null;
 
         //Check all ShippingAgents

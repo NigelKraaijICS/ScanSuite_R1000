@@ -110,7 +110,7 @@ import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
         cIntakeorderMATLineEntity.class,
         cIntakeorderBarcodeEntity.class,
         cIntakeorderMATLineBarcodeEntity.class
-        },version = 74)
+        },version = 75)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {

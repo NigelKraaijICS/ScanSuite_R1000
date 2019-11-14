@@ -246,7 +246,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     public  static void pCloseBin(){
 
-
         Boolean resultBln = cInventoryorderBin.currentInventoryOrderBin.pCloseBln(false);
 
         //Something went wrong
@@ -271,23 +270,20 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     //Region Private Methods
 
-
-
     private static void mHandleScan(cBarcodeScan pvBarcodeScan){
 
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+                //Close current BIN
+                InventoryorderBinActivity.pCloseBin();
 
-            //Close current BIN
-            InventoryorderBinActivity.pCloseBin();
+                //We are not busy anymore
+                InventoryorderBinActivity.busyBln = false;
 
-            //We are not busy anymore
-            InventoryorderBinActivity.busyBln = false;
-
-            //Pass this new BIN scan on to the BINS activity
-            InventoryorderBinsActivity.pHandleScan(pvBarcodeScan.getBarcodeOriginalStr());
-            return;
-        }
+                //Pass this new BIN scan on to the BINS activity
+                InventoryorderBinsActivity.pHandleScan(pvBarcodeScan.getBarcodeOriginalStr());
+                return;
+            }
 
         //Only ARTICLE scans are allowed
         if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
@@ -498,7 +494,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         //This barcode is new for this line so add the barcode to the line
         if (cInventoryorderLineBarcode.currentInventoryorderLineBarcode == null) {
-            cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcodeBln(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
         }
 
         //Make line barcode the current line barcode
@@ -581,7 +577,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         });
     }
 
-
     private void mSetAddArticleListener() {
         this.imageAddArticle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -626,7 +621,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         addArticleFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDARTICLE_TAG);
 
     }
-
 
     //End Region Private Methods
 

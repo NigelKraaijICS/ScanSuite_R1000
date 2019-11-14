@@ -67,7 +67,7 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
                 @Override
                 public void onClick(View v) {
 
-                    //Set the current workplace
+                    //Set the current workplaceStr
                     cWorkplace.currentWorkplace = workplace;
 
                     if (cAppExtension.context instanceof PickorderLinesActivity) {

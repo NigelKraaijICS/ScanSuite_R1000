@@ -657,7 +657,15 @@ public class cSetting {
     }
 
 
+    public static boolean RECEIVE_AMOUNT_MANUAL_MA(){
 
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_AMOUNT_MANUAL_MA);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
 
     //End Region Settings
 

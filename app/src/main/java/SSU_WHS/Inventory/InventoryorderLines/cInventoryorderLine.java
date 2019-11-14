@@ -29,6 +29,26 @@ public class cInventoryorderLine {
 
     public List<cInventoryorderLineBarcode> lineBarcodesObl;
 
+    public List<cInventoryorderBarcode> barcodesObl(){
+
+        List<cInventoryorderBarcode> resultObl = new ArrayList<>();
+
+        if (cInventoryorder.currentInventoryOrder.barcodesObl() == null || cInventoryorder.currentInventoryOrder.barcodesObl().size() == 0) {
+            return  resultObl;
+        }
+
+        //Loop through all barcodes, and if item matches add it to the list
+        for (cInventoryorderBarcode inventoryorderBarcode : cInventoryorder.currentInventoryOrder.barcodesObl()) {
+                        if (inventoryorderBarcode.getItemNoStr().equalsIgnoreCase(this.getItemNoStr()) &&
+                            inventoryorderBarcode.getVariantCodeStr().equalsIgnoreCase(this.getVariantCodeStr())) {
+                resultObl.add(inventoryorderBarcode);
+            }
+        }
+
+        return  resultObl;
+
+    }
+
     public static cInventoryorderLineViewModel gInventoryorderLineViewModel;
     public static cInventoryorderLineViewModel getInventoryorderLineViewModel() {
         if (gInventoryorderLineViewModel == null) {
@@ -224,7 +244,7 @@ public class cInventoryorderLine {
         return true;
     }
 
-    public boolean pAddLineBarcodeBln(String pvBarcodeStr, Double pvQuantityDbl) {
+    public cInventoryorderLineBarcode pAddLineBarcode(String pvBarcodeStr, Double pvQuantityDbl) {
 
         if (this.lineBarcodesObl == null) {
             this.lineBarcodesObl = new ArrayList<>();
@@ -239,7 +259,8 @@ public class cInventoryorderLine {
         cInventoryorderLineBarcode.allLineBarcodesObl.add(inventoryorderLineBarcode);
         this.lineBarcodesObl.add(inventoryorderLineBarcode);
 
-        return  true;
+
+        return  inventoryorderLineBarcode;
     }
 
     public boolean pGetArticleImageBln(){
@@ -335,7 +356,10 @@ public class cInventoryorderLine {
             //Reset this line
             this.quantityHandledDbl = 0.0;
             this.pUpdateQuantityInDatabaseBln();
-            this.lineBarcodesObl.clear();
+
+            if (this.lineBarcodesObl != null) {
+                this.lineBarcodesObl.clear();
+            }
 
             return  result;
         }

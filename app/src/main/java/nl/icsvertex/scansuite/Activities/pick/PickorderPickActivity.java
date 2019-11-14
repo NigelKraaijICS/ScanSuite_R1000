@@ -47,7 +47,7 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 
 import nl.icsvertex.scansuite.Fragments.dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.ArticleFullViewFragment;
-import nl.icsvertex.scansuite.Fragments.dialogs.BarcodePickerFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -65,7 +65,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private static Handler minusHandler;
     private static Handler plusHandler;
     private static ConstraintLayout pickorderPickContainer;
-    private static ConstraintLayout probeersel;
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubtext;
@@ -191,7 +190,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     public void mFindViews() {
 
         this.pickorderPickContainer = findViewById(R.id.pickorderPickContainer);
-        this.probeersel = findViewById(R.id.probeersel);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -320,7 +318,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
     }
-
 
     public static void pCancelPick() {
         cPickorderLine.currentPickOrderLine.quantityHandledDbl = Double.valueOf(0);
@@ -904,7 +901,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.mPickDone();
     }
 
-    private static void mGetNextPickLineFromLocation() {
+    private static void mGetNextPickLineForCurrentBin() {
 
         cResult hulpResult;
 
@@ -932,12 +929,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        PickorderPickActivity.mNextLineForBin();
+        PickorderPickActivity.mInitnewLineForBin();
         return;
 
     }
 
-    private static void mNextLineForBin() {
+    private static void mInitnewLineForBin() {
 
         //Play a sound
         cUserInterface.pPlaySound(R.raw.message, null);
@@ -948,7 +945,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //Show animation and initialize fields
         Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.shrink_and_fade);
-        PickorderPickActivity.probeersel.startAnimation(animation);
+        PickorderPickActivity.pickorderPickContainer.startAnimation(animation);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -1050,7 +1047,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private static void mPickDone() {
 
         PickorderPickActivity.mSendPickorderLine();
-        PickorderPickActivity.mGetNextPickLineFromLocation();
+        PickorderPickActivity.mGetNextPickLineForCurrentBin();
 
     }
 
@@ -1264,8 +1261,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mShowBarcodeSelectFragment() {
-        BarcodePickerFragment barcodePickerFragment = new BarcodePickerFragment();
-        barcodePickerFragment.show(cAppExtension.fragmentManager, BARCODEPICKERFRAGMENT_TAG);
+        BarcodeFragment barcodeFragment = new BarcodeFragment();
+        barcodeFragment.show(cAppExtension.fragmentManager, BARCODEPICKERFRAGMENT_TAG);
         return;
     }
 

@@ -135,7 +135,10 @@ public class cInventoryorderBin {
            // Reset all lines and details via webservice
            List<cInventoryorderLine> hulpObl =cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(this.getBinCodeStr());
            for (cInventoryorderLine inventoryorderLine : hulpObl) {
+
+               cInventoryorderLine.currentInventoryOrderLine = inventoryorderLine;
                inventoryorderLine.pResetRst();
+               cInventoryorderLine.currentInventoryOrderLine = null;
            }
 
            //Reset statusInt

@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ICS.Utils.cText;
+import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.General.cDatabase;
 
 @Entity(tableName= cDatabase.TABLENAME_INVENTORYORDERBARCODE)
@@ -107,5 +108,18 @@ public class cInventoryorderBarcodeEntity {
         }
     }
 
+
+    public cInventoryorderBarcodeEntity(cArticleBarcode pvArticleBarcode) {
+            this.barcode = pvArticleBarcode.getBarcodeStr();
+            this.barcodetype = cText.pIntToStringStr(pvArticleBarcode.getBarcodeTypeInt());
+            this.isuniquebarcode = pvArticleBarcode.getUniqueBarcodeBln();
+            this.itemno = pvArticleBarcode.getItemNoStr();
+            this.variantCode = pvArticleBarcode.getVariantCodeStr();
+            this.itemType = "";
+            this.quantityPerUnitOfMeasure = pvArticleBarcode.getQuantityPerUnitOfMeasureDbl();
+            this.unitOfMeasure = pvArticleBarcode.getUnitOfMeasureStr();
+            this.quantityHandled = 0.0;
+            this.invAmountManual = false;
+    }
 //End Region Constructor
 }

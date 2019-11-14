@@ -3,6 +3,7 @@ package nl.icsvertex.scansuite.Fragments.dialogs;
 
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,6 +127,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
             }
         });
     }
+
     private void mSetAddArticleListener() {
         this.addArticleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +155,6 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
             }
         });
     }
-
 
     public static void pHandleScan(String pvScannedBarcodeStr) {
 

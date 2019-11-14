@@ -212,7 +212,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         }
 
         //Renew data, so only current lines are shown
-        InventoryorderBinActivity.pFillLines();
+        mGetData();
 
     }
 

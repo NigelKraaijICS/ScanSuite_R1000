@@ -217,9 +217,9 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         this.mShowComments();
 
-        //Check if we need to register a workplace
+        //Check if we need to register a workplaceStr
         if (cWorkplace.currentWorkplace == null) {
-            //Show the workplace fragment
+            //Show the workplaceStr fragment
             this.mShowWorkplaceFragment();
             return;
         }
@@ -330,7 +330,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        //Register barcode receiver, because the workplace fragment has been shown
+        //Register barcode receiver, because the workplaceStr fragment has been shown
         cBarcodeScan.pRegisterBarcodeReceiver();
 
         cUserInterface.pShowSnackbarMessage(ShiporderLinesActivity.container,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);

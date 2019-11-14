@@ -115,7 +115,6 @@ public class cUser {
         }
                 }
 
-
     public boolean pGetBranchesBln() {
 
         if (this.branchesObl != null){
@@ -287,5 +286,6 @@ public class cUser {
             return  false;
         }
     }
+
     //End Region Public Methods
 }

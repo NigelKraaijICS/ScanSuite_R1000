@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import nl.icsvertex.scansuite.Activities.intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
@@ -181,6 +182,11 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
             InventoryorderBinsActivity.pCloseOrder();
+            this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
+            IntakeorderLinesActivity.pLeaveActivity();
             this.dismiss();
         }
 

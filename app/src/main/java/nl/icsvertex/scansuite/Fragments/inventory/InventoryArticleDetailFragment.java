@@ -46,13 +46,14 @@ import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
+import nl.icsvertex.scansuite.Fragments.dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryArticleDetailFragment extends DialogFragment implements iICSDefaultFragment {
 
     //Region Public Properties
-    static final String NUMBERPICKERFRAGMENT_TAG = "NUMBERPICKERFRAGMENT_TAG";
+    static final String BARCODEFRAGMENT_TAG = "BARCODERAGMENT_TAG";
     //End Region Public Properties
 
     //Region Private Properties
@@ -115,7 +116,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         cAppExtension.dialogFragment = this;
         this.mFragmentInitialize();
-
     }
 
     @Override
@@ -204,14 +204,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.articleDescription2Text.setText(cInventoryorderLine.currentInventoryOrderLine.getDescription2Str());
         this.articleItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getItemNoStr() + " " + cInventoryorderLine.currentInventoryOrderLine.getVariantCodeStr());
 
-        if (cInventoryorderBarcode.currentInventoryOrderBarcode != null) {
-            InventoryArticleDetailFragment.articleBarcodeText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr() + " (" + cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl().intValue() + ")");
-
-            InventoryArticleDetailFragment.articleUnitOfMeasureText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getUnitOfMeasureStr());
-        } else {
-            InventoryArticleDetailFragment.articleBarcodeText.setText(cAppExtension.context.getString(R.string.message_unknown_barcode));
-            InventoryArticleDetailFragment.articleUnitOfMeasureText.setText("");
-        }
 
         this.articleVendorItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getVendorItemNoStr() + ' ' + cInventoryorderLine.currentInventoryOrderLine.getVendorItemDescriptionStr());
 
@@ -228,6 +220,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         InventoryArticleDetailFragment.mShowArticleImage();
         InventoryArticleDetailFragment.mShowOrHideGenericExtraFields();
+        InventoryArticleDetailFragment.mShowBarcodeInfo();
+
     }
 
     @Override
@@ -238,6 +232,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
             this.mSetPlusListener();
             this.mSetMinusListener();
             this.mSetEditorActionListener();
+            this.mSetImageButtonBarcodeListener();
         }
     }
 
@@ -281,9 +276,11 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     }
 
+
     //End Region Public Methods
 
     //Region Private Methods
+
 
     private static boolean mCheckBarcodeWithLineBarcodesBln(cBarcodeScan pvBarcodeScan){
 
@@ -306,7 +303,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         if (!inventoryorderBarcode.getItemNoStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getItemNoStr()) ||
             ! inventoryorderBarcode.getVariantCodeStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getVariantCodeStr())) {
             return false;
-
         }
 
         //We scanned a barcode that belongs to the current article, so check if we already have a line barcode
@@ -317,11 +313,16 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
                inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr())) {
                 cInventoryorderLineBarcode.currentInventoryorderLineBarcode = inventoryorderLineBarcode;
                 cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
-                return true;
+                InventoryArticleDetailFragment.mShowBarcodeInfo();
+                return  true;
             }
         }
 
-        return  false;
+        //Scanned barcode is correct, but we need to create a line barcode
+        cInventoryorderLineBarcode.currentInventoryorderLineBarcode =  cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(inventoryorderBarcode.getBarcodeStr(),inventoryorderBarcode.getQuantityPerUnitOfMeasureDbl());
+        cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
+        InventoryArticleDetailFragment.mShowBarcodeInfo();
+        return  true;
 
     }
 
@@ -648,6 +649,55 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
             mDoDelayedPlus(this, milliSecsLng);
         }
     };
+
+    private static void mShowBarcodeInfo(){
+
+
+        if (cInventoryorderBarcode.currentInventoryOrderBarcode != null) {
+            InventoryArticleDetailFragment.articleBarcodeText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr() + " (" + cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl().intValue() + ")");
+
+            InventoryArticleDetailFragment.articleUnitOfMeasureText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getUnitOfMeasureStr());
+        } else {
+            InventoryArticleDetailFragment.articleBarcodeText.setText(cAppExtension.context.getString(R.string.message_unknown_barcode));
+            InventoryArticleDetailFragment.articleUnitOfMeasureText.setText("");
+        }
+
+    }
+
+    private void mSetImageButtonBarcodeListener() {
+        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View pvView) {
+
+                if (cInventoryorderLine.currentInventoryOrderLine.barcodesObl() == null || cInventoryorderLine.currentInventoryOrderLine.barcodesObl().size() == 0) {
+                    return;
+                }
+
+                //If we only have one barcode, then automatticaly select that barcode
+                if (cInventoryorderLine.currentInventoryOrderLine.barcodesObl().size() == 1) {
+
+
+                    cBarcodeScan barcodeScan = new cBarcodeScan();
+                    barcodeScan.barcodeStr = cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr();
+                    barcodeScan.barcodeOriginalStr = cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr();
+                    barcodeScan.barcodeStr =  cText.pIntToStringStr(cBarcodeScan.BarcodeType.EAN13);
+
+                    InventoryArticleDetailFragment.pHandleScan(barcodeScan);
+                    return;
+                }
+
+                mShowBarcodeSelectFragment();
+                return;
+
+            }
+        });
+    }
+
+    private void mShowBarcodeSelectFragment() {
+        BarcodeFragment barcodeFragment = new BarcodeFragment();
+        barcodeFragment.show(cAppExtension.fragmentManager, BARCODEFRAGMENT_TAG);
+        return;
+    }
 
     //End Region Private Methods
 }

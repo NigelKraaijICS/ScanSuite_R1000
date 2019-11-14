@@ -13,12 +13,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
+import nl.icsvertex.scansuite.Activities.pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Fragments.inventory.InventoryArticleDetailFragment;
 import nl.icsvertex.scansuite.R;
 
 
-public class BarcodePickerFragment extends DialogFragment implements iICSDefaultFragment {
+public class BarcodeFragment extends DialogFragment implements iICSDefaultFragment {
 
     //Region Public Properties
 
@@ -34,7 +40,7 @@ public class BarcodePickerFragment extends DialogFragment implements iICSDefault
 
 
     //Region Constructor
-    public BarcodePickerFragment() {
+    public BarcodeFragment() {
 
     }
     //End Region Constructor
@@ -49,7 +55,6 @@ public class BarcodePickerFragment extends DialogFragment implements iICSDefault
 
     @Override
     public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
-        cAppExtension.dialogFragment = this;
         this.mFragmentInitialize();
     }
 
@@ -66,8 +71,6 @@ public class BarcodePickerFragment extends DialogFragment implements iICSDefault
         this.buttonClose = getView().findViewById(R.id.buttonClose);
     }
 
-
-
     @Override
     public void mFieldsInitialize() {
         this.mFillRecyclerView();
@@ -82,14 +85,27 @@ public class BarcodePickerFragment extends DialogFragment implements iICSDefault
         this.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cAppExtension.dialogFragment.dismiss();
+               dismiss();
             }
         });
     }
 
     private void mFillRecyclerView() {
         this.barcodeRecyclerview.setHasFixedSize(false);
-        this.barcodeRecyclerview.setAdapter(cPickorderBarcode.getPickorderBarcodeAdapter());
+
+
+        if (cAppExtension.activity instanceof PickorderPickActivity) {
+            this.barcodeRecyclerview.setAdapter(cPickorderBarcode.getPickorderBarcodeAdapter());
+        }
+
+        if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
+            this.barcodeRecyclerview.setAdapter(cIntakeorderBarcode.getIntakeorderBarcodeAdapter());
+        }
+
+        if (cAppExtension.activity instanceof InventoryorderBinActivity) {
+            this.barcodeRecyclerview.setAdapter(cInventoryorderBarcode.getInventoryorderBarcodeAdapter());
+        }
+
         this.barcodeRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
 }

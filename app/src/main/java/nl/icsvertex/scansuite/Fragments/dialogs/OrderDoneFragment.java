@@ -20,6 +20,7 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import nl.icsvertex.scansuite.Activities.intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -169,6 +170,10 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
 
                 if (cAppExtension.activity  instanceof ShiporderLinesActivity) {
                     ShiporderLinesActivity.pShippingDone();
+                }
+
+                if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
+                    IntakeorderLinesActivity.pDone();
                 }
 
 

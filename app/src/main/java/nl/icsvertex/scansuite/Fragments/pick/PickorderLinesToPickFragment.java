@@ -96,7 +96,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     //Region iICSDefaultFragment defaults
     @Override
     public void mFragmentInitialize() {
-
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
@@ -133,8 +132,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         else {
             this.quickhelpText.setText(R.string.scan_bincode);
         }
-
-
     }
 
     @Override

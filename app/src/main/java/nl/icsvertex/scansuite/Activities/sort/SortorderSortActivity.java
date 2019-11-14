@@ -43,7 +43,7 @@ import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Fragments.dialogs.BarcodePickerFragment;
+import nl.icsvertex.scansuite.Fragments.dialogs.BarcodeFragment;
 
 import static android.view.View.GONE;
 
@@ -882,8 +882,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mShowBarcodeSelectFragment() {
-        BarcodePickerFragment barcodePickerFragment = new BarcodePickerFragment();
-        barcodePickerFragment.show(cAppExtension.fragmentManager, BARCODEPICKERFRAGMENT_TAG);
+        BarcodeFragment barcodeFragment = new BarcodeFragment();
+        barcodeFragment.show(cAppExtension.fragmentManager, BARCODEPICKERFRAGMENT_TAG);
     }
 
     private static void mEnablePlusMinusAndBarcodeSelectViews() {

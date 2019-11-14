@@ -7,6 +7,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 import nl.icsvertex.scansuite.Activities.general.MenuActivity;
+import nl.icsvertex.scansuite.Activities.intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.intake.IntakeorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.inventory.InventoryorderSelectActivity;
@@ -181,6 +184,19 @@ public class cBarcodeScan {
                         InventoryorderBinActivity.pHandleScan(barcodeScan);
                     }
 
+                    //Intake
+                    if (cAppExtension.activity instanceof IntakeorderSelectActivity){
+                        IntakeorderSelectActivity.pHandleScan(barcodeStr);
+                    }
+
+                    if (cAppExtension.activity instanceof IntakeorderLinesActivity){
+                        IntakeorderLinesActivity.pHandleScan(barcodeScan,false);
+                    }
+
+                    if (cAppExtension.activity instanceof IntakeOrderIntakeActivity){
+                        IntakeOrderIntakeActivity.pHandleScan(barcodeScan);
+                    }
+
                 }
             };
         }
@@ -234,7 +250,6 @@ public class cBarcodeScan {
                     if (cAppExtension.dialogFragment instanceof AddEnvironmentFragment) {
                         AddEnvironmentFragment.pHandleScan(barcodeStr);
                     }
-
 
                     if (cAppExtension.dialogFragment instanceof CreateInventoryFragment) {
                         CreateInventoryFragment.pHandleScan(barcodeStr);

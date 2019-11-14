@@ -239,6 +239,7 @@ public class cDatabase {
     public static final String RECEIVEAMOUNTMANUAL_MA_NAMESTR = "Receive_Amount_manual_ma";
     public static final String RECEIVEBARCODECHECK_NAMESTR = "Receive_Barcode_check";
     public static final String RECEIVESTOREAUTOACCEPTATREQUESTED_NAMESTR = "Receive_store_auto_accept_at_requested";
+    public static final String RECEIVESTOREAUTOACCEPTATNEWITEM_NAMESTR = "Receive_store_auto_accept_at_new_item";
     public static final String RECEIVESTOREAUTOACCEPTVALIDATIONMESSAGE_NAMESTR = "Receive_store_auto_accept_validation_message";
     public static final String RECEIVENOEXTRABINS_NAMESTR = "Receive_no_extra_bins";
     public static final String RECEIVENOEXTRAITEMS_NAMESTR = "Receive_no_extra_items";
