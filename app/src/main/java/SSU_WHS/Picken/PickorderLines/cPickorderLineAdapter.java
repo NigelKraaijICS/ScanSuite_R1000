@@ -1,11 +1,13 @@
 package SSU_WHS.Picken.PickorderLines;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,6 +34,9 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         private TextView textViewPickorderLineSourceNo;
         private LinearLayout pickorderLineItemLinearLayout;
 
+        public RelativeLayout viewBackground;
+        public ConstraintLayout viewForeground;
+
         public PickorderLineViewHolder(View pvItemView) {
             super(pvItemView);
             this.textViewPickorderLineLocation = pvItemView.findViewById(R.id.textViewPickorderLineLocation);
@@ -50,7 +55,9 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
             this.textViewPickorderLineSourceNo.setMarqueeRepeatLimit(5);
             this.textViewPickorderLineSourceNo.setSelected(true);
             this.textViewPickorderLineQuantity = pvItemView.findViewById(R.id.textViewQuantityLabel);
-            this. pickorderLineItemLinearLayout = pvItemView.findViewById(R.id.pickorderLineItemLinearLayout);
+            this.pickorderLineItemLinearLayout = pvItemView.findViewById(R.id.pickorderLineItemLinearLayout);
+            this.viewBackground = pvItemView.findViewById(R.id.view_background);
+            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
         }
     }
     //End Region Public Properties
