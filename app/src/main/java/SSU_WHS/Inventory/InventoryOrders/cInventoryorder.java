@@ -766,16 +766,10 @@ public class cInventoryorder {
     public  List<cInventoryorderLine> pGetLinesForBinObl(String pvBincodeStr) {
 
         List<cInventoryorderLine> resultObl = new ArrayList<>();
-        List<cInventoryorderLineEntity> hulpResultObl;
-
-        hulpResultObl = cInventoryorderLine.getInventoryorderLineViewModel().pGetLinesFromDatabaseObl(pvBincodeStr);
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return resultObl;
-        }
-
-        for (cInventoryorderLineEntity inventoryorderLineEntity : hulpResultObl) {
-            cInventoryorderLine inventoryorderLine = new cInventoryorderLine(inventoryorderLineEntity);
-            resultObl.add(inventoryorderLine);
+        for (cInventoryorderLine inventoryorderLine : cInventoryorder.currentInventoryOrder.linesObl()) {
+            if (inventoryorderLine.getBinCodeStr().equalsIgnoreCase(pvBincodeStr)) {
+                resultObl.add((inventoryorderLine));
+            }
         }
 
         return resultObl;

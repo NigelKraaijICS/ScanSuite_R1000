@@ -656,7 +656,6 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-
     public static boolean RECEIVE_AMOUNT_MANUAL_MA(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_AMOUNT_MANUAL_MA);
@@ -666,6 +665,17 @@ public class cSetting {
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
+
+    public static boolean RECEIVE_STORE_AUTO_ACCEPT_AT_NEW_BIN(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_STORE_AUTO_ACCEPT_AT_NEW_BIN);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
 
     //End Region Settings
 

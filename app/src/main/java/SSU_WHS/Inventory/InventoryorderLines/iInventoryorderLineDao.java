@@ -37,5 +37,4 @@ public interface iInventoryorderLineDao {
 
     @Query("UPDATE InventoryOrderLines SET QuantityHandled = :pvQuantityHandledDbl , Quantity = :pvQuantityHandledDbl   WHERE LineNo = :pvLineNoLng")
     int updateOrderLineQuantity(Long pvLineNoLng, Double pvQuantityHandledDbl);
-
 }

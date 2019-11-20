@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cDateAndTime;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
@@ -188,28 +187,12 @@ public class cIntakeorderMATLine {
         return gIntakeorderMATLineViewModel;
     }
 
-    public static cIntakeorderMATLineAdapter gIntakeorderMATLinesToDoAdapter;
-    public static cIntakeorderMATLineAdapter getIntakeorderMATLinesToDoAdapter() {
-        if (gIntakeorderMATLinesToDoAdapter == null) {
-            gIntakeorderMATLinesToDoAdapter = new cIntakeorderMATLineAdapter();
+    public static cIntakeorderMATLineAdapter gIntakeorderMATLineAdapter;
+    public static cIntakeorderMATLineAdapter getIntakeorderMATLineAdapter() {
+        if (gIntakeorderMATLineAdapter == null) {
+            gIntakeorderMATLineAdapter = new cIntakeorderMATLineAdapter();
         }
-        return gIntakeorderMATLinesToDoAdapter;
-    }
-
-    public static cIntakeorderMATLineAdapter gIntakeorderMATLineDoneAdapter;
-    public static cIntakeorderMATLineAdapter getIntakeorderMATLineDoneAdapter() {
-        if (gIntakeorderMATLineDoneAdapter == null) {
-            gIntakeorderMATLineDoneAdapter = new cIntakeorderMATLineAdapter();
-        }
-        return gIntakeorderMATLineDoneAdapter;
-    }
-
-    public static cIntakeorderMATLineAdapter gIntakeorderMATLineTotalAdapter;
-    public static cIntakeorderMATLineAdapter getIntakeorderMATLineTotalAdapter() {
-        if (gIntakeorderMATLineTotalAdapter == null) {
-            gIntakeorderMATLineTotalAdapter = new cIntakeorderMATLineAdapter();
-        }
-        return gIntakeorderMATLineTotalAdapter;
+        return gIntakeorderMATLineAdapter;
     }
 
     public static List<cIntakeorderMATLine> allIntakeorderMATLinesObl;

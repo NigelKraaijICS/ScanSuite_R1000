@@ -13,7 +13,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
-import nl.icsvertex.scansuite.Activities.intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorderBarcodeAdapter.intakeorderBarcodeViewHolder>  {

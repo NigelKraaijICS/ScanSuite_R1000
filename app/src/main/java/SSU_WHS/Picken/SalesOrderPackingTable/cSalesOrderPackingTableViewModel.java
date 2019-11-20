@@ -20,6 +20,7 @@ public class cSalesOrderPackingTableViewModel extends AndroidViewModel {
 
     //Region Public Methods
     public void insert(cSalesOrderPackingTableEntity salesOrderPackingTableEntity) {this.Repository .insert(salesOrderPackingTableEntity);}
+    public void delete(String pvPackingTableStr) {this.Repository.delete(pvPackingTableStr);}
     public void deleteAll() {this.Repository .pTruncateTable();}
     public List<cSalesOrderPackingTableEntity> getAll() {return this.Repository .pGetAllSalesOrderPackingTablesFromDatabaseObl();}
 

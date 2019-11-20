@@ -13,7 +13,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Activities.ship.ShiporderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import ICS.cAppExtension;
 
 public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.PickorderLinePackAndShipViewHolder> {

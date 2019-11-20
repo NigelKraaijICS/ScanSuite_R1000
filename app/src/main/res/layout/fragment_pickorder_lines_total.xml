@@ -6,7 +6,7 @@
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.pick.PickorderLinesTotalFragment">
+    tools:context=".Fragments.Pick.PickorderLinesTotalFragment">
        <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/recyclerViewPickorderLinesTotal"
        style="@style/defaultRecyclerView"

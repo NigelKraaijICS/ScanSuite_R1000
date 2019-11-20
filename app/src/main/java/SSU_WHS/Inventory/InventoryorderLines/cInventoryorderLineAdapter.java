@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +15,6 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryorderLineAdapter.InventoryorderLineViewHolder> {

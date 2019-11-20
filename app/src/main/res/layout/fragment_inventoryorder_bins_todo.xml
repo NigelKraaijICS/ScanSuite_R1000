@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.inventory.InventoryBinsToDoFragment"
+    tools:context=".Fragments.Inventory.InventoryBinsToDoFragment"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     >
@@ -27,7 +27,7 @@
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/quickhelp"
-        android:id="@+id/quickhelpContainer"
+        android:id="@+id/actionsContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

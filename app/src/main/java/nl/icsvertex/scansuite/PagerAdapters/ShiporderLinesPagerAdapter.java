@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Fragments.ship.ShiporderLinesShippedFragment;
-import nl.icsvertex.scansuite.Fragments.ship.ShiporderLinesToShipFragment;
-import nl.icsvertex.scansuite.Fragments.ship.ShiporderLinesTotalFragment;
+import nl.icsvertex.scansuite.Fragments.Ship.ShiporderLinesShippedFragment;
+import nl.icsvertex.scansuite.Fragments.Ship.ShiporderLinesToShipFragment;
+import nl.icsvertex.scansuite.Fragments.Ship.ShiporderLinesTotalFragment;
 
 public class ShiporderLinesPagerAdapter extends FragmentStatePagerAdapter {
 

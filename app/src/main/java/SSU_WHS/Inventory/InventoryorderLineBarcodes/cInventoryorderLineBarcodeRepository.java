@@ -30,13 +30,15 @@ public class cInventoryorderLineBarcodeRepository {
         new insertAsyncTask(inventoryorderLineBarcodeDao).execute(inventoryorderLineBarcodeEntity);
     }
 
+    public void pDelete (cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity) {
+        new deleteAsyncTask(inventoryorderLineBarcodeDao).execute(inventoryorderLineBarcodeEntity);
+    }
+
+
     public void pDeleteAll () {
         new deleteAllAsyncTask(inventoryorderLineBarcodeDao).execute();
     }
 
-    public void pDeleteForLineNo(Integer pvLineNoInt) {
-        new mDeleteAllForLineNoAsyncTask(inventoryorderLineBarcodeDao).execute(pvLineNoInt);
-    }
 
     public void updateBarcodeAmount(String pvBarcodeStr, double pvAmountDbl) {
         UpdateBarcodeAmountParams updateBarcodeAmountParams = new UpdateBarcodeAmountParams(pvBarcodeStr, pvAmountDbl);
@@ -62,18 +64,7 @@ public class cInventoryorderLineBarcodeRepository {
         }
     }
 
-    private static class mDeleteAllForLineNoAsyncTask extends AsyncTask<Integer, Void, Void> {
-        private iInventoryorderLineBarcodeDao mAsyncTaskDao;
 
-        mDeleteAllForLineNoAsyncTask(iInventoryorderLineBarcodeDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected Void doInBackground(final Integer... params) {
-            mAsyncTaskDao.deleteLinesForLineNo(params[0]);
-            return null;
-        }
-    }
 
     private static class insertAsyncTask extends AsyncTask<cInventoryorderLineBarcodeEntity, Void, Void> {
         private iInventoryorderLineBarcodeDao mAsyncTaskDao;
@@ -87,6 +78,20 @@ public class cInventoryorderLineBarcodeRepository {
             return null;
         }
     }
+
+    private static class deleteAsyncTask extends AsyncTask<cInventoryorderLineBarcodeEntity, Void, Void> {
+        private iInventoryorderLineBarcodeDao mAsyncTaskDao;
+
+        deleteAsyncTask(iInventoryorderLineBarcodeDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final cInventoryorderLineBarcodeEntity... params) {
+            mAsyncTaskDao.delete(params[0]);
+            return null;
+        }
+    }
+
 
     private static class UpdateBarcodeAmountParams {
         String barcodeStr;

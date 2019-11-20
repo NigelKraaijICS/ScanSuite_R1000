@@ -2,7 +2,6 @@ package ICS.Utils;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import com.google.android.material.snackbar.Snackbar;
@@ -15,17 +14,14 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Fragments.dialogs.GettingDataFragment;
-import nl.icsvertex.scansuite.Fragments.dialogs.HugeErrorFragment;
-import nl.icsvertex.scansuite.Fragments.dialogs.PasswordFragment;
-import nl.icsvertex.scansuite.Fragments.dialogs.WebserviceErrorFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.GettingDataFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.HugeErrorFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
 
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HEADER;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HINT;
@@ -243,6 +239,17 @@ public class cUserInterface {
                 }
             }
         });
+    }
+
+    public static void pHideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) cAppExtension.activity.getSystemService(cAppExtension.activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = cAppExtension.activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(cAppExtension.activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static void pShowGettingData() {

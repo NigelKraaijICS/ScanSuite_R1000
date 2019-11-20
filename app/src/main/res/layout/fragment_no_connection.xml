@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".Fragments.dialogs.NoConnectionFragment"
+    tools:context=".Fragments.Dialogs.NoConnectionFragment"
     android:layout_margin="8dp">
     <TextView
         android:id="@+id/textViewCouldntConnectHeader"

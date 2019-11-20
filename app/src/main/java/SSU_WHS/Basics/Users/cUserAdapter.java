@@ -5,10 +5,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Activities.general.LoginActivity;
+import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHolder> {
@@ -18,17 +20,21 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
     public class UserViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewName;
         private TextView textViewUserName;
+        private TextView textViewInitials;
+        private ImageView imageViewMenuItem;
         public LinearLayout userItemLinearLayout;
 
-        public UserViewHolder(View itemView) {
-            super(itemView);
-            textViewName = itemView.findViewById(R.id.textViewName);
-            textViewName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewName.setSingleLine(true);
-            textViewName.setMarqueeRepeatLimit(5);
-            textViewName.setSelected(true);
-            textViewUserName = itemView.findViewById(R.id.textViewUserName);
-            userItemLinearLayout = itemView.findViewById(R.id.userItemLinearLayout);
+        public UserViewHolder(View pvItemView) {
+            super(pvItemView);
+            this.textViewName = pvItemView.findViewById(R.id.textViewName);
+            this.textViewName.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewName.setSingleLine(true);
+            this.textViewName.setMarqueeRepeatLimit(5);
+            this.textViewName.setSelected(true);
+            this.textViewUserName = pvItemView.findViewById(R.id.textViewUserName);
+            this.textViewInitials = pvItemView.findViewById(R.id.textViewInitials);
+            this.imageViewMenuItem = pvItemView.findViewById(R.id.imageViewMenuItem);
+            this.userItemLinearLayout = pvItemView.findViewById(R.id.userItemLinearLayout);
         }
     }
 
@@ -57,10 +63,11 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
             final cUser User = cUser.allUsersObl.get(position);
             holder.textViewName.setText(User.getNameStr());
             holder.textViewUserName.setText(User.getUsernameStr());
+            holder.textViewInitials.setText(User.getInitialsStr());
             holder.userItemLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-            mUserSelected(User);
+                    mUserSelected(User);
                 }
             });
         }

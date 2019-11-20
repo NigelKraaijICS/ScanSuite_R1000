@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.support.SupportApplicationFragment"
+    tools:context=".Fragments.Support.SupportApplicationFragment"
     android:padding="@dimen/default_padding">
     <TextView
         app:layout_constraintTop_toTopOf="parent"
@@ -26,10 +26,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
     <TextView
+        app:layout_constraintTop_toBottomOf="@id/textViewApplicationVersion"
+        style="@style/textFormLabel"
+        android:id="@+id/textViewApplicationInstalledLabel"
+        android:text="@string/label_application_installed"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+        style="@style/textFormValueConstrained"
+        android:id="@+id/textViewApplicationInstalled"
+        app:layout_constraintTop_toBottomOf="@id/textViewApplicationInstalledLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/testWebserviceImageButton"/>
+    <TextView
         style="@style/textFormLabel"
         android:id="@+id/textViewWebserviceLabel"
         android:text="@string/webservice"
-        app:layout_constraintTop_toBottomOf="@id/updateImageButton"
+        app:layout_constraintTop_toBottomOf="@id/textViewApplicationInstalled"
         app:layout_constraintStart_toStartOf="parent"
         />
     <TextView

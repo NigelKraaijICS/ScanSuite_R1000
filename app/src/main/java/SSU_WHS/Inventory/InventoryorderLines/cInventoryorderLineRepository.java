@@ -104,18 +104,6 @@ public class cInventoryorderLineRepository {
         }
     }
 
-    public List<cInventoryorderLineEntity> pGetInventoryorderLinesForBincodeFromDatabaseObl(String pvBincode) {
-        List<cInventoryorderLineEntity> ResultObl = null;
-        try {
-            ResultObl = new pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask(inventoryorderLineDao).execute(pvBincode).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
-    }
-
     public Double pGetTotalCountDbl() {
         Double resultDbl = Double.valueOf(0);
         try {
@@ -208,16 +196,7 @@ public class cInventoryorderLineRepository {
         }
     }
 
-    private static class pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask extends AsyncTask<String, Void, List<cInventoryorderLineEntity>> {
-        private iInventoryorderLineDao mAsyncTaskDao;
-        pGetInventoryorderLinesForBincodeFromDatabaseAsyncTask(iInventoryorderLineDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected List<cInventoryorderLineEntity> doInBackground(final String... params) {
-            return mAsyncTaskDao.getInventoryorderLineForBincode(params[0]);
-        }
-    }
+
 
     private static class pGetCountForBincodeFromDatabaseAsyncTask extends AsyncTask<String, Void, Double> {
         private iInventoryorderLineDao mAsyncTaskDao;
@@ -282,8 +261,8 @@ public class cInventoryorderLineRepository {
                 SoapObject barcodesHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODESLIST);
 
                 //Only loop through handled barcodes, of there are any
-                if (cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl != null) {
-                    for (cInventoryorderLineBarcode inventoryorderLineBarcode : cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl) {
+                if (cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl() != null) {
+                    for (cInventoryorderLineBarcode inventoryorderLineBarcode : cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl()) {
                         SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, inventoryorderLineBarcode.getBarcodeStr());
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, inventoryorderLineBarcode.getQuantityhandledDbl());

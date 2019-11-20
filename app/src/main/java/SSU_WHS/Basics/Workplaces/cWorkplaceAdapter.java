@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
-import nl.icsvertex.scansuite.Activities.ship.ShiporderLinesActivity;
-import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Fragments.dialogs.WorkplaceFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
 
 public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.WorkplaceViewHolder>{

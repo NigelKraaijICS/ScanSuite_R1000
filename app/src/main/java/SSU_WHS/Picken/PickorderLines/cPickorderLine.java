@@ -522,6 +522,17 @@ public class cPickorderLine {
             this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
             this.mUpdateQuanitityHandled(0);
 
+            //If we already have a processingSequence, then empty it
+            if (!this.processingSequenceStr.isEmpty()) {
+
+                //Check if we need to remove the SalesorderPackingTableLines
+               if (this.pGetLinesForProcessingSequenceObl().size() <= 1)  {
+                   cSalesOrderPackingTable.pDeleteFromDatabaseBln(this.processingSequenceStr);
+                }
+
+                this.pUpdateProcessingSequenceBln("");
+            }
+
 
 
             return  true;
@@ -709,6 +720,27 @@ public class cPickorderLine {
 
         return "";
     }
+
+    public List<cPickorderLine> pGetLinesForProcessingSequenceObl() {
+
+        List<cPickorderLine> resultObl = new ArrayList<>();
+
+        if (cPickorder.currentPickOrder.linesObl() == null || cPickorder.currentPickOrder.linesObl().size() == 0) {
+            return resultObl;
+        }
+
+        for (cPickorderLine pickorderLine :cPickorder.currentPickOrder.linesObl() ) {
+
+            if (pickorderLine.processingSequenceStr.equalsIgnoreCase(this.processingSequenceStr)) {
+                resultObl.add(pickorderLine);
+            }
+
+        }
+
+
+        return resultObl;
+    }
+
 
     //todo: move this function to a different class
     public List<String> pGetAdvicedSortLocationsFromWebserviceObl(){

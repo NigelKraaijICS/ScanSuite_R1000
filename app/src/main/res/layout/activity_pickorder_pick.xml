@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:translationZ="2dp"
     android:layout_height="match_parent"
-    tools:context=".Activities.pick.PickorderPickActivity"
+    tools:context=".Activities.Pick.PickorderPickActivity"
     android:background="@color/colorBart"
     >
     <androidx.constraintlayout.widget.ConstraintLayout

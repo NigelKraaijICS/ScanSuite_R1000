@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Fragments.pick.PickorderLinesPickedFragment;
-import nl.icsvertex.scansuite.Fragments.pick.PickorderLinesToPickFragment;
-import nl.icsvertex.scansuite.Fragments.pick.PickorderLinesTotalFragment;
+import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
+import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
+import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesTotalFragment;
 
 public class PickorderLinesPagerAdapter extends FragmentStatePagerAdapter {
 

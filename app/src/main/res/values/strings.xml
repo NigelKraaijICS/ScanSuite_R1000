@@ -297,10 +297,10 @@
     <string name="message_abort_text">All open lines will be closed with a quantity of 0</string>
     <string name="button_abort">Abort</string>
 
-    <string name="message_pickorderbusy_header">Orderline still busy</string>
-    <string name="message_pickorderbusy_text">What do you want to do with the current order?</string>
-    <string name="message_pickorderbusy_accept">Accept</string>
-    <string name="message_pickorderbusy_reject">Reject</string>
+    <string name="message_orderbusy_header">Order still busy</string>
+    <string name="message_orderbusy_text">What do you want to do with the current order?</string>
+    <string name="message_orderbusy_accept">Accept</string>
+    <string name="message_orderbusy_reject">Reject</string>
     <string name="error_no_more_articles_to_pick">There are no more articles to pick for this barcode</string>
     <string name="error_couldnt_lock_order">This order could not be locked</string>
     <string name="comments">comments</string>
@@ -448,7 +448,7 @@
     <string name="no_barcodes_availabe_for_this_line">No barcodes available for this line</string>
     <string name="mutiple_barcodes_posible">Multiple barcodes possible</string>
     <string name="could_not_get_article_image">Could not get article image</string>
-    <string name="message_unknown_barcode">Unknown/unexppected barcode</string>
+    <string name="message_unknown_barcode">Unknown/unexpected barcode</string>
     <string name="error_inserting_salesorderpackingtable">Could not add salesorder packing table</string>
     <string name="error_updating_processing_sequence">Could not update processing sequence</string>
     <string name="previous_barcode_could_not_be_deleted">Previous barcodes could not be deleted</string>
@@ -559,5 +559,32 @@
     <string name="message_current_line_missing">Current line is missing</string>
     <string name="message_bin_or_item_missing">Bin or item missing</string>
     <string name="message_bin_wrong">Bin is wrong</string>
+    <string name="message_bin_not_allowed">Bin scan not allowed</string>
+    <string name="message_no_lines_for_this_barcode">No lines available for this barcode</string>
+
+    <!--region battery-->
+    <string name="battery_at_parameter1_percent">Battery is at %1$s%%</string>
+    <string name="battery_ischarging_over_parameter1">Battery is charging over %1$s</string>
+    <string name="battery_isnotcharging">Battery is not charging</string>
+    <string name="battery_unknownnotcharging">I can\'t tell if the battery is charging</string>
+
+    <string name="battery_usb">USB</string>
+    <string name="battery_ac">AC</string>
+    <string name="battery_wireless">wireless</string>
+
+    <string name="battery_power_connected">Connected</string>
+    <string name="battery_power_disconnected">Disconnected</string>
+
+    <!--endregion battery-->
+
+    <string name="android_no_codename">No codename</string>
+    <string name="application_unknown_install_date">Unknown install date</string>
+    <string name="label_application_installed">Installed on</string>
+    <string name="message_zero_lines_cant_be_reset">Lines with quantity 0 can\'t be reset</string>
+    <string name="message_finish_later">Finish later</string>
+    <string name="message_close_now">Close now</string>
+    <string name="message_bin_unknown">Bin %1$s unknown to this branch</string>
+
+
     <!--endregion Inventory-->
 </resources>

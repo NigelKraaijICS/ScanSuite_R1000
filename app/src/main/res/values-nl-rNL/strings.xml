@@ -70,7 +70,7 @@
     <string name="connectiontype_unknown">Geen idee</string>
     <string name="screentitle_menu">Menu</string>
     <string name="menuitem_external_return">Picking return supplier</string>
-    <string name="menuitem_intake">Intake</string>
+    <string name="menuitem_intake">Ontvangst/Opslag</string>
     <string name="menuitem_intake_eo">External intake</string>
     <string name="menuitem_intake_ma">Warehouse intake</string>
     <string name="menuitem_intake_om">Internal intake</string>
@@ -138,8 +138,8 @@
     <string name="tab_pickorderline_picked">Gepickt</string>
     <string name="tab_pickorderline_total">Totaal</string>
     <string name="im_at">Ik ben op</string>
-    <string name="scan_bincode">Scan lokatie</string>
-    <string name="scan_article_or_bincode">Scan artikel of lokatie</string>
+    <string name="scan_bincode">Scan locatie</string>
+    <string name="scan_article_or_bincode">Scan artikel of locatie</string>
     <string name="screentitle_pickorderpick">Picken</string>
     <string name="message_underpick_header">Manco bevestigen?</string>
     <string name="message_underpick_text">Je hebt er %1$s van deze nodig, je hebt er %2$s gepickt. Weet je zeker dat er geen artikelen meer beschikbaar zijn en dat je deze regel wil afsluiten?</string>
@@ -185,10 +185,10 @@
     <string name="message_abort_header">Deze opdracht afbreken?</string>
     <string name="message_abort_text">Alle open regels worden gesloten met aantal 0</string>
     <string name="button_abort">Afbreken</string>
-    <string name="message_pickorderbusy_header">Opdracht regel nog in behandeling</string>
-    <string name="message_pickorderbusy_text">Wat wil je met de huidige opdracht doen?</string>
-    <string name="message_pickorderbusy_accept">Accepteren</string>
-    <string name="message_pickorderbusy_reject">Afwijzen</string>
+    <string name="message_orderbusy_header">Opdracht nog in behandeling</string>
+    <string name="message_orderbusy_text">Wat wil je met de huidige opdracht doen?</string>
+    <string name="message_orderbusy_accept">Accepteren</string>
+    <string name="message_orderbusy_reject">Afwijzen</string>
     <string name="error_no_more_articles_to_pick">Er zijn geen artikelen meer voor deze barcode</string>
     <string name="error_couldnt_lock_order">Deze opdracht kon niet gelocked worden</string>
     <string name="comments">opmerkingen</string>
@@ -406,7 +406,7 @@
     <string name="screentitle_inventoryordercount">Inventarisatie telling</string>
     <string name="screentitle_inventoryorderselect">Inventarisatie</string>
     <string name="message_license_release_error">Licentie vrijgeven mislukt</string>
-    <string name="tab_inventorybin_todo">openen</string>
+    <string name="tab_inventorybin_todo">open</string>
     <string name="message_couldnt_create_order">Order kon niet aangemaakt worden</string>
     <string name="orders">opdrachten</string>
     <string name="message_line_save_failed">Opslaan van regel mislukt, probeer het nogmaals</string>
@@ -454,4 +454,22 @@
     <string name="message_no_lines_for_this_bin">Er zijn geen regels bekend voor deze BIN</string>
     <string name="message_wrong_bin">BIN verkeerd</string>
     <string name="screentitle_intake">Ontvangst/Opslag</string>
+    <string name="android_no_codename">Geen codenaam</string>
+    <string name="application_unknown_install_date">Onbekende installatie datum</string>
+    <string name="battery_ac">AC</string>
+    <string name="battery_at_parameter1_percent">Batterij is op %1$s%%</string>
+    <string name="battery_ischarging_over_parameter1">Batterij wordt opgeladen via %1$s</string>
+    <string name="battery_isnotcharging">Batterij laadt niet op</string>
+    <string name="battery_power_connected">Verbonden</string>
+    <string name="battery_power_disconnected">Niet verbonden</string>
+    <string name="battery_unknownnotcharging">Weet niet zeker of de batterij wordt opgeladen</string>
+    <string name="battery_usb">USB</string>
+    <string name="battery_wireless">draadloos</string>
+    <string name="label_application_installed">Geinstalleerd op</string>
+    <string name="message_bin_not_allowed">Locatie scans niet toegestaan</string>
+    <string name="message_close_now">Nu sluiten</string>
+    <string name="message_finish_later">Later afmaken</string>
+    <string name="message_no_lines_for_this_barcode">Geen regels beschikbaar voor deze barcode</string>
+    <string name="message_zero_lines_cant_be_reset">Regels met aantal 0 kunnen niet gereset worden</string>
+    <string name="message_bin_unknown">Locatie %1$s onbekend voor deze vestiging</string>
 </resources>

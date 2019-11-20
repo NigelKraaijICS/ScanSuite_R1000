@@ -34,7 +34,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
         <activity
-            android:name=".Activities.general.MainDefaultActivity"
+            android:name=".Activities.General.MainDefaultActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -44,130 +44,130 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.general.MenuActivity"
+            android:name=".Activities.General.MenuActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".Activities.general.LoginActivity"
+            android:parentActivityName=".Activities.General.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activities.general.LoginActivity"
+            android:name=".Activities.General.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.general.MainDefaultActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.General.MainDefaultActivity" />
         </activity>
         <activity
-            android:name=".Activities.pick.PickorderSelectActivity"
+            android:name=".Activities.Pick.PickorderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.general.MenuActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.General.MenuActivity" />
         </activity>
         <activity
-            android:name=".Activities.pick.PickorderLinesActivity"
+            android:name=".Activities.Pick.PickorderLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity" />
         </activity>
         <activity
-            android:name=".Activities.pick.PickorderPickActivity"
+            android:name=".Activities.Pick.PickorderPickActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity" />
         </activity>
-        <activity android:name=".Activities.sort.SortorderSortActivity"
+        <activity android:name=".Activities.Sort.SortorderSortActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
 
 
-        <activity android:name=".Activities.sort.SortorderLinesActivity"
+        <activity android:name=".Activities.Sort.SortorderLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name=".Activities.sort.SortorderSelectActivity"
+        <activity android:name=".Activities.Sort.SortorderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name=".Activities.ship.ShiporderSelectActivity"
+        <activity android:name=".Activities.Ship.ShiporderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name=".Activities.ship.ShiporderLinesActivity"
+        <activity android:name=".Activities.Ship.ShiporderLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name=".Activities.ship.ShiporderShipActivity"
+        <activity android:name=".Activities.Ship.ShiporderShipActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity
-            android:name=".Activities.inventory.InventoryorderSelectActivity"
+            android:name=".Activities.Inventory.InventoryorderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.general.MenuActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.General.MenuActivity" />
         </activity>
 
-        <activity android:name=".Activities.inventory.InventoryorderBinsActivity"
+        <activity android:name=".Activities.Inventory.InventoryorderBinsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".Activities.inventory.InventoryorderSelectActivity"
+            android:parentActivityName=".Activities.Inventory.InventoryorderSelectActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
         </activity>
 
-        <activity android:name=".Activities.inventory.InventoryorderBinActivity"
+        <activity android:name=".Activities.Inventory.InventoryorderBinActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".Activities.inventory.InventoryorderBinsActivity"
+            android:parentActivityName=".Activities.Inventory.InventoryorderBinsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
         </activity>
 
         <activity
-            android:name=".Activities.intake.IntakeorderSelectActivity"
+            android:name=".Activities.Intake.IntakeorderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.general.MenuActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.General.MenuActivity" />
         </activity>
 
-        <activity android:name=".Activities.intake.IntakeorderLinesActivity"
+        <activity android:name=".Activities.Intake.IntakeorderLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".Activities.intake.IntakeorderSelectActivity"
+            android:parentActivityName=".Activities.Intake.IntakeorderSelectActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.intake.IntakeorderSelectActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity" />
         </activity>
 
-        <activity android:name=".Activities.intake.IntakeOrderIntakeActivity"
+        <activity android:name=".Activities.Intake.IntakeOrderIntakeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".Activities.intake.IntakeorderLinesActivity"
+            android:parentActivityName=".Activities.Intake.IntakeorderLinesActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.intake.IntakeorderSelectActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity" />
         </activity>
 
         <meta-data

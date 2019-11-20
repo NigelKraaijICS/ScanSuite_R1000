@@ -6,7 +6,7 @@
     android:layout_width="0dp"
     android:layout_height="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.pick.PickorderLinesPickedFragment"
+    tools:context=".Fragments.Pick.PickorderLinesPickedFragment"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent">
     <androidx.appcompat.widget.SearchView
@@ -20,17 +20,33 @@
         style="@style/defaultRecyclerView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recyclerSearchView"
-        app:layout_constraintBottom_toTopOf="@id/switchDefects"
+        app:layout_constraintBottom_toTopOf="@id/actionsConstraintView"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
-        style="@style/pillButton"
-        android:id="@+id/abortOrderView"
+        android:id="@+id/actionsConstraintView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
         >
+        <Switch
+            android:id="@+id/switchDefects"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_double_margin"
+            android:text="@string/show_only_defects"
+            app:layout_constraintBottom_toTopOf="@id/actionsConstraintView"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/pillButton"
+            android:id="@+id/abortConstraintView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            >
         <TextView
             android:id="@+id/textViewAbortOrder"
             android:layout_width="wrap_content"
@@ -40,17 +56,6 @@
             android:textColor="@color/colorPrimary"
             app:layout_constraintStart_toEndOf="@id/imageAbortOrder"
             app:layout_constraintTop_toTopOf="@id/imageAbortOrder"
-            android:paddingRight="@dimen/default_double_padding"
-            android:paddingEnd="@dimen/default_double_padding"/>
-        <TextView
-            android:id="@+id/textViewCurrentOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/textsize_big"
-            android:textColor="@color/colorPrimary"
-            android:text="@string/abort_order_order"
-            app:layout_constraintStart_toStartOf="@id/textViewAbortOrder"
-            app:layout_constraintTop_toBottomOf="@id/textViewAbortOrder"
             android:paddingRight="@dimen/default_double_padding"
             android:paddingEnd="@dimen/default_double_padding"/>
         <androidx.appcompat.widget.AppCompatImageView
@@ -64,13 +69,6 @@
             android:layout_height="48dp"
             app:srcCompat="@drawable/ic_abort_black_24dp"
             app:layout_constraintStart_toStartOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <Switch
-        android:id="@+id/switchDefects"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/default_double_margin"
-        android:text="@string/show_only_defects"
-        app:layout_constraintBottom_toTopOf="@id/abortOrderView"
-        app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

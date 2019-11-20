@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import ICS.Utils.cText;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import nl.icsvertex.scansuite.Activities.pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 

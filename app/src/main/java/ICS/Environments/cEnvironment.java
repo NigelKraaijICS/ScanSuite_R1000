@@ -16,25 +16,21 @@ public class cEnvironment {
     //region Public Properties
 
     private String nameStr;
-
     public String getNameStr() {
         return nameStr;
     }
 
     private String descriptionStr;
-
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
     private String webserviceURLStr;
-
     String getWebserviceURLStr() {
         return webserviceURLStr;
     }
 
     private Boolean isDefaultBln;
-
     public Boolean isDefaultBln() {
         return getDefaultBln();
     }
@@ -131,20 +127,6 @@ public class cEnvironment {
             environment.inDatabaseBln = true;
             cEnvironment.allEnviroments.add(environment);
         }
-    }
-
-    public static cEnvironment getEnvironmentByName(String pvEnvironmentName) {
-
-        if (cEnvironment.allEnviroments == null) {
-            return null;
-        }
-
-        for (cEnvironment environment : cEnvironment.allEnviroments) {
-            if (environment.nameStr.equalsIgnoreCase(pvEnvironmentName)) {
-                return environment;
-            }
-        }
-        return null;
     }
 
     public static cEnvironment getDefaultEnvironment() {

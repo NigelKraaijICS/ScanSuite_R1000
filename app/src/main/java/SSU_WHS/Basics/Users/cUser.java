@@ -27,6 +27,40 @@ public class cUser {
         return nameStr;
     }
 
+    public String getInitialsStr() {
+
+        String firstInitialStr;
+        String lastInitialStr;
+        String resultStr;
+
+        if (this.getNameStr() == null || this.getNameStr().isEmpty()) {
+            return "??";
+        }
+        String[] elementArray = this.getNameStr().trim().split(" ");
+
+        ArrayList<String> elementObl = new ArrayList<>();
+        for (String s: elementArray) {
+            String c = s.replaceAll("\\s", "");
+            if (!c.isEmpty()) {
+                elementObl.add(c);
+            }
+        }
+
+        if (elementObl.size() == 1) {
+            firstInitialStr = elementObl.get(0).substring(0,1);
+            lastInitialStr = elementObl.get(0).substring(elementObl.get(0).length() -1);
+            resultStr = firstInitialStr + lastInitialStr;
+        } else {
+            firstInitialStr = elementObl.get(0).substring(0,1);
+            lastInitialStr= elementObl.get(elementObl.size() -1).substring(0,1);
+            resultStr= firstInitialStr + lastInitialStr;
+        }
+
+        return resultStr.toUpperCase();
+
+    }
+
+
     public Integer importfileInt;
     public Integer getImportfileInt() {
         return importfileInt;

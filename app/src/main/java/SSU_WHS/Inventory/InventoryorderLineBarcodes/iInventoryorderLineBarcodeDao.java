@@ -21,9 +21,6 @@ public interface iInventoryorderLineBarcodeDao {
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDERLINEBARCODE)
     void deleteAll();
 
-    @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDERLINEBARCODE + " WHERE " + cDatabase.LINENO_NAMESTR + " == :pvLineNoInt")
-    void deleteLinesForLineNo(Integer pvLineNoInt);
-
     @Query("UPDATE " + cDatabase.TABLENAME_INVENTORYORDERLINEBARCODE + " SET " + cDatabase.QUANTITYHANDLED_NAMESTR + " = :pvAmountDbl WHERE " + cDatabase.BARCODE_NAMESTR + " = :pvBarcodeStr")
     void updateBarcodeAmount(String pvBarcodeStr, double pvAmountDbl);
 }

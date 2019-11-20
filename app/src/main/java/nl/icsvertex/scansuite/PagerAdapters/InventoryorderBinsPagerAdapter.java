@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsDoneFragment;
-import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsToDoFragment;
-import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsTotalFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsToDoFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsTotalFragment;
 
 
 public class InventoryorderBinsPagerAdapter extends FragmentStatePagerAdapter {

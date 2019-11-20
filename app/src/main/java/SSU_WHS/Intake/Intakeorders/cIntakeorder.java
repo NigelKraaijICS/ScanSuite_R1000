@@ -30,30 +30,7 @@ import nl.icsvertex.scansuite.R;
 
 public class cIntakeorder {
 
-    public cIntakeorderEntity intakeorderEntity;
-    public boolean indatabaseBln;
-
-    public static cIntakeorderViewModel gIntakeorderViewModel;
-
-    public static cIntakeorderViewModel getIntakeorderViewModel() {
-        if (gIntakeorderViewModel == null) {
-            gIntakeorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
-        }
-        return gIntakeorderViewModel;
-    }
-
-    public static cIntakeorderAdapter gIntakeorderAdapter;
-    public static cIntakeorderAdapter getIntakeorderAdapter() {
-        if (gIntakeorderAdapter == null) {
-            gIntakeorderAdapter = new cIntakeorderAdapter();
-        }
-        return gIntakeorderAdapter;
-    }
-
-    public static List<cIntakeorder> allIntakeordersObl;
-    public static cIntakeorder currentIntakeOrder;
-
-    public String ordernumberStr;
+     public String ordernumberStr;
     public String getOrderNumberStr() {return this.ordernumberStr;}
 
     public String ordertypeStr;
@@ -107,9 +84,6 @@ public class cIntakeorder {
     public boolean receiveStoreAutoAcceptAtRequestedBln;
     public boolean getReceiveStoreAutoAcceptAtRequestedBln() {return this.receiveStoreAutoAcceptAtRequestedBln;}
 
-    public boolean receiveStoreAutoAcceptAtNewItemBln;
-    public boolean getReceiveStoreAutoAcceptAtNewItemBln() {return this.receiveStoreAutoAcceptAtNewItemBln;}
-
     public boolean receiveStoreAutoAcceptValidationMessageBln;
     public boolean getReceiveStoreAutoAcceptValidationMessageBln() {return this.receiveStoreAutoAcceptValidationMessageBln;}
 
@@ -155,12 +129,7 @@ public class cIntakeorder {
     public String interfaceresultmethod;
     public String getInterfaceResultMethodStr() {return this.interfaceresultmethod;}
 
-    public int lastSelectedIndexInt;
-    public int lastSelectedIndexInt() {
-        return lastSelectedIndexInt;
-    }
-
-    public int sorting;
+     public int sorting;
     public int getSortingStr() {return this.sorting;}
 
     public Boolean isProcessingOrParkedBln;
@@ -168,16 +137,36 @@ public class cIntakeorder {
         return isProcessingOrParkedBln;
     }
 
+    public cIntakeorderEntity intakeorderEntity;
+    public boolean indatabaseBln;
+
+    public static cIntakeorderViewModel gIntakeorderViewModel;
+
+    public static cIntakeorderViewModel getIntakeorderViewModel() {
+        if (gIntakeorderViewModel == null) {
+            gIntakeorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
+        }
+        return gIntakeorderViewModel;
+    }
+
+    public static cIntakeorderAdapter gIntakeorderAdapter;
+    public static cIntakeorderAdapter getIntakeorderAdapter() {
+        if (gIntakeorderAdapter == null) {
+            gIntakeorderAdapter = new cIntakeorderAdapter();
+        }
+        return gIntakeorderAdapter;
+    }
+
+    public static List<cIntakeorder> allIntakeordersObl;
+    public static cIntakeorder currentIntakeOrder;
+
+    public List<cIntakeorderMATLine> linesObl(){
+        return  cIntakeorderMATLine.allIntakeorderMATLinesObl;
+    }
     public List<cComment> commentsObl(){
         return  cComment.allCommentsObl;
     }
     public List<cIntakeorderBarcode> barcodesObl () {return  cIntakeorderBarcode.allBarcodesObl;}
-
-    public  List<cIntakeorderMATLine> linesForBinObl;
-    public  List<cIntakeorderMATLine> linesForArticleObl;
-    public  cIntakeorderBarcode currentIntakeOrderbarcode;
-
-    public  cBranchBin currentBranchBin;
 
     //Region Constructor
 
@@ -203,7 +192,6 @@ public class cIntakeorder {
         this.receiveAmountManualMABln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualMAStr(), false);
         this.receiveBarcodeCheckBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveBarcodeCheckStr(), false);
         this.receiveStoreAutoAcceptAtRequestedBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptAtRequestedStr(), false);
-        this.receiveStoreAutoAcceptAtNewItemBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptAtRequestedStr(), false);
         this.receiveStoreAutoAcceptValidationMessageBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptValidationMessageStr(), false);
         this.receiveNoExtraBinsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraBinsStr(), false);
         this.receiveNoExtraItemsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraItemsStr(), false);

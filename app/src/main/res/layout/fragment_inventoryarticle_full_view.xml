@@ -5,7 +5,7 @@
     android:id="@+id/articleFuillViewContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.dialogs.ArticleFullViewFragment">
+    tools:context=".Fragments.Dialogs.ArticleFullViewFragment">
 
     <include layout="@layout/toolbar_subtext_default" />
     <androidx.cardview.widget.CardView

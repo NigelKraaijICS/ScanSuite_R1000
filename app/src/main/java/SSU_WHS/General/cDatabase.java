@@ -183,6 +183,7 @@ public class cDatabase {
     //region P
     public static final String PACKAGETYPE_NAMESTR = "PackageType";
     public static final String PACKAGESEQUENCENUMBER_NAMESTR = "PackageSequenceNumber";
+    public static final String PACKINGTABLE_NAMESTR = "Packingtable";
     public static final String PICKDEFAULTREJECTREASON = "Pick_default_reject_reden";
     public static final String PICKDEFAULTSTORAGEBIN = "Pick_default_storage_bin";
     public static final String PICKREJECTDURINGPICK_NAMESTR = "Pick_Reject_during_pick";
@@ -248,6 +249,7 @@ public class cDatabase {
     //endregion R
 
     //region S
+    public static final String SALESORDER_NAMESTR = "Salesorder";
     public static final String SHIPDEFAULTBIN_NAMESTR = "Ship_default_bin";
     public static final String SHIPPINGADVICE_NAMESTR = "ShippingAdvice";
     public static final String SETTING_NAMESTR = "Instelling";

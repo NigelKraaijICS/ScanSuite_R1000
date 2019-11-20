@@ -13,8 +13,8 @@ public class cInventoryorderLineBarcodeViewModel extends AndroidViewModel {
     }
 
     public void deleteAll() { this.inventoryorderLineBarcodeRepository.pDeleteAll(); }
-    public void pDeleteForLineNo(Integer pvLineNoInt) {this.inventoryorderLineBarcodeRepository.pDeleteForLineNo(pvLineNoInt);}
-    public void pUpdateAmountForLineNo(String pvBarcodeStr, Double pvAmoundDbl) {this.inventoryorderLineBarcodeRepository.updateBarcodeAmount(pvBarcodeStr,pvAmoundDbl);}
 
     public void insert(cInventoryorderLineBarcodeEntity pvInventoryorderLineBarcodeEntity) { inventoryorderLineBarcodeRepository.pInsert(pvInventoryorderLineBarcodeEntity); }
+    public void delete(cInventoryorderLineBarcodeEntity pvInventoryorderLineBarcodeEntity) { inventoryorderLineBarcodeRepository.pDelete(pvInventoryorderLineBarcodeEntity); }
+
 }

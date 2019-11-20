@@ -146,8 +146,6 @@ public class cNumberTextWatcher implements TextWatcher {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         Log.d(TAG, "onTextChanged");
 
-
-
         String newValue = s.toString();
         String change = newValue.substring(start, start + count);
         String prefix = value.substring(0, start);

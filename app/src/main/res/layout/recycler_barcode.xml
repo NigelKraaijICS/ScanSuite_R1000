@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/barcodeLinearLayout"
-    style="@style/pickorderLineRecyclerLinearLayout"
+    style="@style/defaultLineRecyclerLinearLayout"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,25 +17,25 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
         <TextView
-            style="@style/pickorderLineRecyclerBINText"
+            style="@style/defaultRecyclerBINText"
             android:id="@+id/textViewBarcode"
             app:layout_constraintStart_toEndOf="@id/imageButtonBarcode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
-            style="@style/pickorderLineRecyclerQuantityText"
+            style="@style/defaultLineRecyclerQuantityText"
             android:id="@+id/textViewQuantityLabel"
             android:text="@string/number_per_scan"
             app:layout_constraintStart_toStartOf="@id/textViewBarcode"
             app:layout_constraintTop_toBottomOf="@id/textViewBarcode"
             />
         <TextView
-            style="@style/pickorderLineRecyclerQuantityText"
+            style="@style/defaultLineRecyclerQuantityText"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:id="@+id/textViewQuantity"
-            app:layout_constraintStart_toEndOf="@id/textViewQuantityLabel"
+            app:layout_constraintStart_toEndOf="@id/textViewQuantity"
             app:layout_constraintTop_toBottomOf="@id/textViewBarcode"
             />
         <View

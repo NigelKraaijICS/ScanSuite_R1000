@@ -54,7 +54,10 @@ public class cInventoryorderLineBarcode {
     }
 
     public cInventoryorderLineBarcode(Long pvLineNoLng,String pvBarcodeStr, Double pvQuantityHandledDbl ){
-        this.inventoryorderLineBarcodeEntity = null;
+
+        this.inventoryorderLineBarcodeEntity = new cInventoryorderLineBarcodeEntity(pvLineNoLng,pvBarcodeStr);
+        this.inventoryorderLineBarcodeEntity.quantityHandledStr = cText.pDoubleToStringStr(pvQuantityHandledDbl);
+
         this.lineNoLng = pvLineNoLng;
         this.barcodeStr = pvBarcodeStr;
         this.quantityHandledDbl = pvQuantityHandledDbl;
@@ -73,7 +76,14 @@ public class cInventoryorderLineBarcode {
         return  true;
     }
 
-   public static boolean pTruncateTableBln(){
+    public boolean pDeleteFromDatabaseBln() {
+        cInventoryorderLineBarcode.getInventoryorderLineBarcodeViewModel().delete(this.inventoryorderLineBarcodeEntity);
+        cInventoryorderLineBarcode.allLineBarcodesObl.remove(this);
+        return  true;
+    }
+
+
+    public static boolean pTruncateTableBln(){
         cInventoryorderLineBarcode.getInventoryorderLineBarcodeViewModel().deleteAll();
         return true;
     }

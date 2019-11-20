@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,10 +16,10 @@ import java.util.List;
 
 import ICS.cAppExtension;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
-import nl.icsvertex.scansuite.Activities.inventory.InventoryorderBinsActivity;
-import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsDoneFragment;
-import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsToDoFragment;
-import nl.icsvertex.scansuite.Fragments.inventory.InventoryBinsTotalFragment;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsToDoFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsTotalFragment;
 import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryorderBinAdapter.InventoryorderBinViewHolder> {
@@ -83,7 +82,7 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
     }
 
     @Override
-    public void onBindViewHolder(cInventoryorderBinAdapter.InventoryorderBinViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(cInventoryorderBinAdapter.InventoryorderBinViewHolder pvHolder, final int pvPositionInt) {
 
         if (localInventoryorderBinObl == null || localInventoryorderBinObl.size() == 0 ) {
             return;
@@ -91,15 +90,15 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
 
         cInventoryorderBin.currentInventoryOrderBin = localInventoryorderBinObl.get(pvPositionInt);
 
-        pvHolder.textViewBin.setText( cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
-        pvHolder.textViewBin.setTag( cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
+        pvHolder.textViewBin.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
+        pvHolder.textViewBin.setTag(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
         String imageBinUniqueTag =  cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr() + "_IMG";
         pvHolder.imageBin.setTag(imageBinUniqueTag);
         pvHolder.textViewCounted.setText(cAppExtension.activity.getString(R.string.lines) + ' ' + cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).size());
         pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' +  cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()));
 
 
-        if  (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsToDoFragment) {
+        if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsToDoFragment) {
             pvHolder.imageChevronDown.setVisibility(View.VISIBLE);
         }
 
@@ -111,14 +110,12 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
             pvHolder.imageChevronDown.setVisibility(View.INVISIBLE);
         }
 
-
         pvHolder.viewForeground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (cAppExtension.context instanceof InventoryorderBinsActivity) {
-                    if (thisRecyclerView.getId() == R.id.recyclerViewInventoryBinsToDo || thisRecyclerView.getId() == R.id.recyclerViewInventoryBinsDone) {
+                        cInventoryorderBin.currentInventoryOrderBin = localInventoryorderBinObl.get(pvPositionInt);
                         InventoryorderBinsActivity.pInventoryorderBinSelected();
-                    }
                 }
             }
         });

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cResult;
+import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
@@ -15,6 +16,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
+import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEntity;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -27,7 +29,6 @@ public class cInventoryorderLine {
     public static List<cInventoryorderLine> allLinesObl;
     public static cInventoryorderLine currentInventoryOrderLine;
 
-    public List<cInventoryorderLineBarcode> lineBarcodesObl;
 
     public List<cInventoryorderBarcode> barcodesObl(){
 
@@ -48,6 +49,28 @@ public class cInventoryorderLine {
         return  resultObl;
 
     }
+
+    public List<cInventoryorderLineBarcode> lineBarcodesObl(){
+
+        List<cInventoryorderLineBarcode> resultObl = new ArrayList<>();
+
+        if (cInventoryorderLineBarcode.allLineBarcodesObl == null || cInventoryorderLineBarcode.allLineBarcodesObl.size() == 0) {
+            return  resultObl;
+        }
+
+        //Loop through all barcodes, and if item matches add it to the list
+        for (cInventoryorderLineBarcode inventoryorderLineBarcode : cInventoryorderLineBarcode.allLineBarcodesObl) {
+            if (cText.pLongToStringStr(inventoryorderLineBarcode.getLineNoLng()).equalsIgnoreCase(cText.pIntToStringStr(this.getLineNoInt()))) {
+                resultObl.add(inventoryorderLineBarcode);
+            }
+        }
+
+        return  resultObl;
+
+    }
+
+
+
 
     public static cInventoryorderLineViewModel gInventoryorderLineViewModel;
     public static cInventoryorderLineViewModel getInventoryorderLineViewModel() {
@@ -246,9 +269,7 @@ public class cInventoryorderLine {
 
     public cInventoryorderLineBarcode pAddLineBarcode(String pvBarcodeStr, Double pvQuantityDbl) {
 
-        if (this.lineBarcodesObl == null) {
-            this.lineBarcodesObl = new ArrayList<>();
-        }
+
 
         cInventoryorderLineBarcode inventoryorderLineBarcode = new cInventoryorderLineBarcode((long) this.getLineNoInt(),pvBarcodeStr,pvQuantityDbl);
 
@@ -257,8 +278,6 @@ public class cInventoryorderLine {
         }
 
         cInventoryorderLineBarcode.allLineBarcodesObl.add(inventoryorderLineBarcode);
-        this.lineBarcodesObl.add(inventoryorderLineBarcode);
-
 
         return  inventoryorderLineBarcode;
     }
@@ -326,8 +345,13 @@ public class cInventoryorderLine {
 
     public cInventoryorderLineBarcode pGetLineBarcodeByScannedBarcode(String pvBarcodeStr) {
 
+
+        if (this.lineBarcodesObl().size() == 0) {
+            this.quantityHandledDbl = 0.0;
+        }
+
         //We scanned a barcode that belongs to the current article, so check if we already have a line barcode
-        for (cInventoryorderLineBarcode inventoryorderLineBarcode : this.lineBarcodesObl) {
+        for (cInventoryorderLineBarcode inventoryorderLineBarcode : this.lineBarcodesObl()) {
 
             //We have a match, so set the current line
             if (inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr)) {
@@ -350,16 +374,13 @@ public class cInventoryorderLine {
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
 
-            //Remove line barcodes from the database
-            cInventoryorderLineBarcode.getInventoryorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
+            for (cInventoryorderLineBarcode inventoryorderLineBarcode : this.lineBarcodesObl()) {
+                inventoryorderLineBarcode.pDeleteFromDatabaseBln();
+            }
 
             //Reset this line
             this.quantityHandledDbl = 0.0;
             this.pUpdateQuantityInDatabaseBln();
-
-            if (this.lineBarcodesObl != null) {
-                this.lineBarcodesObl.clear();
-            }
 
             return  result;
         }

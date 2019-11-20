@@ -6,7 +6,7 @@
     android:layout_width="0dp"
     android:layout_height="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.pick.PickorderLinesPickedFragment"
+    tools:context=".Fragments.Pick.PickorderLinesPickedFragment"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent">
     <androidx.recyclerview.widget.RecyclerView

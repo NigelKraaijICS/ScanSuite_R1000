@@ -12,11 +12,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.icsvertex.scansuite.Activities.ship.ShiporderSelectActivity;
-import nl.icsvertex.scansuite.Activities.sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import nl.icsvertex.scansuite.Activities.pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.PickorderViewHolder>  {

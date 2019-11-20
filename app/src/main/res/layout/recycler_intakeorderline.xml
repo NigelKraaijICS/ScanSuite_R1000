@@ -1,54 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/intakeorderLineItemLinearLayout"
-    style="@style/pickorderLineRecyclerLinearLayout"
+    style="@style/defaultLineRecyclerLinearLayout"
     >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/view_background"
+        android:background="@color/colorCommentBubble"
+        >
+        <ImageView
+            android:id="@+id/reset_icon"
+            android:layout_width="@dimen/ic_delete"
+            android:layout_height="@dimen/ic_delete"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            app:srcCompat="@drawable/ic_restore_white_24dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_toLeftOf="@id/reset_icon"
+            android:text="@string/reset"
+            android:textColor="@color/colorWhite"
+            android:textSize="13dp" />
+    </RelativeLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <androidx.appcompat.widget.AppCompatImageView
-            style="@style/imageviewArticleImage"
-            android:id="@+id/imageViewIntakeorderLine"
-            app:srcCompat="@drawable/ic_menu_demo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"
-            />
+        android:layout_height="wrap_content"
+        android:elevation="1dp"
+        android:background="@drawable/menu_row"
+        android:id="@+id/view_foreground">
         <TextView
-            style="@style/pickorderLineRecyclerBINText"
+            style="@style/defaultRecyclerBINText"
             android:id="@+id/textViewBIN"
-            app:layout_constraintStart_toEndOf="@id/imageViewIntakeorderLine"
-            app:layout_constraintEnd_toStartOf="@id/textViewQuantityLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textViewQuantity"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
-            style="@style/pickorderLineRecyclerOrdernumberText"
-            android:id="@+id/textViewLine"
-            app:layout_constraintStart_toEndOf="@id/imageViewIntakeorderLine"
+            style="@style/defaultLineRecyclerQuantityText"
+            android:id="@+id/textViewQuantity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <TextView
+            style="@style/defaultRecyclerOrdernumberText"
+            android:id="@+id/textViewDescription"
+            app:layout_constraintStart_toStartOf="@id/textViewBIN"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewBIN"
             />
         <TextView
-            style="@style/pickorderLineRecyclerSourcenoText"
+            style="@style/defaultRecyclerSourcenoText"
             android:id="@+id/textViewSourceNo"
-            app:layout_constraintStart_toEndOf="@id/imageViewIntakeorderLine"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewLine"
+            app:layout_constraintStart_toStartOf="@id/textViewDescription"
+            app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
+            app:layout_constraintTop_toBottomOf="@id/textViewDescription"
             />
-        <TextView
-            style="@style/pickorderLineRecyclerQuantityText"
-            android:id="@+id/textViewQuantityLabel"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageSendStatus"
+            style="@style/recyclerItemImage"
+            app:srcCompat="@drawable/ic_ordertype_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewSourceNo"
             />
         <View
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"
-            app:layout_constraintStart_toStartOf="@id/textViewLine"
+            app:layout_constraintStart_toStartOf="@id/textViewDescription"
             app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+</FrameLayout>

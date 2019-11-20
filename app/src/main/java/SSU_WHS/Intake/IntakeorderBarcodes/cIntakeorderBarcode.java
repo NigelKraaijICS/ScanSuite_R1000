@@ -10,6 +10,8 @@ import java.util.List;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 
 public class cIntakeorderBarcode {
     public cIntakeorderBarcodeEntity intakeorderBarcodeEntity;
@@ -117,8 +119,9 @@ public class cIntakeorderBarcode {
         this.quantityHandled = this.intakeorderBarcodeEntity.getQuantityHandled();
         this.receiveAmountManual = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
     }
-    public cIntakeorderBarcode(cIntakeorderBarcodeEntity intakeorderBarcodeEntity) {
-        this.intakeorderBarcodeEntity = intakeorderBarcodeEntity;
+
+    public cIntakeorderBarcode(cIntakeorderBarcodeEntity pvIntakeorderBarcodeEntity) {
+        this.intakeorderBarcodeEntity = pvIntakeorderBarcodeEntity;
         this.barcode = this.intakeorderBarcodeEntity.getBarcodeStr();
         this.barcodetypeStr = this.intakeorderBarcodeEntity.getBarcodeTypesStr();
         this.isuniquebarcode = this.intakeorderBarcodeEntity.getIsUniqueBarcodeBln();
@@ -129,11 +132,12 @@ public class cIntakeorderBarcode {
         this.quantityHandled = this.intakeorderBarcodeEntity.getQuantityHandled();
         this.receiveAmountManual = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
     }
+
     public cIntakeorderBarcode() {
 
     }
-    //End Region Constructor
 
+    //End Region Constructor
 
 
     public static boolean pTruncateTableBln(){
@@ -150,6 +154,24 @@ public class cIntakeorderBarcode {
         }
         cIntakeorderBarcode.allBarcodesObl.add(this);
         return  true;
+    }
+
+    public List<cIntakeorderMATLine> linesObl(){
+
+        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
+
+        if (cIntakeorder.currentIntakeOrder == null || cIntakeorder.currentIntakeOrder.linesObl() == null || cIntakeorder.currentIntakeOrder.linesObl().size() == 0) {
+            return resultObl;
+        }
+
+        for (cIntakeorderMATLine intakeorderMATLine :cIntakeorder.currentIntakeOrder.linesObl() ) {
+            if (intakeorderMATLine.getItemNoStr().equalsIgnoreCase(this.getItemNoStr()) && intakeorderMATLine.getVariantCodeStr().equalsIgnoreCase(this.getVariantCodeStr())) {
+                resultObl.add(intakeorderMATLine);
+            }
+        }
+
+        return  resultObl;
+
     }
 
     public static List <cIntakeorderBarcode> pGetIntakeBarcodesViaVariantAndItemNoObl(String pvItemNo, String pvVariantcode) {

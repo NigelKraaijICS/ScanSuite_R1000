@@ -2,6 +2,7 @@ package ICS.Utils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -129,8 +130,10 @@ public class cText {
 
     public static String pDoubleToStringStr(Double pvInputDbl) {
 
-        String helpStr = Double.toString(pvInputDbl);
-        return !helpStr.contains(".") ? helpStr : helpStr.replaceAll("0*$", "").replaceAll("\\.$", "");
+        DecimalFormat df = new DecimalFormat("0.00##");
+        String resultStr = df.format(pvInputDbl);
+
+        return  resultStr;
     }
 
     public static String pIntToStringStr(int pvInputInt) {

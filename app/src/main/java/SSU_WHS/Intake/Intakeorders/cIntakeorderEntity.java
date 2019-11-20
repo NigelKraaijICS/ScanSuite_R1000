@@ -185,7 +185,6 @@ public class cIntakeorderEntity {
             this.receiveAmountManualMA = pvJsonObject.getString(cDatabase.RECEIVEAMOUNTMANUAL_MA_NAMESTR);
             this.receiveBarcodeCheck = pvJsonObject.getString(cDatabase.RECEIVEBARCODECHECK_NAMESTR);
             this.receiveStoreAutoAcceptAtRequested = pvJsonObject.getString(cDatabase.RECEIVESTOREAUTOACCEPTATREQUESTED_NAMESTR);
-            this.receiveStoreAutoAcceptAtNewItem = pvJsonObject.getString(cDatabase.RECEIVESTOREAUTOACCEPTATNEWITEM_NAMESTR);
             this.receiveStoreAutoAcceptValidationMessage = pvJsonObject.getString(cDatabase.RECEIVESTOREAUTOACCEPTVALIDATIONMESSAGE_NAMESTR);
             this.receiveNoExtraBins = pvJsonObject.getString(cDatabase.RECEIVENOEXTRABINS_NAMESTR);
             this.receiveNoExtraItems = pvJsonObject.getString(cDatabase.RECEIVENOEXTRAITEMS_NAMESTR);

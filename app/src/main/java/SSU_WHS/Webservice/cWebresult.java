@@ -22,6 +22,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+
 import ICS.Weberror.cWeberror;
 import ICS.Weberror.cWeberrorEntity;
 
@@ -135,9 +138,13 @@ public class cWebresult {
                 if (portInt == 0) {
                     portInt = 443;
                 }
-
                 HttpsTransportSE httpsTransport = new HttpsTransportSE(hostStr, portInt, pathStr, cWebservice.WEBSERVICE_HTTPS_TIMEOUT);
-                httpsTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pv_methodNameStr, envelope);
+                javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String s, SSLSession sslSession) {
+                        return true;
+                    }
+                });                httpsTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pv_methodNameStr, envelope);
             }
             else {
                 HttpTransportSE httpTransport = new HttpTransportSE(url.toString());
@@ -167,7 +174,8 @@ public class cWebresult {
             l_WebresultWrs.setSuccessBln(false);
             l_WebresultWrs.setResultBln(false);
             l_WebresultWrs.vResultObl.add(e.getMessage());
-            return l_WebresultWrs;
+
+         return l_WebresultWrs;
         } catch (XmlPullParserException e) {
             Log.e("XMLLOG", e.getMessage());
             e.printStackTrace();

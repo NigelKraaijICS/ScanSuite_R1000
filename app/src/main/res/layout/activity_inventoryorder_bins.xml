@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.inventory.InventoryorderBinsActivity"
+    tools:context=".Activities.Inventory.InventoryorderBinsActivity"
     android:id="@+id/container"
     style="@style/defaultScreen">
     <include layout="@layout/toolbar_subtext_default"/>

@@ -53,6 +53,8 @@ public class cSalesOrderPackingTable {
 
     public static void pTruncateTable() {
         cSalesOrderPackingTable.getSalesOrderPackingTableViewModel().deleteAll();
+        cSalesOrderPackingTable.allSalesOrderPackingTabelsObl = null;
+        cSalesOrderPackingTable.currentSalesOrderPackingTable = null;
     }
 
     public boolean pInsertInDatabaseBln() {
@@ -65,6 +67,28 @@ public class cSalesOrderPackingTable {
         cSalesOrderPackingTable.allSalesOrderPackingTabelsObl.add(this);
         return  true;
     }
+
+    public static boolean pDeleteFromDatabaseBln(String pvProcessingSequenceStr) {
+
+        cSalesOrderPackingTable.getSalesOrderPackingTableViewModel().delete(pvProcessingSequenceStr);
+
+        for (cSalesOrderPackingTable salesOrderPackingTable : cSalesOrderPackingTable.allSalesOrderPackingTabelsObl) {
+
+            if (salesOrderPackingTable.getPackingtableStr().equalsIgnoreCase(pvProcessingSequenceStr)) {
+                cSalesOrderPackingTable.allSalesOrderPackingTabelsObl.remove(salesOrderPackingTable);
+                return  true;
+            }
+        }
+
+        return  false;
+
+    }
+
+
+
+
+
+
 
     //End Region Public Methods
 

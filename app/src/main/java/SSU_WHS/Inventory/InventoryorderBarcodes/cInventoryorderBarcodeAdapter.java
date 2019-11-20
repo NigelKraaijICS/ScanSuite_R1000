@@ -17,13 +17,9 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
-import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import nl.icsvertex.scansuite.Activities.pick.PickorderPickActivity;
-import nl.icsvertex.scansuite.Fragments.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.SendOrderFragment;
-import nl.icsvertex.scansuite.Fragments.dialogs.BarcodeFragment;
-import nl.icsvertex.scansuite.Fragments.inventory.InventoryArticleDetailFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
 import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderBarcodeAdapter extends RecyclerView.Adapter<cInventoryorderBarcodeAdapter.inventoryorderBarcodeViewHolder>  {

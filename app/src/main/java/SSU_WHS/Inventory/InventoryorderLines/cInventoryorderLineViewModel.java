@@ -25,7 +25,6 @@ public class cInventoryorderLineViewModel extends AndroidViewModel {
     public void delete(cInventoryorderLineEntity pvInventoryorderLineEntity) {this.Repository.delete(pvInventoryorderLineEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
-    public List<cInventoryorderLineEntity> pGetLinesFromDatabaseObl(String pvBincode){return  this.Repository.pGetInventoryorderLinesForBincodeFromDatabaseObl(pvBincode);}
     public Double pGetTotalCountDbl(){return  this.Repository.pGetTotalCountDbl();}
     public Double pGetCountForBinCodeDbl(String pvBincode){return  this.Repository.pGetCountForBinCodeDbl(pvBincode);}
     public cWebresult pSaveLineViaWebserviceWrs (){return this.Repository.pSaveLineViaWebserviceWrs();}

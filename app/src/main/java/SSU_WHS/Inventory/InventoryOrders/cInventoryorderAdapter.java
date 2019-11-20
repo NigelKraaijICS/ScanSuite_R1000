@@ -15,7 +15,7 @@ import java.util.List;
 
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import nl.icsvertex.scansuite.Activities.inventory.InventoryorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderAdapter  extends RecyclerView.Adapter<cInventoryorderAdapter.InventoryorderViewHolder>  {

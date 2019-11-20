@@ -6,7 +6,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,48 +17,50 @@ import java.util.List;
 import ICS.Utils.cText;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.Activities.sort.SortorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Activities.pick.PickorderLinesActivity;
-import nl.icsvertex.scansuite.Fragments.pick.PickorderLinesToPickFragment;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Fragments.pick.PickorderLinesPickedFragment;
+import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 
 public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAdapter.PickorderLineViewHolder>  {
 
     //Region Public Properties
     public class PickorderLineViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView textViewPickorderLineLocation;
-        private TextView textViewPickorderLine;
-        private TextView textViewPickorderLineQuantity;
-        private TextView textViewPickorderLineSourceNo;
-        private LinearLayout pickorderLineItemLinearLayout;
+        private TextView textViewBIN;
+        private TextView textViewDescription;
+        private TextView textViewQuantity;
+        private TextView textViewSourceNo;
+        private FrameLayout pickorderLineItemFrameLayout;
+        private ImageView imageSendStatus;
 
         public RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
 
         public PickorderLineViewHolder(View pvItemView) {
             super(pvItemView);
-            this.textViewPickorderLineLocation = pvItemView.findViewById(R.id.textViewPickorderLineLocation);
-            this.textViewPickorderLineLocation.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewPickorderLineLocation.setSingleLine(true);
-            this.textViewPickorderLineLocation.setMarqueeRepeatLimit(5);
-            this.textViewPickorderLineLocation.setSelected(true);
-            this.textViewPickorderLine = pvItemView.findViewById(R.id.textViewLine);
-            this.textViewPickorderLine.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewPickorderLine.setSingleLine(true);
-            this.textViewPickorderLine.setMarqueeRepeatLimit(5);
-            this.textViewPickorderLine.setSelected(true);
-            this.textViewPickorderLineSourceNo = pvItemView.findViewById(R.id.textViewSourceNo);
-            this.textViewPickorderLineSourceNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewPickorderLineSourceNo.setSingleLine(true);
-            this.textViewPickorderLineSourceNo.setMarqueeRepeatLimit(5);
-            this.textViewPickorderLineSourceNo.setSelected(true);
-            this.textViewPickorderLineQuantity = pvItemView.findViewById(R.id.textViewQuantityLabel);
-            this.pickorderLineItemLinearLayout = pvItemView.findViewById(R.id.pickorderLineItemLinearLayout);
+            this.textViewBIN = pvItemView.findViewById(R.id.textViewBIN);
+            this.textViewBIN.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewBIN.setSingleLine(true);
+            this.textViewBIN.setMarqueeRepeatLimit(5);
+            this.textViewBIN.setSelected(true);
+            this.textViewDescription = pvItemView.findViewById(R.id.textViewDescription);
+            this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDescription.setSingleLine(true);
+            this.textViewDescription.setMarqueeRepeatLimit(5);
+            this.textViewDescription.setSelected(true);
+            this.textViewSourceNo = pvItemView.findViewById(R.id.textViewSourceNo);
+            this.textViewSourceNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewSourceNo.setSingleLine(true);
+            this.textViewSourceNo.setMarqueeRepeatLimit(5);
+            this.textViewSourceNo.setSelected(true);
+            this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
+            this.pickorderLineItemFrameLayout = pvItemView.findViewById(R.id.pickorderLineItemLinearLayout);
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
             this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
+            this.imageSendStatus = pvItemView.findViewById(R.id.imageSendStatus);
         }
     }
     //End Region Public Properties
@@ -67,7 +70,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     private List<cPickorderLine> localPickorderLinesObl;
     //End Region Private Propertiess
 
-    private List<LinearLayout> pickorderLineItemLinearLayouts = new ArrayList<>();
+    private List<FrameLayout> pickorderLineItemLinearLayouts = new ArrayList<>();
     private RecyclerView thisRecyclerView;
 
     //Region Constructor
@@ -93,7 +96,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     @Override
     public void onBindViewHolder(final cPickorderLineAdapter.PickorderLineViewHolder pvHolder, final int pvPositionInt) {
 
-        this.pickorderLineItemLinearLayouts.add(pvHolder.pickorderLineItemLinearLayout);
+        this.pickorderLineItemLinearLayouts.add(pvHolder.pickorderLineItemFrameLayout);
 
         if (this.localPickorderLinesObl == null || this.localPickorderLinesObl.size() == 0 ) {
             return;
@@ -107,76 +110,80 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         //Pick recyclers
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
-            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
-            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
+            pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
+            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
-            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
-            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
+            pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
+            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
 
             if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT || (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING)) {
-                pvHolder.textViewPickorderLineLocation.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
-                pvHolder.textViewPickorderLine.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
-                pvHolder.textViewPickorderLineQuantity.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
-                pvHolder.textViewPickorderLineSourceNo.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+                pvHolder.imageSendStatus.setVisibility(View.VISIBLE);
+                pvHolder.imageSendStatus.setImageResource(R.drawable.ic_check_black_24dp);
             }
+
+            if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) {
+                pvHolder.imageSendStatus.setVisibility(View.VISIBLE);
+                pvHolder.imageSendStatus.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+            }
+
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTotal) {
            quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
-            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getBinCodeStr());
-            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
-
-
-            if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) {
-                pvHolder.textViewPickorderLineLocation.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorGreen));
-                pvHolder.textViewPickorderLine.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorGreen));
-                pvHolder.textViewPickorderLineQuantity.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorGreen));
-                pvHolder.textViewPickorderLineSourceNo.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorGreen));
-            }
+            pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
+            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
 
             if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT || (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING)) {
-                pvHolder.textViewPickorderLineLocation.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
-                pvHolder.textViewPickorderLine.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
-                pvHolder.textViewPickorderLineQuantity.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
-                pvHolder.textViewPickorderLineSourceNo.setTextColor(cAppExtension.activity.getResources().getColor(R.color.colorAccent));
+                pvHolder.imageSendStatus.setVisibility(View.VISIBLE);
+                pvHolder.imageSendStatus.setImageResource(R.drawable.ic_check_black_24dp);
+
             }
+
+            if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) {
+                pvHolder.imageSendStatus.setVisibility(View.VISIBLE);
+                pvHolder.imageSendStatus.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+
+            }
+
         }
 
         //Sort Recyclers
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
             quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
-            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getProcessingSequenceStr());
-            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
+            pvHolder.textViewBIN.setText(currentPickorderLine.getProcessingSequenceStr());
+            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
             quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
-            pvHolder.textViewPickorderLineLocation.setText(currentPickorderLine.getProcessingSequenceStr());
-            pvHolder.textViewPickorderLineLocation.setVisibility(View.VISIBLE);
+            pvHolder.textViewBIN.setText(currentPickorderLine.getProcessingSequenceStr());
+            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
             quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
-            pvHolder.textViewPickorderLineLocation.setText("");
-            pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
+            pvHolder.textViewBIN.setText("");
+            pvHolder.textViewBIN.setVisibility(View.GONE);
         }
 
-        pvHolder.textViewPickorderLine.setText(lineDescriptionStr);
-        pvHolder.textViewPickorderLineQuantity.setText(quantityToShowStr);
-        pvHolder.textViewPickorderLineSourceNo.setText(currentPickorderLine.getSourceNoStr());
+        pvHolder.textViewDescription.setText(lineDescriptionStr);
+        pvHolder.textViewQuantity.setText(quantityToShowStr);
+        pvHolder.textViewSourceNo.setText(currentPickorderLine.getSourceNoStr());
 
         //Start On Click Listener
-        pvHolder.pickorderLineItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+        pvHolder.pickorderLineItemFrameLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View pvView) {
 
                 //deselect all
-                for (LinearLayout linearLayout : pickorderLineItemLinearLayouts) {
-                    linearLayout.setSelected(false);
+                for (FrameLayout frameLayout : pickorderLineItemLinearLayouts) {
+                    frameLayout.setSelected(false);
                 }
 
                 //select current
@@ -206,7 +213,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
                     }
 
                     if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
-                        pvHolder.textViewPickorderLineLocation.setVisibility(View.GONE);
+                        pvHolder.textViewBIN.setVisibility(View.GONE);
                     }
 
                 }
@@ -222,7 +229,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
         //Select the first one, or selected index
         if (pvPositionInt == cPickorder.currentPickOrder.lastSelectedIndexInt && cAppExtension.activity instanceof  PickorderLinesActivity &&  thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
-            pvHolder.pickorderLineItemLinearLayout.performClick();
+            pvHolder.pickorderLineItemFrameLayout.performClick();
             PickorderLinesToPickFragment.pSetSelectedIndexInt(pvPositionInt);
             return;
         }

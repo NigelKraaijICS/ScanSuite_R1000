@@ -6,14 +6,14 @@ import androidx.annotation.NonNull;
 
 import SSU_WHS.General.cDatabase;
 
-    @Entity(tableName = cDatabase.TABLENAME_SALESORDERPACKINGTABLE, primaryKeys = {"SalesOrder"})
+    @Entity(tableName = cDatabase.TABLENAME_SALESORDERPACKINGTABLE, primaryKeys = {cDatabase.SALESORDER_NAMESTR})
 
     public class cSalesOrderPackingTableEntity {
 
         //Region Public Properties
 
         @NonNull
-        @ColumnInfo(name="SalesOrder")
+        @ColumnInfo(name=cDatabase.SALESORDER_NAMESTR)
         public String salesorder;
         @NonNull
         public String getSalesOrderStr() {
@@ -21,7 +21,7 @@ import SSU_WHS.General.cDatabase;
         }
 
         @NonNull
-        @ColumnInfo(name="Packingtable")
+        @ColumnInfo(name=cDatabase.PACKINGTABLE_NAMESTR)
         public String packingtable;
         public String getPackingTableStr() {
             return packingtable;

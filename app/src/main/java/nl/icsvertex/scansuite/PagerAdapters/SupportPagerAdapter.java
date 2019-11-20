@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Fragments.support.SupportApplicationFragment;
-import nl.icsvertex.scansuite.Fragments.support.SupportDeviceFragment;
-import nl.icsvertex.scansuite.Fragments.support.SupportNetworkFragment;
+import nl.icsvertex.scansuite.Fragments.Support.SupportApplicationFragment;
+import nl.icsvertex.scansuite.Fragments.Support.SupportDeviceFragment;
+import nl.icsvertex.scansuite.Fragments.Support.SupportNetworkFragment;
 
 public class SupportPagerAdapter extends FragmentStatePagerAdapter {
 

@@ -31,6 +31,10 @@ public class cSalesOrderPackingTableRepository {
         new insertAsyncTask(salesOrderPackingTableDao).execute(salesOrderPackingTableEntity);
     }
 
+    public void delete (String pvPackingTableStr) {
+        new deleteAsyncTask(salesOrderPackingTableDao).execute(pvPackingTableStr);
+    }
+
     public List<cSalesOrderPackingTableEntity> pGetAllSalesOrderPackingTablesFromDatabaseObl() {
 
         List<cSalesOrderPackingTableEntity> resultObl = null;
@@ -91,5 +95,20 @@ public class cSalesOrderPackingTableRepository {
             return null;
         }
     }
+
+
+    private static class deleteAsyncTask extends AsyncTask<String, Void, Void> {
+        private iSalesOrderPackingTableDao mAsyncTaskDao;
+
+        deleteAsyncTask(iSalesOrderPackingTableDao dao) {
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final String... params) {
+            mAsyncTaskDao.delete(params[0]);
+            return null;
+        }
+    }
+
 
 }

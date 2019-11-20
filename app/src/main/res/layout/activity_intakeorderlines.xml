@@ -1,35 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/container"
-        tools:context=".Activities.intake.IntakeorderLinesActivity"
-        style="@style/defaultScreen">
-        <include layout="@layout/toolbar_default" />
-        <include layout="@layout/default_orderinfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            />
-        <TextView
-            android:id="@+id/quantityIntakeordersText"
-            style="@style/quantityPickordersText"
-            app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/intakeorderLinesTabLayout"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/quantityIntakeordersText"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    tools:context=".Activities.Intake.IntakeorderLinesActivity"
+    style="@style/defaultScreen">
+    <include layout="@layout/toolbar_subtext_default" />
+    <include layout="@layout/default_orderinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         />
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/intakeorderLinesViewpager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/intakeorderLinesTabLayout"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/recyclerSearchView"
+        style="@style/recyclerSearchView"
+        app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewLines"
+        style="@style/defaultRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerSearchView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/actionsContainer"
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/quickhelp"
+        android:id="@+id/actionsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="1000dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/default_padding"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_margin"
+        >
+        <TextView
+            android:id="@+id/quickhelpText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/textsize_big"
+            android:textColor="@color/colorQuickhelpText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/quickhelpIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/quickhelpIcon"
+            android:layout_width="@dimen/quickelp_icon_size"
+            android:layout_height="@dimen/quickelp_icon_size"
+            android:tint="@color/colorQuickhelpText"
+            app:srcCompat="@drawable/ic_support_black_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.AppCompatImageView
+        style="@style/defaultBottomButton"
+        android:id="@+id/imageViewStart"
+        app:srcCompat="@drawable/ic_start_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

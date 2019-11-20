@@ -294,8 +294,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:queryHint">@string/search</item>
-        <item name="android:background">@color/colorBart</item>
         <item name="android:imeOptions">actionDone</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/extramenu_card_elevation</item>
     </style>
 
     <style name="pickorderRecyclerOrdertypeText">
@@ -304,35 +305,31 @@
         <item name="android:textSize">@dimen/textsize_normal</item>
         <item name="android:textColor">@color/colorNeutral</item>
     </style>
-    <style name="pickorderLineRecyclerLinearLayout">
+    <style name="defaultLineRecyclerLinearLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">@dimen/recycleritem_margin</item>
         <item name="android:background">@drawable/default_recycler_background</item>
     </style>
-    <!--<item name="android:background">@drawable/default_recycler_background</item>-->
-    <!--<item name="android:background">?android:attr/selectableItemBackground</item>-->
-    <style name="pickorderLineRecyclerOrdernumberText">
+    <style name="defaultRecyclerOrdernumberText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textsize_normal</item>
-        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
-    <style name="pickorderLineRecyclerSourcenoText">
+    <style name="defaultRecyclerSourcenoText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textsize_normal</item>
-        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
-    <style name="pickorderLineRecyclerBINText">
+    <style name="defaultRecyclerBINText">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textsize_big</item>
-        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
     </style>
-    <style name="pickorderLineRecyclerQuantityText">
+    <style name="defaultLineRecyclerQuantityText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textsize_normal</item>

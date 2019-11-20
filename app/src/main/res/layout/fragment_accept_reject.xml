@@ -21,7 +21,7 @@
         android:id="@+id/textViewAcceptRejectText"
         android:padding="@dimen/default_padding"
         style="@style/acceptRejectText"
-        android:text="@string/message_pickorderbusy_text"
+        android:text="@string/message_orderbusy_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectHeader" />
@@ -61,7 +61,7 @@
     <TextView
         android:id="@+id/textViewAcceptRejectHeader"
         style="@style/acceptRejectHeader"
-        android:text="@string/message_pickorderbusy_header"
+        android:text="@string/message_orderbusy_header"
         android:padding="@dimen/default_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Activities.ship.ShiporderShipActivity">
+    tools:context=".Activities.Ship.ShiporderShipActivity">
     <include layout="@layout/toolbar_default" />
     <include layout="@layout/default_addressinfo" />
     <include layout="@layout/default_shippinginfo" />

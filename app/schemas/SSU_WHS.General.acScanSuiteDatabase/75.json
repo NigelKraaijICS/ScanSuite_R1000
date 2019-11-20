@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 75,
-    "identityHash": "9b67aec0dd79b94420816361b3335946",
+    "identityHash": "0a8507c55e91962e232b6d7d17c27d8d",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -1030,11 +1030,11 @@
       },
       {
         "tableName": "SalesOrderPackingTable",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`SalesOrder` TEXT NOT NULL, `Packingtable` TEXT NOT NULL, PRIMARY KEY(`SalesOrder`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Salesorder` TEXT NOT NULL, `Packingtable` TEXT NOT NULL, PRIMARY KEY(`Salesorder`))",
         "fields": [
           {
             "fieldPath": "salesorder",
-            "columnName": "SalesOrder",
+            "columnName": "Salesorder",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -1047,7 +1047,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "SalesOrder"
+            "Salesorder"
           ],
           "autoGenerate": false
         },
@@ -2576,7 +2576,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9b67aec0dd79b94420816361b3335946\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0a8507c55e91962e232b6d7d17c27d8d\")"
     ]
   }
 }

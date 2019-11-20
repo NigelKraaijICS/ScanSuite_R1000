@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Fragments.sort.SortorderLinesSortedFragment;
-import nl.icsvertex.scansuite.Fragments.sort.SortorderLinesToSortFragment;
-import nl.icsvertex.scansuite.Fragments.sort.SortorderLinesTotalFragment;
+import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesSortedFragment;
+import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesToSortFragment;
+import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesTotalFragment;
 
 public class SortorderLinesPagerAdapter extends FragmentStatePagerAdapter {
 

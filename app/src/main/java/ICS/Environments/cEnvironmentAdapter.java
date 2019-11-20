@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Activities.general.MainDefaultActivity;
+import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 
 public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapter.EnvironmentViewHolder>{
 
