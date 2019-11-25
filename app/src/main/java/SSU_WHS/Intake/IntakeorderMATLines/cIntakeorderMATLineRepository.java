@@ -53,6 +53,16 @@ public class cIntakeorderMATLineRepository {
         }
     }
 
+    private static class UpdateOrderlineBinCodeHandledParams {
+        Integer lineNoInt;
+        String binCodeStr;
+
+        UpdateOrderlineBinCodeHandledParams(Integer pvLineNoInt, String pvBinCodeStr) {
+            this.lineNoInt = pvLineNoInt;
+            this.binCodeStr = pvBinCodeStr;
+        }
+    }
+
 
     //Region Constructor
     cIntakeorderMATLineRepository(Application pvApplication) {
@@ -112,6 +122,28 @@ public class cIntakeorderMATLineRepository {
 
         try {
             integerValue = new updateOrderLineQuantityAsyncTask(intakeorderMATLineDao).execute(updateOrderlineQuantityParams).get();
+
+            if (integerValue != 0) {
+                return  true;}
+            else{
+                return false;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return  false;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return  false;
+        }
+    }
+
+    public boolean pUpdateBinCodeHandledBln(String pvBinCodeStr) {
+
+        Integer integerValue;
+        UpdateOrderlineBinCodeHandledParams updateOrderlineBinCodeHandledParams = new UpdateOrderlineBinCodeHandledParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvBinCodeStr);
+
+        try {
+            integerValue = new updateOrderLineBinCodeHandledyAsyncTask(intakeorderMATLineDao).execute(updateOrderlineBinCodeHandledParams).get();
 
             if (integerValue != 0) {
                 return  true;}
@@ -245,6 +277,15 @@ public class cIntakeorderMATLineRepository {
         @Override
         protected Integer doInBackground(UpdateOrderlineQuantityParams... params) {
             return mAsyncTaskDao.updateOrderLineQuantity(params[0].lineNoInt, params[0].quantityDbl);
+        }
+    }
+
+    private static class updateOrderLineBinCodeHandledyAsyncTask extends AsyncTask<UpdateOrderlineBinCodeHandledParams, Void, Integer> {
+        private iIntakeorderMATLineDao mAsyncTaskDao;
+        updateOrderLineBinCodeHandledyAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Integer doInBackground(UpdateOrderlineBinCodeHandledParams... params) {
+            return mAsyncTaskDao.updateOrderLineBinCodeHandled(params[0].lineNoInt, params[0].binCodeStr);
         }
     }
 

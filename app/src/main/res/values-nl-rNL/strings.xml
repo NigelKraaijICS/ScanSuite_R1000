@@ -145,7 +145,7 @@
     <string name="message_underpick_text">Je hebt er %1$s van deze nodig, je hebt er %2$s gepickt. Weet je zeker dat er geen artikelen meer beschikbaar zijn en dat je deze regel wil afsluiten?</string>
     <string name="button_close_orderline">Bevestigen</string>
     <string name="choose_barcode">Kies barcode</string>
-    <string name="number_per_scan">Aantal per scan</string>
+    <string name="quantity_per_scan">Aantal per scan</string>
     <string name="filter_orderlines_title">Toon opdrachten:</string>
     <string name="filter_orderlines_enable">Gebruik filters</string>
     <string name="filter_orderlines_enable_summary">Onderstaande filters gebruiken</string>
@@ -472,4 +472,8 @@
     <string name="message_no_lines_for_this_barcode">Geen regels beschikbaar voor deze barcode</string>
     <string name="message_zero_lines_cant_be_reset">Regels met aantal 0 kunnen niet gereset worden</string>
     <string name="message_bin_unknown">Locatie %1$s onbekend voor deze vestiging</string>
+    <string name="multiple_barcodes">Meerdere barcodes</string>
+    <string name="message_unknown_barcode_for_this_line">Onbekende barcode voor deze regel</string>
+    <string name="message_adding_or_changing_bin_now_allowed">"Locaties toevoegen/wijzigen is niet toegestaan "</string>
+    <string name="quantity_scanned">Aantal gescanned:</string>
 </resources>

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,6 +26,8 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
         private TextView textViewArticle;
         private TextView textViewDescription;
         private TextView textViewCounted;
+        private ImageView imageBarcode;
+        private TextView textViewBarcode;
 
         public RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
@@ -54,6 +57,8 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
             },1500);
 
             this.textViewCounted = pvItemView.findViewById(R.id.textViewCounted);
+            this.imageBarcode = pvItemView.findViewById(R.id.imageViewBarcode);
+            this.textViewBarcode = pvItemView.findViewById(R.id.textViewBarcode);
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
             this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
         }
@@ -99,6 +104,25 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
         pvHolder.textViewDescription.setText(inventoryorderLine.getDescriptionStr());
         pvHolder.textViewDescription.setVisibility(View.VISIBLE);
         pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(inventoryorderLine.getQuantityHandledDbl()));
+
+        if (inventoryorderLine.lineBarcodesObl() == null || inventoryorderLine.lineBarcodesObl().size() == 0) {
+            pvHolder.imageBarcode.setVisibility(View.GONE);
+            pvHolder.textViewBarcode.setVisibility(View.GONE);
+        } else {
+
+            if (inventoryorderLine.lineBarcodesObl().size() == 1) {
+                pvHolder.imageBarcode.setVisibility(View.VISIBLE);
+                pvHolder.textViewBarcode.setVisibility(View.VISIBLE);
+                pvHolder.textViewBarcode.setText(inventoryorderLine.lineBarcodesObl().get(0).getBarcodeStr());
+            }
+            else {
+                pvHolder.imageBarcode.setVisibility(View.VISIBLE);
+                pvHolder.textViewBarcode.setVisibility(View.VISIBLE);
+                pvHolder.textViewBarcode.setText(cAppExtension.activity.getString(R.string.multiple_barcodes));
+            }
+
+        }
+
     }
 
     @Override

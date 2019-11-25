@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
@@ -95,7 +96,7 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
         String imageBinUniqueTag =  cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr() + "_IMG";
         pvHolder.imageBin.setTag(imageBinUniqueTag);
         pvHolder.textViewCounted.setText(cAppExtension.activity.getString(R.string.lines) + ' ' + cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).size());
-        pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' +  cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()));
+        pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr())));
 
 
         if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsToDoFragment) {

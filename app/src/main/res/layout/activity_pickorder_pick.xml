@@ -18,12 +18,12 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <include layout="@layout/toolbar_subtext_default" />
     <include layout="@layout/default_articleinfo" />
-    <include layout="@layout/default_locationinfo" />
+    <include layout="@layout/default_bininfo" />
     <include layout="@layout/default_sourcenoinfo" />
     <TextView
         android:id="@+id/containerText"
         style="@style/containerText"
-        app:layout_constraintTop_toBottomOf="@id/locationContainer"
+        app:layout_constraintTop_toBottomOf="@id/binContainer"
         app:layout_constraintStart_toStartOf="parent"
         />
     <TextView

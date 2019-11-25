@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -92,6 +93,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private static ImageView imageButtonDone;
 
     private static ImageButton imageButtonBarcode;
+    private static ConstraintLayout probeerselContainer;
 
 
     //End Region Private Properties
@@ -183,6 +185,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.genericItemExtraField6Text = getView().findViewById(R.id.genericItemExtraField6Text);
         this.genericItemExtraField7Text = getView().findViewById(R.id.genericItemExtraField7Text);
         this.genericItemExtraField8Text = getView().findViewById(R.id.genericItemExtraField8Text);
+
+        InventoryArticleDetailFragment.probeerselContainer = getView().findViewById(R.id.probeersel);
 
         InventoryArticleDetailFragment.imageButtonDone = getView().findViewById(R.id.imageButtonDone);
     }
@@ -494,9 +498,17 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         //negative
 
         //Check if value already is zero
-        if (cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl == 0 ) {
-            cUserInterface.pDoNope(InventoryArticleDetailFragment.quantityText, true, true);
-            return;
+        if (cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl < 1 ) {
+
+            //If we have a decimal, correct it to zero
+            if (cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl > 0 ) {
+                pvAmountDbl = 0;
+                pvAmountFixedBln = true;
+
+            } else {
+                cUserInterface.pDoNope(InventoryArticleDetailFragment.quantityText, true, true);
+                return;
+            }
         }
 
         if (pvAmountDbl < 0) {
@@ -606,7 +618,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     }
 
     private static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
-        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
+        cUserInterface.pShowSnackbarMessage(InventoryArticleDetailFragment.probeerselContainer,pvErrorMessageStr,null,true);
     }
 
     private Runnable mMinusAction = new Runnable() {

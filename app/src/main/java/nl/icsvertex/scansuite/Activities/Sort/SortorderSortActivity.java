@@ -212,7 +212,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         SortorderSortActivity.articleBarcodeText = findViewById(R.id.articleBarcodeText);
         SortorderSortActivity.articleVendorItemText = findViewById(R.id.articleVendorItemText);
 
-        this.locationContainer = findViewById(R.id.locationContainer);
+        this.locationContainer = findViewById(R.id.binContainer);
         this.locationContainer.setVisibility(GONE);
         this.binText = findViewById(R.id.binText);
         this.cardViewAdviceLocation = findViewById(R.id.cardViewAdviceLocation);

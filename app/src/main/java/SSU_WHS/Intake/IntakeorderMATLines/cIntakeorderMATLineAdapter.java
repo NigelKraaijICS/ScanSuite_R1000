@@ -137,7 +137,13 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
                 //select current
                 pvView.setSelected(true);
 
-                      }
+                //Kick off correct event at correct activity
+                if (cAppExtension.context instanceof IntakeorderLinesActivity) {
+                    if (RecyclerView.getId() == R.id.recyclerViewLines) {
+                        IntakeorderLinesActivity.pIntakelineSelected(currentIntakeorderMatLine);
+                    }
+                }
+            }
         });
 
         //End On Click Listener

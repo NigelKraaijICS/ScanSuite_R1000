@@ -43,5 +43,9 @@ public interface iIntakeorderMATLineDao {
     int updateOrderLineQuantity(Integer pvLineNoInt, Double pvQuantityHandled);
 
 
+    @Query("UPDATE IntakeLinesMAT SET BinCodeHandled = :pvBinCodeHandledStr WHERE LineNo = :pvLineNoInt")
+    int updateOrderLineBinCodeHandled(Integer pvLineNoInt, String pvBinCodeHandledStr);
+
+
 
 }

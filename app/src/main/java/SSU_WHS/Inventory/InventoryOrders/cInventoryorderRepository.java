@@ -996,7 +996,7 @@ public class cInventoryorderRepository {
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
                 l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
-                l_PropertyInfo6Pin.setValue(params[0].getBarcodeStr());
+                l_PropertyInfo6Pin.setValue(params[0].getBarcodeOriginalStr());
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
                 PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();

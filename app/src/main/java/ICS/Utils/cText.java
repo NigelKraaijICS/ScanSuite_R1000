@@ -1,5 +1,6 @@
 package ICS.Utils;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -130,6 +131,22 @@ public class cText {
 
     public static String pDoubleToStringStr(Double pvInputDbl) {
 
+
+        //Convert the double to a big decimal
+       BigDecimal bigDecimal = new BigDecimal(String.valueOf(pvInputDbl));
+
+       //Seperate the integer value
+       int intValue = bigDecimal.intValue();
+
+       //Seperate decimals and covert them to a double
+       Double decimalDbl= cText.pStringToDoubleDbl(bigDecimal.subtract(new BigDecimal(intValue)).toPlainString());
+
+      //If we have no decimals bigger then zero, return the number without decimals
+       if (decimalDbl <= 0.00) {
+           return  cText.pIntToStringStr(intValue);
+       }
+
+       //We have decimals bigger then zero, so return number with two decimals
         DecimalFormat df = new DecimalFormat("0.00##");
         String resultStr = df.format(pvInputDbl);
 

@@ -222,7 +222,7 @@
     <string name="message_underpick_text">You need %1$s of these, you\'ve only picked %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
     <string name="button_close_orderline">Finish</string>
     <string name="choose_barcode">Choose barcode</string>
-    <string name="number_per_scan">Number per scan: </string>
+    <string name="quantity_per_scan">Quantity per scan: </string>
     <string name="error_could_not_close_order">The order could not be closed, please try again</string>
     <!--endregion Pickorder Pick-->
 
@@ -584,6 +584,13 @@
     <string name="message_finish_later">Finish later</string>
     <string name="message_close_now">Close now</string>
     <string name="message_bin_unknown">Bin %1$s unknown to this branch</string>
+    <string name="multiple_barcodes">Multiple barcodes</string>
+    <string name="message_unknown_barcode_for_this_line">Unknown barcode for this line</string>
+    <string name="message_adding_or_changing_bin_now_allowed">Adding/changing bins is not allowed</string>
+    <string name="quantity_scanned">Quantity scanned:</string>
+    <string name="message_split_line">Split line</string>
+    <string name="message_split_line_text">You are about to split this line. You will place %1$s pieces on %2$s. There are %3$s pieces left to place at %4$s. Are you sure?</string>
+    <string name="stored">Stored:</string>
 
 
     <!--endregion Inventory-->

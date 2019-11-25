@@ -9,7 +9,7 @@
     >
     <include layout="@layout/toolbar_subtext_default" />
     <include layout="@layout/default_articleinfo" />
-    <include layout="@layout/default_locationinfo" />
+    <include layout="@layout/default_bininfo" />
     <androidx.cardview.widget.CardView
         android:id="@+id/sourcenoContainer"
         style="@style/articleInfoContainer"
@@ -44,7 +44,7 @@
     <TextView
         android:id="@+id/containerText"
         style="@style/containerText"
-        app:layout_constraintTop_toBottomOf="@id/locationContainer"
+        app:layout_constraintTop_toBottomOf="@id/binContainer"
         app:layout_constraintStart_toStartOf="parent"
         />
     <TextView

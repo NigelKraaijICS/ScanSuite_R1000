@@ -206,6 +206,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         this.mSetSearchCloseListener();
         this.mSetShowCommentListener();
         this.mSetQuickHelpListener();
+        this.mSetStartLineListener();
     }
 
     @Override
@@ -266,7 +267,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             }
 
            IntakeorderLinesActivity.mStartStoreActivity();
-
+            return;
         }
 
         //Check if we have scanned a BIN and check if there are not handled linesInt for this BIN
@@ -439,6 +440,15 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             @Override
             public void onClick(View view) {
                 mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pCommentObl(), "");
+            }
+        });
+    }
+
+    private void mSetStartLineListener() {
+        this.imageViewStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IntakeorderLinesActivity.pHandleScan(null,true);
             }
         });
     }
@@ -763,8 +773,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
 
     }
-
-
 
     //End Region Private Methods
 

@@ -172,7 +172,6 @@ public class cIntakeorderMATLine {
             }
         }
 
-
         return  resultObl;
     }
 
@@ -374,6 +373,10 @@ public class cIntakeorderMATLine {
             return  false;
         }
 
+        if (this.mUpdateBinCodeHandled(this.binCodeHandledStr)  == false) {
+            return  false;
+        }
+
         if (this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)  == false) {
             return  false;
         }
@@ -492,6 +495,27 @@ public class cIntakeorderMATLine {
         return true;
     }
 
+    public cIntakeorderBarcode pGetBarcodeForLine(String pvBarcodeStr){
+
+        if (pvBarcodeStr.isEmpty()) {
+            return  null;
+        }
+
+
+        if (this.barcodesObl == null || this.barcodesObl.size() == 0) {
+            return  null;
+        }
+
+        for (cIntakeorderBarcode intakeorderBarcode : this.barcodesObl) {
+            if (intakeorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr) || intakeorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeStr)) {
+                return  intakeorderBarcode;
+            }
+        }
+
+        return  null;
+
+    }
+
     private  List<cIntakeorderBarcode> mGetBarcodesObl(){
 
         //If barcodes already filled, then we are done
@@ -536,6 +560,20 @@ public class cIntakeorderMATLine {
         }
 
         this.quantityHandledDbl = pvQuantityHandledBln;
+        return true;
+
+    }
+
+    private boolean mUpdateBinCodeHandled(String pvBinCodeHandledStr) {
+
+        boolean resultBln;
+        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateBinCodeHandledBln(pvBinCodeHandledStr);
+
+        if (resultBln == false) {
+            return  false;
+        }
+
+        this.binCodeHandledStr = pvBinCodeHandledStr;
         return true;
 
     }

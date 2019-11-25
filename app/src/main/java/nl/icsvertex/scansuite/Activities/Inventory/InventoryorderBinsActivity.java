@@ -156,7 +156,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
         this.toolbarTitle.setText(pvScreenTitleStr);
-        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' + cInventoryorder.currentInventoryOrder.pGetTotalCountDbl());
+        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalCountDbl()) );
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -438,7 +438,6 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     private static void mStepFailed(String pvErrorMessageStr ){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cInventoryorder.currentInventoryOrder.getOrderNumberStr(), true, true );
-        cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
     private static void mShowOrderCloseDialog() {

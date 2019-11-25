@@ -26,7 +26,7 @@
         <TextView
             style="@style/defaultLineRecyclerQuantityText"
             android:id="@+id/textViewQuantityLabel"
-            android:text="@string/number_per_scan"
+            android:text="@string/quantity_per_scan"
             app:layout_constraintStart_toStartOf="@id/textViewBarcode"
             app:layout_constraintTop_toBottomOf="@id/textViewBarcode"
             />
@@ -35,7 +35,7 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:id="@+id/textViewQuantity"
-            app:layout_constraintStart_toEndOf="@id/textViewQuantity"
+            app:layout_constraintStart_toEndOf="@id/textViewQuantityLabel"
             app:layout_constraintTop_toBottomOf="@id/textViewBarcode"
             />
         <View

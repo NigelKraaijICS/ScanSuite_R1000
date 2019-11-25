@@ -95,6 +95,22 @@
             app:layout_constraintTop_toBottomOf="@id/textViewDescription"
             app:layout_constraintStart_toEndOf="@id/imageViewCounted"
             />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewBarcode"
+            style="@style/recyclerItemImage"
+            app:srcCompat="@drawable/ic_barcode_black_24dp"
+            app:layout_constraintTop_toTopOf="@id/textViewBarcode"
+            app:layout_constraintBottom_toBottomOf="@id/textViewBarcode"
+            app:layout_constraintStart_toEndOf="@id/viewOrderStatus"
+            />
+        <TextView
+            android:id="@+id/textViewBarcode"
+            style="@style/pickorderRecyclerQuantityTotalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewCounted"
+            app:layout_constraintStart_toEndOf="@id/imageViewBarcode"
+            />
         <View
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"

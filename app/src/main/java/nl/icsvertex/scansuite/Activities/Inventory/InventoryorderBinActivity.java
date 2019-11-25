@@ -286,6 +286,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         //Only ARTICLE scans are allowed
         if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_mandatory), pvBarcodeScan.getBarcodeOriginalStr());
+
+
             return;
         }
 
@@ -306,6 +308,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
+        //We are not busy anymore
+        InventoryorderBinActivity.busyBln = false;
     }
 
     private void mTryToLeaveActivity() {
@@ -591,8 +595,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        cInventoryorderLine.currentInventoryOrderLine = cInventoryorderLine.allLinesObl.get(pvPositionInt);
-
+        cInventoryorderLine.currentInventoryOrderLine = cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).get(pvPositionInt);
         if (cInventoryorderLine.currentInventoryOrderLine.getQuantityHandledDbl() <= 0) {
             cUserInterface.pShowSnackbarMessage(pvViewHolder.itemView,cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset),null,true);
             cInventoryorderLine.getInventoryorderLineAdapter().notifyItemChanged(pvPositionInt);
