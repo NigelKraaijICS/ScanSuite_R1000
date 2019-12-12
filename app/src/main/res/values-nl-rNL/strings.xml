@@ -422,7 +422,7 @@
     <string name="lines">Regels:</string>
     <string name="message_close_order_text">U gaat de opdracht sluiten, weet u het zeker?</string>
     <string name="message_bin_already_closed">Deze locatie is reeds gesloten, scan een andere locatie.</string>
-    <string name="message_bin_text_sure">Deze locaties leeg, weet u het zeker?</string>
+    <string name="message_bin_text_sure">Deze locatie is leeg, weet u het zeker?</string>
     <string name="message_reset_line_via_webservice_failed">Resetten regel via webservice is mislukt.</string>
     <string name="message_reset_bin_via_webservice_failed">Resetten locatie via webservice is mislukt.</string>
     <string name="message_removing_line_failed">Regel verwijderen mislukt.</string>
@@ -476,4 +476,8 @@
     <string name="message_unknown_barcode_for_this_line">Onbekende barcode voor deze regel</string>
     <string name="message_adding_or_changing_bin_now_allowed">"Locaties toevoegen/wijzigen is niet toegestaan "</string>
     <string name="quantity_scanned">Aantal gescanned:</string>
+    <string name="error_unknown_location">Onbekende lokatie</string>
+    <string name="message_split_line">Splits regel</string>
+    <string name="supervisor_password_header">Supervisor</string>
+    <string name="supervisor_password_text">Voor deze actie is een supervisor wachtwoord nodig</string>
 </resources>

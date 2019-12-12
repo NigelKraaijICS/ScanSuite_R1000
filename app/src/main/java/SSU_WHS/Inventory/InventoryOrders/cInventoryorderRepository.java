@@ -564,8 +564,6 @@ public class cInventoryorderRepository {
                 l_PropertyInfo8Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
-
-
                 l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYCREATE, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setSuccessBln(false);

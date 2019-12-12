@@ -100,6 +100,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -223,21 +224,21 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     //Region Public Methods
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         String barcodeWithoutPrefixStr = "";
 
-        if (cRegex.hasPrefix(pvScannedBarcodeStr)) {
+        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
             Boolean foundBln = false;
 
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.SHIPPINGPACKAGE)) {
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.SHIPPINGPACKAGE)) {
                 foundBln = true;
             }
             if (foundBln) {
                 //has prefix, is shippingpackage
-                barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+                barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
             }
             else {
                 //has prefix, isn't shippingpackage
@@ -247,7 +248,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         }
 
         if (barcodeWithoutPrefixStr.isEmpty()) {
-            barcodeWithoutPrefixStr = pvScannedBarcodeStr;
+            barcodeWithoutPrefixStr = pvBarcodeScan.getBarcodeOriginalStr();
         }
 
 

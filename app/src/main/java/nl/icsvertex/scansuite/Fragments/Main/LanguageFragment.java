@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
@@ -51,6 +52,7 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
         mFindViews();
         mFieldsInitialize();
         mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

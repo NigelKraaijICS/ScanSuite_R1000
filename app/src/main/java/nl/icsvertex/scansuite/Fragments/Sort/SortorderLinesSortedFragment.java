@@ -20,6 +20,7 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 
 import SSU_WHS.Picken.Pickorders.cPickorder;
@@ -85,6 +86,7 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

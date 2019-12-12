@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cImages;
@@ -56,6 +57,7 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
         mFindViews();
          mFieldsInitialize();
         mSetListeners();
+        cUserInterface.pEnableScanner();
     }
     @Override
     public void mFindViews() {

@@ -108,6 +108,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
         getDialog().getWindow().setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -178,26 +179,26 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
     //Region Public Methods
 
-    public static void pHandleScan(String pvBarcodeStr){
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan){
 
         String barcodeWithoutPrefixStr;
 
         //No prefix
-        if (!cRegex.hasPrefix(pvBarcodeStr)) {
-            ArticleFullViewFragment.mArticleScanned(pvBarcodeStr);
+        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+            ArticleFullViewFragment.mArticleScanned(pvBarcodeScan);
             return;
         }
 
         Boolean foundBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             foundBln = true;
         }
 
         //has prefix, is article
         if (foundBln) {
-            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeStr);
-            ArticleFullViewFragment.mArticleScanned(barcodeWithoutPrefixStr);
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+            ArticleFullViewFragment.mArticleScanned(pvBarcodeScan);
             return;
         }
         else {
@@ -237,10 +238,10 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     }
 
 
-    private static void mArticleScanned(String pvBarcodeStr) {
+    private static void mArticleScanned(cBarcodeScan pvBarcodeScan) {
 
         if (cAppExtension.activity instanceof PickorderPickActivity) {
-            PickorderPickActivity.pHandleScan(pvBarcodeStr);
+            PickorderPickActivity.pHandleScan(pvBarcodeScan);
             cAppExtension.dialogFragment.dismiss();
         }
     }

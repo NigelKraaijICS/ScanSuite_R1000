@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
@@ -68,7 +69,7 @@ public class cPickorderBarcodeAdapter extends RecyclerView.Adapter<cPickorderBar
         pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-        PickorderPickActivity.pHandleScan(pickorderBarcode.getBarcodeStr());
+                PickorderPickActivity.pHandleScan(cBarcodeScan.pFakeScan(pickorderBarcode.getBarcodeStr()));
             }
         });
     }

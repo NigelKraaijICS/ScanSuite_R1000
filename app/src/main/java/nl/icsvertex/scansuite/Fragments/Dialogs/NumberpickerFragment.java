@@ -69,6 +69,7 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
         mFindViews();
          mFieldsInitialize();
         mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

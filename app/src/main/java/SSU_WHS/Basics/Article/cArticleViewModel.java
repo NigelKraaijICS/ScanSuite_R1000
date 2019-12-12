@@ -4,6 +4,8 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
+import java.util.List;
+
 import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Webservice.cWebresult;
 
@@ -20,6 +22,8 @@ public class cArticleViewModel extends AndroidViewModel {
     public cWebresult pGetArticleByBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return this.Repository.pGetArticleViaBarcodeWrs(pvBarcodeScan);}
     public cWebresult pGetBarcodesViaWebserviceWrs(cArticle pvArticle) {return this.Repository.pGetBarcodesWrs(pvArticle);}
     public cWebresult pGetStockViaWebserviceWrs(cArticle pvArticle) {return this.Repository.pGetStockWrs(pvArticle);}
+
+
 
 
 }

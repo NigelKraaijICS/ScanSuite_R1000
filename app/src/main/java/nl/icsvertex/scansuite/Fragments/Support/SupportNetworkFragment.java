@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
@@ -55,6 +56,7 @@ public class SupportNetworkFragment extends Fragment implements iICSDefaultFragm
         mFindViews();
         mFieldsInitialize();
         mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

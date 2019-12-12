@@ -469,7 +469,6 @@ public class cPickorderLine {
         }
 
         if (this.mBusyBln() == false) {
-
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_set_line_on_busy));
             return result;
@@ -521,6 +520,11 @@ public class cPickorderLine {
 
             this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
             this.mUpdateQuanitityHandled(0);
+
+            //delete all line barcodes
+            for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
+                    pickorderLineBarcode.pDeleteFromDatabaseBln();
+            }
 
             //If we already have a processingSequence, then empty it
             if (!this.processingSequenceStr.isEmpty()) {

@@ -124,12 +124,13 @@ public class cPickorderBarcode {
         return true;
     }
 
-    public static cPickorderBarcode pGetPickbarcodeViaBarcode(String pvScannedBarcode) {
+    public static cPickorderBarcode pGetPickbarcodeViaBarcode(cBarcodeScan pvBarcodeScan) {
         if (cPickorderBarcode.allBarcodesObl == null || cPickorderBarcode.allBarcodesObl.size() == 0){
             return null;
         }
         for (cPickorderBarcode pickorderBarcode : cPickorderBarcode.allBarcodesObl) {
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcode) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcode)){
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())){
                 return pickorderBarcode;
             }
         }return null;

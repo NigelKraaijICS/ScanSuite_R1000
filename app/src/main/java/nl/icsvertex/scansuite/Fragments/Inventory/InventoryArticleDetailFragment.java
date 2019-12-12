@@ -3,8 +3,6 @@ package nl.icsvertex.scansuite.Fragments.Inventory;
 
 import android.annotation.SuppressLint;
 
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -30,8 +28,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.Locale;
-
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 
@@ -48,7 +44,6 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.InventoryArticleFullViewFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryArticleDetailFragment extends DialogFragment implements iICSDefaultFragment {
@@ -69,6 +64,9 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private ImageView toolbarImageHelp;
 
     private static ImageView articleThumbImageView;
+    private static ImageView articleFullImageView;
+    private static ConstraintLayout articleFullImageContainer;
+
     private TextView binText;
     private static EditText quantityText;
     private static AppCompatImageButton imageButtonMinus;
@@ -139,6 +137,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         getDialog().getWindow().setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     //End Region Default Methods
@@ -164,6 +163,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.toolbarImageHelp = getView().findViewById(R.id.toolbarImageHelp);
 
         this.articleThumbImageView = getView().findViewById(R.id.articleThumbImageView);
+
         this.binText = getView().findViewById(R.id.binText);
         this.quantityText = getView().findViewById(R.id.quantityText);
         this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
@@ -289,8 +289,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private static boolean mCheckBarcodeWithLineBarcodesBln(cBarcodeScan pvBarcodeScan){
 
         //If scanned value matches the current barcode, then we have a match
-        if (pvBarcodeScan.getBarcodeStr().equalsIgnoreCase(cInventoryorderLineBarcode.currentInventoryorderLineBarcode.getBarcodeStr()) ||
-           pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()) ) {
+        if (pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cInventoryorderLineBarcode.currentInventoryorderLineBarcode.getBarcodeStr()) ||
+           pvBarcodeScan.getBarcodeFormattedStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeWithoutCheckDigitStr()) ) {
             //We have a match, so leave
             return  true;
         }
@@ -313,8 +313,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         for (cInventoryorderLineBarcode inventoryorderLineBarcode : cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl()) {
 
             //We have a match, so set
-            if (inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeStr()) ||
-               inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr())) {
+            if (inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+               inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
                 cInventoryorderLineBarcode.currentInventoryorderLineBarcode = inventoryorderLineBarcode;
                 cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
                 InventoryArticleDetailFragment.mShowBarcodeInfo();
@@ -534,32 +534,33 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private static void mShowArticleImage() {
 
         //If pick with picture is false, then hide image view
+        if (!cInventoryorder.currentInventoryOrder.isInventoryWithPictureBln()) {
+            InventoryArticleDetailFragment.articleThumbImageView.setVisibility(View.INVISIBLE);
+            return;
+        }
 
-        InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
-        return;
+        //If picture is not in cache (via webservice) then show no image
+        if (cInventoryorderLine.currentInventoryOrderLine.pGetArticleImageBln() == false) {
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
+            InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+            return;
+        }
 
-        //todo: do this with the correct settings
-//        if (cSetting.PICK_WITH_PICTURE() == false) {
-//            InventoryArticleDetailFragment.articleThumbImageView.setVisibility(View.INVISIBLE);
-//            return;
-//        }
-//
-//        //If picture is not in cache (via webservice) then show no image
-//        if (cInventoryorderLine.currentInventoryOrderLine.pGetArticleImageBln()) {
-//            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
-//            InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
-//            return;
-//        }
-//
-//        //If picture is in cache but can't be converted, then show no image
-//        if (cInventoryorderLine.currentInventoryOrderLine.articleImage == null ||cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap() == null) {
-//            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
-//            InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
-//            return;
-//        }
-//
-//        //Show the image
-//        InventoryArticleDetailFragment.articleThumbImageView.setImageBitmap(cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap());
+        //If picture is in cache but can't be converted, then show no image
+        if (cInventoryorderLine.currentInventoryOrderLine.articleImage == null || cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap() == null) {
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
+            InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+            return;
+        }
+
+        //Show the image
+        InventoryArticleDetailFragment.articleThumbImageView.setImageBitmap(cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap());
+
+        //Open the image
+        if ((cInventoryorder.currentInventoryOrder.isInventoryWithPictureAutoOpenBln())) {
+            //todo wait for Bart to look this up
+            //InventoryArticleDetailFragment.mShowFullArticleFragment();
+        }
 
     }
 
@@ -686,14 +687,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
                 //If we only have one barcode, then automatticaly select that barcode
                 if (cInventoryorderLine.currentInventoryOrderLine.barcodesObl().size() == 1) {
-
-
-                    cBarcodeScan barcodeScan = new cBarcodeScan();
-                    barcodeScan.barcodeStr = cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr();
-                    barcodeScan.barcodeOriginalStr = cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr();
-                    barcodeScan.barcodeStr =  cText.pIntToStringStr(cBarcodeScan.BarcodeType.EAN13);
-
-                    InventoryArticleDetailFragment.pHandleScan(barcodeScan);
+                    InventoryArticleDetailFragment.pHandleScan(cBarcodeScan.pFakeScan(cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr()));
                     return;
                 }
 

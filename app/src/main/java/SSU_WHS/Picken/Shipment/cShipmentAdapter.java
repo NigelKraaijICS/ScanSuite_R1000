@@ -124,7 +124,7 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
                     if (cAppExtension.activity instanceof ShiporderLinesActivity) {
 
                         cShipment.currentShipment = shipment;
-                        ShiporderLinesActivity.pHandleScan("",true);
+                        ShiporderLinesActivity.pHandleScan(null,true);
                     }
                 }
             }

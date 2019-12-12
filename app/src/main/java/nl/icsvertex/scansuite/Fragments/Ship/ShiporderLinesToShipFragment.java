@@ -93,6 +93,7 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -157,7 +158,7 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
         shipThisView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             ShiporderLinesActivity.pHandleScan("",true);
+             ShiporderLinesActivity.pHandleScan(null,true);
             }
         });
     }

@@ -70,6 +70,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         super.onResume();
         this.mStartShimmering();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

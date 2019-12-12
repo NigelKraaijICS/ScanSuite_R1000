@@ -105,6 +105,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     protected void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -226,9 +227,9 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     }
 
-    public static void pHandleScan(String pvBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
-        InventoryorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeStr, true);
+        InventoryorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
         InventoryorderSelectActivity.recyclerSearchView.callOnClick();
         return;
 
@@ -251,13 +252,11 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         cInventoryorder.currentInventoryOrder = pvInventoryorder;
 
         //Try to lock the inventoryorder
-
         if (InventoryorderSelectActivity.mTryToLockOrderBln() == false) {
             InventoryorderSelectActivity.pFillOrders();
             return;
         }
 
-        //TODO BART
         //Delete the detail, so we can get them from the webservice
        if (cInventoryorder.currentInventoryOrder.pDeleteDetailsBln() == false) {
            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
@@ -270,7 +269,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             return;
         }
 
-        //        // If everything went well, then start Bins Activity
+        //If everything went well, then start Bins Activity
         InventoryorderSelectActivity.mShowInventoryorderBinsActivity();
         return;
 
@@ -453,6 +452,14 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
             return result;
         }
+
+        // Get all article images, only if neccesary
+        if (!cInventoryorder.currentInventoryOrder.pGetArticleImagesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_article_images_failed));
+            return result;
+        }
+
         return  result;
     }
 

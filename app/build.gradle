@@ -20,7 +20,7 @@ android {
         applicationId "nl.icsvertex.scansuite"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 10
+        versionCode 11
         versionName "1.5.2.0A"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
@@ -48,6 +48,7 @@ android {
 }
 
 dependencies {
+
     //Shimmer
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
 
@@ -71,17 +72,22 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
+
     // Room components
     implementation 'androidx.room:room-runtime:2.0.0'
     annotationProcessor 'androidx.room:room-compiler:2.0.0'
     androidTestImplementation 'androidx.room:room-testing:2.0.0'
+
     // Lifecycle components
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+
     //Images
     implementation 'com.squareup.picasso:picasso:2.71828'
-    //implementation 'jp.wasabeef:picasso-transformations:2.1.0'
+
+    //Scanner (device)
+    implementation 'com.github.datalogic:datalogic-android-sdk:1.19.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

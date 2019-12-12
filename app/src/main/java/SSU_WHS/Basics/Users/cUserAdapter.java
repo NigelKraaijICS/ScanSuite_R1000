@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.R;
@@ -82,7 +83,7 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
 
     private static void mUserSelected(cUser pvUser){
         if (cAppExtension.context instanceof LoginActivity) {
-            LoginActivity.pUserSelected(pvUser.getUsernameStr(),false);
+            LoginActivity.pUserSelected(cBarcodeScan.pFakeScan(pvUser.getUsernameStr()),false);
         }
 
     }

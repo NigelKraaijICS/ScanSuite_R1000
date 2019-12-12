@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
@@ -42,16 +43,19 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     private String  messageStr;
     private String  acceptStr;
     private String rejectStr;
+    private boolean ignoreAcceptBln;
 
     //End Region Private Properties
 
     //Region Constructor
-    public AcceptRejectFragment(String pvTitleStr, String pvMessageStr, String pvRejectStr, String pvAcceptStr) {
+    public AcceptRejectFragment(String pvTitleStr, String pvMessageStr, String pvRejectStr, String pvAcceptStr, boolean pvIgnoreAccept) {
         this.titleStr = pvTitleStr;
         this.messageStr = pvMessageStr;
 
         this.acceptStr = pvAcceptStr;
         this.rejectStr = pvRejectStr;
+
+        this.ignoreAcceptBln = pvIgnoreAccept;
     }
     //End Region Constructor
 
@@ -76,6 +80,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -169,7 +174,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
-            PickorderPickActivity.pAcceptPick();
+            PickorderPickActivity.pAcceptPick(ignoreAcceptBln);
             this.dismiss();
         }
 

@@ -100,6 +100,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
+        cUserInterface.pEnableScanner();
 
     }
 
@@ -183,7 +184,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         this.currentLocationView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PickorderLinesActivity.pHandleScan("",true);
+                PickorderLinesActivity.pHandleScan(null,true);
             }
         });
     }

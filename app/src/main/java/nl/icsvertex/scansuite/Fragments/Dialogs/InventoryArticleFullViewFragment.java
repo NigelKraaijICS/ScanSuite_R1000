@@ -109,6 +109,7 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
 
         getDialog().getWindow().setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

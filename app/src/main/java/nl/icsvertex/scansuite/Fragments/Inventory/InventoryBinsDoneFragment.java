@@ -17,10 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinAdapter;
@@ -41,6 +43,8 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     private static RecyclerView recyclerViewInventoryBinsDone;
     private ImageView imageCloseOrder;
 
+    static boolean isSupervisor;
+    static int positionSwiped;
     //End Region Private Properties
 
     //Region Default Methods
@@ -62,11 +66,22 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     @Override
     public void onDestroy() {
         super.onDestroy();
+        isSupervisor = false;
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        isSupervisor = false;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isSupervisor = false;
+        cUserInterface.pEnableScanner();
+
     }
 
     @Override
@@ -87,6 +102,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         if (!(pvViewHolder instanceof cInventoryorderBinAdapter.InventoryorderBinViewHolder)) {
             return;
         }
+        positionSwiped = pvPositionInt;
 
         cInventoryorderBin.currentInventoryOrderBin = cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().get(pvPositionInt);
         if ( cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) <= 0) {
@@ -95,11 +111,27 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
             return;
         }
 
+        //do we need an adult for this?
+        if (!cSetting.INV_RESET_PASSWORD().isEmpty()  && !isSupervisor) {
+            cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_password_text), false);
+            return;
+        }
+
         //Remove the enviroment
         this.mRemoveAdapterFromFragment();
 
     }
 
+    public static void pPasswordSuccess() {
+        cBarcodeScan.pRegisterBarcodeReceiver();
+        isSupervisor = true;
+        mRemoveAdapterFromFragment();
+    }
+
+    public static void pPasswordCancelled() {
+        cBarcodeScan.pRegisterBarcodeReceiver();
+        cInventoryorderBin.getInventoryorderBinDoneAdapter().notifyItemChanged(positionSwiped);
+    }
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -147,7 +179,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
 
     //Region Private Methods
 
-    private void mGetData() {
+    private static void mGetData() {
         InventoryBinsDoneFragment.mFillRecycler(cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl());
     }
 
@@ -208,7 +240,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         });
     }
 
-    private void mRemoveAdapterFromFragment(){
+    private static void mRemoveAdapterFromFragment(){
 
         //remove the item from recyclerview
         cResult hulpRst = cInventoryorderBin.currentInventoryOrderBin.pResetRst();

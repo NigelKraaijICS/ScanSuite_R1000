@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
@@ -49,6 +50,7 @@ public class HugeErrorFragment extends DialogFragment implements iICSDefaultFrag
         mFindViews();
          mFieldsInitialize();
         mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

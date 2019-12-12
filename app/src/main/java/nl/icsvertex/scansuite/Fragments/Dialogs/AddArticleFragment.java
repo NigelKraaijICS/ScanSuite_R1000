@@ -76,6 +76,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -140,29 +141,23 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
 
                     cAppExtension.dialogFragment.dismiss();
 
-                    //Simulate a scan
-                    cBarcodeScan barcodeScan = new cBarcodeScan();
-                    barcodeScan.barcodeStr = AddArticleFragment.editTextAddArticle.getText().toString().trim();
-                    barcodeScan.barcodeOriginalStr = AddArticleFragment.editTextAddArticle.getText().toString().trim();
-                    barcodeScan.barcodeTypeStr= cText.pIntToStringStr(cBarcodeScan.BarcodeType.Unknown);
-
-                    //Pass simulated scan
-                    InventoryorderBinActivity.pHandleScan(barcodeScan);
+                    //Pass fake scan
+                    InventoryorderBinActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()));
                 }
             }
         });
     }
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Has prefix, so check if this is an
-        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             cUserInterface.pDoNope(AddArticleFragment.editTextAddArticle, true, true);
             return;
         }
 
         //no prefix, fine
-        AddArticleFragment.editTextAddArticle.setText(pvScannedBarcodeStr);
+        AddArticleFragment.editTextAddArticle.setText(pvBarcodeScan.getBarcodeOriginalStr());
         AddArticleFragment.addArticleButton.callOnClick();
     }
 }

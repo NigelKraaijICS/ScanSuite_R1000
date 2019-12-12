@@ -57,7 +57,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_environments, container);
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+
 
         return rootview;
     }
@@ -66,6 +66,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
         cAppExtension.dialogFragment = this;
         this.mFragmentInitialize();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
     }
 
     @Override
@@ -93,6 +94,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
@@ -117,6 +119,8 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
     }
 
 
@@ -141,9 +145,9 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
 
     //Region Public Methods
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
-        cEnvironment environment = new cEnvironment(pvScannedBarcodeStr);
+        cEnvironment environment = new cEnvironment(pvBarcodeScan.getBarcodeOriginalStr());
         cResult hulpResult = environment.pValidateRst();
 
         if (!hulpResult.resultBln) {
@@ -246,7 +250,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
 
         //Show clickable snackbar message
 
-        Snackbar snackbar = Snackbar.make(this.environmentRecyclerView, cAppExtension.context.getString(R.string.parameter1_is_removed) + " " +  cEnvironment.restorableEnviroment.getNameStr(), Snackbar.LENGTH_LONG );
+        Snackbar snackbar = Snackbar.make(this.environmentRecyclerView, cAppExtension.context.getString(R.string.parameter1_is_removed,cEnvironment.restorableEnviroment.getNameStr()), Snackbar.LENGTH_LONG );
         snackbar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

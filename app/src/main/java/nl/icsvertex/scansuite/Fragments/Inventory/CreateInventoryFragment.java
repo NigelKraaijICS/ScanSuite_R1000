@@ -74,6 +74,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -152,26 +153,26 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
         });
     }
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         String barcodeWithoutPrefixStr;
 
         //No prefix
-        if (!cRegex.hasPrefix(pvScannedBarcodeStr)) {
-            CreateInventoryFragment.editTextDocument.setText(pvScannedBarcodeStr);
+        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+            CreateInventoryFragment.editTextDocument.setText(pvBarcodeScan.getBarcodeOriginalStr());
             CreateInventoryFragment.createInventoryButton.performClick();
             return;
         }
 
         Boolean foundBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.DOCUMENT) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.DOCUMENT) == true) {
             foundBln = true;
         }
 
         //has prefix, is DOCUMENT
         if (foundBln) {
-            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
             CreateInventoryFragment.editTextDocument.setText(barcodeWithoutPrefixStr);
             CreateInventoryFragment.createInventoryButton.performClick();
             return;

@@ -95,6 +95,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     protected void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -262,7 +263,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
     }
 
-    public static void pHandleScan(String pvScannedBarcodeStr,Boolean pvLineSelectedBln) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan,Boolean pvLineSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         cResult hulpResult;
@@ -283,13 +284,13 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
-        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_article_scan_mandatory), "", true, true);
             return;
         }
 
-        String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+        String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
         // Get line forthis barcode
         cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetLineNotHandledByBarcode(barcodewithoutPrefix);
@@ -298,7 +299,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        cPickorderBarcode.currentPickorderBarcode = cPickorderBarcode.pGetPickbarcodeViaBarcode(pvScannedBarcodeStr);
+        cPickorderBarcode.currentPickorderBarcode = cPickorderBarcode.pGetPickbarcodeViaBarcode(pvBarcodeScan);
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             cPickorderLine.currentPickOrderLine = null;
             mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);

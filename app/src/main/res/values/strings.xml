@@ -418,8 +418,6 @@
     <string name="order_done_close">Close</string>
     <string name="message_couldnt_unlock_order">Could\'t unlock order</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="password_header_default">Password</string>
     <string name="password_text_default">Enter password</string>
     <string name="password_hint_default">password</string>
@@ -430,7 +428,7 @@
     <string name="error_no_workplaces_available">There are no workplaces available for this location</string>
     <string name="error_unknown_autorisation">Autorisation is unknown</string>
     <string name="error_get_pickorders_failed">Getting pickorders from server failed</string>
-    <string name="error_couldnt_delete_details">Could not delete pickorder details</string>
+    <string name="error_couldnt_delete_details">Could not delete order details</string>
     <string name="error_get_picklines_failed">Getting lines from server failed</string>
     <string name="error_couldnt_unlock_order">Couldn\'t unlock order</string>
     <string name="error_get_article_images_failed">Getting article images failed</string>
@@ -589,9 +587,13 @@
     <string name="message_adding_or_changing_bin_now_allowed">Adding/changing bins is not allowed</string>
     <string name="quantity_scanned">Quantity scanned:</string>
     <string name="message_split_line">Split line</string>
-    <string name="message_split_line_text">You are about to split this line. You will place %1$s pieces on %2$s. There are %3$s pieces left to place at %4$s. Are you sure?</string>
     <string name="stored">Stored:</string>
-
-
+    <string name="error_unknown_location">Unknown location</string>
+    <string name="message_split_line_text">You are about to split this line. You will place %1$s pieces on %2$s. There are %3$s pieces left to place at %4$s. Are you sure?</string>
     <!--endregion Inventory-->
+
+    <!--region supervisor-->
+    <string name="supervisor_password_header">Supervisor</string>
+    <string name="supervisor_password_text">You need to be a supervisor for this</string>
+    <!--endregion supervisor-->
 </resources>

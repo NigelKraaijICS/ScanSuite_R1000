@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
@@ -343,7 +344,7 @@ public class cInventoryorderLine {
 
     }
 
-    public cInventoryorderLineBarcode pGetLineBarcodeByScannedBarcode(String pvBarcodeStr) {
+    public cInventoryorderLineBarcode pGetLineBarcodeByScannedBarcode(cBarcodeScan pvBarcodeScan) {
 
 
         if (this.lineBarcodesObl().size() == 0) {
@@ -354,7 +355,8 @@ public class cInventoryorderLine {
         for (cInventoryorderLineBarcode inventoryorderLineBarcode : this.lineBarcodesObl()) {
 
             //We have a match, so set the current line
-            if (inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr)) {
+            if (inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
                 return inventoryorderLineBarcode;
             }
         }

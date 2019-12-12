@@ -99,6 +99,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     protected void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -241,7 +242,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    public static void pHandleScan(String pvScannedBarcodeStr, Boolean pvSourceNoSelectedBln) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan, Boolean pvSourceNoSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -254,7 +255,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
             //Check if article scan is allowed
             if (!cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
@@ -263,7 +264,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             }
 
             //Get shipment with scanned barcode
-            cShipment.currentShipment = cShipment.pGetShipmentWithScannedArticleBarcode(pvScannedBarcodeStr);
+            cShipment.currentShipment = cShipment.pGetShipmentWithScannedArticleBarcode(pvBarcodeScan);
 
             // We did not find a match, so stop
             if (cShipment.currentShipment == null) {
@@ -273,7 +274,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Get shipment by SourceNo or pickcartbox
-        cShipment.currentShipment = cShipment.pGetShipmentWithScannedBarcode(pvScannedBarcodeStr);
+        cShipment.currentShipment = cShipment.pGetShipmentWithScannedBarcode(pvBarcodeScan);
 
         // We did not find a match, so stop
         if (cShipment.currentShipment == null) {

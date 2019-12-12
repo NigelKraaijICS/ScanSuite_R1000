@@ -148,6 +148,10 @@ public class cDatabase {
     public static final String INV_BARCODECHECK_NAMESTR = "Inv_barcode_check";
     public static final String INV_ADD_EXTRA_BIN_NAMESTR = "Inv_add_extra_bin";
 
+    public static final String INVENTORYWITHPICTURE_NAMESTR = "Inv_with_picture";
+    public static final String INVENTORYWITHPICTURE_AUTO_OPEN_NAMESTR = "Inv_with_picture_auto_open";
+    public static final String INVENTORYWITHPICTURE_PREFETCH_NAMESTR = "Inv_with_picture_prefetch";
+
 
     //endregion I
 
@@ -196,9 +200,9 @@ public class cDatabase {
     public static final String PICKPICKTOCONTAINERTYPE_NAMESTR = "Pick_Pick_to_container_type";
     public static final String PICKPRINTADDRESSLABEL_NAMESTR = "Pick_Print_adreslabel";
     public static final String PICKPRINTCONTENTLABEL_NAMESTR = "Pick_Print_contentlabel";
-    public static final String PICKPRINTWITHPICTURE_NAMESTR = "Pick_with_picture";
-    public static final String PICKPRINTWITHPICTURE_AUTO_OPEN_NAMESTR = "Pick_with_picture_auto_open";
-    public static final String PICKPRINTWITHPICTURE_PREFETCH_NAMESTR = "Pick_with_picture_prefetch";
+    public static final String PICKWITHPICTURE_NAMESTR = "Pick_with_picture";
+    public static final String PICKWITHPICTURE_AUTO_OPEN_NAMESTR = "Pick_with_picture_auto_open";
+    public static final String PICKWITHPICTURE_PREFETCH_NAMESTR = "Pick_with_picture_prefetch";
     public static final String PICKACTIVITYBINREQUIRED_NAMESTR = "Pick_Activity_bin_required";
 
     public static final String PRICE_NAMESTR = "Price";

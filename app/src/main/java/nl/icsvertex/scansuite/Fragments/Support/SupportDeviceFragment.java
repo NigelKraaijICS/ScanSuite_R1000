@@ -94,6 +94,7 @@ public class SupportDeviceFragment extends DialogFragment implements iICSDefault
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

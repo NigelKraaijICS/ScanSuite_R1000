@@ -182,19 +182,19 @@ public class cEnvironment {
         cResult result = new cResult();
         result.resultBln = true;
 
-        if (this.nameStr.isEmpty()) {
+        if (this.nameStr == null || this.nameStr.isEmpty()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.message_empty_name));
             return result;
         }
 
-        if (this.descriptionStr.isEmpty()) {
+        if (this.descriptionStr == null || this.descriptionStr.trim().isEmpty()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.message_empty_description));
             return result;
         }
 
-        if (this.webserviceURLStr.isEmpty()) {
+        if (this.webserviceURLStr == null || this.webserviceURLStr.isEmpty()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.message_empty_URL));
             return result;

@@ -116,6 +116,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         this.mFieldsInitialize();
         this.mSetListeners();
         this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
+        cUserInterface.pEnableScanner();
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -62,6 +63,7 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

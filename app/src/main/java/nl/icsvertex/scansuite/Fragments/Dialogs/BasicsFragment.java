@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.Basics.Settings.cSetting;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
@@ -40,6 +41,7 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
         mFindViews();
         mFieldsInitialize();
         mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

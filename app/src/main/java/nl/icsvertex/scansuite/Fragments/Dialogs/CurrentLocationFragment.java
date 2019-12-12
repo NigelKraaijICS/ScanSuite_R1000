@@ -84,8 +84,9 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
     @Override
     public void onResume() {
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         super.onResume();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -154,21 +155,21 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     }
 
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
 
         //Has prefix, so check if this is a BIN
-        if (cRegex.hasPrefix(pvScannedBarcodeStr)) {
+        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
             Boolean foundBin = false;
 
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
                 foundBin = true;
             }
 
             if (foundBin) {
                 //has prefix, is bin
-                editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr));
+                editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
                 setLocationButton.callOnClick();
                 return;
             }
@@ -181,7 +182,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         }
 
             //no prefix, fine
-            editTextCurrentLocation.setText(pvScannedBarcodeStr);
+            editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
             setLocationButton.callOnClick();
     }
 }

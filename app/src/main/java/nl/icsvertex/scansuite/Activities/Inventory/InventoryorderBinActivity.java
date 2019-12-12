@@ -65,7 +65,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private ImageView imageAddArticle;
 
-
+    static boolean isSupervisor;
+    static int positionSwiped;
 
     //End Region Private Properties
 
@@ -80,17 +81,21 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     @Override
     protected void onDestroy() {
+        isSupervisor = false;
         super.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+       InventoryorderBinActivity.isSupervisor = false;
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
+        isSupervisor = false;
         super.onPause();
         cBarcodeScan.pUnregisterBarcodeReceiver();
     }
@@ -279,7 +284,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
                 InventoryorderBinActivity.busyBln = false;
 
                 //Pass this new BIN scan on to the BINS activity
-                InventoryorderBinsActivity.pHandleScan(pvBarcodeScan.getBarcodeOriginalStr());
+                InventoryorderBinsActivity.pHandleScan(pvBarcodeScan);
                 return;
             }
 
@@ -492,7 +497,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         }
 
         //We scanned a barcode that belongs to the current article, so check if we already have a line barcode for this barcode
-        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr());
+        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cBarcodeScan.pFakeScan(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()));
 
         //This barcode is new for this line so add the barcode to the line
         if (cInventoryorderLineBarcode.currentInventoryorderLineBarcode == null) {
@@ -500,7 +505,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         }
 
         //Make line barcode the current line barcode
-        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr());
+        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cBarcodeScan.pFakeScan(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()));
 
         //Add quantityDbl of the current barcode
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
@@ -567,7 +572,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_bin),
-                cAppExtension.activity.getString(R.string.message_bin_text_sure), cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_close));
+                cAppExtension.activity.getString(R.string.message_bin_text_sure), cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_close), false);
 
         acceptRejectFragment.setCancelable(true);
         runOnUiThread(new Runnable() {
@@ -594,6 +599,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         if (!(pvViewHolder instanceof cInventoryorderLineAdapter.InventoryorderLineViewHolder)) {
             return;
         }
+        positionSwiped = pvPositionInt;
 
         cInventoryorderLine.currentInventoryOrderLine = cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).get(pvPositionInt);
         if (cInventoryorderLine.currentInventoryOrderLine.getQuantityHandledDbl() <= 0) {
@@ -602,13 +608,29 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             return;
         }
 
+        //do we need an adult for this?
+        if (!cSetting.INV_RESET_PASSWORD().isEmpty() && !isSupervisor) {
+            cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_password_text), false);
+            return;
+        }
 
         //Remove the enviroment
         this.mRemoveAdapterFromFragment();
 
     }
 
-    private void mRemoveAdapterFromFragment(){
+    public static void pPasswordSuccess() {
+        cBarcodeScan.pRegisterBarcodeReceiver();
+        isSupervisor = true;
+        mRemoveAdapterFromFragment();
+    }
+
+    public static void pPasswordCancelled() {
+        cBarcodeScan.pRegisterBarcodeReceiver();
+        cInventoryorderLine.getInventoryorderLineAdapter().notifyItemChanged(positionSwiped);
+    }
+
+    private static void mRemoveAdapterFromFragment(){
 
         //remove the item from recyclerview
         cResult hulpRst = cInventoryorderLine.currentInventoryOrderLine.pResetRst();
@@ -623,7 +645,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     }
 
     private void mShowAddArticleFragment(){
-
+        isSupervisor = false;
         AddArticleFragment addArticleFragment = new AddArticleFragment();
         addArticleFragment.setCancelable(true);
         addArticleFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDARTICLE_TAG);

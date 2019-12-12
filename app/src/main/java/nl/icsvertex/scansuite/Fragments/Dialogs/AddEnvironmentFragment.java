@@ -73,6 +73,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
@@ -116,9 +117,9 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
 
     //Region Public Methods
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
-        String[] scanSplit = pvScannedBarcodeStr.split("=");
+        String[] scanSplit = pvBarcodeScan.getBarcodeOriginalStr().split("=");
         if (scanSplit.length != 2) {
             cUserInterface.pDoNope(buttonSave, true, false);
 

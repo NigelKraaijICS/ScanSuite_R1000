@@ -18,6 +18,7 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
@@ -85,6 +86,7 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -135,7 +137,7 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
         this.packingTableView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SortorderLinesActivity.pHandleScan("", true);
+                SortorderLinesActivity.pHandleScan(null, true);
             }
         });
 

@@ -97,6 +97,19 @@ public class cInventoryorderEntity {
     public Boolean isprocessingorparked;
     public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
 
+    @ColumnInfo(name="Inventory_with_picture")
+    public String inventoryWithPicture;
+    public String getInventoryWithPictureStr() {return this.inventoryWithPicture;}
+
+    @ColumnInfo(name="Inventory_with_picture_auto_open")
+    public String inventoryWithPictureAutoOpen;
+    public String getInventoryWithPictureAutoOpenStr() {return this.inventoryWithPictureAutoOpen;}
+
+    @ColumnInfo(name="Inventory_with_picture_prefetch")
+    public String inventoryWithPicturePrefetch;
+    public String getInventoryWithPicturePrefetchStr() {return this.inventoryWithPicturePrefetch;}
+
+
     //End Region Public Properties
 
     //Region Constructor
@@ -134,6 +147,10 @@ public class cInventoryorderEntity {
             if (this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowInventoryStepEnu.Inventory))) {
                 this.isprocessingorparked = false;
             }
+
+            this.inventoryWithPicture = pvJsonObject.getString(cDatabase.INVENTORYWITHPICTURE_NAMESTR);
+            this.inventoryWithPictureAutoOpen = pvJsonObject.getString(cDatabase.INVENTORYWITHPICTURE_AUTO_OPEN_NAMESTR);
+            this.inventoryWithPicturePrefetch = pvJsonObject.getString(cDatabase.INVENTORYWITHPICTURE_PREFETCH_NAMESTR);
 
         } catch (JSONException e) {
             e.printStackTrace();

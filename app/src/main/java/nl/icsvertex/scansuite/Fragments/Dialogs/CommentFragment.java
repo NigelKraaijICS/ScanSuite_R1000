@@ -19,6 +19,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.General.Comments.cComment;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
@@ -86,6 +87,7 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
         getDialog().getWindow().setLayout(width, height);
+        cUserInterface.pEnableScanner();
     }
 
     //End Region Default Methods

@@ -3,6 +3,7 @@ package SSU_WHS.Picken.Shipment;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
@@ -192,15 +193,17 @@ public class cShipment {
 
     }
 
-    public static cShipment pGetShipmentWithScannedBarcode(String pvScannedBarcodeStr){
+    public static cShipment pGetShipmentWithScannedBarcode(cBarcodeScan pvBarcodeScan){
 
-        if (pvScannedBarcodeStr.isEmpty()) {
+        if (pvBarcodeScan.getBarcodeOriginalStr().isEmpty()) {
             return  null;
         }
 
+        String strippedBarcodeStr = pvBarcodeScan.getBarcodeOriginalStr();
 
-        if (cRegex.hasPrefix(pvScannedBarcodeStr)) {
-            pvScannedBarcodeStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+
+        if (cRegex.hasPrefix(strippedBarcodeStr)) {
+            strippedBarcodeStr = cRegex.pStripRegexPrefixStr(strippedBarcodeStr);
         }
 
         List<cShipment> hulpObl = cPickorder.currentPickOrder.pGetNotHandledShipmentsObl();
@@ -210,7 +213,8 @@ public class cShipment {
         }
 
         for (cShipment shipment : hulpObl) {
-            if (shipment.getSourceNoStr().equalsIgnoreCase(pvScannedBarcodeStr) || shipment.getProcessingSequenceStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
+            if (shipment.getSourceNoStr().equalsIgnoreCase(strippedBarcodeStr) ||
+                shipment.getProcessingSequenceStr().equalsIgnoreCase(strippedBarcodeStr)) {
                 return  shipment;
             }
         }
@@ -219,10 +223,10 @@ public class cShipment {
 
     }
 
-    public static cShipment pGetShipmentWithScannedArticleBarcode(String pvScannedBarcodeStr){
+    public static cShipment pGetShipmentWithScannedArticleBarcode(cBarcodeScan pvScannedBarcodeStr){
 
         //If scanned value is empty, we are done
-        if (pvScannedBarcodeStr.isEmpty()) {
+        if (pvScannedBarcodeStr.getBarcodeOriginalStr().isEmpty()) {
             return  null;
         }
 
@@ -236,7 +240,8 @@ public class cShipment {
         for (cPickorderBarcode pickorderBarcode : cPickorder.currentPickOrder.barcodesObl() ) {
 
             //We found a match in barcodes of the pickorder
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr.getBarcodeOriginalStr()) ||
+                pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr.getBarcodeFormattedStr())) {
 
                 //Get not handled line for this ItemNo and VariantCoce
               for  (cPickorderLinePackAndShip  pickorderLinePackAndShip : hulpObl) {

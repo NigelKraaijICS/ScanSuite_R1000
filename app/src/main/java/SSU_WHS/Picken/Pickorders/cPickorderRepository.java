@@ -630,28 +630,7 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pGetArticleImagesFromWebserviceWrs(List<String> pvItemAmdVariantsObl) {
 
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mGetPickorderImagesFromWebserviceTask().execute(pvItemAmdVariantsObl).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
 
     public cWebresult pGetBarcodesFromWebservice(){
         ArrayList<String> resultObl = new ArrayList<>();
@@ -1286,51 +1265,6 @@ public class cPickorderRepository {
         }
     }
 
-    private static class mGetPickorderImagesFromWebserviceTask extends AsyncTask<List<String>, Void, cWebresult> {
-        @Override
-        protected cWebresult doInBackground(final List<String>... params) {
-            cWebresult webResult = new cWebresult();
-
-            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
-
-            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-            l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
-            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
-
-            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
-            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_OWNER;
-            l_PropertyInfo2Pin.setValue("");
-            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
-
-            SoapObject articleImagesList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_ITEMSLIST);
-
-            for (String itemNoAndVariantCodeStr: params[0]) {
-                String [] itemNoAndVariantObl = itemNoAndVariantCodeStr.split(";");
-
-                SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_ARTICLEINPUT_COMPLEX);
-                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_ITEMNO_COMPLEX,itemNoAndVariantObl[0]);
-                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE_COMPLEX, itemNoAndVariantObl[1]);
-                articleImagesList.addSoapObject(soapObject);
-            }
-
-            PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
-            l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMSLIST;
-            l_PropertyInfo7Pin.setValue(articleImagesList);
-            l_PropertyInfoObl.add(l_PropertyInfo7Pin);
-
-            try {
-                webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE, l_PropertyInfoObl);
-
-            } catch (JSONException e) {
-                webResult.setResultBln(false);
-                webResult.setSuccessBln(false);
-                e.printStackTrace();
-            }
-
-            return webResult;
-        }
-    }
 
     private static class mGetPickorderAdressesFromWebserviceTask extends AsyncTask<List<String>, Void, cWebresult> {
         @Override

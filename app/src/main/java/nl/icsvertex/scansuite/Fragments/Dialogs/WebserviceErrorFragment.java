@@ -55,6 +55,7 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
         mFindViews();
         mFieldsInitialize();
         mSetListeners();
+        cUserInterface.pEnableScanner();
     }
     @Override
     public void mFindViews() {

@@ -7,6 +7,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
@@ -53,6 +54,7 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
+        cUserInterface.pEnableScanner();
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

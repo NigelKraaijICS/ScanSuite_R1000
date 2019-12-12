@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.PagerAdapters.SupportPagerAdapter;
 
@@ -53,6 +54,7 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

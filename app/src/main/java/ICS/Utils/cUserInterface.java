@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.security.PublicKey;
 import java.util.List;
 
 import ICS.cAppExtension;
@@ -28,6 +29,9 @@ import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HINT;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_ISNUMERIC;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TAG;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TEXT;
+
+import com.datalogic.device.input.KeyboardManager;
+import com.datalogic.device.input.Trigger;
 
 public class cUserInterface {
     private static GettingDataFragment gettingDataFragment;
@@ -44,6 +48,7 @@ public class cUserInterface {
         });
 
     }
+
     public static void pShowSnackbarMessage(final View pvView, final String pvMessageStr, final Integer pvSoundInt, final Boolean pvVibrateBln) {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -60,6 +65,7 @@ public class cUserInterface {
 
 
     }
+
     public static void pShowActionSnackbar(final View pvView, final String pvMessageStr, final Integer pvSoundInt, final Boolean pvVibrateBln) {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -79,8 +85,6 @@ public class cUserInterface {
 
 
     }
-
-
 
     public static void pPlaySound(final Integer pvSoundInt, final Integer pvStartAtMsInt) {
         new Thread(new Runnable() {
@@ -151,6 +155,7 @@ public class cUserInterface {
         });
 
     }
+
     public static void pDoWobble(final View pvView) {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -161,6 +166,7 @@ public class cUserInterface {
         });
 
     }
+
     public static void pDoRotate(final View pvView, final int pvRepeatCountInt) {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -175,9 +181,8 @@ public class cUserInterface {
                 pvView.startAnimation(rotate);
             }
         });
-
-
     }
+
     public static void pDoBoing(final View pvView) {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -253,6 +258,10 @@ public class cUserInterface {
     }
 
     public static void pShowGettingData() {
+
+        //Disable the scanner
+        cUserInterface.pDisableScanner();
+
         gettingDataFragment = new GettingDataFragment();
         gettingDataFragment.setCancelable(true);
             cAppExtension.activity.runOnUiThread(new Runnable() {
@@ -264,16 +273,20 @@ public class cUserInterface {
         }
 
     public static void pHideGettingData() {
+
+        //(Re) Enable the scanner
+        cUserInterface.pEnableScanner();
+
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 if (gettingDataFragment != null) {
                     try {
                         gettingDataFragment.dismiss();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
             }
         });
@@ -299,5 +312,34 @@ public class cUserInterface {
 
     }
 
+    public static void pEnableScanner(){
+
+        KeyboardManager keyManager = new KeyboardManager();
+        for (Trigger trigger : keyManager.getAvailableTriggers()) {
+            boolean result =  trigger.setEnabled(true);
+
+            if(result){
+                //operation done
+            }else{
+                //do something in case of failure
+            }
+        }
+
+    }
+
+    public static void pDisableScanner(){
+
+        KeyboardManager keyManager = new KeyboardManager();
+        for (Trigger trigger : keyManager.getAvailableTriggers()) {
+            boolean result =  trigger.setEnabled(false);
+
+            if(result){
+                //operation done
+            }else{
+                //do something in case of failure
+            }
+        }
+
+    }
 
 }

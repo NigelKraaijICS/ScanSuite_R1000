@@ -3,12 +3,15 @@ package SSU_WHS.Basics.Article;
 import android.os.AsyncTask;
 import org.json.JSONException;
 import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Webservice.cWebresult;
+import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cArticleRepository {
@@ -124,7 +127,7 @@ public class cArticleRepository {
 
             PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
             l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
-            l_PropertyInfo3Pin.setValue(params[0].getBarcodeStr());
+            l_PropertyInfo3Pin.setValue(params[0].getBarcodeFormattedStr());
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
             PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
@@ -226,6 +229,8 @@ public class cArticleRepository {
             return WebresultWrs;
         }
     }
+
+
 
 
 }

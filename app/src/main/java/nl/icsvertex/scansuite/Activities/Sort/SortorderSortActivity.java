@@ -145,6 +145,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         super.onResume();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver,new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -312,24 +313,25 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         //Register scan here, so we start things off
         startedWithScanBln = true;
         articleScannedLastBln = false;
-        SortorderSortActivity.pHandleScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
 
+        //Fake a scan
+        SortorderSortActivity.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
     }
 
     //End Region iICSDefaultActivity Methods
 
     //Region Public Methods
 
-    public static void pHandleScan(String pvScannedBarcodeStr){
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan){
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
-            SortorderSortActivity.mHandleArticleScanned(pvScannedBarcodeStr);
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+            SortorderSortActivity.mHandleArticleScanned(pvBarcodeScan);
             return;
         }
 
-        SortorderSortActivity.mHandleSalesOrderOrPackingTableBinScanned(pvScannedBarcodeStr);
+        SortorderSortActivity.mHandleSalesOrderOrPackingTableBinScanned(pvBarcodeScan);
     }
 
     public static void pAcceptPick() {
@@ -347,13 +349,13 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     //Region Private Methods
 
-    private static void mHandleArticleScanned(String pvScannedBarcodeStr) {
+    private static void mHandleArticleScanned(cBarcodeScan pvBarcodeScan) {
 
         //We didn't scan an article yet, so handle it as a "normal" scan
         if (!articleScannedLastBln) {
 
-            if (!SortorderSortActivity.mFindBarcodeInLineBarcodes(pvScannedBarcodeStr)) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr, true, true);
+            if (!SortorderSortActivity.mFindBarcodeInLineBarcodes(pvBarcodeScan)) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
                 return;
             }
 
@@ -369,12 +371,12 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         //We last scanned an article, but thats oke
         if (!cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
-            SortorderSortActivity.pHandleScan(pvScannedBarcodeStr);
+            SortorderSortActivity.pHandleScan(pvBarcodeScan);
             return;
         }
 
         //You have to scan a pickcart or salesorder after the last article scan
-        cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_packinglocation_or_salesorder), pvScannedBarcodeStr, true, true);
+        cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_packinglocation_or_salesorder), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
 
     }
 
@@ -448,19 +450,19 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private static void mHandleSalesOrderOrPackingTableBinScanned(String pvScannedBarcodeStr) {
+    private static void mHandleSalesOrderOrPackingTableBinScanned(cBarcodeScan pvBarcodeScan) {
 
         // Check if article is already scanned
         if (!SortorderSortActivity.articleScannedLastBln) {
             // we've scanned a pickCart or a salesOrder, but we need an article
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_article_first), pvScannedBarcodeStr, true, true);
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_article_first), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
             return;
         }
 
         SortorderSortActivity.imageButtonDone.setVisibility(View.VISIBLE);
 
         //Strip barcode from regex
-        String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+        String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
         Boolean adviceMatchedBln = false;
 
         //We have advice(s) and it is mandatory, so check if we have a correct scan
@@ -478,8 +480,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         //We don't have a match check differently
         if (!adviceMatchedBln) {
             //Check if scanned barcode is a SalesOrder or PickCartBox
-            boolean isSalesOrderBln = cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.SALESORDER);
-            boolean isPackingTableBinBln = cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.PACKINGTABLEBIN);
+            boolean isSalesOrderBln = cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER);
+            boolean isPackingTableBinBln = cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.PACKINGTABLEBIN);
 
             //If we scanned a salesorder, then check if it matches the SourceNo
             if (isSalesOrderBln) {
@@ -846,7 +848,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderbusy_header),
-                                                                                   cAppExtension.activity.getString(R.string.message_orderbusy_text),cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+                                                                                   cAppExtension.activity.getString(R.string.message_orderbusy_text),cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
         acceptRejectFragment.setCancelable(true);
         runOnUiThread(new Runnable() {
             @Override
@@ -1012,7 +1014,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pDoNope(quantityRequiredText, false, false);
     }
 
-    private static Boolean mFindBarcodeInLineBarcodes(String pvScannedBarcodeStr) {
+    private static Boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
 
         if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
             return false;
@@ -1020,7 +1022,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         for (cPickorderBarcode pickorderBarcode : cPickorderLine.currentPickOrderLine.barcodesObl) {
 
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)) {
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
                 cPickorderBarcode.currentPickorderBarcode = pickorderBarcode;
                 return true;
             }

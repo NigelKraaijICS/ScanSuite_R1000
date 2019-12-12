@@ -87,6 +87,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     protected void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -213,7 +214,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     //Region Public Methods
 
-    public static void pHandleScan(final String pvScannedBarcodeStr) {
+    public static void pHandleScan(final cBarcodeScan pvBarcodeScan) {
 
         //Close open Dialogs
         cUserInterface.pCheckAndCloseOpenDialogs();
@@ -223,7 +224,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         new Thread(new Runnable() {
             public void run() {
-                mHandleScan(pvScannedBarcodeStr);
+                mHandleScan(pvBarcodeScan);
             }
         }).start();
 
@@ -319,16 +320,16 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     }
 
-    private  static void mHandleScan(String pvScannedBarcodeStr){
+    private  static void mHandleScan(cBarcodeScan pvBarcodeScan){
 
         //Only BIN scans are allowed
-        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN)) {
-            mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr);
+        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+            mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_location), pvBarcodeScan.getBarcodeOriginalStr());
             return;
         }
 
         //Strip the prefix if thats neccesary
-        String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+        String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
         cResult hulpRst;
         hulpRst = InventoryorderBinsActivity.mCheckAndGetBinRst(barcodewithoutPrefix);
@@ -445,7 +446,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
-                                                                                   cAppExtension.activity.getString(R.string.message_close_order_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close));
+                                                                                   cAppExtension.activity.getString(R.string.message_close_order_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close), false);
         acceptRejectFragment.setCancelable(true);
        cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -506,7 +507,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
                 cAppExtension.activity.getString(R.string.message_orderbusy_text),
-                cAppExtension.activity.getString(R.string.message_finish_later), cAppExtension.activity.getString(R.string.message_close_now));
+                cAppExtension.activity.getString(R.string.message_finish_later), cAppExtension.activity.getString(R.string.message_close_now), false);
         acceptRejectFragment.setCancelable(true);
 
         runOnUiThread(new Runnable() {

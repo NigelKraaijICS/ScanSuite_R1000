@@ -73,6 +73,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mSetAnimations();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

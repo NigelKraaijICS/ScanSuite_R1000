@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -111,6 +112,9 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     }
 
     private static void mStartLoginActivity() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
         Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
         cAppExtension.context.startActivity(intent);
     }

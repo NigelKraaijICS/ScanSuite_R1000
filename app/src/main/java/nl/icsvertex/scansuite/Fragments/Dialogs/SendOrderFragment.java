@@ -58,6 +58,7 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

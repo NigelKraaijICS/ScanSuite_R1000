@@ -92,6 +92,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -249,20 +250,20 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    public static void pHandleScan(String pvBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodescan) {
 
         //Set filter with scanned barcode if there is no prefix
-        if (cRegex.hasPrefix(pvBarcodeStr) == false) {
+        if (cRegex.hasPrefix(pvBarcodescan.getBarcodeOriginalStr()) == false) {
             //no prefix, fine
-            SortorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeStr, true);
+            SortorderSelectActivity.recyclerSearchView.setQuery(pvBarcodescan.getBarcodeOriginalStr(), true);
             SortorderSelectActivity.recyclerSearchView.callOnClick();
             return;
         }
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodescan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
             //has prefix, is salesorderStr
-            SortorderSelectActivity.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeStr), true);
+            SortorderSelectActivity.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodescan.getBarcodeOriginalStr()), true);
             SortorderSelectActivity.recyclerSearchView.callOnClick();
             return;
         }

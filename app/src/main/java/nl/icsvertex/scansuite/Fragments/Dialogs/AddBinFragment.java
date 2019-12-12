@@ -76,6 +76,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -136,7 +137,8 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
                     }
 
                     cAppExtension.dialogFragment.dismiss();
-                    InventoryorderBinsActivity.pHandleScan(AddBinFragment.editTextAddBin.getText().toString());
+
+                    InventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(AddBinFragment.editTextAddBin.getText().toString()));
 
                 }
             }
@@ -144,20 +146,20 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Has prefix, so check if this is a BIN
-        if (cRegex.hasPrefix(pvScannedBarcodeStr)) {
+        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
             Boolean foundBin = false;
 
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
                 foundBin = true;
             }
 
             if (foundBin) {
                 //has prefix, is bin
-                AddBinFragment.editTextAddBin.setText(cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr));
+                AddBinFragment.editTextAddBin.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
                 AddBinFragment.addBinButton.callOnClick();
                 return;
             }
@@ -169,7 +171,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
         }
 
         //no prefix, fine
-        AddBinFragment.editTextAddBin.setText(pvScannedBarcodeStr);
+        AddBinFragment.editTextAddBin.setText(pvBarcodeScan.getBarcodeOriginalStr());
         AddBinFragment.addBinButton.callOnClick();
     }
 }

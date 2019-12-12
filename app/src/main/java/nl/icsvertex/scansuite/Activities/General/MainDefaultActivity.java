@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
+import ICS.Utils.cWifi;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -101,6 +102,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void onResume() {
         super.onResume();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

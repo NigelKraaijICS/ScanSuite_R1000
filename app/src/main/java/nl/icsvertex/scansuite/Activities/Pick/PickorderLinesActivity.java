@@ -102,13 +102,14 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+                super.onDestroy();
     }
 
     @Override
     protected void onResume() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
         super.onResume();
+        cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -272,7 +273,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    public static void pHandleScan(String pvScannedBarcodeStr, Boolean pvBinSelectedBln) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan, Boolean pvBinSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -291,7 +292,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
                 return;
             }
 
-
             //Set last selected index
             cPickorder.currentPickOrder.lastSelectedIndexInt = cPickorder.currentPickOrder.pGetIndexOfNotHandledLineInt(cPickorderLine.currentPickOrderLine);
 
@@ -301,9 +301,12 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Check if we have scanned a BIN and check if there are not handled linesInt for this BIN
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
 
-            String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+            String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+
+            //Clear current barcode
+            cPickorderBarcode.currentPickorderBarcode = null;
 
             cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetNetxLineToHandleForBin(barcodewithoutPrefix);
             if (cPickorderLine.currentPickOrderLine == null) {
@@ -327,15 +330,15 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
             if (!cSetting.PICK_BIN_IS_ITEM()) {
                 //unknown scan
-                mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_not_allowed), pvScannedBarcodeStr);
+                mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_not_allowed), pvBarcodeScan.getBarcodeOriginalStr());
                 return;
             }
 
-            String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+            String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
             // Article always had BIN, so ARTICLE is EQUAL to BIN
             cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetLineNotHandledByBarcode(barcodewithoutPrefix);
@@ -344,7 +347,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
                 return;
             }
 
-            cPickorderBarcode.currentPickorderBarcode = cPickorderBarcode.pGetPickbarcodeViaBarcode(pvScannedBarcodeStr);
+            cPickorderBarcode.currentPickorderBarcode = cPickorderBarcode.pGetPickbarcodeViaBarcode(pvBarcodeScan);
             if (cPickorderBarcode.currentPickorderBarcode == null) {
                 cPickorderLine.currentPickOrderLine = null;
                 mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
@@ -367,7 +370,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //unknown scan
-        mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_barcode), pvScannedBarcodeStr);
+        mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr());
 
     }
 
@@ -814,7 +817,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_sure_leave_screen_title),
-                cAppExtension.activity.getString(R.string.message_sure_leave_screen_text),cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_leave));
+                cAppExtension.activity.getString(R.string.message_sure_leave_screen_text),cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_leave), false);
         acceptRejectFragment.setCancelable(true);
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override

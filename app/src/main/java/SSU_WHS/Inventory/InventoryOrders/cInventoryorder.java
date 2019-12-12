@@ -16,6 +16,7 @@ import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
+import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
@@ -26,7 +27,6 @@ import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinEntity;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
-import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -128,6 +128,21 @@ public class cInventoryorder {
         return interfaceResultMethodStr;
     }
 
+    public boolean inventoryWithPictureBln;
+    public boolean isInventoryWithPictureBln() {
+        return inventoryWithPictureBln;
+    }
+
+    public boolean inventoryWithPictureAutoOpenBln;
+    public boolean isInventoryWithPictureAutoOpenBln() {
+        return inventoryWithPictureAutoOpenBln;
+    }
+
+    public boolean inventoryWithPicturePrefetchBln;
+    public boolean isInventoryWithPicturePrefetchBln() {
+        return inventoryWithPicturePrefetchBln;
+    }
+
     public List<String> errorMessagesObl;
     public List<String> getErrorMessageObl() {
         return errorMessagesObl;
@@ -190,6 +205,10 @@ public class cInventoryorder {
 
     public List<cInventoryorderBin> binsObl () {return  cInventoryorderBin.allInventoryorderBinsObl;}
 
+    public List<cArticleImage> imagesObl()  {
+        return  cArticleImage.allImages;
+    }
+
     public static List<cInventoryorder> allInventoryordersObl;
     public static cInventoryorder currentInventoryOrder;
 
@@ -221,6 +240,10 @@ public class cInventoryorder {
         this.document2Str = this.inventoryorderEntity.getDocument2Str();
         this.webserviceTimeOutERPInsInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getWebserviceTimeOutERPInsStr());
         this.interfaceResultMethodStr = this.inventoryorderEntity.getInterfaceResultMethodStr();
+
+        this.inventoryWithPictureBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPictureStr(),false) ;
+        this.inventoryWithPictureAutoOpenBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPictureAutoOpenStr(),false) ;
+        this.inventoryWithPicturePrefetchBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPicturePrefetchStr(),false) ;
     }
 
     public cInventoryorder(cInventoryorderEntity pvInventoryorderEntity) {
@@ -247,6 +270,11 @@ public class cInventoryorder {
         this.document2Str = this.inventoryorderEntity.getDocument2Str();
         this.webserviceTimeOutERPInsInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getWebserviceTimeOutERPInsStr());
         this.interfaceResultMethodStr = this.inventoryorderEntity.getInterfaceResultMethodStr();
+
+        this.inventoryWithPictureBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPictureStr(),false) ;
+        this.inventoryWithPictureAutoOpenBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPictureAutoOpenStr(),false) ;
+        this.inventoryWithPicturePrefetchBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPicturePrefetchStr(),false) ;
+
     }
 
     //End Region Constructor
@@ -446,8 +474,64 @@ public class cInventoryorder {
 
     }
 
-    public boolean pDeleteDetailsBln() {
+    public boolean pGetArticleImagesViaWebserviceBln(Boolean pvRefreshBln) {
 
+        if (!cInventoryorder.currentInventoryOrder.isInventoryWithPictureBln()  || !cInventoryorder.currentInventoryOrder.inventoryWithPicturePrefetchBln) {
+            return  true;
+        }
+
+        if (pvRefreshBln == true) {
+            cArticleImage.allImages = null;
+            cArticleImage.pTruncateTableBln();
+        }
+
+        if (this.imagesObl()  != null) {
+            return  true;
+        }
+
+        if (this.linesObl() == null || this.linesObl().size() == 0) {
+            return  false;
+        }
+
+        List<String> itemNoAndVariantCodeObl;
+        itemNoAndVariantCodeObl = new ArrayList<>();
+
+        for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
+            String itemNoAndVariantCodeStr = inventoryorderLine.getItemNoStr() + ";" + inventoryorderLine.getVariantCodeStr();
+
+            if (itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr) == false) {
+                itemNoAndVariantCodeObl.add(itemNoAndVariantCodeStr);
+            }
+        }
+
+        cWebresult WebResult;
+        WebResult =  cArticleImage.getArticleImageViewModel().pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
+        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+
+            cArticleImage.allImages = new ArrayList<>();
+            List<JSONObject> myList = WebResult.getResultDtt();
+
+            for (int i = 0; i < myList.size(); i++) {
+                JSONObject jsonObject;
+                jsonObject = myList.get(i);
+
+                cArticleImage articleImage = new cArticleImage(jsonObject);
+
+                if ( cArticleImage.allImages.contains(articleImage) == false) {
+                    articleImage.pInsertInDatabaseBln();
+                    cArticleImage.allImages.add((articleImage));
+                }
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
+            return  false;
+        }
+    }
+
+
+    public boolean pDeleteDetailsBln() {
         cInventoryorderLine.pTruncateTableBln();
         cInventoryorderBin.pTruncateTableBln();
         cInventoryorderBarcode.pTruncateTableBln();
@@ -685,9 +769,8 @@ public class cInventoryorder {
         //Search for the scanned barcode in the article barcodes
         cArticleBarcode matchedArticleBarcode = null;
         for (cArticleBarcode articleBarcode : cArticle.currentArticle.barcodesObl) {
-
-            if (articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeStr()) ||
-                articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr())) {
+            if (articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                articleBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
                 matchedArticleBarcode = articleBarcode;
                 break;
             }
@@ -705,7 +788,8 @@ public class cInventoryorder {
                     cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(articleBarcode);
                     inventoryorderBarcode.pInsertInDatabaseBln();
 
-                    if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeStr())) {
+                    if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                        inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
                         cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
                     }
                 }
@@ -929,7 +1013,8 @@ public class cInventoryorder {
 
         for (cInventoryorderBarcode inventoryorderBarcode : this.barcodesObl()) {
 
-            if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeStr()) || inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeOriginalStr())) {
+            if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeOriginalStr()) ||
+                inventoryorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodescan.getBarcodeFormattedStr())) {
                 return  inventoryorderBarcode;
             }
         }

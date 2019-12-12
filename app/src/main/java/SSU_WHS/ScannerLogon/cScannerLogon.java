@@ -147,10 +147,9 @@ public class cScannerLogon {
             String URLStr = cPublicDefinitions.UPDATE_BASE_URL + "/" + subDirectoryStr + "/" + cPublicDefinitions.UPDATE_PACKAGE_NAME;
             cUpdate.mUpdateBln(pvFrameLayout, URLStr);
             return false;
-
+//            cScannerLogon.scannerLoggedOnBln = true;
+//            return true;
         }
-
-
     }
 
     //End Region Public Methods

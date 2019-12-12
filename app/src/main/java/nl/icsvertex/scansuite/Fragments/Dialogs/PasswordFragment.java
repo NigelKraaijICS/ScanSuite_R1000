@@ -18,10 +18,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cUserInterface;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
@@ -35,10 +40,10 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
 
     private TextView textPasswordHeader;
     private TextView textPasswordText;
-    private EditText editPassword;
+    private static EditText editPassword;
     private TextView textPasswordIncorrect;
     private Button buttonCancel;
-    private Button buttonLogin;
+    private static Button buttonLogin;
 
     public PasswordFragment() {
         // Required empty public constructor
@@ -60,13 +65,36 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     public void onResume() {
         super.onResume();
         cUserInterface.pShowKeyboard(editPassword);
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
+    @Override
+    public void onDestroy() {
+        try {
+            //cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
+    }
+    @Override
+    public void onPause() {
+        try {
+            //cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onPause();
+    }
+
 
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+
+        //cBarcodeScan.pRegisterBarcodeFragmentReceiver();
     }
     @Override
     public void mFindViews() {
@@ -110,6 +138,11 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         this.mSetEditorActionListener();
     }
 
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+        editPassword.setText(pvBarcodeScan.barcodeOriginalStr);
+        buttonLogin.callOnClick();
+    }
+
     private void mSetPasswordCheckListener() {
         this.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +163,22 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                         mWrongPassword();
                     }
                 }
+                if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+                    if (editPassword.getText().toString().equals(cSetting.INV_RESET_PASSWORD())) {
+                        mRightPassword();
+                    }
+                    else {
+                        mWrongPassword();
+                    }
+                }
+                if (cAppExtension.activity instanceof InventoryorderBinActivity) {
+                    if (editPassword.getText().toString().equals(cSetting.INV_RESET_PASSWORD())) {
+                        mRightPassword();
+                    }
+                    else {
+                        mWrongPassword();
+                    }
+                }
             }
         });
     }
@@ -140,6 +189,12 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             public void onClick(View view) {
                 if (cAppExtension.dialogFragment != null) {
                     cAppExtension.dialogFragment.dismiss();
+                    if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+                        InventoryBinsDoneFragment.pPasswordCancelled();
+                    }
+                    if (cAppExtension.activity instanceof InventoryorderBinActivity) {
+                        InventoryorderBinActivity.pPasswordCancelled();
+                    }
                 }
             }
         });
@@ -164,6 +219,15 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             MainDefaultActivity.pPasswordSuccess();
             dismiss();
         }
+        if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+            InventoryBinsDoneFragment.pPasswordSuccess();
+            dismiss();
+        }
+        if (cAppExtension.activity instanceof InventoryorderBinActivity) {
+            InventoryorderBinActivity.pPasswordSuccess();
+            dismiss();
+        }
+
     }
     private void mSetTextChangedListener() {
         editPassword.addTextChangedListener(new TextWatcher() {

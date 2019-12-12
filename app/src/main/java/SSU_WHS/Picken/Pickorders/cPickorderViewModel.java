@@ -59,7 +59,6 @@ public class cPickorderViewModel extends AndroidViewModel {
 
     public cWebresult pGetAdressesFromWebserviceWrs() {return this.PickorderRepository.pGetAddressesFromWebserviceWrs();}
 
-    public cWebresult pGetArticleImagesFromWebserviceWrs(List<String> pvItemNoAndVariantObl) {return this.PickorderRepository.pGetArticleImagesFromWebserviceWrs(pvItemNoAndVariantObl);}
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {return this.PickorderRepository.pGetBarcodesFromWebservice(); }
 

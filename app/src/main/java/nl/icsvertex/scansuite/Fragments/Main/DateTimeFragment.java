@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cDateAndTime;
 import nl.icsvertex.scansuite.R;
@@ -56,6 +57,7 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
         mFindViews();
         mFieldsInitialize();
         mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

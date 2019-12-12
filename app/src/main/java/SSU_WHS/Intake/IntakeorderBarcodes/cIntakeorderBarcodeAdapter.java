@@ -70,13 +70,7 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
         pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                cBarcodeScan barcodeScan = new cBarcodeScan();
-                barcodeScan.barcodeOriginalStr = intakeorderBarcode.getBarcodeStr();
-                barcodeScan.barcodeStr = intakeorderBarcode.getBarcodeStr();
-                barcodeScan.barcodeTypeStr = cText.pIntToStringStr(cBarcodeScan.BarcodeType.EAN13);
-                IntakeOrderIntakeActivity.pHandleScan(barcodeScan);
+                IntakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(intakeorderBarcode.getBarcodeStr()));
 
             }
         });

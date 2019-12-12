@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
@@ -39,13 +41,36 @@ public class cInventoryorderBarcode {
     //Region Public Properties
 
     public String barcode;
-
     public String getBarcodeStr() {
         return this.barcode;
     }
 
+    public String barcodeWithoutCheckDigitStr;
+    public String getBarcodeWithoutCheckDigitStr() {
+
+        this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
+
+        if (cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN8 && cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN13 ) {
+            return  this.barcodeWithoutCheckDigitStr;
+        }
+
+        if (this.getBarcodeStr().length() != 8 && this.getBarcodeStr().length() != 13 ) {
+            return  this.barcodeWithoutCheckDigitStr;
+        }
+
+        if (this.getBarcodeStr().length() == 8)  {
+            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,7);
+        }
+
+        if (this.getBarcodeStr().length() == 13)  {
+            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,12);
+        }
+
+        return barcodeWithoutCheckDigitStr;
+    }
+
     public String barcodetype;
-    public String getBarcodeTypesStr() {
+    public String getBarcodeTypeStr() {
         return this.barcodetype;
     }
 

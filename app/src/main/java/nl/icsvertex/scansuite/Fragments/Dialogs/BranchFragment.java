@@ -87,6 +87,7 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
 
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
 
         this.shimmerViewContainer.startShimmerAnimation();
         int width = getResources().getDisplayMetrics().widthPixels;
@@ -128,26 +129,26 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
 
     //Region Public Methods
 
-    public static void pHandleScan(String pvBarcodeStr){
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan){
 
         String barcodeWithoutPrefixStr;
 
         //No prefix
-        if (!cRegex.hasPrefix(pvBarcodeStr)) {
+        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
-            BranchFragment.mBranchScanned(pvBarcodeStr);
+            BranchFragment.mBranchScanned(pvBarcodeScan.getBarcodeOriginalStr());
             return;
         }
 
         Boolean foundBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.LOCATION) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.LOCATION) == true) {
             foundBln = true;
         }
 
         //has prefix, is branch
         if (foundBln) {
-            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeStr);
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
             BranchFragment.mBranchScanned(barcodeWithoutPrefixStr);
             return;
         }

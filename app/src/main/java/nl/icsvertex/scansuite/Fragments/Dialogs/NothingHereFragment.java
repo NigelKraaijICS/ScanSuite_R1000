@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import com.google.android.gms.common.api.internal.RegistrationMethods;
 
 import ICS.Utils.cImages;
+import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
 
 public class NothingHereFragment extends Fragment {
@@ -97,6 +98,8 @@ public class NothingHereFragment extends Fragment {
         animationSet.addAnimation(anim2);
         this.imageTumbleweed.startAnimation(animationSet);
         this.imageViewWind.startAnimation(anim2);
+
+        cUserInterface.pEnableScanner();
     }
 
     //End Region Default Methods

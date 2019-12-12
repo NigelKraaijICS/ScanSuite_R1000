@@ -68,6 +68,12 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
         super.onPause();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+    }
+
 
     @Override
     public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {

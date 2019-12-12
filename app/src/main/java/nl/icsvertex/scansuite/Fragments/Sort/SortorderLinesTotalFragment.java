@@ -16,6 +16,7 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.R;
@@ -85,6 +86,7 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

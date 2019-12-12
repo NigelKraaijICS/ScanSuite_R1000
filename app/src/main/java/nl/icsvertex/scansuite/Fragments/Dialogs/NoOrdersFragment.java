@@ -60,6 +60,7 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

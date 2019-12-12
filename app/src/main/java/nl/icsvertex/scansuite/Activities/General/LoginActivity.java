@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -155,17 +156,17 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     //Region Public Methods
 
-    public static void pHandleScan(String pvScannedBarcodeStr){
-        LoginActivity.pUserSelected(pvScannedBarcodeStr, true);
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan){
+        LoginActivity.pUserSelected(pvBarcodeScan, true);
         return;
     }
 
-    public static void pUserSelected(String pvUserStr, Boolean pvScannedBln) {
+    public static void pUserSelected(cBarcodeScan pvBarcodeScan, Boolean pvScannedBln) {
 
-        cUser User = cUser.pGetUserByName(pvUserStr);
+        cUser User = cUser.pGetUserByName(pvBarcodeScan.getBarcodeOriginalStr());
         // Scanned/selected user doesn't exist, so show message and end void
         if (User == null){
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_user), pvUserStr, true, true );
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_user), pvBarcodeScan.getBarcodeOriginalStr(), true, true );
             return;
         }
 

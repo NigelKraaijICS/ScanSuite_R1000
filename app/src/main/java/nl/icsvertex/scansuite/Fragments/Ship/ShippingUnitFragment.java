@@ -15,6 +15,7 @@ import android.widget.Button;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Picken.Shipment.cShipment;
@@ -70,6 +71,7 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mGetData();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

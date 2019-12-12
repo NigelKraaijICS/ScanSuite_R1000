@@ -1354,7 +1354,7 @@ public class cPickorder{
         }
 
         cWebresult WebResult;
-        WebResult =  cPickorder.getPickorderViewModel().pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
+        WebResult =  cArticleImage.getArticleImageViewModel().pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
         if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
             cArticleImage.allImages = new ArrayList<>();

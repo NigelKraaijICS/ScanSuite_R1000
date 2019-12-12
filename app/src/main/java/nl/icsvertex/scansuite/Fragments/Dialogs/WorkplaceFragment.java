@@ -81,6 +81,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
@@ -120,18 +121,19 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
 
     //Region Private Methods
 
-    public static void pHandleScan(String pvBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
         String barcodeWithoutPrefixStr ;
-        if (cRegex.hasPrefix(pvBarcodeStr)) {
+
+        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             Boolean foundBin = false;
 
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.WORKPLACE) == true) {
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.WORKPLACE) == true) {
                 foundBin = true;
             }
 
             if (foundBin) {
                 //has prefix, is workPlaceStr
-                barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeStr);
+                barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
                 mWorkplaceScanned(barcodeWithoutPrefixStr);
             }
             else {
@@ -141,13 +143,13 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         }
         else {
             //no prefix, fine
-            mWorkplaceScanned(pvBarcodeStr);
+            mWorkplaceScanned(pvBarcodeScan.getBarcodeOriginalStr());
         }
     }
 
-    private static void mWorkplaceScanned(String pvBarcodeStr) {
+    private static void mWorkplaceScanned(String pvWorkplaceStr) {
 
-        cWorkplace Workplace = cWorkplace.pGetWorkplaceByName(pvBarcodeStr);
+        cWorkplace Workplace = cWorkplace.pGetWorkplaceByName(pvWorkplaceStr);
 
         if (Workplace != null) {
 

@@ -218,9 +218,9 @@ public class cPickorderEntity {
             this.pickPicktocontainertype = pvJsonObject.getString(cDatabase.PICKPICKTOCONTAINERTYPE_NAMESTR);
             this.pickPrintaddresslabel = pvJsonObject.getString(cDatabase.PICKPRINTADDRESSLABEL_NAMESTR);
             this.pickPrintcontentlabel = pvJsonObject.getString(cDatabase.PICKPRINTCONTENTLABEL_NAMESTR);
-            this.pickWithPicture = pvJsonObject.getString(cDatabase.PICKPRINTWITHPICTURE_NAMESTR);
-            this.pickWithPictureAutoOpen = pvJsonObject.getString(cDatabase.PICKPRINTWITHPICTURE_AUTO_OPEN_NAMESTR);
-            this.pickWithPicturePrefetch = pvJsonObject.getString(cDatabase.PICKPRINTWITHPICTURE_PREFETCH_NAMESTR);
+            this.pickWithPicture = pvJsonObject.getString(cDatabase.PICKWITHPICTURE_NAMESTR);
+            this.pickWithPictureAutoOpen = pvJsonObject.getString(cDatabase.PICKWITHPICTURE_AUTO_OPEN_NAMESTR);
+            this.pickWithPicturePrefetch = pvJsonObject.getString(cDatabase.PICKWITHPICTURE_PREFETCH_NAMESTR);
             this.pickActivityBinRequired = pvJsonObject.getString(cDatabase.PICKACTIVITYBINREQUIRED_NAMESTR);
 
         } catch (JSONException e) {

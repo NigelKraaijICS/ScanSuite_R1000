@@ -84,8 +84,9 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     }
     @Override
     public void onResume() {
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         super.onResume();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -181,27 +182,27 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         });
     }
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
 
         String barcodeWithoutPrefixStr;
 
         //No prefix
-        if (!cRegex.hasPrefix(pvScannedBarcodeStr)) {
-            editTextCurrentLocation.setText(pvScannedBarcodeStr);
+        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+            editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
             closeOrderButton.callOnClick();
             return;
         }
 
         Boolean foundBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.BIN) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN) == true) {
             foundBln = true;
         }
 
         //has prefix, is BIN
         if (foundBln) {
-            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr);
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
             editTextCurrentLocation.setText(barcodeWithoutPrefixStr);
             closeOrderButton.callOnClick();
             return;

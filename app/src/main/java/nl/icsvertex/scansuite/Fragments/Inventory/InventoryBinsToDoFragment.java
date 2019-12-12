@@ -76,6 +76,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
     @Override
     public void onResume() {
         super.onResume();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

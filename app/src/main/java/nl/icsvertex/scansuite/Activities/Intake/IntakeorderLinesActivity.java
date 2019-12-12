@@ -110,8 +110,9 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
     @Override
     protected void onResume() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
         super.onResume();
+        cBarcodeScan.pRegisterBarcodeReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -587,7 +588,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_sure_leave_screen_title),
-                cAppExtension.activity.getString(R.string.message_sure_leave_screen_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_leave));
+                cAppExtension.activity.getString(R.string.message_sure_leave_screen_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_leave), false);
         acceptRejectFragment.setCancelable(true);
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override

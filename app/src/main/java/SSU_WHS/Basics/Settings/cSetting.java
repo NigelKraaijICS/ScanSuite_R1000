@@ -109,6 +109,7 @@ public class cSetting {
         INV_NEW_WORKFLOWS,
         INV_PRECOUNT,
         INV_SHOW_EXT_REF,
+        INV_RESET_PASSWORD,
         MOVE_AMOUNT_MANUAL,
         MOVE_AUTO_ACCEPT_AT_NEW_BIN,
         MOVE_AUTO_ACCEPT_AT_NEW_ITEM,
@@ -616,6 +617,17 @@ public class cSetting {
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
+
+    public static String INV_RESET_PASSWORD(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_RESET_PASSWORD);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
     public static String INV_NEW_WORKFLOWS(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.INV_NEW_WORKFLOWS);
@@ -675,7 +687,6 @@ public class cSetting {
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
-
 
     //End Region Settings
 

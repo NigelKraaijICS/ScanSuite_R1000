@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.R;
@@ -46,9 +47,9 @@ public class PickorderLinesTotalFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         this.mFindViews();
         this.mFillRecycler();
+        cUserInterface.pEnableScanner();
     }
 
     @Override

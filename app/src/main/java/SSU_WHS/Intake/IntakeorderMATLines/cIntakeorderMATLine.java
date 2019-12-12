@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
@@ -495,9 +496,9 @@ public class cIntakeorderMATLine {
         return true;
     }
 
-    public cIntakeorderBarcode pGetBarcodeForLine(String pvBarcodeStr){
+    public cIntakeorderBarcode pGetBarcodeForLine(cBarcodeScan pvBarcodeScan){
 
-        if (pvBarcodeStr.isEmpty()) {
+        if (pvBarcodeScan.getBarcodeOriginalStr().isEmpty()) {
             return  null;
         }
 
@@ -507,7 +508,8 @@ public class cIntakeorderMATLine {
         }
 
         for (cIntakeorderBarcode intakeorderBarcode : this.barcodesObl) {
-            if (intakeorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr) || intakeorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeStr)) {
+            if (intakeorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                intakeorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
                 return  intakeorderBarcode;
             }
         }

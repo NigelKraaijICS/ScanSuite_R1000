@@ -77,11 +77,6 @@ public class cInventoryorderBarcodeAdapter extends RecyclerView.Adapter<cInvento
             @Override
             public void onClick(View v) {
 
-                cBarcodeScan barcodeScan = new cBarcodeScan();
-                barcodeScan.barcodeStr = cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr();
-                barcodeScan.barcodeOriginalStr = cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr();
-                barcodeScan.barcodeStr =  cText.pIntToStringStr(cBarcodeScan.BarcodeType.EAN13);
-
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
                     if (fragment instanceof NothingHereFragment || fragment instanceof BarcodeFragment) {
@@ -91,7 +86,7 @@ public class cInventoryorderBarcodeAdapter extends RecyclerView.Adapter<cInvento
                     }
                 }
 
-                InventoryArticleDetailFragment.pHandleScan(barcodeScan);
+                InventoryArticleDetailFragment.pHandleScan(cBarcodeScan.pFakeScan(cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr()));
             }
         });
     }

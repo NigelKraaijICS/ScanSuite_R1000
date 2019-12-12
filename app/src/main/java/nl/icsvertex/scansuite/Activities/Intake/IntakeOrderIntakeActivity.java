@@ -17,7 +17,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -140,9 +139,10 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     @Override
     protected void onResume() {
+        super.onResume();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver();
-        super.onResume();
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -254,7 +254,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 //
 //            cBarcodeScan barcodeScan = new cBarcodeScan();
 //            barcodeScan.barcodeOriginalStr = cIntakeorder.currentIntakeOrder.currentBranchBin.getBinCodeStr();
-//            barcodeScan.barcodeStr = cIntakeorder.currentIntakeOrder.currentBranchBin.getBinCodeStr();
+//            barcodeScan.barcodeFormattedStr = cIntakeorder.currentIntakeOrder.currentBranchBin.getBinCodeStr();
 //            barcodeScan.barcodeTypeStr = cText.pIntToStringStr(cBarcodeScan.BarcodeType.CODE128);
 //
 //          IntakeOrderIntakeActivity.pHandleScan(barcodeScan);
@@ -264,8 +264,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 //       if (cIntakeorder.currentIntakeOrder.currentIntakeOrderbarcode != null) {
 //
 //           cBarcodeScan barcodeScan = new cBarcodeScan();
-//           barcodeScan.barcodeOriginalStr = cIntakeorder.currentIntakeOrder.currentIntakeOrderbarcode.getBarcodeStr();
-//           barcodeScan.barcodeStr = cIntakeorder.currentIntakeOrder.currentIntakeOrderbarcode.getBarcodeStr();
+//           barcodeScan.barcodeOriginalStr = cIntakeorder.currentIntakeOrder.currentIntakeOrderbarcode.getBarcodeFormattedStr();
+//           barcodeScan.barcodeFormattedStr = cIntakeorder.currentIntakeOrder.currentIntakeOrderbarcode.getBarcodeFormattedStr();
 //           barcodeScan.barcodeTypeStr = cText.pIntToStringStr(cBarcodeScan.BarcodeType.CODE128);
 //
 //           IntakeOrderIntakeActivity.pHandleScan(barcodeScan);
@@ -313,7 +313,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this BIN
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
-            hulpRst = IntakeOrderIntakeActivity.mHandleArticleScanRst(pvBarcodeScan.getBarcodeStr());
+            hulpRst = IntakeOrderIntakeActivity.mHandleArticleScanRst(pvBarcodeScan);
             if (! hulpRst.resultBln) {
                 cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,hulpRst.messagesStr(),null,true);
                 return;
@@ -388,13 +388,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
                 //If we only have one barcode, then automatticaly select that barcode
                 if (cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl.size() == 1) {
-
-                    cBarcodeScan barcodeScan = new cBarcodeScan();
-                    barcodeScan.barcodeOriginalStr = cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl.get(0).getBarcodeStr();
-                    barcodeScan.barcodeStr = cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl.get(0).getBarcodeStr();
-                    barcodeScan.barcodeOriginalStr = cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl.get(0).getBarcodeTypeStr();
-
-                    IntakeOrderIntakeActivity.pHandleScan(barcodeScan);
+                    IntakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl.get(0).getBarcodeStr()));
                     return;
                 }
 
@@ -543,12 +537,12 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     //Scans and manual input
 
-    private static cResult mHandleArticleScanRst(String pvScannedBarcodeStr){
+    private static cResult mHandleArticleScanRst(cBarcodeScan pvBarcodeScan){
 
         cResult result = new cResult();
         result.resultBln = true;
 
-        cIntakeorderBarcode intakeorderBarcode = cIntakeorderMATLine.currentIntakeorderMATLine.pGetBarcodeForLine(pvScannedBarcodeStr);
+        cIntakeorderBarcode intakeorderBarcode = cIntakeorderMATLine.currentIntakeorderMATLine.pGetBarcodeForLine(pvBarcodeScan);
         if (intakeorderBarcode == null) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line));
@@ -917,7 +911,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_split_line),
                                                                                    messageStr,
                                                                                    pvRejectStr,
-                                                                                   pvAcceptStr );
+                                                                                   pvAcceptStr , false);
         acceptRejectFragment.setCancelable(true);
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -934,7 +928,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderbusy_header),
                                                                                    cAppExtension.activity.getString(R.string.message_orderbusy_text),
-                                                                                   cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+                                                                                   cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
         acceptRejectFragment.setCancelable(true);
 
         runOnUiThread(new Runnable() {
