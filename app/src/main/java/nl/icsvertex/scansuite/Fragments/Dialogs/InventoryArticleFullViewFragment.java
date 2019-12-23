@@ -39,7 +39,6 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
     private ImageView toolbarImage;
     private  TextView toolbarTitle;
     private TextView toolbarSubtext;
-    private ImageView toolbarImageHelp;
 
     private static ConstraintLayout articleFullViewContainer;
     private TextView articleFullItemNoTextView;
@@ -129,7 +128,6 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
         this.toolbarImage = getView().findViewById(R.id.toolbarImage);
         this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
-        this.toolbarImageHelp = getView().findViewById(R.id.toolbarImageHelp);
 
         this.articleFullViewContainer = getView().findViewById(R.id.articleFuillViewContainer);
         this.articleFullItemNoTextView = getView().findViewById(R.id.articleFullItemNoTextView);
@@ -228,7 +226,7 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
         },1500);
 
         this.toolbarImage.setImageResource(R.drawable.ic_info);
-        this.toolbarImageHelp.setVisibility(View.GONE);
+
     }
 
     private void mDismissListener() {

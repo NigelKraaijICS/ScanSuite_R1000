@@ -23,6 +23,22 @@
         android:translationZ="2dp"
         android:background="@color/colorBart"
         >
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/theBigPictureContainer"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:translationZ="20dp"-->
+<!--            android:background="@color/colorBart"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/toolbar"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            >-->
+<!--            <ImageView-->
+<!--                android:id="@+id/theBigPicture"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true"/>-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
     <include layout="@layout/toolbar_subtext_default" />
     <include layout="@layout/default_articleinfo" />
     <include layout="@layout/default_bininfo" />
@@ -37,20 +53,16 @@
         style="@style/countButton"
         android:id="@+id/imageButtonMinus"
         app:srcCompat="@drawable/ic_remove_black_24dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonPlus"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/quantityText"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
-
     <androidx.appcompat.widget.AppCompatImageButton
         style="@style/countButton"
         android:id="@+id/imageButtonPlus"
         app:srcCompat="@drawable/ic_add_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageButtonMinus"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintTop_toBottomOf="@id/quantityText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
     <androidx.appcompat.widget.AppCompatImageButton
         style="@style/defaultBottomButton"

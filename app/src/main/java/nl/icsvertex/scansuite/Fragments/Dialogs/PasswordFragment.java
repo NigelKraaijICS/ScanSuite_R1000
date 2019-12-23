@@ -71,7 +71,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     @Override
     public void onDestroy() {
         try {
-            //cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +80,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     @Override
     public void onPause() {
         try {
-            //cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -194,6 +194,9 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                     }
                     if (cAppExtension.activity instanceof InventoryorderBinActivity) {
                         InventoryorderBinActivity.pPasswordCancelled();
+                    }
+                    if (cAppExtension.activity instanceof LoginActivity) {
+                        LoginActivity.pHandlePasswordFragmentDismissed();
                     }
                 }
             }

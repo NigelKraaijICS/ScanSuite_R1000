@@ -12,29 +12,30 @@
             style="@style/languageText"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/textViewCurrentTime"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingTop="@dimen/default_double_padding"
             />
-        <TextView
-            android:id="@+id/textViewCurrentTime"
+        <TextClock
+            android:id="@+id/textClockCurrentTime"
             style="@style/languageTextLarge"
+            android:textColor="@color/colorTextDefault"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/textViewTimeZone"
+            app:layout_constraintTop_toBottomOf="@id/textViewCurrentDate"
             />
         <TextView
             android:id="@+id/textViewTimeZone"
             style="@style/languageText"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/buttonChangeDateTime"
+            app:layout_constraintTop_toBottomOf="@id/textClockCurrentTime"
             />
         <ImageButton
             android:id="@+id/buttonChangeDateTime"
             style="@style/defaultBottomRealButton"
-            app:srcCompat="@drawable/ic_calendar_black_24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/ic_calendar_clock_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewTimeZone"
             android:contentDescription="@string/changedatetime_description"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

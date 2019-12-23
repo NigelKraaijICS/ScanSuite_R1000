@@ -287,7 +287,7 @@ public class cBarcodeScan {
 
         //Turn off other receiver
         cBarcodeScan.pUnregisterBarcodeReceiver();
-        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+
         //Initialise this receiver
         cBarcodeScan.getBarcodeFragmentIntentFilter();
         cBarcodeScan.getBarcodeFragmentReceiver();

@@ -2,13 +2,20 @@ package ICS.Environments;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+
+import ICS.Utils.Scanning.cBarcodeGenerator;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
@@ -21,7 +28,7 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
         private TextView textViewDescription;
         private TextView textViewName;
         private TextView textViewURL;
-
+        private ImageView imageQRCode;
         public RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
 
@@ -44,6 +51,7 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
             this.textViewURL.setSelected(true);
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
             this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
+            this.imageQRCode = pvItemView.findViewById(R.id.imageQRCode);
         }
     }
     //End Region Public Properties
@@ -67,7 +75,7 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
     }
 
     @Override
-    public void onBindViewHolder(cEnvironmentAdapter.EnvironmentViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(final cEnvironmentAdapter.EnvironmentViewHolder pvHolder, int pvPositionInt) {
 
         if (cEnvironment.allEnviroments != null) {
 
@@ -76,6 +84,13 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
             pvHolder.textViewDescription.setText(environment.getDescriptionStr());
             pvHolder.textViewName.setText(environment.getNameStr());
             pvHolder.textViewURL.setText(environment.getWebserviceURLStr());
+
+            pvHolder.imageQRCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pvHolder.imageQRCode.setVisibility(View.GONE);
+                }
+            });
 
             pvHolder.viewForeground.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,11 +103,29 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
 
                 }
             });
+            pvHolder.viewForeground.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    String barcodeText = "name=" + environment.getNameStr() + "|";
+                    barcodeText += "description=" + environment.getDescriptionStr() +"|";
+                    barcodeText += "url=" + environment.getWebserviceURLStr() + "|";
+                    barcodeText += "default=f";
+
+                    try {
+                        Bitmap qrCodeImage = cBarcodeGenerator.encodeAsBitmap(barcodeText, BarcodeFormat.QR_CODE, 400, 400);
+                        pvHolder.imageQRCode.setImageBitmap(qrCodeImage);
+                        pvHolder.imageQRCode.setVisibility(View.VISIBLE);
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }
+            });
         }
     }
 
     @Override
-     public int getItemCount () {
+    public int getItemCount () {
         if (cEnvironment.allEnviroments != null)
             return cEnvironment.allEnviroments.size();
         else return 0;

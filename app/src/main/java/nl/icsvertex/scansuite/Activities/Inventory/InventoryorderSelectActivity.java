@@ -177,6 +177,8 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     public void mSetToolbar(String pvScreenTitle) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
         this.toolbarTitle.setText(pvScreenTitle);
+        toolbarTitle.setSelected(true);
+        toolbarSubTitle.setSelected(true);
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -850,12 +852,13 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             InventoryorderSelectActivity.toolbarSubTitle.setText("(0)");
             return;
         }
-
+        String subtitleStr;
         if (!cSharedPreferences.userFilterBln()) {
-            InventoryorderSelectActivity.toolbarSubTitle.setText("(" + cText.pIntToStringStr(cInventoryorder.allInventoryordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders)   );
+            subtitleStr = (cText.pIntToStringStr(cInventoryorder.allInventoryordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders)   );
         } else {
-            InventoryorderSelectActivity.toolbarSubTitle.setText("(" + cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown) );
+            subtitleStr = cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }
+        InventoryorderSelectActivity.toolbarSubTitle.setText(subtitleStr);
     }
 
     // End No orders icon

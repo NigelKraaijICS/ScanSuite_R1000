@@ -194,7 +194,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-            IntakeorderLinesActivity.pLeaveActivity();
+            IntakeorderLinesActivity.pDone();
             this.dismiss();
         }
 
@@ -233,6 +233,10 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             this.dismiss();
         }
 
+        if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
+            IntakeorderLinesActivity.pLeaveActivity();
+            this.dismiss();
+        }
 
     }
 

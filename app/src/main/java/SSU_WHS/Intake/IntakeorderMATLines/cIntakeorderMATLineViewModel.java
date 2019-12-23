@@ -27,9 +27,10 @@ public class cIntakeorderMATLineViewModel extends AndroidViewModel {
 
     public List<cIntakeorderMATLineEntity> pGetIntakeorderMATLinesFromDatabaseObl() {return this.Repository.pGetIntakeorderMATLinesFromDatabaseObl();}
     public boolean pUpdateLocalStatusBln(Integer pvNewStatusInt) {return this.Repository.pUpdateLocalStatusBln(pvNewStatusInt);}
+    public boolean pUpdateQuantityBln(Double pvQuantityDbl) {return this.Repository.pUpdateQuantitydBln(pvQuantityDbl);}
     public boolean pUpdateQuantityHandledBln(Double pvQuantityHandledDbl) {return this.Repository.pUpdateQuantityHandledBln(pvQuantityHandledDbl);}
     public boolean pUpdateBinCodeHandledBln(String pvBinCodeHandledStr) {return this.Repository.pUpdateBinCodeHandledBln(pvBinCodeHandledStr);}
     public cWebresult pResetViaWebserviceWrs() {return this.Repository.pResetViaWebserviceWrs();}
     public cWebresult pLineHandledViaWebserviceWrs() {return this.Repository.pLineHandledViaWebserviceWrs();}
-    public cWebresult pLineSplitdViaWebserviceWrs() {return this.Repository.pLineHandledViaWebserviceWrs();}
+    public cWebresult pLineSplitViaWebserviceWrs() {return this.Repository.pLineSplitViaWebserviceWrs();}
 }

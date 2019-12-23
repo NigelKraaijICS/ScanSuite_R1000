@@ -3,14 +3,19 @@ package nl.icsvertex.scansuite.Fragments.Main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextClock;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
@@ -28,7 +33,7 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
     //Region Private Properties
 
     private TextView textViewCurrentDate;
-    private TextView textViewCurrentTime;
+    private TextClock textClockCurrentTime;
     private TextView textViewTimeZone;
     private ImageButton buttonChangeDateTime;
 
@@ -57,13 +62,12 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
         mFindViews();
         mFieldsInitialize();
         mSetListeners();
-        cUserInterface.pEnableScanner();
     }
 
     @Override
     public void mFindViews() {
         textViewCurrentDate = getView().findViewById(R.id.textViewCurrentDate);
-        textViewCurrentTime = getView().findViewById(R.id.textViewCurrentTime);
+        textClockCurrentTime = getView().findViewById(R.id.textClockCurrentTime);
         textViewTimeZone = getView().findViewById(R.id.textViewTimeZone);
         buttonChangeDateTime = getView().findViewById(R.id.buttonChangeDateTime);
     }
@@ -71,14 +75,38 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFieldsInitialize() {
-        textViewCurrentTime.setText(cDateAndTime.pGetCurrentTimeStr());
-        textViewCurrentDate.setText(cDateAndTime.pGetCurrentLongDateStr());
-        textViewTimeZone.setText(cDateAndTime.pGetCurrentTimeZoneStr());
+        mSetDateAndTimeZone();
     }
 
     @Override
     public void mSetListeners() {
         mChangeDateTimeListener();
+        mClockChangeListener();
+    }
+
+    private void mClockChangeListener() {
+        textClockCurrentTime.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mSetDateAndTimeZone();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+    }
+
+    private void mSetDateAndTimeZone() {
+        textViewCurrentDate.setText(cDateAndTime.pGetCurrentLongDateStr());
+        textViewTimeZone.setText(cDateAndTime.pGetCurrentTimeZoneStr());
     }
 
     private void mChangeDateTimeListener() {
@@ -93,9 +121,7 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == cPublicDefinitions.CHANGEDATETIME_REQUESTCODE) {
-          mFieldsInitialize();
+            mFieldsInitialize();
         }
     }
-
-
 }

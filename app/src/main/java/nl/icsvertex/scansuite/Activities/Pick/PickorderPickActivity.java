@@ -68,7 +68,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubtext;
-    private static ImageView toolbarImageHelp;
+
     private static CardView articleContainer;
     private static TextView articleDescriptionText;
     private static TextView articleDescription2Text;
@@ -192,7 +192,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
-        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
 
         this.articleContainer = findViewById(R.id.addressContainer);
         this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
@@ -229,6 +228,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     public void mSetToolbar(String pvScreenTitle) {
         toolbarImage.setImageResource(R.drawable.ic_menu_pick);
         toolbarTitle.setText(pvScreenTitle);
+        toolbarTitle.setSelected(true);
+        toolbarSubtext.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -325,6 +326,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     public static void pCancelPick() {
+        //Check if we need to remove the SalesorderPackingTableLines
+        if (cPickorderLine.currentPickOrderLine.pGetLinesForProcessingSequenceObl().size() <= 1)  {
+            cSalesOrderPackingTable.pDeleteFromDatabaseBln(cPickorderLine.currentPickOrderLine.processingSequenceStr);
+        }
+        cPickorderLine.currentPickOrderLine.pUpdateProcessingSequenceBln("");
         cPickorderLine.currentPickOrderLine.quantityHandledDbl = Double.valueOf(0);
         cPickorderLine.currentPickOrderLine.pCancelIndatabaseBln();
         PickorderPickActivity.mGoBackToLinesActivity();
@@ -354,11 +360,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.articleVendorItemText.setText(cPickorderLine.currentPickOrderLine.getVendorItemNoStr() + ' ' + cPickorderLine.currentPickOrderLine.getVendorItemDescriptionStr());
 
         PickorderPickActivity.binText.setText(cPickorderLine.currentPickOrderLine.getBinCodeStr());
-        //PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
 
         PickorderPickActivity.containerText.setVisibility(View.GONE);
         PickorderPickActivity.containerText.setText(cPickorderLine.currentPickOrderLine.getContainerStr());
         PickorderPickActivity.containerText.setText("");
+        PickorderPickActivity.quantityText.setText("0");
         PickorderPickActivity.quantityRequiredText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
 
         PickorderPickActivity.mEnablePlusMinusAndBarcodeSelectViews();
@@ -1228,7 +1234,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_underpick_header),
-                                                                                   cAppExtension.activity.getString(R.string.message_underpick_text, cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()), cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())),pvRejectStr,pvAcceptStr , false);
+                                                                                   cAppExtension.activity.getString(R.string.message_underpick_text,
+                                                                                   cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()),
+                                                                                   cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())),
+                                                                                   pvRejectStr,
+                                                                                   pvAcceptStr ,
+                                                                     false);
         acceptRejectFragment.setCancelable(true);
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override

@@ -113,7 +113,7 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
         pvHolder.textViewOrdernumber.setTag(selectedIntakeorder.getOrderNumberStr());
         pvHolder.textViewExternalreference.setText(selectedIntakeorder.getExternalReferenceStr());
 
-        pvHolder.textViewCurrentLocation.setText(selectedIntakeorder.getCurrentLocationStr());
+        pvHolder.textViewCurrentLocation.setText("");
         pvHolder.textViewCurrentLocation.setVisibility(View.VISIBLE);
 
         pvHolder.textViewOrdertype.setText(cWarehouseorder.getWorkflowDescription(selectedIntakeorder.getOrderTypeStr()));
@@ -165,7 +165,7 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
         for (cIntakeorder intakeorder:localIntakeorderObl)
         {
-            if (intakeorder.getOrderNumberStr().toLowerCase().contains(pvQueryTextStr) || intakeorder.getExternalReferenceStr().toLowerCase().contains(pvQueryTextStr) || intakeorder.getCurrentLocationStr().toLowerCase().contains(pvQueryTextStr))
+            if (intakeorder.getOrderNumberStr().toLowerCase().contains(pvQueryTextStr) || intakeorder.getExternalReferenceStr().toLowerCase().contains(pvQueryTextStr))
             {
                 resultObl.add(intakeorder);
             }

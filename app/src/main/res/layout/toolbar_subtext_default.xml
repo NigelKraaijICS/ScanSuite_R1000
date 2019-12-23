@@ -16,13 +16,16 @@
             android:layout_height="wrap_content"
             android:id="@+id/toolbarTitle"
             app:layout_constraintStart_toEndOf="@id/toolbarImage"
-            app:layout_constraintEnd_toStartOf="@id/toolbarImageHelp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
             />
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,6 +37,11 @@
             app:layout_constraintTop_toBottomOf="@id/toolbarTitle"
             app:layout_constraintStart_toStartOf="@id/toolbarTitle"
             app:layout_constraintEnd_toEndOf="@id/toolbarTitle"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
             />
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewToolbar"
@@ -42,14 +50,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-        <androidx.appcompat.widget.AppCompatImageView
-            style="@style/imageviewToolbarHelp"
-            android:visibility="gone"
-            android:id="@+id/toolbarImageHelp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.Toolbar>

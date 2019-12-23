@@ -2,11 +2,14 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -111,6 +114,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     public void mSetListeners() {
         mSetCancelListener();
         mSetSaveListener();
+        mSetEditorActionListener();
     }
 
     //End Region iICSDefaultFragment defaults
@@ -189,7 +193,17 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
             }
         });
     }
-
+    private void mSetEditorActionListener() {
+        this.editTextEnvironmentUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                    buttonSave.callOnClick();
+                }
+                return true;
+            }
+        });
+    }
     //End Region Private Methods
 
 

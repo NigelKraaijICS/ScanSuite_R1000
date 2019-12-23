@@ -12,6 +12,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".Activities.General.MainDefaultActivity"
         style="@style/defaultScreen"
+        android:background="@color/colorBart"
         >
         <include layout="@layout/toolbar_subtext_default" />
         <FrameLayout

@@ -179,6 +179,8 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
         this.toolbarTitle.setText(pvScreenTitleStr);
+        toolbarTitle.setSelected(true);
+
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);

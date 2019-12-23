@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
     <style name="defaultScreen">
         <item name="android:layout_width">match_parent</item>
@@ -147,7 +149,7 @@
         <item name="android:scaleType">fitXY</item>
         <item name="android:tint">@color/colorPrimary</item>
         <item name="android:background">@drawable/button_round_white</item>
-        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
         <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
     </style>
@@ -155,7 +157,7 @@
         <item name="android:layout_height">@dimen/bottombutton_height</item>
         <item name="android:layout_width">@dimen/bottombutton_width</item>
         <item name="android:background">@drawable/button_round_white</item>
-        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
         <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
     </style>
@@ -211,7 +213,7 @@
         <item name="android:tint">@color/colorPrimary</item>
         <item name="android:background">@drawable/button_round_white</item>
         <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
-        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
         <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
     </style>
     <style name="recyclerItemImage">
@@ -233,6 +235,7 @@
         <item name="android:textSize">@dimen/textsize_big</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_marginLeft">@dimen/default_margin</item>
+        <item name="android:layout_marginRight">@dimen/default_margin</item>
     </style>
     <style name="inventoryorderRecyclerOrdernumberText">
         <item name="android:layout_width">300dp</item>
@@ -728,6 +731,15 @@
         <item name="android:layout_margin">@dimen/default_double_margin</item>
         <item name="android:padding">@dimen/default_double_padding</item>
     </style>
+    <style name="addBinHeader">
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:padding">@dimen/default_padding</item>
+    </style>
+
     <style name="orderDoneText">
         <item name="android:textSize">@dimen/textsize_big</item>
         <item name="android:textColor">@color/colorTextDefault</item>
@@ -852,12 +864,12 @@
         <item name="srcCompat">@drawable/ic_price_tag</item>
     </style>
     <style name="createInventoryHeader">
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_huge</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/default_double_margin</item>
-        <item name="android:padding">@dimen/default_double_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:padding">@dimen/default_padding</item>
     </style>
     <style name="createInventoryText">
         <item name="android:textSize">@dimen/textsize_big</item>
@@ -890,4 +902,28 @@
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
     <!--endregion passworddialog-->
+    <style name="createMoveHeader">
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+    </style>
+    <style name="createMoveText">
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="createMoveDocument">
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="createMoveImageView">
+        <item name="android:layout_width">@dimen/order_done_image_width</item>
+        <item name="android:layout_height">@dimen/order_done_image_height</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="srcCompat">@drawable/ic_create</item>
+    </style>
 </resources>

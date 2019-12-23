@@ -70,7 +70,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     private ImageView toolbarImage;
     private TextView toolbarTitle;
-    private ImageView toolbarImageHelp;
 
     public static Fragment currentLineFragment;
 
@@ -155,7 +154,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         ShiporderLinesActivity.container = findViewById(R.id.container);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
         this.quantityShipordersText = findViewById(R.id.quantityShipordersText);
         this.shiporderLinesTabLayout = findViewById(R.id.shiporderLinesTabLayout);
         this.shiporderLinesViewPager = findViewById(R.id.shiporderLinesViewpager);
@@ -168,6 +166,8 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     public void mSetToolbar(String pvScreenTitle) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
         this.toolbarTitle.setText(pvScreenTitle);
+        toolbarTitle.setSelected(true);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -219,10 +219,22 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         this.mShowComments();
 
         //Check if we need to register a workplaceStr
-        if (cWorkplace.currentWorkplace == null) {
-            //Show the workplaceStr fragment
-            this.mShowWorkplaceFragment();
-            return;
+        if (cWorkplace.currentWorkplace == null ) {
+
+
+            if (cWorkplace.allWorkplacesObl.size() > 1) {
+                //Show the workplaceStr fragment
+                this.mShowWorkplaceFragment();
+                return;
+            }
+            else {
+                //Pop-up is not needed, we just select the only workplace there is
+                cWorkplace.currentWorkplace = cWorkplace.allWorkplacesObl.get(0);
+                ShiporderLinesActivity.pWorkplaceSelected();
+                return;
+            }
+
+
         }
 
         //Call this here, because this is called everytime the activiy gets shown

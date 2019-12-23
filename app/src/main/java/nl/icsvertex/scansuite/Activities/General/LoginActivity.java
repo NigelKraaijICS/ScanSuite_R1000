@@ -42,7 +42,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     private ImageView toolbarImage;
     private TextView toolbarTitle;
-    private ImageView toolbarImageHelp;
     //End Region Private Properties
 
     //Region Default Methods
@@ -108,7 +107,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     public void mFindViews() {
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
         this.recyclerViewUsers = findViewById(R.id.recyclerViewLines);
     }
 
@@ -116,7 +114,8 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     public void mSetToolbar(String pvScreenTitle) {
         this.toolbarImage.setImageResource(R.drawable.ic_login);
         this.toolbarTitle.setText(pvScreenTitle);
-        this.toolbarImageHelp.setVisibility(View.INVISIBLE);
+        this.toolbarTitle.setSelected(true);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -196,6 +195,10 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         cUser.currentUser.loggedInBln = true;
         LoginActivity.mGetAndShowBranchesForLoggedInUser();
         return;
+    }
+
+    public static void pHandlePasswordFragmentDismissed(){
+        cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
     //End Region Public Methods

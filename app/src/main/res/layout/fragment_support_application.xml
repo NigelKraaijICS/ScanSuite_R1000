@@ -32,11 +32,25 @@
         android:text="@string/label_application_installed"
         app:layout_constraintStart_toStartOf="parent"/>
     <TextView
-        style="@style/textFormValueConstrained"
+        style="@style/textFormValue"
         android:id="@+id/textViewApplicationInstalled"
         app:layout_constraintTop_toBottomOf="@id/textViewApplicationInstalledLabel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/testWebserviceImageButton"/>
+        />
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/textViewApplicationVersion"
+        style="@style/textFormLabel"
+        android:id="@+id/textViewApplicationLastUpdateLabel"
+        android:text="@string/label_application_last_update"
+        android:layout_marginLeft="@dimen/default_double_margin"
+        android:layout_marginStart="@dimen/default_double_margin"
+        app:layout_constraintStart_toEndOf="@id/textViewApplicationInstalled"/>
+    <TextView
+        style="@style/textFormValue"
+        android:id="@+id/textViewApplicationLastUpdate"
+        app:layout_constraintTop_toBottomOf="@id/textViewApplicationLastUpdateLabel"
+        app:layout_constraintStart_toStartOf="@id/textViewApplicationLastUpdateLabel"
+        />
     <TextView
         style="@style/textFormLabel"
         android:id="@+id/textViewWebserviceLabel"

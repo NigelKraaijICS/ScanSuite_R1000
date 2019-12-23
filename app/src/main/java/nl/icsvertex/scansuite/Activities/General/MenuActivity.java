@@ -50,7 +50,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     private ImageView toolbarImage;
     private TextView toolbarTitle;
-    private ImageView toolbarImageHelp;
+    private TextView toolbarSubtext;
     //End region views
 
     //End Region Private Properties
@@ -132,16 +132,18 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     public void mFindViews() {
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
+        this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
         this.recyclerViewMenu = findViewById(R.id.recyclerViewMenu);
         this.shimmerViewContainer = findViewById(R.id.shimmerViewContainer);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImageHelp.setVisibility(View.INVISIBLE);
         this.toolbarTitle.setText(pvScreenTitle);
         this.toolbarImage.setImageResource(R.drawable.ic_menu);
+        this.toolbarTitle.setSelected(true);
+        this.toolbarSubtext.setSelected(true);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -152,6 +154,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     @Override
     public void mFieldsInitialize() {
+        toolbarSubtext.setText(cUser.currentUser.nameStr);
 
         if (! cUser.currentUser.pGetAutorisationsBln()){
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_autorisations_failed), cUser.currentUser.getUsernameStr(), true, true );

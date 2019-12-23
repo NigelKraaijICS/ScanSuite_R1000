@@ -186,6 +186,8 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
         this.toolbarTitle.setText(pvScreenTitleStr);
+        toolbarTitle.setSelected(true);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

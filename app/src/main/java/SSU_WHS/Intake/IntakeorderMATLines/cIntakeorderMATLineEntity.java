@@ -96,6 +96,10 @@ public class cIntakeorderMATLineEntity {
     @ColumnInfo(name = cDatabase.EXTRAFIELD8_NAMESTR)
     public String extraField8Str;
 
+    @ColumnInfo(name = cDatabase.SOURCETYPE_NAMESTR)
+    public Integer sourceTypeInt;
+
+
     //empty constructor
     public cIntakeorderMATLineEntity() {
 
@@ -121,6 +125,7 @@ public class cIntakeorderMATLineEntity {
             this.statusInt = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.STATUS_NAMESTR));
             this.actionTypeCodeStr = pvJsonObject.getString(cDatabase.ACTIONTYPECODE_NAMESTR);
             this.localStatusInt =  cWarehouseorder.IntakeMATLineLocalStatusEnu.LOCALSTATUS_NEW;
+            this.sourceTypeInt = pvJsonObject.getInt(cDatabase.SOURCETYPE_NAMESTR);
 
             if (this.getQuantityHandledDbl() >= this.getQuantityDbl()) {
                 this.localStatusInt = cWarehouseorder.IntakeMATLineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
@@ -272,4 +277,6 @@ public class cIntakeorderMATLineEntity {
     public String getExtraField6Str() {return this.extraField6Str;}
     public String getExtraField7Str() {return this.extraField7Str;}
     public String getExtraField8Str() {return this.extraField8Str;}
+
+    public int getSourceTypeInt() {return this.sourceTypeInt;}
 }

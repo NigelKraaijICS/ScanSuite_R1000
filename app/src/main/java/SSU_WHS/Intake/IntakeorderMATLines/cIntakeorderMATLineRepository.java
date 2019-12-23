@@ -17,8 +17,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -98,6 +96,7 @@ public class cIntakeorderMATLineRepository {
     public boolean pUpdateLocalStatusBln(Integer pvNewStatusInt) {
 
         Integer integerValue;
+
         UpdateOrderlineLocaStatusParams updateOrderlineLocaStatusParams = new UpdateOrderlineLocaStatusParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvNewStatusInt);
         try {
             integerValue = new updateOrderLineLocalStatusAsyncTask(intakeorderMATLineDao).execute(updateOrderlineLocaStatusParams).get();
@@ -121,6 +120,29 @@ public class cIntakeorderMATLineRepository {
         UpdateOrderlineQuantityParams updateOrderlineQuantityParams = new UpdateOrderlineQuantityParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvQuantityDbl);
 
         try {
+            integerValue = new updateOrderLineQuantityHandledAsyncTask(intakeorderMATLineDao).execute(updateOrderlineQuantityParams).get();
+
+            if (integerValue != 0) {
+                return  true;}
+            else{
+                return false;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return  false;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            return  false;
+        }
+
+    }
+
+    public boolean pUpdateQuantitydBln(Double pvQuantityDbl) {
+
+        Integer integerValue;
+        UpdateOrderlineQuantityParams updateOrderlineQuantityParams = new UpdateOrderlineQuantityParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvQuantityDbl);
+
+        try {
             integerValue = new updateOrderLineQuantityAsyncTask(intakeorderMATLineDao).execute(updateOrderlineQuantityParams).get();
 
             if (integerValue != 0) {
@@ -135,28 +157,31 @@ public class cIntakeorderMATLineRepository {
             e.printStackTrace();
             return  false;
         }
+
     }
 
     public boolean pUpdateBinCodeHandledBln(String pvBinCodeStr) {
 
-        Integer integerValue;
-        UpdateOrderlineBinCodeHandledParams updateOrderlineBinCodeHandledParams = new UpdateOrderlineBinCodeHandledParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvBinCodeStr);
+//        Integer integerValue;
+//        UpdateOrderlineBinCodeHandledParams updateOrderlineBinCodeHandledParams = new UpdateOrderlineBinCodeHandledParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvBinCodeStr);
+//
+//        try {
+//            integerValue = new updateOrderLineBinCodeHandledyAsyncTask(intakeorderMATLineDao).execute(updateOrderlineBinCodeHandledParams).get();
+//
+//            if (integerValue != 0) {
+//                return  true;}
+//            else{
+//                return false;
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//            return  false;
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//            return  false;
+//        }
 
-        try {
-            integerValue = new updateOrderLineBinCodeHandledyAsyncTask(intakeorderMATLineDao).execute(updateOrderlineBinCodeHandledParams).get();
-
-            if (integerValue != 0) {
-                return  true;}
-            else{
-                return false;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return  false;
-        }
+        return  true;
     }
 
     public cWebresult pResetViaWebserviceWrs() {
@@ -268,6 +293,15 @@ public class cIntakeorderMATLineRepository {
         @Override
         protected Integer doInBackground(UpdateOrderlineLocaStatusParams... params) {
             return mAsyncTaskDao.updateOrderLineLocalStatus(params[0].lineNoInt, params[0].newStatusInt);
+        }
+    }
+
+    private static class updateOrderLineQuantityHandledAsyncTask extends AsyncTask<UpdateOrderlineQuantityParams, Void, Integer> {
+        private iIntakeorderMATLineDao mAsyncTaskDao;
+        updateOrderLineQuantityHandledAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Integer doInBackground(UpdateOrderlineQuantityParams... params) {
+            return mAsyncTaskDao.updateOrderLineQuantityHandled(params[0].lineNoInt, params[0].quantityDbl);
         }
     }
 

@@ -30,7 +30,6 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
    //Region Private Properties
    private ImageView toolbarImage;
     private  TextView toolbarTitle;
-    private  ImageView toolbarImageHelp;
 
     private RecyclerView commentRecyclerView;
     private Button buttonRoger;
@@ -107,7 +106,7 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
     public void mFindViews() {
         this.toolbarImage = getView().findViewById(R.id.toolbarImage);
         this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
-        this.toolbarImageHelp = getView().findViewById(R.id.toolbarImageHelp);
+
         this.commentRecyclerView = getView().findViewById(R.id.commentRecyclerview);
         this.buttonRoger = getView().findViewById(R.id.buttonRoger);
     }
@@ -151,7 +150,7 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
         },1500);
 
         this.toolbarImage.setImageResource(R.drawable.ic_comment);
-        this.toolbarImageHelp.setVisibility(View.GONE);
+
     }
     private void mSetCloseListener() {
         this.buttonRoger.setOnClickListener(new View.OnClickListener() {

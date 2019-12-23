@@ -16,7 +16,8 @@ public class cWarehouseorder {
     public enum OrderTypeEnu {
         PICKEN,
         INVENTARISATIE,
-        ONTVANGST
+        ONTVANGST,
+        VERPLAATS
     }
 
     public enum StepCodeEnu {
@@ -24,7 +25,8 @@ public class cWarehouseorder {
         Pick_Sorting,
         Pick_PackAndShip,
         Inventory,
-        Receive_Store
+        Receive_Store,
+        Move
     }
 
     public enum PickOrderTypeEnu {
@@ -46,7 +48,8 @@ public class cWarehouseorder {
         PV,
         BC,
         BP,
-        IVS
+        IVS,
+        MV
     }
 
     public class ItemTypeEnu {
@@ -79,6 +82,13 @@ public class cWarehouseorder {
         public static final int Receive_StoreWacht = 42;
     }
 
+    public class WorkflowMoveStepEnu {
+        public static final int Move = 10;
+        public static final int MoveBusy = 11;
+        public static final int MovePause = 12;
+        public static final int MoveHandled = 13;
+    }
+
     public class PicklineStatusEnu {
         public static final int Needed = 10;
         public static final int DONE = 11;
@@ -105,6 +115,15 @@ public class cWarehouseorder {
         public final static int LOCALSTATUS_DONE_SENT = 40;
     }
 
+    public class MovelineLocalStatusEnu {
+        public final static int LOCALSTATUS_NEW = 10;
+        public final static int LOCALSTATUS_BUSY = 20;
+        public final static int LOCALSTATUS_DONE_NOTSENT = 30;
+        public final static int LOCALSTATUS_DONE_ERROR_SENDING = 32;
+        public final static int LOCALSTATUS_DONE_SENT = 40;
+    }
+
+
 
     public class InventoryBinStatusEnu {
         public static final int New = 10;
@@ -123,7 +142,8 @@ public class cWarehouseorder {
 
 
     public class SoureDocumentTypeEnu {
-        public final static int Undefined = 0;
+
+        public final static int GeneratedLine = 0;
 
         public final static int Salesorder = 1;
         public final static int SalesReturnOrder = 4;
@@ -134,9 +154,11 @@ public class cWarehouseorder {
         public final static int InboundTransfer = 9;
         public final static int OutboundTransfer = 10;
 
-
         public final static int ProductionConsumption = 11;
         public final static int ProductionOutput = 12;
+
+        public final static int PurchaseLine = 39;
+
 
         public final static int Generated = 99;
     }

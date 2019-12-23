@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/addBinContainer"
-    android:padding="@dimen/default_double_padding"
+    android:padding="@dimen/default_padding"
     >
     <TextView
         android:id="@+id/textViewAddBinHeader"
-        style="@style/orderDoneHeader"
+        style="@style/addBinHeader"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/addBinImageView"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="@dimen/default_padding"
         />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/addBinImageView"
         style="@style/addBinImageView"
         app:layout_constraintTop_toTopOf="@id/textViewAddBinHeader"
         app:layout_constraintBottom_toBottomOf="@id/textViewAddBinHeader"
-        app:layout_constraintEnd_toStartOf="@id/textViewAddBinHeader"
+        app:layout_constraintStart_toStartOf="parent"
         />
     <EditText
         android:imeOptions="actionDone"
@@ -48,7 +47,6 @@
         android:id="@+id/addBinButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_double_margin"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:text="@string/button_add_bin"
         app:layout_constraintTop_toBottomOf="@id/textViewAddBinText"
@@ -58,7 +56,6 @@
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_double_margin"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:text="@string/cancel"
         app:layout_constraintTop_toBottomOf="@id/textViewAddBinText"

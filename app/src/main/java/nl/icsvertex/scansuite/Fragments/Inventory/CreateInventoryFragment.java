@@ -3,9 +3,11 @@ package nl.icsvertex.scansuite.Fragments.Inventory;
 
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -122,6 +124,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
         this.mSetImageListener();
         this.mSetCreateListener();
         this.mSetCancelListener();
+        this.mSetEditorActionListener();
     }
     private void mSetImageListener() {
         this.createInventoryImageView.setOnClickListener(new View.OnClickListener() {
@@ -182,6 +185,17 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
             cUserInterface.pDoNope(createInventoryContainer, true, true);
             return;
         }
+    }
+    private void mSetEditorActionListener() {
+        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                    createInventoryButton.callOnClick();
+                }
+                return true;
+            }
+        });
     }
 
 }

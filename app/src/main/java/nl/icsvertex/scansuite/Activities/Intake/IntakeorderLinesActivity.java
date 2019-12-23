@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +41,7 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
@@ -48,6 +51,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
 
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 
+import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.R;
 
 public class IntakeorderLinesActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -70,14 +74,17 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     private TextView toolbarTitle;
     private static TextView toolbarSubTitle;
 
-    private static  TextView quickhelpText;
-    private static ImageView quickhelpIcon;
-    private ConstraintLayout quickhelpContainer;
     private static ImageView imageViewStart;
-
     private static SearchView recyclerSearchView;
     private static ImageView closeButton;
     private static RecyclerView recyclerViewLines;
+
+    private static Switch switchDeviations;
+    public static Boolean showDefectsBln = false;
+
+    private ImageView imageButtonCloseOrder;
+
+
 
     //End Region Views
 
@@ -99,8 +106,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         //Set listeners here, so click listeners only work after activity is shown
         this.mSetListeners();
 
-        //Click so we can show some instructions
-        this.quickhelpContainer.performClick();
     }
 
     @Override
@@ -142,6 +147,8 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         this.mInitScreen();
 
+        this.pShowData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
@@ -170,10 +177,9 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         this.imageViewStart = findViewById(R.id.imageViewStart);
 
-        this.quickhelpText = findViewById(R.id.quickhelpText);
-        this.quickhelpContainer = findViewById(R.id.actionsContainer);
-        this.quickhelpIcon = findViewById(R.id.quickhelpIcon);
+        this.switchDeviations = findViewById(R.id.switchDeviations);
 
+        this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
 
     }
 
@@ -181,6 +187,8 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
         this.toolbarTitle.setText(pvScreenTitleStr);
+        toolbarTitle.setSelected(true);
+        toolbarSubTitle.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -194,9 +202,14 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         ViewCompat.setTransitionName(this.textViewChosenOrder, this.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
-        this.quickhelpText.setText(cAppExtension.activity.getString(R.string.scan_article));
 
-        this.mGetData();
+        if (!IntakeorderLinesActivity.showDefectsBln) {
+            cIntakeorderMATSummaryLine.getSummaryLinesAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+        } else {
+            cIntakeorderMATSummaryLine.getSummaryLinesAdapter().pShowDeviations();
+        }
+
+        this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
 
     }
 
@@ -206,8 +219,9 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         this.mSetSearchListener();
         this.mSetSearchCloseListener();
         this.mSetShowCommentListener();
-        this.mSetQuickHelpListener();
         this.mSetStartLineListener();
+        this.mSetDeviationsListener();
+        this.mSetSendOrderListener();
     }
 
     @Override
@@ -215,16 +229,13 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         this.mShowComments();
 
-        //Call this here, because this is called everytime the activiy gets shown
-        this.mCheckAllDone();
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
         if (pvMenuItem.getItemId() == android.R.id.home) {
-            mTryToLeaveActivity();
+            IntakeorderLinesActivity.pLeaveActivity();
             return true;
         }
 
@@ -233,26 +244,22 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
     @Override
     public void onBackPressed() {
-        mTryToLeaveActivity();
+        IntakeorderLinesActivity.pLeaveActivity();
     }
 
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
 
-    public static void pIntakelineSelected(cIntakeorderMATLine pvIntakeorderMATLine) {
-        cIntakeorderMATLine.currentIntakeorderMATLine = pvIntakeorderMATLine;
+    public static void pIntakelineSelected(cIntakeorderMATSummaryLine pvIntakeorderMATSummaryLine) {
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = pvIntakeorderMATSummaryLine;
     }
 
-    public static void pIntakelineToResetSelected(cIntakeorderMATLine pvIntakeorderMATLine) {
-        cIntakeorderMATLine.currentIntakeorderMATLine = pvIntakeorderMATLine;
-    }
-
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan, Boolean pvLineSelectedBln) {
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan,
+                                   Boolean pvLineSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         cResult hulpResult;
-        String instructionStr = "";
 
         //BIN button has been pressed, so we already have a current line
         if (pvLineSelectedBln) {
@@ -260,10 +267,10 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             //Clear current barcode
             cIntakeorderBarcode.currentIntakeOrderBarcode = null;
 
-            hulpResult = cIntakeorderMATLine.currentIntakeorderMATLine.pLineBusyRst();
+            hulpResult = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pSummaryLineBusyRst();
             if (!hulpResult.resultBln) {
                 mStepFailed(hulpResult.messagesStr());
-                cIntakeorderMATLine.currentIntakeorderMATLine = null;
+                cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
                 return;
             }
 
@@ -287,7 +294,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             //Something went wrong, so show message and stop
             if (!hulpResult.resultBln) {
                 mDoUnknownScan(hulpResult.messagesStr(), pvBarcodeScan.getBarcodeOriginalStr());
-                IntakeorderLinesActivity.mFillRecycler(cIntakeorder.currentIntakeOrder.pGetLinesFromDatabasObl());
+                IntakeorderLinesActivity.mFillRecycler(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
                 return;
             }
 
@@ -326,6 +333,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     }
 
     public static void pSetToolBarTitleWithCounters(String pvTextStr){
+
         IntakeorderLinesActivity.toolbarSubTitle.setText(pvTextStr);
 
         //Close open dialogs, so keyboard will also close
@@ -334,6 +342,14 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         //Click to make even more sure that keyboard gets hidden
         IntakeorderLinesActivity.toolbarSubTitle.performClick();
 
+    }
+
+    public static  void pStartLine(){
+        IntakeorderLinesActivity.imageViewStart.performClick();
+    }
+
+    public static void pShowData(List<cIntakeorderMATSummaryLine> pvDataObl) {
+        IntakeorderLinesActivity.mFillRecycler(pvDataObl);
     }
 
 
@@ -357,11 +373,15 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         }
 
         //Get all lines for this barcode
-        if ( cIntakeorderBarcode.currentIntakeOrderBarcode.linesObl().size() == 0) {
+        if (cIntakeorderBarcode.currentIntakeOrderBarcode.linesObl().size() == 0) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_lines_for_this_barcode));
             return result;
         }
+
+        //Set the scanned barcode, so we can raise quantity in next activity
+        cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcode.currentIntakeOrderBarcode;
+
 
         searchStr = cIntakeorderBarcode.currentIntakeOrderBarcode.getItemNoStr();
 
@@ -417,23 +437,8 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             return;
         }
 
-        mStartOrderSelectActivity();
+        IntakeorderLinesActivity.mStartOrderSelectActivity();
 
-    }
-
-    private void mCheckAllDone() {
-
-        // If not everything is done, then leave
-        if (!this.mAllLinesDoneBln()) {
-            return;
-        }
-
-        // If not everything is sent, then leave
-        if (!this.mCheckAndSentLinesBln(true)) {
-            return;
-        }
-
-        IntakeorderLinesActivity.mShowOrderDoneFragment();
     }
 
     private void mSetShowCommentListener() {
@@ -445,11 +450,37 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         });
     }
 
+    private void mSetDeviationsListener() {
+        this.switchDeviations.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
+
+                if (switchDeviations.isChecked()) {
+                    IntakeorderLinesActivity.showDefectsBln = true;
+                    cIntakeorderMATSummaryLine.getSummaryLinesAdapter().pShowDeviations();
+                }
+                else {
+                    IntakeorderLinesActivity.showDefectsBln = false;
+                    cIntakeorderMATSummaryLine.getSummaryLinesAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+                }
+            }
+        });
+}
+
     private void mSetStartLineListener() {
         this.imageViewStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 IntakeorderLinesActivity.pHandleScan(null,true);
+            }
+        });
+    }
+
+    private void mSetSendOrderListener() {
+        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close_order));
             }
         });
     }
@@ -472,132 +503,10 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
-    private static void mShowOrderDoneFragment() {
-
-        cUserInterface.pPlaySound(R.raw.goodsound, null);
-
-        final OrderDoneFragment orderDoneFragment = new OrderDoneFragment(false);
-        orderDoneFragment.setCancelable(false);
-        orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
-    }
-
-    private Boolean mCheckAndSentLinesBln(Boolean pvShowAnimationBln) {
-
-        final List<cIntakeorderMATLine> linesToSendObl = cIntakeorder.currentIntakeOrder.pGetLinesToSendFromDatabasObl();
-
-        // If there is nothing to send, then we are done
-        if (linesToSendObl.size() == 0) {
-            return true;
-        }
-
-
-        if (pvShowAnimationBln) {
-            mShowSending();
-        }
-
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Callable<Boolean> callableBln = new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-
-                // Try to send each line, if one failes then stop
-                for (cIntakeorderMATLine intakeorderMATLine : linesToSendObl) {
-
-                    //Set the current line
-                    cIntakeorderMATLine.currentIntakeorderMATLine = intakeorderMATLine;
-
-                    //Try to send the line
-                    return cIntakeorderMATLine.currentIntakeorderMATLine.pHandledBln();
-
-                }
-                return false;
-            }
-        };
-
-
-        try {
-            Future<Boolean> callableResultBln = executorService.submit(callableBln);
-            Boolean hulpBln = callableResultBln.get();
-
-            if (!hulpBln) {
-
-                if (pvShowAnimationBln) {
-                    mShowNotSent();
-                }
-
-                return false;
-            }
-
-            if (pvShowAnimationBln) {
-                this.mShowSent();
-            }
-
-            return true;
-
-        } catch (InterruptedException | ExecutionException e) {
-
-        }
-
-        return false;
-
-
-    }
-
-    private Boolean mAllLinesDoneBln() {
-        return false;
-    }
-
-    private static void mShowSending() {
-        final SendingFragment sendingFragment = new SendingFragment();
-        sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, SENDING_TAG);
-            }
-        });
-    }
-
-    private static void mShowNotSent() {
-        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(SENDING_TAG);
-        if (fragment != null) {
-            if (fragment instanceof SendingFragment) {
-                ((SendingFragment) fragment).pShowCrashAnimation("");
-            }
-        }
-    }
-
-    private static void mShowSent() {
-        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(SENDING_TAG);
-        if (fragment != null) {
-            if (fragment instanceof SendingFragment) {
-                ((SendingFragment) fragment).pShowFlyAwayAnimation();
-            }
-        }
-    }
-
     private static void mStepFailed(String pvErrorMessageStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cIntakeorder.currentIntakeOrder.getOrderNumberStr(), true, true);
         cIntakeorder.currentIntakeOrder.pLockReleaseViaWebserviceBln();
         cUserInterface.pCheckAndCloseOpenDialogs();
-    }
-
-    private void mTryToLeaveActivity() {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_sure_leave_screen_title),
-                cAppExtension.activity.getString(R.string.message_sure_leave_screen_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_leave), false);
-        acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
-            }
-        });
-
     }
 
     private static void mStartOrderSelectActivity() {
@@ -638,26 +547,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
     }
 
-    private void mSetQuickHelpListener() {
-        this.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cUserInterface.pDoRotate(quickhelpIcon, 0);
-                if (quickhelpText.getVisibility() == View.VISIBLE) {
-                    quickhelpText.setVisibility(View.GONE);
-                }
-                else {
-                    quickhelpText.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
-
-    private void mGetData() {
-        this.mFillRecycler(cIntakeorder.currentIntakeOrder.pGetLinesFromDatabasObl());
-    }
-
-    private static void mFillRecycler(List<cIntakeorderMATLine> pvDataObl) {
+    private static void mFillRecycler(List<cIntakeorderMATSummaryLine> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
             IntakeorderLinesActivity.imageViewStart.setVisibility(View.INVISIBLE);
@@ -667,18 +557,14 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         IntakeorderLinesActivity.imageViewStart.setVisibility(View.VISIBLE);
 
         //Show the recycler view
-        cIntakeorderMATLine.getIntakeorderMATLineAdapter().pFillData(pvDataObl);
+        cIntakeorderMATSummaryLine.getSummaryLinesAdapter().pFillData(pvDataObl);
         IntakeorderLinesActivity.recyclerViewLines.setHasFixedSize(false);
-        IntakeorderLinesActivity.recyclerViewLines.setAdapter(cIntakeorderMATLine.getIntakeorderMATLineAdapter());
+        IntakeorderLinesActivity.recyclerViewLines.setAdapter( cIntakeorderMATSummaryLine.getSummaryLinesAdapter());
         IntakeorderLinesActivity.recyclerViewLines.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         IntakeorderLinesActivity.recyclerViewLines.setVisibility(View.VISIBLE);
-
-        IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(pvDataObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
-
     }
 
     private void mSetRecyclerOnScrollListener() {
-
         IntakeorderLinesActivity.recyclerViewLines.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView pvRecyclerView, int pvNewStateInt) {
@@ -744,7 +630,16 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
             @Override
             public boolean onQueryTextChange(String pvQueryTextStr) {
-                cIntakeorderMATLine.getIntakeorderMATLineAdapter().pSetFilter(pvQueryTextStr);
+
+                // If this object is filled, we set the filter with a scan
+                if (cIntakeorderBarcode.currentIntakeOrderBarcode != null){
+                    cIntakeorderMATSummaryLine.getSummaryLinesAdapter().pSetFilter(pvQueryTextStr, true);
+                }
+
+                //Someone typed the filter
+                else {
+                    cIntakeorderMATSummaryLine.getSummaryLinesAdapter().pSetFilter(pvQueryTextStr, false);
+                }
                 return true;
             }
 
@@ -775,6 +670,44 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
     }
 
+    private static void mShowCloseOrderDialog(String pvRejectStr,String pvAcceptStr) {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        String messageStr = "";
+        if (cIntakeorderMATSummaryLine.totalItemsDifference() == 0 ) {
+            messageStr = "Exactly what you needed";
+        }
+
+        if (cIntakeorderMATSummaryLine.totalItems() > cIntakeorderMATSummaryLine.totalItemsHandled()) {
+            messageStr =   cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " LESS items";
+        }
+
+        if (cIntakeorderMATSummaryLine.totalItems() < cIntakeorderMATSummaryLine.totalItemsHandled()) {
+            messageStr =   cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " EXTRA items";
+        }
+
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
+                cAppExtension.activity.getString(R.string.message_close_storeorder_text,
+                        cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsHandled()),
+                        cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItems()), messageStr),
+                        pvRejectStr,
+                        pvAcceptStr ,
+                false);
+
+        acceptRejectFragment.setCancelable(true);
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // show my popup
+                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+            }
+        });
+
+        }
+
     //End Region Private Methods
 
-}
+    }
+
+
+

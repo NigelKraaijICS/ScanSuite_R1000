@@ -193,6 +193,8 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     public void mSetToolbar(String pvScreenTitle) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
         this.toolbarTitle.setText(pvScreenTitle);
+        toolbarTitle.setSelected(true);
+        toolbarSubTitle.setSelected(true);
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -762,17 +764,17 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private static void mSetToolBarTitleWithCounters(){
 
-
         if (cPickorder.allPickordersObl == null ) {
             PickorderSelectActivity.toolbarSubTitle.setText("(0)");
             return;
         }
-
+        String subtitleStr;
         if (!cSharedPreferences.userFilterBln()) {
-            PickorderSelectActivity.toolbarSubTitle.setText("(" + cText.pIntToStringStr(cPickorder.allPickordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders)   );
+            subtitleStr = cText.pIntToStringStr(cPickorder.allPickordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders);
         } else {
-            PickorderSelectActivity.toolbarSubTitle.setText("(" + cText.pIntToStringStr(cPickorder.pGetPicksWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cPickorder.allPickordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown) );
+            subtitleStr = cText.pIntToStringStr(cPickorder.pGetPicksWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cPickorder.allPickordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }
+        PickorderSelectActivity.toolbarSubTitle.setText(subtitleStr);
     }
 
     private void mReleaseLicense() {

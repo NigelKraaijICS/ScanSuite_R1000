@@ -44,7 +44,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     private ImageView toolbarImage;
     private TextView toolbarTitle;
-    private ImageView toolbarImageHelp;
+
     private TextView sourcenoText;
     private CardView addressContainer;
     private TextView addressNameText;
@@ -163,7 +163,6 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
 
         this.sourcenoText = findViewById(R.id.sourcenoText);
 
@@ -190,6 +189,8 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     public void mSetToolbar(String pvScreenTitle) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
         this.toolbarTitle.setText(pvScreenTitle);
+        toolbarTitle.setSelected(true);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

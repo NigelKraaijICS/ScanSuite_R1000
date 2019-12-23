@@ -151,6 +151,9 @@ public class cIntakeorderMATLine {
         return extraField8Str;
     }
 
+    public int sourceTypeInt;
+    public int getSourceTypeInt(){return  this.sourceTypeInt;}
+
     public  List<cIntakeorderBarcode> barcodesObl;
 
     public static ArrayList<cIntakeorderMATLineBarcode> allLineBarcodesObl;
@@ -229,6 +232,7 @@ public class cIntakeorderMATLine {
         this.extraField6Str =  this.intakeorderMATLineEntity.getExtraField6Str();
         this.extraField7Str =  this.intakeorderMATLineEntity.getExtraField7Str();
         this.extraField8Str =  this.intakeorderMATLineEntity.getExtraField8Str();
+        this.sourceTypeInt = this.intakeorderMATLineEntity.getSourceTypeInt();
     }
 
     public cIntakeorderMATLine(cIntakeorderMATLineEntity pvIntakeorderMATLineEntity) {
@@ -259,6 +263,7 @@ public class cIntakeorderMATLine {
         this.extraField6Str =  this.intakeorderMATLineEntity.getExtraField6Str();
         this.extraField7Str =  this.intakeorderMATLineEntity.getExtraField7Str();
         this.extraField8Str =  this.intakeorderMATLineEntity.getExtraField8Str();
+        this.sourceTypeInt = this.intakeorderMATLineEntity.getSourceTypeInt();
     }
     //End Region Constructor
 
@@ -273,99 +278,6 @@ public class cIntakeorderMATLine {
         return true;
     }
 
-    public cResult pLineBusyRst(){
-
-
-        cResult result = new cResult();
-        result.resultBln = false;
-
-        if ( cIntakeorderMATLine.currentIntakeorderMATLine.mGetBarcodesObl() == null || cIntakeorderMATLine.currentIntakeorderMATLine.mGetBarcodesObl().size() == 0) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line));
-            return result;
-        }
-
-        if (this.mBusyBln() == false) {
-
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_set_line_on_busy));
-            return result;
-        }
-
-        result.resultBln = true;
-
-        return  result;
-
-    }
-
-    public boolean pResetBln() {
-
-        cWebresult WebResult;
-        WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pResetViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-
-            this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
-            this.mUpdateQuanitityHandled(0);
-
-
-
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINERESET);
-            return  false;
-        }
-
-    }
-
-    public boolean pHandledBln() {
-
-        Boolean splitBln = false;
-
-        if (this.getQuantityHandledDbl() < this.getQuantityDbl() && cIntakeorder.currentIntakeOrder.receiveMatAutoSplitIncompleteLineBln)  {
-            splitBln = true;
-        }
-
-
-        //handled as a normal line if we stored enough or we don't split at all
-        if (! splitBln) {
-            cWebresult WebResult;
-            WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineHandledViaWebserviceWrs();
-            if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-
-                if(this.mUpdateLocalStatusBln( cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) == false) {
-                    return  false;
-                }
-                return  true;
-            }
-            else {
-                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLED);
-                return  false;
-            }
-        }
-
-        cWebresult WebResult;
-        WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineSplitdViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-
-            //Add new line
-            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(WebResult.getResultDtt().get(0));
-            intakeorderMATLine.pInsertInDatabaseBln();
-
-            if(this.mUpdateLocalStatusBln( cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) == false) {
-                return  false;
-            }
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLED);
-            return  false;
-        }
-
-
-
-
-    }
 
     public boolean pHandledIndatabaseBln(){
 
@@ -374,11 +286,11 @@ public class cIntakeorderMATLine {
             return  false;
         }
 
-        if (this.mUpdateBinCodeHandled(this.binCodeHandledStr)  == false) {
+        if (this.mUpdateQuanitity(this.quantityDbl)  == false) {
             return  false;
         }
 
-        if (this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)  == false) {
+        if (this.mUpdateBinCodeHandled(this.binCodeHandledStr)  == false) {
             return  false;
         }
 
@@ -387,90 +299,44 @@ public class cIntakeorderMATLine {
     }
 
     public boolean pErrorSendingBln() {
-
-        return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING);
-
+        return true;
     }
 
-    public boolean pCancelIndatabaseBln(){
+    public boolean pAddOrUpdateLineBarcodeBln(cIntakeorderBarcode pvIntakeorderBarcode){
 
 
-        if (this.mUpdateQuanitityHandled(this.quantityHandledDbl)  == false) {
-            return  false;
-        }
-
-        if (this.mUpdateLocalStatusBln(cWarehouseorder.IntakeMATLineLocalStatusEnu.LOCALSTATUS_NEW)  == false) {
-            return  false;
-        }
-        return  true;
-
-    }
-
-    public boolean pAddOrUpdateLineBarcodeBln(Double pvAmountDbl){
+        Boolean matchBln = false;
 
         //If there are no line barcodes, then simply add this one
         if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
-            cIntakeorderMATLineBarcode intakeorderMATLineBarcode = new cIntakeorderMATLineBarcode(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt().longValue(), cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeStr(), pvAmountDbl);
+            cIntakeorderMATLineBarcode intakeorderMATLineBarcode = new cIntakeorderMATLineBarcode(this.getLineNoInt().longValue(),
+                                                                                                  pvIntakeorderBarcode.getBarcodeStr(),
+                                                                                                  pvIntakeorderBarcode.getQuantityPerUnitOfMeasureDbl());
             intakeorderMATLineBarcode.pInsertInDatabaseBln();
             return true;
         }
 
-        for (cIntakeorderMATLineBarcode intakeorderMATLineBarcode : this.handledBarcodesObl()  ) {
+        for (cIntakeorderMATLineBarcode intakeorderMATLineBarcode : this.handledBarcodesObl()) {
 
-            if (intakeorderMATLineBarcode.getBarcodeStr().equalsIgnoreCase(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeStr())) {
-                intakeorderMATLineBarcode.quantityHandledDbl += pvAmountDbl;
+            if (intakeorderMATLineBarcode.getBarcodeStr().equalsIgnoreCase(pvIntakeorderBarcode.getBarcodeStr())) {
+                matchBln = true;
+                intakeorderMATLineBarcode.quantityHandledDbl += pvIntakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
                 intakeorderMATLineBarcode.pUpdateAmountInDatabaseBln();
                 return  true;
             }
         }
+
+        if (! matchBln) {
+            cIntakeorderMATLineBarcode intakeorderMATLineBarcode = new cIntakeorderMATLineBarcode(this.getLineNoInt().longValue(),
+                                                                                                  pvIntakeorderBarcode.getBarcodeStr(),
+                                                                                                  pvIntakeorderBarcode.getQuantityPerUnitOfMeasureDbl());
+            intakeorderMATLineBarcode.pInsertInDatabaseBln();
+            return true;
+        }
+
         return  false;
     }
 
-    public boolean pRemoveOrUpdateLineBarcodeBln(){
-
-        //If there are no line barcodes, this should not be possible
-        if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
-            return false;
-        }
-
-        for (cIntakeorderMATLineBarcode intakeorderMATLineBarcode : this.handledBarcodesObl()  ) {
-
-            if (intakeorderMATLineBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
-
-                intakeorderMATLineBarcode.quantityHandledDbl -= cPickorderBarcode.currentPickorderBarcode.quantityPerUnitOfMeasureDbl;
-
-                if (intakeorderMATLineBarcode.getQuantityhandledDbl() > 0) {
-                    intakeorderMATLineBarcode.pUpdateAmountInDatabaseBln();
-                    return  true;
-                }
-
-                intakeorderMATLineBarcode.pDeleteFromDatabaseBln();
-                return  true;
-            }
-        }
-        return  false;
-    }
-
-
-    public List<cIntakeorderBarcode> pGetOrderBarcodeObl() {
-
-        List<cIntakeorderBarcode> resultObl = new ArrayList<>();
-
-        if (cIntakeorder.currentIntakeOrder == null || cIntakeorder.currentIntakeOrder.barcodesObl() == null || cIntakeorder.currentIntakeOrder.barcodesObl().size() == 0) {
-            return resultObl;
-        }
-
-
-        for (cIntakeorderBarcode intakeorderBarcode : cIntakeorder.currentIntakeOrder.barcodesObl()) {
-
-            if (intakeorderBarcode.getItemNoStr().equalsIgnoreCase(this.getItemNoStr()) || intakeorderBarcode.getVariantCodeStr().equalsIgnoreCase(this.getVariantCodeStr())) {
-                resultObl.add(intakeorderBarcode);
-            }
-        }
-
-        return  resultObl;
-
-    }
 
 
     public static List<cIntakeorderMATLine> pGetIntakeorderMATLinesFromDatabasObl() {
@@ -518,7 +384,7 @@ public class cIntakeorderMATLine {
 
     }
 
-    private  List<cIntakeorderBarcode> mGetBarcodesObl(){
+    public  List<cIntakeorderBarcode> pGetBarcodesObl(){
 
         //If barcodes already filled, then we are done
         if (this.barcodesObl != null) {
@@ -534,34 +400,30 @@ public class cIntakeorderMATLine {
         return  this.barcodesObl;
     }
 
-    private boolean mBusyBln() {
-        return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY);
-    }
-
-    private boolean mUpdateLocalStatusBln(Integer pvNewStatusInt) {
+    private boolean mUpdateQuanitityHandled(double pvQuantityHandledDbl) {
 
         boolean resultBln;
-        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateLocalStatusBln(pvNewStatusInt);
+        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateQuantityHandledBln(pvQuantityHandledDbl);
 
         if (resultBln == false) {
             return  false;
         }
 
-        this.localStatusInt = pvNewStatusInt;
+        this.quantityHandledDbl = pvQuantityHandledDbl;
         return true;
 
     }
 
-    private boolean mUpdateQuanitityHandled(double pvQuantityHandledBln) {
+    private boolean mUpdateQuanitity(double pvQuantityDbl) {
 
         boolean resultBln;
-        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateQuantityHandledBln(pvQuantityHandledBln);
+        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateQuantityHandledBln(pvQuantityDbl);
 
         if (resultBln == false) {
             return  false;
         }
 
-        this.quantityHandledDbl = pvQuantityHandledBln;
+        this.quantityDbl = pvQuantityDbl;
         return true;
 
     }

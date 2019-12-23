@@ -12,6 +12,7 @@ import ICS.Utils.cUpdate;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Webservice.cWebresult;
+import nl.icsvertex.scansuite.BuildConfig;
 
 public class cScannerLogon {
 
@@ -138,6 +139,11 @@ public class cScannerLogon {
     }
 
     public boolean pScannerVersionCheckBln(FrameLayout pvFrameLayout) {
+        //don't update in debug mode
+        if (BuildConfig.DEBUG) {
+            cScannerLogon.scannerLoggedOnBln = true;
+            return  true;
+        }
 
         if (cDeviceInfo.getAppVersion().equalsIgnoreCase(this.getRequiredScannerversionStr())) {
             cScannerLogon.scannerLoggedOnBln = true;

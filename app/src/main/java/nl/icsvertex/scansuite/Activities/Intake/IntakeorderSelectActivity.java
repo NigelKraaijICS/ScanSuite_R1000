@@ -73,8 +73,6 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private BottomSheetBehavior bottomSheetBehavior;
 
-    private static Boolean orderDetailsCompleteBln;
-
     // End Region Views
 
     //End Region Private Properties
@@ -177,6 +175,8 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     public void mSetToolbar(String pvScreenTitle) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
         this.toolbarTitle.setText(pvScreenTitle);
+        toolbarTitle.setSelected(true);
+        toolbarSubTitle.setSelected(true);
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -308,7 +308,6 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
         //Try to lock the intakeorder
         if (IntakeorderSelectActivity.mTryToLockOrderBln() == false) {
-            IntakeorderSelectActivity.orderDetailsCompleteBln = false;
             IntakeorderSelectActivity.pFillOrders();
             return;
         }

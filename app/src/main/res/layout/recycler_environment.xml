@@ -43,14 +43,15 @@
         android:elevation="1dp"
         android:id="@+id/view_foreground"
         android:background="@drawable/menu_row"
+        android:animateLayoutChanges="true"
         >
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
             android:id="@+id/imageViewMenuItem"
             app:srcCompat="@drawable/ic_environment"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textViewDescription"
+            app:layout_constraintBottom_toBottomOf="@id/textViewURL"
             />
         <TextView
             style="@style/userNameText"
@@ -80,8 +81,19 @@
             app:srcCompat="@drawable/ic_chevron_right_black_24dp"
             android:tint="@color/colorNeutral"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textViewDescription"
+            app:layout_constraintBottom_toBottomOf="@id/textViewURL"
+            />
+        <ImageView
+            android:id="@+id/imageQRCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewURL"
+            android:padding="@dimen/default_double_padding"
+            android:visibility="gone"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

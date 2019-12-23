@@ -1,17 +1,17 @@
 package nl.icsvertex.scansuite.Fragments.Support;
 
+
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,44 +19,29 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
-
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.R;
 
-public class SupportDeviceFragment extends DialogFragment implements iICSDefaultFragment {
-
-    //Region Public Properties
-
-    //End Region Public Properties
-
-    //Region Private Properties
-
-    private TextView textViewDeviceManufacturer;
-    private  TextView textViewDeviceBrand;
-    private TextView textViewDeviceModel;
-    private  TextView textViewSerialnumber;
-    private TextView textViewAndroidversion;
-    private TextView textViewBatterypercent;
-    private TextView textViewBatteryCharging;
-    private TextView textViewBatterypercentOverImage;
-    private ImageView imageViewBattery;
-    private ImageView imageIsCharging;
-    private TextView textChargeState;
-    private ImageView imageViewBatteryRefresh;
-    private  int batteryChargePercent;
-    private  AnimationDrawable batteryAnimation;
-
-    //End Region Private Properties
-
-    //Region Constructor
-
+public class SupportDeviceFragment extends Fragment implements iICSDefaultFragment {
+    TextView textViewDeviceManufacturer;
+    TextView textViewDeviceBrand;
+    TextView textViewDeviceModel;
+    TextView textViewSerialnumber;
+    TextView textViewAndroidversion;
+    TextView textViewBatterypercent;
+    TextView textViewBatteryCharging;
+    TextView textViewBatterypercentOverImage;
+    ImageView imageViewBattery;
+    ImageView imageIsCharging;
+    TextView textChargeState;
+    ImageView imageViewBatteryRefresh;
+    int batteryChargePercent;
+    AnimationDrawable batteryAnimation;
+    private static SupportDeviceFragment instance;
     public SupportDeviceFragment() {
-
+        // Required empty public constructor
     }
-
-    //End Region Constructor
-
-    //Region Default Methods
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,76 +49,53 @@ public class SupportDeviceFragment extends DialogFragment implements iICSDefault
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_support_device, container, false);
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        cAppExtension.dialogFragment = this;
-       this.mFragmentInitialize();
+        instance = this;
+        mFragmentInitialize();
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                cAppExtension.dialogFragment.dismiss();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-    //End Region Default Methods
-
-    //Region iICSDefaultFragment defaults
-
 
     @Override
     public void mFragmentInitialize() {
-        this.mFindViews();
-        this.mFieldsInitialize();
-        this.mSetListeners();
-        cUserInterface.pEnableScanner();
+        mFindViews();
+
+        mFieldsInitialize();
+        mSetListeners();
     }
 
     @Override
     public void mFindViews() {
-        this.textViewDeviceManufacturer = getView().findViewById(R.id.textViewDeviceManufacturer);
-        this.textViewDeviceBrand = getView().findViewById(R.id.textViewDeviceBrand);
-        this.textViewDeviceModel = getView().findViewById(R.id.textViewDeviceModel);
-        this.textViewSerialnumber = getView().findViewById(R.id.textViewSerialnumber);
-        this.textViewAndroidversion = getView().findViewById(R.id.textViewAndroidversion);
-        this.textViewBatterypercent = getView().findViewById(R.id.textViewBatterypercent);
-        this.textViewBatteryCharging = getView().findViewById(R.id.textViewBatteryCharging);
-        this.textViewBatterypercentOverImage = getView().findViewById(R.id.textViewBatterypercentOverImage);
-        this.imageViewBattery = getView().findViewById(R.id.imageViewBattery);
-        this.imageIsCharging = getView().findViewById(R.id.imageIsCharging);
-        this.textChargeState = getView().findViewById(R.id.textChargeState);
-        this.imageViewBatteryRefresh = getView().findViewById(R.id.imageViewBatteryRefresh);
+        textViewDeviceManufacturer = getView().findViewById(R.id.textViewDeviceManufacturer);
+        textViewDeviceBrand = getView().findViewById(R.id.textViewDeviceBrand);
+        textViewDeviceModel = getView().findViewById(R.id.textViewDeviceModel);
+        textViewSerialnumber = getView().findViewById(R.id.textViewSerialnumber);
+        textViewAndroidversion = getView().findViewById(R.id.textViewAndroidversion);
+        textViewBatterypercent = getView().findViewById(R.id.textViewBatterypercent);
+        textViewBatteryCharging = getView().findViewById(R.id.textViewBatteryCharging);
+        textViewBatterypercentOverImage = getView().findViewById(R.id.textViewBatterypercentOverImage);
+        imageViewBattery = getView().findViewById(R.id.imageViewBattery);
+        imageIsCharging = getView().findViewById(R.id.imageIsCharging);
+        textChargeState = getView().findViewById(R.id.textChargeState);
+        imageViewBatteryRefresh = getView().findViewById(R.id.imageViewBatteryRefresh);
     }
 
     @Override
     public void mFieldsInitialize() {
-        this.textViewDeviceManufacturer.setText(cDeviceInfo.getDeviceManufacturer());
-        this.textViewDeviceBrand.setText(cDeviceInfo.getDeviceBrand());
-        this.textViewDeviceModel.setText(cDeviceInfo.getDeviceModel());
-        this.textViewSerialnumber.setText(cDeviceInfo.getSerialnumberStr());
-        this.textViewAndroidversion.setText(cDeviceInfo.getAndroidBuildVersion() + " - " + cDeviceInfo.getFriendlyVersionName());
-        this.mSetBatteryInfo();
+        textViewDeviceManufacturer.setText(cDeviceInfo.getDeviceManufacturer());
+        textViewDeviceBrand.setText(cDeviceInfo.getDeviceBrand());
+        textViewDeviceModel.setText(cDeviceInfo.getDeviceModel());
+        textViewSerialnumber.setText(cDeviceInfo.getSerialnumberStr());
+        String androidVersion = cDeviceInfo.getAndroidBuildVersion() + " - " + cDeviceInfo.getFriendlyVersionName();
+        textViewAndroidversion.setText(androidVersion);
+        mSetBatteryInfo();
     }
 
     @Override
     public void mSetListeners() {
-        this.mSetBatteryRefreshListener();
+        mSetBatteryRefreshListener();
     }
-
-    //End Region iICSDefaultFragment defaults
-
-    //Region Private Methods
-
     private void mSetBatteryRefreshListener() {
-        this.imageViewBatteryRefresh.setOnClickListener(new View.OnClickListener() {
+        imageViewBatteryRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(imageViewBatteryRefresh,0);
@@ -141,53 +103,60 @@ public class SupportDeviceFragment extends DialogFragment implements iICSDefault
             }
         });
     }
-
-    private void mSetBatteryInfo() {
-        this.batteryChargePercent = cDeviceInfo.getBatteryChargePct();
-        this.textChargeState.setText(cDeviceInfo.getChargingStatusString());
-        this.textViewBatteryCharging.setText(cDeviceInfo.getChargingStatusString());
-        this.textViewBatteryCharging.setVisibility(View.GONE);
-        this.textViewBatterypercent.setText(getString(R.string.battery_at_parameter1_percent, cText.pIntToStringStr(cDeviceInfo.getBatteryChargePct())));
-        this.textViewBatterypercent.setVisibility(View.GONE);
-        this.textViewBatterypercentOverImage.setText( cDeviceInfo.getBatteryChargePct() + "%");
-        this.mSetBatteryIcon();
+    public void mPowerChanged() {
+        mSetBatteryInfo();
     }
 
+    public void mBatteryLevelChanged() {
+        mSetBatteryPercent();
+    }
+    private void mSetBatteryPercent() {
+        String percentage = cDeviceInfo.getBatteryChargePct() + "%";
+        textViewBatterypercentOverImage.setText(percentage);
+    }
+
+    public static SupportDeviceFragment getInstance() {
+        return instance;
+    }
+
+    private void mSetBatteryInfo() {
+        batteryChargePercent = cDeviceInfo.getBatteryChargePct();
+        textChargeState.setText(cDeviceInfo.getChargingStatusString());
+        textViewBatteryCharging.setText(cDeviceInfo.getChargingStatusString());
+        textViewBatteryCharging.setVisibility(View.GONE);
+        textViewBatterypercent.setText(getString(R.string.battery_at_parameter1_percent, cText.pIntToStringStr(cDeviceInfo.getBatteryChargePct())));
+        textViewBatterypercent.setVisibility(View.GONE);
+        String percentage = cDeviceInfo.getBatteryChargePct() + "%";
+        textViewBatterypercentOverImage.setText(percentage);
+        mSetBatteryIcon();
+    }
     private void mSetBatteryIcon() {
-
         if (cDeviceInfo.isCharging()) {
-            this.imageIsCharging.setVisibility(View.VISIBLE);
-            this.mAnimateCharging();
+            imageIsCharging.setVisibility(View.VISIBLE);
+
+            mAnimateCharging();
             return;
         }
-
-        this.imageIsCharging.setVisibility(View.INVISIBLE);
+        imageIsCharging.setVisibility(View.INVISIBLE);
         if (cDeviceInfo.getBatteryChargePct() < 40) {
-            this.imageViewBattery.setImageResource(R.drawable.ic_battery25);
+            imageViewBattery.setImageResource(R.drawable.ic_battery25);
             return;
         }
-
         if (cDeviceInfo.getBatteryChargePct() < 65) {
-            this.imageViewBattery.setImageResource(R.drawable.ic_battery50);
+            imageViewBattery.setImageResource(R.drawable.ic_battery50);
             return;
         }
         if (cDeviceInfo.getBatteryChargePct() < 90) {
-            this.imageViewBattery.setImageResource(R.drawable.ic_battery75);
+            imageViewBattery.setImageResource(R.drawable.ic_battery75);
             return;
         }
-
-        this.imageViewBattery.setImageResource(R.drawable.ic_battery100);
+        imageViewBattery.setImageResource(R.drawable.ic_battery100);
     }
-
     private void mAnimateCharging() {
-        this.imageViewBattery.setImageResource(R.drawable.battery_charging);
-        this.batteryAnimation = (AnimationDrawable) imageViewBattery.getDrawable();
-        this.batteryAnimation.start();
+        imageViewBattery.setImageResource(R.drawable.battery_charging);
+        batteryAnimation = (AnimationDrawable) imageViewBattery.getDrawable();
+        batteryAnimation.start();
     }
-
-
-    //End Region private Methods
-
 
 
 }

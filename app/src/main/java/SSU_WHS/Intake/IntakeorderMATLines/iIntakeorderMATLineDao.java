@@ -39,8 +39,12 @@ public interface iIntakeorderMATLineDao {
     @Query("UPDATE IntakeLinesMAT SET Localstatus = :pvNewStatusInt WHERE LineNo = :pvLineNoInt")
     int updateOrderLineLocalStatus(Integer pvLineNoInt, Integer pvNewStatusInt);
 
-    @Query("UPDATE IntakeLinesMAT SET QuantityHandled = :pvQuantityHandled WHERE LineNo = :pvLineNoInt")
-    int updateOrderLineQuantity(Integer pvLineNoInt, Double pvQuantityHandled);
+    @Query("UPDATE IntakeLinesMAT SET QuantityHandled = :pvQuantityHandledDbl WHERE LineNo = :pvLineNoInt")
+    int updateOrderLineQuantityHandled(Integer pvLineNoInt, Double pvQuantityHandledDbl);
+
+
+    @Query("UPDATE IntakeLinesMAT SET Quantity = :pvQuantityDbl WHERE LineNo = :pvLineNoInt")
+    int updateOrderLineQuantity(Integer pvLineNoInt, Double pvQuantityDbl);
 
 
     @Query("UPDATE IntakeLinesMAT SET BinCodeHandled = :pvBinCodeHandledStr WHERE LineNo = :pvLineNoInt")

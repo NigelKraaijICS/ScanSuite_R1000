@@ -38,6 +38,10 @@ public class cDatabase {
     public static final String TABLENAME_INTAKEORDER  = "IntakeOrders";
     public static final String TABLENAME_INTAKEORDERBARCODE  = "IntakeOrderBarcodes";
     public static final String TABLENAME_INTAKEORDERMATLINEBARCODE  = "IntakeOrderMATLineBarcodes";
+    public static final String TABLENAME_MOVEORDER = "MoveOrder";
+    public static final String TABLENAME_MOVEORDERLINE = "MoveOrderLine";
+    public static final String TABLENAME_MOVEORDERLINEBARCODE = "MoveOrderLineBarcode";
+    public static final String TABLENAME_MOVEORDERBARCODE = "MoveOrdeBarcode";
 
 
     //endregion Tables
@@ -167,6 +171,25 @@ public class cDatabase {
 
     //region M
     public static final String MOVEDEFAULTBIN_NAMESTR = "Move_default_bin";
+
+    public static final String MOVEAMOUNTMANUAL_NAMESTR = "Move_Amount_manual";
+    public static final String MOVEBARCODECHECK_NAMESTR = "Move_Barcode_check";
+    public static final String MOVEVALIDATESTOCK_NAMESTR = "Move_validate_stock";
+    public static final String MOVEVALIDATESTOCKENFORCE_NAMESTR = "Move_validate_stock_enforce";
+    public static final String MOVE_MI_BATCHTAKEREQUIRED_NAMESTR = "Move_MI_batch_take_required";
+    public static final String MOVE_MO_BATCHPLACEREQUIRED_NAMESTR = "Move_MO_batch_place_required";
+    public static final String MOVE_MT_TAKEAMOUNTMANUAL_NAMESTR = "Move_MT_take_amount_manual";
+    public static final String MOVE_MT_TAKEAUTOITEM_NAMESTR = "Move_MT_take_auto_item";
+    public static final String MOVE_MT_TAKEAUTOITEMCONTAINERONCE_NAMESTR = "Move_MT_take_auto_item_container_once";
+    public static final String MOVE_MT_TAKEALLOWEND_NAMESTR = "Move_MT_take_allow_end";
+    public static final String MOVE_MT_TAKEIGNOREUNDERTAKE_NAMESTR = "Move_MT_take_ignore_undertake";
+    public static final String MOVE_MT_TAKEAUTOACCEPTSINGLEPIECE_NAMESTR = "Move_MT_take_auto_accept_single_piece";
+    public static final String MOVE_MT_PLACEAMOUNTMANUAL_NAMESTR = "Move_MT_place_amount_manual";
+    public static final String MOVE_MT_PLACEAUTOITEM_NAMESTR = "Move_MT_place_auto_item";
+    public static final String MOVE_AUTOACCEPTATREQUESTED_NAMESTR = "Move_auto_accept_at_requested";
+    public static final String MOVE_NOEXTRABINS_NAMESTR = "Move_no_extra_bins";
+    public static final String MOVE_NOEXTRAITEMS_NAMESTR = "Move_no_extra_items";
+    public static final String MOVE_NOEXTRAPIECES_NAMESTR = "Move_no_extra_pieces";
     //endregion M
 
     //region N

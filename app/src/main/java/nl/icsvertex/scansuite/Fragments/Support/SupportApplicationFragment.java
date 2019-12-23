@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebservice;
 import ICS.Utils.cDeviceInfo;
@@ -39,6 +41,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
     private TextView textViewApplicationVersion;
     private TextView textViewWebservice;
     private TextView textViewApplicationInstalled;
+    private TextView textViewApplicationLastUpdate;
     private String updateUrl;
     private ImageButton updateImageButton;
     private ImageButton testWebserviceImageButton;
@@ -106,7 +109,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         this.testWebserviceImageButton = getView().findViewById(R.id.testWebserviceImageButton);
         this.buttonMySettings = getView().findViewById(R.id.buttonMySettings);
         this.textViewApplicationInstalled = getView().findViewById(R.id.textViewApplicationInstalled);
-
+        this.textViewApplicationLastUpdate = getView().findViewById(R.id.textViewApplicationLastUpdate);
     }
 
     @Override
@@ -115,12 +118,14 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         this.textViewWebservice.setText(cWebservice.WEBSERVICE_URL);
         this.updateImageButton.setVisibility(View.INVISIBLE);
         this.textViewApplicationInstalled.setText(cDeviceInfo.getInstalldate());
+        this.textViewApplicationLastUpdate.setText(cDeviceInfo.getLastUpdateDate());
     }
 
     @Override
     public void mSetListeners() {
         this.mSetUpdateListener();
         this.mTestWebserviceListener();
+        this.mWebserviceURLLongClickListener();
     }
 
     //End Region iICSDefaultFragment defaults
@@ -155,6 +160,21 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
                     cUserInterface.pShowToastMessage( getString(R.string.message_webservice_not_live) , null);
                     cUserInterface.pDoNope(textViewWebservice, true,false);
                 }
+            }
+        });
+    }
+    private void mWebserviceURLLongClickListener() {
+        textViewWebservice.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (cText.pCopyTextToClipboard(textViewWebservice, "webservice url")) {
+                    cUserInterface.pShowToastMessage(getString(R.string.text_copied_to_clipboard), R.raw.headsupsound);
+                    textViewWebservice.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                }
+                else {
+                    cUserInterface.pShowToastMessage(getString(R.string.text_not_copied_to_clipboard), R.raw.headsupsound);
+                }
+                return false;
             }
         });
     }

@@ -1,6 +1,7 @@
 package ICS.Utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -314,30 +315,71 @@ public class cUserInterface {
 
     public static void pEnableScanner(){
 
-        KeyboardManager keyManager = new KeyboardManager();
-        for (Trigger trigger : keyManager.getAvailableTriggers()) {
-            boolean result =  trigger.setEnabled(true);
+        switch(cDeviceInfo.getDeviceManufacturer().toUpperCase()) {
 
-            if(result){
-                //operation done
-            }else{
-                //do something in case of failure
-            }
+            case "DATALOGIC":
+
+                KeyboardManager keyManager = new KeyboardManager();
+                for (Trigger trigger : keyManager.getAvailableTriggers()) {
+                    boolean result;
+                    if (trigger.getId() == KeyboardManager.TRIGGER_ID_MOTION || trigger.getId() == KeyboardManager.TRIGGER_ID_AUTOSCAN) {
+                        result =  trigger.setEnabled(false);
+                    }
+                    else {
+                        result =  trigger.setEnabled(true);
+                    }
+
+                    if(result){
+                        //operation done
+                    }else{
+                        //do something in case of failure
+                    }
+                }
+
+            case "ZEBRA":
+
+                Intent i = new Intent();
+                i.setAction("com.symbol.datawedge.api.ACTION_SCANNERINPUTPLUGIN");
+                i.putExtra("com.symbol.datawedge.api.EXTRA_PARAMETER", "ENABLE_PLUGIN");
+                cAppExtension.context.sendBroadcast(i);
+
+            default:
         }
+
+
 
     }
 
     public static void pDisableScanner(){
 
-        KeyboardManager keyManager = new KeyboardManager();
-        for (Trigger trigger : keyManager.getAvailableTriggers()) {
-            boolean result =  trigger.setEnabled(false);
+        switch(cDeviceInfo.getDeviceManufacturer().toUpperCase()) {
+            case "DATALOGIC":
 
-            if(result){
-                //operation done
-            }else{
-                //do something in case of failure
-            }
+                KeyboardManager keyManager = new KeyboardManager();
+                for (Trigger trigger : keyManager.getAvailableTriggers()) {
+                    boolean result =  trigger.setEnabled(false);
+
+                    if(result){
+                        //operation done
+                    }else{
+                        //do something in case of failure
+                    }
+                }
+
+                break;
+
+            case "ZEBRA":
+
+                Intent i = new Intent();
+                i.setAction("com.symbol.datawedge.api.ACTION_SCANNERINPUTPLUGIN");
+                i.putExtra("com.symbol.datawedge.api.EXTRA_PARAMETER", "DISABLE_PLUGIN");
+                cAppExtension.context.sendBroadcast(i);
+
+                // code block
+                break;
+
+            default:
+                // code block
         }
 
     }

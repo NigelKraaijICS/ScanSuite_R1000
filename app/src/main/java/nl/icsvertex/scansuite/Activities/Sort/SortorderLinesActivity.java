@@ -72,7 +72,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private ImageView toolbarImage;
     private TextView toolbarTitle;
-    private ImageView toolbarImageHelp;
+
 
     //End Region Views
     //End Region Private Properties
@@ -144,7 +144,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         this.container = findViewById(R.id.container);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
+
         this.quantitySortordersText = findViewById(R.id.quantitySortordersText);
         this.sortorderLinesTabLayout = findViewById(R.id.sortorderLinesTabLayout);
         this.sortorderLinesViewPager = findViewById(R.id.sortorderLinesViewpager);
@@ -157,6 +157,8 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         this.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
         this.toolbarTitle.setText(pvScreenTitleStr);
+        toolbarTitle.setSelected(true);
+
         ViewCompat.setTransitionName(textViewChosenOrder, VIEW_CHOSEN_ORDER);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

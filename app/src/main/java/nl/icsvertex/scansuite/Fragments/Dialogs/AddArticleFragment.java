@@ -3,9 +3,12 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -75,6 +78,9 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     @Override
     public void onResume() {
         super.onResume();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = WindowManager.LayoutParams.WRAP_CONTENT;
+        getDialog().getWindow().setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
     }
@@ -114,6 +120,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     public void mSetListeners() {
         this.mSetAddArticleListener();
         this.mSetCancelListener();
+        this.mSetEditorActionListener();
     }
 
     private void mSetCancelListener() {
@@ -131,7 +138,6 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
             @Override
             public void onClick(View view) {
 
-
                 if (cAppExtension.activity instanceof InventoryorderBinActivity) {
 
                     if (AddArticleFragment.editTextAddArticle.getText().toString().trim().isEmpty()) {
@@ -140,7 +146,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
                     }
 
                     cAppExtension.dialogFragment.dismiss();
-
+                    InventoryorderBinActivity.pHandleAddArticleFragmentDismissed();
                     //Pass fake scan
                     InventoryorderBinActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()));
                 }
@@ -159,5 +165,16 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
         //no prefix, fine
         AddArticleFragment.editTextAddArticle.setText(pvBarcodeScan.getBarcodeOriginalStr());
         AddArticleFragment.addArticleButton.callOnClick();
+    }
+    private void mSetEditorActionListener() {
+        this.editTextAddArticle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                    addArticleButton.callOnClick();
+                }
+                return true;
+            }
+        });
     }
 }

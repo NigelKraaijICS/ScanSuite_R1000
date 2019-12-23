@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
-import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
@@ -29,14 +29,8 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     public class IntakeorderMATLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewBinCode;
-        private TextView textViewLine;
         private TextView textViewQuantity;
-        private TextView textViewSourceNo;
-        private FrameLayout intakeOrderMATItemLinearLayout;
-        private ImageView imageSendStatus;
-
-        public RelativeLayout viewBackground;
-        public ConstraintLayout viewForeground;
+        private LinearLayout intakeOrderMATItemLinearLayout;
 
 
         public IntakeorderMATLineViewHolder(View pvItemView) {
@@ -44,28 +38,13 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
 
             this.intakeOrderMATItemLinearLayout = pvItemView.findViewById(R.id.intakeorderLineItemLinearLayout);
 
-            this.textViewLine = pvItemView.findViewById(R.id.textViewDescription);
-            this.textViewLine.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewLine.setSingleLine(true);
-            this.textViewLine.setMarqueeRepeatLimit(5);
-            this.textViewLine.setSelected(true);
-
-            this.textViewBinCode = pvItemView.findViewById(R.id.textViewBIN);
+            this.textViewBinCode = pvItemView.findViewById(R.id.bincodeText);
             this.textViewBinCode.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewBinCode.setSingleLine(true);
             this.textViewBinCode.setMarqueeRepeatLimit(5);
             this.textViewBinCode.setSelected(true);
 
-            this.textViewSourceNo = pvItemView.findViewById(R.id.textViewSourceNo);
-            this.textViewSourceNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewSourceNo.setSingleLine(true);
-            this.textViewSourceNo.setMarqueeRepeatLimit(5);
-            this.textViewSourceNo.setSelected(true);
-
-            this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
-            this.viewBackground = pvItemView.findViewById(R.id.view_background);
-            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
-            this.imageSendStatus = pvItemView.findViewById(R.id.imageSendStatus);
+            this.textViewQuantity = pvItemView.findViewById(R.id.storedQuantityText);
 
         }
     }
@@ -76,7 +55,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     private List<cIntakeorderMATLine> localIntakeorderMATLinesObl;
     //End Region Private Propertiess
 
-    private List<FrameLayout> intakeorderLineItemFrameLayout = new ArrayList<>();
+    private List<LinearLayout> intakeorderLineItemFrameLayout = new ArrayList<>();
     private RecyclerView RecyclerView;
 
     //Region Constructor
@@ -111,17 +90,18 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
         final cIntakeorderMATLine currentIntakeorderMatLine = this.localIntakeorderMATLinesObl.get(pvPositionInt);
 
         //Set fields
-        String lineDescriptionStr = currentIntakeorderMatLine.getItemNoStr() + "~" + currentIntakeorderMatLine.getVariantCodeStr() + ": " + currentIntakeorderMatLine.getDescriptionStr();
-        String quantityToShowStr = currentIntakeorderMatLine.getQuantityHandledDbl().intValue() + "/" + currentIntakeorderMatLine.getQuantityDbl().intValue();
-        String binCodeStr = currentIntakeorderMatLine.binCodeStr;
-        String sourceNoStr = currentIntakeorderMatLine.sourceNoStr;
+        String quantityToShowStr = cText.pDoubleToStringStr(currentIntakeorderMatLine.getQuantityHandledDbl());
+        String binCodeStr;
+
+        if (currentIntakeorderMatLine.getBinCodeHandledStr().isEmpty()) {
+            binCodeStr = currentIntakeorderMatLine.binCodeStr;
+        } else {
+            binCodeStr = currentIntakeorderMatLine.getBinCodeHandledStr();
+        }
 
         //Set description and quantity
-        pvHolder.textViewLine.setText(lineDescriptionStr);
         pvHolder.textViewQuantity.setText(quantityToShowStr);
         pvHolder.textViewBinCode.setText(binCodeStr);
-        pvHolder.textViewSourceNo.setText(sourceNoStr);
-        pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
 
         //Start On Click Listener
         pvHolder.intakeOrderMATItemLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -130,19 +110,14 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
             public void onClick(View pvView) {
 
                 //deselect all
-                for (FrameLayout frameLayout : intakeorderLineItemFrameLayout) {
-                    frameLayout.setSelected(false);
+                for (LinearLayout linearLayout : intakeorderLineItemFrameLayout) {
+                    linearLayout.setSelected(false);
                 }
 
                 //select current
                 pvView.setSelected(true);
 
-                //Kick off correct event at correct activity
-                if (cAppExtension.context instanceof IntakeorderLinesActivity) {
-                    if (RecyclerView.getId() == R.id.recyclerViewLines) {
-                        IntakeorderLinesActivity.pIntakelineSelected(currentIntakeorderMatLine);
-                    }
-                }
+
             }
         });
 
@@ -172,64 +147,9 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
         notifyDataSetChanged();
     }
 
-    public void pSetFilter(String pvQueryTextStr) {
-        this.localIntakeorderMATLinesObl = mGetFilteredListObl(pvQueryTextStr);
-        IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
-        notifyDataSetChanged();
-    }
-
     //End Region Public Methods
 
     //Region Private Methods
-
-    private List<cIntakeorderMATLine> mGetFilteredListObl(String pvQueryTextStr) {
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-
-        String variantCodeStr = "";
-        int loopInt = 0;
-
-        if (this.localIntakeorderMATLinesObl == null || this.localIntakeorderMATLinesObl.size() == 0) {
-            return resultObl;
-        }
-
-        if (pvQueryTextStr.isEmpty()) {
-            return cIntakeorder.currentIntakeOrder.linesObl();
-        }
-
-        String[] fieldsObl = pvQueryTextStr.split(" ");
-        if (fieldsObl.length <= 0) {
-            return resultObl;
-        }
-
-        for (String loopStr : fieldsObl) {
-
-            if (loopInt == 0) {
-                loopInt += 1;
-                continue;
-            }
-
-            variantCodeStr += loopStr;
-            loopInt += 1;
-        }
-
-        for (cIntakeorderMATLine intakeorderMATLine :this.localIntakeorderMATLinesObl){
-
-            if (!intakeorderMATLine.getItemNoStr().equalsIgnoreCase(fieldsObl[0])) {
-                continue;
-            }
-
-            if (!variantCodeStr.isEmpty()) {
-                if (!intakeorderMATLine.getVariantCodeStr().equalsIgnoreCase(variantCodeStr)) {
-                    continue;
-                }
-            }
-
-            resultObl.add(intakeorderMATLine);
-
-        }
-
-        return resultObl;
-    }
 
     //End Region Private Methods
 

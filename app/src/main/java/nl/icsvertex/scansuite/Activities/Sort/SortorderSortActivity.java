@@ -73,7 +73,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubtext;
-    private ImageView toolbarImageHelp;
 
     private TextView genericItemExtraField1Text;
     private TextView genericItemExtraField2Text;
@@ -199,7 +198,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
-        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
 
         this.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
         this.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
@@ -239,9 +237,10 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-
         this.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
         this.toolbarTitle.setText(pvScreenTitleStr);
+        toolbarTitle.setSelected(true);
+        toolbarSubtext.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

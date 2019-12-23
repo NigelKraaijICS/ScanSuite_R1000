@@ -688,6 +688,16 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean MOVE_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
     //End Region Settings
 
 

@@ -42,6 +42,12 @@
     <string name="message_webservice_not_live">Can\'t reach the webservice</string>
     <string name="mysettings">My settings</string>
     <string name="iconattribution_freepik">Icons made by Freepik from www.flaticon.com</string>
+    <string name="text_copied_to_clipboard">Text was copied to the clipboard</string>
+    <string name="text_not_copied_to_clipboard">Text was not copied to the clipboard</string>
+    <string name="application_unknown_install_date">Unknown install date</string>
+    <string name="label_application_installed">Installed on</string>
+    <string name="label_application_last_update">Last update</string>
+    <string name="application_unknown_update_date">Unknown update date</string>
     <!--endregion Application info-->
 
     <!--region Network info-->
@@ -521,7 +527,7 @@
     <string name="error_barcode_doesnt_belong_to_line">This barcode doesn\'t belong to this line</string>
     <string name="message_line_save_failed">Saving line failed, please try again</string>
     <string name="message_workplace_not_updated">Workplace not updated on server</string>
-    <string name="lines">Lines:</string>
+    <string name="lines">Lines</string>
     <string name="items">Items</string>
     <string name="message_bin_close_failed">Closing BIN failed</string>
     <string name="message_close_bin">Close BIN</string>
@@ -576,8 +582,6 @@
     <!--endregion battery-->
 
     <string name="android_no_codename">No codename</string>
-    <string name="application_unknown_install_date">Unknown install date</string>
-    <string name="label_application_installed">Installed on</string>
     <string name="message_zero_lines_cant_be_reset">Lines with quantity 0 can\'t be reset</string>
     <string name="message_finish_later">Finish later</string>
     <string name="message_close_now">Close now</string>
@@ -596,4 +600,24 @@
     <string name="supervisor_password_header">Supervisor</string>
     <string name="supervisor_password_text">You need to be a supervisor for this</string>
     <!--endregion supervisor-->
+
+    <!--region move-->
+    <string name="screentitle_moveorderselect">Move orders</string>
+    <string name="error_get_moveorders_failed">Getting moveorders from server failed</string>
+    <string name="error_get_movelines_failed">Getting movelines from server failed</string>
+    <string name="button_create_move">Create</string>
+    <string name="createmove_header_default">Create moveorder</string>
+    <string name="createmove_text_default">Create new moveorder?</string>
+    <string name="screentitle_moveorderlines">Move lines</string>
+    <string name="tab_moveorderline_notdone">Not done</string>
+    <string name="tab_moveorderline_done">Done</string>
+    <string name="tab_moveorderline_total">Total</string>
+    <string name="screentitle_moveordertake">Move take</string>
+    <string name="message_moveorderbusy_header">Orderline still busy</string>
+    <string name="message_unknown_bin">Unknown bin</string>
+    <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
+    <string name="show_only_deviations">Show deviations</string>
+    <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
+    <!--endregion move-->
+
 </resources>

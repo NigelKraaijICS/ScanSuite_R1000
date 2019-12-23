@@ -1,5 +1,10 @@
 package ICS.Utils;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.view.View;
+import android.widget.TextView;
+
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,6 +13,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import ICS.cAppExtension;
 
 public class cText {
 
@@ -158,7 +165,9 @@ public class cText {
     }
 
     public static Boolean pStringToBooleanBln(String pvInputStr, Boolean pvDefaultValueBln) {
-
+        if (pvInputStr == null) {
+            return pvDefaultValueBln;
+        }
         switch (pvInputStr.toUpperCase()) {
             case "N":
             case "FALSE":
@@ -205,7 +214,17 @@ public class cText {
         return  pvInputStr.replaceAll("(\\r|\\n|\\t)","");
     }
 
-
+    public static Boolean pCopyTextToClipboard(View view, String label) {
+        if (view instanceof TextView) {
+            ClipboardManager clipboard = (ClipboardManager) cAppExtension.activity.getSystemService(cAppExtension.context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(label, ((TextView) view).getText());
+            clipboard.setPrimaryClip(clip);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     //End Region Public Methods
 
 

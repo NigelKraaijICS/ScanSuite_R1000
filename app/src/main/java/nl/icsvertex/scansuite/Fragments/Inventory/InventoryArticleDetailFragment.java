@@ -61,11 +61,10 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private ImageView toolbarImage;
     private  TextView toolbarTitle;
     private TextView toolbarSubtext;
-    private ImageView toolbarImageHelp;
 
     private static ImageView articleThumbImageView;
-    private static ImageView articleFullImageView;
-    private static ConstraintLayout articleFullImageContainer;
+    private static ImageView theBigPicture;
+    private static ConstraintLayout theBigPictureContainer;
 
     private TextView binText;
     private static EditText quantityText;
@@ -160,9 +159,11 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.toolbarImage = getView().findViewById(R.id.toolbarImage);
         this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
-        this.toolbarImageHelp = getView().findViewById(R.id.toolbarImageHelp);
+
 
         this.articleThumbImageView = getView().findViewById(R.id.articleThumbImageView);
+//        theBigPicture = getView().findViewById(R.id.theBigPicture);
+//        theBigPictureContainer = getView().findViewById(R.id.theBigPictureContainer);
 
         this.binText = getView().findViewById(R.id.binText);
         this.quantityText = getView().findViewById(R.id.quantityText);
@@ -344,7 +345,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         },1500);
 
         this.toolbarImage.setImageResource(R.drawable.ic_info);
-        this.toolbarImageHelp.setVisibility(View.GONE);
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -535,7 +536,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         //If pick with picture is false, then hide image view
         if (!cInventoryorder.currentInventoryOrder.isInventoryWithPictureBln()) {
-            InventoryArticleDetailFragment.articleThumbImageView.setVisibility(View.INVISIBLE);
+            InventoryArticleDetailFragment.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
 

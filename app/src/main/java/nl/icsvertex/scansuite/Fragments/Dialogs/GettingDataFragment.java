@@ -30,8 +30,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     CardView progressContainer;
     TextView textProgress;
     TextView textDots;
-    Button buttonCancel;
-    ConstraintLayout gettingDataContainer;
+      ConstraintLayout gettingDataContainer;
 
     //End Region Private Properties
 
@@ -66,6 +65,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
 
     @Override
     public void mFragmentInitialize() {
+        setCancelable(false);
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
@@ -78,7 +78,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
         this.progressContainer = getView().findViewById(R.id.progressContainer);
         this.textDots = getView().findViewById(R.id.textDots);
         this.textProgress = getView().findViewById(R.id.textProgress);
-        this.buttonCancel = getView().findViewById(R.id.buttonCancel);
+
     }
 
     @Override
@@ -89,7 +89,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     @Override
     public void mSetListeners() {
         this.mSetHourglassImageListener();
-        this.mSetCancelListener();
+
     }
 
     //End Region iICSDefaultFragment defaults
@@ -139,16 +139,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
         });
     }
 
-    private void mSetCancelListener() {
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-    }
-
-    private void mToggleDetails() {
+     private void mToggleDetails() {
         Boolean isCurrentlyShown;
         if (progressContainer.getVisibility() == View.VISIBLE) {
             isCurrentlyShown = true;

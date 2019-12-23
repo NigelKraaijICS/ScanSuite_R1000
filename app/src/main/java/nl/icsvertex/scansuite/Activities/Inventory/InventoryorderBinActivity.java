@@ -162,6 +162,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
         this.toolbarTitle.setText(pvScreenTitleStr);
+        toolbarTitle.setSelected(true);
+        toolbarSubTitle.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -425,14 +427,14 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         //Add the barcode via the webservice
         if (!cInventoryorder.currentInventoryOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-            InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed));
+            InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed), pvBarcodeScan.barcodeOriginalStr);
             InventoryorderBinActivity.busyBln = false;
             return;
         }
 
         //Add the line via the webservice
         if (!cInventoryorder.currentInventoryOrder.pAddLineBln()) {
-            InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_line_failed));
+            InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_line_failed),pvBarcodeScan.barcodeOriginalStr);
             InventoryorderBinActivity.busyBln = false;
             return;
         }
@@ -454,7 +456,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         // Check if we can add a line
         if (! cSetting.INV_ADD_EXTRA_LINES()) {
-            InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_now_allowed));
+            InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_now_allowed),pvBarcodeScan.barcodeOriginalStr);
             InventoryorderBinActivity.busyBln = false;
             return;
         }
@@ -483,14 +485,14 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         if (cInventoryorderLine.currentInventoryOrderLine == null )  {
 
             if (!cSetting.INV_ADD_EXTRA_LINES()) {
-                InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_for_this_bin_now_allowed));
+                InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_for_this_bin_now_allowed),pvInventoryorderBarcode.barcode);
                 InventoryorderBinActivity.busyBln = false;
                 return;
             }
 
             //Add the line via the webservice
             if (!cInventoryorder.currentInventoryOrder.pAddLineBln()) {
-                InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_line_failed));
+                InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_line_failed),pvInventoryorderBarcode.barcode);
                 InventoryorderBinActivity.busyBln = false;
                 return;
             }
@@ -521,9 +523,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         articleDetailFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLEDETAILFRAGMENT_TAG);
     }
 
-    private static void mStepFailed(String pvErrorMessageStr ){
-        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cInventoryorder.currentInventoryOrder.getOrderNumberStr(), true, true );
-        cUserInterface.pCheckAndCloseOpenDialogs();
+    private static void mStepFailed(String pvErrorMessageStr , String scannedBarcode){
+        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, scannedBarcode, true, true );
     }
 
     private static void mShowNoLinesIcon(final Boolean pvShowBln){

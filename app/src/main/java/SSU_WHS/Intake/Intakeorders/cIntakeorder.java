@@ -20,6 +20,7 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineEntity;
 import SSU_WHS.Webservice.cWebresult;
@@ -61,9 +62,6 @@ public class cIntakeorder {
     public String workplaceStr;
     public String getWorkplaceStr() {return this.workplaceStr;}
 
-    public String stockOwnerStr;
-    public String getStockOwnerStr() {return this.stockOwnerStr;}
-
     public boolean receiveExportPartBln;
     public boolean getReceiveExportPartBln() {return this.receiveExportPartBln;}
 
@@ -100,40 +98,14 @@ public class cIntakeorder {
     public boolean receiveMATEmptyBinsBln;
     public boolean getReceiveMATEmptyBinsBln() {return this.receiveMATEmptyBinsBln;}
 
-    public int sourceDocument;
-    public int getSourceDocumentInt() {return this.sourceDocument;}
-
-    public String document;
-    public String getDocumentStr() {return this.document;}
-
-    public String document2;
-    public String getDocument2Str() {return this.document2;}
-
-    public String container;
-    public String getContainerStr() {return this.container;}
-
-    public String currentLocation;
-    public String getCurrentLocationStr() {return this.currentLocation;}
-
-    public String originNo;
-    public String getOriginNoStr() {return this.originNo;}
-
     public String receivedDateTime;
     public String getReceivedDateTime() {return this.receivedDateTime;}
-
-    public String webservicetimeouterpins;
-    public String getWebserviceTimeOutERPInsStr() {return this.webservicetimeouterpins;}
-
-    public String interfaceresultmethod;
-    public String getInterfaceResultMethodStr() {return this.interfaceresultmethod;}
-
-     public int sorting;
-    public int getSortingStr() {return this.sorting;}
 
     public Boolean isProcessingOrParkedBln;
     public Boolean getProcessingOrParkedBln() {
         return isProcessingOrParkedBln;
     }
+
 
     public cIntakeorderEntity intakeorderEntity;
     public boolean indatabaseBln;
@@ -158,6 +130,9 @@ public class cIntakeorder {
     public static List<cIntakeorder> allIntakeordersObl;
     public static cIntakeorder currentIntakeOrder;
 
+    public List<cIntakeorderMATSummaryLine> summaryLinesObl(){
+        return  cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl;
+    }
     public List<cIntakeorderMATLine> linesObl(){
         return  cIntakeorderMATLine.allIntakeorderMATLinesObl;
     }
@@ -165,6 +140,8 @@ public class cIntakeorder {
         return  cComment.allCommentsObl;
     }
     public List<cIntakeorderBarcode> barcodesObl () {return  cIntakeorderBarcode.allBarcodesObl;}
+
+    public cIntakeorderBarcode intakeorderBarcodeScanned;
 
     //Region Constructor
 
@@ -182,7 +159,7 @@ public class cIntakeorder {
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
         this.workplaceStr = this.intakeorderEntity.getWorkplaceStr();
-        this.stockOwnerStr = this.intakeorderEntity.getStockOwnerStr();
+
 
         this.receiveExportPartBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveExportPartStr(), false);
         this.receiveAmountManualEOBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualEOStr(), false);
@@ -196,18 +173,9 @@ public class cIntakeorder {
         this.receiveNoExtraPiecesBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraPiecesStr(), false);
         this.receiveMatAutoSplitIncompleteLineBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveMatAutoSplitIncompleteLineStr(), false);
 
-        this.sourceDocument = this.intakeorderEntity.getSourceDocumentInt();
-        this.document = this.intakeorderEntity.getDocumentStr();
-        this.document2 = this.intakeorderEntity.getDocument2Str();
-        this.container = this.intakeorderEntity.getContainerStr();
-        this.currentLocation = this.intakeorderEntity.getCurrentLocationStr();
-        this.originNo = this.intakeorderEntity.getOriginNoStr();
         this.receivedDateTime = this.intakeorderEntity.getReceivedDateTime();
-        this.webservicetimeouterpins = this.intakeorderEntity.getWebserviceTimeOutERPInsStr();
-        this.interfaceresultmethod = this.intakeorderEntity.getInterfaceResultMethodStr();
-        this.sorting = this.intakeorderEntity.getStatusInt();
-
         this.isProcessingOrParkedBln = this.intakeorderEntity.getIsProcessingOrParkedStr();
+
     }
 
     public cIntakeorder(cIntakeorderEntity pvIntakeorderEntity) {
@@ -224,7 +192,6 @@ public class cIntakeorder {
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
         this.workplaceStr = this.intakeorderEntity.getWorkplaceStr();
-        this.stockOwnerStr = this.intakeorderEntity.getStockOwnerStr();
 
         this.receiveExportPartBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveExportPartStr(), false);
         this.receiveAmountManualEOBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualEOStr(), false);
@@ -238,17 +205,7 @@ public class cIntakeorder {
         this.receiveNoExtraPiecesBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraPiecesStr(), false);
         this.receiveMatAutoSplitIncompleteLineBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveMatAutoSplitIncompleteLineStr(), false);
 
-        this.sourceDocument = this.intakeorderEntity.getSourceDocumentInt();
-        this.document = this.intakeorderEntity.getDocumentStr();
-        this.document2 = this.intakeorderEntity.getDocument2Str();
-        this.container = this.intakeorderEntity.getContainerStr();
-        this.currentLocation = this.intakeorderEntity.getCurrentLocationStr();
-        this.originNo = this.intakeorderEntity.getOriginNoStr();
         this.receivedDateTime = this.intakeorderEntity.getReceivedDateTime();
-        this.webservicetimeouterpins = this.intakeorderEntity.getWebserviceTimeOutERPInsStr();
-        this.interfaceresultmethod = this.intakeorderEntity.getInterfaceResultMethodStr();
-        this.sorting = this.intakeorderEntity.getStatusInt();
-
         this.isProcessingOrParkedBln = this.intakeorderEntity.getIsProcessingOrParkedStr();
     }
 
@@ -749,6 +706,7 @@ public class cIntakeorder {
 
         if (pvRefreshBln == true) {
             cIntakeorderMATLine.allIntakeorderMATLinesObl = null;
+            cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl = null;
             cIntakeorderMATLine.pTruncateTableBln();
         }
 
@@ -768,8 +726,26 @@ public class cIntakeorder {
                     this.receiveMATEmptyBinsBln = true;
                 }
 
+                cIntakeorderMATSummaryLine intakeorderMATSummaryLine = cIntakeorderMATSummaryLine.pGetSummaryLine(intakeorderMATLine.getItemNoStr(),
+                                                                                                                  intakeorderMATLine.getVariantCodeStr(),
+                                                                                                                  intakeorderMATLine.getSourceNoStr());
+
+                if (intakeorderMATSummaryLine == null ) {
+                    cIntakeorderMATSummaryLine summaryLineToAdd = new cIntakeorderMATSummaryLine(intakeorderMATLine.getItemNoStr(),
+                                                                                                 intakeorderMATLine.getVariantCodeStr(),
+                                                                                                 intakeorderMATLine.getSourceNoStr());
+
+
+                    cIntakeorderMATSummaryLine.pAddSummaryLine(summaryLineToAdd);
+                    summaryLineToAdd.pAddMATLine(intakeorderMATLine);
+                    continue;
+                }
+
+                intakeorderMATSummaryLine.pAddMATLine(intakeorderMATLine);
             }
+
             return true;
+
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
             return false;
@@ -820,6 +796,8 @@ public class cIntakeorder {
 
     }
 
+
+
     public boolean pCheckItemVariantBln(String pvItemNoStr, String pvVariantCodeStr) {
 
         if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
@@ -855,7 +833,6 @@ public class cIntakeorder {
         return  false;
 
     }
-
 
     private static boolean mTruncateTableBln() {
         cIntakeorder.getIntakeorderViewModel().deleteAll();

@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
+import ICS.Utils.cPower;
 import ICS.Utils.cWifi;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
@@ -68,7 +69,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     private Toolbar Toolbar;
     private ImageView toolbarImage;
     private TextView toolbarTitle;
-    private ImageView toolbarImageHelp;
     private static TextView toolbarSubtext;
 
     private FrameLayout mainFramelayout;
@@ -101,6 +101,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     @Override
     public void onResume() {
+        cPower.pRegisterPowerConnectReceiver();
+        cPower.pRegisterPowerLevelChangedReceiver();
         super.onResume();
         cUserInterface.pEnableScanner();
     }
@@ -170,7 +172,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         this.Toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarImageHelp = findViewById(R.id.toolbarImageHelp);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
         this.imageHome = findViewById(R.id.imageHome);
@@ -185,10 +186,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void mSetToolbar(String pvScreenTitle) {
 
-        this.toolbarImageHelp.setVisibility(View.INVISIBLE);
         this.toolbarTitle.setText(pvScreenTitle);
         this.toolbarImage.setImageResource(R.drawable.ic_welcome);
-
+        this.toolbarTitle.setSelected(true);
+        toolbarSubtext.setSelected(true);
         setSupportActionBar(this.Toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

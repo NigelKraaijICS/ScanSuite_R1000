@@ -73,6 +73,21 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_INTAKELINEMATHANDLED = "p_ReceiveMATLineHandledJsonStr";
     public static String WEBMETHOD_INTAKELINEMATHANDLEDPART = "p_ReceiveRegelHandledPartPlaceMATJsonStr";
     public static String WEBMETHOD_INTAKEHANLED= "p_ReceiveMATOrderHandledJsonStr";
+    public static String WEBMETHOD_MOVEBARCODECREATE = "p_MoveBarcodeCreateJsonStr";
+    public static String WEBMETHOD_MOVEHANDLED = "p_MoveOrderHandledJsonStr";
+    public static String WEBMETHOD_MOVEORDERCREATE = "p_MoveOrderCreateJsonStr";
+    public static String WEBMETHOD_GETMOVEORDERLINES = "p_MoveRegelsGetJsonStr";
+    public static String WEBMETHOD_GETMOVEORDERBARCODES = "p_MoveOrderBarcodesGetJsonStr";
+    public static String WEBMETHOD_GETMOVEORDERLINEBARCODES = "p_MoveRegelBarcodesGetJsonStr";
+    public static String WEBMETHOD_GETMOVEORDERCOMMENTS = "p_MoveOrderCommentsGetJsonStr";
+    public static String WEBMETHOD_GETMOVEORDERS = "p_MoveOrdersGetJsonStr";
+    public static String WEBMETHOD_MOVELINERESET = "p_MoveRegelResetJsonStr";
+    public static String WEBMETHOD_CREATEMOVEORDERBARCODES = "p_MoveBarcodeCreateJsonStr";
+    public static String WEBMETHOD_MOVEORDERUPDATECURRENTLOCATIION = "p_MoveOrderUpdateCurrentOrderLocationJsonStr";
+    public static String WEBMETHOD_GETBRANCHBINS = "p_MagazijnlocatieGetJsonStr";
+    public static String WEBMETHOD_MOVEORDERLINE_HANDLEDTAKEMT = "p_MoveRegelHandledTakeMTJsonStr";
+    public static String WEBMETHOD_MOVEORDERLINE_HANDLEDPLACEMT = "p_MoveRegelHandledPlaceMTJsonStr";
+    public static String WEBMETHOD_MOVEITEM_HANDLED = "p_MoveItemHandledJsonStr";
 
 
 
@@ -146,6 +161,12 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_QUANTITYPERUNITOFMEASURE = "pv_QtyPerUnitOfMeasureDbl";
     public static String WEBPROPERTY_UNITOFMEASURE = "pv_UnitOfMeasureStr";
     public static String WEBPROPERTY_ITEMTYPE = "pv_ItemsoortStr";
+    public static String WEBPROPERTY_CONTAINER = "pv_ContainerStr";
+    public static String WEBPROPERTY_PROPERTIESHANDLEDLIST = "pv_PropertiesHandledObl";
+    public static String WEBPROPERTY_ACTIONTYPECODE_CAMELCASE = "pv_ActionTypeCodeStr";
+    public static String WEBPROPERTY_CURRENTLOCATION_SHORT = "pv_CurrentLocationStr";
+    public static String WEBPROPERTY_MOVEBARCODECHECK = "pv_MoveBarcodeCheckBln";
+    public static String WEBPROPERTY_MIBATCHTRAKEBIN = "pv_MiBatchTakeBinStr";
 
     //endregion Properties
 

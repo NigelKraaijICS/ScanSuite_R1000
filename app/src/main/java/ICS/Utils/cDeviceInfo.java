@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -11,6 +12,7 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.text.format.Formatter;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,6 +61,25 @@ public class cDeviceInfo {
         String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(installDate));
         return dateString;
     }
+    public static String getLastUpdateDate() {
+        long updateDate;
+        PackageManager packageManager = cAppExtension.context.getPackageManager();
+        if (packageManager != null) {
+            try {
+                ApplicationInfo appInfo = packageManager.getApplicationInfo(cAppExtension.context.getPackageName(), 0);
+                String appFile = appInfo.sourceDir;
+                updateDate = new File(appFile).lastModified();
+                String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(updateDate));
+                return dateString;
+            } catch (PackageManager.NameNotFoundException e) {
+                return cAppExtension.context.getString(R.string.application_unknown_update_date);
+            }
+        }
+        else {
+            return cAppExtension.context.getString(R.string.application_unknown_update_date);
+        }
+    }
+
 
     public static String getAndroidBuildVersion ( ) {
         return Build.VERSION.RELEASE;

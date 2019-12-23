@@ -480,4 +480,8 @@
     <string name="message_split_line">Splits regel</string>
     <string name="supervisor_password_header">Supervisor</string>
     <string name="supervisor_password_text">Voor deze actie is een supervisor wachtwoord nodig</string>
+    <string name="application_unknown_update_date">Onbekende update datum</string>
+    <string name="label_application_last_update">Laatste update</string>
+    <string name="text_copied_to_clipboard">Tekst is gekopieerd</string>
+    <string name="text_not_copied_to_clipboard">Tekst is niet gekopieerd</string>
 </resources>

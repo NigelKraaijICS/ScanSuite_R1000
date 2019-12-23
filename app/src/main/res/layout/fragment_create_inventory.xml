@@ -36,6 +36,7 @@
         app:layout_constraintTop_toBottomOf="@id/textViewCreateInventoryText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
         />
     <Button
         android:id="@+id/closeOrderButton"

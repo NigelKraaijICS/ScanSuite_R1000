@@ -537,8 +537,6 @@ public class cPickorderLine {
                 this.pUpdateProcessingSequenceBln("");
             }
 
-
-
             return  true;
         }
         else {

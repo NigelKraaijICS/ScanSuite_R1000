@@ -13,18 +13,19 @@
         android:id="@+id/guidelinehalfway"
         app:layout_constraintGuide_percent="0.5"
         android:orientation="horizontal"/>
+
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelinetext"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/guidelinetext"
-        app:layout_constraintGuide_percent="0.25"
-        android:orientation="horizontal"/>
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
     <TextView
         android:id="@+id/textViewNothingHere"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_orders"
-        app:layout_constraintBottom_toTopOf="@id/guidelinetext"
+        app:layout_constraintTop_toBottomOf="@id/guidelinetext"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="@dimen/textsize_big"

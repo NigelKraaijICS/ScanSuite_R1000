@@ -37,6 +37,6 @@
         android:orderInCategory="100"
         android:title="@string/mainmenu_datetime"
         app:showAsAction="never"
-        android:icon="@drawable/ic_calendar_black_24dp"
+        android:icon="@drawable/ic_calendar_clock_black_24dp"
         />
 </menu>
