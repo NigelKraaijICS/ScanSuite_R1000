@@ -65,7 +65,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private ImageView imageAddArticle;
 
-    static boolean isSupervisor;
     static int positionSwiped;
 
     //End Region Private Properties
@@ -81,21 +80,18 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     @Override
     protected void onDestroy() {
-        isSupervisor = false;
         super.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-       InventoryorderBinActivity.isSupervisor = false;
         cBarcodeScan.pRegisterBarcodeReceiver();
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
-        isSupervisor = false;
         super.onPause();
         cBarcodeScan.pUnregisterBarcodeReceiver();
     }
@@ -104,7 +100,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
         if (pvMenuItem.getItemId() == android.R.id.home) {
-            this.mTryToLeaveActivity();
+            this.mTryToLeaveActivity(true);
             return true;
         }
 
@@ -113,7 +109,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     @Override
     public void onBackPressed() {
-        this.mTryToLeaveActivity();
+        this.mTryToLeaveActivity(true);
     }
 
     //End Region Default Methods
@@ -177,7 +173,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         ViewCompat.setTransitionName(this.imageBin, this.VIEW_CHOSEN_BIN_IMAGE);
         ViewCompat.setTransitionName(this.binText, this.VIEW_CHOSEN_BIN);
         this.binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
-
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cInventoryorderLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewInventoryorderLines);
@@ -251,7 +246,17 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     public  static void pCloseBin(){
 
-        Boolean resultBln = cInventoryorderBin.currentInventoryOrderBin.pCloseBln(false);
+
+        Boolean closeViaWebserviceBln;
+
+        if (cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
+            closeViaWebserviceBln = false;
+        }else {
+            closeViaWebserviceBln = true;
+        }
+
+
+        Boolean resultBln = cInventoryorderBin.currentInventoryOrderBin.pCloseBln(closeViaWebserviceBln);
 
         //Something went wrong
         if (! resultBln) {
@@ -277,18 +282,27 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private static void mHandleScan(cBarcodeScan pvBarcodeScan){
 
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
 
-                //Close current BIN
-                InventoryorderBinActivity.pCloseBin();
-
-                //We are not busy anymore
-                InventoryorderBinActivity.busyBln = false;
-
-                //Pass this new BIN scan on to the BINS activity
-                InventoryorderBinsActivity.pHandleScan(pvBarcodeScan);
+            if (!cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
+                mDoUnknownScan(cAppExtension.context.getString(R.string.message_bin_not_allowed),pvBarcodeScan.getBarcodeOriginalStr());
                 return;
             }
+
+
+            //Close current BIN
+            InventoryorderBinActivity.pCloseBin();
+
+            //We are not busy anymore
+            InventoryorderBinActivity.busyBln = false;
+
+            //Pass this new BIN scan on to the BINS activity
+            InventoryorderBinsActivity.pHandleScan(pvBarcodeScan);
+            return;
+
+
+
+        }
 
         //Only ARTICLE scans are allowed
         if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
@@ -319,14 +333,35 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         InventoryorderBinActivity.busyBln = false;
     }
 
-    private void mTryToLeaveActivity() {
+    private void mTryToLeaveActivity(Boolean pvAskCloseBln) {
 
-        if (cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).size() == 0) {
+        if(cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
+            if (cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).size() == 0) {
+                mShowCloseBinDialog();
+                return;
+            }
+
+            InventoryorderBinActivity.pCloseBin();
+        }
+
+        if (pvAskCloseBln) {
             mShowCloseBinDialog();
             return;
         }
 
-        InventoryorderBinActivity.pCloseBin();
+
+        if (! cInventoryorder.currentInventoryOrder.isGeneratedBln() && cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) == 0) {
+
+            //Clear cache
+            cInventoryorderBin.currentInventoryOrderBin = null;
+
+            //Start BIN activity
+            InventoryorderBinActivity.mStartBinsActivity();
+            return;
+        }
+        else {
+            InventoryorderBinActivity.pCloseBin();
+        }
     }
 
     private static void mFillRecyclerView(List<cInventoryorderLine> pvInventoryorderLinesObl) {
@@ -370,7 +405,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         this.imageBinDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mTryToLeaveActivity();
+                mTryToLeaveActivity(true);
             }
         });
 
@@ -475,6 +510,9 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private static void mHandleKnownBarcodeScan(cInventoryorderBarcode pvInventoryorderBarcode) {
 
+        Boolean updateQuantityBln = true;
+
+
         //Set the current barcode
         cInventoryorderBarcode.currentInventoryOrderBarcode = pvInventoryorderBarcode;
 
@@ -496,18 +534,28 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
                 InventoryorderBinActivity.busyBln = false;
                 return;
             }
+
+            updateQuantityBln = false;
+
         }
 
         //We scanned a barcode that belongs to the current article, so check if we already have a line barcode for this barcode
         cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cBarcodeScan.pFakeScan(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()));
 
-        //This barcode is new for this line so add the barcode to the line
-        if (cInventoryorderLineBarcode.currentInventoryorderLineBarcode == null) {
-            cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
-        }
+        if (cInventoryorderLineBarcode.currentInventoryorderLineBarcode != null) {
+            //Raise the quantity handled
+            if (updateQuantityBln) {
+                cInventoryorderLineBarcode.currentInventoryorderLineBarcode.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+            }
 
-        //Make line barcode the current line barcode
-        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cBarcodeScan.pFakeScan(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()));
+        } else {
+
+            //This is a new barcode, so add it
+            cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+
+            //Make added line the current line
+            cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cBarcodeScan.pFakeScan(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()));
+        }
 
         //Add quantityDbl of the current barcode
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
@@ -571,10 +619,15 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     private void mShowCloseBinDialog() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+        String messageStr =  cAppExtension.activity.getString(R.string.message_bin_text_sure) ;
 
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_bin),
-                cAppExtension.activity.getString(R.string.message_bin_text_sure), cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_close), false);
+        if (!cInventoryorder.currentInventoryOrder.isGeneratedBln() &&
+            cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) == 0) {
+            messageStr = cAppExtension.activity.getString(R.string.message_bin_empty_close);
+        }
 
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment( cAppExtension.activity.getString(R.string.message_close_bin),
+                messageStr, cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_close), false);
         acceptRejectFragment.setCancelable(true);
         runOnUiThread(new Runnable() {
             @Override
@@ -610,7 +663,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         }
 
         //do we need an adult for this?
-        if (!cSetting.INV_RESET_PASSWORD().isEmpty() && !isSupervisor) {
+        if (!cSetting.INV_RESET_PASSWORD().isEmpty()) {
             cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_password_text), false);
             return;
         }
@@ -622,7 +675,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     public static void pPasswordSuccess() {
         cBarcodeScan.pRegisterBarcodeReceiver();
-        isSupervisor = true;
         mRemoveAdapterFromFragment();
     }
 
@@ -646,7 +698,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     }
 
     private void mShowAddArticleFragment(){
-        isSupervisor = false;
         AddArticleFragment addArticleFragment = new AddArticleFragment();
         addArticleFragment.setCancelable(true);
         addArticleFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDARTICLE_TAG);

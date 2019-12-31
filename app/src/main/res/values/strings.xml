@@ -592,8 +592,7 @@
     <string name="quantity_scanned">Quantity scanned:</string>
     <string name="message_split_line">Split line</string>
     <string name="stored">Stored:</string>
-    <string name="error_unknown_location">Unknown location</string>
-    <string name="message_split_line_text">You are about to split this line. You will place %1$s pieces on %2$s. There are %3$s pieces left to place at %4$s. Are you sure?</string>
+    <string name="error_unknown_location">Scan not recogised as a BIN</string>
     <!--endregion Inventory-->
 
     <!--region supervisor-->
@@ -618,6 +617,8 @@
     <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
     <string name="show_only_deviations">Show deviations</string>
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
+    <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
+    <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
     <!--endregion move-->
 
 </resources>

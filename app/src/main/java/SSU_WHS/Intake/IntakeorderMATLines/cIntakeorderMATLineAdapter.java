@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import ICS.Utils.cText;
@@ -141,7 +142,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     //End Region Default Methods
 
     //Region Public Methods
-    public void pFillData(List<cIntakeorderMATLine> pvDataObl) {
+    public void pFillData(List<cIntakeorderMATLine> pvDataObl ) {
         this.localIntakeorderMATLinesObl = pvDataObl;
         IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
         notifyDataSetChanged();

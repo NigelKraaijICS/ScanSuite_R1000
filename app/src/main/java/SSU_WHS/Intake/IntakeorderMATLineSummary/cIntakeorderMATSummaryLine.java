@@ -14,6 +14,8 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
+import java.util.HashMap;
+
 
 public class cIntakeorderMATSummaryLine {
 
@@ -133,27 +135,48 @@ public class cIntakeorderMATSummaryLine {
 
     public static List<cIntakeorderMATSummaryLine> allIntakeorderMATSummaryLinesObl;
     public List<cIntakeorderMATLine> MATLinesObl;
-    public List<cIntakeorderMATLine> MATLinesToShowObl (){
+
+    public List<cIntakeorderMATLine> MATLinestoShowObl() {
 
         List<cIntakeorderMATLine> resultObl = new ArrayList<>();
+        List<String> scannedBINSObl = new ArrayList<>();
 
-        if (this.MATLinesObl == null) {
+        if (this.MATLinesObl == null || this.MATLinesObl.size() == 0) {
             return  resultObl;
         }
 
+
+        if (this.MATLinesObl.size() == 1) {
+            return  this.MATLinesObl;
+        }
+
+        //Loop through all lines, so we can make a list of scanned locations
         for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
 
-            if (intakeorderMATLine.sourceTypeInt == cWarehouseorder.SoureDocumentTypeEnu.GeneratedLine && intakeorderMATLine.getBinCodeHandledStr().isEmpty()) {
+            if (!intakeorderMATLine.getBinCodeHandledStr().isEmpty()) {
+                scannedBINSObl.add((intakeorderMATLine.getBinCodeHandledStr()));
+            }
+        }
+
+        //Loop a second time, so we can build the list
+        for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
+
+
+            //If the quantity is zero and the binlist containt this bin, we only show the scanned line
+            if (intakeorderMATLine.getQuantityHandledDbl() ==0 && scannedBINSObl.contains(intakeorderMATLine.getBinCodeStr())) {
                 continue;
             }
 
-            resultObl.add(intakeorderMATLine);
-        }
+            //Add the line
+            resultObl.add((intakeorderMATLine));
 
+        }
 
         return  resultObl;
 
+
     }
+
     public List<cIntakeorderBarcode> barcodesObl(){
 
         List<cIntakeorderBarcode> resultObl = new ArrayList<>();
@@ -402,18 +425,18 @@ public class cIntakeorderMATSummaryLine {
             return  false;
         }
 
-        //Loop through all lines and look for a match
-        for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
+        if (this.MATLinesObl.size() == 1) {
+            matchedLinesObl.add(this.MATLinesObl.get(0));
+        }
+        else  {
+            //Loop through all lines and look for a match
+            for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
 
-            //We have a match on BIN/the BIN is empty
-            if (intakeorderMATLine.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr) || intakeorderMATLine.getBinCodeStr().isEmpty()) {
-                matchedLinesObl.add(intakeorderMATLine);
+                //We have a match on BIN/the BIN is empty
+                if (intakeorderMATLine.getBinCodeHandledStr().equalsIgnoreCase(pvBinCodeStr) || intakeorderMATLine.getBinCodeHandledStr().isEmpty()) {
+                    matchedLinesObl.add(intakeorderMATLine);
+                }
             }
-
-            if (intakeorderMATLine.getSourceTypeInt() == cWarehouseorder.SoureDocumentTypeEnu.GeneratedLine && intakeorderMATLine.getBinCodeHandledStr().isEmpty()) {
-                matchedLinesObl.add(intakeorderMATLine);
-            }
-
         }
 
         //Handle matched lines
@@ -421,8 +444,26 @@ public class cIntakeorderMATSummaryLine {
 
             //We have no match, so this will result in a new line
             case 0:
-                // code block
-                break;
+
+                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pCreateLineViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl);
+                if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+
+                    if (this.getBinCodeStr().isEmpty()) {
+                        this.binCodeStr = pvBinCodeStr;
+                    }
+
+                    this.quantityHandledDbl += quantityScannedDbl;
+
+                    //Add new line so the quanity gets raised again
+                    cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(WebResult.getResultDtt().get(0));
+                    intakeorderMATLine.pInsertInDatabaseBln();
+                    this.pAddMATLine(intakeorderMATLine);
+                    return  true;
+                }
+                else {
+                    cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKEITEMHANLED);
+                    return  false;
+                }
 
             //We have a match, so we can handle one specific line
             case 1:
@@ -436,7 +477,7 @@ public class cIntakeorderMATSummaryLine {
                 for (cIntakeorderMATLine intakeorderMATLine : matchedLinesObl) {
 
                     matchedLine = intakeorderMATLine;
-                    if (!intakeorderMATLine.getBinCodeStr().isEmpty()) {
+                    if (intakeorderMATLine.getBinCodeHandledStr().isEmpty()) {
                         break;
                     }
                 }

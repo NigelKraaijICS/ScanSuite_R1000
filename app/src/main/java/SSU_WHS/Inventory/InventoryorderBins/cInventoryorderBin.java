@@ -110,11 +110,16 @@ public class cInventoryorderBin {
     public boolean pUpdateStatusInDatabaseBln(){
 
         boolean resultBln;
+
+        cInventoryorderBin.currentInventoryOrderBin = this;
+
         resultBln =   currentInventoryOrderBin.getInventoryorderBinViewModel().pUpdateStatusBln();
 
         if (resultBln == false) {
+            cInventoryorderBin.currentInventoryOrderBin = null;
             return  false;
         }
+        cInventoryorderBin.currentInventoryOrderBin = null;
 
         return true;
 

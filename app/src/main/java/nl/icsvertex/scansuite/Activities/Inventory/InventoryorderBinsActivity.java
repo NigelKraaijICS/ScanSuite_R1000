@@ -40,6 +40,8 @@ import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsTotalFragment;
 import nl.icsvertex.scansuite.PagerAdapters.InventoryorderBinsPagerAdapter;
 import nl.icsvertex.scansuite.R;
 
@@ -100,7 +102,15 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
         if (pvMenuItem.getItemId() == android.R.id.home) {
-            this.mShowAcceptFragment();
+
+
+            if (cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size() == 0) {
+                this.mShowAcceptFragment();
+            }
+            else {
+                InventoryorderBinsActivity.mStartOrderSelectActivity();
+            }
+
             return true;
         }
 
@@ -255,6 +265,13 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     }
 
     public static void pInventoryorderBinSelected() {
+
+        if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment || InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
+            if (!cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
+                return;
+            }
+        }
+
          InventoryorderBinsActivity.mOpenInventoryCountActivity();
     }
 
@@ -285,7 +302,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         hulpResult = new cResult();
         hulpResult.resultBln = false;
 
-        for (cInventoryorderBin inventoryorderBin : cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl()) {
+        for (cInventoryorderBin inventoryorderBin : cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl()) {
 
             if (!inventoryorderBin.pCloseBln(true)) {
                 mShowNotSend(inventoryorderBin.getBinCodeStr() + ' ' +  cAppExtension.activity.getString(R.string.message_bin_close_failed));
@@ -341,6 +358,8 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
             return;
         }
 
+
+
         //Everything went well, so we can open the BIN
         InventoryorderBinsActivity.pInventoryorderBinSelected();
 
@@ -356,6 +375,14 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         //We found a BIN so we are done
         if (cInventoryorderBin.currentInventoryOrderBin  != null) {
+
+
+            if (cInventoryorderBin.currentInventoryOrderBin.getStatusInt() == cWarehouseorder.InventoryBinStatusEnu.InventoryDone &&
+                !cInventoryorder.currentInventoryOrder.isGeneratedBln() ) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_already_closed));
+            }
+
             return result;
         }
 
@@ -435,6 +462,11 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     }
 
     private static void mStartOrderSelectActivity() {
+
+
+        cInventoryorder.currentInventoryOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Inventory, cWarehouseorder.WorkflowInventoryStepEnu.Inventory);
+
+
         Intent intent = new Intent(cAppExtension.context, InventoryorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
     }
@@ -503,7 +535,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         }
     }
 
-    private void mShowAcceptFragment(){
+    private static void mShowAcceptFragment(){
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -512,7 +544,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
                 cAppExtension.activity.getString(R.string.message_finish_later), cAppExtension.activity.getString(R.string.message_close_now), false);
         acceptRejectFragment.setCancelable(true);
 
-        runOnUiThread(new Runnable() {
+        cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // show my popup

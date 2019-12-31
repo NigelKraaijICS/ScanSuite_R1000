@@ -1,9 +1,12 @@
 package SSU_WHS.Inventory.InventoryorderBarcodes;
 
+
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
+import java.util.List;
 
 import SSU_WHS.General.cDatabase;
 
@@ -14,4 +17,11 @@ public interface iInventoryorderBarcodeDao {
 
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDERBARCODE)
     void deleteAll();
-}
+
+    @Insert
+    void insertAll(List<cInventoryorderBarcodeEntity> inventoryorderBarcodeEntities);
+
+
+    }
+
+

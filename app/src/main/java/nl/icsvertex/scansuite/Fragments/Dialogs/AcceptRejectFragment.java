@@ -127,8 +127,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
                     PickorderPickActivity.pAcceptRejectDialogDismissed();
                 }
 
-
-
                 dismiss();
             }
         });

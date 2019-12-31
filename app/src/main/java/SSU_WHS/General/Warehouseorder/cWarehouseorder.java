@@ -127,7 +127,7 @@ public class cWarehouseorder {
 
     public class InventoryBinStatusEnu {
         public static final int New = 10;
-        public static final int InventoryPause = 20;
+        public static final int InventoryDoneOnServer = 20;
         public static final int InventoryDone = 30;
     }
 

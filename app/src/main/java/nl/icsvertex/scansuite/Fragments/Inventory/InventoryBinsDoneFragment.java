@@ -43,7 +43,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     private static RecyclerView recyclerViewInventoryBinsDone;
     private ImageView imageCloseOrder;
 
-    static boolean isSupervisor;
+
     static int positionSwiped;
     //End Region Private Properties
 
@@ -66,20 +66,17 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isSupervisor = false;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        isSupervisor = false;
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        isSupervisor = false;
         cUserInterface.pEnableScanner();
 
     }
@@ -112,7 +109,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         }
 
         //do we need an adult for this?
-        if (!cSetting.INV_RESET_PASSWORD().isEmpty()  && !isSupervisor) {
+        if (!cSetting.INV_RESET_PASSWORD().isEmpty()) {
             cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_password_text), false);
             return;
         }
@@ -124,7 +121,6 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
 
     public static void pPasswordSuccess() {
         cBarcodeScan.pRegisterBarcodeReceiver();
-        isSupervisor = true;
         mRemoveAdapterFromFragment();
     }
 

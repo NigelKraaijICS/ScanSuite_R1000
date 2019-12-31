@@ -105,6 +105,11 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
 
     // Region iICSDefaultFragment defaults
 
+    public static void pHandlePasswordFragmentDismissed(){
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+    }
+
+
     @Override
     public void mFindViews() {
 

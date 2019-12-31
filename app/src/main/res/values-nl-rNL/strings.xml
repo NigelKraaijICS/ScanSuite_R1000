@@ -337,7 +337,6 @@
     <string name="error_unknown_branch">Onbekende vestiging</string>
     <string name="error_updating_processing_sequence">VKO/Tijdelijke locatie bijwerken mislukt</string>
     <string name="feedback">Feedback</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="invalid_user_not_assigned">invalid_user_not_assigned</string>
     <string name="lines_to_be_send">Er zijn nog regels die verzonden moeten worden</string>
     <string name="message_another_user_already_started">Een andere gebruiker heeft de order in behandeling genomen:</string>
@@ -484,4 +483,23 @@
     <string name="label_application_last_update">Laatste update</string>
     <string name="text_copied_to_clipboard">Tekst is gekopieerd</string>
     <string name="text_not_copied_to_clipboard">Tekst is niet gekopieerd</string>
+    <string name="button_create_move">Creeer</string>
+    <string name="couldnt_send_line_no_connection">Kan regels niet verzenden omdat er geen internet connectie is</string>
+    <string name="createmove_header_default">Creeer verplaatsopdracht</string>
+    <string name="createmove_text_default">Nieuwe verplaatsopdracht creeeren?</string>
+    <string name="error_get_movelines_failed">Verplaatsregels ophalen mislukt.</string>
+    <string name="error_get_moveorders_failed">Verplaats opdrachten ophalen mislukt.</string>
+    <string name="message_bin_empty_close">Wil je de BIN sluiten ondanks dat er niks gescanned is?</string>
+    <string name="message_close_bin_with_progress">U heeft al progressie gemaakt. Wilt u de BIN echt sluiten?</string>
+    <string name="message_close_storeorder_text">U heeft %1$s items opgeslagen.</string>
+    <string name="message_moveorderbusy_header">Orderregel nog bezig.</string>
+    <string name="message_unknown_bin">Onbekende locatie</string>
+    <string name="screentitle_moveorderlines">Verplaats regels</string>
+    <string name="screentitle_moveorderselect">Verplaats opdrachten</string>
+    <string name="screentitle_moveordertake">Nemen</string>
+    <string name="show_only_deviations">Afwijkingen tonen</string>
+    <string name="stored">Opgeslagen:</string>
+    <string name="tab_moveorderline_done">Klaar</string>
+    <string name="tab_moveorderline_notdone">Niet klaar</string>
+    <string name="tab_moveorderline_total">Totaal</string>
 </resources>

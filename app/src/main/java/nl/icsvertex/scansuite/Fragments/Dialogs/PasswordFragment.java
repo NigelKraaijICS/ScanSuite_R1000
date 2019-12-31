@@ -214,13 +214,13 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             return;
         }
         if (cAppExtension.activity instanceof LoginActivity) {
-                LoginActivity.pLoginSuccess();
-                dismiss();
-                return;    
+            LoginActivity.pLoginSuccess();
+            dismiss();
+            return;
         }
         if (cAppExtension.activity instanceof MainDefaultActivity) {
-            MainDefaultActivity.pPasswordSuccess();
             dismiss();
+            MainDefaultActivity.pPasswordSuccess();
         }
         if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
             InventoryBinsDoneFragment.pPasswordSuccess();

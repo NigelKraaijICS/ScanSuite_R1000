@@ -89,14 +89,15 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
             return;
         }
 
-        cInventoryorderBin.currentInventoryOrderBin = localInventoryorderBinObl.get(pvPositionInt);
+       final  cInventoryorderBin inventoryorderBin = localInventoryorderBinObl.get(pvPositionInt);
 
-        pvHolder.textViewBin.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
-        pvHolder.textViewBin.setTag(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
-        String imageBinUniqueTag =  cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr() + "_IMG";
+
+        pvHolder.textViewBin.setText(inventoryorderBin.getBinCodeStr());
+        pvHolder.textViewBin.setTag(inventoryorderBin.getBinCodeStr());
+        String imageBinUniqueTag =  inventoryorderBin.getBinCodeStr() + "_IMG";
         pvHolder.imageBin.setTag(imageBinUniqueTag);
-        pvHolder.textViewCounted.setText(cAppExtension.activity.getString(R.string.lines) + ' ' + cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).size());
-        pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr())));
+        pvHolder.textViewCounted.setText(cAppExtension.activity.getString(R.string.lines) + ' ' + cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(inventoryorderBin.getBinCodeStr()).size());
+        pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(inventoryorderBin.getBinCodeStr())));
 
 
         if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsToDoFragment) {
@@ -115,8 +116,8 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
             @Override
             public void onClick(View v) {
                 if (cAppExtension.context instanceof InventoryorderBinsActivity) {
-                        cInventoryorderBin.currentInventoryOrderBin = localInventoryorderBinObl.get(pvPositionInt);
-                        InventoryorderBinsActivity.pInventoryorderBinSelected();
+                    cInventoryorderBin.currentInventoryOrderBin = inventoryorderBin;
+                   InventoryorderBinsActivity.pInventoryorderBinSelected();
                 }
             }
         });

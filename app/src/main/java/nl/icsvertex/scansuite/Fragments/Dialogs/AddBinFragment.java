@@ -128,8 +128,9 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cAppExtension.dialogFragment.dismiss();
                 InventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
+                cAppExtension.dialogFragment.dismiss();
+                return;
             }
         });
     }
@@ -137,18 +138,21 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
         this.addBinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
 
-                    if (AddBinFragment.editTextAddBin.getText().toString().trim().isEmpty()) {
-                        cUserInterface.pDoNope(AddBinFragment.editTextAddBin, true, true);
-                        return;
-                    }
-
-                    cAppExtension.dialogFragment.dismiss();
-
-                    InventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(AddBinFragment.editTextAddBin.getText().toString()));
-
+                if (AddBinFragment.editTextAddBin.getText().toString().trim().isEmpty()) {
+                    cUserInterface.pDoNope(AddBinFragment.editTextAddBin, true, true);
+                    return;
                 }
+
+                if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+                    InventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(AddBinFragment.editTextAddBin.getText().toString()));
+                    InventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
+                    cAppExtension.dialogFragment.dismiss();
+                    return;
+                }
+
+
+
             }
         });
     }

@@ -239,8 +239,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     public static void pInventoryorderSelected(cInventoryorder pvInventoryorder) {
 
-        cResult hulpResult;
-
         if (mCheckOrderIsLockableBln(pvInventoryorder) == false) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
             cUserInterface.pCheckAndCloseOpenDialogs();
@@ -253,27 +251,12 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         //Set the current inventoryorder
         cInventoryorder.currentInventoryOrder = pvInventoryorder;
 
-        //Try to lock the inventoryorder
-        if (InventoryorderSelectActivity.mTryToLockOrderBln() == false) {
-            InventoryorderSelectActivity.pFillOrders();
-            return;
-        }
 
-        //Delete the detail, so we can get them from the webservice
-       if (cInventoryorder.currentInventoryOrder.pDeleteDetailsBln() == false) {
-           mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-           return;
-       }
-
-        hulpResult = InventoryorderSelectActivity.mGetOrderDetailsRst();
-        if (hulpResult.resultBln == false ) {
-            InventoryorderSelectActivity.mStepFailed(hulpResult.messagesStr());
-            return;
-        }
-
-        //If everything went well, then start Bins Activity
-        InventoryorderSelectActivity.mShowInventoryorderBinsActivity();
-        return;
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleInventoryOrderSelected();
+            }
+        }).start();
 
     }
 
@@ -294,6 +277,39 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     //End Region Public Methods
 
     // Region Private Methods
+
+    private static void mHandleInventoryOrderSelected(){
+
+        cResult hulpResult;
+
+        //Try to lock the pickorder
+        if (InventoryorderSelectActivity.mTryToLockOrderBln() == false) {
+            InventoryorderSelectActivity.pFillOrders();
+            return;
+        }
+
+        //Delete the detail, so we can get them from the webservice
+        if (cInventoryorder.currentInventoryOrder.pDeleteDetailsBln() == false) {
+            InventoryorderSelectActivity.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            return;
+        }
+
+        hulpResult = InventoryorderSelectActivity.mGetOrderDetailsRst();
+        if (hulpResult.resultBln == false ) {
+            InventoryorderSelectActivity.mStepFailed(hulpResult.messagesStr());
+            return;
+        }
+
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // If everything went well, then start Lines Activity
+                InventoryorderSelectActivity.mShowInventoryorderBinsActivity();
+            }
+        });
+
+    }
 
     private static void mHandleCreateOrder(String pvDocumentstr){
 
@@ -442,12 +458,14 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;
         }
+
         //Get all barcodes
         if (!cInventoryorder.currentInventoryOrder.pGetBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
             return result;
         }
+
         //Get all inventorylinebarcodes
         if (!cInventoryorder.currentInventoryOrder.pGetLineBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -780,8 +798,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private static void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cInventoryorder.currentInventoryOrder.getOrderNumberStr(), true, true );
-        cInventoryorder.currentInventoryOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Inventory, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
-        cUserInterface.pCheckAndCloseOpenDialogs();
+        cInventoryorder.currentInventoryOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Inventory, cWarehouseorder.WorkflowInventoryStepEnu.InventoryBusy);
         cInventoryorder.currentInventoryOrder = null;
         return ;
     }

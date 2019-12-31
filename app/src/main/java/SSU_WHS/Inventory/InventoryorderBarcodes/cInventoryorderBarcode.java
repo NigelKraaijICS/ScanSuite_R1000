@@ -180,4 +180,9 @@ public class cInventoryorderBarcode {
         return  true;
     }
 
+    public static boolean pInsertAllInDatabaseBln(List<cInventoryorderBarcodeEntity> inventoryorderBarcodeEntities ) {
+        cInventoryorderBarcode.getInventoryorderBarcodeViewModel().insertAll (inventoryorderBarcodeEntities);
+        return  true;
+    }
+
 }

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
+
+import com.datalogic.decode.BarcodeManager;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -315,7 +317,7 @@ public class cUserInterface {
 
     public static void pEnableScanner(){
 
-        switch(cDeviceInfo.getDeviceManufacturer().toUpperCase()) {
+        switch(cDeviceInfo.getDeviceBrand().toUpperCase()) {
 
             case "DATALOGIC":
 
@@ -352,11 +354,14 @@ public class cUserInterface {
 
     public static void pDisableScanner(){
 
-        switch(cDeviceInfo.getDeviceManufacturer().toUpperCase()) {
+        switch(cDeviceInfo.getDeviceBrand().toUpperCase()) {
             case "DATALOGIC":
 
                 KeyboardManager keyManager = new KeyboardManager();
+                BarcodeManager barcodeManager = new BarcodeManager();
+
                 for (Trigger trigger : keyManager.getAvailableTriggers()) {
+                    barcodeManager.releaseTrigger();
                     boolean result =  trigger.setEnabled(false);
 
                     if(result){

@@ -219,9 +219,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         TextWatcher tw = new cNumberTextWatcher(InventoryArticleDetailFragment.quantityText, 2,999999d);
         InventoryArticleDetailFragment.quantityText.addTextChangedListener((tw));
-
         InventoryArticleDetailFragment.quantityText.setText(cText.pDoubleToStringStr(cInventoryorderLine.currentInventoryOrderLine.getQuantityHandledDbl()));
-
 
         InventoryArticleDetailFragment.mShowArticleImage();
         InventoryArticleDetailFragment.mShowOrHideGenericExtraFields();
@@ -280,7 +278,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         InventoryArticleDetailFragment.mTryToChangeInventoryQuantity(true, false,cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl() );
 
     }
-
 
     //End Region Public Methods
 

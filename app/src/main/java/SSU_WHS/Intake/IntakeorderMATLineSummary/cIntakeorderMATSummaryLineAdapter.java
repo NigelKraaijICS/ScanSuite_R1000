@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -32,10 +34,8 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         private TextView textViewSourceNo;
         private FrameLayout intakeOrderMATItemLinearLayout;
         private ImageView imageSendStatus;
+        private  TextView textViewBins;
 
-
-        public RelativeLayout viewBackground;
-        public ConstraintLayout viewForeground;
 
         public IntakeorderMATLineViewHolder(View pvItemView) {
             super(pvItemView);
@@ -61,8 +61,6 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
             this.textViewSourceNo.setSelected(true);
 
             this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
-            this.viewBackground = pvItemView.findViewById(R.id.view_background);
-            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
             this.imageSendStatus = pvItemView.findViewById(R.id.imageSendStatus);
 
         }
@@ -75,11 +73,12 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
     //End Region Private Propertiess
 
     private List<FrameLayout> intakeorderLineItemFrameLayout = new ArrayList<>();
-    private RecyclerView RecyclerView;
+
 
     //Region Constructor
     public cIntakeorderMATSummaryLineAdapter() {
         this.LayoutInflaterObject = LayoutInflater.from(cAppExtension.context);
+
     }
     // End Region Constructor
 
@@ -91,11 +90,11 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         return new cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder(itemView);
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
-        this.RecyclerView = pvRecyclerView;
-        super.onAttachedToRecyclerView( this.RecyclerView);
-    }
+//    @Override
+//    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+//        this.recyclerlineBins = pvRecyclerView;
+//        super.onAttachedToRecyclerView( this.recyclerlineBins);
+//    }
 
     @Override
     public void onBindViewHolder(final cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder pvHolder, final int pvPositionInt) {
@@ -137,19 +136,25 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
                 //Kick off correct event at correct activity
                 if (cAppExtension.context instanceof IntakeorderLinesActivity) {
-                    if (RecyclerView.getId() == R.id.recyclerViewLines) {
                         IntakeorderLinesActivity.pIntakelineSelected(currentIntakeorderMATSummaryLine);
-                    }
                 }
             }
         });
 
 
+        pvHolder.intakeOrderMATItemLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                pvHolder.textViewBins.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
+
         //End On Click Listener
 
 
         //Select the first one, or selected index
-        if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderLinesActivity &&  RecyclerView.getId() == R.id.recyclerViewLines) {
+        if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderLinesActivity ) {
             pvHolder.intakeOrderMATItemLinearLayout.performClick();
             return;
         }

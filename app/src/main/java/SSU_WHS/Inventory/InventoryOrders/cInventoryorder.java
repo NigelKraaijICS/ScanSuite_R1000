@@ -12,6 +12,7 @@ import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
@@ -23,6 +24,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
+import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcodeEntity;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinEntity;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
@@ -530,7 +532,6 @@ public class cInventoryorder {
         }
     }
 
-
     public boolean pDeleteDetailsBln() {
         cInventoryorderLine.pTruncateTableBln();
         cInventoryorderBin.pTruncateTableBln();
@@ -570,7 +571,10 @@ public class cInventoryorder {
                         continue;
                     }
 
-                    cInventoryorderBin.currentInventoryOrderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
+                    if (cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
+                        cInventoryorderBin.currentInventoryOrderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
+                    }
+
                     cInventoryorderBin.currentInventoryOrderBin.pUpdateStatusInDatabaseBln();
                     cInventoryorderBin.currentInventoryOrderBin = null;
                 }
@@ -610,6 +614,11 @@ public class cInventoryorder {
 
                 cInventoryorderBin inventoryorderBin = new cInventoryorderBin(jsonObject);
                 inventoryorderBin.pInsertInDatabaseBln();
+
+                if (inventoryorderBin.getStatusInt() ==  cWarehouseorder.InventoryBinStatusEnu.InventoryDoneOnServer && !cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
+                    inventoryorderBin.pCloseBln(false);
+                }
+
             }
 
             return  true;
@@ -666,14 +675,22 @@ public class cInventoryorder {
             }
 
             List<JSONObject> myList = WebResult.getResultDtt();
+            List<cInventoryorderBarcodeEntity> inventoryorderEntities = new ArrayList<>();
+
             for (int i = 0; i < myList.size(); i++) {
                 JSONObject jsonObject;
                 jsonObject = myList.get(i);
 
                 cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(jsonObject);
+                inventoryorderEntities.add(inventoryorderBarcode.inventoryorderBarcodeEntity);
 
-                inventoryorderBarcode.pInsertInDatabaseBln();
+
+
+
+//                inventoryorderBarcode.pInsertInDatabaseBln();
             }
+
+            cInventoryorderBarcode.pInsertAllInDatabaseBln(inventoryorderEntities);
 
             return  true;
         }
@@ -858,6 +875,7 @@ public class cInventoryorder {
 
         return resultObl;
     }
+
 
     public Double  pGetTotalCountDbl() {
 

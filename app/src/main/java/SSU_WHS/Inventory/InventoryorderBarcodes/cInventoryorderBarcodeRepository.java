@@ -37,6 +37,10 @@ public class cInventoryorderBarcodeRepository {
         new mInsertAsyncTask(inventoryorderBarcodeDao).execute(inventoryorderBarcodeEntity);
     }
 
+    public void insertAll(List<cInventoryorderBarcodeEntity>  inventoryorderBarcodeEntities) {
+        new mInsertAllAsyncTask(inventoryorderBarcodeDao).execute(inventoryorderBarcodeEntities);
+    }
+
     public void deleteAll() {
         new mDeleteAllAsyncTask(inventoryorderBarcodeDao).execute();
     }
@@ -51,6 +55,20 @@ public class cInventoryorderBarcodeRepository {
         @Override
         protected Void doInBackground(final cInventoryorderBarcodeEntity... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class mInsertAllAsyncTask extends AsyncTask<List<cInventoryorderBarcodeEntity>, Void, Void> {
+        private iInventoryorderBarcodeDao mAsyncTaskDao;
+
+        mInsertAllAsyncTask(iInventoryorderBarcodeDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final List<cInventoryorderBarcodeEntity>... params) {
+            mAsyncTaskDao.insertAll(params[0]);
             return null;
         }
     }

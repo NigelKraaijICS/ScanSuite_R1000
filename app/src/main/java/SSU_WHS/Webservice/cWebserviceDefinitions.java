@@ -73,6 +73,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_INTAKELINEMATHANDLED = "p_ReceiveMATLineHandledJsonStr";
     public static String WEBMETHOD_INTAKELINEMATHANDLEDPART = "p_ReceiveRegelHandledPartPlaceMATJsonStr";
     public static String WEBMETHOD_INTAKEHANLED= "p_ReceiveMATOrderHandledJsonStr";
+    public static String WEBMETHOD_INTAKEITEMHANLED= "p_ReceiveMATItemHandledJsonStr";
     public static String WEBMETHOD_MOVEBARCODECREATE = "p_MoveBarcodeCreateJsonStr";
     public static String WEBMETHOD_MOVEHANDLED = "p_MoveOrderHandledJsonStr";
     public static String WEBMETHOD_MOVEORDERCREATE = "p_MoveOrderCreateJsonStr";

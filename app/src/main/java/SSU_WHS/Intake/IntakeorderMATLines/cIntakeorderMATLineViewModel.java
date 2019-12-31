@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cIntakeorderMATLineViewModel extends AndroidViewModel {
@@ -33,4 +34,5 @@ public class cIntakeorderMATLineViewModel extends AndroidViewModel {
     public cWebresult pResetViaWebserviceWrs() {return this.Repository.pResetViaWebserviceWrs();}
     public cWebresult pLineHandledViaWebserviceWrs() {return this.Repository.pLineHandledViaWebserviceWrs();}
     public cWebresult pLineSplitViaWebserviceWrs() {return this.Repository.pLineSplitViaWebserviceWrs();}
+    public cWebresult pCreateLineViaWebserviceWrs(String pvBarcodeStr, List<cIntakeorderBarcode> pvBarcodeObl) {return this.Repository.pCreateLineViaWebserviceWrs(pvBarcodeStr,pvBarcodeObl);}
 }
