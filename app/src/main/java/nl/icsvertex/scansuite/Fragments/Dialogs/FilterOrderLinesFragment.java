@@ -48,12 +48,14 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Preference applyButton = findPreference(getString(R.string.filter_orderlines_apply_key));
-        applyButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                return true;
-            }
-        });
+        if (applyButton != null) {
+            applyButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    return true;
+                }
+            });
+        }
         cUserInterface.pEnableScanner();
     }
     @Override
@@ -64,9 +66,7 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
                     @Override
                     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                                           String key) {
-                        if (key.equalsIgnoreCase(getString(R.string.filter_orderlines_enable_key))) {
 
-                        }
                     }
                 };
         PreferenceManager.getDefaultSharedPreferences(cAppExtension.activity.getApplicationContext()).registerOnSharedPreferenceChangeListener(spChanged);

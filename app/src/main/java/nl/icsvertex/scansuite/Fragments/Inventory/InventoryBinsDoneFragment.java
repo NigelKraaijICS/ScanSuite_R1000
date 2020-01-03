@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -41,10 +42,8 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     //Region Private Properties
 
     private static RecyclerView recyclerViewInventoryBinsDone;
-    private ImageView imageCloseOrder;
-
-
-    static int positionSwiped;
+    private static ImageView imageCloseOrder;
+    private static int positionSwiped;
     //End Region Private Properties
 
     //Region Default Methods
@@ -52,9 +51,9 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     @Override
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer,
                              Bundle pvSavedInstanceState) {
+
         // Inflate the layout for this fragment
-        View rootview = pvInflater.inflate(R.layout.fragment_inventoryorder_bins_done, pvContainer, false);
-        return rootview;
+        return pvInflater.inflate(R.layout.fragment_inventoryorder_bins_done, pvContainer, false);
 
 
     }
@@ -78,20 +77,8 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     public void onResume() {
         super.onResume();
         cUserInterface.pEnableScanner();
+        InventoryorderBinsActivity.currentBinFragment = this;
 
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
-
-        if (pvIsVisibleToUserBln) {
-
-            InventoryorderBinsActivity.currentBinFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
     }
 
     @Override
@@ -115,7 +102,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         }
 
         //Remove the enviroment
-        this.mRemoveAdapterFromFragment();
+        InventoryBinsDoneFragment.mRemoveAdapterFromFragment();
 
     }
 
@@ -137,26 +124,26 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.mGetData();
+        InventoryBinsDoneFragment.mGetData();
     }
 
     @Override
     public void mFindViews() {
-        InventoryBinsDoneFragment.recyclerViewInventoryBinsDone = getView().findViewById(R.id.recyclerViewInventoryBinsDone);
-        this.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
+        InventoryBinsDoneFragment.recyclerViewInventoryBinsDone = Objects.requireNonNull(getView()).findViewById(R.id.recyclerViewInventoryBinsDone);
+        InventoryBinsDoneFragment.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
     }
 
     @Override
     public void mFieldsInitialize() {
 
-        this.imageCloseOrder.setVisibility(View.INVISIBLE);
+        InventoryBinsDoneFragment.imageCloseOrder.setVisibility(View.INVISIBLE);
 
         if (cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().size() >0 && cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size() == 0 ) {
-            this.imageCloseOrder.setVisibility(View.VISIBLE);
+            InventoryBinsDoneFragment.imageCloseOrder.setVisibility(View.VISIBLE);
         }
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cInventoryorderBinRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewInventoryBinsDone);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(InventoryBinsDoneFragment.recyclerViewInventoryBinsDone);
 
 
     }
@@ -200,7 +187,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
 
     private static void mNoLinesAvailable(Boolean pvEnabledBln) {
 
-        if (InventoryorderBinsActivity.currentBinFragment != null && InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
+        if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
 
             if (!pvEnabledBln) {
 
@@ -228,7 +215,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     }
 
     private void mSetDoneListener() {
-        this.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
+        InventoryBinsDoneFragment.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 InventoryorderBinsActivity.pHandleOrderCloseClick();

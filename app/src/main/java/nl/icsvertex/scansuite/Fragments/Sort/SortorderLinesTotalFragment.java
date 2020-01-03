@@ -31,7 +31,7 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
 
     //Region Private Properties
 
-    private RecyclerView recyclerViewSortorderLinesTotal;
+    private static RecyclerView recyclerViewSortorderLinesTotal;
 
     //End Region Private Properties
 
@@ -62,16 +62,20 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
     }
 
     @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-        if (pvIsVisibleToUserBln) {
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
-            SortorderLinesActivity.currentLineFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+        SortorderLinesActivity.currentLineFragment = this;
     }
 
     //End Region Default Methods
@@ -91,7 +95,10 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
 
     @Override
     public void mFindViews() {
-        this.recyclerViewSortorderLinesTotal = getView().findViewById(R.id.recyclerViewSortorderLinesTotal);
+
+        if (getView() != null) {
+            SortorderLinesTotalFragment.recyclerViewSortorderLinesTotal = getView().findViewById(R.id.recyclerViewSortorderLinesTotal);
+        }
     }
 
     @Override
@@ -120,9 +127,9 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
 
 
         cPickorderLine.getPickorderLineTotalAdapter().pFillData(pvDataObl);
-        this.recyclerViewSortorderLinesTotal.setHasFixedSize(false);
-        this.recyclerViewSortorderLinesTotal.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
-        this.recyclerViewSortorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        SortorderLinesTotalFragment.recyclerViewSortorderLinesTotal.setHasFixedSize(false);
+        SortorderLinesTotalFragment.recyclerViewSortorderLinesTotal.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
+        SortorderLinesTotalFragment.recyclerViewSortorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
 

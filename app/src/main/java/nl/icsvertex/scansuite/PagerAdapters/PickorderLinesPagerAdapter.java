@@ -1,14 +1,15 @@
 package nl.icsvertex.scansuite.PagerAdapters;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesTotalFragment;
 
-public class PickorderLinesPagerAdapter extends FragmentStatePagerAdapter {
+public class PickorderLinesPagerAdapter extends FragmentPagerAdapter {
 
     //Region Private Properties
     private int numberOfTabsInt;
@@ -16,27 +17,25 @@ public class PickorderLinesPagerAdapter extends FragmentStatePagerAdapter {
 
     //Region Constructor
     public PickorderLinesPagerAdapter(int pvNumberOfTabsInt) {
-        super(cAppExtension.fragmentManager);
+        super(cAppExtension.fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.numberOfTabsInt = pvNumberOfTabsInt;
     }
     //End Region Constructor
 
     //Region Default Methods
 
+    @NonNull
     @Override
     public Fragment getItem(int pvPositionInt) {
         switch(pvPositionInt) {
             case 0:
-                PickorderLinesToPickFragment tab1 = new PickorderLinesToPickFragment();
-                return tab1;
+                return new PickorderLinesToPickFragment();
             case 1:
-                PickorderLinesPickedFragment tab2 = new PickorderLinesPickedFragment();
-                return tab2;
+                return new PickorderLinesPickedFragment();
             case 2:
-                PickorderLinesTotalFragment tab3 = new PickorderLinesTotalFragment();
-                return tab3;
+                return new PickorderLinesTotalFragment();
             default:
-                return null;
+                return cAppExtension.dialogFragment;
         }
     }
 

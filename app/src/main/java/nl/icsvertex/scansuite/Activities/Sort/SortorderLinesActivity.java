@@ -62,16 +62,15 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     //Region Private Properties
     //Region Views
 
-    private TextView textViewChosenOrder;
-    static private TextView quantitySortordersText;
-    private ConstraintLayout container;
-    private TabLayout sortorderLinesTabLayout;
+    private static TextView textViewChosenOrder;
+    private static TextView quantitySortordersText;
+    private static TabLayout sortorderLinesTabLayout;
     private static ViewPager sortorderLinesViewPager;
-    private SortorderLinesPagerAdapter sortorderLinesPagerAdapter;
+    private static SortorderLinesPagerAdapter sortorderLinesPagerAdapter;
     private static ImageView imageButtonComments;
 
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
 
 
     //End Region Views
@@ -141,23 +140,23 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     public void mFindViews() {
-        this.container = findViewById(R.id.container);
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
 
-        this.quantitySortordersText = findViewById(R.id.quantitySortordersText);
-        this.sortorderLinesTabLayout = findViewById(R.id.sortorderLinesTabLayout);
-        this.sortorderLinesViewPager = findViewById(R.id.sortorderLinesViewpager);
-        this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
-        this.imageButtonComments = findViewById(R.id.imageButtonComments);
+        SortorderLinesActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        SortorderLinesActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+
+        SortorderLinesActivity.quantitySortordersText = findViewById(R.id.quantitySortordersText);
+        SortorderLinesActivity.sortorderLinesTabLayout = findViewById(R.id.sortorderLinesTabLayout);
+        SortorderLinesActivity.sortorderLinesViewPager = findViewById(R.id.sortorderLinesViewpager);
+        SortorderLinesActivity.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
+        SortorderLinesActivity.imageButtonComments = findViewById(R.id.imageButtonComments);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
 
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
-        this.toolbarTitle.setText(pvScreenTitleStr);
-        toolbarTitle.setSelected(true);
+        SortorderLinesActivity.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
+        SortorderLinesActivity.toolbarTitle.setText(pvScreenTitleStr);
+        SortorderLinesActivity.toolbarTitle.setSelected(true);
 
         ViewCompat.setTransitionName(textViewChosenOrder, VIEW_CHOSEN_ORDER);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -171,15 +170,15 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFieldsInitialize() {
 
-        this.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
-        this.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_sortorderline_tosort));
-        this.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_sortorderline_sorted));
-        this.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
+        SortorderLinesActivity.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
+        SortorderLinesActivity.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_sortorderline_tosort));
+        SortorderLinesActivity.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_sortorderline_sorted));
+        SortorderLinesActivity.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
 
-        this.sortorderLinesPagerAdapter = new SortorderLinesPagerAdapter(this.sortorderLinesTabLayout.getTabCount());
-        this.sortorderLinesViewPager.setAdapter(this.sortorderLinesPagerAdapter);
-        this.sortorderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.sortorderLinesTabLayout));
-        this. sortorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        SortorderLinesActivity.sortorderLinesPagerAdapter = new SortorderLinesPagerAdapter(SortorderLinesActivity.sortorderLinesTabLayout.getTabCount());
+        SortorderLinesActivity.sortorderLinesViewPager.setAdapter(SortorderLinesActivity.sortorderLinesPagerAdapter);
+        SortorderLinesActivity.sortorderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(SortorderLinesActivity.sortorderLinesTabLayout));
+        SortorderLinesActivity. sortorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
                 sortorderLinesViewPager.setCurrentItem(pvTab.getPosition());
@@ -208,7 +207,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     public void mInitScreen() {
 
         //Show comments first
-        this.mShowComments();
+        SortorderLinesActivity.mShowComments();
 
         //Call this here, because this is called everytime the activiy gets shown
         this.mCheckAllDone();
@@ -261,7 +260,6 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         //If we have to ship, then start ship/ask if ship has to be started/go back or order select
         if (cPickorder.currentPickOrder.isBCBln() || cPickorder.currentPickOrder.isBPBln()) {
             mPackAndShipNextStap();
-            return;
         }
     }
 
@@ -317,7 +315,6 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //we have a line to handle, so start Pick activity
         SortorderLinesActivity.mStartSortActivity();
-        return;
     }
 
     public static void pHandleLineReset() {
@@ -439,7 +436,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                return;
+
             }
         });
 
@@ -460,7 +457,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
                     alertDialog2.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            return;
+
                         }
                     });
 
@@ -482,7 +479,6 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
                             //We managed to send everuthing, so we are done
                             cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
                             pStartOrderSelectActivity();
-                            return;
                         }
                     });
 
@@ -492,7 +488,6 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
                 else {
                     cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
                     pStartOrderSelectActivity();
-                    return;
                 }
 
             }
@@ -520,14 +515,14 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
        }
 
         //Delete the detail, so we can get them from the webservice
-        if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
+        if (!cPickorder.currentPickOrder.pDeleteDetailsBln()) {
             mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
             return;
         }
 
         //Get all new details
         hulpResult = SortorderLinesActivity.mGetShipOrderDetailsRst();
-        if (hulpResult.resultBln == false ) {
+        if (!hulpResult.resultBln) {
             SortorderLinesActivity.mStepFailed(hulpResult.messagesStr());
             return;
         }
@@ -558,7 +553,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     private Boolean mCheckAndSentLinesToBeSendBln() {
 
         List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabasObl();
-        Boolean hulpBln = false;
+        boolean hulpBln = false;
 
         // If there is nothing to send, then we are done
         if (linesToSendObl.size() == 0 ) {
@@ -650,7 +645,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     private void mCheckAllDone() {
 
         // If not everything is done, then leave
-        if (this.mAllLinesDoneBln() == false) {
+        if (!this.mAllLinesDoneBln()) {
             return;
         }
 
@@ -665,11 +660,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private Boolean mAllLinesDoneBln() {
-
-        if (cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0) {
-            return true;
-        }
-        return  false;
+        return cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0;
     }
 
     private static void mAskShip() {
@@ -694,7 +685,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
+        SortorderLinesActivity.imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowCommentsFragment(cPickorder.currentPickOrder.pSortCommentObl(),"");
@@ -716,13 +707,13 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
 
             //If we got any comments, show them
             if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
@@ -753,19 +744,19 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         hulpResult = cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
 
         //Everything was fine, so we are done
-        if (hulpResult.resultBln == true) {
+        if (hulpResult.resultBln) {
             return true;
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             mStepFailed(hulpResult.messagesStr());
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
-                hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
+        if ( hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
+             hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
 
 
             //If we got any comments, show them
@@ -814,28 +805,28 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         cShipment.allShipmentsObl = null;
 
         // Get all linesInt, if zero than there is something wrong
-        if (cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));
             return result;
         }
 
         // Get all packages
-        if (cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
             return result;
         }
 
         // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
-        if (cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
             return result;
         }
 
         // Get all comments
-        if (cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;
@@ -843,7 +834,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //If this is single article, then get barcodes
         if (cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
-            if (cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true) == false) {
+            if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
                 result.resultBln = false;
                 result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
                 return result;

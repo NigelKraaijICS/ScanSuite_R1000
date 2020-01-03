@@ -13,9 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -34,12 +37,13 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     //End Region Public Properties
 
     //Region Private Properties
-    private ConstraintLayout addArticleContainer;
-    private TextView textViewAddArticleHeader;
-    private TextView textViewAddArticleText;
-    private  static EditText editTextAddArticle;
+
+    private static TextView textViewAddArticleHeader;
+    private static TextView textViewAddArticleText;
+    private static EditText editTextAddArticle;
     private static Button addArticleButton;
-    private Button cancelButton;
+    private static Button cancelButton;
+
     //End Region Private Properties
 
 
@@ -59,7 +63,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         cAppExtension.dialogFragment  = this;
         this.mFragmentInitialize();
     }
@@ -80,7 +84,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
         super.onResume();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
     }
@@ -96,24 +100,25 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
 
     @Override
     public void mFindViews() {
-        this.textViewAddArticleHeader = getView().findViewById(R.id.textViewAddArticleHeader );
-        this.textViewAddArticleText = getView().findViewById(R.id.textViewAddArticleText);
-        this.editTextAddArticle = getView().findViewById(R.id.editTextAddArticle);
-        this.addArticleContainer = getView().findViewById(R.id.addArticleContainer);
-        this.addArticleButton = getView().findViewById(R.id.addArticleButton);
-        this.cancelButton = getView().findViewById(R.id.cancelButton);
+        if (getView() != null) {
+            AddArticleFragment.textViewAddArticleHeader = getView().findViewById(R.id.textViewAddArticleHeader );
+            AddArticleFragment.textViewAddArticleText = getView().findViewById(R.id.textViewAddArticleText);
+            AddArticleFragment.editTextAddArticle = getView().findViewById(R.id.editTextAddArticle);
+            AddArticleFragment.addArticleButton = getView().findViewById(R.id.addArticleButton);
+            AddArticleFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+        }
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        this.textViewAddArticleHeader.setText(R.string.add_article_header_default);
+        AddArticleFragment.textViewAddArticleHeader.setText(R.string.add_article_header_default);
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
-        this.editTextAddArticle.setFilters(filterArray);
-        cUserInterface.pShowKeyboard(this.editTextAddArticle);
-        this.textViewAddArticleText.setVisibility(View.GONE);
+        AddArticleFragment.editTextAddArticle.setFilters(filterArray);
+        cUserInterface.pShowKeyboard(AddArticleFragment.editTextAddArticle);
+        AddArticleFragment.textViewAddArticleText.setVisibility(View.GONE);
     }
 
     @Override
@@ -124,7 +129,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     }
 
     private void mSetCancelListener() {
-       this.cancelButton.setOnClickListener(new View.OnClickListener() {
+        AddArticleFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cAppExtension.dialogFragment.dismiss();
@@ -134,7 +139,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     }
 
     private void mSetAddArticleListener() {
-        this.addArticleButton.setOnClickListener(new View.OnClickListener() {
+        AddArticleFragment.addArticleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -167,11 +172,11 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
         AddArticleFragment.addArticleButton.callOnClick();
     }
     private void mSetEditorActionListener() {
-        this.editTextAddArticle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        AddArticleFragment.editTextAddArticle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    addArticleButton.callOnClick();
+                    AddArticleFragment.addArticleButton.callOnClick();
                 }
                 return true;
             }

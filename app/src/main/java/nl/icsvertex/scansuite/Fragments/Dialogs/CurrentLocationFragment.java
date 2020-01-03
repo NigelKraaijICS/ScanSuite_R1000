@@ -2,9 +2,6 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +10,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
+import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
-import ICS.cAppExtension;
 
 
 public class CurrentLocationFragment extends DialogFragment implements iICSDefaultFragment {
@@ -31,13 +32,12 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     //End Region Public Properties
 
     //Region Private Properties
-    private ConstraintLayout currentLocationContainer;
-    private TextView textViewCurrentLocationHeader;
-    private TextView textViewCurrentLocationText;
+    private static TextView textViewCurrentLocationHeader;
+    private static TextView textViewCurrentLocationText;
 
-    private  static EditText editTextCurrentLocation;
+    private static EditText editTextCurrentLocation;
     private static Button setLocationButton;
-    private Button cancelButton;
+    private static Button cancelButton;
     //End Region Private Properties
 
 
@@ -57,7 +57,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         cAppExtension.dialogFragment  = this;
         this.mFragmentInitialize();
     }
@@ -100,24 +100,26 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
     @Override
     public void mFindViews() {
-        this.textViewCurrentLocationHeader = getView().findViewById(R.id.textViewCurrentLocationHeader);
-        this.textViewCurrentLocationText = getView().findViewById(R.id.textViewCurrentLocationText);
-        this.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
-        this.currentLocationContainer = getView().findViewById(R.id.currentLocationContainer);
-        this.setLocationButton = getView().findViewById(R.id.setLocationButton);
-        this.cancelButton = getView().findViewById(R.id.cancelButton);
+
+        if (getView() != null) {
+            CurrentLocationFragment.textViewCurrentLocationHeader = getView().findViewById(R.id.textViewCurrentLocationHeader);
+            CurrentLocationFragment.textViewCurrentLocationText = getView().findViewById(R.id.textViewCurrentLocationText);
+            CurrentLocationFragment.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
+            CurrentLocationFragment.setLocationButton = getView().findViewById(R.id.setLocationButton);
+            CurrentLocationFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+        }
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        this.textViewCurrentLocationHeader.setText(R.string.currentlocation_header_default);
-        this.textViewCurrentLocationText.setText(R.string.currentlocation_text_default);
+        CurrentLocationFragment.textViewCurrentLocationHeader.setText(R.string.currentlocation_header_default);
+        CurrentLocationFragment.textViewCurrentLocationText.setText(R.string.currentlocation_text_default);
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
-        this.editTextCurrentLocation.setFilters(filterArray);
-        cUserInterface.pShowKeyboard(editTextCurrentLocation);
+        CurrentLocationFragment.editTextCurrentLocation.setFilters(filterArray);
+        cUserInterface.pShowKeyboard(CurrentLocationFragment.editTextCurrentLocation);
     }
 
     @Override
@@ -127,7 +129,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     }
 
     private void mSetCancelListener() {
-       this.cancelButton.setOnClickListener(new View.OnClickListener() {
+        CurrentLocationFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -135,19 +137,19 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         });
     }
     private void mSetSetLocationListener() {
-        this.setLocationButton.setOnClickListener(new View.OnClickListener() {
+        CurrentLocationFragment.setLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
                 if (cAppExtension.activity instanceof  PickorderLinesActivity) {
 
-                    if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
-                        cUserInterface.pDoNope(editTextCurrentLocation, true, true);
+                    if (CurrentLocationFragment.editTextCurrentLocation.getText().toString().trim().isEmpty()) {
+                        cUserInterface.pDoNope(CurrentLocationFragment.editTextCurrentLocation, true, true);
                     }
                     else {
                         dismiss();
-                        PickorderLinesActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
+                        PickorderLinesActivity.pSetCurrentLocation(CurrentLocationFragment.editTextCurrentLocation.getText().toString());
                     }
                 }
             }
@@ -161,7 +163,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         //Has prefix, so check if this is a BIN
         if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
-            Boolean foundBin = false;
+            boolean foundBin = false;
 
             if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
                 foundBin = true;
@@ -169,20 +171,20 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
             if (foundBin) {
                 //has prefix, is bin
-                editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
-                setLocationButton.callOnClick();
+                CurrentLocationFragment.editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+                CurrentLocationFragment.setLocationButton.callOnClick();
                 return;
             }
             else {
                 //has prefix, isn't bin
-                cUserInterface.pDoNope(editTextCurrentLocation, true, true);
+                cUserInterface.pDoNope(CurrentLocationFragment.editTextCurrentLocation, true, true);
                 return;
             }
 
         }
 
             //no prefix, fine
-            editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
-            setLocationButton.callOnClick();
+        CurrentLocationFragment.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
+        CurrentLocationFragment.setLocationButton.callOnClick();
     }
 }

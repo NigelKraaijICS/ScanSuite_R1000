@@ -28,8 +28,7 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     //End Region Public Properties
 
     //Region Private Properties
-    private ImageView imageNoOrders;
-    private ImageButton buttonRefreshOrders;
+    private static ImageButton buttonRefreshOrders;
     //End Region Private Properties
 
     //Region Constructor
@@ -65,8 +64,11 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFindViews() {
-        this.imageNoOrders = getView().findViewById(R.id.imageNoOrders);
-        this.buttonRefreshOrders = getView().findViewById(R.id.buttonRefreshOrders);
+
+        if (getView() != null) {
+            NoOrdersFragment.buttonRefreshOrders = getView().findViewById(R.id.buttonRefreshOrders);
+        }
+
     }
 
 
@@ -79,7 +81,7 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mSetListeners() {
 
-        this.buttonRefreshOrders.setOnClickListener(new View.OnClickListener() {
+        NoOrdersFragment.buttonRefreshOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(buttonRefreshOrders, 2);

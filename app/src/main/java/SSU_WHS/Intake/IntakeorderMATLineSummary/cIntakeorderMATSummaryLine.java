@@ -1,5 +1,7 @@
 package SSU_WHS.Intake.IntakeorderMATLineSummary;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cResult;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
@@ -21,32 +24,36 @@ public class cIntakeorderMATSummaryLine {
 
     //Region Public Properties
 
-    public String itemNoStr;
+    private String itemNoStr;
     public String getItemNoStr() {
         return itemNoStr;
     }
 
-    public String variantCodeStr;
+    private String variantCodeStr;
     public String getVariantCodeStr() {
         return variantCodeStr;
     }
 
-    public String descriptionStr;
+    public  String getItemNoAndVariantCodeStr(){
+        return   this.getItemNoStr() + " " + this.getVariantCodeStr();
+    }
+
+    private String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    public String description2Str;
+    private String description2Str;
     public String getDescription2Str() {
         return description2Str;
     }
 
-    public String binCodeStr;
+    private String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
     }
 
-    public Double quantityDbl;
+    private Double quantityDbl;
     public Double getQuantityDbl()
     {
         Double resultDbl =  0.0;
@@ -62,7 +69,7 @@ public class cIntakeorderMATSummaryLine {
         return resultDbl;
     }
 
-    public Double quantityHandledDbl;
+    private Double quantityHandledDbl;
     public Double getQuantityHandledDbl()
     {
         Double resultDbl =  0.0;
@@ -78,63 +85,69 @@ public class cIntakeorderMATSummaryLine {
         return resultDbl;
     }
 
-    public String sourceNoStr;
+    private String sourceNoStr;
     public String getSourceNoStr() {
         return sourceNoStr;
     }
 
-    public String vendorItemNo;
+    private String vendorItemNo;
     public String getVendorItemNoStr() {
         return vendorItemNo;
     }
 
-    public String vendorItemDescriptionStr;
+    private String vendorItemDescriptionStr;
     public String getVendorItemDescriptionStr() {
         return vendorItemDescriptionStr;
     }
 
-    public String extraField1Str;
+    public  String getVendorItemNoAndDescriptionStr(){
+        return   this.getVendorItemNoStr() + " " + this.getVendorItemDescriptionStr();
+    }
+
+    private String extraField1Str;
     public String getExtraField1Str() {
         return extraField1Str;
     }
 
-    public String extraField2Str;
+    private String extraField2Str;
     public String getExtraField2Str() {
         return extraField2Str;
     }
 
-    public String extraField3Str;
+    private String extraField3Str;
     public String getExtraField3Str() {
         return extraField3Str;
     }
 
-    public String extraField4Str;
+    private String extraField4Str;
     public String getExtraField4Str() {
         return extraField4Str;
     }
 
-    public String extraField5Str;
+    private String extraField5Str;
     public String getExtraField5Str() {
         return extraField5Str;
     }
 
-    public String extraField6Str;
+    private String extraField6Str;
     public String getExtraField6Str() {
         return extraField6Str;
     }
 
-    public String extraField7Str;
+    private String extraField7Str;
     public String getExtraField7Str() {
         return extraField7Str;
     }
 
-    public String extraField8Str;
+    private String extraField8Str;
     public String getExtraField8Str() {
         return extraField8Str;
     }
 
+    public cArticleImage articleImage;
+
     public static List<cIntakeorderMATSummaryLine> allIntakeorderMATSummaryLinesObl;
-    public List<cIntakeorderMATLine> MATLinesObl;
+    private List<cIntakeorderMATLine> MATLinesObl;
 
     public List<cIntakeorderMATLine> MATLinestoShowObl() {
 
@@ -221,7 +234,7 @@ public class cIntakeorderMATSummaryLine {
 
         Double resultDbl = 0.0;
 
-        if (cIntakeorderMATSummaryLine.totalItems() == cIntakeorderMATSummaryLine.totalItemsHandled()) {
+        if (cIntakeorderMATSummaryLine.totalItems().equals(cIntakeorderMATSummaryLine.totalItemsHandled())) {
             resultDbl  = 0.0;
             return resultDbl;
         }
@@ -242,7 +255,7 @@ public class cIntakeorderMATSummaryLine {
 
     public static cIntakeorderMATSummaryLine currentIntakeorderMATSummaryLine;
 
-    public static cIntakeorderMATSummaryLineAdapter gSummaryLinesAdapter;
+    private static cIntakeorderMATSummaryLineAdapter gSummaryLinesAdapter;
     public static cIntakeorderMATSummaryLineAdapter getSummaryLinesAdapter() {
         if (gSummaryLinesAdapter == null) {
             gSummaryLinesAdapter = new cIntakeorderMATSummaryLineAdapter();
@@ -387,11 +400,7 @@ public class cIntakeorderMATSummaryLine {
             quantityTotalDbl += intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
         }
 
-        if (quantityTotalDbl < this.getQuantityDbl()) {
-            return  false;
-        }
-
-        return  true;
+        return quantityTotalDbl >= this.getQuantityDbl();
 
     }
 
@@ -446,7 +455,7 @@ public class cIntakeorderMATSummaryLine {
             case 0:
 
                 WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pCreateLineViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl);
-                if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+                if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
                     if (this.getBinCodeStr().isEmpty()) {
                         this.binCodeStr = pvBinCodeStr;
@@ -503,7 +512,7 @@ public class cIntakeorderMATSummaryLine {
            if (this.pQuantityReachedBln(pvScannedBarcodesObl)) {
 
                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineHandledViaWebserviceWrs();
-               if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+               if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
                    if (this.getBinCodeStr().isEmpty()) {
                        this.binCodeStr = pvBinCodeStr;
@@ -528,7 +537,7 @@ public class cIntakeorderMATSummaryLine {
            else {
                //if quantity is lower, we have to split the line
                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineSplitViaWebserviceWrs();
-               if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+               if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
 
 
                    //Set the quantity to the quantity scanned
@@ -553,6 +562,35 @@ public class cIntakeorderMATSummaryLine {
 
         //We have no match, so we have to add a line
         return  true;
+    }
+
+    public boolean pGetArticleImageBln(){
+
+        if (this.articleImage != null) {
+            return  true;
+        }
+
+        this.articleImage = cArticleImage.pGetArticleImageByItemNoAndVariantCode(this.getItemNoStr(),this.getVariantCodeStr());
+        if (this.articleImage != null){
+            return  true;
+        }
+
+        cWebresult Webresult;
+
+        Webresult = cArticleImage.getArticleImageViewModel().pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
+        if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
+            return  false;
+        }
+
+        if (Webresult.getResultDtt().size() == 1) {
+            cArticleImage articleImage = new cArticleImage(Webresult.getResultDtt().get(0));
+            articleImage.pInsertInDatabaseBln();
+            this.articleImage = articleImage;
+            return true;
+        }
+
+        return  false;
+
     }
 
     //End Region Public Methods

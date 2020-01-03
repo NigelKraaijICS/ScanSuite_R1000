@@ -1,66 +1,59 @@
 package nl.icsvertex.scansuite.Activities.Pick;
 
 
-
 import android.content.Intent;
-import androidx.annotation.NonNull;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
-import androidx.core.view.ViewCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-
+import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
+import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
-
-
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Licenses.cLicense;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import ICS.cAppExtension;
-import ICS.Utils.cRegex;
-import ICS.Utils.cSharedPreferences;
-import ICS.Utils.cUserInterface;
-import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 
 public class PickorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
@@ -75,18 +68,16 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     // Region Views
     private static RecyclerView recyclerViewPickorders;
-    private ImageView toolbarImage;
+    private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubTitle;
     private static androidx.appcompat.widget.SearchView recyclerSearchView;
 
     private static ImageView imageViewFilter;
-    private ConstraintLayout constraintFilterOrders;
+    private static ConstraintLayout constraintFilterOrders;
     private static SwipeRefreshLayout swipeRefreshLayout;
 
-    private BottomSheetBehavior bottomSheetBehavior;
-
-    private static Boolean orderDetailsCompleteBln;
+    private static BottomSheetBehavior bottomSheetBehavior;
 
     // End Region Views
 
@@ -123,14 +114,13 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.mLeaveActivity();
-                return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            this.mLeaveActivity();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -142,8 +132,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     public void onRefresh() {
         PickorderSelectActivity.pFillOrders();
     }
-
-
 
     //End Region Default Methods
 
@@ -177,26 +165,24 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void mFindViews() {
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        this.recyclerViewPickorders = findViewById(R.id.recyclerViewPickorders);
-        this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        this.imageViewFilter = findViewById(R.id.imageViewFilter);
-        this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
+        PickorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        PickorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        PickorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        PickorderSelectActivity.recyclerViewPickorders = findViewById(R.id.recyclerViewPickorders);
+        PickorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
+        PickorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
+        PickorderSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
         PickorderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
-
-
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
-        this.toolbarTitle.setText(pvScreenTitle);
-        toolbarTitle.setSelected(true);
-        toolbarSubTitle.setSelected(true);
-        ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
-        ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
+        PickorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
+        PickorderSelectActivity.toolbarTitle.setText(pvScreenTitle);
+        PickorderSelectActivity.toolbarTitle.setSelected(true);
+        PickorderSelectActivity.toolbarSubTitle.setSelected(true);
+        ViewCompat.setTransitionName(PickorderSelectActivity.toolbarImage, VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName(PickorderSelectActivity.toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -245,7 +231,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Set filter with scanned barcode if there is no prefix
-        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr()) == false) {
+        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
             PickorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
             PickorderSelectActivity.recyclerSearchView.callOnClick();
@@ -262,13 +248,11 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         //If there is a prefix but it's not a salesorder tgen do nope
         cUserInterface.pDoNope(recyclerSearchView, true, true);
-        return;
-
     }
 
     public static void pPickorderSelected(cPickorder pvPickorder) {
 
-        if (mCheckOrderIsLockableBln(pvPickorder) == false) {
+        if (!mCheckOrderIsLockableBln(pvPickorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
             cUserInterface.pCheckAndCloseOpenDialogs();
             return;
@@ -295,13 +279,13 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     private static void mHandleFillOrders(){
 
         //First get all Pickorders that are new
-        if (cPickorder.pGetPickOrdersViaWebserviceBln(true,false,"") == false) {
+        if (!cPickorder.pGetPickOrdersViaWebserviceBln(true, false, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
             return;
         }
 
         //Then get all pickorders that are processing or parked
-        if (cPickorder.pGetPickOrdersViaWebserviceBln(false,true,"") == false) {
+        if (!cPickorder.pGetPickOrdersViaWebserviceBln(false, true, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
             return;
         }
@@ -331,24 +315,22 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cResult hulpResult;
 
         //Try to lock the pickorder
-        if (PickorderSelectActivity.mTryToLockOrderBln() == false) {
-            PickorderSelectActivity.orderDetailsCompleteBln = false;
+        if (!PickorderSelectActivity.mTryToLockOrderBln()) {
             PickorderSelectActivity.pFillOrders();
             return;
         }
 
         //Delete the detail, so we can get them from the webservice
-        if (cPickorder.currentPickOrder.pDeleteDetailsBln() == false) {
+        if (!cPickorder.currentPickOrder.pDeleteDetailsBln()) {
             mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
             return;
         }
 
         hulpResult = PickorderSelectActivity.mGetOrderDetailsRst();
-        if (hulpResult.resultBln == false ) {
+        if (!hulpResult.resultBln) {
             PickorderSelectActivity.mStepFailed(hulpResult.messagesStr());
             return;
         }
-
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -368,48 +350,48 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         result.resultBln = true;
 
         //Get all TAKE linesInt for current order, if size = 0 or webservice error then stop
-        if (cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.PICK) == false) {
+        if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true, cWarehouseorder.PickOrderTypeEnu.PICK)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
             return result;
         }
 
         //Get TAKE line barcodes for current order
-        if (cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true,cWarehouseorder.ActionTypeEnu.TAKE) == false) {
+        if (!cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true, cWarehouseorder.ActionTypeEnu.TAKE)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
             return result;
         }
 
         // Get all article images, only if neccesary
-        if (cPickorder.currentPickOrder.pGetArticleImagesViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetArticleImagesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_article_images_failed));
             return result;
         }
 
         // Get all barcodes, if size =0 or webservice error then stop
-        if (cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
             return result;
         }
 
         // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
-        if (cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
             return result;
         }
 
         // Get all comments
-        if (cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;
         }
 
-        if (cPickorder.currentPickOrder.pGetSortingDetailsBln() == false) {
+        if (!cPickorder.currentPickOrder.pGetSortingDetailsBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_sorting_detals_failed));
             return result;
@@ -423,7 +405,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
         cUserInterface.pCheckAndCloseOpenDialogs();
         cPickorder.currentPickOrder = null;
-        return ;
     }
 
     private static void mShowPickLinesActivity() {
@@ -436,7 +417,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         View clickedOrder = container.findViewWithTag(cPickorder.currentPickOrder.getOrderNumberStr());
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, PickorderLinesActivity.VIEW_CHOSEN_ORDER));
         ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-        return;
     }
 
     // End Region Private Methods
@@ -447,10 +427,10 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mInitBottomSheet() {
 
-        this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
-        this.bottomSheetBehavior.setHideable(true);
-        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        this.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        PickorderSelectActivity.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
+        PickorderSelectActivity.bottomSheetBehavior.setHideable(true);
+        PickorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        PickorderSelectActivity.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View pvBottomSheet, int pvNewStateInt) {
                 if (pvNewStateInt == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -476,12 +456,12 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mShowHideBottomSheet(Boolean pvShowBln) {
 
-        if (pvShowBln == true) {
-            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        if (pvShowBln) {
+            PickorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return;
         }
 
-        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        PickorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     }
 
@@ -515,7 +495,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
+        PickorderSelectActivity.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -526,7 +506,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                 }
             }
         });
-        return;
     }
 
     private void mSetSwipeRefreshListener() {
@@ -560,7 +539,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         PickorderSelectActivity.recyclerViewPickorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         cPickorder.getPickorderAdapter().pFillData(pvPickorderObl);
-        return;
     }
 
     private void mSetRecyclerOnScrollListener() {
@@ -613,7 +591,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        PickorderSelectActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 recyclerSearchView.setIconified(false);
@@ -621,7 +599,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         });
 
         //query entered
-        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        PickorderSelectActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String pvString) {
                 return false;
@@ -634,9 +612,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                 return true;
             }
         });
-
-        return;
-
     }
 
     // End Recycler View
@@ -689,15 +664,11 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         }
 
         //If you are allowed to unlock busy order, then no problem
-        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED() == true) {
+        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED()) {
             return true;
         }
 
-        if (cUser.currentUser.getNameStr().equalsIgnoreCase(pvPickorder.getAssignedUserIdStr())) {
-            return  true;
-        }
-
-        return  false;
+        return cUser.currentUser.getNameStr().equalsIgnoreCase(pvPickorder.getAssignedUserIdStr());
 
 
     }
@@ -718,19 +689,19 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         hulpResult = cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Picking, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
 
         //Everything was fine, so we are done
-        if (hulpResult.resultBln == true) {
+        if (hulpResult.resultBln) {
             return true;
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if ( hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             mStepFailed(hulpResult.messagesStr());
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
-            hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
+            hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
 
 
             //If we got any comments, show them
@@ -759,7 +730,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         commentFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.COMMENTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
-        return;
     }
 
     private static void mSetToolBarTitleWithCounters(){

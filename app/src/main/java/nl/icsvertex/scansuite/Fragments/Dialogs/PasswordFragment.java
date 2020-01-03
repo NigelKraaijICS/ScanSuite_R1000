@@ -38,11 +38,11 @@ import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TEXT;
 
 public class PasswordFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private TextView textPasswordHeader;
-    private TextView textPasswordText;
+    private static TextView textPasswordHeader;
+    private static TextView textPasswordText;
     private static EditText editPassword;
-    private TextView textPasswordIncorrect;
-    private Button buttonCancel;
+    private static TextView textPasswordIncorrect;
+    private static Button buttonCancel;
     private static Button buttonLogin;
 
     public PasswordFragment() {
@@ -99,20 +99,20 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     @Override
     public void mFindViews() {
         if (getView() != null) {
-            this.textPasswordHeader = getView().findViewById(R.id.textPasswordHeader);
-            this.textPasswordText = getView().findViewById(R.id.textPasswordText);
-            this.editPassword = getView().findViewById(R.id.editPassword);
-            this.textPasswordIncorrect = getView().findViewById(R.id.textPasswordIncorrect);
-            this.buttonCancel = getView().findViewById(R.id.buttonCancel);
-            this.buttonLogin = getView().findViewById(R.id.buttonLogin);
+            PasswordFragment.textPasswordHeader = getView().findViewById(R.id.textPasswordHeader);
+            PasswordFragment.textPasswordText = getView().findViewById(R.id.textPasswordText);
+            PasswordFragment.editPassword = getView().findViewById(R.id.editPassword);
+            PasswordFragment.textPasswordIncorrect = getView().findViewById(R.id.textPasswordIncorrect);
+            PasswordFragment.buttonCancel = getView().findViewById(R.id.buttonCancel);
+            PasswordFragment.buttonLogin = getView().findViewById(R.id.buttonLogin);
         }
     }
 
     @Override
     public void mFieldsInitialize() {
-        this.editPassword.setSelectAllOnFocus(true);
-        this.editPassword.requestFocus();
-        this.textPasswordIncorrect.setVisibility(View.INVISIBLE);
+        PasswordFragment.editPassword.setSelectAllOnFocus(true);
+        PasswordFragment.editPassword.requestFocus();
+        PasswordFragment.textPasswordIncorrect.setVisibility(View.INVISIBLE);
         Bundle args = getArguments();
         if (args != null) {
             String header = args.getString(PASSWORDFRAGMENT_HEADER, getString(R.string.password_header_default));
@@ -120,12 +120,12 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             String hint = args.getString(PASSWORDFRAGMENT_HINT, getString(R.string.password_hint_default));
             boolean isNumeric = args.getBoolean(PASSWORDFRAGMENT_ISNUMERIC, false);
 
-            this.textPasswordHeader.setText(header);
-            this.textPasswordText.setText(text);
-            this.editPassword.setHint(hint);
+            PasswordFragment.textPasswordHeader.setText(header);
+            PasswordFragment.textPasswordText.setText(text);
+            PasswordFragment.editPassword.setHint(hint);
             if (isNumeric) {
-                this.editPassword.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                this.editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                PasswordFragment.editPassword.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                PasswordFragment.editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
             }
         }
     }
@@ -139,12 +139,12 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     }
 
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
-        editPassword.setText(pvBarcodeScan.barcodeOriginalStr);
-        buttonLogin.callOnClick();
+        PasswordFragment.editPassword.setText(pvBarcodeScan.barcodeOriginalStr);
+        PasswordFragment.buttonLogin.callOnClick();
     }
 
     private void mSetPasswordCheckListener() {
-        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
+        PasswordFragment.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cAppExtension.activity instanceof LoginActivity) {
@@ -184,7 +184,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     }
 
     private void mSetCancelListener() {
-        this.buttonCancel.setOnClickListener(new View.OnClickListener() {
+        PasswordFragment.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cAppExtension.dialogFragment != null) {
@@ -203,11 +203,11 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         });
     }
     private void mWrongPassword() {
-        this.textPasswordIncorrect.setVisibility(View.VISIBLE);
+        PasswordFragment.textPasswordIncorrect.setVisibility(View.VISIBLE);
         cUserInterface.pDoNope(editPassword, false, false);
         cUserInterface.pPlaySound(R.raw.headsupsound, null);
-        this.editPassword.requestFocus();
-        this.editPassword.setSelection(0,editPassword.getText().toString().length());
+        PasswordFragment.editPassword.requestFocus();
+        PasswordFragment.editPassword.setSelection(0,editPassword.getText().toString().length());
     }
     private void mRightPassword() {
         if ((getActivity()) == null) {
@@ -251,7 +251,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         });
     }
     private void mSetEditorActionListener() {
-        this.editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        PasswordFragment.editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {

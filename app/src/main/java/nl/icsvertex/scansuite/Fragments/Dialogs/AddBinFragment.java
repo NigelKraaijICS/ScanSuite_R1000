@@ -13,9 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -34,12 +36,11 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     //End Region Public Properties
 
     //Region Private Properties
-    private ConstraintLayout addBinContainer;
-    private TextView textViewAddBinHeader;
-    private TextView textViewAddBinText;
-    private  static EditText editTextAddBin;
+    private static TextView textViewAddBinHeader;
+    private static TextView textViewAddBinText;
+    private static EditText editTextAddBin;
     private static Button addBinButton;
-    private Button cancelButton;
+    private static Button cancelButton;
     //End Region Private Properties
 
 
@@ -59,7 +60,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         cAppExtension.dialogFragment  = this;
         this.mFragmentInitialize();
     }
@@ -80,7 +81,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
         super.onResume();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
 
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
@@ -97,24 +98,23 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
 
     @Override
     public void mFindViews() {
-        this.textViewAddBinHeader = getView().findViewById(R.id.textViewAddBinHeader );
-        this.textViewAddBinText = getView().findViewById(R.id.textViewAddBinText);
-        this.editTextAddBin = getView().findViewById(R.id.editTextAddBin);
-        this.addBinContainer = getView().findViewById(R.id.addBinContainer);
-        this.addBinButton = getView().findViewById(R.id.addBinButton);
-        this.cancelButton = getView().findViewById(R.id.cancelButton);
+        AddBinFragment.textViewAddBinHeader = Objects.requireNonNull(getView()).findViewById(R.id.textViewAddBinHeader );
+        AddBinFragment.textViewAddBinText = getView().findViewById(R.id.textViewAddBinText);
+        AddBinFragment.editTextAddBin = getView().findViewById(R.id.editTextAddBin);
+        AddBinFragment.addBinButton = getView().findViewById(R.id.addBinButton);
+        AddBinFragment.cancelButton = getView().findViewById(R.id.cancelButton);
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        this.textViewAddBinHeader.setText(R.string.add_bin_header_default);
+        AddBinFragment.textViewAddBinHeader.setText(R.string.add_bin_header_default);
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
-        this.editTextAddBin.setFilters(filterArray);
+        AddBinFragment.editTextAddBin.setFilters(filterArray);
         cUserInterface.pShowKeyboard(editTextAddBin);
-        this.textViewAddBinText.setVisibility(View.GONE);
+        AddBinFragment.textViewAddBinText.setVisibility(View.GONE);
     }
 
     @Override
@@ -125,17 +125,16 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
     private void mSetCancelListener() {
-       this.cancelButton.setOnClickListener(new View.OnClickListener() {
+       AddBinFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 InventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
                 cAppExtension.dialogFragment.dismiss();
-                return;
             }
         });
     }
     private void mSetAddBinListener() {
-        this.addBinButton.setOnClickListener(new View.OnClickListener() {
+        AddBinFragment.addBinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -148,16 +147,13 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
                     InventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(AddBinFragment.editTextAddBin.getText().toString()));
                     InventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
                     cAppExtension.dialogFragment.dismiss();
-                    return;
                 }
-
-
 
             }
         });
     }
     private void mSetEditorActionListener() {
-        this.editTextAddBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        AddBinFragment.editTextAddBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
@@ -174,7 +170,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
         //Has prefix, so check if this is a BIN
         if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
-            Boolean foundBin = false;
+            boolean foundBin = false;
 
             if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
                 foundBin = true;

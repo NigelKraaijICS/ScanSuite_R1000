@@ -146,6 +146,7 @@ public class cDatabase {
     public static final String ITEMINFOCODE_NAMESTR = "ItemInfoCode";
     public static final String ITEMNO_NAMESTR = "ItemNo";
     public static final String ITEMTYPE_NAMESTR = "Itemsoort";
+
     public static final String INV_AUTOCLOSE_BIN_NAMESTR = "Inv_auto_close_bin";
     public static final String INV_PRECOUNT_NAMESTR = "Inv_precount";
     public static final String INV_AMOUNT_MANUAL_NAMESTR = "Inv_Amount_manual";
@@ -253,6 +254,9 @@ public class cDatabase {
 
     //region R
     public static final String RECEIVEDEFAULTBIN_NAMESTR = "Receive_default_bin";
+    public static final String RECEIVEWITHPICTURE_NAMESTR = "Receive_with_picture";
+    public static final String RECEIVEWITHPICTURE_AUTO_OPEN_NAMESTR = "Receive_with_picture_auto_open";
+    public static final String RECEIVEWITHPICTURE_PREFETCH_NAMESTR = "Receive_with_picture_prefetch";
     public static final String REQUESTENDDATETIME_NAMESTR = "RequestedEndDateTime";
     public static final String REQUESTEDENDDATETIME_NAMESTR = "RequestedEndDateTime";
     public static final String REQUESTEDSTARTDATETIME_NAMESTR = "RequestedStartDateTime";

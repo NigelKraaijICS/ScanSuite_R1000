@@ -17,11 +17,13 @@ import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cInventoryorderBarcodeRepository {
+
     //Region Public Properties
-    public iInventoryorderBarcodeDao inventoryorderBarcodeDao;
+
     //End Region Public Properties
 
     //Region Private Properties
+    private iInventoryorderBarcodeDao inventoryorderBarcodeDao;
     private acScanSuiteDatabase db;
 
     //Region Constructor
@@ -66,8 +68,9 @@ public class cInventoryorderBarcodeRepository {
             mAsyncTaskDao = dao;
         }
 
+        @SafeVarargs
         @Override
-        protected Void doInBackground(final List<cInventoryorderBarcodeEntity>... params) {
+        protected final Void doInBackground(final List<cInventoryorderBarcodeEntity>... params) {
             mAsyncTaskDao.insertAll(params[0]);
             return null;
         }
@@ -94,13 +97,7 @@ public class cInventoryorderBarcodeRepository {
 
         try {
             webResultWrs = new mCreateBarcodeViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -172,7 +169,7 @@ public class cInventoryorderBarcodeRepository {
                 l_PropertyInfo11Pin.setValue(cInventoryorderBarcode.currentInventoryOrderBarcode.getItemTypeStr());
                 l_PropertyInfoObl.add(l_PropertyInfo11Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBARCODES, l_PropertyInfoObl);
+                webresult =  cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBARCODES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

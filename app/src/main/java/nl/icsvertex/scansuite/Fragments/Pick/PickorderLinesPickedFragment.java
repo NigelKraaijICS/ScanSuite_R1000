@@ -1,40 +1,38 @@
 package nl.icsvertex.scansuite.Fragments.Pick;
 
 import android.app.AlertDialog;
-
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineRecyclerItemTouchHelper;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
-import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendOrderFragment;
+import nl.icsvertex.scansuite.R;
 
 public class PickorderLinesPickedFragment extends Fragment implements iICSDefaultFragment, cPickorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
@@ -44,11 +42,8 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
     //Region Private Properties
 
     private static RecyclerView recyclerViewPickorderLinesPicked;
-    private androidx.appcompat.widget.SearchView recyclerSearchView;
+    private static androidx.appcompat.widget.SearchView recyclerSearchView;
     private static Switch switchDefects;
-
-    private ConstraintLayout fragmentPickorderLinesToPick;
-    private static  TextView textViewSelectedLine;
     private static ConstraintLayout abortOrderView;
 
     private static List<cPickorderLine> localLinesObl;
@@ -66,8 +61,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer,
                              Bundle pvSavedInstanceState) {
         // Inflate the layout for this fragment
-        View rootview = pvInflater.inflate(R.layout.fragment_pickorder_lines_picked, pvContainer, false);
-        return rootview;
+        return  pvInflater.inflate(R.layout.fragment_pickorder_lines_picked, pvContainer, false);
 
 
     }
@@ -78,16 +72,20 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
     }
 
     @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-        if (pvIsVisibleToUserBln) {
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
-            PickorderLinesActivity.currentLineFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+        PickorderLinesActivity.currentLineFragment = this;
     }
 
     @Override
@@ -115,18 +113,20 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
+        PickorderLinesPickedFragment.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     public void mFindViews() {
-        this.fragmentPickorderLinesToPick = getView().findViewById(R.id.fragmentPickorderLinesToPick);
-        this.recyclerSearchView = getView().findViewById(R.id.recyclerSearchView);
-        this.recyclerViewPickorderLinesPicked = getView().findViewById(R.id.recyclerViewPickorderLinesPicked);
-        this.switchDefects = getView().findViewById(R.id.switchDefects);
-        this.textViewSelectedLine = getView().findViewById(R.id.textViewSelectedLine);
-        this.abortOrderView = getView().findViewById(R.id.actionsConstraintView);
+
+        if (getView() != null) {
+            PickorderLinesPickedFragment.recyclerSearchView = getView().findViewById(R.id.recyclerSearchView);
+            PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked = getView().findViewById(R.id.recyclerViewPickorderLinesPicked);
+            PickorderLinesPickedFragment.switchDefects = getView().findViewById(R.id.switchDefects);
+            PickorderLinesPickedFragment.abortOrderView = getView().findViewById(R.id.actionsConstraintView);
+        }
+
     }
 
 
@@ -134,7 +134,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
     public void mFieldsInitialize() {
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cPickorderLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewPickorderLinesPicked);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked);
 
     }
 
@@ -154,7 +154,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     public static void pNoLinesAvailable(Boolean pvEnabledBln) {
 
-        if (PickorderLinesActivity.currentLineFragment != null && PickorderLinesActivity.currentLineFragment instanceof PickorderLinesPickedFragment) {
+        if (PickorderLinesActivity.currentLineFragment instanceof PickorderLinesPickedFragment) {
 
             if (!pvEnabledBln) {
 
@@ -223,7 +223,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
     //End Region Private Methods
 
     private void mSetDefectsListener() {
-        this.switchDefects.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        PickorderLinesPickedFragment.switchDefects.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
                    cPickorderLine.getPickorderLinePickedAdapter().pShowDefects(show);
@@ -232,7 +232,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
     }
 
     private void mSetAbortListener() {
-        this.abortOrderView.setOnClickListener(new View.OnClickListener() {
+        PickorderLinesPickedFragment.abortOrderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mAskAbort();
@@ -271,7 +271,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             return;
         }
 
-        this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
+        PickorderLinesPickedFragment.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
 
     }
 
@@ -287,7 +287,10 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutmanager = (LinearLayoutManager)recyclerView.getLayoutManager();
                 if (dy < 0) {
-                    int itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
+                    int itemPosition = 0;
+                    if (layoutmanager != null) {
+                        itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
+                    }
 
                     if(itemPosition==0){
                         //cUserInterface.pShowToastMessage(thisContext, "Show", null);
@@ -305,7 +308,10 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
                     }
 
                 } else {
-                    int itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
+                    int itemPosition = 0;
+                    if (layoutmanager != null) {
+                        itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
+                    }
 
                     if(itemPosition>1){// your *second item your recyclerview
                         // Start the animation
@@ -318,15 +324,15 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        PickorderLinesPickedFragment.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recyclerSearchView.setIconified(false);
+                PickorderLinesPickedFragment.recyclerSearchView.setIconified(false);
             }
         });
 
         //query entered
-        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        PickorderLinesPickedFragment.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 return false;
@@ -343,7 +349,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
     private void mRemoveAdapterFromFragment(){
 
         //remove the item from recyclerview
-        Boolean resultBln = cPickorderLine.currentPickOrderLine.pResetBln();
+        boolean resultBln = cPickorderLine.currentPickOrderLine.pResetBln();
         if (! resultBln) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed),"",true,true);
             return;

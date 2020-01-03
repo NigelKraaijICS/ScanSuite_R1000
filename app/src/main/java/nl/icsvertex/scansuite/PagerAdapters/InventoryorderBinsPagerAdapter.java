@@ -1,7 +1,8 @@
 package nl.icsvertex.scansuite.PagerAdapters;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
@@ -9,31 +10,29 @@ import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsToDoFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsTotalFragment;
 
 
-public class InventoryorderBinsPagerAdapter extends FragmentStatePagerAdapter {
+public class InventoryorderBinsPagerAdapter extends FragmentPagerAdapter {
 
     //Region Private Properties
     private int numberOfTabsInt;
     //End Region Private Properties
 
     public InventoryorderBinsPagerAdapter(int pvNumberOfTabsInt) {
-        super(cAppExtension.fragmentManager);
+        super(cAppExtension.fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.numberOfTabsInt = pvNumberOfTabsInt;
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int pvPositionInt) {
         switch(pvPositionInt) {
             case 0:
-                InventoryBinsToDoFragment tab1 = new InventoryBinsToDoFragment();
-                return tab1;
+                return new InventoryBinsToDoFragment();
             case 1:
-                InventoryBinsDoneFragment tab2 = new InventoryBinsDoneFragment();
-                return tab2;
+                return new InventoryBinsDoneFragment();
             case 2:
-                InventoryBinsTotalFragment tab3 = new InventoryBinsTotalFragment();
-                return tab3;
+                return  new InventoryBinsTotalFragment();
             default:
-                return null;
+                return cAppExtension.dialogFragment;
         }
     }
     @Override

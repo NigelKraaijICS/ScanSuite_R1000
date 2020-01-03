@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,10 +12,10 @@ import androidx.fragment.app.Fragment;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.R;
+import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
-import ICS.cAppExtension;
+import nl.icsvertex.scansuite.R;
 
 
 public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
@@ -26,8 +25,7 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
     //End Region Public Properties
 
     //Region Private Properties
-    ImageView imageSendOrder;
-    ImageButton buttonSendOrder;
+    private static  ImageButton buttonSendOrder;
     //End Region Private Properties
 
     //Region Constructor
@@ -63,8 +61,10 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFindViews() {
-        this.imageSendOrder = getView().findViewById(R.id.imageSendOrder);
-        this.buttonSendOrder = getView().findViewById(R.id.buttonSendOrder);
+
+        if (getView() != null) {
+            SendOrderFragment.buttonSendOrder = getView().findViewById(R.id.buttonSendOrder);
+        }
     }
 
 
@@ -79,17 +79,15 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mSetListeners() {
 
-        this.buttonSendOrder.setOnClickListener(new View.OnClickListener() {
+        SendOrderFragment.buttonSendOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(buttonSendOrder, 2);
                 if (cAppExtension.activity instanceof PickorderLinesActivity) {
                     PickorderLinesActivity.pPickingDone("");
-                    return;
                 }
                 if (cAppExtension.activity instanceof SortorderLinesActivity) {
                     SortorderLinesActivity.pSortingDone();
-                    return;
                 }
             }
         });

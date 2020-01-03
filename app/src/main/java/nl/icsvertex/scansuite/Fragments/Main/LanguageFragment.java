@@ -24,8 +24,8 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Private Properties
 
-    private  TextView textViewCurrentLanguage;
-    private ImageButton buttonChangeLanguage;
+    private static  TextView textViewCurrentLanguage;
+    private static ImageButton buttonChangeLanguage;
 
     //End Region Private Properties
 
@@ -57,14 +57,16 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFindViews() {
-        textViewCurrentLanguage = getView().findViewById(R.id.textViewCurrentLanguage);
-        buttonChangeLanguage = getView().findViewById(R.id.buttonChangeLanguage);
+         if (getView() != null) {
+             LanguageFragment.textViewCurrentLanguage = getView().findViewById(R.id.textViewCurrentLanguage);
+             LanguageFragment.buttonChangeLanguage = getView().findViewById(R.id.buttonChangeLanguage);
+         }
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        textViewCurrentLanguage.setText(Locale.getDefault().getDisplayLanguage());
+        LanguageFragment.textViewCurrentLanguage.setText(Locale.getDefault().getDisplayLanguage());
     }
 
     @Override
@@ -74,7 +76,7 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
 
 
     private void mChangeLanguageListener() {
-        buttonChangeLanguage.setOnClickListener(new View.OnClickListener() {
+        LanguageFragment.buttonChangeLanguage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (getActivity() != null) {

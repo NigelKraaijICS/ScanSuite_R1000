@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
@@ -35,14 +37,14 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     //End Region Public Properties
 
     //Region Private Properties
-    private ImageView toolbarImage;
-    private  TextView toolbarTitle;
-    private TextView toolbarSubtext;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
+    private static TextView toolbarSubtext;
 
     private static ConstraintLayout articleFullViewContainer;
-    private TextView articleFullItemNoTextView;
-    private TextView articleFullVariantTextView;
-    private ImageView articleFullImageView;
+    private static TextView articleFullItemNoTextView;
+    private static TextView articleFullVariantTextView;
+    private static ImageView articleFullImageView;
     //End Region Private Properties
 
 
@@ -105,7 +107,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
     }
@@ -124,47 +126,50 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     @Override
     public void mFindViews() {
 
-        this.toolbarImage = getView().findViewById(R.id.toolbarImage);
-        this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
-        this.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
+        if (getView() != null) {
+            ArticleFullViewFragment.toolbarImage = getView().findViewById(R.id.toolbarImage);
+            ArticleFullViewFragment.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
+            ArticleFullViewFragment.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
 
-        this.articleFullViewContainer = getView().findViewById(R.id.articleFuillViewContainer);
-        this.articleFullItemNoTextView = getView().findViewById(R.id.articleFullItemNoTextView);
-        this.articleFullVariantTextView = getView().findViewById(R.id.articleFullVariantTextView);
-        this.articleFullImageView = getView().findViewById(R.id.articleFullImageView);
+            ArticleFullViewFragment.articleFullViewContainer = getView().findViewById(R.id.articleFuillViewContainer);
+            ArticleFullViewFragment.articleFullItemNoTextView = getView().findViewById(R.id.articleFullItemNoTextView);
+            ArticleFullViewFragment.articleFullVariantTextView = getView().findViewById(R.id.articleFullVariantTextView);
+            ArticleFullViewFragment.articleFullImageView = getView().findViewById(R.id.articleFullImageView);
+        }
+
     }
 
      @Override
     public void mFieldsInitialize() {
 
         if (!cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
-            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-            this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.toolbarSubtext.setSingleLine(true);
-            this.toolbarSubtext.setMarqueeRepeatLimit(5);
-            this.toolbarSubtext.postDelayed(new Runnable() {
+            ArticleFullViewFragment.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
+            ArticleFullViewFragment.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            ArticleFullViewFragment.toolbarSubtext.setSingleLine(true);
+            ArticleFullViewFragment.toolbarSubtext.setMarqueeRepeatLimit(5);
+            ArticleFullViewFragment.toolbarSubtext.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    toolbarSubtext.setSelected(true);
+                    ArticleFullViewFragment.toolbarSubtext.setSelected(true);
                 }
             },1500);
         }
 
         //articleFullBrandTextView.setText(pickorderLineEntity2.getBrand());
-        this.articleFullItemNoTextView.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
-        this.articleFullVariantTextView.setText(cPickorderLine.currentPickOrderLine.getVariantCodeStr());
-        this.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        this.articleFullVariantTextView.setSingleLine(true);
-        this.articleFullVariantTextView.setMarqueeRepeatLimit(5);
-        this.articleFullVariantTextView.setSelected(true);
+         ArticleFullViewFragment.articleFullItemNoTextView.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
+         ArticleFullViewFragment.articleFullVariantTextView.setText(cPickorderLine.currentPickOrderLine.getVariantCodeStr());
+         ArticleFullViewFragment.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+         ArticleFullViewFragment.articleFullVariantTextView.setSingleLine(true);
+         ArticleFullViewFragment.articleFullVariantTextView.setMarqueeRepeatLimit(5);
+         ArticleFullViewFragment.articleFullVariantTextView.setSelected(true);
 
         if (cPickorderLine.currentPickOrderLine.articleImage != null) {
             byte[] decodedString = Base64.decode(cPickorderLine.currentPickOrderLine.articleImage.getImageStr(), Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            articleFullImageView.setImageBitmap(decodedByte);
+            ArticleFullViewFragment.articleFullImageView.setImageBitmap(decodedByte);
         }
         else {
-            articleFullImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_no_image_lightgrey_24dp));
+            ArticleFullViewFragment.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_no_image_lightgrey_24dp));
         }
     }
 
@@ -177,9 +182,9 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
     //Region Public Methods
 
+
     public static void pHandleScan(cBarcodeScan pvBarcodeScan){
 
-        String barcodeWithoutPrefixStr;
 
         //No prefix
         if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
@@ -187,7 +192,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
             return;
         }
 
-        Boolean foundBln = false;
+        boolean foundBln = false;
 
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             foundBln = true;
@@ -195,14 +200,11 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
         //has prefix, is article
         if (foundBln) {
-            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
             ArticleFullViewFragment.mArticleScanned(pvBarcodeScan);
-            return;
         }
         else {
             //has prefix, isn't branch
-            cUserInterface.pDoNope(articleFullViewContainer, true, true);
-            return;
+            cUserInterface.pDoNope(ArticleFullViewFragment.articleFullViewContainer, true, true);
         }
     }
     //End Region Public Methods
@@ -211,22 +213,22 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
     private void mSetToolbar() {
 
-        this.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
-        this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        this.toolbarTitle.setSingleLine(true);
-        this.toolbarTitle.setMarqueeRepeatLimit(5);
-        this.toolbarTitle.postDelayed(new Runnable() {
+        ArticleFullViewFragment.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+        ArticleFullViewFragment.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        ArticleFullViewFragment.toolbarTitle.setSingleLine(true);
+        ArticleFullViewFragment.toolbarTitle.setMarqueeRepeatLimit(5);
+        ArticleFullViewFragment.toolbarTitle.postDelayed(new Runnable() {
             @Override
             public void run() {
-                toolbarTitle.setSelected(true);
+                ArticleFullViewFragment.toolbarTitle.setSelected(true);
             }
         },1500);
 
-        this.toolbarImage.setImageResource(R.drawable.ic_info);
+        ArticleFullViewFragment.toolbarImage.setImageResource(R.drawable.ic_info);
     }
 
     private void mDismissListener() {
-        getView().setOnClickListener(new View.OnClickListener() {
+         Objects.requireNonNull(getView()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();

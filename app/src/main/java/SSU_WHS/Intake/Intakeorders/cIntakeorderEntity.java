@@ -15,10 +15,11 @@ import SSU_WHS.General.cDatabase;
 @Entity(tableName= cDatabase.TABLENAME_INTAKEORDER)
 public class cIntakeorderEntity {
     //Region Public Properties
+
     @PrimaryKey
     @NonNull
     @ColumnInfo(name= cDatabase.ORDERNUMBER_NAMESTR)
-    public String ordernumber;
+    public String ordernumber = "" ;
     public String getOrdernumberStr() {return this.ordernumber;}
 
     @ColumnInfo(name= cDatabase.ORDERTYPE_NAMESTR)
@@ -157,6 +158,18 @@ public class cIntakeorderEntity {
     public Boolean isprocessingorparked;
     public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
 
+    @ColumnInfo(name="Receive_with_picture")
+    public String receiveWithPicture;
+    public String getReceiveWithPictureStr() {return this.receiveWithPicture;}
+
+    @ColumnInfo(name="Receive_with_picture_auto_open")
+    public String receiveWithPictureAutoOpen;
+    public String getReceiveWithPictureAutoOpenStr() {return this.receiveWithPictureAutoOpen;}
+
+    @ColumnInfo(name="Receive_with_picture_prefetch")
+    public String receiveWithPicturePrefetch;
+    public String getReceiveWithPicturePrefetchStr() {return this.receiveWithPicturePrefetch;}
+
     //End Region Public Properties
 
     //Region Constructor
@@ -202,12 +215,19 @@ public class cIntakeorderEntity {
             this.interfaceresultmethod = pvJsonObject.getString(cDatabase.INTERFACERESULTMETHOD_NAMESTR);
             this.sorting = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.SORTING_NAMESTR));
 
-            //Is processing
-            this.isprocessingorparked = true;
+            //todo: do this the correct way
+//            this.receiveWithPicture = pvJsonObject.getString(pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_NAMESTR));
+//            this.receiveWithPictureAutoOpen = pvJsonObject.getString(pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_AUTO_OPEN_NAMESTR));
+//            this.receiveWithPicturePrefetch = pvJsonObject.getString(pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_PREFETCH_NAMESTR));
 
-            if (cText.pIntToStringStr(this.status).equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store))) {
-                this.isprocessingorparked = false;
-            }
+            this.receiveWithPicture = "false";
+            this.receiveWithPictureAutoOpen ="false";
+            this.receiveWithPicturePrefetch = "false";
+
+
+            //Is processing
+
+            this.isprocessingorparked = !cText.pIntToStringStr(this.status).equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store));
 
 
         } catch (JSONException e) {

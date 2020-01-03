@@ -3,16 +3,16 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
-import androidx.cardview.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.DialogFragment;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import nl.icsvertex.scansuite.R;
@@ -26,11 +26,10 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
 
     //Region Private Properties
 
-    ImageView imageHourglass;
-    CardView progressContainer;
-    TextView textProgress;
-    TextView textDots;
-      ConstraintLayout gettingDataContainer;
+    private static ImageView imageHourglass;
+    private static CardView progressContainer;
+    private static TextView textDots;
+
 
     //End Region Private Properties
 
@@ -52,7 +51,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.mFragmentInitialize();
         this.mSetAnimations();
     }
@@ -65,7 +64,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
 
     @Override
     public void mFragmentInitialize() {
-        setCancelable(false);
+        this.setCancelable(false);
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
@@ -73,17 +72,18 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
 
     @Override
     public void mFindViews() {
-        this.gettingDataContainer = getView().findViewById(R.id.gettingDataContainer);
-        this.imageHourglass = getView().findViewById(R.id.imageHourglass);
-        this.progressContainer = getView().findViewById(R.id.progressContainer);
-        this.textDots = getView().findViewById(R.id.textDots);
-        this.textProgress = getView().findViewById(R.id.textProgress);
+
+        if (getView() != null) {
+            GettingDataFragment.imageHourglass = getView().findViewById(R.id.imageHourglass);
+            GettingDataFragment.progressContainer = getView().findViewById(R.id.progressContainer);
+            GettingDataFragment.textDots = getView().findViewById(R.id.textDots);
+        }
 
     }
 
     @Override
     public void mFieldsInitialize() {
-        this.progressContainer.setVisibility(View.INVISIBLE);
+        GettingDataFragment.progressContainer.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -114,11 +114,11 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
                 count++;
                 if (count == 1)
                 {
-                    imageHourglass.animate().rotation(180).start();
+                    GettingDataFragment.imageHourglass.animate().rotation(180).start();
                 }
                 else if (count == 2)
                 {
-                    imageHourglass.animate().rotation(0).start();
+                    GettingDataFragment.imageHourglass.animate().rotation(0).start();
                 }
                 if (count == 2) {
                     count = 0;
@@ -131,7 +131,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     }
 
     private void mSetHourglassImageListener() {
-        imageHourglass.setOnClickListener(new View.OnClickListener() {
+        GettingDataFragment.imageHourglass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mToggleDetails();
@@ -140,24 +140,19 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     }
 
      private void mToggleDetails() {
-        Boolean isCurrentlyShown;
-        if (progressContainer.getVisibility() == View.VISIBLE) {
-            isCurrentlyShown = true;
-        }
-        else {
-            isCurrentlyShown = false;
-        }
+        boolean isCurrentlyShown;
+         isCurrentlyShown = GettingDataFragment.progressContainer.getVisibility() == View.VISIBLE;
         if (isCurrentlyShown) {
-            progressContainer.animate().scaleY(0).withEndAction(new Runnable() {
+            GettingDataFragment.progressContainer.animate().scaleY(0).withEndAction(new Runnable() {
                 @Override
                 public void run() {
-                    progressContainer.setVisibility(View.INVISIBLE);
+                    GettingDataFragment.progressContainer.setVisibility(View.INVISIBLE);
                 }
             }).start();
         }
         else {
-            progressContainer.animate().scaleY(1).start();
-            progressContainer.setVisibility(View.VISIBLE);
+            GettingDataFragment.progressContainer.animate().scaleY(1).start();
+            GettingDataFragment.progressContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -172,15 +167,15 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
                 count++;
                 if (count == 1)
                 {
-                    textDots.setText(".");
+                    GettingDataFragment.textDots.setText(".");
                 }
                 else if (count == 2)
                 {
-                    textDots.setText("..");
+                    GettingDataFragment.textDots.setText("..");
                 }
                 else if (count == 3)
                 {
-                    textDots.setText("...");
+                    GettingDataFragment.textDots.setText("...");
 
                 }
                 if (count == 3) {
@@ -189,7 +184,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
                 handler.postDelayed(this, 2 * 600);
             }
         };
-        handler.postDelayed(runnable, 1 * 600);
+        handler.postDelayed(runnable, 600);
     }
 
     //End Region Private Methods

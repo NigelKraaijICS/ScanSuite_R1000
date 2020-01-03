@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
@@ -29,9 +30,9 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
     //End Region Public Properties
 
     //Region Private Properties
-    private RecyclerView shippingUnitRecyclerView;
-    private Button buttonClose;
-    private Button buttonDone;
+    private static  RecyclerView shippingUnitRecyclerView;
+    private static Button buttonClose;
+    private static Button buttonDone;
     //End Region Private Properties
 
     //Region Constructor
@@ -59,7 +60,12 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
         super.onResume();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
-        getDialog().getWindow().setLayout(width, height);
+
+        if (getDialog() != null) {
+            Objects.requireNonNull(getDialog().getWindow()).setLayout(width, height);
+        }
+
+
     }
     //End Region Default Methods
 
@@ -76,10 +82,12 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
 
     @Override
     public void mFindViews() {
-        this.buttonClose = getView().findViewById(R.id.buttonClose);
-        this.buttonDone = getView().findViewById(R.id.buttonDone);
-        this.shippingUnitRecyclerView = getView().findViewById(R.id.shippingUnitRecyclerView);
-        this.shippingUnitRecyclerView.setHapticFeedbackEnabled(true);
+        if (getView() != null) {
+            ShippingUnitFragment.buttonClose = getView().findViewById(R.id.buttonClose);
+            ShippingUnitFragment.buttonDone = getView().findViewById(R.id.buttonDone);
+            ShippingUnitFragment.shippingUnitRecyclerView = getView().findViewById(R.id.shippingUnitRecyclerView);
+            ShippingUnitFragment.shippingUnitRecyclerView.setHapticFeedbackEnabled(true);
+        }
     }
 
     @Override
@@ -103,7 +111,7 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
 
 
     private void mSetCloseListener() {
-        this.buttonClose.setOnClickListener(new View.OnClickListener() {
+        ShippingUnitFragment.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 0;
@@ -112,7 +120,7 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
         });
     }
     private void mSetOKListener() {
-        this.buttonDone.setOnClickListener(new View.OnClickListener() {
+        ShippingUnitFragment.buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -122,10 +130,10 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
 
     private void mFillRecycler(List<cShippingAgentServiceShippingUnit> pvDataObl) {
 
-        ((SimpleItemAnimator)shippingUnitRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-        this.shippingUnitRecyclerView.setHasFixedSize(false);
-        this.shippingUnitRecyclerView.setAdapter(cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitAdapter());
-        this.shippingUnitRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        ((SimpleItemAnimator) Objects.requireNonNull(shippingUnitRecyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
+        ShippingUnitFragment.shippingUnitRecyclerView.setHasFixedSize(false);
+        ShippingUnitFragment.shippingUnitRecyclerView.setAdapter(cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitAdapter());
+        ShippingUnitFragment.shippingUnitRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitAdapter().pFillData(pvDataObl);
     }
 }

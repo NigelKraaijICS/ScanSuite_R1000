@@ -62,16 +62,16 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     // Region Views
     private static RecyclerView recyclerViewIntakeorders;
-    private ImageView toolbarImage;
+    private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubTitle;
     private static SearchView recyclerSearchView;
 
     private static ImageView imageViewFilter;
-    private ConstraintLayout constraintFilterOrders;
+    private  static ConstraintLayout constraintFilterOrders;
     private static SwipeRefreshLayout swipeRefreshLayout;
 
-    private BottomSheetBehavior bottomSheetBehavior;
+    private static BottomSheetBehavior bottomSheetBehavior;
 
     // End Region Views
 
@@ -108,14 +108,13 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.mLeaveActivity();
-                return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            this.mLeaveActivity();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -161,22 +160,22 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     @Override
     public void mFindViews() {
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        this.recyclerViewIntakeorders = findViewById(R.id.recyclerViewIntakeorders);
-        this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        this.imageViewFilter = findViewById(R.id.imageViewFilter);
-        this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
+        IntakeorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        IntakeorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        IntakeorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        IntakeorderSelectActivity.recyclerViewIntakeorders = findViewById(R.id.recyclerViewIntakeorders);
+        IntakeorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
+        IntakeorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
+        IntakeorderSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
         IntakeorderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
-        this.toolbarTitle.setText(pvScreenTitle);
-        toolbarTitle.setSelected(true);
-        toolbarSubTitle.setSelected(true);
+        IntakeorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
+        IntakeorderSelectActivity.toolbarTitle.setText(pvScreenTitle);
+        IntakeorderSelectActivity.toolbarTitle.setSelected(true);
+        IntakeorderSelectActivity.toolbarSubTitle.setSelected(true);
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -227,7 +226,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Set filter with scanned barcode if there is no prefix
-        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr()) == false) {
+        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
             IntakeorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
             IntakeorderSelectActivity.recyclerSearchView.callOnClick();
@@ -243,14 +242,13 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         }
 
         //If there is a prefix but it's not a salesorder tgen do nope
-        cUserInterface.pDoNope(recyclerSearchView, true, true);
-        return;
+        cUserInterface.pDoNope(IntakeorderSelectActivity.recyclerSearchView, true, true);
 
     }
 
     public static void pIntakeorderSelected(cIntakeorder pvIntakeorder) {
 
-        if (mCheckOrderIsLockableBln(pvIntakeorder) == false) {
+        if (!mCheckOrderIsLockableBln(pvIntakeorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
             cUserInterface.pCheckAndCloseOpenDialogs();
             return;
@@ -277,7 +275,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     private static void mHandleFillOrders(){
 
         //all Intakeorders
-        if (cIntakeorder.pGetIntakeOrdersViaWebserviceBln(true,"") == false) {
+        if (!cIntakeorder.pGetIntakeOrdersViaWebserviceBln(true, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_intakeorders_failed), "", true, true );
             return;
         }
@@ -307,19 +305,19 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         cResult hulpResult;
 
         //Try to lock the intakeorder
-        if (IntakeorderSelectActivity.mTryToLockOrderBln() == false) {
+        if (!IntakeorderSelectActivity.mTryToLockOrderBln()) {
             IntakeorderSelectActivity.pFillOrders();
             return;
         }
 
         //Delete the detail, so we can get them from the webservice
-        if (cIntakeorder.currentIntakeOrder.pDeleteDetailsBln() == false) {
+        if (!cIntakeorder.currentIntakeOrder.pDeleteDetailsBln()) {
             mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
             return;
         }
 
         hulpResult = IntakeorderSelectActivity.mGetOrderDetailsRst();
-        if (hulpResult.resultBln == false ) {
+        if (!hulpResult.resultBln) {
             IntakeorderSelectActivity.mStepFailed(hulpResult.messagesStr());
             return;
         }
@@ -350,7 +348,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         }
 
         //Get line barcodes for current order
-        if (cIntakeorder.currentIntakeOrder.pGetMATLineBarcodesViaWebserviceBln(true) == false) {
+        if (!cIntakeorder.currentIntakeOrder.pGetMATLineBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
             return result;
@@ -365,14 +363,14 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 //        }
 
         // Get all barcodes, if size =0 or webservice error then stop
-        if (cIntakeorder.currentIntakeOrder.pGetBarcodesViaWebserviceBln(true) == false) {
+        if (!cIntakeorder.currentIntakeOrder.pGetBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
             return result;
         }
 
         // Get all comments
-        if (cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true) == false) {
+        if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;
@@ -386,7 +384,6 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         cIntakeorder.currentIntakeOrder.pLockReleaseViaWebserviceBln();
         cUserInterface.pCheckAndCloseOpenDialogs();
         cIntakeorder.currentIntakeOrder = null;
-        return ;
     }
 
     private static void mShowIntakeLinesActivity() {
@@ -399,7 +396,6 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         View clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, IntakeorderLinesActivity.VIEW_CHOSEN_ORDER));
         ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-        return;
     }
 
     // End Region Private Methods
@@ -410,10 +406,10 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mInitBottomSheet() {
 
-        this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
-        this.bottomSheetBehavior.setHideable(true);
-        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        this.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        IntakeorderSelectActivity.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
+        IntakeorderSelectActivity.bottomSheetBehavior.setHideable(true);
+        IntakeorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        IntakeorderSelectActivity.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View pvBottomSheet, int pvNewStateInt) {
                 if (pvNewStateInt == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -439,12 +435,12 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mShowHideBottomSheet(Boolean pvShowBln) {
 
-        if (pvShowBln == true) {
-            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        if (pvShowBln) {
+            IntakeorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return;
         }
 
-        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        IntakeorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     }
 
@@ -478,7 +474,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
+        IntakeorderSelectActivity.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -489,7 +485,6 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
                 }
             }
         });
-        return;
     }
 
     private void mSetSwipeRefreshListener() {
@@ -523,7 +518,6 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         IntakeorderSelectActivity.recyclerViewIntakeorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         cIntakeorder.getIntakeorderAdapter().pFillData(pvIntakeorderObl);
-        return;
     }
 
     private void mSetRecyclerOnScrollListener() {
@@ -576,7 +570,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        IntakeorderSelectActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 recyclerSearchView.setIconified(false);
@@ -584,7 +578,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         });
 
         //query entered
-        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        IntakeorderSelectActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String pvString) {
                 return false;
@@ -597,8 +591,6 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
                 return true;
             }
         });
-
-        return;
 
     }
 
@@ -652,15 +644,11 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         }
 
         //If you are allowed to unlock busy order, then no problem
-        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED() == true) {
+        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED()) {
             return true;
         }
 
-        if (cUser.currentUser.getNameStr().equalsIgnoreCase(pvIntakeorder.getAssignedUserIdStr())) {
-            return  true;
-        }
-
-        return  false;
+        return cUser.currentUser.getNameStr().equalsIgnoreCase(pvIntakeorder.getAssignedUserIdStr());
 
 
     }
@@ -677,38 +665,32 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Receive_Store, cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store);
 
         //Everything was fine, so we are done
-        if (hulpResult.resultBln == true) {
+        if (hulpResult.resultBln) {
             return true;
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             mStepFailed(hulpResult.messagesStr());
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
-            hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
-
-
-            //If we got any comments, show them
-            //TODO error
-//            if (cIntakeorder.currentIntakeOrder.pFeedbackCommentObl() != null && cIntakeorder.currentIntakeOrder.pFeedbackCommentObl().size() > 0 ) {
-//                //Process comments from webresult
-//                IntakeorderSelectActivity.mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
-//            }
-
-            return  false;
-        }
-
-
-        return true;
+        //If we got any comments, show them
+        //TODO error
+        //            if (cIntakeorder.currentIntakeOrder.pFeedbackCommentObl() != null && cIntakeorder.currentIntakeOrder.pFeedbackCommentObl().size() > 0 ) {
+        //                //Process comments from webresult
+        //                IntakeorderSelectActivity.mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+        //            }
+        return (hulpResult.activityActionEnu != cWarehouseorder.ActivityActionEnu.Delete) &&
+                (hulpResult.activityActionEnu != cWarehouseorder.ActivityActionEnu.NoStart);
 
     }
 
     private static void mSetToolBarTitleWithCounters(){
 
+
+        String subTitleStr;
 
         if (cIntakeorder.allIntakeordersObl == null ) {
             IntakeorderSelectActivity.toolbarSubTitle.setText("(0)");
@@ -716,10 +698,13 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         }
 
         if (!cSharedPreferences.userFilterBln()) {
-            IntakeorderSelectActivity.toolbarSubTitle.setText("(" + cText.pIntToStringStr(cIntakeorder.allIntakeordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders)   );
+            subTitleStr = "(" + cText.pIntToStringStr(cIntakeorder.allIntakeordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders);
         } else {
-            IntakeorderSelectActivity.toolbarSubTitle.setText("(" + cText.pIntToStringStr(cIntakeorder.pGetIntakesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cIntakeorder.allIntakeordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown) );
+            subTitleStr = "(" + cText.pIntToStringStr(cIntakeorder.pGetIntakesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cIntakeorder.allIntakeordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }
+
+        IntakeorderSelectActivity.toolbarSubTitle.setText(subTitleStr);
+
     }
 
     private void mReleaseLicense() {

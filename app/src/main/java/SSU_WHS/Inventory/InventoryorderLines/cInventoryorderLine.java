@@ -24,12 +24,11 @@ import nl.icsvertex.scansuite.R;
 
 
 public class cInventoryorderLine {
-    public cInventoryorderLineEntity inventoryorderLineEntity;
-    public boolean indatabaseBln;
+
+    private  cInventoryorderLineEntity inventoryorderLineEntity;
 
     public static List<cInventoryorderLine> allLinesObl;
     public static cInventoryorderLine currentInventoryOrderLine;
-
 
     public List<cInventoryorderBarcode> barcodesObl(){
 
@@ -50,7 +49,6 @@ public class cInventoryorderLine {
         return  resultObl;
 
     }
-
     public List<cInventoryorderLineBarcode> lineBarcodesObl(){
 
         List<cInventoryorderLineBarcode> resultObl = new ArrayList<>();
@@ -71,9 +69,7 @@ public class cInventoryorderLine {
     }
 
 
-
-
-    public static cInventoryorderLineViewModel gInventoryorderLineViewModel;
+    private static cInventoryorderLineViewModel gInventoryorderLineViewModel;
     public static cInventoryorderLineViewModel getInventoryorderLineViewModel() {
         if (gInventoryorderLineViewModel == null) {
             gInventoryorderLineViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cInventoryorderLineViewModel.class);
@@ -81,7 +77,7 @@ public class cInventoryorderLine {
         return gInventoryorderLineViewModel;
     }
 
-    public static cInventoryorderLineAdapter gInventoryorderLineAdapter;
+    private static cInventoryorderLineAdapter gInventoryorderLineAdapter;
     public static cInventoryorderLineAdapter getInventoryorderLineAdapter() {
         if (gInventoryorderLineAdapter == null) {
             gInventoryorderLineAdapter = new cInventoryorderLineAdapter();
@@ -91,105 +87,113 @@ public class cInventoryorderLine {
 
 
     //Region Public Properties
-    public int lineNoInt;
+    private int lineNoInt;
     public int getLineNoInt() {
         return lineNoInt;
     }
 
-    public String itemNoStr;
+    private String itemNoStr;
     public String getItemNoStr() {
         return itemNoStr;
     }
 
-    public String variantCodeStr;
+    private String variantCodeStr;
     public String getVariantCodeStr() {
         return variantCodeStr;
     }
 
-    public String itemTypeStr;
+    private String itemTypeStr;
     public String getItemTypeStr() {
         return itemTypeStr;
     }
 
-    public String descriptionStr;
+    private String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    public String description2Str;
+    private String description2Str;
     public String getDescription2Str() {
         return description2Str;
     }
 
-    public String binCodeStr;
+    private String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
     }
 
-    public Double quantityDbl;
+    private Double quantityDbl;
     public Double getQuantityDbl() {
         return quantityDbl;
     }
 
-    public String vendorItemNoStr;
+    private String vendorItemNoStr;
     public String getVendorItemNoStr() { return vendorItemNoStr; }
 
-    public String vendorItemDescriptionStr;
+    private String vendorItemDescriptionStr;
     public String getVendorItemDescriptionStr() { return vendorItemDescriptionStr; }
 
-    public int sortingSequenceNoInt;
+    private int sortingSequenceNoInt;
     public int getSortingSequenceNoInt() { return sortingSequenceNoInt; }
 
-    public int statusInt;
+    private int statusInt;
     public int getStatusInt() { return statusInt; }
 
-    public String handeledTimeStampStr;
+    private String handeledTimeStampStr;
     public String getHandeledTimeStampStr() { return handeledTimeStampStr; }
 
     public Double quantityHandledDbl;
     public Double getQuantityHandledDbl() { return quantityHandledDbl; }
 
-    public Double quantityHandledAllScannersDbl;
+    private Double quantityHandledAllScannersDbl;
     public Double getQuantityHandledAllScannersDbl() { return quantityHandledAllScannersDbl; }
 
-    public String extraField1Str;
+    private String extraField1Str;
     public String getExtraField1Str() {
         return extraField1Str;
     }
 
-    public String extraField2Str;
+    private String extraField2Str;
     public String getExtraField2Str() {
         return extraField2Str;
     }
 
-    public String extraField3Str;
+    private String extraField3Str;
     public String getExtraField3Str() {
         return extraField3Str;
     }
 
-    public String extraField4Str;
+    private String extraField4Str;
     public String getExtraField4Str() {
         return extraField4Str;
     }
 
-    public String extraField5Str;
+    private String extraField5Str;
     public String getExtraField5Str() {
         return extraField5Str;
     }
 
-    public String extraField6Str;
+    private String extraField6Str;
     public String getExtraField6Str() {
         return extraField6Str;
     }
 
-    public String extraField7Str;
+    private String extraField7Str;
     public String getExtraField7Str() {
         return extraField7Str;
     }
 
-    public String extraField8Str;
+    private String extraField8Str;
     public String getExtraField8Str() {
         return extraField8Str;
+    }
+
+    public String getItemNoAndVariantCodeStr(){
+        return  this.getItemNoStr() + " " + this.getVariantCodeStr();
+    }
+
+    public String getVendorItemNoAndVendorDescriptionStr(){
+        return  this.getVendorItemNoStr() + " " + this.getVendorItemDescriptionStr();
     }
 
     public cArticleImage articleImage;
@@ -254,7 +258,6 @@ public class cInventoryorderLine {
 
     public boolean pInsertInDatabaseBln() {
         cInventoryorderLine.getInventoryorderLineViewModel().insert(this.inventoryorderLineEntity);
-        this.indatabaseBln = true;
 
         if (cInventoryorderLine.allLinesObl == null){
             cInventoryorderLine.allLinesObl = new ArrayList<>();
@@ -297,21 +300,18 @@ public class cInventoryorderLine {
         cWebresult Webresult;
 
         Webresult = cArticleImage.getArticleImageViewModel().pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
-        if (Webresult.getSuccessBln() == false || Webresult.getResultBln() == false) {
+        if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
             return  false;
         }
 
-        List<JSONObject> myList = Webresult.getResultDtt();
-        for (int i = 0; i < myList.size(); i++) {
-            JSONObject jsonObject;
-            jsonObject = myList.get(i);
-
-            cArticleImage articleImage = new cArticleImage(jsonObject);
+        if (Webresult.getResultDtt().size() == 1) {
+            cArticleImage articleImage = new cArticleImage(Webresult.getResultDtt().get(0));
             articleImage.pInsertInDatabaseBln();
             this.articleImage = articleImage;
             return true;
-
         }
+
+
         return  false;
 
     }
@@ -321,7 +321,7 @@ public class cInventoryorderLine {
         cWebresult WebResult;
 
         WebResult =  cInventoryorderLine.getInventoryorderLineViewModel().pSaveLineViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
                 return  true;
             }
         else {
@@ -335,12 +335,7 @@ public class cInventoryorderLine {
 
         boolean resultBln;
         resultBln =   cInventoryorderLine.getInventoryorderLineViewModel().pUpdateQuantityBln();
-
-        if (resultBln == false) {
-            return  false;
-        }
-
-        return true;
+        return resultBln;
 
     }
 
@@ -373,7 +368,7 @@ public class cInventoryorderLine {
         cWebresult WebResult;
 
         WebResult =  cInventoryorderLine.getInventoryorderLineViewModel().pResetLineViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
             for (cInventoryorderLineBarcode inventoryorderLineBarcode : this.lineBarcodesObl()) {

@@ -2,6 +2,8 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
@@ -18,12 +20,12 @@ import nl.icsvertex.scansuite.R;
 
 public class HugeErrorFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private String errorMessage;
-    private  String extraMessage;
+    private static String errorMessage;
+    private static String extraMessage;
 
-    private ConstraintLayout containerHugeError;
-    private TextView textViewErrorMessage;
-    private TextView textViewExtraError;
+    private static ConstraintLayout containerHugeError;
+    private static TextView textViewErrorMessage;
+    private static TextView textViewExtraError;
 
 
     public HugeErrorFragment() {
@@ -37,47 +39,56 @@ public class HugeErrorFragment extends DialogFragment implements iICSDefaultFrag
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_huge_error, container, false);
     }
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        errorMessage = args.getString(cPublicDefinitions.HUGEERROR_ERRORMESSAGE, getString(R.string.error_unspecified));
-        extraMessage = args.getString(cPublicDefinitions.HUGEERROR_EXTRASTRING, "");
 
-        mFragmentInitialize();
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        if (args != null) {
+            HugeErrorFragment.errorMessage = args.getString(cPublicDefinitions.HUGEERROR_ERRORMESSAGE, getString(R.string.error_unspecified));
+            HugeErrorFragment.extraMessage = args.getString(cPublicDefinitions.HUGEERROR_EXTRASTRING, "");
+        }
+
+        this.mFragmentInitialize();
     }
+
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-         mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
         cUserInterface.pEnableScanner();
     }
 
     @Override
     public void mFindViews() {
-        textViewErrorMessage = getView().findViewById(R.id.textViewErrorMessage);
-        textViewExtraError = getView().findViewById(R.id.textViewExtraError);
-        containerHugeError = getView().findViewById(R.id.containerHugeError);
+
+        if (getView() != null) {
+            HugeErrorFragment.textViewErrorMessage = getView().findViewById(R.id.textViewErrorMessage);
+            HugeErrorFragment.textViewExtraError = getView().findViewById(R.id.textViewExtraError);
+            HugeErrorFragment.containerHugeError = getView().findViewById(R.id.containerHugeError);
+        }
+
+
     }
 
 
 
     @Override
     public void mFieldsInitialize() {
-        textViewErrorMessage.setText(errorMessage);
-        if (extraMessage.trim().isEmpty()) {
-            textViewExtraError.setVisibility(View.GONE);
+        HugeErrorFragment.textViewErrorMessage.setText(errorMessage);
+        if (HugeErrorFragment.extraMessage.trim().isEmpty()) {
+            HugeErrorFragment.textViewExtraError.setVisibility(View.GONE);
         }
-        textViewExtraError.setText(extraMessage);
+        HugeErrorFragment.textViewExtraError.setText(HugeErrorFragment.extraMessage);
     }
 
     @Override
     public void mSetListeners() {
-        mSetClickListener();
+        this.mSetClickListener();
     }
 
     private void mSetClickListener() {
-        containerHugeError.setOnClickListener(new View.OnClickListener() {
+        HugeErrorFragment.containerHugeError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();

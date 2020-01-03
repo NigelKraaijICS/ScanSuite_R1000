@@ -32,7 +32,7 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
 
     //Region Private Properties
 
-    private RecyclerView recyclerViewShiporderLinesShipped;
+    private static RecyclerView recyclerViewShiporderLinesShipped;
 
     //End Region Private Properties
 
@@ -58,16 +58,20 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
     }
 
     @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-        if (pvIsVisibleToUserBln) {
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
-            ShiporderLinesActivity.currentLineFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+        ShiporderLinesActivity.currentLineFragment = this;
     }
 
     //End Region Default Methods
@@ -85,8 +89,10 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
 
     @Override
     public void mFindViews() {
-            this.recyclerViewShiporderLinesShipped = getView().findViewById(R.id.recyclerViewShiporderLinesShipped);
 
+        if (getView() != null) {
+            ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped = getView().findViewById(R.id.recyclerViewShiporderLinesShipped);
+        }
     }
 
 
@@ -118,22 +124,23 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
         }
 
         cShipment.gethipmentsShippedAdapter().pFillData(pvDataObl);
-        this.recyclerViewShiporderLinesShipped.setHasFixedSize(false);
-        this.recyclerViewShiporderLinesShipped.setAdapter( cShipment.gethipmentsShippedAdapter());
-        this.recyclerViewShiporderLinesShipped.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped.setHasFixedSize(false);
+        ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped.setAdapter( cShipment.gethipmentsShippedAdapter());
+        ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
 
     }
 
+    //todo: check why this is always true
     private void mNoLinesAvailable(Boolean pvEnabledBln) {
 
-        if (ShiporderLinesActivity.currentLineFragment != null && ShiporderLinesActivity.currentLineFragment == this) {
+        if (ShiporderLinesActivity.currentLineFragment == this) {
             //Close no linesInt fragment if needed
             if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment || fragment instanceof NothingHereFragment ) {
+                    if (fragment instanceof NothingHereFragment ) {
                         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                         fragmentTransaction.remove(fragment);
                         fragmentTransaction.commit();
@@ -145,7 +152,7 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
             }
 
             //Hide the recycler view
-            this.recyclerViewShiporderLinesShipped.setVisibility(View.INVISIBLE);
+            ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped.setVisibility(View.INVISIBLE);
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();

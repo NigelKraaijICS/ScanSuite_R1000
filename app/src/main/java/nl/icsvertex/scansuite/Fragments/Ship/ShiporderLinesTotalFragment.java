@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,10 +16,10 @@ import java.util.List;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
-import SSU_WHS.Picken.Shipment.cShipment;
-import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import ICS.cAppExtension;
+import SSU_WHS.Picken.Shipment.cShipment;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
+import nl.icsvertex.scansuite.R;
 
 public class ShiporderLinesTotalFragment extends Fragment implements iICSDefaultFragment {
 
@@ -29,7 +28,7 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
     //End Region Public Properties
 
     //Region Private Properties
-    private RecyclerView recyclerViewShiporderLinesTotal;
+    private static RecyclerView recyclerViewShiporderLinesTotal;
     //End Region Private Properties
 
 
@@ -54,16 +53,20 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
     }
 
     @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-        if (pvIsVisibleToUserBln) {
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
-            ShiporderLinesActivity.currentLineFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+        ShiporderLinesActivity.currentLineFragment = this;
     }
 
     //End Region Default Methods
@@ -81,7 +84,10 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
 
     @Override
     public void mFindViews() {
-          this.recyclerViewShiporderLinesTotal = getView().findViewById(R.id.recyclerViewShiporderLinesTotal);
+
+        if (getView() != null) {
+            ShiporderLinesTotalFragment.recyclerViewShiporderLinesTotal = getView().findViewById(R.id.recyclerViewShiporderLinesTotal);
+        }
     }
 
 
@@ -106,9 +112,9 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
     private void mFillRecycler(List<cShipment> pvDataObl) {
 
         cShipment.getShipmentsTotalAdapter().pFillData(pvDataObl);
-        this.recyclerViewShiporderLinesTotal.setHasFixedSize(false);
-        this.recyclerViewShiporderLinesTotal.setAdapter(cShipment.getShipmentsTotalAdapter());
-        this.recyclerViewShiporderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        ShiporderLinesTotalFragment.recyclerViewShiporderLinesTotal.setHasFixedSize(false);
+        ShiporderLinesTotalFragment.recyclerViewShiporderLinesTotal.setAdapter(cShipment.getShipmentsTotalAdapter());
+        ShiporderLinesTotalFragment.recyclerViewShiporderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         ShiporderLinesActivity.pChangeTabCounterText( cText.pIntToStringStr(pvDataObl.size()));
 

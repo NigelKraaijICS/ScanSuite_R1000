@@ -2,6 +2,8 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -10,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
@@ -31,13 +35,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     //Region Private Properties
 
-    private Button cancelButton;
-    private ImageView acceptImageView;
-    private ImageView rejectImageView;
-    private TextView acceptRejectHeader;
-    private TextView acceptRejectText;
-    private TextView textReject;
-    private TextView textAccept;
+    private static  Button cancelButton;
+    private static ImageView acceptImageView;
+    private static ImageView rejectImageView;
+    private static TextView acceptRejectHeader;
+    private static TextView acceptRejectText;
+    private static TextView textReject;
+    private static TextView textAccept;
 
     private String  titleStr;
     private String  messageStr;
@@ -70,7 +74,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         cAppExtension.dialogFragment = this;
         this.mFragmentInitialize();
     }
@@ -85,25 +89,28 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     @Override
     public void mFindViews() {
-        this.acceptImageView = getView().findViewById(R.id.acceptImageView);
-        this.rejectImageView = getView().findViewById(R.id.rejectImageView);
-        this.cancelButton = getView().findViewById(R.id.cancelButton);
-        this.textReject = getView().findViewById(R.id.textReject);
-        this.textAccept = getView().findViewById(R.id.textAccept);
-        this.acceptRejectHeader = getView().findViewById(R.id.textViewAcceptRejectHeader);
-        this.acceptRejectText = getView().findViewById(R.id.textViewAcceptRejectText);
+
+        if (getView() != null) {
+            AcceptRejectFragment.acceptImageView = getView().findViewById(R.id.acceptImageView);
+            AcceptRejectFragment.rejectImageView = getView().findViewById(R.id.rejectImageView);
+            AcceptRejectFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+            AcceptRejectFragment.textReject = getView().findViewById(R.id.textReject);
+            AcceptRejectFragment.textAccept = getView().findViewById(R.id.textAccept);
+            AcceptRejectFragment.acceptRejectHeader = getView().findViewById(R.id.textViewAcceptRejectHeader);
+            AcceptRejectFragment.acceptRejectText = getView().findViewById(R.id.textViewAcceptRejectText);
+        }
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        getActivity().runOnUiThread(new Runnable() {
+        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                acceptRejectHeader.setText(titleStr);
-                acceptRejectText.setText(messageStr);
-                textReject.setText(rejectStr);
-                textAccept.setText(acceptStr);
+                AcceptRejectFragment.acceptRejectHeader.setText(titleStr);
+                AcceptRejectFragment.acceptRejectText.setText(messageStr);
+                AcceptRejectFragment.textReject.setText(rejectStr);
+                AcceptRejectFragment.textAccept.setText(acceptStr);
             }
         });
     }
@@ -118,7 +125,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
+        AcceptRejectFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -134,14 +141,14 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     private void mSetAcceptListener() {
 
-        this.acceptImageView.setOnClickListener(new View.OnClickListener() {
+        AcceptRejectFragment.acceptImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAccept();
             }
         });
 
-        this.textAccept.setOnClickListener(new View.OnClickListener() {
+        AcceptRejectFragment.textAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAccept();
@@ -150,13 +157,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     }
 
     private void mSetRejectListener() {
-        this.rejectImageView.setOnClickListener(new View.OnClickListener() {
+        AcceptRejectFragment.rejectImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mReject();
             }
         });
-        this.textReject.setOnClickListener(new View.OnClickListener() {
+        AcceptRejectFragment.textReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mReject();
@@ -228,6 +235,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
+            IntakeOrderIntakeActivity.pCancelStore();
             this.dismiss();
         }
 

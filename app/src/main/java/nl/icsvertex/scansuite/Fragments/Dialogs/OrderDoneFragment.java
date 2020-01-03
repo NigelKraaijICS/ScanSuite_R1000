@@ -2,6 +2,8 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
@@ -32,13 +34,13 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
 
     //Region Private Properties
 
-    static private ConstraintLayout orderDoneContainer;
-    private TextView textViewOrderDoneHeader;
-    private TextView textViewOrderDoneText;
-    static private EditText editTextCurrentLocation;
-    static private Button closeOrderButton;
-    static private Button cancelButton;
-    static private Boolean showCurrentLocationBln;
+    private static  ConstraintLayout orderDoneContainer;
+    private static TextView textViewOrderDoneHeader;
+    private static  TextView textViewOrderDoneText;
+    private static  EditText editTextCurrentLocation;
+    private static  Button closeOrderButton;
+    private static Button cancelButton;
+    private static Boolean showCurrentLocationBln;
 
     //End Region private Properties
 
@@ -60,7 +62,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
 
     }
     @Override
-    public void onViewCreated(View pvView, @Nullable Bundle pvSavedInstanceState) {
+    public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
         this.mFragmentInitialize();
     }
 
@@ -101,34 +103,38 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
 
     @Override
     public void mFindViews() {
-        this.textViewOrderDoneHeader = getView().findViewById(R.id.textViewOrderDoneHeader);
-        this.textViewOrderDoneText = getView().findViewById(R.id.textViewOrderDoneText);
-        this.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
-        this.orderDoneContainer = getView().findViewById(R.id.orderDoneContainer);
-        this.closeOrderButton = getView().findViewById(R.id.closeOrderButton);
-        this.cancelButton = getView().findViewById(R.id.cancelButton);
+
+        if (getView() != null) {
+            OrderDoneFragment.textViewOrderDoneHeader = getView().findViewById(R.id.textViewOrderDoneHeader);
+            OrderDoneFragment.textViewOrderDoneText = getView().findViewById(R.id.textViewOrderDoneText);
+            OrderDoneFragment.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
+            OrderDoneFragment.orderDoneContainer = getView().findViewById(R.id.orderDoneContainer);
+            OrderDoneFragment.closeOrderButton = getView().findViewById(R.id.closeOrderButton);
+            OrderDoneFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+        }
+
     }
 
     @Override
     public void mFieldsInitialize() {
 
-        this.textViewOrderDoneHeader.setText(cAppExtension.context.getString(R.string.orderdone_header_default));
-        this.textViewOrderDoneText.setText(cAppExtension.context.getString(R.string.orderdone_text_default));
+        OrderDoneFragment.textViewOrderDoneHeader.setText(cAppExtension.context.getString(R.string.orderdone_header_default));
+        OrderDoneFragment.textViewOrderDoneText.setText(cAppExtension.context.getString(R.string.orderdone_text_default));
 
 
-       if (!this.showCurrentLocationBln) {
-           editTextCurrentLocation.setVisibility(View.INVISIBLE);
+       if (!OrderDoneFragment.showCurrentLocationBln) {
+           OrderDoneFragment.editTextCurrentLocation.setVisibility(View.INVISIBLE);
            return;
        }
 
 
-        if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 && cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty() == false ) {
-            editTextCurrentLocation.setVisibility(View.INVISIBLE);
+        if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 && !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+            OrderDoneFragment.editTextCurrentLocation.setVisibility(View.INVISIBLE);
         } else {
             InputFilter[] filterArray = new InputFilter[1];
             filterArray[0] = new InputFilter.LengthFilter(20);
-            editTextCurrentLocation.setFilters(filterArray);
-            cUserInterface.pShowKeyboard(editTextCurrentLocation);
+            OrderDoneFragment.editTextCurrentLocation.setFilters(filterArray);
+            cUserInterface.pShowKeyboard(OrderDoneFragment.editTextCurrentLocation);
         }
     }
 
@@ -139,7 +145,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
+        OrderDoneFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 dismiss();
@@ -148,21 +154,21 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private void mSetCloseListener() {
-        this.closeOrderButton.setOnClickListener(new View.OnClickListener() {
+        OrderDoneFragment.closeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
 
 
                 if (cAppExtension.activity instanceof PickorderLinesActivity) {
-                    if (cPickorder.currentPickOrder.pQuantityHandledDbl() > 0 && cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty() == true) {
+                    if (cPickorder.currentPickOrder.pQuantityHandledDbl() > 0 && cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
                         //we need a location
-                        if (editTextCurrentLocation.getText().toString().trim().isEmpty() && OrderDoneFragment.showCurrentLocationBln ) {
-                            cUserInterface.pDoNope(editTextCurrentLocation, true, true);
+                        if (OrderDoneFragment.editTextCurrentLocation.getText().toString().trim().isEmpty() && OrderDoneFragment.showCurrentLocationBln ) {
+                            cUserInterface.pDoNope(OrderDoneFragment.editTextCurrentLocation, true, true);
                             return;
                         }
                     }
                     dismiss();
-                    PickorderLinesActivity.pPickingDone(editTextCurrentLocation.getText().toString().trim());
+                    PickorderLinesActivity.pPickingDone(OrderDoneFragment.editTextCurrentLocation.getText().toString().trim());
                 }
 
                 if (cAppExtension.activity  instanceof SortorderLinesActivity) {
@@ -189,28 +195,26 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
 
         //No prefix
         if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
-            editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
-            closeOrderButton.callOnClick();
+            OrderDoneFragment.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
+            OrderDoneFragment.closeOrderButton.callOnClick();
             return;
         }
 
-        Boolean foundBln = false;
+        boolean foundBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
             foundBln = true;
         }
 
         //has prefix, is BIN
         if (foundBln) {
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-            editTextCurrentLocation.setText(barcodeWithoutPrefixStr);
-            closeOrderButton.callOnClick();
-            return;
+            OrderDoneFragment.editTextCurrentLocation.setText(barcodeWithoutPrefixStr);
+            OrderDoneFragment.closeOrderButton.callOnClick();
         }
         else {
             //has prefix, isn't branch
-            cUserInterface.pDoNope(orderDoneContainer, true, true);
-            return;
+            cUserInterface.pDoNope( OrderDoneFragment.orderDoneContainer, true, true);
         }
     }
 

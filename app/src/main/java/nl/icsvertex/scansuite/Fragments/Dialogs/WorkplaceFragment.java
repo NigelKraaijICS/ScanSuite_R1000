@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
@@ -86,7 +88,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
     }
 
     //End Region Default Methods
@@ -95,7 +97,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();
-         this.mFieldsInitialize();
+        this.mFieldsInitialize();
         this.mSetListeners();
 
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
@@ -103,7 +105,11 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
 
     @Override
     public void mFindViews() {
-        this.workplaceRecyclerView = getView().findViewById(R.id.workplaceRecyclerview);
+
+        if (getView() != null) {
+            WorkplaceFragment.workplaceRecyclerView = getView().findViewById(R.id.workplaceRecyclerview);
+        }
+
     }
 
 
@@ -125,16 +131,16 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         String barcodeWithoutPrefixStr ;
 
         if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
-            Boolean foundBin = false;
+            boolean foundBin = false;
 
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.WORKPLACE) == true) {
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.WORKPLACE)) {
                 foundBin = true;
             }
 
             if (foundBin) {
                 //has prefix, is workPlaceStr
                 barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-                mWorkplaceScanned(barcodeWithoutPrefixStr);
+                WorkplaceFragment.mWorkplaceScanned(barcodeWithoutPrefixStr);
             }
             else {
                 //has prefix, isn't workPlaceStr
@@ -143,7 +149,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         }
         else {
             //no prefix, fine
-            mWorkplaceScanned(pvBarcodeScan.getBarcodeOriginalStr());
+            WorkplaceFragment.mWorkplaceScanned(pvBarcodeScan.getBarcodeOriginalStr());
         }
     }
 
@@ -179,15 +185,15 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         boolean webserviceResult;
         webserviceResult = cWorkplace.pGetWorkplacesViaWebserviceBln();
 
-        if (webserviceResult == true) {
-            mSetWorkplaceRecycler();
+        if (webserviceResult) {
+            this.mSetWorkplaceRecycler();
         }
     }
 
     private void mSetWorkplaceRecycler() {
-        this.workplaceRecyclerView.setHasFixedSize(false);
-        this.workplaceRecyclerView.setAdapter(cWorkplace.getWorkplaceAdapter());
-        this.workplaceRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        WorkplaceFragment.workplaceRecyclerView.setHasFixedSize(false);
+        WorkplaceFragment.workplaceRecyclerView.setAdapter(cWorkplace.getWorkplaceAdapter());
+        WorkplaceFragment.workplaceRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
 
     //End Region Private Methods

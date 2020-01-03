@@ -22,9 +22,9 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
     //End Region Public Properties
 
     //Region Private Properties
-    private TabLayout supportTabLayout;
-    private ViewPager supportViewPager;
-    private SupportPagerAdapter supportPagerAdapter;
+    private static TabLayout supportTabLayout;
+    private static ViewPager supportViewPager;
+    private static SupportPagerAdapter supportPagerAdapter;
     //End Region Private Properties
 
 
@@ -59,24 +59,21 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFindViews() {
-        this.supportViewPager = getView().findViewById(R.id.supportViewpager);
-        this.supportTabLayout = getView().findViewById(R.id.supportTabLayout);
 
-
-
+        if (getView() != null) {
+            SupportFragment.supportViewPager = getView().findViewById(R.id.supportViewpager);
+            SupportFragment.supportTabLayout = getView().findViewById(R.id.supportTabLayout);
+        }
     }
 
 
     @Override
     public void mFieldsInitialize() {
-
-        this.supportTabLayout.addTab(this.supportTabLayout.newTab().setText(R.string.tab_support_network));
-        this.supportTabLayout.addTab(this.supportTabLayout.newTab().setText(R.string.tab_support_device));
-        this.supportTabLayout.addTab(this.supportTabLayout.newTab().setText(R.string.tab_support_application));
-        this.supportPagerAdapter = new SupportPagerAdapter(this.supportTabLayout.getTabCount());
-
-        this.supportViewPager.setAdapter(this.supportPagerAdapter);
-
+        SupportFragment.supportTabLayout.addTab(SupportFragment.supportTabLayout.newTab().setText(R.string.tab_support_network));
+        SupportFragment.supportTabLayout.addTab(SupportFragment.supportTabLayout.newTab().setText(R.string.tab_support_device));
+        SupportFragment.supportTabLayout.addTab(SupportFragment.supportTabLayout.newTab().setText(R.string.tab_support_application));
+        SupportFragment.supportPagerAdapter = new SupportPagerAdapter(SupportFragment.supportTabLayout.getTabCount());
+        SupportFragment.supportViewPager.setAdapter(SupportFragment.supportPagerAdapter);
     }
 
     @Override
@@ -85,11 +82,11 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
     }
 
     private void mSetTabListener() {
-        this.supportViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.supportTabLayout));
-        this.supportTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        SupportFragment.supportViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(SupportFragment.supportTabLayout));
+        SupportFragment.supportTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                supportViewPager.setCurrentItem(tab.getPosition());
+                SupportFragment.supportViewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override

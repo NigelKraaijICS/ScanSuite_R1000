@@ -1,23 +1,23 @@
 package nl.icsvertex.scansuite.Fragments.Pick;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
-import ICS.cAppExtension;
+import nl.icsvertex.scansuite.R;
 
 public class PickorderLinesTotalFragment extends Fragment {
 
@@ -27,7 +27,7 @@ public class PickorderLinesTotalFragment extends Fragment {
     //End Region Public Properties
 
     //Region Private Properties
-    private  RecyclerView recyclerViewPickorderLinesTotal;
+    private static  RecyclerView recyclerViewPickorderLinesTotal;
     //End Region Private Properties
 
     //Region Constructor
@@ -53,23 +53,27 @@ public class PickorderLinesTotalFragment extends Fragment {
     }
 
     @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
-
-        if (pvIsVisibleToUserBln) {
-
-            PickorderLinesActivity.currentLineFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+    public void onDestroy() {
+        super.onDestroy();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+        PickorderLinesActivity.currentLineFragment = this;
+    }
 
     private void mFindViews() {
-        this.recyclerViewPickorderLinesTotal = getView().findViewById(R.id.recyclerViewPickorderLinesTotal);
+        if (getView() != null) {
+            PickorderLinesTotalFragment.recyclerViewPickorderLinesTotal = getView().findViewById(R.id.recyclerViewPickorderLinesTotal);
+        }
     }
-
 
     private void mFillRecycler() {
 

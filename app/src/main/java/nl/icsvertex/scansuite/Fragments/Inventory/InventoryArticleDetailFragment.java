@@ -28,6 +28,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 
@@ -49,34 +51,31 @@ import nl.icsvertex.scansuite.R;
 public class InventoryArticleDetailFragment extends DialogFragment implements iICSDefaultFragment {
 
     //Region Public Properties
-    static final String BARCODEFRAGMENT_TAG = "BARCODERAGMENT_TAG";
     //End Region Public Properties
 
-    //Region Private Properties
+    //Region Private
+    private static final String BARCODEFRAGMENT_TAG = "BARCODERAGMENT_TAG";
     private static int inventoryCounterMinusHelperInt;
     private static int inventoryCounterPlusHelperInt;
     private static Handler minusHandler;
     private static Handler plusHandler;
 
-    private ImageView toolbarImage;
-    private  TextView toolbarTitle;
-    private TextView toolbarSubtext;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
 
     private static ImageView articleThumbImageView;
-    private static ImageView theBigPicture;
-    private static ConstraintLayout theBigPictureContainer;
 
-    private TextView binText;
+    private static TextView binText;
     private static EditText quantityText;
     private static AppCompatImageButton imageButtonMinus;
     private static AppCompatImageButton imageButtonPlus;
 
-    private TextView articleDescriptionText;
-    private TextView articleDescription2Text;
-    private TextView articleItemText;
+    private static TextView articleDescriptionText;
+    private static TextView articleDescription2Text;
+    private static TextView articleItemText;
     private static TextView articleBarcodeText;
     private static TextView articleUnitOfMeasureText;
-    private TextView articleVendorItemText;
+    private static TextView articleVendorItemText;
 
     private static TextView genericItemExtraField1Text;
     private static TextView genericItemExtraField2Text;
@@ -134,7 +133,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
     }
@@ -156,36 +155,31 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     @Override
     public void mFindViews() {
 
-        this.toolbarImage = getView().findViewById(R.id.toolbarImage);
-        this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
-        this.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
+        InventoryArticleDetailFragment.toolbarImage = Objects.requireNonNull(getView()).findViewById(R.id.toolbarImage);
+        InventoryArticleDetailFragment.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
+        InventoryArticleDetailFragment.articleThumbImageView = getView().findViewById(R.id.articleThumbImageView);
 
+        InventoryArticleDetailFragment.binText = getView().findViewById(R.id.binText);
+        InventoryArticleDetailFragment.quantityText = getView().findViewById(R.id.quantityText);
+        InventoryArticleDetailFragment.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
+        InventoryArticleDetailFragment.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
+        InventoryArticleDetailFragment.imageButtonBarcode = getView().findViewById(R.id.imageButtonBarcode);
 
-        this.articleThumbImageView = getView().findViewById(R.id.articleThumbImageView);
-//        theBigPicture = getView().findViewById(R.id.theBigPicture);
-//        theBigPictureContainer = getView().findViewById(R.id.theBigPictureContainer);
+        InventoryArticleDetailFragment.articleDescriptionText = getView().findViewById(R.id.articleDescriptionText);
+        InventoryArticleDetailFragment.articleDescription2Text = getView().findViewById(R.id.articleDescription2Text);
+        InventoryArticleDetailFragment.articleItemText = getView().findViewById(R.id.articleItemText);
+        InventoryArticleDetailFragment.articleBarcodeText = getView().findViewById(R.id.articleBarcodeText);
+        InventoryArticleDetailFragment.articleUnitOfMeasureText = getView().findViewById(R.id.articleUnitOfMeasureText);
+        InventoryArticleDetailFragment.articleVendorItemText = getView().findViewById(R.id.articleVendorItemText);
 
-        this.binText = getView().findViewById(R.id.binText);
-        this.quantityText = getView().findViewById(R.id.quantityText);
-        this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
-        this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
-        this.imageButtonBarcode = getView().findViewById(R.id.imageButtonBarcode);
-
-        this.articleDescriptionText = getView().findViewById(R.id.articleDescriptionText);
-        this.articleDescription2Text = getView().findViewById(R.id.articleDescription2Text);
-        this.articleItemText = getView().findViewById(R.id.articleItemText);
-        this.articleBarcodeText = getView().findViewById(R.id.articleBarcodeText);
-        this.articleUnitOfMeasureText = getView().findViewById(R.id.articleUnitOfMeasureText);
-        this.articleVendorItemText = getView().findViewById(R.id.articleVendorItemText);
-
-        this.genericItemExtraField1Text = getView().findViewById(R.id.genericItemExtraField1Text);
-        this.genericItemExtraField2Text = getView().findViewById(R.id.genericItemExtraField2Text);
-        this.genericItemExtraField3Text = getView().findViewById(R.id.genericItemExtraField3Text);
-        this.genericItemExtraField4Text = getView().findViewById(R.id.genericItemExtraField4Text);
-        this.genericItemExtraField5Text = getView().findViewById(R.id.genericItemExtraField5Text);
-        this.genericItemExtraField6Text = getView().findViewById(R.id.genericItemExtraField6Text);
-        this.genericItemExtraField7Text = getView().findViewById(R.id.genericItemExtraField7Text);
-        this.genericItemExtraField8Text = getView().findViewById(R.id.genericItemExtraField8Text);
+        InventoryArticleDetailFragment.genericItemExtraField1Text = getView().findViewById(R.id.genericItemExtraField1Text);
+        InventoryArticleDetailFragment.genericItemExtraField2Text = getView().findViewById(R.id.genericItemExtraField2Text);
+        InventoryArticleDetailFragment.genericItemExtraField3Text = getView().findViewById(R.id.genericItemExtraField3Text);
+        InventoryArticleDetailFragment.genericItemExtraField4Text = getView().findViewById(R.id.genericItemExtraField4Text);
+        InventoryArticleDetailFragment.genericItemExtraField5Text = getView().findViewById(R.id.genericItemExtraField5Text);
+        InventoryArticleDetailFragment.genericItemExtraField6Text = getView().findViewById(R.id.genericItemExtraField6Text);
+        InventoryArticleDetailFragment.genericItemExtraField7Text = getView().findViewById(R.id.genericItemExtraField7Text);
+        InventoryArticleDetailFragment.genericItemExtraField8Text = getView().findViewById(R.id.genericItemExtraField8Text);
 
         InventoryArticleDetailFragment.probeerselContainer = getView().findViewById(R.id.probeersel);
 
@@ -196,21 +190,21 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     public void mFieldsInitialize() {
 
         if (!cInventoryorder.currentInventoryOrder.isInvAmountManualBln()) {
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            InventoryArticleDetailFragment.imageButtonBarcode.setVisibility(View.INVISIBLE);
         } else {
-            this.imageButtonBarcode.setVisibility(View.VISIBLE);
+            InventoryArticleDetailFragment.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
 
-        this.inventoryCounterPlusHelperInt = 0;
-        this. inventoryCounterMinusHelperInt = 0;
+        InventoryArticleDetailFragment.inventoryCounterPlusHelperInt = 0;
+        InventoryArticleDetailFragment. inventoryCounterMinusHelperInt = 0;
 
-        this.articleDescriptionText.setText(cInventoryorderLine.currentInventoryOrderLine.getDescriptionStr());
-        this.articleDescription2Text.setText(cInventoryorderLine.currentInventoryOrderLine.getDescription2Str());
-        this.articleItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getItemNoStr() + " " + cInventoryorderLine.currentInventoryOrderLine.getVariantCodeStr());
+        InventoryArticleDetailFragment.articleDescriptionText.setText(cInventoryorderLine.currentInventoryOrderLine.getDescriptionStr());
+        InventoryArticleDetailFragment.articleDescription2Text.setText(cInventoryorderLine.currentInventoryOrderLine.getDescription2Str());
+        InventoryArticleDetailFragment.articleItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getItemNoAndVariantCodeStr());
 
-        this.articleVendorItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getVendorItemNoStr() + ' ' + cInventoryorderLine.currentInventoryOrderLine.getVendorItemDescriptionStr());
+        InventoryArticleDetailFragment.articleVendorItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getVendorItemNoAndVendorDescriptionStr());
 
-        this.binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
+        InventoryArticleDetailFragment.binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
 
         InventoryArticleDetailFragment.quantityText.setSelectAllOnFocus(true);
         InventoryArticleDetailFragment.quantityText.requestFocus();
@@ -231,7 +225,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     public void mSetListeners() {
              this.mSetDoneListener();
 
-        if (cSetting.INV_AMOUNT_MANUAL() == true) {
+        if (cSetting.INV_AMOUNT_MANUAL()) {
             this.mSetPlusListener();
             this.mSetMinusListener();
             this.mSetEditorActionListener();
@@ -259,7 +253,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         //Only ARTICLE scans are allowed
         if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
-            mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_mandatory), pvBarcodeScan.getBarcodeOriginalStr());
+            mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_mandatory));
             return;
         }
 
@@ -330,25 +324,25 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     private void mSetToolbar() {
 
-        this.toolbarTitle.setText(cAppExtension.activity.getString(R.string.scan_article));
-        this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        this.toolbarTitle.setSingleLine(true);
-        this.toolbarTitle.setMarqueeRepeatLimit(5);
-        this.toolbarTitle.postDelayed(new Runnable() {
+        InventoryArticleDetailFragment.toolbarTitle.setText(cAppExtension.activity.getString(R.string.scan_article));
+        InventoryArticleDetailFragment.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        InventoryArticleDetailFragment.toolbarTitle.setSingleLine(true);
+        InventoryArticleDetailFragment.toolbarTitle.setMarqueeRepeatLimit(5);
+        InventoryArticleDetailFragment.toolbarTitle.postDelayed(new Runnable() {
             @Override
             public void run() {
                 toolbarTitle.setSelected(true);
             }
         },1500);
 
-        this.toolbarImage.setImageResource(R.drawable.ic_info);
+        InventoryArticleDetailFragment.toolbarImage.setImageResource(R.drawable.ic_info);
 
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetPlusListener() {
 
-        this.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
+        InventoryArticleDetailFragment.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -370,7 +364,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
             }
         });
 
-        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
+        InventoryArticleDetailFragment.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -388,7 +382,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
-        this.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
+        InventoryArticleDetailFragment.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -407,7 +401,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         });
 
-        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
+        InventoryArticleDetailFragment.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -434,7 +428,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         });
 
 
-        this.quantityText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        InventoryArticleDetailFragment.quantityText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
@@ -463,15 +457,13 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     }
 
     private void mDoDelayedMinus(Runnable pvRunnable, long pvMilliSecsLng) {
-        this.minusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
-        this.inventoryCounterMinusHelperInt += 1;
-        return;
+        InventoryArticleDetailFragment.minusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
+        InventoryArticleDetailFragment.inventoryCounterMinusHelperInt += 1;
     }
 
     private void mDoDelayedPlus(Runnable pvRunnable, long pvMilliSecsLng) {
-        this.plusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
-        this.inventoryCounterPlusHelperInt += 1;
-        return;
+        InventoryArticleDetailFragment.plusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
+        InventoryArticleDetailFragment.inventoryCounterPlusHelperInt += 1;
     }
 
     private static void mTryToChangeInventoryQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
@@ -480,7 +472,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         if (pvIsPositiveBln) {
 
             //Determine the new amount
-            if (pvAmountFixedBln == true) {
+            if (pvAmountFixedBln) {
                 cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl = pvAmountDbl;
                 cInventoryorderLineBarcode.currentInventoryorderLineBarcode.quantityHandledDbl =  pvAmountDbl;
             } else {
@@ -515,7 +507,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         }
 
         //Determine the new amount
-        if (pvAmountFixedBln == true) {
+        if (pvAmountFixedBln) {
             cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl = pvAmountDbl;
             cInventoryorderLineBarcode.currentInventoryorderLineBarcode.quantityHandledDbl =  pvAmountDbl;
         }else {
@@ -525,7 +517,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         //Change quantityDbl in activity
         InventoryArticleDetailFragment.quantityText.setText(cText.pDoubleToStringStr(cInventoryorderLine.currentInventoryOrderLine.getQuantityHandledDbl()));
-        return;
 
     }
 
@@ -538,7 +529,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         }
 
         //If picture is not in cache (via webservice) then show no image
-        if (cInventoryorderLine.currentInventoryOrderLine.pGetArticleImageBln() == false) {
+        if (!cInventoryorderLine.currentInventoryOrderLine.pGetArticleImageBln()) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
             InventoryArticleDetailFragment.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
             return;
@@ -553,12 +544,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         //Show the image
         InventoryArticleDetailFragment.articleThumbImageView.setImageBitmap(cInventoryorderLine.currentInventoryOrderLine.articleImage.imageBitmap());
-
-        //Open the image
-        if ((cInventoryorder.currentInventoryOrder.isInventoryWithPictureAutoOpenBln())) {
-            //todo wait for Bart to look this up
-            //InventoryArticleDetailFragment.mShowFullArticleFragment();
-        }
 
     }
 
@@ -616,7 +601,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     }
 
-    private static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
+    private static void mDoUnknownScan(String pvErrorMessageStr) {
         cUserInterface.pShowSnackbarMessage(InventoryArticleDetailFragment.probeerselContainer,pvErrorMessageStr,null,true);
     }
 
@@ -664,8 +649,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
 
         if (cInventoryorderBarcode.currentInventoryOrderBarcode != null) {
-            InventoryArticleDetailFragment.articleBarcodeText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr() + " (" + cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl().intValue() + ")");
-
+            InventoryArticleDetailFragment.articleBarcodeText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeAndQuantityStr());
             InventoryArticleDetailFragment.articleUnitOfMeasureText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getUnitOfMeasureStr());
         } else {
             InventoryArticleDetailFragment.articleBarcodeText.setText(cAppExtension.context.getString(R.string.message_unknown_barcode));
@@ -675,7 +659,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     }
 
     private void mSetImageButtonBarcodeListener() {
-        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
+        InventoryArticleDetailFragment.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
 
@@ -690,7 +674,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
                 }
 
                 mShowBarcodeSelectFragment();
-                return;
 
             }
         });
@@ -699,7 +682,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private void mShowBarcodeSelectFragment() {
         BarcodeFragment barcodeFragment = new BarcodeFragment();
         barcodeFragment.show(cAppExtension.fragmentManager, BARCODEFRAGMENT_TAG);
-        return;
     }
 
     //End Region Private Methods

@@ -1,32 +1,33 @@
 package nl.icsvertex.scansuite.Activities.General;
 
 import android.content.Intent;
-import androidx.annotation.NonNull;
-
-import com.crashlytics.android.Crashlytics;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.crashlytics.android.Crashlytics;
+import com.google.android.material.navigation.NavigationView;
+
 import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
+import ICS.Utils.cConnection;
+import ICS.Utils.cPermissions;
 import ICS.Utils.cPower;
-import ICS.Utils.cWifi;
+import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -35,22 +36,17 @@ import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.ScannerLogon.cScannerLogon;
 import SSU_WHS.Webservice.cWebservice;
-import ICS.cAppExtension;
-import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.cConnection;
-import ICS.Utils.cUserInterface;
-import ICS.Utils.cPermissions;
-
 import io.fabric.sdk.android.Fabric;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
 import nl.icsvertex.scansuite.Fragments.Main.DateTimeFragment;
 import nl.icsvertex.scansuite.Fragments.Main.HomeFragment;
 import nl.icsvertex.scansuite.Fragments.Main.LanguageFragment;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Fragments.Support.SupportFragment;
+import nl.icsvertex.scansuite.R;
 
 public class MainDefaultActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -66,14 +62,14 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     private static ImageView imageHome;
     private static ImageView imageEnvironment;
 
-    private Toolbar Toolbar;
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static Toolbar Toolbar;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
     private static TextView toolbarSubtext;
 
-    private FrameLayout mainFramelayout;
-    private DrawerLayout menuMainDrawer;
-    private NavigationView mainmenuNavigation;
+    private static FrameLayout mainFramelayout;
+    private static DrawerLayout menuMainDrawer;
+    private static NavigationView mainmenuNavigation;
     //End region views
 
     //End Region Private Properties
@@ -114,7 +110,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         if (pvRequestCodeInt == cPublicDefinitions.CHANGELANGUAGE_REQUESTCODE) {
             //we've changed the language, or not, who cares, but go back to language
             this.setTitle(R.string.screentitle_language);
-            this.toolbarTitle.setText(R.string.screentitle_language);
+            MainDefaultActivity.toolbarTitle.setText(R.string.screentitle_language);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.mainFramelayout, new LanguageFragment());
             transaction.commit();
@@ -169,28 +165,28 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void mFindViews() {
 
-        this.Toolbar = findViewById(R.id.toolbar);
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        MainDefaultActivity.Toolbar = findViewById(R.id.toolbar);
+        MainDefaultActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        MainDefaultActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        MainDefaultActivity.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-        this.imageHome = findViewById(R.id.imageHome);
-        this.imageEnvironment = findViewById(R.id.imageEnvironment);
+        MainDefaultActivity.imageHome = findViewById(R.id.imageHome);
+        MainDefaultActivity.imageEnvironment = findViewById(R.id.imageEnvironment);
 
-        this.mainFramelayout = findViewById(R.id.mainFramelayout);
-        this.menuMainDrawer = findViewById(R.id.menuMainDrawer);
-        this.mainmenuNavigation = findViewById(R.id.mainmenuNavigation);
+        MainDefaultActivity.mainFramelayout = findViewById(R.id.mainFramelayout);
+        MainDefaultActivity.menuMainDrawer = findViewById(R.id.menuMainDrawer);
+        MainDefaultActivity.mainmenuNavigation = findViewById(R.id.mainmenuNavigation);
     }
 
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
 
-        this.toolbarTitle.setText(pvScreenTitle);
-        this.toolbarImage.setImageResource(R.drawable.ic_welcome);
-        this.toolbarTitle.setSelected(true);
-        toolbarSubtext.setSelected(true);
-        setSupportActionBar(this.Toolbar);
+        MainDefaultActivity.toolbarTitle.setText(pvScreenTitle);
+        MainDefaultActivity.toolbarImage.setImageResource(R.drawable.ic_welcome);
+        MainDefaultActivity.toolbarTitle.setSelected(true);
+        MainDefaultActivity.toolbarSubtext.setSelected(true);
+        setSupportActionBar(MainDefaultActivity.Toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -222,20 +218,18 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     public void pLetsGetThisPartyStartedOrNot() {
 
         // If scanner had different interface version then web service, then stop
-        if (cWebservice.pWebserviceIsAvailableAndRightVersionBln() == false) {
+        if (!cWebservice.pWebserviceIsAvailableAndRightVersionBln()) {
             return;
         }
 
         // If we already have everything we need, then next fragment
-        if (this.mAllBasicsAvailableBln() == true) {
+        if (this.mAllBasicsAvailableBln()) {
             HomeFragment.pFragmentDone();
-            return;
         }
 
         // Get all basic data via webservice, then next fragment
-        if (this.mGetBasicDataBln() == true) {
+        if (this.mGetBasicDataBln()) {
             HomeFragment.pFragmentDone();
-            return;
         }
     }
 
@@ -248,20 +242,19 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         toolbarSubtext.setText(cEnvironment.currentEnvironment.getDescriptionStr());
         cUserInterface.pShowSnackbarMessage(imageEnvironment, cAppExtension.context.getString(R.string.environment_set_to_parameter1, cEnvironment.currentEnvironment.getDescriptionStr()), R.raw.goodsound, false );
-        return;
+
     }
 
 
     public static void pPasswordSuccess(){
         MainDefaultActivity.mShowEnvironmentFragment();
-        return;
     }
 
     //End Region Public Methods
 
     //Region Private Methods
     private boolean mAllBasicsAvailableBln() {
-        if (cScannerLogon.scannerLoggedOnBln &&
+        return cScannerLogon.scannerLoggedOnBln &&
                 cUser.usersAvailableBln &&
                 cBarcodeLayout.barcodeLayoutsAvailableBln &&
                 cSetting.settingsAvailableBln &&
@@ -269,76 +262,64 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cShippingAgentService.shippingAgentServicesAvailableBln &&
                 cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln &&
                 cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln &&
-                cItemProperty.itemPropertiesAvaliableBln )
-        {
-            return true;
-        }
-        else {
-            return  false;
-        }
+                cItemProperty.itemPropertiesAvaliableBln;
     }
 
     private boolean mGetBasicDataBln() {
 
-        if (cScannerLogon.pScannerLogonViaWebserviceBln() == false) {
+        if (!cScannerLogon.pScannerLogonViaWebserviceBln()) {
             return  false;
         }
 
-        if (cScannerLogon.currentScannerLogon.pScannerVersionCheckBln(mainFramelayout) == false ){
+        if (!cScannerLogon.currentScannerLogon.pScannerVersionCheckBln(mainFramelayout)){
             return  false;
         }
 
 
-        if (cSetting.pGetSettingsViaWebserviceBln(true) == false) {
+        if (!cSetting.pGetSettingsViaWebserviceBln(true)) {
             return false;
         }
 
-        if ( cUser.pGetUsersViaWebserviceBln(true) == false) {
+        if (!cUser.pGetUsersViaWebserviceBln(true)) {
             return false;
         }
 
-        if ( cBarcodeLayout.pGetBarcodeLayoutsViaWebserviceBln(true) == false) {
+        if (!cBarcodeLayout.pGetBarcodeLayoutsViaWebserviceBln(true)) {
             return false;
         }
 
-        if ( cItemProperty.pGetItemPropertiesViaWebserviceBln(  true) == false) {
+        if (!cItemProperty.pGetItemPropertiesViaWebserviceBln(true)) {
             return false;
         }
 
-        if ( mGetshippingInfoViawebserviceBln(true) == false) {
+        if (!mGetshippingInfoViawebserviceBln()) {
             return false;
         }
 
-        if (mAllBasicsAvailableBln()  == true) {
-            return  true;
-        } else {
-            return  false;
-        }
+        return  mAllBasicsAvailableBln();
+
     }
 
-    private boolean mGetshippingInfoViawebserviceBln(Boolean pvRefreshBln) {
+    private boolean mGetshippingInfoViawebserviceBln() {
 
-        cShippingAgent.pGetShippingAgentsViaWebserviceBln(pvRefreshBln);
-        if (cShippingAgent.shippingAgentsAvailableBln == false) {
+
+        cShippingAgent.pGetShippingAgentsViaWebserviceBln(true);
+        if (!cShippingAgent.shippingAgentsAvailableBln) {
             return false;
         }
 
-        cShippingAgentService.pGetShippingAgentServicesViaWebserviceBln(pvRefreshBln);
-        if (cShippingAgentService.shippingAgentServicesAvailableBln == false) {
+        cShippingAgentService.pGetShippingAgentServicesViaWebserviceBln(true);
+        if (!cShippingAgentService.shippingAgentServicesAvailableBln) {
             return false;
         }
 
-        cShippingAgentServiceShippingUnit.pGetShippingAgentServicesShippingUnitsViaWebserviceBln(pvRefreshBln);
-        if (cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln == false) {
+        cShippingAgentServiceShippingUnit.pGetShippingAgentServicesShippingUnitsViaWebserviceBln(true);
+        if (!cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln) {
             return false;
         }
 
-        cShippingAgentShipMethod.pGetShippingAgentServicesShippingUnitsViaWebserviceBln(pvRefreshBln);
-        if (cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln == false) {
-            return false;
-        }
-
-        return  true;
+        cShippingAgentShipMethod.pGetShippingAgentServicesShippingUnitsViaWebserviceBln(true);
+        return cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln;
     }
 
     public static void pSetAddedEnvironment() {
@@ -349,15 +330,15 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     private void mSetEnviroment(){
         cEnvironment.pSetEnvironment();
         if (cEnvironment.currentEnvironment != null) {
-            this.toolbarSubtext.setText(cEnvironment.currentEnvironment.getDescriptionStr());
+            MainDefaultActivity.toolbarSubtext.setText(cEnvironment.currentEnvironment.getDescriptionStr());
         }
     }
 
     private void mShowHomeFragment() {
-        this.imageHome.setVisibility(View.INVISIBLE);
-        this.imageEnvironment.setVisibility(View.VISIBLE);
-        this.toolbarTitle.setText(R.string.screentitle_main);
-        this.toolbarImage.setImageResource(R.drawable.ic_welcome);
+        MainDefaultActivity.imageHome.setVisibility(View.INVISIBLE);
+        MainDefaultActivity.imageEnvironment.setVisibility(View.VISIBLE);
+        MainDefaultActivity.toolbarTitle.setText(R.string.screentitle_main);
+        MainDefaultActivity.toolbarImage.setImageResource(R.drawable.ic_welcome);
         FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.mainFramelayout, new HomeFragment());
         transaction.commit();
@@ -375,7 +356,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     //Region Listeners
     private void mSetHomeListener() {
-        this.imageHome.setOnClickListener(new View.OnClickListener() {
+        MainDefaultActivity.imageHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowHomeFragment();
@@ -384,17 +365,16 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     }
 
     private void mSetEnvironmentListener() {
-        this.imageEnvironment.setOnClickListener(new View.OnClickListener() {
+        MainDefaultActivity.imageEnvironment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
-                return;
             }
         });
     }
 
     private void mSetMenuListener() {
-        this.mainmenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        MainDefaultActivity.mainmenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Fragment selectedFragment = null;
@@ -475,11 +455,14 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     //region Event handlers
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.menuMainDrawer.openDrawer(GravityCompat.START);
-                return true;
+
+        if (item.getItemId() == android.R.id.home) {
+            MainDefaultActivity.menuMainDrawer.openDrawer(GravityCompat.START);
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
+
+
     }
 }

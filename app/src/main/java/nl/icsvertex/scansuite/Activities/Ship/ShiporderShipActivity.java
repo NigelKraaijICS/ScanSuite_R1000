@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,22 +41,20 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     private static String SENDING_TAG = "SENDING_TAG";
 
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
 
-    private TextView sourcenoText;
-    private CardView addressContainer;
-    private TextView addressNameText;
-    private TextView addressAddressText;
-    private TextView addressZipCodeText;
-    private TextView addressCityText;
-    private TextView addressCountryText;
+    private static TextView sourcenoText;
+    private static TextView addressNameText;
+    private static TextView addressAddressText;
+    private static TextView addressZipCodeText;
+    private static TextView addressCityText;
+    private static TextView addressCountryText;
     private static TextView actionTextView;
-    private CardView shippingInfoContainer;
-    private  TextView shippingAgentText;
-    private TextView shippingServiceText;
+    private static TextView shippingAgentText;
+    private static TextView shippingServiceText;
     private static RecyclerView recyclerUnitsUsed;
-    private ImageView imageViewPackaging;
+    private static ImageView imageViewPackaging;
     private static ImageView imageViewShippingDone;
 
     //End Region Private Properties
@@ -71,7 +68,6 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shiporder_ship);
 
-
         if (cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 1) {
             for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit :cShipment.currentShipment.shippingAgentService().shippingUnitsObl() ) {
                 shippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 1;
@@ -80,19 +76,10 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         }
 
         this.mActivityInitialize();
-
-
-
-
     }
 
     @Override
     protected void onDestroy() {
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onDestroy();
     }
 
@@ -161,35 +148,33 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void mFindViews() {
 
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        ShiporderShipActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        ShiporderShipActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
 
-        this.sourcenoText = findViewById(R.id.sourcenoText);
+        ShiporderShipActivity.sourcenoText = findViewById(R.id.sourcenoText);
 
-        this.addressContainer = findViewById(R.id.addressContainer);
-        this.addressNameText = findViewById(R.id.addressNameText);
-        this.addressAddressText = findViewById(R.id.addressAddressText);
-        this.addressZipCodeText = findViewById(R.id.addressZipCodeText);
-        this.addressCityText = findViewById(R.id.addressCityText);
-        this.addressCountryText = findViewById(R.id.addressCountryText);
+        ShiporderShipActivity.addressNameText = findViewById(R.id.addressNameText);
+        ShiporderShipActivity.addressAddressText = findViewById(R.id.addressAddressText);
+        ShiporderShipActivity.addressZipCodeText = findViewById(R.id.addressZipCodeText);
+        ShiporderShipActivity.addressCityText = findViewById(R.id.addressCityText);
+        ShiporderShipActivity.addressCountryText = findViewById(R.id.addressCountryText);
 
-        this.actionTextView = findViewById(R.id.actionTextView);
+        ShiporderShipActivity.actionTextView = findViewById(R.id.actionTextView);
 
-        this.shippingInfoContainer = findViewById(R.id.shippingInfoContainer);
-        this.shippingAgentText = findViewById(R.id.shippingAgentText);
-        this.shippingServiceText = findViewById(R.id.shippingServiceText);
+        ShiporderShipActivity.shippingAgentText = findViewById(R.id.shippingAgentText);
+        ShiporderShipActivity.shippingServiceText = findViewById(R.id.shippingServiceText);
 
-        this.recyclerUnitsUsed = findViewById(R.id.recyclerUnitsUsed);
+        ShiporderShipActivity.recyclerUnitsUsed = findViewById(R.id.recyclerUnitsUsed);
 
-        this.imageViewPackaging = findViewById(R.id.imageViewPackaging);
-        this.imageViewShippingDone = findViewById(R.id.imageViewShippingDone);
+        ShiporderShipActivity.imageViewPackaging = findViewById(R.id.imageViewPackaging);
+        ShiporderShipActivity.imageViewShippingDone = findViewById(R.id.imageViewShippingDone);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
-        this.toolbarTitle.setText(pvScreenTitle);
-        toolbarTitle.setSelected(true);
+        ShiporderShipActivity.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
+        ShiporderShipActivity.toolbarTitle.setText(pvScreenTitle);
+        ShiporderShipActivity.toolbarTitle.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -205,7 +190,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         this.mSetSourceNo();
         this.mSetAddress();
         this.mSetShippingInfo();
-        this.mSetShippingUnits();
+        ShiporderShipActivity.mSetShippingUnits();
     }
 
     @Override
@@ -232,7 +217,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
         if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
-            Boolean foundBln = false;
+            boolean foundBln = false;
 
             if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.SHIPPINGPACKAGE)) {
                 foundBln = true;
@@ -275,7 +260,6 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         if (numberShippingUnits == 0) {
             cUserInterface.pShowSnackbarMessage(ShiporderShipActivity.recyclerUnitsUsed, cAppExtension.context.getString(R.string.ship_pick_at_least_one_package), R.raw.headsupsound, true);
             cUserInterface.pDoNope(imageViewShippingDone, false, false);
-            return;
         }
         else {
             mShowSending();
@@ -302,8 +286,8 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     //End Region Public Methods
 
     private void mSetActionText() {
-        this.actionTextView.setVisibility(View.VISIBLE);
-        this.actionTextView.setText(getString(R.string.select_shippingunit));
+        ShiporderShipActivity.actionTextView.setVisibility(View.VISIBLE);
+        ShiporderShipActivity.actionTextView.setText(getString(R.string.select_shippingunit));
     }
 
     private static void mGoBackToLinesActivity() {
@@ -318,10 +302,9 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     private void mSetSourceNo() {
 
-        this.sourcenoText.setText(cShipment.currentShipment.getSourceNoStr());
+        ShiporderShipActivity.sourcenoText.setText(cShipment.currentShipment.getSourceNoStr());
         if (! cShipment.currentShipment.getProcessingSequenceStr().isEmpty()) {
-            sourcenoText.setText(cShipment.currentShipment.getProcessingSequenceStr());
-            return;
+            ShiporderShipActivity.sourcenoText.setText(cShipment.currentShipment.getProcessingSequenceStr());
         }
 
     }
@@ -332,25 +315,25 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        this.addressNameText.setText(cShipment.currentShipment.pickorderAddress().getNameStr());
-        this.addressAddressText.setText(cShipment.currentShipment.pickorderAddress().getAddressStr());
-        this.addressZipCodeText.setText(cShipment.currentShipment.pickorderAddress().getZipcodeStr());
-        this.addressCityText.setText(cShipment.currentShipment.pickorderAddress().getCityStr());
-        this.addressCountryText.setText(cShipment.currentShipment.pickorderAddress().getCountryStr());
+        ShiporderShipActivity.addressNameText.setText(cShipment.currentShipment.pickorderAddress().getNameStr());
+        ShiporderShipActivity.addressAddressText.setText(cShipment.currentShipment.pickorderAddress().getAddressStr());
+        ShiporderShipActivity.addressZipCodeText.setText(cShipment.currentShipment.pickorderAddress().getZipcodeStr());
+        ShiporderShipActivity.addressCityText.setText(cShipment.currentShipment.pickorderAddress().getCityStr());
+        ShiporderShipActivity.addressCountryText.setText(cShipment.currentShipment.pickorderAddress().getCountryStr());
 
     }
 
     private void mSetShippingInfo() {
 
-        this.shippingServiceText.setText(R.string.unknown_shippingagent);
-        this.shippingServiceText.setText(R.string.unknown_shippingagentservice);
+        ShiporderShipActivity.shippingServiceText.setText(R.string.unknown_shippingagent);
+        ShiporderShipActivity.shippingServiceText.setText(R.string.unknown_shippingagentservice);
 
         if (cShipment.currentShipment.shippingAgent() == null) {
             return;
         }
 
         //Set the descriptionStr for the shipping agent
-        this.shippingAgentText.setText(cShipment.currentShipment.shippingAgent().getDescriptionStr());
+        ShiporderShipActivity.shippingAgentText.setText(cShipment.currentShipment.shippingAgent().getDescriptionStr());
 
         //If service is unknown, then exit
         if (cShipment.currentShipment.shippingAgentService() == null) {
@@ -358,7 +341,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         }
 
         //Set the descriptionStr for the shipping agent
-        this.shippingServiceText.setText(cShipment.currentShipment.shippingAgentService().getDescriptionStr());
+        ShiporderShipActivity.shippingServiceText.setText(cShipment.currentShipment.shippingAgentService().getDescriptionStr());
     }
 
     private static void mSetShippingUnits() {
@@ -373,12 +356,12 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     private static void mFillRecycler(List<cShippingAgentServiceShippingUnit> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            actionTextView.setVisibility(View.VISIBLE);
-            actionTextView.setText(cAppExtension.activity.getString(R.string.select_shippingunit));
+            ShiporderShipActivity.actionTextView.setVisibility(View.VISIBLE);
+            ShiporderShipActivity.actionTextView.setText(cAppExtension.activity.getString(R.string.select_shippingunit));
         }
 
         if (pvDataObl.size() > 0) {
-            actionTextView.setVisibility(View.GONE);
+            ShiporderShipActivity.actionTextView.setVisibility(View.GONE);
         }
 
         cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitAdapter().pFillData(pvDataObl);
@@ -388,7 +371,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mSetShippingUnitsListener() {
-        this.imageViewPackaging.setOnClickListener(new View.OnClickListener() {
+        ShiporderShipActivity.imageViewPackaging.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowShippingUnitFragment();
@@ -398,7 +381,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     private void mSetOrderDoneListener() {
 
-        this.imageViewShippingDone.setOnClickListener(new View.OnClickListener() {
+        ShiporderShipActivity.imageViewShippingDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ShiporderShipActivity.pHandleSourceDocumentDone();

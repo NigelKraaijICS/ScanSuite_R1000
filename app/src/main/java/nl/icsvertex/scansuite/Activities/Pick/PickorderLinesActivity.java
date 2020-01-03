@@ -67,16 +67,16 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     //Region Private Properties
 
     //Region Views
-    private TextView textViewChosenOrder;
+    private static TextView textViewChosenOrder;
     static private TextView quantityPickordersText;
     static private TabLayout pickorderLinesTabLayout;
     static private cNoSwipeViewPager pickorderLinesViewPager;
 
-    private PickorderLinesPagerAdapter pickorderLinesPagerAdapter;
+    private static PickorderLinesPagerAdapter pickorderLinesPagerAdapter;
     static private ImageView imageButtonComments;
 
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static  ImageView toolbarImage;
+    private static TextView toolbarTitle;
 
 
     //End Region Views
@@ -153,20 +153,20 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFindViews() {
 
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.quantityPickordersText = findViewById(R.id.quantityPickordersText);
-        this.pickorderLinesTabLayout = findViewById(R.id.pickorderLinesTabLayout);
-        this.pickorderLinesViewPager = findViewById(R.id.pickorderLinesViewpager);
-        this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
-        this.imageButtonComments = findViewById(R.id.imageButtonComments);
+        PickorderLinesActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        PickorderLinesActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        PickorderLinesActivity.quantityPickordersText = findViewById(R.id.quantityPickordersText);
+        PickorderLinesActivity.pickorderLinesTabLayout = findViewById(R.id.pickorderLinesTabLayout);
+        PickorderLinesActivity.pickorderLinesViewPager = findViewById(R.id.pickorderLinesViewpager);
+        PickorderLinesActivity.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
+        PickorderLinesActivity.imageButtonComments = findViewById(R.id.imageButtonComments);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
-        this.toolbarTitle.setText(pvScreenTitleStr);
-        toolbarTitle.setSelected(true);
+        PickorderLinesActivity.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
+        PickorderLinesActivity.toolbarTitle.setText(pvScreenTitleStr);
+        PickorderLinesActivity.toolbarTitle.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -179,17 +179,17 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFieldsInitialize() {
 
-        ViewCompat.setTransitionName(this.textViewChosenOrder, this.VIEW_CHOSEN_ORDER);
+        ViewCompat.setTransitionName(PickorderLinesActivity.textViewChosenOrder, PickorderLinesActivity.VIEW_CHOSEN_ORDER);
 
-        this.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_topick));
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_picked));
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
+        PickorderLinesActivity.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
+        PickorderLinesActivity.pickorderLinesTabLayout.addTab(PickorderLinesActivity.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_topick));
+        PickorderLinesActivity.pickorderLinesTabLayout.addTab(PickorderLinesActivity.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_picked));
+        PickorderLinesActivity.pickorderLinesTabLayout.addTab(PickorderLinesActivity.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
 
-        this.pickorderLinesPagerAdapter = new PickorderLinesPagerAdapter( this.pickorderLinesTabLayout.getTabCount());
-        this.pickorderLinesViewPager.setAdapter(this.pickorderLinesPagerAdapter);
-        this.pickorderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(pickorderLinesTabLayout));
-        this.pickorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        PickorderLinesActivity.pickorderLinesPagerAdapter = new PickorderLinesPagerAdapter( PickorderLinesActivity.pickorderLinesTabLayout.getTabCount());
+        PickorderLinesActivity.pickorderLinesViewPager.setAdapter(PickorderLinesActivity.pickorderLinesPagerAdapter);
+        PickorderLinesActivity.pickorderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(PickorderLinesActivity.pickorderLinesTabLayout));
+        PickorderLinesActivity.pickorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
                 pickorderLinesViewPager.setCurrentItem(pvTab.getPosition());
@@ -217,7 +217,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mInitScreen() {
 
-        this.mShowComments();
+        PickorderLinesActivity.mShowComments();
 
         //Call this here, because this is called everytime the activiy gets shown
         this.mCheckAllDone();
@@ -416,13 +416,14 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
 
         //If activity bin is not required, then don't show the fragment
-        if (!cPickorder.currentPickOrder.pickActivityBinRequiredBln || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+        if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
+            cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 ||
+            !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
             mStartOrderSelectActivity();
             return;
         }
 
         mShowCurrentLocationFragment();
-        return;
 
     }
 
@@ -444,13 +445,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if ( hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
 
             //If we got any comments, show them
             if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
@@ -490,13 +491,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         // If not everything is sent, then leave
-        if (!this.mCheckAndSentLinesBln(true)) {
+        if (!this.mCheckAndSentLinesBln()) {
             return;
         }
 
         // If there is no next step, then we are done
         if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isBPBln() && !cPickorder.currentPickOrder.isBCBln()) {
-            if (!cPickorder.currentPickOrder.pickActivityBinRequiredBln ||
+            if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
                     !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
                 // Show order done fragment
                 PickorderLinesActivity.mShowOrderDoneFragment(false);
@@ -508,10 +509,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Show Current Location fragment
-        if (cPickorder.currentPickOrder.pickActivityBinRequiredBln ||
+        if (cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
                 cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
             // Show order done fragment
-            this.mShowCurrentLocationFragment();
+            PickorderLinesActivity.mShowCurrentLocationFragment();
             return;
         }
 
@@ -538,7 +539,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
+        PickorderLinesActivity.imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl(),"");
@@ -590,7 +591,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
-    private Boolean mCheckAndSentLinesBln(Boolean pvShowAnimationBln) {
+    private Boolean mCheckAndSentLinesBln() {
 
         final List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabasObl();
 
@@ -599,15 +600,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return  true;
         }
 
-
-        if (pvShowAnimationBln) {
             mShowSending();
-        }
+
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Callable<Boolean> callableBln = new Callable<Boolean>() {
             @Override
-            public Boolean call() throws Exception {
+            public Boolean call() {
 
                 // Try to send each line, if one failes then stop
                 for (cPickorderLine pickorderLine : linesToSendObl) {
@@ -616,10 +615,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
                     cPickorderLine.currentPickOrderLine = pickorderLine;
 
                     //Try to send the line
-                    return cPickorderLine.currentPickOrderLine .pHandledBln();
+                   cPickorderLine.currentPickOrderLine .pHandledBln();
 
                 }
-                return  false;
+                return  true;
             }
         };
 
@@ -629,36 +628,21 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             Boolean hulpBln = callableResultBln.get();
 
             if (!hulpBln) {
-
-                if (pvShowAnimationBln) {
                     mShowNotSent();
-                }
-
-                return false;
+                 return false;
             }
-
-            if (pvShowAnimationBln) {
-                this.mShowSent();
-            }
-
+                PickorderLinesActivity.mShowSent();
             return  true;
-
         }
-        catch (InterruptedException | ExecutionException e) {
-
+        catch (InterruptedException | ExecutionException ignored) {
         }
-
       return  false;
 
 
     }
 
     private Boolean mAllLinesDoneBln() {
-
-        if (cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0) {
-            return true;
-        }
-        return  false;
+        return cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0;
     }
 
     private static void mShowSending() {
@@ -775,7 +759,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         // If settings is true, then go  to sort
         if (cSetting.PICK_SORT_AUTO_START()) {
             mStartSortActivity();
-            return;
         }
 
     }
@@ -794,7 +777,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-
         // If setting is not defined, then ask user
         if (cSetting.PICK_PACK_AND_SHIP_AUTO_START() == null) {
             PickorderLinesActivity.mAskShip();
@@ -802,15 +784,15 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         // If settings is false, then go back to order select
-        if (!cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
-            PickorderLinesActivity.mStartOrderSelectActivity();
-            return;
-        }
+            if (!cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
+                PickorderLinesActivity.mStartOrderSelectActivity();
+                return;
+            }
 
         // If settings is true, then go  to ship
-        if (cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
-            mStartShipActivity();
-        }
+            if (cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
+                mStartShipActivity();
+            }
 
     }
 
@@ -903,7 +885,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
 
         hulpResult = PickorderLinesActivity.mGetShipOrderDetailsRst();
-        if (hulpResult.resultBln == false ) {
+        if (!hulpResult.resultBln) {
             PickorderLinesActivity.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
             return;
         }
@@ -911,7 +893,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         //Show ShipLines
         Intent intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
         cAppExtension.activity.startActivity(intent);
-        return;
 
     }
 
@@ -945,19 +926,19 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         hulpResult = cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
 
         //Everything was fine, so we are done
-        if (hulpResult.resultBln == true) {
+        if (hulpResult.resultBln) {
             return true;
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
-                hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
+        if ( hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
+              hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
 
 
             //If we got any comments, show them
@@ -1009,28 +990,28 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         cShipment.allShipmentsObl = null;
 
         // Get all linesInt, if zero than there is something wrong
-        if (cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));
             return result;
         }
 
         // Get all packages
-        if (cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
             return result;
         }
 
         // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
-        if (cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
             return result;
         }
 
         // Get all comments
-        if (cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true) == false) {
+        if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;
@@ -1038,7 +1019,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //If this is single article, then get barcodes
         if (cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
-            if (cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true) == false) {
+            if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
                 result.resultBln = false;
                 result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
                 return result;

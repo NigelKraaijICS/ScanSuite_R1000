@@ -20,7 +20,7 @@ import nl.icsvertex.scansuite.R;
 
 public class BasicsFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private  RecyclerView recyclerViewSettings;
+    private static  RecyclerView recyclerViewSettings;
 
     public BasicsFragment() {
         // Required empty public constructor
@@ -34,26 +34,30 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mFragmentInitialize();
+       this.mFragmentInitialize();
     }
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
         cUserInterface.pEnableScanner();
     }
 
     @Override
     public void mFindViews() {
-        recyclerViewSettings = getView().findViewById(R.id.recyclerViewSettings);
+
+        if (getView() != null) {
+            BasicsFragment.recyclerViewSettings = getView().findViewById(R.id.recyclerViewSettings);
+        }
+
     }
 
 
 
     @Override
     public void mFieldsInitialize() {
-        mFillRecycler();
+        this.mFillRecycler();
     }
 
     @Override
@@ -62,12 +66,12 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
     private void mFillRecycler() {
-        mSetSettingsRecycler();
+        this.mSetSettingsRecycler();
     }
     private void mSetSettingsRecycler() {
-        recyclerViewSettings.setHasFixedSize(false);
-        recyclerViewSettings.setAdapter(cSetting.getSettingsAdapter());
-        recyclerViewSettings.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+       BasicsFragment.recyclerViewSettings.setHasFixedSize(false);
+        BasicsFragment. recyclerViewSettings.setAdapter(cSetting.getSettingsAdapter());
+        BasicsFragment.recyclerViewSettings.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
 
 

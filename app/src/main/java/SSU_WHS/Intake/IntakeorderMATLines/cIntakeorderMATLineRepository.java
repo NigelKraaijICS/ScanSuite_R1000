@@ -24,11 +24,11 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cIntakeorderMATLineRepository {
     //Region Public Properties
-    public iIntakeorderMATLineDao intakeorderMATLineDao;
 
     //End Region Public Properties
 
     //Region Private Properties
+    private iIntakeorderMATLineDao intakeorderMATLineDao;
     private acScanSuiteDatabase db;
 
     private static class UpdateOrderlineLocaStatusParams {
@@ -92,9 +92,7 @@ public class cIntakeorderMATLineRepository {
         List<cIntakeorderMATLineEntity> ResultObl = null;
         try {
             ResultObl = new mGetIntakeorderMATLinesFromDatabaseAsyncTask(intakeorderMATLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -111,15 +109,8 @@ public class cIntakeorderMATLineRepository {
         UpdateOrderlineLocaStatusParams updateOrderlineLocaStatusParams = new UpdateOrderlineLocaStatusParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvNewStatusInt);
         try {
             integerValue = new updateOrderLineLocalStatusAsyncTask(intakeorderMATLineDao).execute(updateOrderlineLocaStatusParams).get();
-            if (integerValue != 0) {
-                return  true;}
-            else{
-                return false;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  false;
         }
@@ -133,15 +124,8 @@ public class cIntakeorderMATLineRepository {
         try {
             integerValue = new updateOrderLineQuantityHandledAsyncTask(intakeorderMATLineDao).execute(updateOrderlineQuantityParams).get();
 
-            if (integerValue != 0) {
-                return  true;}
-            else{
-                return false;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  false;
         }
@@ -156,15 +140,8 @@ public class cIntakeorderMATLineRepository {
         try {
             integerValue = new updateOrderLineQuantityAsyncTask(intakeorderMATLineDao).execute(updateOrderlineQuantityParams).get();
 
-            if (integerValue != 0) {
-                return  true;}
-            else{
-                return false;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  false;
         }
@@ -202,13 +179,7 @@ public class cIntakeorderMATLineRepository {
 
         try {
             webResultWrs = new mResetViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -224,13 +195,7 @@ public class cIntakeorderMATLineRepository {
 
         try {
             webResultWrs = new mLineHandledViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -246,13 +211,7 @@ public class cIntakeorderMATLineRepository {
 
         try {
             webResultWrs = new mLineSplitViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -269,13 +228,7 @@ public class cIntakeorderMATLineRepository {
         CreateLineParams createLineParams = new CreateLineParams(pvBinCodeStr, pvBarcodeObl);
         try {
             webResultWrs = new mLineCreateViaWebserviceAsyncTask().execute(createLineParams).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -384,7 +337,7 @@ public class cIntakeorderMATLineRepository {
                 l_PropertyInfo4Pin.setValue(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt());
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATRESET, l_PropertyInfoObl);
+                l_WebresultWrs =  cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATRESET, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setSuccessBln(false);
                 l_WebresultWrs.setResultBln(false);
@@ -460,7 +413,7 @@ public class cIntakeorderMATLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLED, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLED, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -537,7 +490,7 @@ public class cIntakeorderMATLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLEDPART, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLEDPART, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -618,7 +571,7 @@ public class cIntakeorderMATLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo10Pin);
 
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKEITEMHANLED, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKEITEMHANLED, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

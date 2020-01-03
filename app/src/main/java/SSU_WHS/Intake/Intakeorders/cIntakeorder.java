@@ -29,97 +29,100 @@ import nl.icsvertex.scansuite.R;
 
 public class cIntakeorder {
 
-     public String ordernumberStr;
+    private String ordernumberStr;
     public String getOrderNumberStr() {return this.ordernumberStr;}
 
-    public String ordertypeStr;
+    private String ordertypeStr;
     public String getOrderTypeStr() {return this.ordertypeStr;}
 
-    public int numberofBinsInt;
-    public int getNumberofBinsInt() {return this.numberofBinsInt;}
-
-    public String assignedUserIdStr;
+    private String assignedUserIdStr;
     public String getAssignedUserIdStr() {return this.assignedUserIdStr;}
 
-    public String currentUserIdStr;
+    private String currentUserIdStr;
     public String getCurrentUserIdStr() {return this.currentUserIdStr;}
 
-    public String requestedStartDateTimeStr;
-    public String getRequestedStartDateTimeStr() {return this.requestedStartDateTimeStr;}
-
-    public String requestedEndDateTimeStr;
-    public String getRequestedEndDateTimeStr() {return this.requestedEndDateTimeStr;}
-
-    public int statusInt;
+    private int statusInt;
     public int getStatusInt() {return this.statusInt;}
 
-    public String binCodeStr;
+    private String binCodeStr;
     public String getBinCodeStr() {return this.binCodeStr;}
 
-    public String externalReferenceStr;
+    private String externalReferenceStr;
     public String getExternalReferenceStr() {return this.externalReferenceStr;}
 
-    public String workplaceStr;
+    private String workplaceStr;
     public String getWorkplaceStr() {return this.workplaceStr;}
 
-    public boolean receiveExportPartBln;
+    private boolean receiveExportPartBln;
     public boolean getReceiveExportPartBln() {return this.receiveExportPartBln;}
 
-    public boolean receiveAmountManualEOBln;
+    private boolean receiveAmountManualEOBln;
     public boolean getReceiveAmountManualEOBln() {return this.receiveAmountManualEOBln;}
 
-    public boolean receiveAmountManualOMBln;
+    private boolean receiveAmountManualOMBln;
     public boolean getReceiveAmountManualOMBln() {return this.receiveAmountManualOMBln;}
 
-    public boolean receiveAmountManualMABln;
+    private boolean receiveAmountManualMABln;
     public boolean getReceiveAmountManualMABln() {return this.receiveAmountManualMABln;}
 
-    public boolean receiveBarcodeCheckBln;
+    private boolean receiveBarcodeCheckBln;
     public boolean getReceiveBarcodeCheckBln() {return this.receiveBarcodeCheckBln;}
 
-    public boolean receiveStoreAutoAcceptAtRequestedBln;
+    private boolean receiveStoreAutoAcceptAtRequestedBln;
     public boolean getReceiveStoreAutoAcceptAtRequestedBln() {return this.receiveStoreAutoAcceptAtRequestedBln;}
 
-    public boolean receiveStoreAutoAcceptValidationMessageBln;
+    private boolean receiveStoreAutoAcceptValidationMessageBln;
     public boolean getReceiveStoreAutoAcceptValidationMessageBln() {return this.receiveStoreAutoAcceptValidationMessageBln;}
 
-    public boolean receiveNoExtraBinsBln;
+    private boolean receiveNoExtraBinsBln;
     public boolean getReceiveNoExtraBinsBln() {return this.receiveNoExtraBinsBln;}
 
-    public boolean receiveNoExtraItemsBln;
+    private boolean receiveNoExtraItemsBln;
     public boolean getReceiveNoExtraItemsBln() {return this.receiveNoExtraItemsBln;}
 
-    public boolean receiveNoExtraPiecesBln;
+    private boolean receiveNoExtraPiecesBln;
     public boolean getReceiveNoExtraPiecesBln() {return this.receiveNoExtraPiecesBln;}
 
-    public boolean receiveMatAutoSplitIncompleteLineBln;
+    private boolean receiveMatAutoSplitIncompleteLineBln;
     public boolean getReceiveMatAutoSplitIncompleteLineBln() {return this.receiveMatAutoSplitIncompleteLineBln;}
 
-    public boolean receiveMATEmptyBinsBln;
+    private boolean receiveMATEmptyBinsBln;
     public boolean getReceiveMATEmptyBinsBln() {return this.receiveMATEmptyBinsBln;}
 
-    public String receivedDateTime;
+    private String receivedDateTime;
     public String getReceivedDateTime() {return this.receivedDateTime;}
 
-    public Boolean isProcessingOrParkedBln;
+    private Boolean isProcessingOrParkedBln;
     public Boolean getProcessingOrParkedBln() {
         return isProcessingOrParkedBln;
     }
 
+    private boolean receiveWithPictureBln;
+    public boolean isReceiveWithPictureBln() {
+        return receiveWithPictureBln;
+    }
 
-    public cIntakeorderEntity intakeorderEntity;
-    public boolean indatabaseBln;
+    private boolean receiveWithAutoOpenBln;
+    public boolean isReceiveWithAutoOpenBln() {
+        return receiveWithAutoOpenBln;
+    }
 
-    public static cIntakeorderViewModel gIntakeorderViewModel;
+    private boolean receiveWithPicturePrefetchBln;
+    private boolean isReceiveWithPicturePrefetchBln() {
+        return receiveWithPicturePrefetchBln;
+    }
 
-    public static cIntakeorderViewModel getIntakeorderViewModel() {
+    private cIntakeorderEntity intakeorderEntity;
+
+    private static cIntakeorderViewModel gIntakeorderViewModel;
+    private static cIntakeorderViewModel getIntakeorderViewModel() {
         if (gIntakeorderViewModel == null) {
             gIntakeorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
         }
         return gIntakeorderViewModel;
     }
 
-    public static cIntakeorderAdapter gIntakeorderAdapter;
+    private static cIntakeorderAdapter gIntakeorderAdapter;
     public static cIntakeorderAdapter getIntakeorderAdapter() {
         if (gIntakeorderAdapter == null) {
             gIntakeorderAdapter = new cIntakeorderAdapter();
@@ -136,7 +139,7 @@ public class cIntakeorder {
     public List<cIntakeorderMATLine> linesObl(){
         return  cIntakeorderMATLine.allIntakeorderMATLinesObl;
     }
-    public List<cComment> commentsObl(){
+    private List<cComment> commentsObl(){
         return  cComment.allCommentsObl;
     }
     public List<cIntakeorderBarcode> barcodesObl () {return  cIntakeorderBarcode.allBarcodesObl;}
@@ -150,11 +153,10 @@ public class cIntakeorder {
         this.intakeorderEntity = new cIntakeorderEntity(pvJsonObject);
         this.ordernumberStr = this.intakeorderEntity.getOrdernumberStr();
         this.ordertypeStr = this.intakeorderEntity.getOrderTypeStr();
-        this.numberofBinsInt = this.intakeorderEntity.getNumberofBinsInt();
+
         this.assignedUserIdStr = this.intakeorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.intakeorderEntity.getCurrentUserIdStr();
-        this.requestedStartDateTimeStr = this.intakeorderEntity.getRequestedStartDateTimeStr();
-        this.requestedEndDateTimeStr = this.intakeorderEntity.getRequestedEndDateTimeStr();
+
         this.statusInt = this.intakeorderEntity.getStatusInt();
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
@@ -176,6 +178,9 @@ public class cIntakeorder {
         this.receivedDateTime = this.intakeorderEntity.getReceivedDateTime();
         this.isProcessingOrParkedBln = this.intakeorderEntity.getIsProcessingOrParkedStr();
 
+        this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
+        this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
+        this.receiveWithPicturePrefetchBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPicturePrefetchStr(),false);
     }
 
     public cIntakeorder(cIntakeorderEntity pvIntakeorderEntity) {
@@ -183,11 +188,9 @@ public class cIntakeorder {
         this.intakeorderEntity = pvIntakeorderEntity;
         this.ordernumberStr = this.intakeorderEntity.getOrdernumberStr();
         this.ordertypeStr = this.intakeorderEntity.getOrderTypeStr();
-        this.numberofBinsInt = this.intakeorderEntity.getNumberofBinsInt();
+
         this.assignedUserIdStr = this.intakeorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.intakeorderEntity.getCurrentUserIdStr();
-        this.requestedStartDateTimeStr = this.intakeorderEntity.getRequestedStartDateTimeStr();
-        this.requestedEndDateTimeStr = this.intakeorderEntity.getRequestedEndDateTimeStr();
         this.statusInt = this.intakeorderEntity.getStatusInt();
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
@@ -207,13 +210,19 @@ public class cIntakeorder {
 
         this.receivedDateTime = this.intakeorderEntity.getReceivedDateTime();
         this.isProcessingOrParkedBln = this.intakeorderEntity.getIsProcessingOrParkedStr();
+
+        this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
+        this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
+        this.receiveWithPicturePrefetchBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPicturePrefetchStr(),false);
+
     }
+
+
 
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
         cIntakeorder.getIntakeorderViewModel().insert(this.intakeorderEntity);
-        this.indatabaseBln = true;
 
         if (cIntakeorder.allIntakeordersObl == null) {
             cIntakeorder.allIntakeordersObl = new ArrayList<>();
@@ -224,19 +233,15 @@ public class cIntakeorder {
 
     public static boolean pGetIntakeOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cIntakeorder.allIntakeordersObl = null;
             cIntakeorder.mTruncateTableBln();
         }
 
         cWebresult WebResult;
         WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeordersFromWebserviceWrs(pvSearchTextStr);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true) {
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
 
                 cIntakeorder intakeorder = new cIntakeorder(jsonObject);
                 intakeorder.pInsertInDatabaseBln();
@@ -266,22 +271,7 @@ public class cIntakeorder {
         return  resultObl;
     }
 
-    public List<cIntakeorderMATLine> pGetLinesFromDatabasObl() {
 
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-        List<cIntakeorderMATLineEntity> hulpResultObl;
-
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetAllLinesFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
-            cIntakeorderMATLine IntakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
-            resultObl.add(IntakeorderMATLine);
-        }
-        return  resultObl;
-    }
 
     public List<cIntakeorderMATLine> pGetIntakeorderMATLinesToSendFromDatabaseObl() {
 
@@ -300,22 +290,6 @@ public class cIntakeorder {
         return  resultObl;
     }
 
-    public List<cIntakeorderMATLine> pGetLinesNotHandledFromDatabasObl() {
-
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-        List<cIntakeorderMATLineEntity> hulpResultObl;
-
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesNotHandledFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
-            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
-            resultObl.add(intakeorderMATLine);
-        }
-        return  resultObl;
-    }
 
     public List<cIntakeorderMATLine> pGetLinesBusyFromDatabasObl() {
 
@@ -370,7 +344,7 @@ public class cIntakeorder {
 
     public List<cIntakeorderMATLine> pGetLinesForBinObl(String pvBinCodeStr) {
 
-        List <cIntakeorderMATLine> hulpObl = this.pGetLinesFromDatabasObl();
+        List <cIntakeorderMATLine> hulpObl = this.mGetLinesFromDatabasObl();
         List <cIntakeorderMATLine> resultObl = new ArrayList<>();
 
         if (hulpObl == null || hulpObl.size() ==0 ) {
@@ -408,13 +382,13 @@ public class cIntakeorder {
         }
 
         //Everything was fine, so we are done
-        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
             result.resultBln = true;
             return result;
         }
 
         //Something really went wrong
-        if (webresult.getSuccessBln() == false ) {
+        if (!webresult.getSuccessBln()) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
@@ -422,16 +396,16 @@ public class cIntakeorder {
         }
 
         // We got a succesfull response, but we need to do something with this activity
-        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
 
-            Long actionLng = Long.valueOf(0);
+            Long actionLng = 0L;
 
             if (webresult.getResultLng() < 10 ) {
                 actionLng = webresult.getResultLng();
             }
 
             if (webresult.getResultLng() > 100) {
-                actionLng  = (long)(webresult.getResultLng()/100);
+                actionLng  = webresult.getResultLng()/100;
             }
 
             //Try to convert action long to action enumerate
@@ -444,7 +418,7 @@ public class cIntakeorder {
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
             }
 
-            cIntakeorder.currentIntakeOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            cIntakeorder.currentIntakeOrder.mGetCommentsViaWebErrorBln(webresult.getResultDtt());
             return result;
         }
 
@@ -458,8 +432,7 @@ public class cIntakeorder {
             return  null;
         }
 
-        List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.RECEIVE);
-        return hulpObl;
+        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.RECEIVE);
 
     }
 
@@ -469,25 +442,11 @@ public class cIntakeorder {
             return  null;
         }
 
-        List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
-        return hulpObl;
+        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
 
     }
 
-    public boolean pGetCommentsViaWebErrorBln(List<JSONObject> pvResultDtt) {
 
-        cComment.allCommentsObl = new ArrayList<>();
-
-        List<JSONObject> myList = pvResultDtt;
-        for (int i = 0; i < myList.size(); i++) {
-            JSONObject jsonObject;
-            jsonObject = myList.get(i);
-            cComment comment = new cComment(jsonObject);
-            comment.pInsertInDatabaseBln();
-        }
-        return true;
-
-    }
 
     public cResult pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu pvStepCodeEnu, int pvWorkFlowStepInt) {
 
@@ -497,16 +456,12 @@ public class cIntakeorder {
         result.resultBln = true;
 
         cWebresult Webresult;
-        Boolean ignoreBusyBln = false;
+        boolean ignoreBusyBln = false;
 
-        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED() == false) {
-            ignoreBusyBln = false;
-        } else {
-
-            if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
-                ignoreBusyBln = true;
-            }
+        if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
+            ignoreBusyBln = true;
         }
+
 
         Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt, ignoreBusyBln);
 
@@ -519,13 +474,13 @@ public class cIntakeorder {
         }
 
         //Everything was fine, so we are done
-        if (Webresult.getSuccessBln() == true && Webresult.getResultBln() == true) {
+        if (Webresult.getSuccessBln() && Webresult.getResultBln()) {
             result.resultBln = true;
             return result;
         }
 
         //Something really went wrong
-        if (Webresult.getSuccessBln() == false) {
+        if (!Webresult.getSuccessBln()) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_lock_order));
@@ -533,8 +488,8 @@ public class cIntakeorder {
         }
 
         //Check if this activity is meant for a different user
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-                Webresult.getResultObl().size() >= 2 && Webresult.getResultObl().get(0).equalsIgnoreCase("invalid_user_not_assigned") == true) {
+        if (!Webresult.getResultBln() && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
+            Webresult.getResultObl().size() >= 2 && Webresult.getResultObl().get(0).equalsIgnoreCase("invalid_user_not_assigned")) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_meant_for_other_user)) + " " + Webresult.getResultObl().get(1));
@@ -542,8 +497,8 @@ public class cIntakeorder {
         }
 
         //Check if this activity is meant for a different user
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-                Webresult.getResultObl().size() >= 0 && Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr()) == false) {
+        if (!Webresult.getResultBln()&& Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
+            Webresult.getResultObl().size() > 0 && !Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr())) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_another_user_already_started)) + " " + Webresult.getResultObl().get(0));
@@ -551,7 +506,7 @@ public class cIntakeorder {
         }
 
         // We got a succesfull response, but we need to do something with this activity
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() > 0) {
+        if (!Webresult.getResultBln() && Webresult.getResultLng() > 0) {
 
             //Try to convert result long to action enumerate
             cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(Webresult.getResultLng().intValue());
@@ -568,7 +523,7 @@ public class cIntakeorder {
             }
 
             //TODO WTF is this?
-            //cIntakeorder.currentIntakeOrder.pGetCommentsViaWebErrorBln(Webresult.getResultDtt());
+            //cIntakeorder.currentIntakeOrder.mGetCommentsViaWebErrorBln(Webresult.getResultDtt());
             return result;
         }
 
@@ -582,14 +537,11 @@ public class cIntakeorder {
 
         Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_Store.toString(), cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_StoreBezig);
 
-        if (Webresult.getSuccessBln() == false || Webresult.getResultBln() == false) {
-            return false;
-        }
-        return true;
+        return Webresult.getSuccessBln() && Webresult.getResultBln();
     }
 
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
-        if (pvRefeshBln == true) {
+        if (pvRefeshBln) {
             cComment.allCommentsObl = null;
             cComment.pTruncateTableBln();
             cComment.commentsShownBln = false;
@@ -597,14 +549,11 @@ public class cIntakeorder {
 
         cWebresult webresult;
         webresult = cIntakeorder.getIntakeorderViewModel().pGetCommentsFromWebserviceWrs();
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
             cComment.allCommentsObl = new ArrayList<>();
 
-            List<JSONObject> myList = webresult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+            for (JSONObject jsonObject : webresult.getResultDtt()) {
                 cComment comment = new cComment(jsonObject);
                 comment.pInsertInDatabaseBln();
             }
@@ -645,14 +594,14 @@ public class cIntakeorder {
 
         int resultInt = -1;
 
-        if (this.pGetLinesNotHandledFromDatabasObl() == null || this.pGetLinesNotHandledFromDatabasObl().size() == 0) {
+        if (this.mGetLinesNotHandledFromDatabasObl() == null || this.mGetLinesNotHandledFromDatabasObl().size() == 0) {
             return  resultInt;
         }
 
 
         int indexInt = -1;
 
-        for (cIntakeorderMATLine intakeorderMATLine : this.pGetLinesNotHandledFromDatabasObl()) {
+        for (cIntakeorderMATLine intakeorderMATLine : this.mGetLinesNotHandledFromDatabasObl()) {
 
             indexInt += 1;
 
@@ -678,23 +627,20 @@ public class cIntakeorder {
 
     public boolean pGetMATLineBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cIntakeorderMATLineBarcode.allMATLineBarcodesObl = null;
             cIntakeorderMATLineBarcode.pTruncateTableBln();
         }
 
         cWebresult WebResult;
         WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLineBarcodesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true) {
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cIntakeorderMATLineBarcode cIntakeorderMATLineBarcode = new cIntakeorderMATLineBarcode(jsonObject);
                 cIntakeorderMATLineBarcode.pInsertInDatabaseBln();
             }
+
             return true;
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
@@ -704,7 +650,7 @@ public class cIntakeorder {
 
     public boolean pGetMATLinesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cIntakeorderMATLine.allIntakeorderMATLinesObl = null;
             cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl = null;
             cIntakeorderMATLine.pTruncateTableBln();
@@ -712,13 +658,10 @@ public class cIntakeorder {
 
         cWebresult WebResult;
         WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true) {
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
 
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(jsonObject);
                 intakeorderMATLine.pInsertInDatabaseBln();
 
@@ -727,13 +670,13 @@ public class cIntakeorder {
                 }
 
                 cIntakeorderMATSummaryLine intakeorderMATSummaryLine = cIntakeorderMATSummaryLine.pGetSummaryLine(intakeorderMATLine.getItemNoStr(),
-                                                                                                                  intakeorderMATLine.getVariantCodeStr(),
-                                                                                                                  intakeorderMATLine.getSourceNoStr());
+                        intakeorderMATLine.getVariantCodeStr(),
+                        intakeorderMATLine.getSourceNoStr());
 
                 if (intakeorderMATSummaryLine == null ) {
                     cIntakeorderMATSummaryLine summaryLineToAdd = new cIntakeorderMATSummaryLine(intakeorderMATLine.getItemNoStr(),
-                                                                                                 intakeorderMATLine.getVariantCodeStr(),
-                                                                                                 intakeorderMATLine.getSourceNoStr());
+                            intakeorderMATLine.getVariantCodeStr(),
+                            intakeorderMATLine.getSourceNoStr());
 
 
                     cIntakeorderMATSummaryLine.pAddSummaryLine(summaryLineToAdd);
@@ -743,7 +686,6 @@ public class cIntakeorder {
 
                 intakeorderMATSummaryLine.pAddMATLine(intakeorderMATLine);
             }
-
             return true;
 
         } else {
@@ -754,20 +696,18 @@ public class cIntakeorder {
 
     public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cIntakeorderBarcode.allBarcodesObl = null;
             cIntakeorderBarcode.pTruncateTableBln();
         }
 
         cWebresult WebResult;
         WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATBarcodesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true) {
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
 
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cIntakeorderBarcode intakeorderBarcode = new cIntakeorderBarcode(jsonObject);
                 intakeorderBarcode.pInsertInDatabaseBln();
             }
@@ -817,7 +757,7 @@ public class cIntakeorder {
     public boolean pCheckLinesForBinAndItemVariantBln(String pvBinCodeStr, String pvItemNoStr, String pvVariantCodeStr) {
 
 
-        List<cIntakeorderMATLine> hulpObl = this.pGetLinesFromDatabasObl();
+        List<cIntakeorderMATLine> hulpObl = this.mGetLinesFromDatabasObl();
 
         if (hulpObl== null || hulpObl.size() == 0)  {
             return  false;
@@ -837,6 +777,53 @@ public class cIntakeorder {
     private static boolean mTruncateTableBln() {
         cIntakeorder.getIntakeorderViewModel().deleteAll();
         return true;
+    }
+
+    private List<cIntakeorderMATLine> mGetLinesFromDatabasObl() {
+
+        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
+        List<cIntakeorderMATLineEntity> hulpResultObl;
+
+        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetAllLinesFromDatabaseObl();
+        if (hulpResultObl == null || hulpResultObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
+            cIntakeorderMATLine IntakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
+            resultObl.add(IntakeorderMATLine);
+        }
+        return  resultObl;
+    }
+
+    private List<cIntakeorderMATLine> mGetLinesNotHandledFromDatabasObl() {
+
+        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
+        List<cIntakeorderMATLineEntity> hulpResultObl;
+
+        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesNotHandledFromDatabaseObl();
+        if (hulpResultObl == null || hulpResultObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
+            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
+            resultObl.add(intakeorderMATLine);
+        }
+        return  resultObl;
+    }
+
+    private boolean mGetCommentsViaWebErrorBln(List<JSONObject> pvResultDtt) {
+
+        cComment.allCommentsObl = new ArrayList<>();
+
+        for (JSONObject jsonObject : pvResultDtt) {
+            cComment comment = new cComment(jsonObject);
+            comment.pInsertInDatabaseBln();
+        }
+
+        return true;
+
     }
 
 

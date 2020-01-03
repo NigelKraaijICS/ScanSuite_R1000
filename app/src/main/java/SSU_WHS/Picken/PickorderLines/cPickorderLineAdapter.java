@@ -1,7 +1,5 @@
 package SSU_WHS.Picken.PickorderLines;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +9,22 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
+import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
-import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
+import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 
 public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAdapter.PickorderLineViewHolder>  {
 
@@ -81,14 +83,15 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
     //Region Default Methods
 
+    @NonNull
     @Override
-    public cPickorderLineAdapter.PickorderLineViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewTypeInt) {
+    public cPickorderLineAdapter.PickorderLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_pickorderline, pvParent, false);
         return new cPickorderLineAdapter.PickorderLineViewHolder(itemView);
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
         this.thisRecyclerView = pvRecyclerView;
         super.onAttachedToRecyclerView( this.thisRecyclerView);
     }
@@ -223,15 +226,14 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         //End On Click Listener
 
 
-        if (cPickorder.currentPickOrder.lastSelectedIndexInt > this.localPickorderLinesObl.size() -1 ) {
+        if (cPickorder.currentPickOrder.getLastSelectedIndexInt() > this.localPickorderLinesObl.size() -1 ) {
             cPickorder.currentPickOrder.lastSelectedIndexInt = 0;
         }
 
         //Select the first one, or selected index
-        if (pvPositionInt == cPickorder.currentPickOrder.lastSelectedIndexInt && cAppExtension.activity instanceof  PickorderLinesActivity &&  thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
+        if (pvPositionInt == cPickorder.currentPickOrder.getLastSelectedIndexInt() && cAppExtension.activity instanceof  PickorderLinesActivity &&  thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
             pvHolder.pickorderLineItemFrameLayout.performClick();
             PickorderLinesToPickFragment.pSetSelectedIndexInt(pvPositionInt);
-            return;
         }
     }
 
@@ -306,7 +308,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         List<cPickorderLine> resultObl = new ArrayList<>();
         for (cPickorderLine pickorderLine :this.localPickorderLinesObl)
         {
-            if (pickorderLine.getQuantityHandledDbl() < pickorderLine.quantityDbl)
+            if (pickorderLine.getQuantityHandledDbl() < pickorderLine.getQuantityDbl())
             {
                 resultObl.add(pickorderLine);
             }

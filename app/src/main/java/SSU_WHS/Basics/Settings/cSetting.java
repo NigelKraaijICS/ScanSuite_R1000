@@ -16,11 +16,12 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cSetting {
 
     //region Public Properties
-    public String nameStr;
-        public String getNameStr() {
+    private String nameStr;
+    public String getNameStr() {
         return nameStr;
     }
-    public settingEnu getSettingEnu(){
+
+    private settingEnu getSettingEnu(){
 
         settingEnu settingEnu;
 
@@ -35,23 +36,23 @@ public class cSetting {
 
     }
 
-    public String valueStr;
+    private String valueStr;
     public String getValueStr() {
         return valueStr;
     }
 
-    public cSettingsEntity settingsEntity;
+    private cSettingsEntity settingsEntity;
      public boolean indatabaseBln;
 
-    public static cSettingsViewModel gSettingViewModel;
-    public static cSettingsViewModel getSettingViewModel() {
+    private static cSettingsViewModel gSettingViewModel;
+    private static cSettingsViewModel getSettingViewModel() {
         if (gSettingViewModel == null) {
             gSettingViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cSettingsViewModel.class);
         }
         return gSettingViewModel;
     }
 
-    public static cSettingsAdapter gSettingsAdapter;
+    private static cSettingsAdapter gSettingsAdapter;
     public static cSettingsAdapter getSettingsAdapter() {
         if (gSettingsAdapter == null) {
             gSettingsAdapter = new cSettingsAdapter();
@@ -267,7 +268,7 @@ public class cSetting {
     //end region Public Properties
 
      //Region Constructor
-    cSetting(JSONObject pvJsonObject) {
+    private cSetting(JSONObject pvJsonObject) {
         this.settingsEntity = new cSettingsEntity(pvJsonObject);
         this.nameStr = this.settingsEntity.getNameStr();
         this.valueStr = this.settingsEntity.getValueStr();
@@ -318,7 +319,7 @@ public class cSetting {
 
         cWebresult WebResult;
         WebResult =  cSetting.getSettingViewModel().pGetSettingsFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
             List<JSONObject> myList = WebResult.getResultDtt();
@@ -442,7 +443,7 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-    public static Boolean PICK_SORT_AUTO_START(){
+    public static boolean PICK_SORT_AUTO_START(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SORT_AUTO_START);
         if (Setting == null) {
@@ -450,7 +451,7 @@ public class cSetting {
         }
 
         if (Setting.valueStr.equalsIgnoreCase( "")) {
-            return  null;
+            return  false;
         }
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
@@ -494,14 +495,14 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-    public static Boolean GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED(){
+    public static boolean GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED);
         if (Setting == null) {
             return  false;
         }
         if (Setting.valueStr.equalsIgnoreCase( "")) {
-            return  null;
+            return  false;
         }
 
 

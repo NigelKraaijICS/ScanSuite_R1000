@@ -17,9 +17,6 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import java.security.PublicKey;
-import java.util.List;
-
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -37,9 +34,52 @@ import com.datalogic.device.input.KeyboardManager;
 import com.datalogic.device.input.Trigger;
 
 public class cUserInterface {
+
     private static GettingDataFragment gettingDataFragment;
 
-    public static void pShowToastMessage(final String pvMessageStr, final Integer pvSoundInt) {
+    private static void mDoVibrate() {
+        // Get instance of Vibrator from current Context
+        Vibrator v = (Vibrator) cAppExtension.context.getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 300 milliseconds
+        if (v!= null) {
+            if (v.hasVibrator()) {
+                v.vibrate(300);
+            }
+        }
+    }
+
+    private static void pDisableScanner(){
+
+        switch(cDeviceInfo.getDeviceBrand().toUpperCase()) {
+            case "DATALOGIC":
+
+                KeyboardManager keyManager = new KeyboardManager();
+                BarcodeManager barcodeManager = new BarcodeManager();
+
+                for (Trigger trigger : keyManager.getAvailableTriggers()) {
+                    barcodeManager.releaseTrigger();
+                    trigger.setEnabled(false);
+                }
+
+                break;
+
+            case "ZEBRA":
+
+                Intent i = new Intent();
+                i.setAction("com.symbol.datawedge.api.ACTION_SCANNERINPUTPLUGIN");
+                i.putExtra("com.symbol.datawedge.api.EXTRA_PARAMETER", "DISABLE_PLUGIN");
+                cAppExtension.context.sendBroadcast(i);
+
+                // code block
+                break;
+
+            default:
+                // code block
+        }
+
+    }
+
+     public static void pShowToastMessage(final String pvMessageStr, final Integer pvSoundInt) {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -60,7 +100,7 @@ public class cUserInterface {
                     pPlaySound(pvSoundInt, null);
                 }
                 if (pvVibrateBln) {
-                    pDoVibrate();
+                    mDoVibrate();
                 }
                 Snackbar.make(pvView, pvMessageStr, Snackbar.LENGTH_LONG).show();
             }
@@ -77,7 +117,7 @@ public class cUserInterface {
                     pPlaySound(pvSoundInt, null);
                 }
                 if (pvVibrateBln) {
-                    pDoVibrate();
+                    mDoVibrate();
                 }
                 Snackbar snackbar =  Snackbar.make(pvView, pvMessageStr, Snackbar.LENGTH_LONG);
                 View sbView = snackbar.getView();
@@ -114,17 +154,6 @@ public class cUserInterface {
             }).start(); //thread
     }
 
-    public static void pDoVibrate() {
-        // Get instance of Vibrator from current Context
-        Vibrator v = (Vibrator) cAppExtension.context.getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 300 milliseconds
-        if (v!= null) {
-            if (v.hasVibrator()) {
-                v.vibrate(300);
-            }
-        }
-    }
-
     public static void pDoNope(final View pvView, final Boolean pvPlaySoundBln, final Boolean pvVibrateBln) {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -135,7 +164,7 @@ public class cUserInterface {
                     pPlaySound( R.raw.badsound, null);
                 }
                 if (pvVibrateBln) {
-                    pDoVibrate();
+                    mDoVibrate();
                 }
             }
         });
@@ -152,7 +181,7 @@ public class cUserInterface {
                     pPlaySound(R.raw.goodsound, null);
                 }
                 if (pvVibrateBln) {
-                    pDoVibrate();
+                    mDoVibrate();
                 }
             }
         });
@@ -209,7 +238,7 @@ public class cUserInterface {
                     pPlaySound(R.raw.badsound, null);
                 }
                 if (pvVibrateBln) {
-                    pDoVibrate();
+                    mDoVibrate();
                 }
                 final HugeErrorFragment hugeErrorFragment = new HugeErrorFragment();
                 Bundle bundle = new Bundle();
@@ -224,16 +253,14 @@ public class cUserInterface {
 
     public static void pCheckAndCloseOpenDialogs() {
 
-        pHideGettingData();
+        cUserInterface.pHideGettingData();
 
-        List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof DialogFragment) {
-                    ((DialogFragment) fragment).dismiss();
-                }
+        for (Fragment fragment : cAppExtension.fragmentManager.getFragments()) {
+            if (fragment instanceof DialogFragment) {
+                ((DialogFragment) fragment).dismiss();
             }
         }
+
     }
 
     public static void pShowKeyboard(final View pvView) {
@@ -250,14 +277,16 @@ public class cUserInterface {
     }
 
     public static void pHideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) cAppExtension.activity.getSystemService(cAppExtension.activity.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) cAppExtension.activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
         View view = cAppExtension.activity.getCurrentFocus();
         //If no view currently has focus, create a new one, just so we can grab a window token from it
         if (view == null) {
             view = new View(cAppExtension.activity);
         }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public static void pShowGettingData() {
@@ -323,19 +352,15 @@ public class cUserInterface {
 
                 KeyboardManager keyManager = new KeyboardManager();
                 for (Trigger trigger : keyManager.getAvailableTriggers()) {
-                    boolean result;
+
                     if (trigger.getId() == KeyboardManager.TRIGGER_ID_MOTION || trigger.getId() == KeyboardManager.TRIGGER_ID_AUTOSCAN) {
-                        result =  trigger.setEnabled(false);
+                        trigger.setEnabled(false);
                     }
                     else {
-                        result =  trigger.setEnabled(true);
+                         trigger.setEnabled(true);
                     }
 
-                    if(result){
-                        //operation done
-                    }else{
-                        //do something in case of failure
-                    }
+
                 }
 
             case "ZEBRA":
@@ -352,41 +377,6 @@ public class cUserInterface {
 
     }
 
-    public static void pDisableScanner(){
 
-        switch(cDeviceInfo.getDeviceBrand().toUpperCase()) {
-            case "DATALOGIC":
-
-                KeyboardManager keyManager = new KeyboardManager();
-                BarcodeManager barcodeManager = new BarcodeManager();
-
-                for (Trigger trigger : keyManager.getAvailableTriggers()) {
-                    barcodeManager.releaseTrigger();
-                    boolean result =  trigger.setEnabled(false);
-
-                    if(result){
-                        //operation done
-                    }else{
-                        //do something in case of failure
-                    }
-                }
-
-                break;
-
-            case "ZEBRA":
-
-                Intent i = new Intent();
-                i.setAction("com.symbol.datawedge.api.ACTION_SCANNERINPUTPLUGIN");
-                i.putExtra("com.symbol.datawedge.api.EXTRA_PARAMETER", "DISABLE_PLUGIN");
-                cAppExtension.context.sendBroadcast(i);
-
-                // code block
-                break;
-
-            default:
-                // code block
-        }
-
-    }
 
 }

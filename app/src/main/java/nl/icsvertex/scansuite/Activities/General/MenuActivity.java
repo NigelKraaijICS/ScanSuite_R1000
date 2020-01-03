@@ -87,14 +87,14 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.mLeaveActivity();
-                return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            this.mLeaveActivity();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
 
@@ -226,8 +226,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.SORTING) {
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
-
-            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
             if (!  cLicense.pGetLicenseViaWebserviceBln()) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
                 return;
@@ -246,7 +244,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
 
-            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
             if (!  cLicense.pGetLicenseViaWebserviceBln()) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
                 return;
@@ -291,7 +288,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INVENTORY);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, IntakeorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, IntakeorderSelectActivity.VIEW_NAME_HEADER_TEXT));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-            return;
         }
 
     }
@@ -299,6 +295,11 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     public static void pHandleScan(cBarcodeScan pvScannedBarcode){
 
      cArticle article =   cArticle.pGetArticleByBarcodeViaWebservice(pvScannedBarcode);
+
+     if (article == null) {
+         return;
+     }
+
      article.pGetBarcodesViaWebserviceBln();
      article.pGetStockViaWebserviceBln();
     }

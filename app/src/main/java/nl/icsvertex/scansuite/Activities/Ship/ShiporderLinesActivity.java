@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -59,17 +58,16 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     //Region Views
 
-    private TextView textViewChosenOrder;
+    private static TextView textViewChosenOrder;
     private static TextView quantityShipordersText;
     private static ConstraintLayout container;
-    private TabLayout shiporderLinesTabLayout;
-    private ViewPager shiporderLinesViewPager;
-    private CardView chosenOrderContainer;
+    private static TabLayout shiporderLinesTabLayout;
+    private static ViewPager shiporderLinesViewPager;
     private static ImageView imageButtonComments;
-    private ShiporderLinesPagerAdapter shiporderLinesPagerAdapter;
+    private static ShiporderLinesPagerAdapter shiporderLinesPagerAdapter;
 
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
 
     public static Fragment currentLineFragment;
 
@@ -152,21 +150,20 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFindViews() {
         ShiporderLinesActivity.container = findViewById(R.id.container);
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.quantityShipordersText = findViewById(R.id.quantityShipordersText);
-        this.shiporderLinesTabLayout = findViewById(R.id.shiporderLinesTabLayout);
-        this.shiporderLinesViewPager = findViewById(R.id.shiporderLinesViewpager);
-        this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
-        this.chosenOrderContainer = findViewById(R.id.chosenOrderContainer);
-        this.imageButtonComments = findViewById(R.id.imageButtonComments);
+        ShiporderLinesActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        ShiporderLinesActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        ShiporderLinesActivity.quantityShipordersText = findViewById(R.id.quantityShipordersText);
+        ShiporderLinesActivity.shiporderLinesTabLayout = findViewById(R.id.shiporderLinesTabLayout);
+        ShiporderLinesActivity.shiporderLinesViewPager = findViewById(R.id.shiporderLinesViewpager);
+        ShiporderLinesActivity.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
+        ShiporderLinesActivity.imageButtonComments = findViewById(R.id.imageButtonComments);
     }
 
      @Override
     public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
-        this.toolbarTitle.setText(pvScreenTitle);
-        toolbarTitle.setSelected(true);
+         ShiporderLinesActivity.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
+         ShiporderLinesActivity.toolbarTitle.setText(pvScreenTitle);
+         ShiporderLinesActivity.toolbarTitle.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -179,20 +176,20 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFieldsInitialize() {
 
-        ViewCompat.setTransitionName(this.textViewChosenOrder, this.VIEW_CHOSEN_ORDER);
+        ViewCompat.setTransitionName(ShiporderLinesActivity.textViewChosenOrder, ShiporderLinesActivity.VIEW_CHOSEN_ORDER);
 
-        this.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
-        this.shiporderLinesTabLayout.addTab(shiporderLinesTabLayout.newTab().setText(R.string.tab_shiporderline_toship));
-        this.shiporderLinesTabLayout.addTab(shiporderLinesTabLayout.newTab().setText(R.string.tab_shiporderline_shipped));
-        this.shiporderLinesTabLayout.addTab(shiporderLinesTabLayout.newTab().setText(R.string.tab_shiporderline_total));
+        ShiporderLinesActivity.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
+        ShiporderLinesActivity.shiporderLinesTabLayout.addTab(shiporderLinesTabLayout.newTab().setText(R.string.tab_shiporderline_toship));
+        ShiporderLinesActivity.shiporderLinesTabLayout.addTab(shiporderLinesTabLayout.newTab().setText(R.string.tab_shiporderline_shipped));
+        ShiporderLinesActivity.shiporderLinesTabLayout.addTab(shiporderLinesTabLayout.newTab().setText(R.string.tab_shiporderline_total));
 
-        this.shiporderLinesPagerAdapter = new ShiporderLinesPagerAdapter(this.shiporderLinesTabLayout.getTabCount());
-        this.shiporderLinesViewPager.setAdapter(shiporderLinesPagerAdapter);
-        this.shiporderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(shiporderLinesTabLayout));
-        this.shiporderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        ShiporderLinesActivity.shiporderLinesPagerAdapter = new ShiporderLinesPagerAdapter(ShiporderLinesActivity.shiporderLinesTabLayout.getTabCount());
+        ShiporderLinesActivity.shiporderLinesViewPager.setAdapter(ShiporderLinesActivity.shiporderLinesPagerAdapter);
+        ShiporderLinesActivity.shiporderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(shiporderLinesTabLayout));
+        ShiporderLinesActivity.shiporderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
-                shiporderLinesViewPager.setCurrentItem(pvTab.getPosition());
+                ShiporderLinesActivity.shiporderLinesViewPager.setCurrentItem(pvTab.getPosition());
                 mChangeSelectedTab(pvTab);
             }
 
@@ -216,7 +213,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mInitScreen() {
 
-        this.mShowComments();
+        ShiporderLinesActivity.mShowComments();
 
         //Check if we need to register a workplaceStr
         if (cWorkplace.currentWorkplace == null ) {
@@ -224,7 +221,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
             if (cWorkplace.allWorkplacesObl.size() > 1) {
                 //Show the workplaceStr fragment
-                this.mShowWorkplaceFragment();
+                ShiporderLinesActivity.mShowWorkplaceFragment();
                 return;
             }
             else {
@@ -305,8 +302,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         //We found a match in open shipments
         ShiporderLinesActivity.mStartShipActivity();
-        return;
-
     }
 
     public static void pShipmentSelected(cShipment pvShipment) {
@@ -355,7 +350,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     private void mCheckAllDone() {
 
         // If not everything is done, then leave
-        if (this.mCheckAllDoneBln() == false) {
+        if (!this.mCheckAllDoneBln()) {
             return;
         }
 
@@ -366,10 +361,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     private boolean mCheckAllDoneBln() {
 
-        if (cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size() <= 0) {
-            return true;
-        }
-        return  false;
+        return cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size() <= 0;
     }
 
     private void mChangeSelectedTab(TabLayout.Tab pvTab) {
@@ -445,9 +437,8 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
                 cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
 
                 //If activity bin is not required, then don't show the fragment
-                if (!cPickorder.currentPickOrder.pickActivityBinRequiredBln || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+                if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
                     mStartOrderSelectActivity();
-                    return;
                 }
 
             }
@@ -479,13 +470,13 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
 
             //If we got any comments, show them
             if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {

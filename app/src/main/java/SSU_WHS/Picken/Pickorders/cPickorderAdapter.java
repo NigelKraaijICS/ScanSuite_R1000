@@ -1,5 +1,6 @@
 package SSU_WHS.Picken.Pickorders;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cText;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import ICS.cAppExtension;
@@ -77,14 +79,15 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
 
     //Region Default Methods
+    @NonNull
     @Override
-    public cPickorderAdapter.PickorderViewHolder onCreateViewHolder(ViewGroup pvParent, int pbViewTypeInt) {
+    public cPickorderAdapter.PickorderViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_pickorder, pvParent, false);
         return new cPickorderAdapter.PickorderViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(cPickorderAdapter.PickorderViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cPickorderAdapter.PickorderViewHolder pvHolder, int pvPositionInt) {
 
         if (localPickorderObl == null || localPickorderObl.size() == 0 ) {
             return;
@@ -103,14 +106,14 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             pvHolder.textViewOrderUser.setText(selectedPickorder.getCurrentUserIdStr());
         }
 
-        if (selectedPickorder.singleArticleOrdersBln == false) {
+        if (!selectedPickorder.isSingleArticleOrdersBln()) {
             pvHolder.imageViewIsSingleArticle.setVisibility(View.INVISIBLE);
         }
         else {
             pvHolder.imageViewIsSingleArticle.setVisibility(View.VISIBLE);
         }
 
-        if (selectedPickorder.isProcessingOrParkedBln == true) {
+        if (selectedPickorder.getProcessingOrParkedBln()) {
             pvHolder.imageViewIsProcessedOrWait.setVisibility(View.VISIBLE);
         }
         else {
@@ -129,7 +132,7 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             pvHolder.textViewQuantityTotal.setText("");
         }
         else {
-            pvHolder.textViewQuantityTotal.setText(Integer.toString(selectedPickorder.getQuantityTotalInt()));
+            pvHolder.textViewQuantityTotal.setText(cText.pIntToStringStr(selectedPickorder.getQuantityTotalInt()));
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BC.toString())) {
@@ -232,16 +235,13 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
                 if (cAppExtension.context instanceof PickorderSelectActivity) {
                     PickorderSelectActivity.pPickorderSelected(selectedPickorder);
-                    return;
                 }
                 if (cAppExtension.context instanceof SortorderSelectActivity) {
                     SortorderSelectActivity.pSortorderSelected(selectedPickorder);
-                    return;
                 }
 
                 if (cAppExtension.context instanceof ShiporderSelectActivity) {
                     ShiporderSelectActivity.pShiporderSelected(selectedPickorder);
-                    return;
                 }
 
             }

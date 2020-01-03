@@ -12,7 +12,6 @@ import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
-import ICS.Utils.cUserInterface;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
@@ -37,137 +36,81 @@ import nl.icsvertex.scansuite.R;
 public class cInventoryorder {
 
 
-    public String orderNumberStr;
+    private String orderNumberStr;
     public String getOrderNumberStr() {
         return orderNumberStr;
     }
 
-    public String orderTypeStr;
+    private String orderTypeStr;
     public String getOrderTypeStr() {
         return orderTypeStr;
     }
 
-    public int numberOfBinsInt;
+    private int numberOfBinsInt;
     public int getNumberOfBinsInt() {
         return numberOfBinsInt;
     }
 
-    public String assignedUserIdStr;
+    private String assignedUserIdStr;
     public String getAssignedUserIdStr() {
         return assignedUserIdStr;
     }
 
-    public String currentUserIdStr;
+    private String currentUserIdStr;
     public String getCurrentUserIdStr() {
         return currentUserIdStr;
     }
 
-    public int statusInt;
+    private int statusInt;
     public int getStatusInt() {
         return statusInt;
     }
 
-    public boolean invAutoCloseBinBln;
-    public boolean isInvAutoCloseBinBln() {
-        return invAutoCloseBinBln;
-    }
-
-    public boolean invPrecountBln;
-    public boolean isInvPrecountBln() {
-        return invPrecountBln;
-    }
-
-    public boolean invAmountManualBln;
+    private boolean invAmountManualBln;
     public boolean isInvAmountManualBln() {
         return invAmountManualBln;
     }
 
-    public boolean invBarcodeCheckBln;
+    private boolean invBarcodeCheckBln;
     public boolean isInvBarcodeCheckBln() {
         return invBarcodeCheckBln;
     }
 
-    public boolean invAddExtraBinBln;
+    private boolean invAddExtraBinBln;
     public boolean isInvAddExtraBinBln() {
         return invAddExtraBinBln;
     }
 
-    public String externalReferenceStr;
+    private String externalReferenceStr;
     public String getExternalReferenceStr() {
         return externalReferenceStr;
     }
 
-    public String workPlaceStr;
-    public String getWorkPlaceStr() {
-        return workPlaceStr;
-    }
+    private int sourceDocumentInt;
+    private int getSourceDocumentInt() { return sourceDocumentInt; }
 
-    public String stockOwnerStr;
-    public String getStockOwnerStr() {
-        return stockOwnerStr;
-    }
-
-    public int sourceDocumentInt;
-    public int getSourceDocumentInt() { return sourceDocumentInt; }
-
-    public String documentStr;
+    private String documentStr;
     public String getDocumentStr() {
         return documentStr;
     }
 
-    public String document2Str;
-    public String getDocument2Str() {
-        return document2Str;
-    }
-
-    public int webserviceTimeOutERPInsInt;
-    public int getWebserviceTimeOutERPInsInt() {
-        return webserviceTimeOutERPInsInt;
-    }
-
-    public String interfaceResultMethodStr;
-    public String getInterfaceResultMethodStr() {
-        return interfaceResultMethodStr;
-    }
-
-    public boolean inventoryWithPictureBln;
+    private boolean inventoryWithPictureBln;
     public boolean isInventoryWithPictureBln() {
         return inventoryWithPictureBln;
     }
 
-    public boolean inventoryWithPictureAutoOpenBln;
+    private boolean inventoryWithPictureAutoOpenBln;
     public boolean isInventoryWithPictureAutoOpenBln() {
         return inventoryWithPictureAutoOpenBln;
     }
 
-    public boolean inventoryWithPicturePrefetchBln;
+    private boolean inventoryWithPicturePrefetchBln;
     public boolean isInventoryWithPicturePrefetchBln() {
         return inventoryWithPicturePrefetchBln;
     }
 
-    public List<String> errorMessagesObl;
-    public List<String> getErrorMessageObl() {
-        return errorMessagesObl;
-    }
-
-    public Boolean isIVSBln() {
-
-        if (this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.IVS.toString())) {
-            return true;
-        }
-
-        return false;
-
-    }
-
     public Boolean isGeneratedBln() {
-
-        if (this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated) {
-            return  true;
-        }
-
-        return false;
-
+        return this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated;
     }
 
     public int unknownVariantCounterInt = 0;
@@ -175,12 +118,10 @@ public class cInventoryorder {
         return unknownVariantCounterInt;
     }
 
-
-    public cInventoryorderEntity inventoryorderEntity;
+    private cInventoryorderEntity inventoryorderEntity;
     public boolean indatabaseBln;
 
-    public static cInventoryorderViewModel gInventoryorderViewModel;
-
+    private static cInventoryorderViewModel gInventoryorderViewModel;
     public static cInventoryorderViewModel getInventoryorderViewModel() {
         if (gInventoryorderViewModel == null) {
             gInventoryorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
@@ -188,8 +129,7 @@ public class cInventoryorder {
         return gInventoryorderViewModel;
     }
 
-    public static cInventoryorderAdapter gInventoryorderAdapter;
-
+    private static cInventoryorderAdapter gInventoryorderAdapter;
     public static cInventoryorderAdapter getInventoryorderAdapter() {
         if (gInventoryorderAdapter == null) {
             gInventoryorderAdapter = new cInventoryorderAdapter();
@@ -202,12 +142,9 @@ public class cInventoryorder {
     }
 
     public List<cInventoryorderBarcode> barcodesObl () {return  cInventoryorderBarcode.allInventoryorderBarcodesObl;}
+    private List<cInventoryorderLine> linesObl() {return  cInventoryorderLine.allLinesObl;}
 
-    public List<cInventoryorderLine> linesObl () {return  cInventoryorderLine.allLinesObl;}
-
-    public List<cInventoryorderBin> binsObl () {return  cInventoryorderBin.allInventoryorderBinsObl;}
-
-    public List<cArticleImage> imagesObl()  {
+    private List<cArticleImage> imagesObl()  {
         return  cArticleImage.allImages;
     }
 
@@ -228,20 +165,14 @@ public class cInventoryorder {
         this.currentUserIdStr = this.inventoryorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getStatusStr());
 
-        this.invAutoCloseBinBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvAutoCloseBinStr(), false);
-        this.invPrecountBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvPrecountStr(), false);
         this.invAmountManualBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvAmountManualStr(), false);
         this.invBarcodeCheckBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvBarcodeCheckStr(), false);
         this.invAddExtraBinBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvAddExtraBinStr(), false);
 
         this.externalReferenceStr = this.inventoryorderEntity.getExternalReferenceStr();
-        this.workPlaceStr = this.inventoryorderEntity.getWorkplaceStr();
-        this.stockOwnerStr = this.inventoryorderEntity.getStockOwnerStr();
+
         this.sourceDocumentInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getSourceDocumentStr()) ;
         this.documentStr = this.inventoryorderEntity.getDocumentStr();
-        this.document2Str = this.inventoryorderEntity.getDocument2Str();
-        this.webserviceTimeOutERPInsInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getWebserviceTimeOutERPInsStr());
-        this.interfaceResultMethodStr = this.inventoryorderEntity.getInterfaceResultMethodStr();
 
         this.inventoryWithPictureBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPictureStr(),false) ;
         this.inventoryWithPictureAutoOpenBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPictureAutoOpenStr(),false) ;
@@ -258,20 +189,14 @@ public class cInventoryorder {
         this.currentUserIdStr = this.inventoryorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getStatusStr());
 
-        this.invAutoCloseBinBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvAutoCloseBinStr(), false);
-        this.invPrecountBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvPrecountStr(), false);
         this.invAmountManualBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvAmountManualStr(), false);
         this.invBarcodeCheckBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvBarcodeCheckStr(), false);
         this.invAddExtraBinBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvAddExtraBinStr(), false);
 
         this.externalReferenceStr = this.inventoryorderEntity.getExternalReferenceStr();
-        this.workPlaceStr = this.inventoryorderEntity.getWorkplaceStr();
-        this.stockOwnerStr = this.inventoryorderEntity.getStockOwnerStr();
+
         this.sourceDocumentInt =  cText.pStringToIntegerInt(this.inventoryorderEntity.getSourceDocumentStr());
         this.documentStr = this.inventoryorderEntity.getDocumentStr();
-        this.document2Str = this.inventoryorderEntity.getDocument2Str();
-        this.webserviceTimeOutERPInsInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getWebserviceTimeOutERPInsStr());
-        this.interfaceResultMethodStr = this.inventoryorderEntity.getInterfaceResultMethodStr();
 
         this.inventoryWithPictureBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPictureStr(),false) ;
         this.inventoryWithPictureAutoOpenBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInventoryWithPictureAutoOpenStr(),false) ;
@@ -298,15 +223,11 @@ public class cInventoryorder {
 
         cWebresult WebResult;
         WebResult = cInventoryorder.getInventoryorderViewModel().pCreateInventoryOrderViaWebserviceWrs(pvDocumentStr);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true) {
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
 
-                cInventoryorder inventoryorder = new cInventoryorder(jsonObject);
+            if (WebResult.getResultDtt().size() == 1) {
+                cInventoryorder inventoryorder = new cInventoryorder(WebResult.getResultDtt().get(0));
                 inventoryorder.pInsertInDatabaseBln();
-
                 cInventoryorder.currentInventoryOrder = inventoryorder;
                 return true;
             }
@@ -321,24 +242,22 @@ public class cInventoryorder {
 
     public static boolean pGetInventoryOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cInventoryorder.allInventoryordersObl = null;
             cInventoryorder.mTruncateTableBln();
         }
 
         cWebresult WebResult;
         WebResult = cInventoryorder.getInventoryorderViewModel().pGetInventoryordersFromWebserviceWrs(pvSearchTextStr);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true) {
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cInventoryorder inventoryorder = new cInventoryorder(jsonObject);
                 inventoryorder.pInsertInDatabaseBln();
             }
+
             return true;
+
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERS);
             return false;
@@ -371,18 +290,18 @@ public class cInventoryorder {
         result.resultBln = true;
 
         cWebresult Webresult;
-        Boolean ignoreBusyBln = false;
+        boolean ignoreBusyBln = false;
 
-        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED() == false) {
-            ignoreBusyBln = false;
-        } else {
-
-            if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
-                ignoreBusyBln = true;
-            }
+        if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
+            ignoreBusyBln = true;
         }
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt, ignoreBusyBln);
+        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString(),
+                                                                                                        this.getOrderNumberStr(),
+                                                                                                        cDeviceInfo.getSerialnumberStr(),
+                                                                                                        pvStepCodeEnu.toString(),
+                                                                                                        pvWorkFlowStepInt,
+                                                                                                        ignoreBusyBln);
 
         //No result, so something really went wrong
         if (Webresult == null) {
@@ -393,13 +312,13 @@ public class cInventoryorder {
         }
 
         //Everything was fine, so we are done
-        if (Webresult.getSuccessBln() == true && Webresult.getResultBln() == true) {
+        if (Webresult.getSuccessBln() && Webresult.getResultBln()) {
             result.resultBln = true;
             return result;
         }
 
         //Something really went wrong
-        if (Webresult.getSuccessBln() == false) {
+        if (!Webresult.getSuccessBln()) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_lock_order));
@@ -407,8 +326,8 @@ public class cInventoryorder {
         }
 
         //Check if this activity is meant for a different user
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-                Webresult.getResultObl().size() >= 2 && Webresult.getResultObl().get(0).equalsIgnoreCase("invalid_user_not_assigned") == true) {
+        if (!Webresult.getResultBln() && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
+                Webresult.getResultObl().size() >= 2 && Webresult.getResultObl().get(0).equalsIgnoreCase("invalid_user_not_assigned")) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_meant_for_other_user)) + " " + Webresult.getResultObl().get(1));
@@ -416,8 +335,8 @@ public class cInventoryorder {
         }
 
         //Check if this activity is meant for a different user
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-                Webresult.getResultObl().size() >= 0 && Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr()) == false) {
+        if (!Webresult.getResultBln() && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
+            Webresult.getResultObl().size() > 0 && ! Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr())) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_another_user_already_started)) + " " + Webresult.getResultObl().get(0));
@@ -425,7 +344,7 @@ public class cInventoryorder {
         }
 
         // We got a succesfull response, but we need to do something with this activity
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() > 0) {
+        if (!Webresult.getResultBln()&& Webresult.getResultLng() > 0) {
 
             //Try to convert result long to action enumerate
             cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(Webresult.getResultLng().intValue());
@@ -441,7 +360,7 @@ public class cInventoryorder {
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_cant_be_started)));
             }
 
-            cInventoryorder.currentInventoryOrder.pGetCommentsViaWebErrorBln(Webresult.getResultDtt());
+            cInventoryorder.currentInventoryOrder.mGetCommentsViaWebErrorBln(Webresult.getResultDtt());
             return result;
         }
 
@@ -455,25 +374,7 @@ public class cInventoryorder {
 
         Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt);
 
-        if (Webresult.getSuccessBln() == false || Webresult.getResultBln() == false) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean pGetCommentsViaWebErrorBln(List<JSONObject> pvResultDtt) {
-
-        cComment.allCommentsObl = new ArrayList<>();
-
-        List<JSONObject> myList = pvResultDtt;
-        for (int i = 0; i < myList.size(); i++) {
-            JSONObject jsonObject;
-            jsonObject = myList.get(i);
-            cComment comment = new cComment(jsonObject);
-            comment.pInsertInDatabaseBln();
-        }
-        return true;
-
+        return Webresult.getSuccessBln() && Webresult.getResultBln();
     }
 
     public boolean pGetArticleImagesViaWebserviceBln(Boolean pvRefreshBln) {
@@ -482,7 +383,7 @@ public class cInventoryorder {
             return  true;
         }
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cArticleImage.allImages = null;
             cArticleImage.pTruncateTableBln();
         }
@@ -501,14 +402,14 @@ public class cInventoryorder {
         for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
             String itemNoAndVariantCodeStr = inventoryorderLine.getItemNoStr() + ";" + inventoryorderLine.getVariantCodeStr();
 
-            if (itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr) == false) {
+            if (!itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr)) {
                 itemNoAndVariantCodeObl.add(itemNoAndVariantCodeStr);
             }
         }
 
         cWebresult WebResult;
         WebResult =  cArticleImage.getArticleImageViewModel().pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()){
 
             cArticleImage.allImages = new ArrayList<>();
             List<JSONObject> myList = WebResult.getResultDtt();
@@ -519,7 +420,7 @@ public class cInventoryorder {
 
                 cArticleImage articleImage = new cArticleImage(jsonObject);
 
-                if ( cArticleImage.allImages.contains(articleImage) == false) {
+                if ( !cArticleImage.allImages.contains(articleImage)) {
                     articleImage.pInsertInDatabaseBln();
                     cArticleImage.allImages.add((articleImage));
                 }
@@ -532,17 +433,16 @@ public class cInventoryorder {
         }
     }
 
-    public boolean pDeleteDetailsBln() {
+    public void pDeleteDetails() {
         cInventoryorderLine.pTruncateTableBln();
         cInventoryorderBin.pTruncateTableBln();
         cInventoryorderBarcode.pTruncateTableBln();
         cInventoryorderLineBarcode.pTruncateTableBln();
-        return true;
     }
 
     public boolean pGetLinesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cInventoryorderLine.allLinesObl = null;
             cInventoryorderLine.pTruncateTableBln();
         }
@@ -550,7 +450,7 @@ public class cInventoryorder {
         cWebresult WebResult;
 
         WebResult = cInventoryorder.getInventoryorderViewModel().pGetLinesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true) {
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             if (cInventoryorderLine.allLinesObl == null) {
                 cInventoryorderLine.allLinesObl = new ArrayList<>();
@@ -579,8 +479,6 @@ public class cInventoryorder {
                     cInventoryorderBin.currentInventoryOrderBin = null;
                 }
 
-
-                continue;
             }
 
             return  true;
@@ -593,7 +491,7 @@ public class cInventoryorder {
 
     public boolean pGetBinsViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cInventoryorderBin.allInventoryorderBinsObl = null;
             cInventoryorderBin.pTruncateTableBln();
         }
@@ -601,7 +499,7 @@ public class cInventoryorder {
         cWebresult WebResult;
 
         WebResult = cInventoryorder.getInventoryorderViewModel().pGetBinsFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true) {
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             if (cInventoryorderBin.allInventoryorderBinsObl == null) {
                 cInventoryorderBin.allInventoryorderBinsObl = new ArrayList<>();
@@ -631,7 +529,7 @@ public class cInventoryorder {
 
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
 
-        if (pvRefeshBln == true) {
+        if (pvRefeshBln) {
             cComment.allCommentsObl = null;
             cComment.pTruncateTableBln();
             cComment.commentsShownBln = false;
@@ -639,7 +537,7 @@ public class cInventoryorder {
 
         cWebresult webresult;
         webresult = cInventoryorder.getInventoryorderViewModel().pGetCommentsFromWebserviceWrs();
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+        if (webresult.getResultBln()&& webresult.getSuccessBln()) {
 
             cComment.allCommentsObl = new ArrayList<>();
 
@@ -660,7 +558,7 @@ public class cInventoryorder {
 
     public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cInventoryorderBarcode.allInventoryorderBarcodesObl = null;
             cInventoryorderBarcode.pTruncateTableBln();
         }
@@ -668,7 +566,7 @@ public class cInventoryorder {
         cWebresult WebResult;
 
         WebResult =  cInventoryorder.getInventoryorderViewModel().pGetBarcodesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
 
             if (cInventoryorderBarcode.allInventoryorderBarcodesObl == null) {
                 cInventoryorderBarcode.allInventoryorderBarcodesObl = new ArrayList<>();
@@ -702,15 +600,13 @@ public class cInventoryorder {
 
     public boolean pGetLineBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cInventoryorderLineBarcode.allLineBarcodesObl = null;
             cInventoryorderLineBarcode.pTruncateTableBln();
         }
 
-        cWebresult WebResult;
-
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pGetLineBarcodesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        cWebresult WebResult =  cInventoryorder.getInventoryorderViewModel().pGetLineBarcodesFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             List<JSONObject> myList = WebResult.getResultDtt();
             for (int i = 0; i < myList.size(); i++) {
                 JSONObject jsonObject;
@@ -720,7 +616,7 @@ public class cInventoryorder {
                 cInventoryorderLineBarcode inventoryorderLineBarcode = new cInventoryorderLineBarcode(jsonObject);
 
                 //Search for line that belongs to this barcode
-                cInventoryorderLine inventoryorderLine = cInventoryorder.currentInventoryOrder.pGetLineWithLineNo(inventoryorderLineBarcode.getLineNoLng());
+                cInventoryorderLine inventoryorderLine = cInventoryorder.currentInventoryOrder.mGetLineWithLineNo(inventoryorderLineBarcode.getLineNoLng());
 
                 //If we can't find it, skip this
                 if (inventoryorderLine == null) {
@@ -746,13 +642,10 @@ public class cInventoryorder {
         cWebresult WebResult;
 
         WebResult =  cInventoryorder.getInventoryorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
-                cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(jsonObject);
+            if (WebResult.getResultDtt().size() == 1) {
+                cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(WebResult.getResultDtt().get(0));
                 inventoryorderBarcode.pInsertInDatabaseBln();
                 cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
                 return  true;
@@ -800,7 +693,7 @@ public class cInventoryorder {
 
         cWebresult WebResult;
         WebResult =  cInventoryorder.getInventoryorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
                 for (cArticleBarcode articleBarcode :  cArticle.currentArticle.barcodesObl) {
                     cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(articleBarcode);
                     inventoryorderBarcode.pInsertInDatabaseBln();
@@ -822,16 +715,11 @@ public class cInventoryorder {
 
     public boolean pAddLineBln() {
 
-        cWebresult WebResult;
+        cWebresult WebResult =  cInventoryorder.getInventoryorderViewModel().pAddLineViaWebserviceWrs();
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()){
 
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pAddLineViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
-                cInventoryorderLine.currentInventoryOrderLine= new cInventoryorderLine(jsonObject);
+            if (WebResult.getResultDtt().size() == 1) {
+                cInventoryorderLine.currentInventoryOrderLine= new cInventoryorderLine(WebResult.getResultDtt().get(0));
                 cInventoryorderLine.currentInventoryOrderLine.pInsertInDatabaseBln();
                 cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
                 return  true;
@@ -846,24 +734,6 @@ public class cInventoryorder {
         return  true;
     }
 
-    public  cInventoryorderLine pGetLineWithLineNo(Long pvLineNoLng) {
-
-       if (this.linesObl() == null || this.linesObl().size() == 0) {
-           return  null;
-       }
-
-       for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
-
-           if (cText.pIntToStringStr(inventoryorderLine.getLineNoInt()).equalsIgnoreCase(cText.pLongToStringStr(pvLineNoLng))) {
-               return  inventoryorderLine;
-           }
-
-       }
-
-       return  null;
-
-    }
-
     public  List<cInventoryorderLine> pGetLinesForBinObl(String pvBincodeStr) {
 
         List<cInventoryorderLine> resultObl = new ArrayList<>();
@@ -876,14 +746,13 @@ public class cInventoryorder {
         return resultObl;
     }
 
-
     public Double  pGetTotalCountDbl() {
 
         Double resultDbl;
 
         resultDbl = cInventoryorderLine.getInventoryorderLineViewModel().pGetTotalCountDbl();
         if (resultDbl == null ) {
-            return Double.valueOf(0);
+            return (double) 0;
         }
 
         return resultDbl;
@@ -895,7 +764,7 @@ public class cInventoryorder {
 
         resultDbl = cInventoryorderLine.getInventoryorderLineViewModel().pGetCountForBinCodeDbl(pvBincodeStr);
         if (resultDbl == null ) {
-            return Double.valueOf(0);
+            return (double) 0;
         }
 
         return resultDbl;
@@ -925,8 +794,7 @@ public class cInventoryorder {
             return  null;
         }
 
-        List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
-        return hulpObl;
+        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
 
     }
 
@@ -1004,13 +872,10 @@ public class cInventoryorder {
 
         cWebresult WebResult;
         WebResult =  cInventoryorder.getInventoryorderViewModel().pAddBinViaWebserviceWrs(pvBranchBin.getBinCodeStr());
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-                cInventoryorderBin InventoryorderBin = new cInventoryorderBin(jsonObject);
+            if (WebResult.getResultDtt().size() == 1) {
+                cInventoryorderBin InventoryorderBin = new cInventoryorderBin(WebResult.getResultDtt().get(0));
                 InventoryorderBin.pInsertInDatabaseBln();
                 return  InventoryorderBin;
             }
@@ -1085,13 +950,13 @@ public class cInventoryorder {
         }
 
         //Everything was fine, so we are done
-        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
             result.resultBln = true;
             return result;
         }
 
         //Something really went wrong
-        if (webresult.getSuccessBln() == false ) {
+        if (!webresult.getSuccessBln()) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
@@ -1099,16 +964,16 @@ public class cInventoryorder {
         }
 
         // We got a succesfull response, but we need to do something with this activity
-        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
 
-            Long actionLng = Long.valueOf(0);
+            Long actionLng = 0L;
 
             if (webresult.getResultLng() < 10 ) {
                 actionLng = webresult.getResultLng();
             }
 
             if (webresult.getResultLng() > 100) {
-                actionLng  = (long)(webresult.getResultLng()/100);
+                actionLng  = webresult.getResultLng()/100;
             }
 
             //Try to convert action long to action enumerate
@@ -1121,7 +986,7 @@ public class cInventoryorder {
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
             }
 
-            cInventoryorder.currentInventoryOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            cInventoryorder.currentInventoryOrder.mGetCommentsViaWebErrorBln(webresult.getResultDtt());
             return result;
         }
 
@@ -1137,6 +1002,36 @@ public class cInventoryorder {
     private static boolean mTruncateTableBln() {
         cInventoryorder.getInventoryorderViewModel().deleteAll();
         return true;
+    }
+
+    private boolean mGetCommentsViaWebErrorBln(List<JSONObject> pvResultDtt) {
+
+        cComment.allCommentsObl = new ArrayList<>();
+        for (JSONObject jsonObject : pvResultDtt) {
+            cComment comment = new cComment(jsonObject);
+            comment.pInsertInDatabaseBln();
+        }
+
+        return true;
+
+    }
+
+    private cInventoryorderLine mGetLineWithLineNo(Long pvLineNoLng) {
+
+        if (this.linesObl() == null || this.linesObl().size() == 0) {
+            return  null;
+        }
+
+        for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
+
+            if (cText.pIntToStringStr(inventoryorderLine.getLineNoInt()).equalsIgnoreCase(cText.pLongToStringStr(pvLineNoLng))) {
+                return  inventoryorderLine;
+            }
+
+        }
+
+        return  null;
+
     }
 
     //End Region Private Methods

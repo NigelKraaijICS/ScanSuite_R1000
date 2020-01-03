@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import java.util.Objects;
+
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Support.SupportDeviceFragment;
 
 public class cPower {
+
     private static IntentFilter PowerConnectIntentFilter;
     private static IntentFilter getPowerConnectIntentFilter() {
         if (PowerConnectIntentFilter == null) {
@@ -25,26 +28,17 @@ public class cPower {
             PowerConnectReceiver = new BroadcastReceiver(){
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    String action = intent.getAction();
-
-                    if(action.equals(Intent.ACTION_POWER_CONNECTED)) {
-                    }
-                    else if(action.equals(Intent.ACTION_POWER_DISCONNECTED)) {
-                    }
-                    try {
-                        SupportDeviceFragment.getInstance().mPowerChanged();
-                    } catch (Exception e) {
-
-                    }
+                    SupportDeviceFragment.pPowerChanged();
                 }
             };
         }
         return PowerConnectReceiver;
     }
+
     public static void pRegisterPowerConnectReceiver(){
 
         //Turn off other receiver
-        pUnregisterConnectPowerReceiver();
+        mUnregisterConnectPowerReceiver();
 
         //Initialise this receiver
         getPowerConnectReceiver();
@@ -54,23 +48,7 @@ public class cPower {
         cAppExtension.context.registerReceiver(PowerConnectReceiver, PowerConnectIntentFilter);
     }
 
-    public static void pUnregisterConnectPowerReceiver(){
 
-        try {
-            cAppExtension.context.unregisterReceiver(PowerConnectReceiver);
-        } catch(IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static IntentFilter PowerLevelChangedIntentFilter;
-    private static IntentFilter getPowerLevelChangedIntentFilter() {
-        if (PowerLevelChangedIntentFilter == null) {
-            PowerLevelChangedIntentFilter = new IntentFilter();
-            PowerLevelChangedIntentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
-        }
-        return PowerLevelChangedIntentFilter;
-    }
 
     private static BroadcastReceiver PowerLevelChangedReceiver;
     private static BroadcastReceiver getPowerLevelChangedReceiver() {
@@ -80,10 +58,10 @@ public class cPower {
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
 
-                    if(action.equals(Intent.ACTION_BATTERY_CHANGED)) {
+                    if(Objects.equals(action, Intent.ACTION_BATTERY_CHANGED)) {
                         try {
-                            SupportDeviceFragment.getInstance().mBatteryLevelChanged();
-                        } catch (Exception e) {
+                            SupportDeviceFragment.pBatteryLevelChanged();
+                        } catch (Exception ignored) {
 
                         }
                     }
@@ -97,7 +75,7 @@ public class cPower {
     public static void pRegisterPowerLevelChangedReceiver(){
 
         //Turn off other receiver
-        pUnregisterPowerLevelChangedReceiver();
+        mUnregisterPowerLevelChangedReceiver();
 
         //Initialise this receiver
         getPowerLevelChangedReceiver();
@@ -107,12 +85,32 @@ public class cPower {
         cAppExtension.context.registerReceiver(PowerLevelChangedReceiver, PowerLevelChangedIntentFilter);
     }
 
-    public static void pUnregisterPowerLevelChangedReceiver(){
+
+
+    private static void mUnregisterConnectPowerReceiver(){
+
+        try {
+            cAppExtension.context.unregisterReceiver(PowerConnectReceiver);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void mUnregisterPowerLevelChangedReceiver(){
 
         try {
             cAppExtension.context.unregisterReceiver(PowerLevelChangedReceiver);
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
         }
+    }
+
+    private static IntentFilter PowerLevelChangedIntentFilter;
+    private static IntentFilter getPowerLevelChangedIntentFilter() {
+        if (PowerLevelChangedIntentFilter == null) {
+            PowerLevelChangedIntentFilter = new IntentFilter();
+            PowerLevelChangedIntentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        }
+        return PowerLevelChangedIntentFilter;
     }
 }

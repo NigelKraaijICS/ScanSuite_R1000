@@ -34,14 +34,6 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEn
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.iInventoryorderLineBarcodeDao;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
 import SSU_WHS.Inventory.InventoryorderLines.iInventoryorderLineDao;
-import SSU_WHS.Move.MoveOrders.cMoveorderEntity;
-import SSU_WHS.Move.MoveOrders.iMoveorderDao;
-import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeEntity;
-import SSU_WHS.Move.MoveorderBarcodes.iMoveorderBarcodeDao;
-import SSU_WHS.Move.MoveorderLineBarcodes.cMoveorderLineBarcodeEntity;
-import SSU_WHS.Move.MoveorderLineBarcodes.iMoveorderLineBarcodeDao;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
-import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddressEntity;
 import SSU_WHS.Picken.PickorderAddresses.iPickorderAddressDao;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeEntity;
@@ -118,11 +110,7 @@ import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
         cIntakeorderMATLineEntity.class,
         cIntakeorderBarcodeEntity.class,
         cIntakeorderMATLineBarcodeEntity.class,
-        cMoveorderEntity.class,
-        cMoveorderLineEntity.class,
-        cMoveorderLineBarcodeEntity.class,
-        cMoveorderBarcodeEntity.class,
-        },version = 79)
+        },version = 80)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -159,12 +147,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iIntakeorderDao intakeorderDao();
     public abstract iIntakeorderBarcodeDao intakeorderBarcodeDao();
     public abstract iIntakeorderMATLineBarcodeDao intakeorderMATLineBarcodeDao();
-    public abstract iMoveorderDao moveorderDao();
-    public abstract iMoveorderLineDao moveorderLineDao();
-    public abstract iMoveorderLineBarcodeDao moveorderLineBarcodeDao();
-    public abstract iMoveorderBarcodeDao moveorderBarcodeDao();
-
-    //public abstract iEnvironmentDao environmentDao();
+      //public abstract iEnvironmentDao environmentDao();
 
     private static acScanSuiteDatabase INSTANCE;
 

@@ -39,7 +39,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
     //Region Private Properties
 
     private static RecyclerView recyclerViewInventoryBinsTotal;
-    private ImageView imageCloseOrder;
+    private static ImageView imageCloseOrder;
 
     //End Region Private Properties
 
@@ -49,8 +49,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer,
                              Bundle pvSavedInstanceState) {
         // Inflate the layout for this fragment
-        View rootview = pvInflater.inflate(R.layout.fragment_inventoryorder_bins_total, pvContainer, false);
-        return rootview;
+        return pvInflater.inflate(R.layout.fragment_inventoryorder_bins_total, pvContainer, false);
     }
 
     @Override
@@ -72,20 +71,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
     public void onResume() {
         super.onResume();
         cUserInterface.pEnableScanner();
-    }
-
-
-    @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
-
-        if (pvIsVisibleToUserBln) {
-
-            InventoryorderBinsActivity.currentBinFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+        InventoryorderBinsActivity.currentBinFragment = this;
     }
 
     @Override
@@ -121,22 +107,27 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
 
     @Override
     public void mFindViews() {
-        InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal = getView().findViewById(R.id.recyclerViewInventoryBinsTotal);
-        this.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
+
+        if (getView() != null) {
+            InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal = getView().findViewById(R.id.recyclerViewInventoryBinsTotal);
+            InventoryBinsTotalFragment.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
+        }
+
+
     }
 
     @Override
     public void mFieldsInitialize() {
 
-        this.imageCloseOrder.setVisibility(View.INVISIBLE);
+        InventoryBinsTotalFragment.imageCloseOrder.setVisibility(View.INVISIBLE);
 
 
         if (cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().size() >0 && cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size() == 0 ) {
-            this.imageCloseOrder.setVisibility(View.VISIBLE);
+            InventoryBinsTotalFragment.imageCloseOrder.setVisibility(View.VISIBLE);
         }
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cInventoryorderBinRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewInventoryBinsTotal);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal);
 
 
     }
@@ -178,7 +169,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
     }
 
     private void mSetDoneListener() {
-        this.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
+        InventoryBinsTotalFragment.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 InventoryorderBinsActivity.pHandleOrderCloseClick();
@@ -205,7 +196,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
 
     private static void mNoLinesAvailable(Boolean pvEnabledBln) {
 
-        if (InventoryorderBinsActivity.currentBinFragment != null && InventoryorderBinsActivity.currentBinFragment  instanceof InventoryBinsTotalFragment) {
+        if (InventoryorderBinsActivity.currentBinFragment  instanceof InventoryBinsTotalFragment) {
             //Close no orders fragment if needed
             if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();

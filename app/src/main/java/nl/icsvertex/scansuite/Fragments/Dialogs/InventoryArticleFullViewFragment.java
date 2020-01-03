@@ -18,6 +18,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
@@ -36,14 +38,14 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
     //End Region Public Properties
 
     //Region Private Properties
-    private ImageView toolbarImage;
-    private  TextView toolbarTitle;
-    private TextView toolbarSubtext;
+    private static ImageView toolbarImage;
+    private static  TextView toolbarTitle;
+    private static TextView toolbarSubtext;
 
     private static ConstraintLayout articleFullViewContainer;
-    private TextView articleFullItemNoTextView;
-    private TextView articleFullVariantTextView;
-    private ImageView articleFullImageView;
+    private static TextView articleFullItemNoTextView;
+    private static TextView articleFullVariantTextView;
+    private static ImageView articleFullImageView;
     //End Region Private Properties
 
 
@@ -106,7 +108,7 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
     }
@@ -125,14 +127,17 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
     @Override
     public void mFindViews() {
 
-        this.toolbarImage = getView().findViewById(R.id.toolbarImage);
-        this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
-        this.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
+        if (getView() != null) {
+            InventoryArticleFullViewFragment.toolbarImage = getView().findViewById(R.id.toolbarImage);
+            InventoryArticleFullViewFragment.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
+            InventoryArticleFullViewFragment.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
 
-        this.articleFullViewContainer = getView().findViewById(R.id.articleFuillViewContainer);
-        this.articleFullItemNoTextView = getView().findViewById(R.id.articleFullItemNoTextView);
-        this.articleFullVariantTextView = getView().findViewById(R.id.articleFullVariantTextView);
-        this.articleFullImageView = getView().findViewById(R.id.articleFullImageView);
+            InventoryArticleFullViewFragment.articleFullViewContainer = getView().findViewById(R.id.articleFuillViewContainer);
+            InventoryArticleFullViewFragment.articleFullItemNoTextView = getView().findViewById(R.id.articleFullItemNoTextView);
+            InventoryArticleFullViewFragment.articleFullVariantTextView = getView().findViewById(R.id.articleFullVariantTextView);
+            InventoryArticleFullViewFragment.articleFullImageView = getView().findViewById(R.id.articleFullImageView);
+        }
+
     }
 
 
@@ -141,33 +146,32 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
     public void mFieldsInitialize() {
 
         if (!cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
-            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-            this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.toolbarSubtext.setSingleLine(true);
-            this.toolbarSubtext.setMarqueeRepeatLimit(5);
-            this.toolbarSubtext.postDelayed(new Runnable() {
+            InventoryArticleFullViewFragment.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
+            InventoryArticleFullViewFragment.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            InventoryArticleFullViewFragment.toolbarSubtext.setSingleLine(true);
+            InventoryArticleFullViewFragment.toolbarSubtext.setMarqueeRepeatLimit(5);
+            InventoryArticleFullViewFragment.toolbarSubtext.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    toolbarSubtext.setSelected(true);
+                    InventoryArticleFullViewFragment.toolbarSubtext.setSelected(true);
                 }
             },1500);
         }
 
-        //articleFullBrandTextView.setText(pickorderLineEntity2.getBrand());
-        this.articleFullItemNoTextView.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
-        this.articleFullVariantTextView.setText(cPickorderLine.currentPickOrderLine.getVariantCodeStr());
-        this.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        this.articleFullVariantTextView.setSingleLine(true);
-        this.articleFullVariantTextView.setMarqueeRepeatLimit(5);
-        this.articleFullVariantTextView.setSelected(true);
+        InventoryArticleFullViewFragment.articleFullItemNoTextView.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
+        InventoryArticleFullViewFragment.articleFullVariantTextView.setText(cPickorderLine.currentPickOrderLine.getVariantCodeStr());
+        InventoryArticleFullViewFragment.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        InventoryArticleFullViewFragment.articleFullVariantTextView.setSingleLine(true);
+        InventoryArticleFullViewFragment.articleFullVariantTextView.setMarqueeRepeatLimit(5);
+        InventoryArticleFullViewFragment.articleFullVariantTextView.setSelected(true);
 
         if (cPickorderLine.currentPickOrderLine.articleImage != null) {
             byte[] decodedString = Base64.decode(cPickorderLine.currentPickOrderLine.articleImage.getImageStr(), Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            articleFullImageView.setImageBitmap(decodedByte);
+            InventoryArticleFullViewFragment.articleFullImageView.setImageBitmap(decodedByte);
         }
         else {
-            articleFullImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_no_image_lightgrey_24dp));
+            InventoryArticleFullViewFragment.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_no_image_lightgrey_24dp));
         }
     }
 
@@ -190,7 +194,7 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
             return;
         }
 
-        Boolean foundBln = false;
+        boolean foundBln = false;
 
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeStr, cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             foundBln = true;
@@ -200,12 +204,10 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
         if (foundBln) {
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeStr);
             InventoryArticleFullViewFragment.mArticleScanned(barcodeWithoutPrefixStr);
-            return;
         }
         else {
             //has prefix, isn't branch
-            cUserInterface.pDoNope(articleFullViewContainer, true, true);
-            return;
+            cUserInterface.pDoNope(InventoryArticleFullViewFragment.articleFullViewContainer, true, true);
         }
     }
     //End Region Public Methods
@@ -214,23 +216,23 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
 
     private void mSetToolbar() {
 
-        this.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
-        this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        this.toolbarTitle.setSingleLine(true);
-        this.toolbarTitle.setMarqueeRepeatLimit(5);
-        this.toolbarTitle.postDelayed(new Runnable() {
+        InventoryArticleFullViewFragment.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+        InventoryArticleFullViewFragment.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        InventoryArticleFullViewFragment.toolbarTitle.setSingleLine(true);
+        InventoryArticleFullViewFragment.toolbarTitle.setMarqueeRepeatLimit(5);
+        InventoryArticleFullViewFragment.toolbarTitle.postDelayed(new Runnable() {
             @Override
             public void run() {
-                toolbarTitle.setSelected(true);
+                InventoryArticleFullViewFragment.toolbarTitle.setSelected(true);
             }
         },1500);
 
-        this.toolbarImage.setImageResource(R.drawable.ic_info);
+        InventoryArticleFullViewFragment.toolbarImage.setImageResource(R.drawable.ic_info);
 
     }
 
     private void mDismissListener() {
-        getView().setOnClickListener(new View.OnClickListener() {
+        Objects.requireNonNull(getView()).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -239,6 +241,7 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
     }
 
 
+    //todo: check why we don't use this
     private static void mArticleScanned(String pvBarcodeStr) {
 
 

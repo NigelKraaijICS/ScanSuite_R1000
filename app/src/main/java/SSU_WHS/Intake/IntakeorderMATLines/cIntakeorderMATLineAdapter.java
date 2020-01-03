@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,14 +68,15 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
 
     //Region Default Methods
 
+    @NonNull
     @Override
-    public cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewTypeInt) {
+    public cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_intakeorderline, pvParent, false);
         return new cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder(itemView);
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
         this.RecyclerView = pvRecyclerView;
         super.onAttachedToRecyclerView( this.RecyclerView);
     }
@@ -128,7 +130,6 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
         //Select the first one, or selected index
         if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderLinesActivity &&  RecyclerView.getId() == R.id.recyclerViewLines) {
             pvHolder.intakeOrderMATItemLinearLayout.performClick();
-            return;
         }
     }
 

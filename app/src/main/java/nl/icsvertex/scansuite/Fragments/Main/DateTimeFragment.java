@@ -32,10 +32,10 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Private Properties
 
-    private TextView textViewCurrentDate;
-    private TextClock textClockCurrentTime;
-    private TextView textViewTimeZone;
-    private ImageButton buttonChangeDateTime;
+    private static TextView textViewCurrentDate;
+    private static TextClock textClockCurrentTime;
+    private static TextView textViewTimeZone;
+    private static ImageButton buttonChangeDateTime;
 
     //Region Private Properties
 
@@ -66,10 +66,14 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFindViews() {
-        textViewCurrentDate = getView().findViewById(R.id.textViewCurrentDate);
-        textClockCurrentTime = getView().findViewById(R.id.textClockCurrentTime);
-        textViewTimeZone = getView().findViewById(R.id.textViewTimeZone);
-        buttonChangeDateTime = getView().findViewById(R.id.buttonChangeDateTime);
+
+        if (getView() != null) {
+            DateTimeFragment.textViewCurrentDate = getView().findViewById(R.id.textViewCurrentDate);
+            DateTimeFragment.textClockCurrentTime = getView().findViewById(R.id.textClockCurrentTime);
+            DateTimeFragment.textViewTimeZone = getView().findViewById(R.id.textViewTimeZone);
+            DateTimeFragment.buttonChangeDateTime = getView().findViewById(R.id.buttonChangeDateTime);
+        }
+
     }
 
 

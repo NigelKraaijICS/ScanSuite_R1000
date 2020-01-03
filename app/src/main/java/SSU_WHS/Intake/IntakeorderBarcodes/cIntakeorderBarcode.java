@@ -14,19 +14,18 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 
 public class cIntakeorderBarcode {
-    public cIntakeorderBarcodeEntity intakeorderBarcodeEntity;
-    public boolean indatabaseBln;
 
-    public static cIntakeorderBarcodeViewModel gIntakeorderBarcodeViewModel;
+    private cIntakeorderBarcodeEntity intakeorderBarcodeEntity;
 
-    public static cIntakeorderBarcodeViewModel getIntakeorderBarcodeViewModel() {
+    private static cIntakeorderBarcodeViewModel gIntakeorderBarcodeViewModel;
+    private static cIntakeorderBarcodeViewModel getIntakeorderBarcodeViewModel() {
         if (gIntakeorderBarcodeViewModel == null) {
             gIntakeorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cIntakeorderBarcodeViewModel.class);
         }
         return gIntakeorderBarcodeViewModel;
     }
 
-    public static cIntakeorderBarcodeAdapter gIntakeorderBarcodeAdapter;
+    private static cIntakeorderBarcodeAdapter gIntakeorderBarcodeAdapter;
     public static cIntakeorderBarcodeAdapter getIntakeorderBarcodeAdapter() {
         if (gIntakeorderBarcodeAdapter == null) {
             gIntakeorderBarcodeAdapter = new cIntakeorderBarcodeAdapter();
@@ -39,12 +38,12 @@ public class cIntakeorderBarcode {
 
     //Region Public Properties
 
-    public String barcode;
+    private String barcodeStr;
     public String getBarcodeStr() {
-        return this.barcode;
+        return this.barcodeStr;
     }
 
-    public String barcodeWithoutCheckDigitStr;
+    private String barcodeWithoutCheckDigitStr;
     public String getBarcodeWithoutCheckDigitStr() {
 
         this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
@@ -68,69 +67,73 @@ public class cIntakeorderBarcode {
         return barcodeWithoutCheckDigitStr;
     }
 
-    public String barcodetypeStr;
-    public String getBarcodeTypeStr() {return barcodetypeStr;}
+    private String barcodetypeStr;
+    private String getBarcodeTypeStr() {return barcodetypeStr;}
 
-    public Boolean isuniquebarcode;
+    private Boolean isUniqueBarcodeBln;
     public Boolean getIsUniqueBarcodeBln() {
-        return this.isuniquebarcode;
+        return this.isUniqueBarcodeBln;
     }
 
-    public String itemno;
+    private String itemNoStr;
     public String getItemNoStr() {
-        return this.itemno;
+        return this.itemNoStr;
     }
 
-    public String variantCode;
+    private String variantCodeStr;
     public String getVariantCodeStr() {
-        return this.variantCode;
+        return this.variantCodeStr;
     }
 
-    public Double quantityPerUnitOfMeasure;
+    private Double quantityPerUnitOfMeasureDbl;
     public Double getQuantityPerUnitOfMeasureDbl() {
-        return this.quantityPerUnitOfMeasure;
+        return this.quantityPerUnitOfMeasureDbl;
     }
 
-    public String unitOfMeasure;
+    private String unitOfMeasureStr;
     public String getUnitOfMeasureStr() {
-        return this.unitOfMeasure;
+        return this.unitOfMeasureStr;
     }
 
-    public Double quantityHandled;
-    public Double getQuantityHandled() {
-        return this.quantityHandled;
+    private Double quantityHandledDbl;
+    public Double getQuantityHandledDbl() {
+        return this.quantityHandledDbl;
     }
 
-    public Boolean receiveAmountManual;
+    private Boolean receiveAmountManualBln;
     public Boolean getReceiveAmountManualBln() {
-        return this.receiveAmountManual;
+        return this.receiveAmountManualBln;
+    }
+
+    public  String getBarcodeAndQuantityStr(){
+        return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
     }
 
     //Region Constructor
     public cIntakeorderBarcode(JSONObject pvJsonObject) {
         this.intakeorderBarcodeEntity = new cIntakeorderBarcodeEntity(pvJsonObject);
-        this.barcode = this.intakeorderBarcodeEntity.getBarcodeStr();
+        this.barcodeStr = this.intakeorderBarcodeEntity.getBarcodeStr();
         this.barcodetypeStr = this.intakeorderBarcodeEntity.getBarcodeTypesStr();
-        this.isuniquebarcode = this.intakeorderBarcodeEntity.getIsUniqueBarcodeBln();
-        this.itemno = this.intakeorderBarcodeEntity.getItemNoStr();
-        this.variantCode = this.intakeorderBarcodeEntity.getVariantCodeStr();
-        this.quantityPerUnitOfMeasure = this.intakeorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
-        this.unitOfMeasure = this.intakeorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.intakeorderBarcodeEntity.getQuantityHandled();
-        this.receiveAmountManual = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
+        this.isUniqueBarcodeBln = this.intakeorderBarcodeEntity.getIsUniqueBarcodeBln();
+        this.itemNoStr = this.intakeorderBarcodeEntity.getItemNoStr();
+        this.variantCodeStr = this.intakeorderBarcodeEntity.getVariantCodeStr();
+        this.quantityPerUnitOfMeasureDbl = this.intakeorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
+        this.unitOfMeasureStr = this.intakeorderBarcodeEntity.getUnitOfMeasureStr();
+        this.quantityHandledDbl = this.intakeorderBarcodeEntity.getQuantityHandled();
+        this.receiveAmountManualBln = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
     }
 
     public cIntakeorderBarcode(cIntakeorderBarcodeEntity pvIntakeorderBarcodeEntity) {
         this.intakeorderBarcodeEntity = pvIntakeorderBarcodeEntity;
-        this.barcode = this.intakeorderBarcodeEntity.getBarcodeStr();
+        this.barcodeStr = this.intakeorderBarcodeEntity.getBarcodeStr();
         this.barcodetypeStr = this.intakeorderBarcodeEntity.getBarcodeTypesStr();
-        this.isuniquebarcode = this.intakeorderBarcodeEntity.getIsUniqueBarcodeBln();
-        this.itemno = this.intakeorderBarcodeEntity.getItemNoStr();
-        this.variantCode = this.intakeorderBarcodeEntity.getVariantCodeStr();
-        this.quantityPerUnitOfMeasure = this.intakeorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
-        this.unitOfMeasure = this.intakeorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.intakeorderBarcodeEntity.getQuantityHandled();
-        this.receiveAmountManual = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
+        this.isUniqueBarcodeBln = this.intakeorderBarcodeEntity.getIsUniqueBarcodeBln();
+        this.itemNoStr = this.intakeorderBarcodeEntity.getItemNoStr();
+        this.variantCodeStr = this.intakeorderBarcodeEntity.getVariantCodeStr();
+        this.quantityPerUnitOfMeasureDbl = this.intakeorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
+        this.unitOfMeasureStr = this.intakeorderBarcodeEntity.getUnitOfMeasureStr();
+        this.quantityHandledDbl = this.intakeorderBarcodeEntity.getQuantityHandled();
+        this.receiveAmountManualBln = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
     }
 
     public cIntakeorderBarcode() {
@@ -147,7 +150,6 @@ public class cIntakeorderBarcode {
 
     public boolean pInsertInDatabaseBln() {
         cIntakeorderBarcode.getIntakeorderBarcodeViewModel().insert(this.intakeorderBarcodeEntity);
-        this.indatabaseBln = true;
 
         if (cIntakeorderBarcode.allBarcodesObl == null){
             cIntakeorderBarcode.allBarcodesObl = new ArrayList<>();

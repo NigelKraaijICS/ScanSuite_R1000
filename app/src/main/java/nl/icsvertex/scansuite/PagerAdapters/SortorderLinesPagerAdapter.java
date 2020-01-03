@@ -1,14 +1,15 @@
 package nl.icsvertex.scansuite.PagerAdapters;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesSortedFragment;
 import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesToSortFragment;
 import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesTotalFragment;
 
-public class SortorderLinesPagerAdapter extends FragmentStatePagerAdapter {
+public class SortorderLinesPagerAdapter extends FragmentPagerAdapter {
 
     //Region Public Properties
 
@@ -21,13 +22,15 @@ public class SortorderLinesPagerAdapter extends FragmentStatePagerAdapter {
 //Region Constructor
 
     public SortorderLinesPagerAdapter(int pvNumberOfTabsInt) {
-        super(cAppExtension.fragmentManager);
+        super(cAppExtension.fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.numberOfTabsInt = pvNumberOfTabsInt;
+
     }
 
     //End Region Constructor
 
 
+    @NonNull
     @Override
     public Fragment getItem(int pvPositionInt) {
         switch(pvPositionInt) {
@@ -38,7 +41,7 @@ public class SortorderLinesPagerAdapter extends FragmentStatePagerAdapter {
             case 2:
                 return new SortorderLinesTotalFragment();
             default:
-                return null;
+                return cAppExtension.dialogFragment;
         }
     }
     @Override

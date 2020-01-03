@@ -2,9 +2,6 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,9 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
-import com.google.android.gms.common.api.internal.RegistrationMethods;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import ICS.Utils.cImages;
 import ICS.Utils.cUserInterface;
@@ -28,11 +27,11 @@ public class NothingHereFragment extends Fragment {
     //End Region Public Properties
 
     //Region private Properties
-    private ImageView imageTumbleweed;
-    private ImageView imageViewWind;
-    private ImageView imageViewCactus;
-    private Boolean blnToggleGrey;
-    private View viewDesert;
+    private static ImageView imageTumbleweed;
+    private static ImageView imageViewWind;
+    private static ImageView imageViewCactus;
+    private static Boolean blnToggleGrey;
+    private static View viewDesert;
     //End Region Private Properties
 
     //Region Constructor
@@ -54,31 +53,31 @@ public class NothingHereFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        this.imageTumbleweed = view.findViewById(R.id.imageViewTumbleweed);
-        this.imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
-        this.imageViewWind = view.findViewById(R.id.imageViewWind);
-        this.imageViewWind.setImageDrawable(cImages.convertToGrayscale(imageViewWind.getDrawable()));
-        this.imageViewCactus = view.findViewById(R.id.imageViewCactus);
-        this.imageViewCactus.setImageDrawable(cImages.convertToGrayscale(imageViewCactus.getDrawable()));
-        this.viewDesert = view.findViewById(R.id.viewDesert);
-        this.blnToggleGrey = false;
+        NothingHereFragment.imageTumbleweed = view.findViewById(R.id.imageViewTumbleweed);
+        NothingHereFragment.imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
+        NothingHereFragment.imageViewWind = view.findViewById(R.id.imageViewWind);
+        NothingHereFragment.imageViewWind.setImageDrawable(cImages.convertToGrayscale(imageViewWind.getDrawable()));
+        NothingHereFragment.imageViewCactus = view.findViewById(R.id.imageViewCactus);
+        NothingHereFragment.imageViewCactus.setImageDrawable(cImages.convertToGrayscale(imageViewCactus.getDrawable()));
+        NothingHereFragment.viewDesert = view.findViewById(R.id.viewDesert);
+        NothingHereFragment.blnToggleGrey = false;
 
-        this. imageViewCactus.setOnClickListener(new View.OnClickListener() {
+        NothingHereFragment.imageViewCactus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!blnToggleGrey) {
-                    imageTumbleweed.setImageDrawable(getResources().getDrawable(R.drawable.ic_tumbleweed));
-                    imageViewCactus.setImageDrawable(getResources().getDrawable(R.drawable.ic_cactus));
-                    imageViewWind.setImageDrawable(getResources().getDrawable(R.drawable.ic_wind));
-                    viewDesert.setBackgroundResource(R.color.colorDesert);
-                    blnToggleGrey = true;
+                if (!NothingHereFragment.blnToggleGrey) {
+                    NothingHereFragment.imageTumbleweed.setImageDrawable(getResources().getDrawable(R.drawable.ic_tumbleweed));
+                    NothingHereFragment.imageViewCactus.setImageDrawable(getResources().getDrawable(R.drawable.ic_cactus));
+                    NothingHereFragment.imageViewWind.setImageDrawable(getResources().getDrawable(R.drawable.ic_wind));
+                    NothingHereFragment.viewDesert.setBackgroundResource(R.color.colorDesert);
+                    NothingHereFragment.blnToggleGrey = true;
                 }
                 else {
-                    imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
-                    imageViewCactus.setImageDrawable(cImages.convertToGrayscale(imageViewCactus.getDrawable()));
-                    imageViewWind.setImageDrawable(cImages.convertToGrayscale(imageViewWind.getDrawable()));
-                    viewDesert.setBackgroundColor(getResources().getColor(R.color.colorDesertGrey));
-                    blnToggleGrey = false;
+                    NothingHereFragment.imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
+                    NothingHereFragment.imageViewCactus.setImageDrawable(cImages.convertToGrayscale(imageViewCactus.getDrawable()));
+                    NothingHereFragment.imageViewWind.setImageDrawable(cImages.convertToGrayscale(imageViewWind.getDrawable()));
+                    NothingHereFragment.viewDesert.setBackgroundColor(getResources().getColor(R.color.colorDesertGrey));
+                    NothingHereFragment.blnToggleGrey = false;
                 }
             }
         });
@@ -96,8 +95,8 @@ public class NothingHereFragment extends Fragment {
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(anim);
         animationSet.addAnimation(anim2);
-        this.imageTumbleweed.startAnimation(animationSet);
-        this.imageViewWind.startAnimation(anim2);
+        NothingHereFragment.imageTumbleweed.startAnimation(animationSet);
+        NothingHereFragment.imageViewWind.startAnimation(anim2);
 
         cUserInterface.pEnableScanner();
     }

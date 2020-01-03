@@ -37,234 +37,105 @@ public class cPickorder{
 
     //Region Public Properties
 
-    public String orderNumberStr;
+    private String orderNumberStr;
     public String getOrderNumberStr() {
         return orderNumberStr;
     }
 
-    public String orderTypeStr;
+    private String orderTypeStr;
     public String getOrderTypeStr() {
         return orderTypeStr;
     }
 
-    public int numberOfBinsInt;
-    public int getNumberOfBinsInt() {
-        return numberOfBinsInt;
-    }
-
-    public int quantityTotalInt;
+    private int quantityTotalInt;
     public int getQuantityTotalInt() {
         return quantityTotalInt;
     }
 
-    public boolean singleArticleOrdersBln;
+    private boolean singleArticleOrdersBln;
     public boolean isSingleArticleOrdersBln() {
         return singleArticleOrdersBln;
     }
 
-    public boolean pickRejectDuringPickBln;
-    public boolean isPickRejectDuringPickBln() {
-        return pickRejectDuringPickBln;
-    }
-
-    public boolean pickRejectDuringSortBln;
-    public boolean isPickRejectDuringSortBln() {
-        return pickRejectDuringSortBln;
-    }
-
-    public boolean pickSalesAskWorkplaceBln;
+    private boolean pickSalesAskWorkplaceBln;
     public boolean isPickSalesAskWorkplaceBln() {
         return pickSalesAskWorkplaceBln;
     }
 
-    public boolean pickTransferAskWorkplaceBln;
+    private boolean pickTransferAskWorkplaceBln;
     public boolean isPickTransferAskWorkplaceBln() {
         return pickTransferAskWorkplaceBln;
     }
 
-    public boolean pickBarcodeCheckBln;
-    public boolean isPickBarcodeCheckBln() {
-        return pickBarcodeCheckBln;
-    }
-
-    public boolean pickPickPVVKOEachPieceBln;
+    private boolean pickPickPVVKOEachPieceBln;
     public boolean isPickPickPVVKOEachPieceBln() {
         return pickPickPVVKOEachPieceBln;
     }
 
-    public boolean pickPickToContainerBln;
-    public boolean isPickPickToContainerBln() {
-        return pickPickToContainerBln;
-    }
-
-    public String pickPickToContainerTypeStr;
-    public String getPickPickToContainerTypeStr() {
-        return pickPickToContainerTypeStr;
-    }
-
-    public boolean pickPickWithPictureBln;
+    private boolean pickWithPictureBln;
     public boolean isPickWithPictureBln() {
-        return pickPickWithPictureBln;
+        return pickWithPictureBln;
     }
 
-    public boolean pickPickWithAutoOpenBln;
+    private boolean pickPickWithAutoOpenBln;
     public boolean isPickWithPictureAutoOpenBln() {
         return pickPickWithAutoOpenBln;
     }
 
-    public boolean pickPickWithPicturePrefetchBln;
-    public boolean isPickPickWithPicturePrefetchBln() {
+    private boolean pickPickWithPicturePrefetchBln;
+    private boolean isPickPickWithPicturePrefetchBln() {
         return pickPickWithPicturePrefetchBln;
     }
 
-    public boolean pickPrintAddressLabelBln;
-    public boolean isPickPrintAddressLabelBln() {
-        return pickPrintAddressLabelBln;
-    }
-
-    public boolean pickPrintContentLabelBln;
-    public boolean isPickPrintContentLabelBln() {
-        return pickPrintContentLabelBln;
-    }
-
-    public boolean pickActivityBinRequiredBln;
-    public boolean ispickActivityBinRequiredBln() {
+    private boolean pickActivityBinRequiredBln;
+    public boolean isPickActivityBinRequiredBln() {
         return pickActivityBinRequiredBln;
     }
 
-    public String assignedUserIdStr;
+    private String assignedUserIdStr;
     public String getAssignedUserIdStr() {
         return assignedUserIdStr;
     }
 
-    public String currentUserIdStr;
+    private String currentUserIdStr;
     public String getCurrentUserIdStr() {
         return currentUserIdStr;
     }
 
-    public int statusInt;
+    private int statusInt;
     public int getStatusInt() {
         return statusInt;
     }
 
-    public int statusPrintAtStartInt;
-    public int getStatusPrintAtStartInt() {
-        return statusPrintAtStartInt;
-    }
-
-    public String externalReferenceStr;
+    private String externalReferenceStr;
     public String getExternalReferenceStr() {
         return externalReferenceStr;
     }
 
-    public String workPlaceStr;
-    public String getWorkPlaceStr() {
-        return workPlaceStr;
-    }
-
-    public String stockOwnerStr;
-    public String getStockOwnerStr() {
-        return stockOwnerStr;
-    }
-
-    public String requestedEndDateTimeStr;
-    public String getRequestedEndDateTimeStr() {
-        return requestedEndDateTimeStr;
-    }
-
-    public String sourceDocumentStr;
-    public String getSourceDocumentStr() {
-        return sourceDocumentStr;
-    }
-
-    public String documentStr;
-    public String getDocumentStr() {
-        return documentStr;
-    }
-
-    public String documentTypeStr;
-    public String getDocumentTypeStr() {
-        return documentTypeStr;
-    }
-
-    public String document2Str;
-    public String getDocument2Str() {
-        return document2Str;
-    }
-
-    public String documentType2Str;
-    public String getDocumentType2Str() {
-        return documentType2Str;
-    }
-
-    public int webserviceTimeOutERPInsInt;
-    public int getWebserviceTimeOutERPInsInt() {
-        return webserviceTimeOutERPInsInt;
-    }
-
-    public String currentLocationStr;
+    private String currentLocationStr;
     public String getCurrentLocationStr() {
         return currentLocationStr;
     }
 
-    public String interfaceResultMethodStr;
-    public String getInterfaceResultMethodStr() {
-        return interfaceResultMethodStr;
-    }
-
-    public String sortingStr;
-    public String getSortingStr() {
-        return sortingStr;
-    }
-
-    public Boolean isProcessingOrParkedBln;
+    private Boolean isProcessingOrParkedBln;
     public Boolean getProcessingOrParkedBln() {
         return isProcessingOrParkedBln;
     }
 
-    public List<String> errorMessagesObl;
-    public List<String> getErrorMessageObl() {
-        return errorMessagesObl;
-    }
-
     public Boolean isBMBln() {
-
-        if (this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.BM.toString())) {
-            return  true;
-        }
-
-        return  false;
-
+        return this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.BM.toString());
     }
 
     public Boolean isPVBln() {
-
-        if (this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PV.toString())) {
-            return  true;
-        }
-
-        return  false;
-
+        return this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PV.toString());
     }
 
     public Boolean isBCBln() {
-
-        if (this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.BC.toString())) {
-            return  true;
-        }
-
-        return  false;
-
+        return this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.BC.toString());
     }
 
     public Boolean isBPBln() {
-
-        if (this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.BP.toString())) {
-            return  true;
-        }
-
-        return  false;
-
+        return this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.BP.toString());
     }
 
     public boolean PackAndShipNeededBln(){
@@ -279,34 +150,27 @@ public class cPickorder{
 
         for (cPickorderLine pickorderLine : this.linesObl()) {
 
-            if (pickorderLine.statusShippingInt != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded || pickorderLine.statusPackingInt != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded)
+            if (pickorderLine.getStatusShippingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded ||
+                pickorderLine.getStatuPackingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded)
                     return  true;
         }
 
-        return  false;
-
+       return  false;
     }
 
     public boolean SortNeededBln(){
-
-        if (this.isBPBln() || this.isBCBln()) {
-            return  true;
-        }
-
-        return  false;
-
+        return this.isBPBln() || this.isBCBln();
     }
 
     public int lastSelectedIndexInt;
-    public int lastSelectedIndexInt() {
+    public int getLastSelectedIndexInt() {
         return lastSelectedIndexInt;
     }
 
-    public cPickorderEntity pickorderEntity;
+    private cPickorderEntity pickorderEntity;
     public boolean indatabaseBln;
 
-    public static cPickorderViewModel gPickorderViewModel;
-
+    private static cPickorderViewModel gPickorderViewModel;
     public static cPickorderViewModel getPickorderViewModel() {
         if (gPickorderViewModel == null) {
             gPickorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cPickorderViewModel.class);
@@ -314,7 +178,7 @@ public class cPickorder{
         return gPickorderViewModel;
     }
 
-    public static cPickorderAdapter gPickorderAdapter;
+    private static cPickorderAdapter gPickorderAdapter;
     public static cPickorderAdapter getPickorderAdapter() {
         if (gPickorderAdapter == null) {
             gPickorderAdapter = new cPickorderAdapter();
@@ -328,52 +192,37 @@ public class cPickorder{
     public List<cPickorderLine> linesObl(){
         return  cPickorderLine.allLinesObl;
     }
-
     public List<cShipment> shipmentObl(){ return  cShipment.allShipmentsObl; }
-
     public List<cPickorderAddress> adressesObl(){
      return  cPickorderAddress.allAdressesObl ;
     }
-
-    public List<cArticleImage> imagesObl()  {
+    private List<cArticleImage> imagesObl()  {
         return  cArticleImage.allImages;
     }
-
     public List<cPickorderBarcode> barcodesObl() {
         return  cPickorderBarcode.allBarcodesObl;
     }
-
     public List<cComment> commentsObl(){
         return  cComment.allCommentsObl;
     }
-
     public List<cSalesOrderPackingTable> salesOrderPackingTableObl() {
         return  cSalesOrderPackingTable.allSalesOrderPackingTabelsObl;
     }
 
-
     //End region Public Properties
 
     //Region Constructor
-    cPickorder(JSONObject pvJsonObject){
+    public cPickorder(JSONObject pvJsonObject){
 
         this.pickorderEntity = new cPickorderEntity(pvJsonObject);
         this.orderNumberStr = this.pickorderEntity.getOrdernumberStr();
         this.orderTypeStr = this.pickorderEntity.getOrderTypeStr();
-        this.numberOfBinsInt = cText.pStringToIntegerInt(this.pickorderEntity.getNumberofBinsStr()) ;
         this.quantityTotalInt =cText.pStringToIntegerInt(this.pickorderEntity.getQuantityTotalStr());
         this.singleArticleOrdersBln = cText.pStringToBooleanBln(this.pickorderEntity.getSingleArticleOrdersStr(),false) ;
-        this.pickRejectDuringPickBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickRejectDuringpickStr(),false) ;
-        this.pickRejectDuringSortBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickRejectDuringSortStr(),false) ;
         this.pickSalesAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickSalesAskWorkplaceStr(),false) ;
         this.pickTransferAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickTransferAskWorkplaceStr(),false) ;
-        this.pickBarcodeCheckBln  = cText.pStringToBooleanBln(this.pickorderEntity.getPickBarcodeCheckStr(),false) ;
         this.pickPickPVVKOEachPieceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickPVVKOEachPieceStr(),false) ;
-        this.pickPickToContainerBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickToContainerStr(),false) ;
-        this.pickPickToContainerTypeStr = this.pickorderEntity.getPickPickToContainerTypeStr();
-        this.pickPrintAddressLabelBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPrintAddresslabelStr(),false) ;
-        this.pickPrintContentLabelBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPrintContentLabelStr(),false) ;
-        this.pickPickWithPictureBln = cText.pStringToBooleanBln(this.pickorderEntity.getpickWithPictureStr(),false) ;
+        this.pickWithPictureBln = cText.pStringToBooleanBln(this.pickorderEntity.getpickWithPictureStr(),false) ;
         this.pickPickWithAutoOpenBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
         this.pickPickWithPicturePrefetchBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
         this.pickActivityBinRequiredBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickActivityBinRequired(),false);
@@ -381,62 +230,33 @@ public class cPickorder{
         this.assignedUserIdStr = this.pickorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.pickorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.pickorderEntity.getStatusStr());
-        this.statusPrintAtStartInt = cText.pStringToIntegerInt(this.pickorderEntity.getStatusPrintAtStartStr());
         this.externalReferenceStr = this.pickorderEntity.getExternalReferenceStr();
-        this.workPlaceStr = this.pickorderEntity.getWorkplaceStr();
-        this.stockOwnerStr = this.pickorderEntity.getStockOwnerStr();
-        this.requestedEndDateTimeStr = this.pickorderEntity.getRequestedEndDateTimeStr();
-        this.sourceDocumentStr = this.pickorderEntity.getSourceDocumentStr();
-        this.documentStr = this.pickorderEntity.getDocumentStr();
-        this.documentTypeStr = this.pickorderEntity.getDocumentTypeStr();
-        this.document2Str = this.pickorderEntity.getDocument2Str();
-        this.documentType2Str = this.pickorderEntity.getDocumentType2Str();
-        this.webserviceTimeOutERPInsInt = cText.pStringToIntegerInt(this.pickorderEntity.getWebserviceTimeOutERPInsStr());
         this.currentLocationStr = this.pickorderEntity.getCurrentLocationStr();
-        this.interfaceResultMethodStr = this.pickorderEntity.getInterfaceResultMethodStr();
-        this.sortingStr = this.pickorderEntity.getSortingStr();
         this.isProcessingOrParkedBln = this.pickorderEntity.getIsProcessingOrParkedStr();
     }
 
-    cPickorder(cPickorderEntity pvPickorderEntity){
+    private cPickorder(cPickorderEntity pvPickorderEntity){
 
         this.pickorderEntity = pvPickorderEntity;
         this.orderNumberStr = this.pickorderEntity.getOrdernumberStr();
         this.orderTypeStr = this.pickorderEntity.getOrderTypeStr();
-        this.numberOfBinsInt = cText.pStringToIntegerInt(this.pickorderEntity.getNumberofBinsStr()) ;
+
         this.quantityTotalInt =cText.pStringToIntegerInt(this.pickorderEntity.getQuantityTotalStr());
         this.singleArticleOrdersBln = cText.pStringToBooleanBln(this.pickorderEntity.getSingleArticleOrdersStr(),false) ;
-        this.pickRejectDuringPickBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickRejectDuringpickStr(),false) ;
-        this.pickRejectDuringSortBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickRejectDuringSortStr(),false) ;
         this.pickSalesAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickSalesAskWorkplaceStr(),false) ;
         this.pickTransferAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickTransferAskWorkplaceStr(),false) ;
-        this.pickBarcodeCheckBln  = cText.pStringToBooleanBln(this.pickorderEntity.getPickBarcodeCheckStr(),false) ;
+
         this.pickPickPVVKOEachPieceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickPVVKOEachPieceStr(),false) ;
-        this.pickPickToContainerBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickToContainerStr(),false) ;
-        this.pickPickToContainerTypeStr = this.pickorderEntity.getPickPickToContainerTypeStr();
-        this.pickPrintAddressLabelBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPrintAddresslabelStr(),false) ;
-        this.pickPrintContentLabelBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPrintContentLabelStr(),false) ;
-        this.pickPickWithPictureBln = cText.pStringToBooleanBln(this.pickorderEntity.getpickWithPictureStr(),false) ;
+        this.pickWithPictureBln = cText.pStringToBooleanBln(this.pickorderEntity.getpickWithPictureStr(),false) ;
         this.pickPickWithAutoOpenBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
         this.pickPickWithPicturePrefetchBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
         this.pickActivityBinRequiredBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickActivityBinRequired(),false);
         this.assignedUserIdStr = this.pickorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.pickorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.pickorderEntity.getStatusStr());
-        this.statusPrintAtStartInt = cText.pStringToIntegerInt(this.pickorderEntity.getStatusPrintAtStartStr());
+
         this.externalReferenceStr = this.pickorderEntity.getExternalReferenceStr();
-        this.workPlaceStr = this.pickorderEntity.getWorkplaceStr();
-        this.stockOwnerStr = this.pickorderEntity.getStockOwnerStr();
-        this.requestedEndDateTimeStr = this.pickorderEntity.getRequestedEndDateTimeStr();
-        this.sourceDocumentStr = this.pickorderEntity.getSourceDocumentStr();
-        this.documentStr = this.pickorderEntity.getDocumentStr();
-        this.documentTypeStr = this.pickorderEntity.getDocumentTypeStr();
-        this.document2Str = this.pickorderEntity.getDocument2Str();
-        this.documentType2Str = this.pickorderEntity.getDocumentType2Str();
-        this.webserviceTimeOutERPInsInt = cText.pStringToIntegerInt(this.pickorderEntity.getWebserviceTimeOutERPInsStr());
         this.currentLocationStr = this.pickorderEntity.getCurrentLocationStr();
-        this.interfaceResultMethodStr = this.pickorderEntity.getInterfaceResultMethodStr();
-        this.sortingStr = this.pickorderEntity.getSortingStr();
         this.isProcessingOrParkedBln = this.pickorderEntity.getIsProcessingOrParkedStr();
     }
     //End Region Constructor
@@ -462,18 +282,18 @@ public class cPickorder{
         result.resultBln = true;
 
         cWebresult Webresult;
-        Boolean ignoreBusyBln = false;
+        boolean ignoreBusyBln = false;
 
-        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED() == false) {
-            ignoreBusyBln = false;
-        } else {
-
-            if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
-                ignoreBusyBln = true;
-            }
+        if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
+            ignoreBusyBln = true;
         }
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(),pvStepCodeEnu.toString(),pvWorkFlowStepInt, ignoreBusyBln);
+        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),
+                                                                                                        this.getOrderNumberStr(),
+                                                                                                        cDeviceInfo.getSerialnumberStr(),
+                                                                                                        pvStepCodeEnu.toString(),
+                                                                                                        pvWorkFlowStepInt,
+                                                                                                        ignoreBusyBln);
 
         //No result, so something really went wrong
         if (Webresult == null) {
@@ -484,13 +304,13 @@ public class cPickorder{
         }
 
         //Everything was fine, so we are done
-        if (Webresult.getSuccessBln() == true && Webresult.getResultBln() == true) {
+        if (Webresult.getSuccessBln() && Webresult.getResultBln()) {
             result.resultBln = true;
             return result;
         }
 
         //Something really went wrong
-        if (Webresult.getSuccessBln() == false ) {
+        if (!Webresult.getSuccessBln()) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_lock_order));
@@ -498,8 +318,8 @@ public class cPickorder{
         }
 
         //Check if this activity is meant for a different user
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-            Webresult.getResultObl().size() >= 2 && Webresult.getResultObl().get(0).equalsIgnoreCase("invalid_user_not_assigned") == true ) {
+        if (!Webresult.getResultBln()&& Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
+            Webresult.getResultObl().size() >= 2 && Webresult.getResultObl().get(0).equalsIgnoreCase("invalid_user_not_assigned")) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_meant_for_other_user)) + " " + Webresult.getResultObl().get(1) );
@@ -507,8 +327,8 @@ public class cPickorder{
         }
 
         //Check if this activity is meant for a different user
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-            Webresult.getResultObl().size() >= 0 && Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr()) == false ) {
+        if (!Webresult.getResultBln() && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
+            Webresult.getResultObl().size() > 0 && !Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr())) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_another_user_already_started)) + " " + Webresult.getResultObl().get(0) );
@@ -516,7 +336,7 @@ public class cPickorder{
         }
 
         // We got a succesfull response, but we need to do something with this activity
-        if (Webresult.getResultBln() == false && Webresult.getResultLng() > 0 ) {
+        if (!Webresult.getResultBln() && Webresult.getResultLng() > 0 ) {
 
             //Try to convert result long to action enumerate
             cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(Webresult.getResultLng().intValue());
@@ -532,7 +352,7 @@ public class cPickorder{
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_cant_be_started)));
             }
 
-            cPickorder.currentPickOrder.pGetCommentsViaWebErrorBln(Webresult.getResultDtt());
+            cPickorder.currentPickOrder.mGetCommentsViaWebErrorBln(Webresult.getResultDtt());
             return result;
         }
 
@@ -546,11 +366,7 @@ public class cPickorder{
 
         Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),this.getOrderNumberStr(),cDeviceInfo.getSerialnumberStr(),pvStepCodeEnu.toString(), pvWorkFlowStepInt);
 
-        if (Webresult.getSuccessBln() == false || Webresult.getResultBln() == false) {
-            return  false;
-        }
-
-        return  true;
+        return Webresult.getSuccessBln() && Webresult.getResultBln();
     }
 
     public boolean pDeleteDetailsBln(){
@@ -575,11 +391,11 @@ public class cPickorder{
         cWebresult Webresult;
 
         Webresult = cPickorder.getPickorderViewModel().pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);
-        if (Webresult.getSuccessBln() == false || Webresult.getResultBln() == false) {
+        if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
             return  false;
         }
 
-        if (cPickorder.getPickorderViewModel().pUpdatePickorderCurrentLocationInDatabaseBln(pvCurrentLocationStr) == false) {
+        if (!cPickorder.getPickorderViewModel().pUpdatePickorderCurrentLocationInDatabaseBln(pvCurrentLocationStr)) {
             return  false;
         }
 
@@ -645,8 +461,8 @@ public class cPickorder{
             return  null;
         }
 
-        List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.PICK);
-        return hulpObl;
+
+        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.PICK);
 
     }
 
@@ -656,8 +472,7 @@ public class cPickorder{
             return  null;
         }
 
-        List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.SORT);
-        return hulpObl;
+        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.SORT);
 
     }
 
@@ -667,8 +482,7 @@ public class cPickorder{
             return  null;
         }
 
-        List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.SHIP);
-        return hulpObl;
+        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.SHIP);
 
     }
 
@@ -678,14 +492,13 @@ public class cPickorder{
             return  null;
         }
 
-        List<cComment> hulpObl = cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
-        return hulpObl;
+        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
 
     }
 
     public boolean pGetLinesViaWebserviceBln(Boolean pvRefreshBln,cWarehouseorder.PickOrderTypeEnu pvPickOrderTypeEnu) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPickorderLine.allLinesObl = null;
             cPickorderLine.pTruncateTableBln();
         }
@@ -703,14 +516,10 @@ public class cPickorder{
 
 
         WebResult =  cPickorder.getPickorderViewModel().pGetLinesFromWebserviceWrs(actionTypeEnu);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 if (cPickorderLine.allLinesObl == null) {
                     cPickorderLine.allLinesObl = new ArrayList<>();
                 }
@@ -723,18 +532,11 @@ public class cPickorder{
                 }
 
                 //Check the statusInt, so linesInt that are not picked are ignored
-                if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT && pickorderLine.quantityTakenDbl >0 ) {
+                if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT && pickorderLine.getQuantityTakenDbl() >0 ) {
                     pickorderLine.pInsertInDatabaseBln();
-                    continue;
                 }
             }
-
-            if (cPickorderLine.allLinesObl.size() == 0) {
-                return  false;
-            }else
-            {
-                return  true;
-            }
+            return cPickorderLine.allLinesObl.size() != 0;
 
         }
         else {
@@ -849,24 +651,20 @@ public class cPickorder{
 
     public static boolean pGetPickOrdersViaWebserviceBln(Boolean pvRefreshBln, Boolean pvProcessingOrParkedBln, String pvSearchTextStr) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPickorder.allPickordersObl = null;
-            cPickorder.mTruncateTableBln();
+            cPickorder.mTruncateTable();
         }
 
         cWebresult WebResult;
         WebResult =  cPickorder.getPickorderViewModel().pGetPickordersFromWebserviceWrs(pvProcessingOrParkedBln,pvSearchTextStr);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cPickorder pickorder = new cPickorder(jsonObject);
                 pickorder.pInsertInDatabaseBln();
             }
+
             return  true;
         }
         else {
@@ -877,24 +675,20 @@ public class cPickorder{
 
     public static boolean pGetSortOrdersViaWebserviceBln(Boolean pvRefreshBln,String pvSearchTextStr) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPickorder.allPickordersObl = null;
-            cPickorder.mTruncateTableBln();
+            cPickorder.mTruncateTable();
         }
 
         cWebresult WebResult;
         WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs(cUser.currentUser.getNameStr(),cWarehouseorder.StepCodeEnu.Pick_Sorting,pvSearchTextStr);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cPickorder pickorder = new cPickorder(jsonObject);
                 pickorder.pInsertInDatabaseBln();
             }
+
             return  true;
         }
         else {
@@ -905,24 +699,20 @@ public class cPickorder{
 
     public static boolean pGetPackAndShipOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPickorder.allPickordersObl = null;
-            cPickorder.mTruncateTableBln();
+            cPickorder.mTruncateTable();
         }
 
         cWebresult WebResult;
         WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs(cUser.currentUser.getNameStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip,pvSearchTextStr);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject :WebResult.getResultDtt()) {
                 cPickorder pickorder = new cPickorder(jsonObject);
                 pickorder.pInsertInDatabaseBln();
             }
+
             return  true;
         }
         else {
@@ -933,21 +723,16 @@ public class cPickorder{
 
     public boolean pGetPackAndShipLinesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPickorderLinePackAndShip.allPackAndShipLinesObl = null;
         }
 
         cWebresult WebResult;
         WebResult =  cPickorder.getPickorderViewModel().pGetPackAndShipLinesFromWebserviceWrs();
 
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 if (cPickorderLinePackAndShip.allPackAndShipLinesObl == null) {
                     cPickorderLinePackAndShip.allPackAndShipLinesObl  = new ArrayList<>();
                 }
@@ -964,11 +749,8 @@ public class cPickorder{
                 cShipment shipment = cShipment.pGetShipment(pickorderLinePackAndShip.getSourceNoStr());
                 if (shipment == null ) {
                     cShipment shipmentToAdd = new cShipment(pickorderLinePackAndShip.getSourceNoStr());
-                    shipmentToAdd.handledBln = true;
 
-                    if (pickorderLinePackAndShip.localStatusInt == cWarehouseorder.PackingAndShippingStatusEnu.Needed) {
-                        shipmentToAdd.handledBln = false;
-                    }
+                    shipmentToAdd.handledBln = pickorderLinePackAndShip.localStatusInt != cWarehouseorder.PackingAndShippingStatusEnu.Needed;
 
                     cShipment.pAddShipment(shipmentToAdd);
                     shipmentToAdd.pAddPackAndShipLine(pickorderLinePackAndShip);
@@ -976,15 +758,10 @@ public class cPickorder{
                 }
 
                 shipment.pAddPackAndShipLine(pickorderLinePackAndShip);
-
             }
 
-            if (cPickorderLinePackAndShip.allPackAndShipLinesObl.size() == 0) {
-                return  false;
-            }else
-            {
-                return  true;
-            }
+
+            return cPickorderLinePackAndShip.allPackAndShipLinesObl.size() != 0;
 
         }
         else {
@@ -1071,13 +848,13 @@ public class cPickorder{
         }
 
         //Everything was fine, so we are done
-        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
             result.resultBln = true;
             return result;
         }
 
         //Something really went wrong
-        if (webresult.getSuccessBln() == false ) {
+        if (!webresult.getSuccessBln()) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
@@ -1085,16 +862,16 @@ public class cPickorder{
         }
 
         // We got a succesfull response, but we need to do something with this activity
-        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
 
-            Long actionLng = Long.valueOf(0);
+            Long actionLng = 0L;
 
             if (webresult.getResultLng() < 10 ) {
                 actionLng = webresult.getResultLng();
             }
 
             if (webresult.getResultLng() > 100) {
-                actionLng  = (long)(webresult.getResultLng()/100);
+                actionLng  = webresult.getResultLng()/100;
             }
 
             //Try to convert action long to action enumerate
@@ -1107,7 +884,7 @@ public class cPickorder{
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
             }
 
-            cPickorder.currentPickOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            cPickorder.currentPickOrder.mGetCommentsViaWebErrorBln(webresult.getResultDtt());
             return result;
         }
 
@@ -1141,13 +918,13 @@ public class cPickorder{
         }
 
         //Everything was fine, so we are done
-        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
             result.resultBln = true;
             return result;
         }
 
         //Something really went wrong
-        if (webresult.getSuccessBln() == false ) {
+        if (!webresult.getSuccessBln()) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
@@ -1155,16 +932,16 @@ public class cPickorder{
         }
 
         // We got a succesfull response, but we need to do something with this activity
-        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
 
-            Long actionLng = Long.valueOf(0);
+            Long actionLng = 0L;
 
             if (webresult.getResultLng() < 10 ) {
                 actionLng = webresult.getResultLng();
             }
 
             if (webresult.getResultLng() > 100) {
-                actionLng  = (long)(webresult.getResultLng()/100);
+                actionLng  = webresult.getResultLng()/100;
             }
 
             //Try to convert action long to action enumerate
@@ -1177,7 +954,7 @@ public class cPickorder{
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
             }
 
-            cPickorder.currentPickOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            cPickorder.currentPickOrder.mGetCommentsViaWebErrorBln(webresult.getResultDtt());
             return result;
         }
 
@@ -1211,13 +988,13 @@ public class cPickorder{
         }
 
         //Everything was fine, so we are done
-        if (webresult.getSuccessBln() == true && webresult.getResultBln() == true) {
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
             result.resultBln = true;
             return result;
         }
 
         //Something really went wrong
-        if (webresult.getSuccessBln() == false ) {
+        if (!webresult.getSuccessBln()) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
@@ -1225,17 +1002,15 @@ public class cPickorder{
         }
 
         // We got a succesfull response, but we need to do something with this activity
-        if (webresult.getResultBln() == false && webresult.getResultLng() > 0 ) {
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
 
-            Long actionLng = Long.valueOf(0);
+            Long actionLng = 0L;
 
             if (webresult.getResultLng() < 10 ) {
                 actionLng = webresult.getResultLng();
             }
 
-            if (webresult.getResultLng() > 100) {
-                actionLng  = (long)(webresult.getResultLng()/100);
-            }
+            if (webresult.getResultLng() > 100) actionLng = webresult.getResultLng() / 100;
 
             //Try to convert action long to action enumerate
             cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
@@ -1247,7 +1022,7 @@ public class cPickorder{
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
             }
 
-            cPickorder.currentPickOrder.pGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            cPickorder.currentPickOrder.mGetCommentsViaWebErrorBln(webresult.getResultDtt());
             return result;
         }
 
@@ -1294,18 +1069,21 @@ public class cPickorder{
 
     public boolean pGetAdressesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (cSetting.PICK_SHIPPING_SALES() == false ) {
+        if (!cSetting.PICK_SHIPPING_SALES()) {
             return  true;
         }
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPickorderAddress.allAdressesObl = null;
             cPickorderAddress.pTruncateTableBln();
         }
 
         cWebresult WebResult;
         WebResult =  cPickorder.getPickorderViewModel().pGetAdressesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+
+
 
             List<JSONObject> myList = WebResult.getResultDtt();
             for (int i = 0; i < myList.size(); i++) {
@@ -1325,11 +1103,11 @@ public class cPickorder{
 
     public boolean pGetArticleImagesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (cPickorder.currentPickOrder.isPickWithPictureBln() == false || cPickorder.currentPickOrder.pickPickWithPicturePrefetchBln == false) {
+        if (!cPickorder.currentPickOrder.isPickWithPictureBln() || !cPickorder.currentPickOrder.isPickPickWithPicturePrefetchBln()) {
             return  true;
         }
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cArticleImage.allImages = null;
             cArticleImage.pTruncateTableBln();
         }
@@ -1348,25 +1126,21 @@ public class cPickorder{
         for (cPickorderLine pickorderLine : this.linesObl()) {
             String itemNoAndVariantCodeStr = pickorderLine.getItemNoStr() + ";" + pickorderLine.getVariantCodeStr();
 
-            if (itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr) == false) {
+            if (!itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr)) {
                 itemNoAndVariantCodeObl.add(itemNoAndVariantCodeStr);
             }
         }
 
         cWebresult WebResult;
         WebResult =  cArticleImage.getArticleImageViewModel().pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             cArticleImage.allImages = new ArrayList<>();
-            List<JSONObject> myList = WebResult.getResultDtt();
 
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cArticleImage articleImage = new cArticleImage(jsonObject);
 
-                if ( cArticleImage.allImages.contains(articleImage) == false) {
+                if (!cArticleImage.allImages.contains(articleImage)) {
                     articleImage.pInsertInDatabaseBln();
                     cArticleImage.allImages.add((articleImage));
                 }
@@ -1381,31 +1155,24 @@ public class cPickorder{
 
     public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPickorderBarcode.allBarcodesObl = null;
             cPickorderBarcode.pTruncateTableBln();
         }
 
         cWebresult WebResult;
         WebResult =  cPickorder.getPickorderViewModel().pGetBarcodesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
 
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cPickorderBarcode pickorderBarcode = new cPickorderBarcode(jsonObject);
                 pickorderBarcode.pInsertInDatabaseBln();
-
-
             }
 
-            if (cPickorderBarcode.allBarcodesObl.size() == 0) {
-                return  false;
-            }
-
-            return  true;
+            return cPickorderBarcode.allBarcodesObl.size() != 0;
 
         }
         else {
@@ -1416,19 +1183,16 @@ public class cPickorder{
 
     public boolean pGetLineBarcodesViaWebserviceBln(Boolean pvRefreshBln,cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPickorderLineBarcode.allLineBarcodesObl = null;
             cPickorderLineBarcode.pTruncateTableBln();
         }
 
         cWebresult WebResult;
         WebResult =  cPickorder.getPickorderViewModel().pGetLineBarcodesFromWebserviceWrs(pvActionTypeEnu);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
 
                 cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(jsonObject);
                 pickorderLineBarcode.pInsertInDatabaseBln();
@@ -1443,7 +1207,8 @@ public class cPickorder{
     }
 
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
-        if (pvRefeshBln == true) {
+
+        if (pvRefeshBln) {
             cComment.allCommentsObl = null;
             cComment.pTruncateTableBln();
             cComment.commentsShownBln = false;
@@ -1451,14 +1216,11 @@ public class cPickorder{
 
         cWebresult webresult;
         webresult = cPickorder.getPickorderViewModel().pGetCommentsFromWebserviceWrs();
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
             cComment.allCommentsObl = new ArrayList<>();
 
-            List<JSONObject> myList = webresult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+            for (JSONObject jsonObject : webresult.getResultDtt()) {
                 cComment comment = new cComment(jsonObject);
                 comment.pInsertInDatabaseBln();
             }
@@ -1471,20 +1233,15 @@ public class cPickorder{
     }
 
     public boolean pGetShippingPackagedViaWebserviceBln(Boolean pvRefeshBln) {
-        if (pvRefeshBln == true) {
+        if (pvRefeshBln) {
             cPickorderShipPackage.allPackagesObl = null;
             cPickorderShipPackage.pTruncateTableBln();
         }
 
         cWebresult webresult;
         webresult = cPickorder.getPickorderViewModel().pGetPackagesFromWebserviceWrs();
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
-
-
-            List<JSONObject> myList = webresult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
+            for (JSONObject jsonObject : webresult.getResultDtt()) {
                 cPickorderShipPackage pickorderShipPackage = new cPickorderShipPackage(jsonObject);
                 pickorderShipPackage.pInsertInDatabaseBln();
             }
@@ -1496,20 +1253,7 @@ public class cPickorder{
         }
     }
 
-    public boolean pGetCommentsViaWebErrorBln(List<JSONObject> pvResultDtt) {
 
-            cComment.allCommentsObl = new ArrayList<>();
-
-            List<JSONObject> myList = pvResultDtt;
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-                cComment comment = new cComment(jsonObject);
-                comment.pInsertInDatabaseBln();
-            }
-            return true;
-
-    }
 
     public boolean pGetSortingDetailsBln(){
 
@@ -1524,11 +1268,11 @@ public class cPickorder{
                 continue;
             }
 
-            if (pickorderLine.processingSequenceStr.equalsIgnoreCase(pickorderLine.sourceNoStr)) {
+            if (pickorderLine.processingSequenceStr.equalsIgnoreCase(pickorderLine.getSourceNoStr())) {
                 continue;
             }
 
-            cSalesOrderPackingTable salesOrderPackingTable = new cSalesOrderPackingTable(pickorderLine.sourceNoStr,pickorderLine.processingSequenceStr);
+            cSalesOrderPackingTable salesOrderPackingTable = new cSalesOrderPackingTable(pickorderLine.getSourceNoStr(),pickorderLine.processingSequenceStr);
             salesOrderPackingTable.pInsertInDatabaseBln();
 
         }
@@ -1602,9 +1346,20 @@ public class cPickorder{
 
     //Region Private Methods
 
-    private static boolean mTruncateTableBln(){
-        cPickorder.getPickorderViewModel().deleteAll();
+    private boolean mGetCommentsViaWebErrorBln(List<JSONObject> pvResultDtt) {
+
+        cComment.allCommentsObl = new ArrayList<>();
+
+        for (JSONObject jsonObject : pvResultDtt) {
+            cComment comment = new cComment(jsonObject);
+            comment.pInsertInDatabaseBln();
+        }
         return true;
+
+    }
+
+    private static void mTruncateTable(){
+        cPickorder.getPickorderViewModel().deleteAll();
     }
 
     //End Region Private Methods

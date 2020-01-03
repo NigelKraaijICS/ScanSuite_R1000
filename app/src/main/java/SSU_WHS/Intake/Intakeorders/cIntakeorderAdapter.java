@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -76,14 +77,15 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
 
     //Region Default Methods
+    @NonNull
     @Override
-    public cIntakeorderAdapter.IntakeorderViewHolder onCreateViewHolder(ViewGroup pvParent, int pbViewTypeInt) {
+    public cIntakeorderAdapter.IntakeorderViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_intakeorder, pvParent, false);
         return new cIntakeorderAdapter.IntakeorderViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(cIntakeorderAdapter.IntakeorderViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cIntakeorderAdapter.IntakeorderViewHolder pvHolder, int pvPositionInt) {
 
         if (localIntakeorderObl == null || localIntakeorderObl.size() == 0 ) {
             return;
@@ -102,7 +104,7 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
             pvHolder.textViewOrderUser.setText(selectedIntakeorder.getCurrentUserIdStr());
         }
 
-        if (selectedIntakeorder.isProcessingOrParkedBln == true) {
+        if (selectedIntakeorder.getProcessingOrParkedBln()) {
             pvHolder.imageViewIsProcessedOrWait.setVisibility(View.VISIBLE);
         }
         else {
@@ -124,7 +126,6 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
                 if (cAppExtension.context instanceof IntakeorderSelectActivity) {
                     IntakeorderSelectActivity.pIntakeorderSelected(selectedIntakeorder);
-                    return;
                 }
                             }
         });

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
@@ -31,20 +32,20 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
 
     //Region Private Properties
 
-    static private ConstraintLayout createInventoryContainer;
-    private TextView textViewCreateInventoryHeader;
-    private TextView textViewCreateInventoryText;
-    static private EditText editTextDocument;
-    static private Button createInventoryButton;
-    static private Button cancelButton;
-    ImageView createInventoryImageView;
-    private Boolean showDocumentBln;
+    private static ConstraintLayout createInventoryContainer;
+    private static TextView textViewCreateInventoryHeader;
+    private static TextView textViewCreateInventoryText;
+    private static EditText editTextDocument;
+    private static Button createInventoryButton;
+    private static Button cancelButton;
+    private static ImageView createInventoryImageView;
+    private static Boolean showDocumentBln;
 
     //End Region private Properties
 
     //Region Constructor
     public CreateInventoryFragment(Boolean pvShowDocumentBln) {
-        this.showDocumentBln = pvShowDocumentBln;
+        CreateInventoryFragment.showDocumentBln = pvShowDocumentBln;
     }
     //End Region Constructor
 
@@ -58,7 +59,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
     }
 
     @Override
-    public void onViewCreated(View pvView, @Nullable Bundle pvSavedInstanceState) {
+    public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
         this.mFragmentInitialize();
     }
 
@@ -92,30 +93,33 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
 
     @Override
     public void mFindViews() {
-        this.textViewCreateInventoryHeader = getView().findViewById(R.id.textViewCreateInventoryHeader);
-        this.textViewCreateInventoryText = getView().findViewById(R.id.textViewCreateInventoryText);
-        this.editTextDocument = getView().findViewById(R.id.editTextDocument);
-        this.createInventoryContainer = getView().findViewById(R.id.createInventoryContainer);
-        this.createInventoryButton = getView().findViewById(R.id.closeOrderButton);
-        this.cancelButton = getView().findViewById(R.id.cancelButton);
-        this.createInventoryImageView = getView().findViewById(R.id.createInventoryImageView);
+
+        if (getView() != null) {
+            CreateInventoryFragment.textViewCreateInventoryHeader = getView().findViewById(R.id.textViewCreateInventoryHeader);
+            CreateInventoryFragment.textViewCreateInventoryText = getView().findViewById(R.id.textViewCreateInventoryText);
+            CreateInventoryFragment.editTextDocument = getView().findViewById(R.id.editTextDocument);
+            CreateInventoryFragment.createInventoryContainer = getView().findViewById(R.id.createInventoryContainer);
+            CreateInventoryFragment.createInventoryButton = getView().findViewById(R.id.closeOrderButton);
+            CreateInventoryFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+            CreateInventoryFragment.createInventoryImageView = getView().findViewById(R.id.createInventoryImageView);
+        }
     }
 
 
     @Override
     public void mFieldsInitialize() {
 
-        this.textViewCreateInventoryHeader.setText(cAppExtension.context.getString(R.string.createinventory_header_default));
-        this.textViewCreateInventoryText.setText(cAppExtension.context.getString(R.string.createinventory_text_default));
+        CreateInventoryFragment.textViewCreateInventoryHeader.setText(cAppExtension.context.getString(R.string.createinventory_header_default));
+        CreateInventoryFragment.textViewCreateInventoryText.setText(cAppExtension.context.getString(R.string.createinventory_text_default));
 
-        if (!this.showDocumentBln) {
-            editTextDocument.setVisibility(View.INVISIBLE);
+        if (!CreateInventoryFragment.showDocumentBln) {
+            CreateInventoryFragment.editTextDocument.setVisibility(View.INVISIBLE);
             return;
         }
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(50);
-        this.editTextDocument.setFilters(filterArray);
+        CreateInventoryFragment.editTextDocument.setFilters(filterArray);
         cUserInterface.pShowKeyboard(editTextDocument);
     }
 
@@ -127,7 +131,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
         this.mSetEditorActionListener();
     }
     private void mSetImageListener() {
-        this.createInventoryImageView.setOnClickListener(new View.OnClickListener() {
+        CreateInventoryFragment.createInventoryImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 cUserInterface.pDoRotate(pvView, 0);
@@ -136,7 +140,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
+        CreateInventoryFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 cAppExtension.dialogFragment.dismiss();
@@ -145,7 +149,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
     }
 
     private void mSetCreateListener() {
-        this.createInventoryButton.setOnClickListener(new View.OnClickListener() {
+        CreateInventoryFragment.createInventoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 if (cAppExtension.activity  instanceof InventoryorderSelectActivity) {
@@ -167,9 +171,9 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
             return;
         }
 
-        Boolean foundBln = false;
+        boolean foundBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.DOCUMENT) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
             foundBln = true;
         }
 
@@ -178,20 +182,18 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
             CreateInventoryFragment.editTextDocument.setText(barcodeWithoutPrefixStr);
             CreateInventoryFragment.createInventoryButton.performClick();
-            return;
         }
         else {
             //has prefix, isn't DOCUMENT
             cUserInterface.pDoNope(createInventoryContainer, true, true);
-            return;
         }
     }
     private void mSetEditorActionListener() {
-        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        CreateInventoryFragment.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    createInventoryButton.callOnClick();
+                    CreateInventoryFragment.createInventoryButton.callOnClick();
                 }
                 return true;
             }

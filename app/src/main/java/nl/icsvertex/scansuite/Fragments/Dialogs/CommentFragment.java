@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
@@ -28,15 +29,15 @@ import nl.icsvertex.scansuite.R;
 public class CommentFragment extends DialogFragment implements iICSDefaultFragment {
 
    //Region Private Properties
-   private ImageView toolbarImage;
-    private  TextView toolbarTitle;
+   private static ImageView toolbarImage;
+   private static TextView toolbarTitle;
 
-    private RecyclerView commentRecyclerView;
-    private Button buttonRoger;
+    private static RecyclerView commentRecyclerView;
+    private static Button buttonRoger;
 
-    private   List<cComment> localCommentObl;
+    private static List<cComment> localCommentObl;
 
-    private String titleStr;
+    private static String titleStr;
 
     //End Region Private Properties
 
@@ -47,7 +48,7 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
     }
 
     public CommentFragment(List<cComment> pvDataObl) {
-        this.localCommentObl = pvDataObl;
+        CommentFragment.localCommentObl = pvDataObl;
     }
     //End Region Constructor
 
@@ -56,23 +57,21 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
     @Nullable
     @Override
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer, Bundle pvSavedInstanceState) {
-        View rootview = pvInflater.inflate(R.layout.fragment_comments, pvContainer);
-        return rootview;
+        return pvInflater.inflate(R.layout.fragment_comments, pvContainer);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         Bundle args = getArguments();
-
-        this.titleStr = cAppExtension.context.getString(R.string.comments);
+        CommentFragment.titleStr = cAppExtension.context.getString(R.string.comments);
 
         if (args != null) {
-            this.titleStr = args.getString(cPublicDefinitions.KEY_COMMENTHEADER,"");
+            CommentFragment.titleStr = args.getString(cPublicDefinitions.KEY_COMMENTHEADER,"");
         }
 
-        if (this.titleStr.equalsIgnoreCase("")) {
-            this.titleStr = getResources().getString(R.string.comments);
+        if (CommentFragment.titleStr.equalsIgnoreCase("")) {
+            CommentFragment.titleStr = getResources().getString(R.string.comments);
         }
 
         cAppExtension.dialogFragment = this;
@@ -85,7 +84,7 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
         cUserInterface.pEnableScanner();
     }
 
@@ -99,16 +98,18 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
             this.mFieldsInitialize();
         this.mSetListeners();
         this.mSetToolbar();
-        this.mSetCommentRecycler(this.localCommentObl);
+        this.mSetCommentRecycler();
     }
 
     @Override
     public void mFindViews() {
-        this.toolbarImage = getView().findViewById(R.id.toolbarImage);
-        this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
+        if (getView() != null) {
+            CommentFragment.toolbarImage = getView().findViewById(R.id.toolbarImage);
+            CommentFragment.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
 
-        this.commentRecyclerView = getView().findViewById(R.id.commentRecyclerview);
-        this.buttonRoger = getView().findViewById(R.id.buttonRoger);
+            CommentFragment.commentRecyclerView = getView().findViewById(R.id.commentRecyclerview);
+            CommentFragment.buttonRoger = getView().findViewById(R.id.buttonRoger);
+        }
     }
 
 
@@ -138,22 +139,22 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
     //Region Private Methods
     private void mSetToolbar() {
 
-        this.toolbarTitle.setText(this.titleStr);
-        this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        this.toolbarTitle.setSingleLine(true);
-        this.toolbarTitle.setMarqueeRepeatLimit(5);
-        this.toolbarTitle.postDelayed(new Runnable() {
+        CommentFragment.toolbarTitle.setText(CommentFragment.titleStr);
+        CommentFragment.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        CommentFragment.toolbarTitle.setSingleLine(true);
+        CommentFragment.toolbarTitle.setMarqueeRepeatLimit(5);
+        CommentFragment.toolbarTitle.postDelayed(new Runnable() {
             @Override
             public void run() {
-                toolbarTitle.setSelected(true);
+                CommentFragment.toolbarTitle.setSelected(true);
             }
         },1500);
 
-        this.toolbarImage.setImageResource(R.drawable.ic_comment);
+        CommentFragment.toolbarImage.setImageResource(R.drawable.ic_comment);
 
     }
     private void mSetCloseListener() {
-        this.buttonRoger.setOnClickListener(new View.OnClickListener() {
+        CommentFragment.buttonRoger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cAppExtension.dialogFragment.dismiss();
@@ -162,14 +163,14 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
     }
 
     private void mSetHeaderListener() {
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
+        CommentFragment.toolbarTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mScrollToBottom();
             }
         });
 
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
+        CommentFragment.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 mScrollToTop();
@@ -179,25 +180,25 @@ public class CommentFragment extends DialogFragment implements iICSDefaultFragme
     }
 
     private void mScrollToTop() {
-        this.commentRecyclerView.smoothScrollToPosition(0);
+        CommentFragment.commentRecyclerView.smoothScrollToPosition(0);
     }
 
     private void mScrollToBottom() {
         if (cComment.getcommentAdapter()!= null) {
             if (cComment.getcommentAdapter().getItemCount() > 0) {
-                commentRecyclerView.smoothScrollToPosition(cComment.getcommentAdapter().getItemCount() -1 );
+                CommentFragment.commentRecyclerView.smoothScrollToPosition(cComment.getcommentAdapter().getItemCount() -1 );
             }
         }
 
     }
 
 
-    private void mSetCommentRecycler(List<cComment> pvDataObl) {
+    private void mSetCommentRecycler() {
 
-        commentRecyclerView.setHasFixedSize(false);
-        commentRecyclerView.setAdapter(cComment.getcommentAdapter());
-        commentRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        cComment.getcommentAdapter().pFillData(pvDataObl);
+        CommentFragment.commentRecyclerView.setHasFixedSize(false);
+        CommentFragment.commentRecyclerView.setAdapter(cComment.getcommentAdapter());
+        CommentFragment.commentRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        cComment.getcommentAdapter().pFillData(CommentFragment.localCommentObl);
     }
     //End Region Private Methods
 

@@ -37,12 +37,12 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
     //Region Private Properties
 
     private static TextView textViewSelectedOrder;
-    private ConstraintLayout shipThisView;
+    private static ConstraintLayout shipThisView;
 
-    private TextView quickhelpText;
-    private ImageView quickhelpIcon;
-    private ConstraintLayout quickhelpContainer;
-    private RecyclerView recyclerViewShiporderLinesToship;
+    private static TextView quickhelpText;
+    private static ImageView quickhelpIcon;
+    private static ConstraintLayout quickhelpContainer;
+    private static RecyclerView recyclerViewShiporderLinesToship;
 
     //End Region Private Properties
 
@@ -70,16 +70,20 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
     }
 
     @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-        if (pvIsVisibleToUserBln) {
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
-            ShiporderLinesActivity.currentLineFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+        ShiporderLinesActivity.currentLineFragment = this;
     }
 
     //End Region Default Methods
@@ -98,19 +102,23 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     @Override
     public void mFindViews() {
-            this.recyclerViewShiporderLinesToship = getView().findViewById(R.id.recyclerViewShiporderLinesToship);
+
+        if (getView() != null) {
+            ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship = getView().findViewById(R.id.recyclerViewShiporderLinesToship);
             ShiporderLinesToShipFragment.textViewSelectedOrder = getView().findViewById(R.id.textViewSelectedOrder);
-            this.shipThisView = getView().findViewById(R.id.shipThisView);
-            this.quickhelpText = getView().findViewById(R.id.quickhelpText);
-            this.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
-            this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
+            ShiporderLinesToShipFragment.shipThisView = getView().findViewById(R.id.shipThisView);
+            ShiporderLinesToShipFragment.quickhelpText = getView().findViewById(R.id.quickhelpText);
+            ShiporderLinesToShipFragment.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
+            ShiporderLinesToShipFragment.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
+        }
+
+
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        this.quickhelpText.setText(R.string.scan_salesorder);
-;
+        ShiporderLinesToShipFragment.quickhelpText.setText(R.string.scan_salesorder);
     }
 
     @Override
@@ -140,15 +148,15 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
     //Region Private Methods
 
     private void setQuickHelpListener() {
-        this.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
+        ShiporderLinesToShipFragment.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cUserInterface.pDoRotate( quickhelpIcon, 0);
-                if (quickhelpText.getVisibility() == View.VISIBLE) {
-                    quickhelpText.setVisibility(View.GONE);
+                cUserInterface.pDoRotate(ShiporderLinesToShipFragment.quickhelpIcon, 0);
+                if (ShiporderLinesToShipFragment.quickhelpText.getVisibility() == View.VISIBLE) {
+                    ShiporderLinesToShipFragment.quickhelpText.setVisibility(View.GONE);
                 }
                 else {
-                    quickhelpText.setVisibility(View.VISIBLE);
+                    ShiporderLinesToShipFragment.quickhelpText.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -177,22 +185,23 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
         }
 
         cShipment.getShipmentsToshipAdapter().pFillData(pvDataObl);
-        this.recyclerViewShiporderLinesToship.setHasFixedSize(false);
-        this.recyclerViewShiporderLinesToship.setAdapter(cShipment.getShipmentsToshipAdapter());
-        this.recyclerViewShiporderLinesToship.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship.setHasFixedSize(false);
+        ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship.setAdapter(cShipment.getShipmentsToshipAdapter());
+        ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
 
     }
 
+    //todo: check why this is always true
     private void mNoLinesAvailable(Boolean pvEnabledBln) {
 
-        if (ShiporderLinesActivity.currentLineFragment != null && ShiporderLinesActivity.currentLineFragment == this) {
+        if (ShiporderLinesActivity.currentLineFragment == this) {
             //Close no linesInt fragment if needed
             if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment || fragment instanceof NothingHereFragment ) {
+                    if (fragment instanceof NothingHereFragment ) {
                         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                         fragmentTransaction.remove(fragment);
                         fragmentTransaction.commit();
@@ -204,7 +213,7 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
             }
 
             //Hide the recycler view
-            this.recyclerViewShiporderLinesToship.setVisibility(View.INVISIBLE);
+            ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship.setVisibility(View.INVISIBLE);
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();

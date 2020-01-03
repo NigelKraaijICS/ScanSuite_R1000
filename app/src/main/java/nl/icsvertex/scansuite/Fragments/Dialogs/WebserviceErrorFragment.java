@@ -2,6 +2,8 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
@@ -24,13 +26,11 @@ import nl.icsvertex.scansuite.R;
 
 public class WebserviceErrorFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private  List<String> errorList;
-    private ImageView imageNoEntry;
-    private CardView errorContainer;
-    private TextView textErrors;
-    private Button buttonCancel;
-    private ConstraintLayout webserviceErrorContainer;
-
+    private static  List<String> errorList;
+    private static ImageView imageNoEntry;
+    private static CardView errorContainer;
+    private static TextView textErrors;
+    private static Button buttonCancel;
 
     public WebserviceErrorFragment() {
         // Required empty public constructor
@@ -43,59 +43,64 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
         return inflater.inflate(R.layout.fragment_webservice_error, container, false);
     }
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
-        errorList = (List<String>)bundle.getSerializable(cPublicDefinitions.WEBSERVICEERROR_LIST_TAG);
-
-        mFragmentInitialize();
+        if (bundle != null) {
+            WebserviceErrorFragment.errorList = (List<String>)bundle.getSerializable(cPublicDefinitions.WEBSERVICEERROR_LIST_TAG);
+        }
+        this.mFragmentInitialize();
     }
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this. mSetListeners();
         cUserInterface.pEnableScanner();
     }
     @Override
     public void mFindViews() {
-        webserviceErrorContainer = getView().findViewById(R.id.webserviceErrorContainer);
-        imageNoEntry = getView().findViewById(R.id.imageNoEntry);
-        errorContainer = getView().findViewById(R.id.errorContainer);
-        textErrors = getView().findViewById(R.id.textErrors);
-        buttonCancel = getView().findViewById(R.id.buttonCancel);
+        if (getView() != null) {
+            WebserviceErrorFragment.imageNoEntry = getView().findViewById(R.id.imageNoEntry);
+            WebserviceErrorFragment.errorContainer = getView().findViewById(R.id.errorContainer);
+            WebserviceErrorFragment.textErrors = getView().findViewById(R.id.textErrors);
+            WebserviceErrorFragment.buttonCancel = getView().findViewById(R.id.buttonCancel);
+        }
+
     }
 
     @Override
     public void mFieldsInitialize() {
-        errorContainer.setVisibility(View.INVISIBLE);
-        mFillErrors();
+       WebserviceErrorFragment.errorContainer.setVisibility(View.INVISIBLE);
+       this.mFillErrors();
     }
+
     @Override
     public void mSetListeners() {
-        mSetErrorImageListener();
-        mSetCancelListener();
+        this.mSetErrorImageListener();
+        this.mSetCancelListener();
     }
+
     private void mFillErrors() {
-        if (errorList != null) {
-            String listToShow = "";
-            for (String errorMessage : errorList) {
-                listToShow += errorMessage + cText.NEWLINE;
+        if (WebserviceErrorFragment.errorList != null) {
+            StringBuilder listToShow = new StringBuilder();
+            for (String errorMessage : WebserviceErrorFragment.errorList) {
+                listToShow.append(errorMessage).append(cText.NEWLINE);
             }
-            textErrors.setText(listToShow);
+            WebserviceErrorFragment.textErrors.setText(listToShow.toString());
         }
     }
     private void mSetErrorImageListener() {
-        imageNoEntry.setOnClickListener(new View.OnClickListener() {
+        WebserviceErrorFragment.imageNoEntry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cUserInterface.pDoRotate(imageNoEntry, 0);
+                cUserInterface.pDoRotate(WebserviceErrorFragment.imageNoEntry, 0);
                 mShowOrHideDetails();
             }
         });
     }
     private void mSetCancelListener() {
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
+       WebserviceErrorFragment.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
@@ -103,19 +108,19 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
         });
     }
     private void mShowOrHideDetails() {
-        Boolean isCurrentlyShown;
-        isCurrentlyShown = errorContainer.getVisibility() == View.VISIBLE;
+        boolean isCurrentlyShown;
+        isCurrentlyShown = WebserviceErrorFragment.errorContainer.getVisibility() == View.VISIBLE;
         if (isCurrentlyShown) {
-            errorContainer.animate().scaleY(0).withEndAction(new Runnable() {
+            WebserviceErrorFragment.errorContainer.animate().scaleY(0).withEndAction(new Runnable() {
                 @Override
                 public void run() {
-                    errorContainer.setVisibility(View.INVISIBLE);
+                    WebserviceErrorFragment.errorContainer.setVisibility(View.INVISIBLE);
                 }
             }).start();
         }
         else {
-            errorContainer.animate().scaleY(1).start();
-            errorContainer.setVisibility(View.VISIBLE);
+            WebserviceErrorFragment.errorContainer.animate().scaleY(1).start();
+            WebserviceErrorFragment.errorContainer.setVisibility(View.VISIBLE);
         }
     }
 }

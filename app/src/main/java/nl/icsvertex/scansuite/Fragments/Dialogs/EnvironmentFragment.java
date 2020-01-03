@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import ICS.Environments.cEnvironment;
 import ICS.Environments.cEnvironmentAdapter;
 import ICS.Environments.cEnvironmentRecyclerItemTouchHelper;
@@ -38,9 +40,9 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     private static String ADDENVIRONMENTMANUALLYFRAGMENT_TAG = "ADDENVIRONMENTMANUALLYFRAGMENT_TAG";
 
     private static RecyclerView environmentRecyclerView;
-    private Button buttonClose;
-    private Button buttonAddManually;
-    private   static TextView textViewCurrentEnvironment;
+    private static Button buttonClose;
+    private static Button buttonAddManually;
+    private static TextView textViewCurrentEnvironment;
 
     //End Region Private Properties
 
@@ -56,10 +58,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_environments, container);
-
-
-        return rootview;
+        return inflater.inflate(R.layout.fragment_environments, container);
     }
 
     @Override
@@ -98,25 +97,20 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
     }
 
     //End Region Default Methods
 
     // Region iICSDefaultFragment defaults
 
-    public static void pHandlePasswordFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
-    }
-
-
     @Override
     public void mFindViews() {
 
-        this.environmentRecyclerView = getView().findViewById(R.id.environmentRecyclerview);
-        this.buttonClose = getView().findViewById(R.id.buttonClose);
-        this.buttonAddManually = getView().findViewById(R.id.buttonAddManually);
-        this.textViewCurrentEnvironment = getView().findViewById(R.id.textViewCurrentEnvironment);
+        EnvironmentFragment.environmentRecyclerView = Objects.requireNonNull(getView()).findViewById(R.id.environmentRecyclerview);
+        EnvironmentFragment.buttonClose = getView().findViewById(R.id.buttonClose);
+        EnvironmentFragment.buttonAddManually = getView().findViewById(R.id.buttonAddManually);
+        EnvironmentFragment.textViewCurrentEnvironment = getView().findViewById(R.id.textViewCurrentEnvironment);
     }
 
     @Override
@@ -134,7 +128,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     public void mFieldsInitialize() {
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cEnvironmentRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.environmentRecyclerView);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(EnvironmentFragment.environmentRecyclerView);
 
         EnvironmentFragment.mGetData();
     }
@@ -190,7 +184,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     //Region Private Methods
 
     private void mSetCloseListener() {
-        this.buttonClose.setOnClickListener(new View.OnClickListener() {
+        EnvironmentFragment.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cAppExtension.dialogFragment.dismiss();
@@ -235,7 +229,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
 
         //if it's the active environment, don't pDelete
         if (  cEnvironment.restorableEnviroment.getNameStr().equalsIgnoreCase(cEnvironment.currentEnvironment.getNameStr())) {
-            cUserInterface.pShowSnackbarMessage(this.environmentRecyclerView,cAppExtension.context.getString(R.string.message_cant_delete_active_environment),R.raw.headsupsound,true);
+            cUserInterface.pShowSnackbarMessage(EnvironmentFragment.environmentRecyclerView,cAppExtension.context.getString(R.string.message_cant_delete_active_environment),R.raw.headsupsound,true);
             cEnvironment.restorableEnviroment = null;
             return;
         }
@@ -255,7 +249,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
 
         //Show clickable snackbar message
 
-        Snackbar snackbar = Snackbar.make(this.environmentRecyclerView, cAppExtension.context.getString(R.string.parameter1_is_removed,cEnvironment.restorableEnviroment.getNameStr()), Snackbar.LENGTH_LONG );
+        Snackbar snackbar = Snackbar.make(EnvironmentFragment.environmentRecyclerView, cAppExtension.context.getString(R.string.parameter1_is_removed,cEnvironment.restorableEnviroment.getNameStr()), Snackbar.LENGTH_LONG );
         snackbar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

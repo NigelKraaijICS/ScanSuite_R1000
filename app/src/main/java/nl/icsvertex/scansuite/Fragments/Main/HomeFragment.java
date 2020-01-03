@@ -28,10 +28,10 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
 public class HomeFragment extends Fragment implements iICSDefaultFragment {
 
     //region Private Properties
-    private ImageView imageLogo;
-    private TextView textViewDevicedetails;
-    private CardView cardViewDeviceDetails;
-    private Button buttonLogin;
+    private static  ImageView imageLogo;
+    private static TextView textViewDevicedetails;
+    private static CardView cardViewDeviceDetails;
+    private static Button buttonLogin;
     //end region Private Properties
 
     //region Constructor
@@ -66,16 +66,21 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFindViews() {
-        this.imageLogo = getView().findViewById(R.id.imageLogo);
-        this.cardViewDeviceDetails = getView().findViewById(R.id.cardViewDeviceDetails);
-        this.textViewDevicedetails = getView().findViewById(R.id.textViewDeviceDetails);
-        this.buttonLogin = getView().findViewById(R.id.buttonLogin);
+
+        if (getView() != null) {
+            HomeFragment.imageLogo = getView().findViewById(R.id.imageLogo);
+            HomeFragment.cardViewDeviceDetails = getView().findViewById(R.id.cardViewDeviceDetails);
+            HomeFragment.textViewDevicedetails = getView().findViewById(R.id.textViewDeviceDetails);
+            HomeFragment.buttonLogin = getView().findViewById(R.id.buttonLogin);
+        }
+
+
     }
 
     @Override
     public void mFieldsInitialize() {
         this.mSetDeviceInfo();
-        this.buttonLogin.setVisibility(View.VISIBLE);
+        HomeFragment.buttonLogin.setVisibility(View.VISIBLE);
         this.mBounceLogo();
     }
 
@@ -102,14 +107,7 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     }
 
     private void mSetDeviceInfo() {
-        String DeviceInfoStr = "";
-        DeviceInfoStr += getString(R.string.device_manufacturer) + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceManufacturer() + cText.NEWLINE;
-        DeviceInfoStr += getString(R.string.device_brand)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceBrand() + cText.NEWLINE;
-        DeviceInfoStr += getString(R.string.device_model)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceModel() + cText.NEWLINE;
-        DeviceInfoStr += getString(R.string.device_serialnumber)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getSerialnumberStr() + cText.NEWLINE;
-        DeviceInfoStr += getString(R.string.application_version)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getAppVersion() + cText.NEWLINE;
-        DeviceInfoStr += getString(R.string.android_version) + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getAndroidBuildVersion() + " - " + cDeviceInfo.getFriendlyVersionName();
-        this.textViewDevicedetails.setText(DeviceInfoStr);
+        HomeFragment.textViewDevicedetails.setText(cDeviceInfo.getDeviceInfoStr());
     }
 
     private static void mStartLoginActivity() {
@@ -122,28 +120,28 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Listeners
     private void mSetLogoListener() {
-        this.imageLogo.setOnClickListener(new View.OnClickListener() {
+        HomeFragment.imageLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                mBounceLogo();
-                if (cardViewDeviceDetails.getVisibility() == View.VISIBLE) {
-                    cardViewDeviceDetails.setVisibility(View.INVISIBLE);
+                if (HomeFragment.cardViewDeviceDetails.getVisibility() == View.VISIBLE) {
+                    HomeFragment.cardViewDeviceDetails.setVisibility(View.INVISIBLE);
                 }
                 else {
-                    cardViewDeviceDetails.setVisibility(View.VISIBLE);
+                    HomeFragment.cardViewDeviceDetails.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
     private void mSetLoginButtonListener() {
-        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
+        HomeFragment.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (cAppExtension.context instanceof MainDefaultActivity) {
 
-                    if (cConnection.isInternetConnectedBln() == false) {
+                    if (!cConnection.isInternetConnectedBln()) {
                         final NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
                         noConnectionFragment.setCancelable(true);
                         noConnectionFragment.show(((MainDefaultActivity) cAppExtension.context).getSupportFragmentManager(), "NOCONNECTION");

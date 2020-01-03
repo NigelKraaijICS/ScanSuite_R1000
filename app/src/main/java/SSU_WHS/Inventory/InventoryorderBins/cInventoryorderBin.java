@@ -19,12 +19,12 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderBin {
-    public cInventoryorderBinEntity inventoryorderBinEntity;
+
+    private cInventoryorderBinEntity inventoryorderBinEntity;
     public boolean indatabaseBln;
 
-    public static cInventoryorderBinViewModel gInventoryorderBinViewModel;
-
-    public static cInventoryorderBinViewModel getInventoryorderBinViewModel() {
+    private static cInventoryorderBinViewModel gInventoryorderBinViewModel;
+    private static cInventoryorderBinViewModel getInventoryorderBinViewModel() {
         if (gInventoryorderBinViewModel == null) {
             gInventoryorderBinViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cInventoryorderBinViewModel.class);
         }
@@ -36,17 +36,17 @@ public class cInventoryorderBin {
 
     //Region Public Properties
 
-    public String binCodeStr;
+    private String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
     }
 
-    public int linesInt;
+    private int linesInt;
     public int getLinesInt() {
         return linesInt;
     }
 
-    public String handledTimeStampStr;
+    private String handledTimeStampStr;
     public String getHhandledTimeStampStr() {
         return handledTimeStampStr;
     }
@@ -56,7 +56,7 @@ public class cInventoryorderBin {
         return statusInt;
     }
 
-    public int sortingSequenceInt;
+    private int sortingSequenceInt;
     public int getSortingSequenceInt() { return sortingSequenceInt; }
 
     //Region Constructor
@@ -113,9 +113,9 @@ public class cInventoryorderBin {
 
         cInventoryorderBin.currentInventoryOrderBin = this;
 
-        resultBln =   currentInventoryOrderBin.getInventoryorderBinViewModel().pUpdateStatusBln();
+        resultBln =   cInventoryorderBin.getInventoryorderBinViewModel().pUpdateStatusBln();
 
-        if (resultBln == false) {
+        if (!resultBln) {
             cInventoryorderBin.currentInventoryOrderBin = null;
             return  false;
         }
@@ -134,7 +134,7 @@ public class cInventoryorderBin {
         cWebresult WebResult;
 
         WebResult =  cInventoryorderBin.getInventoryorderBinViewModel().pResetBinViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
            // Reset all lines and details via webservice
@@ -170,7 +170,7 @@ public class cInventoryorderBin {
 
         cWebresult webresult;
         webresult = cInventoryorder.getInventoryorderViewModel().pCloseBinViaWebserviceWrs(this.getBinCodeStr());
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+        if (webresult.getResultBln()&& webresult.getSuccessBln()) {
 
             this.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
             this.pUpdateStatusInDatabaseBln();
@@ -183,7 +183,7 @@ public class cInventoryorderBin {
     }
 
 
-    public static cInventoryorderBinAdapter gInventoryorderBinAdapter;
+    private static cInventoryorderBinAdapter gInventoryorderBinAdapter;
     public static cInventoryorderBinAdapter getInventoryorderBinAdapter() {
         if (gInventoryorderBinAdapter == null) {
             gInventoryorderBinAdapter = new cInventoryorderBinAdapter();
@@ -191,25 +191,28 @@ public class cInventoryorderBin {
         return gInventoryorderBinAdapter;
     }
 
-    public static cInventoryorderBinAdapter gInventoryorderBinDoneAdapter;
+    private static cInventoryorderBinAdapter gInventoryorderBinDoneAdapter;
     public static cInventoryorderBinAdapter getInventoryorderBinDoneAdapter() {
         if (gInventoryorderBinDoneAdapter == null) {
             gInventoryorderBinDoneAdapter = new cInventoryorderBinAdapter();
         }
         return gInventoryorderBinDoneAdapter;
     }
-    public static cInventoryorderBinAdapter gInventoryorderBinNotDoneAdapter;
+
+    private static cInventoryorderBinAdapter gInventoryorderBinNotDoneAdapter;
     public static cInventoryorderBinAdapter getInventoryorderBinNotDoneAdapter() {
         if (gInventoryorderBinNotDoneAdapter == null) {
             gInventoryorderBinNotDoneAdapter = new cInventoryorderBinAdapter();
         }
         return gInventoryorderBinNotDoneAdapter;
     }
-    public static cInventoryorderBinAdapter gInventoryorderBinTotalAdapter;
+
+    private static cInventoryorderBinAdapter gInventoryorderBinTotalAdapter;
     public static cInventoryorderBinAdapter getInventoryorderBinTotalAdapter() {
         if (gInventoryorderBinTotalAdapter == null) {
             gInventoryorderBinTotalAdapter = new cInventoryorderBinAdapter();
         }
         return gInventoryorderBinTotalAdapter;
     }
+
 }

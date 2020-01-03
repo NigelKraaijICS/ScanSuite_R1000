@@ -42,11 +42,11 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     //Region Private Properties
 
-    private TextView quickhelpText;
-    private ImageView quickhelpIcon;
-    private ConstraintLayout quickhelpContainer;
+    private static TextView quickhelpText;
+    private static ImageView quickhelpIcon;
+    private static ConstraintLayout quickhelpContainer;
     private static TextView textViewSelectedBin;
-    private ConstraintLayout currentLocationView;
+    private static ConstraintLayout currentLocationView;
 
     private static RecyclerView recyclerViewPickorderLinesTopick;
 
@@ -65,8 +65,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
                              Bundle pvSavedInstanceState) {
 
         // Inflate the layout for this fragment
-        View rootview = pvInflater.inflate(R.layout.fragment_pickorder_lines_to_pick, pvContainer, false);
-        return rootview;
+        return pvInflater.inflate(R.layout.fragment_pickorder_lines_to_pick, pvContainer, false);
 
     }
 
@@ -78,16 +77,20 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     }
 
     @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-        if (pvIsVisibleToUserBln) {
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
-            PickorderLinesActivity.currentLineFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+        PickorderLinesActivity.currentLineFragment = this;
     }
 
 
@@ -106,12 +109,16 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     @Override
     public void mFindViews() {
-        this.recyclerViewPickorderLinesTopick = getView().findViewById(R.id.recyclerViewPickorderLinesTopick);
-        this.textViewSelectedBin = getView().findViewById(R.id.textViewSelectedBin);
-        this.quickhelpText = getView().findViewById(R.id.quickhelpText);
-        this.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
-        this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
-        this.currentLocationView = getView().findViewById(R.id.currentBINView);
+
+        if (getView() != null) {
+            PickorderLinesToPickFragment.recyclerViewPickorderLinesTopick = getView().findViewById(R.id.recyclerViewPickorderLinesTopick);
+            PickorderLinesToPickFragment.textViewSelectedBin = getView().findViewById(R.id.textViewSelectedBin);
+            PickorderLinesToPickFragment.quickhelpText = getView().findViewById(R.id.quickhelpText);
+            PickorderLinesToPickFragment.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
+            PickorderLinesToPickFragment.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
+            PickorderLinesToPickFragment.currentLocationView = getView().findViewById(R.id.currentBINView);
+        }
+
     }
 
 
@@ -119,19 +126,19 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     public void mFieldsInitialize() {
 
         if (cSetting.PICK_BIN_MANUAL()) {
-            this.currentLocationView.setVisibility(View.VISIBLE);
-            this.currentLocationView.setClickable(true);
+            PickorderLinesToPickFragment.currentLocationView.setVisibility(View.VISIBLE);
+            PickorderLinesToPickFragment.currentLocationView.setClickable(true);
         }
         else {
-            this.currentLocationView.setVisibility(View.INVISIBLE);
-            this.currentLocationView.setClickable(false);
+            PickorderLinesToPickFragment.currentLocationView.setVisibility(View.INVISIBLE);
+            PickorderLinesToPickFragment.currentLocationView.setClickable(false);
         }
 
         if (cSetting.PICK_BIN_IS_ITEM()) {
-            this.quickhelpText.setText(R.string.scan_article_or_bincode);
+            PickorderLinesToPickFragment.quickhelpText.setText(R.string.scan_article_or_bincode);
         }
         else {
-            this.quickhelpText.setText(R.string.scan_bincode);
+            PickorderLinesToPickFragment.quickhelpText.setText(R.string.scan_bincode);
         }
     }
 
@@ -166,7 +173,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     //Region Private Methods
 
     private void mSetQuickHelpListener() {
-        this.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
+        PickorderLinesToPickFragment.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(quickhelpIcon, 0);
@@ -181,7 +188,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     }
 
     private void mSetLocationListener() {
-        this.currentLocationView.setOnClickListener(new View.OnClickListener() {
+        PickorderLinesToPickFragment.currentLocationView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PickorderLinesActivity.pHandleScan(null,true);
@@ -194,10 +201,10 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         List<cPickorderLine> notHandledLinesObl = cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl();
 
         if (notHandledLinesObl.size()>0) {
-            this.currentLocationView.setVisibility(View.VISIBLE);
+            PickorderLinesToPickFragment.currentLocationView.setVisibility(View.VISIBLE);
         }
         else {
-            this.currentLocationView.setVisibility(View.INVISIBLE);
+            PickorderLinesToPickFragment.currentLocationView.setVisibility(View.INVISIBLE);
     }
 
         this.mFillRecycler(notHandledLinesObl);
@@ -215,17 +222,17 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
         //Show the recycler view
         cPickorderLine.getPickorderLineToPickAdapter().pFillData(pvDataObl);
-        this.recyclerViewPickorderLinesTopick.setHasFixedSize(false);
-        this.recyclerViewPickorderLinesTopick.setAdapter(cPickorderLine.getPickorderLineToPickAdapter());
-        this.recyclerViewPickorderLinesTopick.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        this.recyclerViewPickorderLinesTopick.setVisibility(View.VISIBLE);
+        PickorderLinesToPickFragment.recyclerViewPickorderLinesTopick.setHasFixedSize(false);
+        PickorderLinesToPickFragment.recyclerViewPickorderLinesTopick.setAdapter(cPickorderLine.getPickorderLineToPickAdapter());
+        PickorderLinesToPickFragment.recyclerViewPickorderLinesTopick.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        PickorderLinesToPickFragment.recyclerViewPickorderLinesTopick.setVisibility(View.VISIBLE);
 
         PickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
     }
 
     private void mNoLinesAvailable(Boolean pvEnabledBln) {
 
-        if (PickorderLinesActivity.currentLineFragment != null && PickorderLinesActivity.currentLineFragment == this) {
+        if (PickorderLinesActivity.currentLineFragment == this) {
             //Close no orders fragment if needed
             if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
@@ -237,19 +244,19 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
                     }
                 }
 
-                this.quickhelpContainer.setVisibility(View.VISIBLE);
+                PickorderLinesToPickFragment.quickhelpContainer.setVisibility(View.VISIBLE);
                 return;
 
             }
 
             //Hide the recycler view
-            this.recyclerViewPickorderLinesTopick.setVisibility(View.INVISIBLE);
+            PickorderLinesToPickFragment.recyclerViewPickorderLinesTopick.setVisibility(View.INVISIBLE);
 
             //Hide location button and clear text
-            this.currentLocationView.setVisibility(View.INVISIBLE);
-            this.currentLocationView.setClickable(false);
+            PickorderLinesToPickFragment.currentLocationView.setVisibility(View.INVISIBLE);
+            PickorderLinesToPickFragment.currentLocationView.setClickable(false);
             PickorderLinesToPickFragment.textViewSelectedBin.setText("");
-            this.quickhelpContainer.setVisibility(View.INVISIBLE);
+            PickorderLinesToPickFragment.quickhelpContainer.setVisibility(View.INVISIBLE);
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();

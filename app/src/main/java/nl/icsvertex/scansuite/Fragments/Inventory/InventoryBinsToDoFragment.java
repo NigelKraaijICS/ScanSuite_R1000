@@ -38,12 +38,12 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
 
     //Region Private Properties
 
-    private ImageView imageAddBin;
+    private static ImageView imageAddBin;
     private static RecyclerView recyclerViewInventoryBinsToDo;
 
-    private TextView quickhelpText;
-    private ImageView quickhelpIcon;
-    private ConstraintLayout quickhelpContainer;
+    private static TextView quickhelpText;
+    private static ImageView quickhelpIcon;
+    private static ConstraintLayout quickhelpContainer;
 
     //End Region Private Properties
 
@@ -54,8 +54,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer,
                              Bundle pvSavedInstanceState) {
         // Inflate the layout for this fragment
-        View rootview = pvInflater.inflate(R.layout.fragment_inventoryorder_bins_todo, pvContainer, false);
-        return rootview;
+        return pvInflater.inflate(R.layout.fragment_inventoryorder_bins_todo, pvContainer, false);
     }
 
     @Override
@@ -77,23 +76,8 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
     public void onResume() {
         super.onResume();
         cUserInterface.pEnableScanner();
+        InventoryorderBinsActivity.currentBinFragment = this;
     }
-
-    @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
-
-        if (pvIsVisibleToUserBln) {
-
-            InventoryorderBinsActivity.currentBinFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
-    }
-
-
-
 
     //End Region Default Methods
 
@@ -105,29 +89,33 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.mGetData();
+        InventoryBinsToDoFragment.mGetData();
 
     }
 
     @Override
     public void mFindViews() {
-        this.imageAddBin = getView().findViewById(R.id.imageAddBin);
-        this.recyclerViewInventoryBinsToDo = getView().findViewById(R.id.recyclerViewInventoryBinsToDo);
-        this.quickhelpText = getView().findViewById(R.id.quickhelpText);
-        this.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
-        this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
+
+        if (getView() != null) {
+            InventoryBinsToDoFragment.imageAddBin = getView().findViewById(R.id.imageAddBin);
+            InventoryBinsToDoFragment.recyclerViewInventoryBinsToDo = getView().findViewById(R.id.recyclerViewInventoryBinsToDo);
+            InventoryBinsToDoFragment.quickhelpText = getView().findViewById(R.id.quickhelpText);
+            InventoryBinsToDoFragment.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
+            InventoryBinsToDoFragment.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
+        }
+
     }
 
     @Override
     public void mFieldsInitialize() {
 
-        this.quickhelpText.setText(R.string.scan_bincode);
+        InventoryBinsToDoFragment.quickhelpText.setText(R.string.scan_bincode);
 
         if (cInventoryorder.currentInventoryOrder.isGeneratedBln() || cInventoryorder.currentInventoryOrder.isInvAddExtraBinBln()) {
-            this.imageAddBin.setVisibility(View.VISIBLE);
+            InventoryBinsToDoFragment.imageAddBin.setVisibility(View.VISIBLE);
         }
         else {
-            this.imageAddBin.setVisibility(View.INVISIBLE);
+            InventoryBinsToDoFragment.imageAddBin.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -150,7 +138,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
     }
 
     private void mSetAddBinListener() {
-        this.imageAddBin.setOnClickListener(new View.OnClickListener() {
+        InventoryBinsToDoFragment.imageAddBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                mShowAddBinFragment();
@@ -177,7 +165,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
 
     private static void mNoLinesAvailable(Boolean pvEnabledBln) {
 
-        if (InventoryorderBinsActivity.currentBinFragment != null && InventoryorderBinsActivity.currentBinFragment  instanceof InventoryBinsToDoFragment) {
+        if (InventoryorderBinsActivity.currentBinFragment  instanceof InventoryBinsToDoFragment) {
             //Close no orders fragment if needed
             if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
@@ -216,7 +204,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
     }
 
     private void mSetQuickHelpListener() {
-        this.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
+        InventoryBinsToDoFragment.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(quickhelpIcon, 0);

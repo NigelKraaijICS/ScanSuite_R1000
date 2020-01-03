@@ -33,8 +33,8 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
 
     //Region Private Properties
 
-    private RecyclerView barcodeRecyclerview;
-    private Button buttonClose;
+    private static RecyclerView barcodeRecyclerview;
+    private static Button buttonClose;
 
     //End Region Private Properties
 
@@ -49,8 +49,7 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootview = inflater.inflate(R.layout.fragment_barcode_picker, container);
-        return rootview;
+        return inflater.inflate(R.layout.fragment_barcode_picker, container);
     }
 
     @Override
@@ -68,8 +67,11 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
 
     @Override
     public void mFindViews() {
-        this.barcodeRecyclerview = getView().findViewById(R.id.barcodeRecyclerview);
-        this.buttonClose = getView().findViewById(R.id.buttonClose);
+
+        if (getView() != null) {
+            BarcodeFragment.barcodeRecyclerview = getView().findViewById(R.id.barcodeRecyclerview);
+            BarcodeFragment.buttonClose = getView().findViewById(R.id.buttonClose);
+        }
     }
 
     @Override
@@ -83,7 +85,7 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     }
 
     private void mSetCloseListener() {
-        this.buttonClose.setOnClickListener(new View.OnClickListener() {
+        BarcodeFragment.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                dismiss();
@@ -92,21 +94,21 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     }
 
     private void mFillRecyclerView() {
-        this.barcodeRecyclerview.setHasFixedSize(false);
+        BarcodeFragment.barcodeRecyclerview.setHasFixedSize(false);
 
 
         if (cAppExtension.activity instanceof PickorderPickActivity) {
-            this.barcodeRecyclerview.setAdapter(cPickorderBarcode.getPickorderBarcodeAdapter());
+            BarcodeFragment.barcodeRecyclerview.setAdapter(cPickorderBarcode.getPickorderBarcodeAdapter());
         }
 
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
-            this.barcodeRecyclerview.setAdapter(cIntakeorderBarcode.getIntakeorderBarcodeAdapter());
+            BarcodeFragment.barcodeRecyclerview.setAdapter(cIntakeorderBarcode.getIntakeorderBarcodeAdapter());
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-            this.barcodeRecyclerview.setAdapter(cInventoryorderBarcode.getInventoryorderBarcodeAdapter());
+            BarcodeFragment.barcodeRecyclerview.setAdapter(cInventoryorderBarcode.getInventoryorderBarcodeAdapter());
         }
 
-        this.barcodeRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        BarcodeFragment.barcodeRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
 }

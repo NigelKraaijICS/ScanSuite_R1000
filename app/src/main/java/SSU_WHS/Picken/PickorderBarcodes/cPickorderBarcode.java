@@ -14,10 +14,10 @@ import ICS.cAppExtension;
 
 public class cPickorderBarcode {
 
-    public String barcodeStr;
+    private String barcodeStr;
     public String getBarcodeStr() {return barcodeStr;}
 
-    public String barcodeWithoutCheckDigitStr;
+    private String barcodeWithoutCheckDigitStr;
     public String getBarcodeWithoutCheckDigitStr() {
 
         this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
@@ -41,41 +41,48 @@ public class cPickorderBarcode {
         return barcodeWithoutCheckDigitStr;
     }
 
-    public String barcodetypeStr;
-    public String getBarcodeTypeStr() {return barcodetypeStr;}
+    private String barcodetypeStr;
+    private String getBarcodeTypeStr() {return barcodetypeStr;}
 
-    public Boolean isUniqueBarcodeBln;
+    private Boolean isUniqueBarcodeBln;
     public Boolean getIsUniqueBarcodeBln() {return isUniqueBarcodeBln;}
 
-    public String itemNoStr;
+    private String itemNoStr;
     public String getItemNoStr() {return itemNoStr;}
 
-    public String variantcodeStr;
+    private String variantcodeStr;
     public String getVariantcodeStr() {return variantcodeStr;}
 
-    public Double quantityPerUnitOfMeasureDbl;
+    private Double quantityPerUnitOfMeasureDbl;
     public Double getQuantityPerUnitOfMeasureDbl() {return quantityPerUnitOfMeasureDbl;}
 
-    public Double quantityHandledDbl;
+    private Double quantityHandledDbl;
     public Double getQuantityHandledDbl() {return quantityHandledDbl;}
 
-    public cPickorderBarcodeEntity pickorderBarcodeEntity;
+    public  String getBarcodeAndQuantityStr(){
+        return    this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
+    }
+
+
+
+    private cPickorderBarcodeEntity pickorderBarcodeEntity;
     public boolean inDatabaseBln;
 
     public static ArrayList<cPickorderBarcode> allBarcodesObl;
     public static cPickorderBarcode currentPickorderBarcode;
 
-    public static cPickorderBarcodeViewModel pickorderBarcodeViewModel;
 
     public iPickorderBarcodeDao pickorderBarcodeDao;
-    public static cPickorderBarcodeViewModel getPickorderBarcodeViewModel(){
+
+    private static cPickorderBarcodeViewModel pickorderBarcodeViewModel;
+    private static cPickorderBarcodeViewModel getPickorderBarcodeViewModel(){
         if (pickorderBarcodeViewModel == null) {
             pickorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cPickorderBarcodeViewModel.class);
         }
         return pickorderBarcodeViewModel;
     }
 
-    public static cPickorderBarcodeAdapter gPickorderBarcodeAdapter;
+    private static cPickorderBarcodeAdapter gPickorderBarcodeAdapter;
     public static cPickorderBarcodeAdapter getPickorderBarcodeAdapter() {
         if (gPickorderBarcodeAdapter == null) {
             gPickorderBarcodeAdapter = new cPickorderBarcodeAdapter();

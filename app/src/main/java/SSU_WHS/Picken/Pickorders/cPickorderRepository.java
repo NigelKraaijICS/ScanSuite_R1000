@@ -35,13 +35,14 @@ import static ICS.Utils.cText.pAddSingleQuotesStr;
 public class cPickorderRepository {
 
     //Region Public Properties
-    public iPickorderDao pickorderDao;
-    public iPickorderLineDao pickorderLineDao;
-    public iPickorderLinePackAndShipDao pickorderLinePackAndShipDao;
+
     //End Region Public Properties
 
     //Region Private Properties
     private acScanSuiteDatabase db;
+    private iPickorderDao pickorderDao;
+    private iPickorderLineDao pickorderLineDao;
+    private iPickorderLinePackAndShipDao pickorderLinePackAndShipDao;
 
     private class PickorderStepHandledParams {
         String userStr;
@@ -166,13 +167,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mGetPickordersFromWebserviceAsyncTask().execute(pickorderLocalParams).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -203,13 +198,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mPickordersToSortFromWebserviceGetAsyncTask().execute(pickorderLocalParams).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -223,9 +212,7 @@ public class cPickorderRepository {
         List<cPickorderEntity> ResultObl = null;
         try {
             ResultObl = new mGetPickordersFromDatabaseAsyncTask(pickorderDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -285,9 +272,7 @@ public class cPickorderRepository {
             SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
             ResultObl = new mGetPickordersFromDatabaseWithFilterAsyncTask(pickorderDao).execute(query).get();
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -298,7 +283,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
 
         try {
 
@@ -306,11 +291,7 @@ public class cPickorderRepository {
             return  webResult;
         }
 
-        catch (InterruptedException e) {
-            e.printStackTrace();
-            return  null;
-
-        } catch (ExecutionException e) {
+        catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  null;
 
@@ -322,7 +303,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.orderNumberStr, cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
 
         try {
 
@@ -330,11 +311,7 @@ public class cPickorderRepository {
             return  webResult;
         }
 
-        catch (InterruptedException e) {
-            e.printStackTrace();
-            return  null;
-
-        } catch (ExecutionException e) {
+        catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  null;
 
@@ -349,7 +326,7 @@ public class cPickorderRepository {
         pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(),
                                                                     "",
                                                                     cUser.currentUser.currentBranch.getBranchStr(),
-                                                                    cPickorder.currentPickOrder.orderNumberStr,
+                                                                    cPickorder.currentPickOrder.getOrderNumberStr(),
                                                                     cDeviceInfo.getSerialnumberStr() ,
                                                                     pvWorkplaceStr,
                                                                     cWarehouseorder.StepCodeEnu.Pick_PackAndShip.toString(),
@@ -362,11 +339,7 @@ public class cPickorderRepository {
             return  webResult;
         }
 
-        catch (InterruptedException e) {
-            e.printStackTrace();
-            return  null;
-
-        } catch (ExecutionException e) {
+        catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  null;
 
@@ -379,19 +352,16 @@ public class cPickorderRepository {
 
         try {
             webResult = new mPickorderSourceDocumentShippedAsyncTask().execute().get();
-            if (webResult.getSuccessBln() == false || webResult.getResultBln() == false) {
+            if (!webResult.getSuccessBln() || !webResult.getResultBln()) {
                 return  webResult;
             }
 
         }
 
-        catch (InterruptedException e) {
+        catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  null;
 
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return  null;
         }
         return  webResult;
     }
@@ -405,17 +375,10 @@ public class cPickorderRepository {
 
         try {
             webResult = new mPickorderUpdateWorkplaceViaWebserviceAsyncTask().execute(pickorderUpdateWorkplaceParams).get();
-            if (webResult.getSuccessBln() == false || webResult.getResultBln() == false) {
-                return  false;
-            }
-            return  true;
+            return webResult.getSuccessBln() && webResult.getResultBln();
         }
 
-        catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-
-        } catch (ExecutionException e) {
+        catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  false;
 
@@ -428,14 +391,8 @@ public class cPickorderRepository {
         UpdatePickorderWorkplaceLocalParams updatePickorderWorkplaceLocalParams = new UpdatePickorderWorkplaceLocalParams(cPickorder.currentPickOrder.getOrderNumberStr(), cWorkplace.currentWorkplace.getWorkplaceStr());
         try {
             integerValue = new mUpdatePickorderWorkplaceInDatabaseAsyncTask(pickorderDao).execute(updatePickorderWorkplaceLocalParams).get();
-            if (integerValue == 0 ) {
-                return  false;
-            }
-            return  true;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  false;
         }
@@ -448,13 +405,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mUpdateCurrentLocationViaWebserviceAsyncTask().execute(pvCurrentLocationStr).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -470,14 +421,8 @@ public class cPickorderRepository {
         UpdatePickorderCurrentLocationLocalParams updatePickorderCurrentLocationLocalParams = new UpdatePickorderCurrentLocationLocalParams(cPickorder.currentPickOrder.getOrderNumberStr(), pvCurrentLocationStr);
         try {
             integerValue = new mUpdatePickorderCurrentLocationInDatabaseAsyncTask(pickorderDao).execute(updatePickorderCurrentLocationLocalParams).get();
-            if (integerValue == 0 ) {
-                return  false;
-            }
-            return  true;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  false;
         }
@@ -491,13 +436,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mGetLinesViaWebserviceAsyncTask().execute(pvActionTypeEnu.toString()).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -512,9 +451,7 @@ public class cPickorderRepository {
         List<cPickorderLineEntity> resultObl = null;
         try {
             resultObl = new mGetAllLinesFromDatabaseAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultObl;
@@ -524,9 +461,7 @@ public class cPickorderRepository {
         List<cPickorderLineEntity> resultObl = null;
         try {
             resultObl = new mGetPickorderLinesToSendFromDatabaseAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultObl;
@@ -536,9 +471,7 @@ public class cPickorderRepository {
         List<cPickorderLineEntity> resultObl = null;
         try {
             resultObl = new mGetNotHandledLinesAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultObl;
@@ -548,9 +481,7 @@ public class cPickorderRepository {
         List<cPickorderLineEntity> resultObl = null;
         try {
             resultObl = new mGetBusyLinesAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultObl;
@@ -560,9 +491,7 @@ public class cPickorderRepository {
         List<cPickorderLineEntity> resultObl = null;
         try {
             resultObl = new mGetHandledLinesOblAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultObl;
@@ -573,9 +502,7 @@ public class cPickorderRepository {
         Double resultDbl = 0.0;
         try {
             resultDbl = new mGetQuantityNotHandledAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultDbl;
@@ -585,9 +512,7 @@ public class cPickorderRepository {
         Double resultDbl = 0.0;
         try {
             resultDbl = new mGetQuantityHandledAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultDbl;
@@ -597,9 +522,7 @@ public class cPickorderRepository {
         Double resultDbl = 0.0;
         try {
             resultDbl = new mGetTotalQuanitityAsyncTask(pickorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultDbl;
@@ -614,13 +537,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mGetPickorderAdressesFromWebserviceTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -638,13 +555,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mPickorderBarcodesGetFromWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -660,13 +571,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mPickorderLineBarcodesGetFromWebserviceAsyncTask().execute(pvActionTypeEnu.toString()).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -682,13 +587,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mGetCommentsFromWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -705,13 +604,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mGetPickorderPackagesFromWebserviceTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -730,13 +623,7 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mGetPackAndShipLinesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -750,9 +637,7 @@ public class cPickorderRepository {
         List<cPickorderLinePackAndShipEntity> resultObl = null;
         try {
             resultObl = new mGetNotHandledPackAndShipLinesAsyncTask(pickorderLinePackAndShipDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultObl;
@@ -821,7 +706,7 @@ public class cPickorderRepository {
             l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERS, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERS, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -865,7 +750,7 @@ public class cPickorderRepository {
             l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERSSEQUELSTEP, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERSSEQUELSTEP, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -948,7 +833,7 @@ public class cPickorderRepository {
                 l_PropertyInfo9Pin.setValue(params[0].cultureStr);
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERSTEPHANDLED, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERSTEPHANDLED, l_PropertyInfoObl);
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
                 webresult.setResultBln(false);
@@ -1006,9 +891,9 @@ public class cPickorderRepository {
 
                 SoapObject shippingpackages = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_SHIPPINGPACKAGES);
 
-                Integer sequencenumberInt = 0;
+                int sequencenumberInt = 0;
                 String packageTypeToRememberStr = "";
-                Integer counterForTypeInt = 0;
+                int counterForTypeInt = 0;
 
                 for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit : cShipment.currentShipment.shippingAgentService().shippingUnitsObl()) {
 
@@ -1044,7 +929,7 @@ public class cPickorderRepository {
                 l_PropertyInfo9Pin.setValue(shippingpackages);
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERSOURCEDOCUMENTSHIPPED, l_PropertyInfoObl);
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERSOURCEDOCUMENTSHIPPED, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setSuccessBln(false);
                 l_WebresultWrs.setResultBln(false);
@@ -1080,7 +965,7 @@ public class cPickorderRepository {
                 l_PropertyInfo4Pin.setValue(params[0].workplace);
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERUPDATEWORKPLACE, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERUPDATEWORKPLACE, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -1140,7 +1025,7 @@ public class cPickorderRepository {
                 l_PropertyInfo3Pin.setValue(params[0]);
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINES, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -1167,7 +1052,7 @@ public class cPickorderRepository {
                 l_PropertyInfo2Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -1267,8 +1152,9 @@ public class cPickorderRepository {
 
 
     private static class mGetPickorderAdressesFromWebserviceTask extends AsyncTask<List<String>, Void, cWebresult> {
+        @SafeVarargs
         @Override
-        protected cWebresult doInBackground(final List<String>... params) {
+        protected final cWebresult doInBackground(final List<String>... params) {
             cWebresult webResult = new cWebresult();
 
             List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
@@ -1284,7 +1170,7 @@ public class cPickorderRepository {
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
             try {
-                webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERADDRESSES, l_PropertyInfoObl);
+                webResult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERADDRESSES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webResult.setResultBln(false);
@@ -1314,7 +1200,7 @@ public class cPickorderRepository {
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
             try {
-                webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERSHIPPACKAGES, l_PropertyInfoObl);
+                webResult =  cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERSHIPPACKAGES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webResult.setResultBln(false);
@@ -1445,7 +1331,7 @@ public class cPickorderRepository {
                 l_PropertyInfo4Pin.setValue(params[0]);
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_UPDATECURRENTORDERLOCATION, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_UPDATECURRENTORDERLOCATION, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

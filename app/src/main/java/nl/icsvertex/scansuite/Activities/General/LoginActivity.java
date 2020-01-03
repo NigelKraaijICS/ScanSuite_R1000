@@ -1,20 +1,21 @@
 package nl.icsvertex.scansuite.Activities.General;
 
 import android.content.Intent;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
@@ -24,9 +25,7 @@ import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
 import SSU_WHS.Basics.Users.cUser;
-import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.cUserInterface;
 import SSU_WHS.ScannerLogon.cScannerLogon;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
 import nl.icsvertex.scansuite.R;
@@ -38,10 +37,10 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     //End Region Public Properties
 
     //Region Private Properties
-    private RecyclerView recyclerViewUsers;
+    private static RecyclerView recyclerViewUsers;
 
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
     //End Region Private Properties
 
     //Region Default Methods
@@ -77,7 +76,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         this.mLeaveActivity();
     }
 
-
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -105,16 +103,20 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     @Override
     public void mFindViews() {
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.recyclerViewUsers = findViewById(R.id.recyclerViewLines);
+
+        if (cAppExtension.activity != null) {
+            LoginActivity.toolbarImage = cAppExtension.activity.findViewById(R.id.toolbarImage);
+            LoginActivity.toolbarTitle = cAppExtension.activity.findViewById(R.id.toolbarTitle);
+            LoginActivity.recyclerViewUsers = cAppExtension.activity.findViewById(R.id.recyclerViewLines);
+        }
+
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_login);
-        this.toolbarTitle.setText(pvScreenTitle);
-        this.toolbarTitle.setSelected(true);
+        LoginActivity.toolbarImage.setImageResource(R.drawable.ic_login);
+        LoginActivity.toolbarTitle.setText(pvScreenTitle);
+        LoginActivity.toolbarTitle.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -141,14 +143,14 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.mLeaveActivity();
-                return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() ==  android.R.id.home) {
+            this.mLeaveActivity();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     //End Region iICSDefaultActivity defaults
@@ -157,7 +159,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     public static void pHandleScan(cBarcodeScan pvBarcodeScan){
         LoginActivity.pUserSelected(pvBarcodeScan, true);
-        return;
     }
 
     public static void pUserSelected(cBarcodeScan pvBarcodeScan, Boolean pvScannedBln) {
@@ -173,14 +174,14 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         cUser.currentUser = User;
 
         // If user is scanned, then we don't need a password, show branches fragment and return
-        if (pvScannedBln == true) {
+        if (pvScannedBln) {
             LoginActivity.mGetAndShowBranchesForLoggedInUser();
             return;
         }
 
         // If user is selected, show password dialog and return
         cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cUser.currentUser.getNameStr(),true );
-        return;
+
     }
 
     public static void pBranchSelected(cBranch pvBranch) {
@@ -188,13 +189,12 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         // Branch is known, so set current branch of current user
         cUser.currentUser.currentBranch = pvBranch;
         LoginActivity.mStartMenuActivity();
-        return;
     }
 
     public static void pLoginSuccess(){
         cUser.currentUser.loggedInBln = true;
         LoginActivity.mGetAndShowBranchesForLoggedInUser();
-        return;
+
     }
 
     public static void pHandlePasswordFragmentDismissed(){
@@ -206,15 +206,15 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     //Region Private Methods
 
     private void mSetUserRecycler() {
-        this.recyclerViewUsers.setHasFixedSize(false);
-        this.recyclerViewUsers.setAdapter(cUser.getUserAdapter());
-        this.recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
+        LoginActivity.recyclerViewUsers.setHasFixedSize(false);
+        LoginActivity.recyclerViewUsers.setAdapter(cUser.getUserAdapter());
+        LoginActivity.recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private static void mGetAndShowBranchesForLoggedInUser() {
 
         boolean result = cUser.currentUser.pGetBranchesBln();
-        if (result == true) {
+        if (result) {
             if (cUser.currentUser.branchesObl.size() == 1) {
                 cUser.currentUser.currentBranch = cUser.currentUser.branchesObl.get(0);
                 mStartMenuActivity();
@@ -235,7 +235,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);
-        return;
     }
 
     private void mLeaveActivity(){

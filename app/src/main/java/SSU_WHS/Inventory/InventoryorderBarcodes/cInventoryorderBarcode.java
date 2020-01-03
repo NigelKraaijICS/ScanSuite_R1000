@@ -19,15 +19,15 @@ public class cInventoryorderBarcode {
     public cInventoryorderBarcodeEntity inventoryorderBarcodeEntity;
     public boolean indatabaseBln;
 
-    public static cInventoryorderBarcodeViewModel gInventoryorderBarcodeViewModel;
-    public static cInventoryorderBarcodeViewModel getInventoryorderBarcodeViewModel() {
+    private static cInventoryorderBarcodeViewModel gInventoryorderBarcodeViewModel;
+    private static cInventoryorderBarcodeViewModel getInventoryorderBarcodeViewModel() {
         if (gInventoryorderBarcodeViewModel == null) {
             gInventoryorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cInventoryorderBarcodeViewModel.class);
         }
         return gInventoryorderBarcodeViewModel;
     }
 
-    public static cInventoryorderBarcodeAdapter gInventoryorderBarcodeAdapter;
+    private static cInventoryorderBarcodeAdapter gInventoryorderBarcodeAdapter;
     public static cInventoryorderBarcodeAdapter getInventoryorderBarcodeAdapter() {
         if (gInventoryorderBarcodeAdapter == null) {
             gInventoryorderBarcodeAdapter = new cInventoryorderBarcodeAdapter();
@@ -40,12 +40,12 @@ public class cInventoryorderBarcode {
 
     //Region Public Properties
 
-    public String barcode;
+    private String barcode;
     public String getBarcodeStr() {
         return this.barcode;
     }
 
-    public String barcodeWithoutCheckDigitStr;
+    private String barcodeWithoutCheckDigitStr;
     public String getBarcodeWithoutCheckDigitStr() {
 
         this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
@@ -69,37 +69,37 @@ public class cInventoryorderBarcode {
         return barcodeWithoutCheckDigitStr;
     }
 
-    public String barcodetype;
+    private String barcodetype;
     public String getBarcodeTypeStr() {
         return this.barcodetype;
     }
 
-    public Boolean isuniquebarcode;
+    private Boolean isuniquebarcode;
     public Boolean getIsUniqueBarcodeBln() {
         return this.isuniquebarcode;
     }
 
-    public String itemno;
+    private String itemno;
     public String getItemNoStr() {
         return this.itemno;
     }
 
-    public String variantCode;
+    private String variantCode;
     public String getVariantCodeStr() {
         return this.variantCode;
     }
 
-    public String itemType;
+    private String itemType;
     public String getItemTypeStr() {
         return this.itemType;
     }
 
-    public Double quantityPerUnitOfMeasure;
+    private Double quantityPerUnitOfMeasure;
     public Double getQuantityPerUnitOfMeasureDbl() {
         return this.quantityPerUnitOfMeasure;
     }
 
-    public String unitOfMeasure;
+    private String unitOfMeasure;
     public String getUnitOfMeasureStr() {
         return this.unitOfMeasure;
     }
@@ -109,7 +109,11 @@ public class cInventoryorderBarcode {
         return this.quantityHandled;
     }
 
-    public Boolean invAmountManual;
+    public  String getBarcodeAndQuantityStr(){
+        return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
+    }
+
+    private Boolean invAmountManual;
     public Boolean getInvAmountManualBln() {
         return this.invAmountManual;
     }

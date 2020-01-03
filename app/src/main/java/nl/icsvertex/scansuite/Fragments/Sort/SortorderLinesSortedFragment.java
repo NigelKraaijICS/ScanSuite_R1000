@@ -24,6 +24,7 @@ import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
@@ -37,9 +38,9 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
 
     //Region Private Properties
 
-    private RecyclerView recyclerViewSortorderLinesSorted;
-    private SearchView recyclerSearchView;
-    private ConstraintLayout resetPicklineView;
+    private static RecyclerView recyclerViewSortorderLinesSorted;
+    private static SearchView recyclerSearchView;
+    private static ConstraintLayout resetPicklineView;
 
     //End Region Private Properties
 
@@ -64,16 +65,20 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
     }
 
     @Override
-    public void setUserVisibleHint(boolean pvIsVisibleToUserBln) {
-        super.setUserVisibleHint(pvIsVisibleToUserBln);
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-        if (pvIsVisibleToUserBln) {
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
-            SortorderLinesActivity.currentLineFragment = this;
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        cUserInterface.pEnableScanner();
+        SortorderLinesActivity.currentLineFragment = this;
     }
 
     //End Region Default Methods
@@ -91,9 +96,13 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
 
     @Override
     public void mFindViews() {
-            this.recyclerSearchView = getView().findViewById(R.id.recyclerSearchView);
-            this.recyclerViewSortorderLinesSorted = getView().findViewById(R.id.recyclerViewSortorderLinesSorted);
-            this.resetPicklineView = getView().findViewById(R.id.resetPicklineView);
+
+        if (getView() != null) {
+            SortorderLinesSortedFragment.recyclerSearchView = getView().findViewById(R.id.recyclerSearchView);
+            SortorderLinesSortedFragment.recyclerViewSortorderLinesSorted = getView().findViewById(R.id.recyclerViewSortorderLinesSorted);
+            SortorderLinesSortedFragment.resetPicklineView = getView().findViewById(R.id.resetPicklineView);
+        }
+
     }
 
 
@@ -127,16 +136,16 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
         }
 
         cPickorderLine.getPickorderLinePickedAdapter().pFillData(pvDataObl);
-        this.recyclerViewSortorderLinesSorted.setHasFixedSize(false);
-        this.recyclerViewSortorderLinesSorted.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
-        this.recyclerViewSortorderLinesSorted.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        SortorderLinesSortedFragment.recyclerViewSortorderLinesSorted.setHasFixedSize(false);
+        SortorderLinesSortedFragment.recyclerViewSortorderLinesSorted.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
+        SortorderLinesSortedFragment.recyclerViewSortorderLinesSorted.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
 
     }
 
     private void mSetResetListener() {
-        this.resetPicklineView.setOnClickListener(new View.OnClickListener() {
+        SortorderLinesSortedFragment.resetPicklineView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mAskResetLine();
@@ -167,7 +176,7 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
     }
 
     private void mSetRecyclerOnScrollListener() {
-        this.recyclerViewSortorderLinesSorted.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        SortorderLinesSortedFragment.recyclerViewSortorderLinesSorted.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -211,14 +220,14 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        SortorderLinesSortedFragment.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recyclerSearchView.setIconified(false);
+                SortorderLinesSortedFragment.recyclerSearchView.setIconified(false);
             }
         });
         //query entered
-        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        SortorderLinesSortedFragment.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 return false;
@@ -232,18 +241,19 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
         });
     }
 
+    //todo: check why this is always true
     private void mNoLinesAvailable(Boolean pvEnabledBln) {
 
-        if (SortorderLinesActivity.currentLineFragment != null && SortorderLinesActivity.currentLineFragment == this) {
+        if (SortorderLinesActivity.currentLineFragment == this) {
             //Close no linesInt fragment if needed
             if (!pvEnabledBln) {
 
 
-                this.resetPicklineView.setVisibility(View.VISIBLE);
+                SortorderLinesSortedFragment.resetPicklineView.setVisibility(View.VISIBLE);
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment || fragment instanceof NothingHereFragment ) {
+                    if (fragment instanceof NothingHereFragment ) {
                         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                         fragmentTransaction.remove(fragment);
                         fragmentTransaction.commit();
@@ -255,8 +265,8 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
             }
 
             //Hide the recycler view
-            this.recyclerViewSortorderLinesSorted.setVisibility(View.INVISIBLE);
-            this.resetPicklineView.setVisibility(View.INVISIBLE);
+            SortorderLinesSortedFragment.recyclerViewSortorderLinesSorted.setVisibility(View.INVISIBLE);
+            SortorderLinesSortedFragment.resetPicklineView.setVisibility(View.INVISIBLE);
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();

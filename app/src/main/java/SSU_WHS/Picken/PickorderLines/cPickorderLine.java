@@ -28,62 +28,66 @@ public class cPickorderLine {
 
     //Region Public Properties
 
-    public Integer recordIDInt;
+    private Integer recordIDInt;
     public Integer getRecordIDInt() {
         return recordIDInt;
     }
 
-    public Integer lineNoInt;
+    private Integer lineNoInt;
     public Integer getLineNoInt() {
         return lineNoInt;
     }
 
-    public String itemNoStr;
+    private String itemNoStr;
     public String getItemNoStr() {
         return itemNoStr;
     }
 
-    public String variantCodeStr;
+    private String variantCodeStr;
     public String getVariantCodeStr() {
         return variantCodeStr;
     }
 
-    public String descriptionStr;
+    public  String getItemNoAndVariantStr(){
+        return  this.getItemNoStr() + " " + this.getVariantCodeStr();
+    }
+
+    private String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    public String description2Str;
+    private String description2Str;
     public String getDescription2Str() {
         return description2Str;
     }
 
-    public String binCodeStr;
+    private String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
     }
 
-    public String containerStr;
+    private String containerStr;
     public String getContainerStr() {
         return containerStr;
     }
 
-    public String containerTypeStr;
+    private String containerTypeStr;
     public String getContainerTypeStr() {
         return containerTypeStr;
     }
 
-    public String containerInputStr;
+    private String containerInputStr;
     public String getContainerInputStr() {
         return containerInputStr;
     }
 
-    public String containerHandled;
+    private String containerHandled;
     public String getContainerHandledStr() {
         return containerHandled;
     }
 
-    public Double quantityDbl;
+    private Double quantityDbl;
     public Double getQuantityDbl() {
         return quantityDbl;
     }
@@ -93,32 +97,32 @@ public class cPickorderLine {
         return quantityHandledDbl;
     }
 
-    public double quantityRejectedDbl;
+    private double quantityRejectedDbl;
     public double getQuantityRejectedDbl() {
         return quantityRejectedDbl;
     }
 
-    public double quantityTakenDbl;
+    private double quantityTakenDbl;
     public double getQuantityTakenDbl() {
         return quantityTakenDbl;
     }
 
-    public String sourceNoStr;
+    private String sourceNoStr;
     public String getSourceNoStr() {
         return sourceNoStr;
     }
 
-    public String destinationNoStr;
+    private String destinationNoStr;
     public String getDestinationNoStr() {
         return destinationNoStr;
     }
 
-    public Boolean isPartOfMultiLineOrderBln;
+    private Boolean isPartOfMultiLineOrderBln;
     public Boolean getPartOfMultiLineOrderBln() {
         return isPartOfMultiLineOrderBln;
     }
 
-    public String shippingAdviceStr;
+    private String shippingAdviceStr;
     public String getShippingAdviceStr() {
         return shippingAdviceStr;
     }
@@ -128,119 +132,123 @@ public class cPickorderLine {
         return processingSequenceStr;
     }
 
-    public String storeSourceOpdrachtStr;
+    private String storeSourceOpdrachtStr;
     public String getStoreSourceOpdrachtStr() {
         return storeSourceOpdrachtStr;
     }
 
-    public String storageBinCodeStr;
+    private String storageBinCodeStr;
     public String getStorageBinCodeStr() {
         return storageBinCodeStr;
     }
 
-    public String vendorItemNo;
+    private String vendorItemNo;
     public String getVendorItemNoStr() {
         return vendorItemNo;
     }
 
-    public String vendorItemDescriptionStr;
+    private String vendorItemDescriptionStr;
     public String getVendorItemDescriptionStr() {
         return vendorItemDescriptionStr;
     }
 
-    public String component10Str;
+    public  String getVendorItemNoAndDescriptionStr(){
+        return  this.getVendorItemNoStr() + " " + this.getVendorItemDescriptionStr();
+    }
+
+    private String component10Str;
     public String getComponent10Str() {
         return component10Str;
     }
 
-    public String brandStr;
+    private String brandStr;
     public String getBrandStr() {
         return brandStr;
     }
 
-    public boolean printDocumentsBln;
+    private boolean printDocumentsBln;
     public boolean isPrintDocumentsBln() {
         return printDocumentsBln;
     }
 
-    public int statusInt;
+    private int statusInt;
     public int getStatusInt() {
         return statusInt;
     }
 
-    public int statusShippingInt;
+    private int statusShippingInt;
     public int getStatusShippingInt() {
         return statusShippingInt;
     }
 
-    public int statusPackingInt;
+    private int statusPackingInt;
     public int getStatuPackingInt() {
         return statusPackingInt;
     }
 
-    public int lineNoTakeInt;
+    private int lineNoTakeInt;
     public int getLineNoTakeInt() {
         return lineNoTakeInt;
     }
 
-    public String takenTimeStampStr;
+    private String takenTimeStampStr;
     public String getTakenTimeStampStr() {
         return takenTimeStampStr;
     }
 
-    public Integer localStatusInt;
+    private Integer localStatusInt;
     public Integer getLocalStatusInt() {
         return localStatusInt;
     }
 
-    public String localSortLocationStr;
+    private String localSortLocationStr;
     public String getLocalSortLocationStr() {
         return localSortLocationStr;
     }
 
-    public String extraField1Str;
+    private String extraField1Str;
     public String getExtraField1Str() {
         return extraField1Str;
     }
 
-    public String extraField2Str;
+    private String extraField2Str;
     public String getExtraField2Str() {
         return extraField2Str;
     }
 
-    public String extraField3Str;
+    private String extraField3Str;
     public String getExtraField3Str() {
         return extraField3Str;
     }
 
-    public String extraField4Str;
+    private String extraField4Str;
     public String getExtraField4Str() {
         return extraField4Str;
     }
 
-    public String extraField5Str;
+    private String extraField5Str;
     public String getExtraField5Str() {
         return extraField5Str;
     }
 
-    public String extraField6Str;
+    private String extraField6Str;
     public String getExtraField6Str() {
         return extraField6Str;
     }
 
-    public String extraField7Str;
+    private String extraField7Str;
     public String getExtraField7Str() {
         return extraField7Str;
     }
 
-    public String extraField8Str;
+    private String extraField8Str;
     public String getExtraField8Str() {
         return extraField8Str;
     }
 
     public cArticleImage articleImage;
 
-    public cPickorderLineEntity PickorderLineEntity;
+    private cPickorderLineEntity PickorderLineEntity;
     public boolean indatabaseBln;
 
     public  List<cPickorderBarcode> barcodesObl;
@@ -267,15 +275,15 @@ public class cPickorderLine {
                  return  resultObl;
         }
 
-    public static cPickorderLineViewModel gPickorderLineViewModel;
-    public static cPickorderLineViewModel getPickorderLineViewModel() {
+    private static cPickorderLineViewModel gPickorderLineViewModel;
+    private static cPickorderLineViewModel getPickorderLineViewModel() {
         if (gPickorderLineViewModel == null) {
             gPickorderLineViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cPickorderLineViewModel.class);
         }
         return gPickorderLineViewModel;
     }
 
-    public static cPickorderLineAdapter gPickorderLineToPickAdapter;
+    private static cPickorderLineAdapter gPickorderLineToPickAdapter;
     public static cPickorderLineAdapter getPickorderLineToPickAdapter() {
         if (gPickorderLineToPickAdapter == null) {
             gPickorderLineToPickAdapter = new cPickorderLineAdapter();
@@ -283,7 +291,7 @@ public class cPickorderLine {
         return gPickorderLineToPickAdapter;
     }
 
-    public static cPickorderLineAdapter gPickorderLinePickedAdapter;
+    private static cPickorderLineAdapter gPickorderLinePickedAdapter;
     public static cPickorderLineAdapter getPickorderLinePickedAdapter() {
         if (gPickorderLinePickedAdapter == null) {
             gPickorderLinePickedAdapter = new cPickorderLineAdapter();
@@ -291,7 +299,7 @@ public class cPickorderLine {
         return gPickorderLinePickedAdapter;
     }
 
-    public static cPickorderLineAdapter gPickorderLineTotalAdapter;
+    private static cPickorderLineAdapter gPickorderLineTotalAdapter;
     public static cPickorderLineAdapter getPickorderLineTotalAdapter() {
         if (gPickorderLineTotalAdapter == null) {
             gPickorderLineTotalAdapter = new cPickorderLineAdapter();
@@ -447,7 +455,7 @@ public class cPickorderLine {
         boolean resultBln;
         resultBln =   cPickorderLine.getPickorderLineViewModel().pUpdateProcessingSequenceBln(pvProcessingSequenceStr);
 
-        if (resultBln == false) {
+        if (!resultBln) {
             return  false;
         }
 
@@ -468,7 +476,7 @@ public class cPickorderLine {
             return result;
         }
 
-        if (this.mBusyBln() == false) {
+        if (!this.mBusyBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_set_line_on_busy));
             return result;
@@ -493,7 +501,7 @@ public class cPickorderLine {
         }
 
 
-        if (this.mBusyBln() == false) {
+        if (!this.mBusyBln()) {
 
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_set_line_on_busy));
@@ -506,17 +514,15 @@ public class cPickorderLine {
 
     }
 
-    public boolean pErrorSendingBln() {
-
-        return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING);
-
+    public void pErrorSending() {
+      this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING);
     }
 
     public boolean pResetBln() {
 
         cWebresult WebResult;
         WebResult =  cPickorderLine.getPickorderLineViewModel().pResetViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
             this.mUpdateQuanitityHandled(0);
@@ -549,63 +555,51 @@ public class cPickorderLine {
     public boolean pHandledIndatabaseBln(){
 
 
-        if (this.mUpdateQuanitityHandled(this.quantityHandledDbl)  == false) {
+        if (!this.mUpdateQuanitityHandled(this.quantityHandledDbl)) {
             return  false;
         }
 
-        if (this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)  == false) {
+        if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)) {
             return  false;
         }
 
         this.takenTimeStampStr = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
 
-        if (this.mUpdateHandledTimeStampBln(this.takenTimeStampStr)  == false) {
-            return  false;
-        }
-
-        return  true;
+        return this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
 
     }
 
     public boolean pUpdateSortLineIndatabaseBln(){
 
 
-        if (this.mUpdateQuanitityHandled(this.quantityHandledDbl)  == false) {
+        if (!this.mUpdateQuanitityHandled(this.quantityHandledDbl)) {
             return  false;
         }
 
-        if (this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)  == false) {
+        if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)) {
             return  false;
         }
 
         this.takenTimeStampStr = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
 
-        if (this.mUpdateHandledTimeStampBln(this.takenTimeStampStr)  == false) {
-            return  false;
-        }
-
-        return  true;
+        return this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
 
     }
 
     public boolean pCancelIndatabaseBln(){
 
 
-        if (this.mUpdateQuanitityHandled(this.quantityHandledDbl)  == false) {
+        if (!this.mUpdateQuanitityHandled(this.quantityHandledDbl)) {
             return  false;
         }
 
-        if (this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)  == false) {
+        if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)) {
             return  false;
         }
 
         this.takenTimeStampStr = "";
 
-        if (this.mUpdateHandledTimeStampBln(this.takenTimeStampStr)  == false) {
-            return  false;
-        }
-
-        return  true;
+        return this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
 
     }
 
@@ -641,7 +635,7 @@ public class cPickorderLine {
 
             if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
 
-                pickorderLineBarcode.quantityHandledDbl -= cPickorderBarcode.currentPickorderBarcode.quantityPerUnitOfMeasureDbl;
+                pickorderLineBarcode.quantityHandledDbl -= cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl();
 
                 if (pickorderLineBarcode.getQuantityhandledDbl() > 0) {
                     pickorderLineBarcode.pUpdateAmountInDatabaseBln();
@@ -659,12 +653,9 @@ public class cPickorderLine {
 
         cWebresult WebResult;
         WebResult =  cPickorderLine.getPickorderLineViewModel().pPickLineHandledViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-           if(this.mUpdateLocalStatusBln( cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) == false) {
-               return  false;
-           }
-            return  true;
+            return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
@@ -686,20 +677,17 @@ public class cPickorderLine {
         cWebresult Webresult;
 
         Webresult = cArticleImage.getArticleImageViewModel().pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
-        if (Webresult.getSuccessBln() == false || Webresult.getResultBln() == false) {
+        if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
             return  false;
         }
 
         List<JSONObject> myList = Webresult.getResultDtt();
-        for (int i = 0; i < myList.size(); i++) {
-            JSONObject jsonObject;
-            jsonObject = myList.get(i);
 
-            cArticleImage articleImage = new cArticleImage(jsonObject);
+        if (Webresult.getResultDtt().size() == 1) {
+            cArticleImage articleImage = new cArticleImage(Webresult.getResultDtt().get(0));
             articleImage.pInsertInDatabaseBln();
             this.articleImage = articleImage;
             return true;
-
         }
         return  false;
 
@@ -757,11 +745,9 @@ public class cPickorderLine {
 
         cWebresult WebResult;
         WebResult =  cPickorderLine.getPickorderLineViewModel().pGetSortLocationAdviceViaWebserviceWrs(this.getSourceNoStr());
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-            for (String loopStr : WebResult.getResultObl() ) {
-                resultObl.add(loopStr);
-            }
+            resultObl.addAll(WebResult.getResultObl());
 
             return  resultObl;
         }
@@ -822,7 +808,7 @@ public class cPickorderLine {
         boolean resultBln;
         resultBln =   cPickorderLine.getPickorderLineViewModel().pUpdateLocalStatusBln(pvNewStatusInt);
 
-        if (resultBln == false) {
+        if (!resultBln) {
             return  false;
         }
 
@@ -836,7 +822,7 @@ public class cPickorderLine {
         boolean resultBln;
         resultBln =   cPickorderLine.getPickorderLineViewModel().pUpdateQuantityHandledBln(pvQuantityHandledBln);
 
-        if (resultBln == false) {
+        if (!resultBln) {
             return  false;
         }
 
@@ -850,11 +836,7 @@ public class cPickorderLine {
         boolean resultBln;
         resultBln =   cPickorderLine.getPickorderLineViewModel().pUpdateHandledTimeStampBln(pvHandledTimeStampStr);
 
-        if (resultBln == false) {
-            return  false;
-        }
-
-        return true;
+        return resultBln;
 
     }
 

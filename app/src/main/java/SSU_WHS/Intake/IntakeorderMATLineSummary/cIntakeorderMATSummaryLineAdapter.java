@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -84,8 +85,9 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
     //Region Default Methods
 
+    @NonNull
     @Override
-    public cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewTypeInt) {
+    public cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_intakeorderline_summary, pvParent, false);
         return new cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder(itemView);
     }
@@ -111,7 +113,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         String itemNoAndVariantCodeStr = currentIntakeorderMATSummaryLine.getItemNoStr() + "~" + currentIntakeorderMATSummaryLine.getVariantCodeStr();
         String lineDescriptionStr = currentIntakeorderMATSummaryLine.getDescriptionStr();
         String quantityToShowStr = currentIntakeorderMATSummaryLine.getQuantityHandledDbl().intValue() + "/" + currentIntakeorderMATSummaryLine.getQuantityDbl().intValue();
-        String sourceNoStr = currentIntakeorderMATSummaryLine.sourceNoStr;
+        String sourceNoStr = currentIntakeorderMATSummaryLine.getSourceNoStr();
 
         //Set description and quantity
         pvHolder.textViewItemNoAndVariantCode.setText(itemNoAndVariantCodeStr);
@@ -156,7 +158,6 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         //Select the first one, or selected index
         if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderLinesActivity ) {
             pvHolder.intakeOrderMATItemLinearLayout.performClick();
-            return;
         }
     }
 
@@ -198,7 +199,6 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
             if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
                 IntakeorderLinesActivity.pIntakelineSelected(this.localIntakeorderMATSummaryLinesObl.get(0));
                 IntakeorderLinesActivity.pStartLine();
-                return;
             }
 
         }
@@ -212,7 +212,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
     private List<cIntakeorderMATSummaryLine> mGetFilteredListObl(String pvQueryTextStr) {
         List<cIntakeorderMATSummaryLine> resultObl = new ArrayList<>();
 
-        String variantCodeStr = "";
+        StringBuilder variantCodeStr = new StringBuilder();
         int loopInt = 0;
 
         if (this.localIntakeorderMATSummaryLinesObl == null || this.localIntakeorderMATSummaryLinesObl.size() == 0) {
@@ -235,7 +235,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
                 continue;
             }
 
-            variantCodeStr += loopStr;
+            variantCodeStr.append(loopStr);
             loopInt += 1;
         }
 
@@ -245,8 +245,8 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
                 continue;
             }
 
-            if (!variantCodeStr.isEmpty()) {
-                if (!intakeorderMATSummaryLine.getVariantCodeStr().equalsIgnoreCase(variantCodeStr)) {
+            if (variantCodeStr.length() > 0) {
+                if (!intakeorderMATSummaryLine.getVariantCodeStr().equalsIgnoreCase(variantCodeStr.toString())) {
                     continue;
                 }
             }

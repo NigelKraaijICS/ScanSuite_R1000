@@ -4,6 +4,8 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -17,6 +19,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -27,11 +31,11 @@ import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 
 public class NoConnectionFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private ImageView imageViewSatellite;
-    private ImageView imageViewEarth;
-    private Button openSettingsButton;
-    private Button tryAgainButton;
-    private Boolean blnToggleGrey;
+    private static ImageView imageViewSatellite;
+    private static ImageView imageViewEarth;
+    private static Button openSettingsButton;
+    private static Button tryAgainButton;
+    private static Boolean toggleGreyBln;
 
    public NoConnectionFragment() {
         // Required empty public constructor
@@ -44,27 +48,32 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
         return inflater.inflate(R.layout.fragment_no_connection, container, false);
     }
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        blnToggleGrey = true;
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        mFragmentInitialize();
+        NoConnectionFragment.toggleGreyBln = true;
 
-        mSetAnimations();
+        this.mFragmentInitialize();
+        this.mSetAnimations();
     }
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-         mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
         cUserInterface.pEnableScanner();
     }
+
     @Override
     public void mFindViews() {
-        imageViewSatellite = getView().findViewById(R.id.imageViewSatellite);
-        imageViewEarth = getView().findViewById(R.id.imageViewEarth);
-        openSettingsButton = getView().findViewById(R.id.openSettingsButton);
-        tryAgainButton = getView().findViewById(R.id.tryAgainButton);
+
+       if (getView() != null) {
+           NoConnectionFragment.imageViewSatellite = getView().findViewById(R.id.imageViewSatellite);
+           NoConnectionFragment.imageViewEarth = getView().findViewById(R.id.imageViewEarth);
+           NoConnectionFragment.openSettingsButton = getView().findViewById(R.id.openSettingsButton);
+           NoConnectionFragment.tryAgainButton = getView().findViewById(R.id.tryAgainButton);
+       }
+
     }
 
 
@@ -72,12 +81,14 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
     public void mFieldsInitialize() {
 
     }
+
     @Override
     public void mSetListeners() {
-        mEarthListener();
-        mTryAgainListener();
-        mOpenSettingsListener();
+        this.mEarthListener();
+        this.mTryAgainListener();
+        this. mOpenSettingsListener();
     }
+
     private void mSetAnimations() {
         RotateAnimation anim = new RotateAnimation(0f, 1080f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         anim.setInterpolator(new LinearInterpolator());
@@ -93,10 +104,10 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
         animationSet.addAnimation(anim);
         animationSet.addAnimation(anim2);
 
-        imageViewSatellite.startAnimation(animationSet);
+        NoConnectionFragment.imageViewSatellite.startAnimation(animationSet);
     }
     private void mTryAgainListener() {
-        tryAgainButton.setOnClickListener(new View.OnClickListener() {
+        NoConnectionFragment.tryAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (cAppExtension.activity instanceof MainDefaultActivity) {
@@ -107,11 +118,11 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
         });
     }
     private void mOpenSettingsListener() {
-        openSettingsButton.setOnClickListener(new View.OnClickListener() {
+        NoConnectionFragment.openSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent  = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                if (intent.resolveActivity(getView().getContext().getPackageManager()) != null) {
+                if (intent.resolveActivity(Objects.requireNonNull(getView()).getContext().getPackageManager()) != null) {
                     startActivityForResult(intent, cPublicDefinitions.CHANGEWIFI_REQUESTCODE);
                 }
                 dismiss();
@@ -120,18 +131,18 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
     }
 
     private void mEarthListener() {
-        imageViewEarth.setOnClickListener(new View.OnClickListener() {
+        NoConnectionFragment.imageViewEarth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!blnToggleGrey) {
-                    imageViewSatellite.setImageDrawable(getResources().getDrawable(R.drawable.ic_satellite));
-                    imageViewEarth.setImageDrawable(getResources().getDrawable(R.drawable.ic_earth));
-                    blnToggleGrey = true;
+                if (!NoConnectionFragment.toggleGreyBln) {
+                    NoConnectionFragment.imageViewSatellite.setImageDrawable(getResources().getDrawable(R.drawable.ic_satellite));
+                    NoConnectionFragment.imageViewEarth.setImageDrawable(getResources().getDrawable(R.drawable.ic_earth));
+                    NoConnectionFragment.toggleGreyBln = true;
                 }
                 else {
-                    imageViewSatellite.setImageDrawable(cImages.convertToGrayscale(imageViewSatellite.getDrawable()));
-                    imageViewEarth.setImageDrawable(cImages.convertToGrayscale(imageViewEarth.getDrawable()));
-                    blnToggleGrey = false;
+                    NoConnectionFragment.imageViewSatellite.setImageDrawable(cImages.convertToGrayscale(imageViewSatellite.getDrawable()));
+                    NoConnectionFragment.imageViewEarth.setImageDrawable(cImages.convertToGrayscale(imageViewEarth.getDrawable()));
+                    NoConnectionFragment.toggleGreyBln = false;
                 }
             }
         });

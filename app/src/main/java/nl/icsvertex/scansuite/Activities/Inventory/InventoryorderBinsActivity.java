@@ -55,16 +55,16 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     //End Region Public Properties
 
     //Region Private Properties
-    private TextView textViewChosenOrder;
+    private static TextView textViewChosenOrder;
     static private TextView quantityText;
     static private TabLayout inventoryorderBinsTabLayout;
     static private cNoSwipeViewPager inventoryorderBinsViewpager;
 
-    private InventoryorderBinsPagerAdapter inventoryorderBinsPagerAdapter;
+    private static InventoryorderBinsPagerAdapter inventoryorderBinsPagerAdapter;
     static private ImageView imageButtonComments;
 
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
     private static TextView toolbarSubTitle;
 
     private static String SENDING_TAG = "SENDING_TAG";
@@ -105,7 +105,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
 
             if (cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size() == 0) {
-                this.mShowAcceptFragment();
+                InventoryorderBinsActivity.mShowAcceptFragment();
             }
             else {
                 InventoryorderBinsActivity.mStartOrderSelectActivity();
@@ -119,7 +119,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     @Override
     public void onBackPressed() {
-       this.mShowAcceptFragment();
+        InventoryorderBinsActivity.mShowAcceptFragment();
     }
 
     //End Region Default Methods
@@ -153,22 +153,22 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     @Override
     public void mFindViews() {
 
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        this.inventoryorderBinsTabLayout = findViewById(R.id.inventoryorderBinsTabLayout);
-        this.inventoryorderBinsViewpager = findViewById(R.id.inventoryorderBinsViewpager);
-        this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
-        this.imageButtonComments = findViewById(R.id.imageButtonComments);
-        this.quantityText = findViewById(R.id.quantityText);
+        InventoryorderBinsActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        InventoryorderBinsActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        InventoryorderBinsActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        InventoryorderBinsActivity.inventoryorderBinsTabLayout = findViewById(R.id.inventoryorderBinsTabLayout);
+        InventoryorderBinsActivity.inventoryorderBinsViewpager = findViewById(R.id.inventoryorderBinsViewpager);
+        InventoryorderBinsActivity.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
+        InventoryorderBinsActivity.imageButtonComments = findViewById(R.id.imageButtonComments);
+        InventoryorderBinsActivity.quantityText = findViewById(R.id.quantityText);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
-        this.toolbarTitle.setText(pvScreenTitleStr);
-        toolbarTitle.setSelected(true);
-        toolbarSubTitle.setSelected(true);
+        InventoryorderBinsActivity.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
+        InventoryorderBinsActivity.toolbarTitle.setText(pvScreenTitleStr);
+        InventoryorderBinsActivity.toolbarTitle.setSelected(true);
+        InventoryorderBinsActivity.toolbarSubTitle.setSelected(true);
         InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalCountDbl()) );
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -180,20 +180,20 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     @Override
     public void mFieldsInitialize() {
-        ViewCompat.setTransitionName(this.textViewChosenOrder, this.VIEW_CHOSEN_ORDER);
-        this.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
-        this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_todo));
-        this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
-        this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_total));
+        ViewCompat.setTransitionName(InventoryorderBinsActivity.textViewChosenOrder, InventoryorderBinsActivity.VIEW_CHOSEN_ORDER);
+        InventoryorderBinsActivity.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+        InventoryorderBinsActivity.inventoryorderBinsTabLayout.addTab(InventoryorderBinsActivity.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_todo));
+        InventoryorderBinsActivity.inventoryorderBinsTabLayout.addTab(InventoryorderBinsActivity.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
+        InventoryorderBinsActivity.inventoryorderBinsTabLayout.addTab(InventoryorderBinsActivity.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_total));
 
-        this.inventoryorderBinsPagerAdapter = new InventoryorderBinsPagerAdapter(this.inventoryorderBinsTabLayout.getTabCount());
-        this.inventoryorderBinsViewpager.setAdapter(this.inventoryorderBinsPagerAdapter);
+        InventoryorderBinsActivity.inventoryorderBinsPagerAdapter = new InventoryorderBinsPagerAdapter(InventoryorderBinsActivity.inventoryorderBinsTabLayout.getTabCount());
+        InventoryorderBinsActivity.inventoryorderBinsViewpager.setAdapter(InventoryorderBinsActivity.inventoryorderBinsPagerAdapter);
 
-        this.inventoryorderBinsViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.inventoryorderBinsTabLayout));
-        this.inventoryorderBinsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        InventoryorderBinsActivity.inventoryorderBinsViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(InventoryorderBinsActivity.inventoryorderBinsTabLayout));
+        InventoryorderBinsActivity.inventoryorderBinsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
-                inventoryorderBinsViewpager.setCurrentItem(pvTab.getPosition());
+                InventoryorderBinsActivity.inventoryorderBinsViewpager.setCurrentItem(pvTab.getPosition());
                 mChangeSelectedTab(pvTab);
             }
 
@@ -214,7 +214,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     @Override
     public void mSetListeners() {
-
+        this.mSetShowCommentListener();
     }
 
     @Override
@@ -320,21 +320,19 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             mShowNotSend(hulpResult.messagesStr());
             return;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (!hulpResult.resultBln && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
+        if ( hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
             mShowNotSend("");
             //If we got any comments, show them
             if (cInventoryorder.currentInventoryOrder.pFeedbackCommentObl() != null && cInventoryorder.currentInventoryOrder.pFeedbackCommentObl().size() > 0 ) {
                 //Process comments from webresult
                 InventoryorderBinsActivity.mShowCommentsFragment(cInventoryorder.currentInventoryOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
             }
-
-            return;
         }
 
     }
@@ -450,7 +448,6 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
                 public void run() {
                     ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedBin, InventoryorderBinActivity.VIEW_CHOSEN_BIN),new Pair<>(clickedBinImage, InventoryorderBinActivity.VIEW_CHOSEN_BIN_IMAGE) );
                     ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-                    return;
                 }
             });
 
@@ -553,6 +550,14 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         });
     }
 
+    private void mSetShowCommentListener() {
+        InventoryorderBinsActivity.imageButtonComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShowCommentsFragment(cInventoryorder.currentInventoryOrder.commentsObl(),"");
+            }
+        });
+    }
 
     //End Region Private Methods
 

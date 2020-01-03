@@ -64,18 +64,17 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     // Region Views
     private static RecyclerView recyclerViewInventoryorders;
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
     private static TextView toolbarSubTitle;
     private static SearchView recyclerSearchView;
     private static SwipeRefreshLayout swipeRefreshLayout;
 
     private static ImageView imageViewFilter;
-    private ImageView imageViewNewOrder;
-    private ConstraintLayout constraintFilterOrders;
-    private BottomSheetBehavior bottomSheetBehavior;
+    private static ImageView imageViewNewOrder;
+    private static ConstraintLayout constraintFilterOrders;
+    private static BottomSheetBehavior bottomSheetBehavior;
 
-    private static Boolean orderDetailsCompleteBln;
     // End Region Views
 
     //End Region Private Properties
@@ -110,14 +109,14 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.mLeaveActivity();
-                return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home )  {
+            this.mLeaveActivity();
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -162,25 +161,25 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     @Override
     public void mFindViews() {
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        this.recyclerViewInventoryorders = findViewById(R.id.recyclerViewInventoryorders);
-        this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        this.imageViewFilter = findViewById(R.id.imageViewFilter);
-        this.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        this.imageViewNewOrder = findViewById(R.id.imageViewBinDone);
-        this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
+        InventoryorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        InventoryorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        InventoryorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        InventoryorderSelectActivity.recyclerViewInventoryorders = findViewById(R.id.recyclerViewInventoryorders);
+        InventoryorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
+        InventoryorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
+        InventoryorderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        InventoryorderSelectActivity.imageViewNewOrder = findViewById(R.id.imageViewBinDone);
+        InventoryorderSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
-        this.toolbarTitle.setText(pvScreenTitle);
-        toolbarTitle.setSelected(true);
-        toolbarSubTitle.setSelected(true);
-        ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
-        ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
+        InventoryorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
+        InventoryorderSelectActivity.toolbarTitle.setText(pvScreenTitle);
+        InventoryorderSelectActivity.toolbarTitle.setSelected(true);
+        InventoryorderSelectActivity.toolbarSubTitle.setSelected(true);
+        ViewCompat.setTransitionName( InventoryorderSelectActivity.toolbarImage, VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName( InventoryorderSelectActivity.toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -230,16 +229,13 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     }
 
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
-
         InventoryorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
         InventoryorderSelectActivity.recyclerSearchView.callOnClick();
-        return;
-
     }
 
     public static void pInventoryorderSelected(cInventoryorder pvInventoryorder) {
 
-        if (mCheckOrderIsLockableBln(pvInventoryorder) == false) {
+        if (!mCheckOrderIsLockableBln(pvInventoryorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
             cUserInterface.pCheckAndCloseOpenDialogs();
             return;
@@ -283,19 +279,16 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         cResult hulpResult;
 
         //Try to lock the pickorder
-        if (InventoryorderSelectActivity.mTryToLockOrderBln() == false) {
+        if (!InventoryorderSelectActivity.mTryToLockOrderBln()) {
             InventoryorderSelectActivity.pFillOrders();
             return;
         }
 
         //Delete the detail, so we can get them from the webservice
-        if (cInventoryorder.currentInventoryOrder.pDeleteDetailsBln() == false) {
-            InventoryorderSelectActivity.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-            return;
-        }
+        cInventoryorder.currentInventoryOrder.pDeleteDetails();
 
         hulpResult = InventoryorderSelectActivity.mGetOrderDetailsRst();
-        if (hulpResult.resultBln == false ) {
+        if (!hulpResult.resultBln ) {
             InventoryorderSelectActivity.mStepFailed(hulpResult.messagesStr());
             return;
         }
@@ -316,31 +309,23 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         cResult hulpResult;
 
         //Try to create the order
-        if (InventoryorderSelectActivity.mTryToCreateOrderBln(pvDocumentstr) == false) {
-            InventoryorderSelectActivity.orderDetailsCompleteBln = false;
+        if (!InventoryorderSelectActivity.mTryToCreateOrderBln(pvDocumentstr)) {
             InventoryorderSelectActivity.pFillOrders();
             return;
         }
 
         //Try to lock the order
-        if (InventoryorderSelectActivity.mTryToLockOrderBln() == false) {
-            InventoryorderSelectActivity.orderDetailsCompleteBln = false;
+        if (!InventoryorderSelectActivity.mTryToLockOrderBln()) {
             InventoryorderSelectActivity.pFillOrders();
             return;
         }
 
         //Delete the detail, so we can get them from the webservice
-        if (cInventoryorder.currentInventoryOrder.pDeleteDetailsBln() == false) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-            InventoryorderSelectActivity.orderDetailsCompleteBln = false;
-            InventoryorderSelectActivity.pFillOrders();
-            return;
-        }
+        cInventoryorder.currentInventoryOrder.pDeleteDetails();
 
         hulpResult = InventoryorderSelectActivity.mGetOrderDetailsRst();
-        if (hulpResult.resultBln == false ) {
+        if (!hulpResult.resultBln) {
             InventoryorderSelectActivity.mStepFailed(hulpResult.messagesStr());
-            InventoryorderSelectActivity.orderDetailsCompleteBln = false;
             InventoryorderSelectActivity.pFillOrders();
             return;
         }
@@ -357,15 +342,13 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private static boolean mTryToCreateOrderBln(String pvDocumentstr){
 
-        Boolean resultBln = false;
-
-        resultBln =  cInventoryorder.pCreateInventoryOrderViaWebserviceBln(pvDocumentstr);
+        Boolean resultBln =  cInventoryorder.pCreateInventoryOrderViaWebserviceBln(pvDocumentstr);
         if (!resultBln) {
             mStepFailed(cAppExtension.activity.getString(R.string.message_couldnt_create_order));
             return  false;
         }
 
-        return resultBln;
+        return true;
 
     }
 
@@ -373,21 +356,20 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         cResult hulpResult;
         hulpResult = cInventoryorder.currentInventoryOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Inventory, cWarehouseorder.WorkflowInventoryStepEnu.Inventory);
-
         //Everything was fine, so we are done
-        if (hulpResult.resultBln == true) {
+        if (hulpResult.resultBln) {
             return true;
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             mStepFailed(hulpResult.messagesStr());
             return  false;
         }
 
         //Something went wrong, the order has been deleted, so show comments and refresh
-        if (hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
-                hulpResult.resultBln == false  && hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
+            hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
 
 
             //If we got any comments, show them
@@ -406,7 +388,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private static void mHandleFillOrders(){
 
-        if (cInventoryorder.pGetInventoryOrdersViaWebserviceBln(true,"") == false) {
+        if (!cInventoryorder.pGetInventoryOrdersViaWebserviceBln(true,"")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_inventoryorders_failed), "", true, true );
             return;
         }
@@ -439,21 +421,21 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         result.resultBln = true;
 
         //Get all bins for current order, if webservice error then stop
-        if (cInventoryorder.currentInventoryOrder.pGetBinsViaWebserviceBln(true) == false) {
+        if (!cInventoryorder.currentInventoryOrder.pGetBinsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
             return result;
         }
 
         //Get all linesInt for current order, if size = 0 or webservice error then stop
-        if (cInventoryorder.currentInventoryOrder.pGetLinesViaWebserviceBln(true) == false) {
+        if (!cInventoryorder.currentInventoryOrder.pGetLinesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_inventorylines_failed));
             return result;
         }
 
         // Get all comments
-        if (cInventoryorder.currentInventoryOrder.pGetCommentsViaWebserviceBln(true) == false) {
+        if (!cInventoryorder.currentInventoryOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;
@@ -491,10 +473,10 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private void mInitBottomSheet() {
 
-        this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
-        this.bottomSheetBehavior.setHideable(true);
-        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        this.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        InventoryorderSelectActivity.bottomSheetBehavior = BottomSheetBehavior.from(InventoryorderSelectActivity.constraintFilterOrders);
+        InventoryorderSelectActivity.bottomSheetBehavior.setHideable(true);
+        InventoryorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        InventoryorderSelectActivity.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View pvBottomSheet, int pvNewStateInt) {
                 if (pvNewStateInt == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -521,12 +503,12 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private void mShowHideBottomSheet(Boolean pvShowBln) {
 
-        if (pvShowBln == true) {
-            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        if (pvShowBln) {
+            InventoryorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return;
         }
 
-        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        InventoryorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     }
 
@@ -560,7 +542,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
+        InventoryorderSelectActivity.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -571,17 +553,16 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
                 }
             }
         });
-        return;
     }
 
     private void mSetToolbarTitleListeners() {
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
+        InventoryorderSelectActivity.toolbarTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mScrollToTop();
             }
         });
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
+        InventoryorderSelectActivity.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 mScrollToBottom();
@@ -626,7 +607,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         InventoryorderSelectActivity.recyclerViewInventoryorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         cInventoryorder.getInventoryorderAdapter().pFillData(pvInventoryorderObl);
-        return;
     }
 
     private void mSetRecyclerOnScrollListener() {
@@ -679,7 +659,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        InventoryorderSelectActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 recyclerSearchView.setIconified(false);
@@ -687,7 +667,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         });
 
         //query entered
-        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        InventoryorderSelectActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String pvString) {
                 return false;
@@ -701,25 +681,27 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             }
         });
 
-        return;
 
     }
 
     // End Recycler View
 
     private void mSetNewOrderListener() {
-       this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
+        InventoryorderSelectActivity.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                mShowCreateInventoryFragment(true);
+                mShowCreateInventoryFragment();
             }
         });
     }
 
     private void mSetSwipeRefreshListener() {
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
+        InventoryorderSelectActivity.swipeRefreshLayout.setOnRefreshListener(this);
+        InventoryorderSelectActivity.swipeRefreshLayout.setSize(SwipeRefreshLayout.LARGE);
+        InventoryorderSelectActivity.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent),
+                                                                             getResources().getColor(R.color.colorActive),
+                                                                             getResources().getColor(R.color.colorPrimary));
+
     }
 
 
@@ -767,15 +749,11 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         }
 
         //If you are allowed to unlock busy order, then no problem
-        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED() == true) {
+        if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED()) {
             return true;
         }
 
-        if (cUser.currentUser.getNameStr().equalsIgnoreCase(pvInventoryorder.getAssignedUserIdStr())) {
-            return  true;
-        }
-
-        return  false;
+        return cUser.currentUser.getNameStr().equalsIgnoreCase(pvInventoryorder.getAssignedUserIdStr());
 
     }
 
@@ -800,11 +778,10 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cInventoryorder.currentInventoryOrder.getOrderNumberStr(), true, true );
         cInventoryorder.currentInventoryOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Inventory, cWarehouseorder.WorkflowInventoryStepEnu.InventoryBusy);
         cInventoryorder.currentInventoryOrder = null;
-        return ;
     }
 
-    private void mShowCreateInventoryFragment(Boolean pvShowDocumentInputBln) {
-        final CreateInventoryFragment createInventoryFragment = new CreateInventoryFragment(pvShowDocumentInputBln);
+    private void mShowCreateInventoryFragment() {
+        final CreateInventoryFragment createInventoryFragment = new CreateInventoryFragment(true);
         createInventoryFragment.setCancelable(false);
         createInventoryFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
@@ -821,7 +798,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         commentFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.COMMENTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
-        return;
     }
 
     private static void mShowInventoryorderBinsActivity() {
@@ -835,7 +811,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         if (clickedOrder != null) {
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, InventoryorderBinsActivity.VIEW_CHOSEN_ORDER));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-            return;
         } else {
             cAppExtension.activity.startActivity(intent);
             cAppExtension.activity.finish();

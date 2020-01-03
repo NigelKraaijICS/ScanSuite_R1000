@@ -12,6 +12,8 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.text.format.Formatter;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -58,8 +60,7 @@ public class cDeviceInfo {
         } catch (PackageManager.NameNotFoundException e) {
             return cAppExtension.context.getString(R.string.application_unknown_install_date);
         }
-        String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(installDate));
-        return dateString;
+        return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(installDate));
     }
     public static String getLastUpdateDate() {
         long updateDate;
@@ -69,8 +70,7 @@ public class cDeviceInfo {
                 ApplicationInfo appInfo = packageManager.getApplicationInfo(cAppExtension.context.getPackageName(), 0);
                 String appFile = appInfo.sourceDir;
                 updateDate = new File(appFile).lastModified();
-                String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(updateDate));
-                return dateString;
+                return new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date(updateDate));
             } catch (PackageManager.NameNotFoundException e) {
                 return cAppExtension.context.getString(R.string.application_unknown_update_date);
             }
@@ -81,7 +81,7 @@ public class cDeviceInfo {
     }
 
 
-    public static String getAndroidBuildVersion ( ) {
+    private static String getAndroidBuildVersion ( ) {
         return Build.VERSION.RELEASE;
     }
 
@@ -113,35 +113,8 @@ public class cDeviceInfo {
         return ssid;
     }
 
-    public static String getFriendlyLanguage() {
-        return Locale.getDefault().getDisplayLanguage();
-    }
 
-    public static String getSDKCodeName() {
-        String codeName = "";
-        Field[] fields = Build.VERSION_CODES.class.getFields();
-        for (Field field : fields) {
-            String fieldName = field.getName();
-            int fieldValue = -1;
-
-            try {
-                fieldValue = field.getInt(new Object());
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-
-            if (fieldValue == Build.VERSION.SDK_INT) {
-                codeName = fieldName;
-            }
-        }
-        return codeName;
-    }
-
-    public static String getFriendlyVersionName (){
+    private static String getFriendlyVersionName (){
         int code = Build.VERSION.SDK_INT;
 
         switch (code) {
@@ -241,77 +214,111 @@ public class cDeviceInfo {
         }
     }
 
-
     public static int getBatteryChargePct() {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = cAppExtension.context.registerReceiver(null, ifilter);
-        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        int level;
 
-        float batteryPct = (level / (float)scale) *100;
+        if (batteryStatus != null) {
+            level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+            float batteryPct = (level / (float)scale) *100;
+            return Math.round(batteryPct);
+        }
 
-        return Math.round(batteryPct);
+        return  0;
+
+
     }
 
     public static boolean isCharging() {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = cAppExtension.context.registerReceiver(null, ifilter);
         // Are we charging / charged?
-        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL;
+        int status;
 
-        // How are we charging?
-        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-        return isCharging;
+        if (batteryStatus != null) {
+            status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL;
+
+            // How are we charging?
+            int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+            boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+            boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+            return isCharging;
+        }
+
+        return  false;
+
     }
-    public static boolean isChargingUSB() {
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = cAppExtension.context.registerReceiver(null, ifilter);
-        // How are we charging?
-        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-        return usbCharge;
-    }
-    public static boolean isChargingAC() {
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = cAppExtension.context.registerReceiver(null, ifilter);
-        // How are we charging?
-        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-        return acCharge;
-    }
+
     public static String getChargingStatusString() {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = cAppExtension.context.registerReceiver(null, ifilter);
         // Are we charging / charged?
-        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL;
+        int status = 0;
+        if (batteryStatus != null) {
+            status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL;
 
-        // How are we charging?
-        int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-        boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-        boolean wirelessCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_WIRELESS;
+            // How are we charging?
+            int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+            boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
+            boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
+            boolean wirelessCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_WIRELESS;
 
 
-        if (!isCharging) {
-            return cAppExtension.context.getString(R.string.battery_isnotcharging);
-        }
-        if (usbCharge) {
-            return cAppExtension.context.getString(R.string.battery_ischarging_over_parameter1, cAppExtension.context.getString(R.string.battery_usb));
-        }
-        if (acCharge) {
-            return cAppExtension.context.getString(R.string.battery_ischarging_over_parameter1, cAppExtension.context.getString(R.string.battery_ac));
-        }
-        if (wirelessCharge) {
-            return cAppExtension.context.getString(R.string.battery_ischarging_over_parameter1, cAppExtension.context.getString(R.string.battery_wireless));
+            if (!isCharging) {
+                return cAppExtension.context.getString(R.string.battery_isnotcharging);
+            }
+            if (usbCharge) {
+                return cAppExtension.context.getString(R.string.battery_ischarging_over_parameter1, cAppExtension.context.getString(R.string.battery_usb));
+            }
+            if (acCharge) {
+                return cAppExtension.context.getString(R.string.battery_ischarging_over_parameter1, cAppExtension.context.getString(R.string.battery_ac));
+            }
+            if (wirelessCharge) {
+                return cAppExtension.context.getString(R.string.battery_ischarging_over_parameter1, cAppExtension.context.getString(R.string.battery_wireless));
+            }
+
+            return cAppExtension.context.getString(R.string.battery_unknownnotcharging);
         }
 
-        return cAppExtension.context.getString(R.string.battery_unknownnotcharging);
+        return  "";
+
 
     }
+
+    public static String getDeviceInfoStr(){
+
+        String DeviceInfoStr;
+        DeviceInfoStr = cAppExtension.activity.getString(R.string.device_manufacturer) + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceManufacturer() + cText.NEWLINE;
+        DeviceInfoStr += cAppExtension.activity.getString(R.string.device_brand)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceBrand() + cText.NEWLINE;
+        DeviceInfoStr += cAppExtension.activity.getString(R.string.device_model)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getDeviceModel() + cText.NEWLINE;
+        DeviceInfoStr += cAppExtension.activity.getString(R.string.device_serialnumber)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getSerialnumberStr() + cText.NEWLINE;
+        DeviceInfoStr += cAppExtension.activity.getString(R.string.application_version)  + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getAppVersion() + cText.NEWLINE;
+        DeviceInfoStr += cAppExtension.activity.getString(R.string.android_version) + cText.LABEL_VALUE_SEPARATOR + cDeviceInfo.getAndroidBuildVersion() + " - " + cDeviceInfo.getFriendlyVersionName();
+
+        return  DeviceInfoStr;
+
+    }
+
+    @NonNull
+    public static String getAndroidVersionStr(){
+       return cDeviceInfo.getAndroidBuildVersion() + " - " + cDeviceInfo.getFriendlyVersionName();
+
+    }
+
+    @NonNull
+    public static String getPercentageStr(){
+
+       return   cDeviceInfo.getBatteryChargePct() + "%";
+    }
+
+    public static String getChargingStr(){
+      return   cAppExtension.activity.getString(R.string.battery_at_parameter1_percent, cText.pIntToStringStr(cDeviceInfo.getBatteryChargePct()));
+    }
+
 }

@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
@@ -32,9 +35,9 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
 
     //Region Private Properties
     private static RecyclerView branchRecyclerview;
-    private Button buttonClose;
+    private static Button buttonClose;
 
-    private ShimmerFrameLayout shimmerViewContainer;
+    private static ShimmerFrameLayout shimmerViewContainer;
 
     //End Region Private Properties
 
@@ -63,7 +66,7 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
 
     @Override
     public void onPause() {
-        shimmerViewContainer.stopShimmerAnimation();
+        BranchFragment.shimmerViewContainer.stopShimmerAnimation();
         try {
             cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
@@ -89,11 +92,11 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
 
-        this.shimmerViewContainer.startShimmerAnimation();
+        BranchFragment.shimmerViewContainer.startShimmerAnimation();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
-        getDialog().getWindow().setLayout(width, height);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
     }
 
     //End Region Default Methods
@@ -109,9 +112,11 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
 
     @Override
     public void mFindViews() {
-        this.branchRecyclerview = getView().findViewById(R.id.branchRecyclerview);
-        this.buttonClose = getView().findViewById(R.id.buttonClose);
-        this.shimmerViewContainer = getView().findViewById(R.id.shimmerViewContainer);
+        if (getView() != null) {
+            BranchFragment.branchRecyclerview = getView().findViewById(R.id.branchRecyclerview);
+            BranchFragment.buttonClose = getView().findViewById(R.id.buttonClose);
+            BranchFragment.shimmerViewContainer = getView().findViewById(R.id.shimmerViewContainer);
+        }
     }
 
 
@@ -140,9 +145,9 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
             return;
         }
 
-        Boolean foundBln = false;
+        boolean foundBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.LOCATION) == true) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.LOCATION)) {
             foundBln = true;
         }
 
@@ -150,12 +155,10 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
         if (foundBln) {
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
             BranchFragment.mBranchScanned(barcodeWithoutPrefixStr);
-            return;
         }
         else {
             //has prefix, isn't branch
             cUserInterface.pDoNope(branchRecyclerview, true, true);
-            return;
         }
     }
     //End Region Public Methods
@@ -178,17 +181,17 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
 
     private void mFillRecyclerView() {
 
-        this.branchRecyclerview.setHasFixedSize(false);
-        this.branchRecyclerview.setAdapter(cBranch.getBranchAdapter());
-        this.branchRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        BranchFragment.branchRecyclerview.setHasFixedSize(false);
+        BranchFragment.branchRecyclerview.setAdapter(cBranch.getBranchAdapter());
+        BranchFragment.branchRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         //Stopping Shimmer Effect's animation after data is loaded
-        this.shimmerViewContainer.stopShimmerAnimation();
-        this.shimmerViewContainer.setVisibility(View.GONE);
+        BranchFragment.shimmerViewContainer.stopShimmerAnimation();
+        BranchFragment.shimmerViewContainer.setVisibility(View.GONE);
     }
 
     private void mSetCloseListener() {
-        buttonClose.setOnClickListener(new View.OnClickListener() {
+        BranchFragment.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cAppExtension.dialogFragment != null) {
