@@ -491,7 +491,7 @@
     <string name="error_get_moveorders_failed">Verplaats opdrachten ophalen mislukt.</string>
     <string name="message_bin_empty_close">Wil je de BIN sluiten ondanks dat er niks gescanned is?</string>
     <string name="message_close_bin_with_progress">U heeft al progressie gemaakt. Wilt u de BIN echt sluiten?</string>
-    <string name="message_close_storeorder_text">U heeft %1$s items opgeslasgen\nU moest %2$s items opslaan\n\n%3$s\n\nWilt u de order sluiten?</string>
+    <string name="message_close_storeorder_text">U heeft %1$s items opgeslagen\nU moest %2$s items opslaan\n\n%3$s\n\nWilt u de order sluiten?</string>
     <string name="message_moveorderbusy_header">Orderregel nog bezig.</string>
     <string name="message_unknown_bin">Onbekende locatie</string>
     <string name="screentitle_moveorderlines">Verplaats regels</string>
@@ -502,4 +502,12 @@
     <string name="tab_moveorderline_done">Klaar</string>
     <string name="tab_moveorderline_notdone">Niet klaar</string>
     <string name="tab_moveorderline_total">Totaal</string>
+    <string name="message_exactly_what_you_needed">Conform</string>
+    <string name="message_bin_required">Scan locatie om regel te sluiten</string>
+    <string name="connected">Verbonden</string>
+    <string name="message_checking_connection">Connectie controleren.....</string>
+    <string name="message_no_connection_header">Geen connectie</string>
+    <string name="message_no_connection_try_again">Geen connectie, probeer nogmaals</string>
+    <string name="message_please_wait">Een moment...</string>
+    <string name="not_connected">Niet verbonden</string>
 </resources>

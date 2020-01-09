@@ -97,7 +97,7 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
         String imageBinUniqueTag =  inventoryorderBin.getBinCodeStr() + "_IMG";
         pvHolder.imageBin.setTag(imageBinUniqueTag);
         pvHolder.textViewCounted.setText(cAppExtension.activity.getString(R.string.lines) + ' ' + cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(inventoryorderBin.getBinCodeStr()).size());
-        pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(inventoryorderBin.getBinCodeStr())));
+        pvHolder.textViewLines.setText( cAppExtension.activity.getString(R.string.items)  + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(inventoryorderBin.getBinCodeStr())));
 
 
         if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsToDoFragment) {

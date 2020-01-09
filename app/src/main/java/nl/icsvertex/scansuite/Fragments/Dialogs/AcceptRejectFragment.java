@@ -227,7 +227,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-            this.dismiss();
+            InventoryorderBinActivity.pAcceptRejectDialogDismissed();
         }
 
         if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {

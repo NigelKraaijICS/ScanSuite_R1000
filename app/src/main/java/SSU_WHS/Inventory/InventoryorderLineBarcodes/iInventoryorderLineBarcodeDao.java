@@ -6,17 +6,21 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import java.util.List;
+
 import SSU_WHS.General.cDatabase;
 
 @Dao
 public interface iInventoryorderLineBarcodeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity);
+    void insert(cInventoryorderLineBarcodeEntity pvInventoryorderLineBarcodeEntity);
+
+    @Insert
+    void insertAll(List<cInventoryorderLineBarcodeEntity> pvIInventoryorderLineBarcodeEntities);
 
     @Delete
     void delete(cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity);
-
 
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDERLINEBARCODE)
     void deleteAll();

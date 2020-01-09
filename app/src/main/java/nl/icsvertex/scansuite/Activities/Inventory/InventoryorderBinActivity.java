@@ -269,6 +269,10 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
+    public static void pAcceptRejectDialogDismissed() {
+        mStartBinsActivity();
+    }
+
     //End Region Public Methods
 
     //Region Private Methods
@@ -342,7 +346,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         }
 
 
-        if (! cInventoryorder.currentInventoryOrder.isGeneratedBln() && cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) == 0) {
+        if (! cInventoryorder.currentInventoryOrder.isGeneratedBln() && cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) == 0) {
 
             //Clear cache
             cInventoryorderBin.currentInventoryOrderBin = null;
@@ -601,7 +605,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     }
 
     private static void mSetToolBarTitleWithCounters(){
-        String toolBarStr = cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()));
+        String toolBarStr = cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()));
         InventoryorderBinActivity.toolbarSubTitle.setText(toolBarStr);
     }
 
@@ -611,7 +615,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         String messageStr =  cAppExtension.activity.getString(R.string.message_bin_text_sure) ;
 
         if (!cInventoryorder.currentInventoryOrder.isGeneratedBln() &&
-            cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) == 0) {
+            cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) == 0) {
             messageStr = cAppExtension.activity.getString(R.string.message_bin_empty_close);
         }
 

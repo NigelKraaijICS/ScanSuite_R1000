@@ -4,14 +4,23 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/currentLocationContainer"
+    android:padding="@dimen/default_double_padding"
     >
     <TextView
         android:id="@+id/textViewCurrentLocationHeader"
         style="@style/orderDoneHeader"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/currentLocationImageView"
         app:layout_constraintEnd_toEndOf="parent"
         />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/currentLocationImageView"
+        style="@style/currentLocationImageView"
+        app:layout_constraintTop_toTopOf="@id/textViewCurrentLocationHeader"
+        app:layout_constraintBottom_toBottomOf="@id/textViewCurrentLocationHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
     <EditText
         android:imeOptions="actionDone"
         android:singleLine="true"
@@ -34,13 +43,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/currentLocationImageView"
-        style="@style/currentLocationImageView"
-        app:layout_constraintTop_toBottomOf="@id/textViewCurrentLocationText"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewConnection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/editTextCurrentLocation"
+        android:layout_margin="@dimen/default_double_margin"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding">
+            <TextView
+                android:id="@+id/textViewConnection"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imageButtonWifiReconnect"
+                app:layout_constraintBottom_toBottomOf="@id/imageButtonWifiReconnect"
+                app:layout_constraintTop_toTopOf="@id/imageButtonWifiReconnect"
+                >
+            </TextView>
+            <ImageButton
+                style="@style/smallButton"
+                android:id="@+id/imageButtonWifiReconnect"
+                app:srcCompat="@drawable/ic_wifi_star_black_24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
     <Button
         android:id="@+id/setLocationButton"
         android:layout_width="wrap_content"
@@ -48,7 +83,7 @@
         android:layout_margin="@dimen/default_double_margin"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:text="@string/botton_set_currentlocation"
-        app:layout_constraintTop_toBottomOf="@id/currentLocationImageView"
+        app:layout_constraintTop_toBottomOf="@id/cardViewConnection"
         app:layout_constraintEnd_toEndOf="parent"
         />
     <Button
@@ -59,6 +94,6 @@
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:text="@string/cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/currentLocationImageView"
+        app:layout_constraintTop_toBottomOf="@id/cardViewConnection"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

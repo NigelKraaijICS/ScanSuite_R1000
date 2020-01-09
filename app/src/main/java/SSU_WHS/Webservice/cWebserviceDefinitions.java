@@ -65,6 +65,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_INVENTORYBINCLOSE = "p_InventoryOrderBinCloseJsonStr";
     public static String WEBMETHOD_INVENTORYHANDLED = "p_InventoryOrderHandledJsonStr";
     public static String WEBMETHOD_INVENTORYBINRESET = "p_InventoryBinResetJsonStr";
+    public static String WEBMETHOD_INVENTORYBINOPEN = "p_InventoryOrderBinOpenJsonStr";
     public static String WEBMETHOD_GETINTAKEORDERS = "p_ReceiveOrdersGetJsonStr";
     public static String WEBMETHOD_GETINTAKEORDERMATLINES = "p_ReceiveMATRegelsGetJsonStr";
     public static String WEBMETHOD_GETINTAKEORDERMATLINEBARCODES = "p_ReceiveMATRegelBarcodesGetJsonStr";

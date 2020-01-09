@@ -589,17 +589,28 @@ public class cPickorderLine {
     public boolean pCancelIndatabaseBln(){
 
 
+        cPickorderLine.currentPickOrderLine.quantityHandledDbl = 0.0;
+
         if (!this.mUpdateQuanitityHandled(this.quantityHandledDbl)) {
             return  false;
         }
 
+        //Remove or update line barcode
+        cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcodeBln();
         if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)) {
             return  false;
+        }
+
+        for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()) {
+            pickorderLineBarcode.pDeleteFromDatabaseBln();
         }
 
         this.takenTimeStampStr = "";
 
         return this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
+
+
+
 
     }
 
@@ -730,7 +741,6 @@ public class cPickorderLine {
 
         return resultObl;
     }
-
 
     //todo: move this function to a different class
     public List<String> pGetAdvicedSortLocationsFromWebserviceObl(){

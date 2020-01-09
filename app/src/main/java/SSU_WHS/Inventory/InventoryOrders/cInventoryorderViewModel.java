@@ -25,6 +25,9 @@ public class cInventoryorderViewModel extends AndroidViewModel {
 
     //Region Public Methods
     public void insert(cInventoryorderEntity pvInventoryorderEntity) {this.Repository.insert(pvInventoryorderEntity);}
+
+    public void insertAll(List<cInventoryorderEntity>  pvInventoryorderEntities) {this.Repository.insertAll(pvInventoryorderEntities);}
+
     public void deleteAll() {this.Repository.deleteAll();}
 
     public cWebresult pCreateInventoryOrderViaWebserviceWrs(String pvDocumentStr) {return this.Repository.pCreateInventoryOrderViaWebserviceWrs(pvDocumentStr);}

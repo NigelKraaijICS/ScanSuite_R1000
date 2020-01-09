@@ -36,8 +36,8 @@ import static ICS.Utils.cText.pAddSingleQuotesStr;
 
 public class cInventoryorderRepository {
     //Region Public Properties
-    public iInventoryorderDao inventoryorderDao;
-    public iInventoryorderBinDao inventoryorderBinDao;
+    private iInventoryorderDao inventoryorderDao;
+    private iInventoryorderBinDao inventoryorderBinDao;
 
     //End Region Public Properties
 
@@ -58,6 +58,10 @@ public class cInventoryorderRepository {
 
     public void insert (cInventoryorderEntity inventoryorderEntity) {
         new mInsertAsyncTask(inventoryorderDao).execute(inventoryorderEntity);
+    }
+
+    public void insertAll(List<cInventoryorderEntity>  pvInventoryOrderEntities) {
+        new mInsertAllAsyncTask(inventoryorderDao).execute(pvInventoryOrderEntities);
     }
 
     public void deleteAll () {
@@ -500,6 +504,21 @@ public class cInventoryorderRepository {
         @Override
         protected Void doInBackground(final cInventoryorderEntity... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class mInsertAllAsyncTask extends AsyncTask<List<cInventoryorderEntity>, Void, Void> {
+        private iInventoryorderDao mAsyncTaskDao;
+
+        mInsertAllAsyncTask(iInventoryorderDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(final List<cInventoryorderEntity>... params) {
+            mAsyncTaskDao.insertAll(params[0]);
             return null;
         }
     }

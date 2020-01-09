@@ -92,7 +92,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private static TextView quantityText;
     private static TextView quantityRequiredText;
     private static TextView sourcenoText;
-    private static TextView textViewAction;
 
     private static Boolean articleScannedBln = false;
     private static Boolean binScannedBln = false;
@@ -155,6 +154,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         if (item.getItemId() == android.R.id.home) {
             if (IntakeOrderIntakeActivity.quantityScannedDbl == 0 ) {
+                IntakeOrderIntakeActivity.mResetCurrents();
                 IntakeOrderIntakeActivity.mGoBackToLinesActivity();
                 return  true;
             }
@@ -170,6 +170,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     public void onBackPressed() {
 
         if (IntakeOrderIntakeActivity.quantityScannedDbl == 0 ) {
+            IntakeOrderIntakeActivity.mResetCurrents();
             IntakeOrderIntakeActivity.mGoBackToLinesActivity();
             return;
         }
@@ -238,8 +239,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         IntakeOrderIntakeActivity.imageButtonPlus = findViewById(R.id.imageButtonPlus);
         IntakeOrderIntakeActivity.imageButtonDone = findViewById(R.id.imageButtonDone);
 
-        IntakeOrderIntakeActivity.textViewAction = findViewById(R.id.textViewAction);
-
         IntakeOrderIntakeActivity.recyclerScanActions = findViewById(R.id.recyclerScanActions);
     }
 
@@ -306,7 +305,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
             hulpRst = IntakeOrderIntakeActivity.mHandleArticleScanRst(pvBarcodeScan);
             if (! hulpRst.resultBln) {
-                cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,hulpRst.messagesStr(),null,true);
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",null,true);
                 return;
             }
             return;
@@ -334,7 +333,14 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     public static void pAcceptStore() {
 
+
+        if (IntakeOrderIntakeActivity.currentBin == null) {
+            cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer, cAppExtension.activity.getString(R.string.message_bin_required),null, true);
+            return;
+        }
+
         if (IntakeOrderIntakeActivity.quantityScannedDbl == 0 ) {
+            IntakeOrderIntakeActivity.mResetCurrents();
             IntakeOrderIntakeActivity.mGoBackToLinesActivity();
             return;
         }
@@ -349,6 +355,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     }
 
     public static void pCancelStore() {
+        IntakeOrderIntakeActivity.mResetCurrents();
         IntakeOrderIntakeActivity.mGoBackToLinesActivity();
     }
 
@@ -978,7 +985,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     private static void mShowExtraPiecesNotAllowed(){
         IntakeOrderIntakeActivity.quantityText.setText(quantityRequiredText.getText());
-        cUserInterface.pShowSnackbarMessage(textViewAction , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
+        cUserInterface.pShowSnackbarMessage(toolbarImage , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
         cUserInterface.pDoNope(quantityText, true, true);
         cUserInterface.pDoNope(quantityRequiredText, false, false);
     }
@@ -998,6 +1005,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         IntakeOrderIntakeActivity.binScannedBln = false;
         IntakeOrderIntakeActivity.scannedBarcodesObl = null;
         IntakeOrderIntakeActivity.quantityScannedDbl = 0.0;
+        IntakeOrderIntakeActivity.scannedBarcodesObl = null;
 
     }
 

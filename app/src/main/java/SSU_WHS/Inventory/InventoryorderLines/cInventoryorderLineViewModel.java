@@ -22,6 +22,8 @@ public class cInventoryorderLineViewModel extends AndroidViewModel {
 
     //Region Public Methods
     public void insert(cInventoryorderLineEntity pvInventoryorderLineEntity) {this.Repository.insert(pvInventoryorderLineEntity);}
+    public void insertAll(List<cInventoryorderLineEntity>  pvInventoryorderLineEntities) {this.Repository.insertAll(pvInventoryorderLineEntities);}
+
     public void delete(cInventoryorderLineEntity pvInventoryorderLineEntity) {this.Repository.delete(pvInventoryorderLineEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 

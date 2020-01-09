@@ -71,7 +71,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     @Override
     public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
-        this.mFragmentInitialize();
+
 
 
     }
@@ -91,6 +91,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         super.onResume();
         cUserInterface.pEnableScanner();
         PickorderLinesActivity.currentLineFragment = this;
+        this.mFragmentInitialize();
     }
 
 

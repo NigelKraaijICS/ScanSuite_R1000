@@ -393,7 +393,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             return;
         }
 
-        if (cInventoryorder.allInventoryordersObl == null || cInventoryorder.allInventoryordersObl.size() == 0) {
+        if (cInventoryorder.allInventoryOrdersObl(false) == null || cInventoryorder.allInventoryOrdersObl(false).size() == 0) {
             InventoryorderSelectActivity.mShowNoOrdersIcon(true);
             return;
         }
@@ -402,7 +402,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             @Override
             public void run() {
                 //Fill and show recycler
-                InventoryorderSelectActivity.mSetInventoryorderRecycler(cInventoryorder.allInventoryordersObl);
+                InventoryorderSelectActivity.mSetInventoryorderRecycler(cInventoryorder.allInventoryOrdersObl(false));
                 InventoryorderSelectActivity.mShowNoOrdersIcon(false);
                 if (cSharedPreferences.userFilterBln()) {
                     mApplyFilter();
@@ -840,15 +840,15 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     private static void mSetToolBarTitleWithCounters(){
 
 
-        if (cInventoryorder.allInventoryordersObl == null ) {
+        if (cInventoryorder.allInventoryOrdersObl(false) == null ) {
             InventoryorderSelectActivity.toolbarSubTitle.setText("(0)");
             return;
         }
         String subtitleStr;
         if (!cSharedPreferences.userFilterBln()) {
-            subtitleStr = (cText.pIntToStringStr(cInventoryorder.allInventoryordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders)   );
+            subtitleStr = (cText.pIntToStringStr(cInventoryorder.allInventoryOrdersObl(false).size()) + " " + cAppExtension.activity.getString(R.string.orders)   );
         } else {
-            subtitleStr = cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
+            subtitleStr = cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryOrdersObl(false).size()) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }
         InventoryorderSelectActivity.toolbarSubTitle.setText(subtitleStr);
     }

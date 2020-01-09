@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import java.util.List;
 
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cIntakeorderMATLineViewModel extends AndroidViewModel {

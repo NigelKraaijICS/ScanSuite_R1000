@@ -61,7 +61,6 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        this.mFragmentInitialize();
     }
 
     @Override
@@ -79,6 +78,8 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
         super.onResume();
         cUserInterface.pEnableScanner();
         SortorderLinesActivity.currentLineFragment = this;
+        this.mFragmentInitialize();
+
     }
 
     //End Region Default Methods

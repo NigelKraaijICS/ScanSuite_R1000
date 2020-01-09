@@ -392,17 +392,6 @@ public class cIntakeorderMATSummaryLine {
 
     }
 
-    public Boolean pQuantityReachedBln(List<cIntakeorderBarcode> pvScannedBarcodesObl){
-
-        Double quantityTotalDbl = this.quantityHandledDbl;
-
-        for (cIntakeorderBarcode intakeorderBarcode : pvScannedBarcodesObl) {
-            quantityTotalDbl += intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
-        }
-
-        return quantityTotalDbl >= this.getQuantityDbl();
-
-    }
 
     public cIntakeorderMATLine pGetLineForBinCode(cBranchBin pvBranchBin){
 
@@ -474,7 +463,7 @@ public class cIntakeorderMATSummaryLine {
                     return  false;
                 }
 
-            //We have a match, so we can handle one specific line
+                //We have a match, so we can handle one specific line
             case 1:
                 matchedLine = matchedLinesObl.get(0);
                 break;
@@ -509,60 +498,61 @@ public class cIntakeorderMATSummaryLine {
             cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
 
             //If quantity is equal or bigger then asked, the line is finished
-           if (this.pQuantityReachedBln(pvScannedBarcodesObl)) {
+            if (this.pQuantityReachedBln(pvScannedBarcodesObl)) {
 
-               WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineHandledViaWebserviceWrs();
-               if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineHandledViaWebserviceWrs();
+                if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-                   if (this.getBinCodeStr().isEmpty()) {
-                       this.binCodeStr = pvBinCodeStr;
-                   }
+                    if (this.getBinCodeStr().isEmpty()) {
+                        this.binCodeStr = pvBinCodeStr;
+                    }
 
-                   this.quantityHandledDbl += quantityScannedDbl;
+                    this.quantityHandledDbl += quantityScannedDbl;
 
-                   return  true;
-               }
-               else {
+                    return  true;
+                }
+                else {
 
-                   //Undo updated MAT line + own quantity
-                   cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = "";
-                   cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl -= quantityScannedDbl;
-                   cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
-                   cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLED);
-                   return  false;
-               }
+                    //Undo updated MAT line + own quantity
+                    cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = "";
+                    cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl -= quantityScannedDbl;
+                    cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
+                    cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLED);
+                    return  false;
+                }
 
-           }
+            }
 
-           else {
-               //if quantity is lower, we have to split the line
-               WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineSplitViaWebserviceWrs();
-               if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
+            else {
+                //if quantity is lower, we have to split the line
+                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineSplitViaWebserviceWrs();
+                if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
 
 
-                   //Set the quantity to the quantity scanned
-                   cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = pvBinCodeStr;
-                   cIntakeorderMATLine.currentIntakeorderMATLine.quantityDbl = quantityScannedDbl;
-                   cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl = quantityScannedDbl;
-                   cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
+                    //Set the quantity to the quantity scanned
+                    cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = pvBinCodeStr;
+                    cIntakeorderMATLine.currentIntakeorderMATLine.quantityDbl = quantityScannedDbl;
+                    cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl = quantityScannedDbl;
+                    cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
 
-                   //Add new line so the quanity gets raised again
-                   cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(WebResult.getResultDtt().get(0));
-                   intakeorderMATLine.pInsertInDatabaseBln();
-                   this.pAddMATLine(intakeorderMATLine);
-                   return  true;
-               }
-               else {
-                   cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLEDPART);
-                   return  false;
-               }
-           }
+                    //Add new line so the quanity gets raised again
+                    cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(WebResult.getResultDtt().get(0));
+                    intakeorderMATLine.pInsertInDatabaseBln();
+                    this.pAddMATLine(intakeorderMATLine);
+                    return  true;
+                }
+                else {
+                    cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLEDPART);
+                    return  false;
+                }
+            }
         }
 
 
         //We have no match, so we have to add a line
         return  true;
     }
+
 
     public boolean pGetArticleImageBln(){
 
@@ -592,6 +582,19 @@ public class cIntakeorderMATSummaryLine {
         return  false;
 
     }
+
+    public Boolean pQuantityReachedBln(List<cIntakeorderBarcode> pvScannedBarcodesObl){
+
+        Double quantityTotalDbl = this.quantityHandledDbl;
+
+        for (cIntakeorderBarcode intakeorderBarcode : pvScannedBarcodesObl) {
+            quantityTotalDbl += intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
+        }
+
+        return quantityTotalDbl >= this.getQuantityDbl();
+
+    }
+
 
     //End Region Public Methods
 

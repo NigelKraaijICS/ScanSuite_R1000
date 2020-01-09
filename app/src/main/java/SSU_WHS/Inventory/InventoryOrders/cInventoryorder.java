@@ -18,7 +18,6 @@ import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
-import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -27,14 +26,15 @@ import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcodeEntity;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinEntity;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
+import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEntity;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
+import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
 
 
 public class cInventoryorder {
-
 
     private String orderNumberStr;
     public String getOrderNumberStr() {
@@ -140,15 +140,37 @@ public class cInventoryorder {
     public List<cComment> commentsObl() {
         return cComment.allCommentsObl;
     }
-
     public List<cInventoryorderBarcode> barcodesObl () {return  cInventoryorderBarcode.allInventoryorderBarcodesObl;}
     private List<cInventoryorderLine> linesObl() {return  cInventoryorderLine.allLinesObl;}
-
     private List<cArticleImage> imagesObl()  {
         return  cArticleImage.allImages;
     }
 
-    public static List<cInventoryorder> allInventoryordersObl;
+    private static List<cInventoryorder> allCachedOrdersObl;
+    public static List<cInventoryorder> allInventoryOrdersObl(Boolean pvRefreshBln ){
+
+        if (pvRefreshBln) {
+             cInventoryorder.allCachedOrdersObl = null;
+        }
+
+        if (cInventoryorder.allCachedOrdersObl != null) {
+            return  cInventoryorder.allCachedOrdersObl;
+        }
+
+        cInventoryorder.allCachedOrdersObl  = new ArrayList<>();
+        List<cInventoryorderEntity> hulpObl  =  cInventoryorder.getInventoryorderViewModel().pGetInventoryordersFromDatabaseObl();
+
+
+        for (cInventoryorderEntity inventoryorderEntity : hulpObl) {
+            cInventoryorder inventoryorder = new cInventoryorder(inventoryorderEntity);
+            cInventoryorder.allCachedOrdersObl.add(inventoryorder);
+        }
+
+        return  cInventoryorder.allCachedOrdersObl;
+
+
+    }
+
     public static cInventoryorder currentInventoryOrder;
 
     //Region Public Properties
@@ -208,14 +230,12 @@ public class cInventoryorder {
 
     //Region Public Methods
 
+    //Region Orders
+
     public boolean pInsertInDatabaseBln() {
         cInventoryorder.getInventoryorderViewModel().insert(this.inventoryorderEntity);
         this.indatabaseBln = true;
 
-        if (cInventoryorder.allInventoryordersObl == null) {
-            cInventoryorder.allInventoryordersObl = new ArrayList<>();
-        }
-        cInventoryorder.allInventoryordersObl.add(this);
         return true;
     }
 
@@ -243,43 +263,34 @@ public class cInventoryorder {
     public static boolean pGetInventoryOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr) {
 
         if (pvRefreshBln) {
-            cInventoryorder.allInventoryordersObl = null;
-            cInventoryorder.mTruncateTableBln();
+            cInventoryorder.mTruncateTable();
         }
 
         cWebresult WebResult;
         WebResult = cInventoryorder.getInventoryorderViewModel().pGetInventoryordersFromWebserviceWrs(pvSearchTextStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
+            List<cInventoryorderEntity> insertObl = new ArrayList<>();
+
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cInventoryorder inventoryorder = new cInventoryorder(jsonObject);
-                inventoryorder.pInsertInDatabaseBln();
+                insertObl.add(inventoryorder.inventoryorderEntity);
             }
 
+            //Batch insert in database
+            cInventoryorder.mInsertAllInDatabase(insertObl);
+
+            //Make sure memory is filled
+            cInventoryorder.allInventoryOrdersObl(true);
             return true;
 
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERS);
             return false;
         }
-    }
 
-    public static List<cInventoryorder> pGetInventoriesFromDatabasObl() {
 
-        List<cInventoryorder> resultObl = new ArrayList<>();
-        List<cInventoryorderEntity> hulpResultObl;
 
-        hulpResultObl = cInventoryorder.getInventoryorderViewModel().pGetInventoryordersFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return resultObl;
-        }
-
-        for (cInventoryorderEntity inventoryorderEntity : hulpResultObl) {
-            cInventoryorder inventoryorder = new cInventoryorder(inventoryorderEntity);
-            resultObl.add(inventoryorder);
-        }
-
-        return resultObl;
     }
 
     public cResult pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu pvStepCodeEnu, int pvWorkFlowStepInt) {
@@ -297,11 +308,11 @@ public class cInventoryorder {
         }
 
         Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString(),
-                                                                                                        this.getOrderNumberStr(),
-                                                                                                        cDeviceInfo.getSerialnumberStr(),
-                                                                                                        pvStepCodeEnu.toString(),
-                                                                                                        pvWorkFlowStepInt,
-                                                                                                        ignoreBusyBln);
+                this.getOrderNumberStr(),
+                cDeviceInfo.getSerialnumberStr(),
+                pvStepCodeEnu.toString(),
+                pvWorkFlowStepInt,
+                ignoreBusyBln);
 
         //No result, so something really went wrong
         if (Webresult == null) {
@@ -336,7 +347,7 @@ public class cInventoryorder {
 
         //Check if this activity is meant for a different user
         if (!Webresult.getResultBln() && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-            Webresult.getResultObl().size() > 0 && ! Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr())) {
+                Webresult.getResultObl().size() > 0 && ! Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr())) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_another_user_already_started)) + " " + Webresult.getResultObl().get(0));
@@ -360,7 +371,7 @@ public class cInventoryorder {
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_cant_be_started)));
             }
 
-            cInventoryorder.currentInventoryOrder.mGetCommentsViaWebErrorBln(Webresult.getResultDtt());
+            cInventoryorder.currentInventoryOrder.mGetCommentsViaWebError(Webresult.getResultDtt());
             return result;
         }
 
@@ -377,68 +388,107 @@ public class cInventoryorder {
         return Webresult.getSuccessBln() && Webresult.getResultBln();
     }
 
-    public boolean pGetArticleImagesViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (!cInventoryorder.currentInventoryOrder.isInventoryWithPictureBln()  || !cInventoryorder.currentInventoryOrder.inventoryWithPicturePrefetchBln) {
-            return  true;
-        }
-
-        if (pvRefreshBln) {
-            cArticleImage.allImages = null;
-            cArticleImage.pTruncateTableBln();
-        }
-
-        if (this.imagesObl()  != null) {
-            return  true;
-        }
-
-        if (this.linesObl() == null || this.linesObl().size() == 0) {
-            return  false;
-        }
-
-        List<String> itemNoAndVariantCodeObl;
-        itemNoAndVariantCodeObl = new ArrayList<>();
-
-        for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
-            String itemNoAndVariantCodeStr = inventoryorderLine.getItemNoStr() + ";" + inventoryorderLine.getVariantCodeStr();
-
-            if (!itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr)) {
-                itemNoAndVariantCodeObl.add(itemNoAndVariantCodeStr);
-            }
-        }
-
-        cWebresult WebResult;
-        WebResult =  cArticleImage.getArticleImageViewModel().pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
-        if (WebResult.getResultBln()&& WebResult.getSuccessBln()){
-
-            cArticleImage.allImages = new ArrayList<>();
-            List<JSONObject> myList = WebResult.getResultDtt();
-
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
-                cArticleImage articleImage = new cArticleImage(jsonObject);
-
-                if ( !cArticleImage.allImages.contains(articleImage)) {
-                    articleImage.pInsertInDatabaseBln();
-                    cArticleImage.allImages.add((articleImage));
-                }
-            }
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
-            return  false;
-        }
-    }
-
     public void pDeleteDetails() {
         cInventoryorderLine.pTruncateTableBln();
         cInventoryorderBin.pTruncateTableBln();
         cInventoryorderBarcode.pTruncateTableBln();
         cInventoryorderLineBarcode.pTruncateTableBln();
     }
+
+    public cResult pOrderHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+
+        cWebresult webresult;
+
+        webresult =  cInventoryorder.getInventoryorderViewModel().pHandledViaWebserviceWrs();
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (!webresult.getSuccessBln()) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
+
+            Long actionLng = 0L;
+
+            if (webresult.getResultLng() < 10 ) {
+                actionLng = webresult.getResultLng();
+            }
+
+            if (webresult.getResultLng() > 100) {
+                actionLng  = webresult.getResultLng()/100;
+            }
+
+            //Try to convert action long to action enumerate
+            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            result.resultBln = false;
+            result.activityActionEnu = activityActionEnu;
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+            }
+
+            cInventoryorder.currentInventoryOrder.mGetCommentsViaWebError(webresult.getResultDtt());
+            return result;
+        }
+
+        return  result;
+
+
+    }
+
+    public static List<cInventoryorder> pGetInventoriesWithFilterFromDatabasObl() {
+
+        List<cInventoryorder> resultObl = new ArrayList<>();
+        List<cInventoryorderEntity> hulpResultObl;
+
+        hulpResultObl =  cInventoryorder.getInventoryorderViewModel().pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getNameStr(), cSharedPreferences.userFilterBln());
+        if (hulpResultObl == null || hulpResultObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cInventoryorderEntity inventoryorderEntity : hulpResultObl ) {
+            cInventoryorder inventoryorder = new cInventoryorder(inventoryorderEntity);
+            resultObl.add(inventoryorder);
+        }
+
+        return  resultObl;
+    }
+
+    private static void mTruncateTable() {
+        cInventoryorder.getInventoryorderViewModel().deleteAll();
+    }
+
+    private static  void mInsertAllInDatabase(List<cInventoryorderEntity> pvInventoryOrderEntityObl ) {
+        cInventoryorder.getInventoryorderViewModel().insertAll (pvInventoryOrderEntityObl);
+    }
+
+    //End Region Orders
+
+    //Region Lines
 
     public boolean pGetLinesViaWebserviceBln(Boolean pvRefreshBln) {
 
@@ -456,17 +506,19 @@ public class cInventoryorder {
                 cInventoryorderLine.allLinesObl = new ArrayList<>();
             }
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+
+            List<cInventoryorderLineEntity> importObl = new ArrayList<>();
+            List<cInventoryorderLine> objectObl = new ArrayList<>();
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
 
                 cInventoryorderLine inventoryorderLine = new cInventoryorderLine(jsonObject);
-                inventoryorderLine.pInsertInDatabaseBln();
+                importObl.add(inventoryorderLine.inventoryorderLineEntity);
+                objectObl.add((inventoryorderLine));
 
                 if (! inventoryorderLine.getHandeledTimeStampStr().isEmpty()) {
 
-                  cInventoryorderBin.currentInventoryOrderBin  =   cInventoryorder.currentInventoryOrder.pGetBin(inventoryorderLine.getBinCodeStr());
+                    cInventoryorderBin.currentInventoryOrderBin  =   cInventoryorder.currentInventoryOrder.pGetBin(inventoryorderLine.getBinCodeStr());
                     if ( cInventoryorderBin.currentInventoryOrderBin == null) {
                         continue;
                     }
@@ -475,11 +527,14 @@ public class cInventoryorder {
                         cInventoryorderBin.currentInventoryOrderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
                     }
 
-                    cInventoryorderBin.currentInventoryOrderBin.pUpdateStatusInDatabaseBln();
+                    cInventoryorderBin.currentInventoryOrderBin.pUpdateStatusAndTimeStampInDatabaseBln();
                     cInventoryorderBin.currentInventoryOrderBin = null;
                 }
 
             }
+
+            cInventoryorderLine.pInsertAllInDatabase(objectObl,importObl);
+
 
             return  true;
 
@@ -487,230 +542,6 @@ public class cInventoryorder {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERLINES);
             return false;
         }
-    }
-
-    public boolean pGetBinsViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cInventoryorderBin.allInventoryorderBinsObl = null;
-            cInventoryorderBin.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-
-        WebResult = cInventoryorder.getInventoryorderViewModel().pGetBinsFromWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
-
-            if (cInventoryorderBin.allInventoryorderBinsObl == null) {
-                cInventoryorderBin.allInventoryorderBinsObl = new ArrayList<>();
-            }
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
-                cInventoryorderBin inventoryorderBin = new cInventoryorderBin(jsonObject);
-                inventoryorderBin.pInsertInDatabaseBln();
-
-                if (inventoryorderBin.getStatusInt() ==  cWarehouseorder.InventoryBinStatusEnu.InventoryDoneOnServer && !cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
-                    inventoryorderBin.pCloseBln(false);
-                }
-
-            }
-
-            return  true;
-
-        } else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBINS);
-            return false;
-        }
-    }
-
-    public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
-
-        if (pvRefeshBln) {
-            cComment.allCommentsObl = null;
-            cComment.pTruncateTableBln();
-            cComment.commentsShownBln = false;
-        }
-
-        cWebresult webresult;
-        webresult = cInventoryorder.getInventoryorderViewModel().pGetCommentsFromWebserviceWrs();
-        if (webresult.getResultBln()&& webresult.getSuccessBln()) {
-
-            cComment.allCommentsObl = new ArrayList<>();
-
-            List<JSONObject> myList = webresult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-                cComment comment = new cComment(jsonObject);
-                comment.pInsertInDatabaseBln();
-            }
-            return true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERCOMMENTS);
-            return false;
-        }
-    }
-
-    public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cInventoryorderBarcode.allInventoryorderBarcodesObl = null;
-            cInventoryorderBarcode.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pGetBarcodesFromWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
-
-            if (cInventoryorderBarcode.allInventoryorderBarcodesObl == null) {
-                cInventoryorderBarcode.allInventoryorderBarcodesObl = new ArrayList<>();
-            }
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            List<cInventoryorderBarcodeEntity> inventoryorderEntities = new ArrayList<>();
-
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
-                cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(jsonObject);
-                inventoryorderEntities.add(inventoryorderBarcode.inventoryorderBarcodeEntity);
-
-
-
-
-//                inventoryorderBarcode.pInsertInDatabaseBln();
-            }
-
-            cInventoryorderBarcode.pInsertAllInDatabaseBln(inventoryorderEntities);
-
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBARCODES);
-            return  false;
-        }
-    }
-
-    public boolean pGetLineBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cInventoryorderLineBarcode.allLineBarcodesObl = null;
-            cInventoryorderLineBarcode.pTruncateTableBln();
-        }
-
-        cWebresult WebResult =  cInventoryorder.getInventoryorderViewModel().pGetLineBarcodesFromWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
-
-                cInventoryorderLineBarcode inventoryorderLineBarcode = new cInventoryorderLineBarcode(jsonObject);
-
-                //Search for line that belongs to this barcode
-                cInventoryorderLine inventoryorderLine = cInventoryorder.currentInventoryOrder.mGetLineWithLineNo(inventoryorderLineBarcode.getLineNoLng());
-
-                //If we can't find it, skip this
-                if (inventoryorderLine == null) {
-                    continue;
-                }
-
-                //Add barcode to line
-                inventoryorderLine.pAddLineBarcode(inventoryorderLineBarcode.getBarcodeStr(),inventoryorderLineBarcode.getQuantityhandledDbl());
-            }
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERLINEBARCODES);
-            return  false;
-        }
-
-        return  true;
-    }
-
-    public boolean pAddUnkownBarcodeBln(cBarcodeScan pvBarcodeScan) {
-
-        cInventoryorder.currentInventoryOrder.unknownVariantCounterInt += 1;
-
-        cWebresult WebResult;
-
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
-        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
-
-            if (WebResult.getResultDtt().size() == 1) {
-                cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(WebResult.getResultDtt().get(0));
-                inventoryorderBarcode.pInsertInDatabaseBln();
-                cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
-                return  true;
-            }
-        }
-        else {
-            cInventoryorder.currentInventoryOrder.unknownVariantCounterInt -= 1;
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE);
-            return  false;
-        }
-
-        return  true;
-    }
-
-    public boolean pAddERPBarcodeBln(cBarcodeScan pvBarcodeScan) {
-
-
-        //Get article info via the web service
-        cArticle.currentArticle  = cArticle.pGetArticleByBarcodeViaWebservice(pvBarcodeScan);
-
-        //We failed to get the article
-        if (cArticle.currentArticle == null) {
-            return false;
-        }
-
-        //Get barcodes for this article
-        if (!cArticle.currentArticle.pGetBarcodesViaWebserviceBln()) {
-            return false;
-        }
-
-        //Search for the scanned barcode in the article barcodes
-        cArticleBarcode matchedArticleBarcode = null;
-        for (cArticleBarcode articleBarcode : cArticle.currentArticle.barcodesObl) {
-            if (articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
-                articleBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
-                matchedArticleBarcode = articleBarcode;
-                break;
-            }
-        }
-
-        //We didn't find a match, so no use in adding the line
-        if (matchedArticleBarcode == null) {
-            return  false;
-        }
-
-        cWebresult WebResult;
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-                for (cArticleBarcode articleBarcode :  cArticle.currentArticle.barcodesObl) {
-                    cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(articleBarcode);
-                    inventoryorderBarcode.pInsertInDatabaseBln();
-
-                    if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
-                        inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
-                        cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
-                    }
-                }
-        }
-        else {
-            cInventoryorder.currentInventoryOrder.unknownVariantCounterInt -= 1;
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE);
-            return  false;
-        }
-
-        return  true;
     }
 
     public boolean pAddLineBln() {
@@ -734,7 +565,7 @@ public class cInventoryorder {
         return  true;
     }
 
-    public  List<cInventoryorderLine> pGetLinesForBinObl(String pvBincodeStr) {
+    public List<cInventoryorderLine> pGetLinesForBinObl(String pvBincodeStr) {
 
         List<cInventoryorderLine> resultObl = new ArrayList<>();
         for (cInventoryorderLine inventoryorderLine : cInventoryorder.currentInventoryOrder.linesObl()) {
@@ -746,7 +577,7 @@ public class cInventoryorder {
         return resultObl;
     }
 
-    public Double  pGetTotalCountDbl() {
+    public Double pGetTotalItemCountDbl() {
 
         Double resultDbl;
 
@@ -758,9 +589,9 @@ public class cInventoryorder {
         return resultDbl;
     }
 
-    public Double  pGetCountForBinDbl(String pvBincodeStr) {
+    public Double pGetItemCountForBinDbl(String pvBincodeStr) {
 
-      Double resultDbl;
+        Double resultDbl;
 
         resultDbl = cInventoryorderLine.getInventoryorderLineViewModel().pGetCountForBinCodeDbl(pvBincodeStr);
         if (resultDbl == null ) {
@@ -770,32 +601,96 @@ public class cInventoryorder {
         return resultDbl;
     }
 
-    public static List<cInventoryorder> pGetInventoriesWithFilterFromDatabasObl() {
+    public cInventoryorderLine pGetLineForArticleAndBin() {
 
-        List<cInventoryorder> resultObl = new ArrayList<>();
-        List<cInventoryorderEntity> hulpResultObl;
 
-        hulpResultObl =  cInventoryorder.getInventoryorderViewModel().pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getNameStr(), cSharedPreferences.userFilterBln());
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cInventoryorderEntity inventoryorderEntity : hulpResultObl ) {
-            cInventoryorder inventoryorder = new cInventoryorder(inventoryorderEntity);
-            resultObl.add(inventoryorder);
-        }
-
-        return  resultObl;
-    }
-
-    public List<cComment> pFeedbackCommentObl(){
-
-        if (cInventoryorder.currentInventoryOrder.commentsObl() == null || cInventoryorder.currentInventoryOrder.commentsObl().size() == 0) {
+        if (this.linesObl() == null || this.linesObl().size() == 0) {
             return  null;
         }
 
-        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
+        for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
 
+            //Check if BIN matches current BIN
+            if (! inventoryorderLine.getBinCodeStr().equalsIgnoreCase(   cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr())) {
+                continue;
+            }
+
+            //Check if item matches scanned item
+            if (inventoryorderLine.getItemNoStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getItemNoStr()) &&
+                    inventoryorderLine.getVariantCodeStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getVariantCodeStr())) {
+                return  inventoryorderLine;
+            }
+        }
+
+        return  null;
+    }
+
+    private cInventoryorderLine mGetLineWithLineNo(Long pvLineNoLng) {
+
+        if (this.linesObl() == null || this.linesObl().size() == 0) {
+            return  null;
+        }
+
+        for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
+
+            if (cText.pIntToStringStr(inventoryorderLine.getLineNoInt()).equalsIgnoreCase(cText.pLongToStringStr(pvLineNoLng))) {
+                return  inventoryorderLine;
+            }
+
+        }
+
+        return  null;
+
+    }
+
+    //End Region Lines
+
+    //Region BINS
+
+    public boolean pGetBinsViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cInventoryorderBin.allInventoryorderBinsObl = null;
+            cInventoryorderBin.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+
+        WebResult = cInventoryorder.getInventoryorderViewModel().pGetBinsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            if (cInventoryorderBin.allInventoryorderBinsObl == null) {
+                cInventoryorderBin.allInventoryorderBinsObl = new ArrayList<>();
+            }
+
+            List<cInventoryorderBinEntity> insertObl = new ArrayList<>();
+            List<cInventoryorderBin> closedBinsObl = new ArrayList<>();
+
+            for ( JSONObject jsonObject : WebResult.getResultDtt()) {
+
+
+                cInventoryorderBin inventoryorderBin = new cInventoryorderBin(jsonObject);
+                insertObl.add(inventoryorderBin.inventoryorderBinEntity);
+
+                if (inventoryorderBin.getStatusInt() ==  cWarehouseorder.InventoryBinStatusEnu.InventoryDoneOnServer && !cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
+                    closedBinsObl.add(inventoryorderBin);
+                }
+
+            }
+
+            cInventoryorderBin.pInsertAllInDatabase(insertObl);
+
+            //Close all BINS in database after they got inserted
+            for (cInventoryorderBin inventoryorderBin : closedBinsObl) {
+                inventoryorderBin.pCloseBln(false);
+            }
+
+            return  true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBINS);
+            return false;
+        }
     }
 
     public List<cInventoryorderBin> pGetBinsDoneFromDatabasObl() {
@@ -888,6 +783,171 @@ public class cInventoryorder {
         return  null;
     }
 
+    //End Region BINS
+
+    //Region Barcodes
+
+    public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cInventoryorderBarcode.allInventoryorderBarcodesObl = null;
+            cInventoryorderBarcode.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+
+        WebResult =  cInventoryorder.getInventoryorderViewModel().pGetBarcodesFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
+
+            if (cInventoryorderBarcode.allInventoryorderBarcodesObl == null) {
+                cInventoryorderBarcode.allInventoryorderBarcodesObl = new ArrayList<>();
+            }
+
+
+            List<cInventoryorderBarcodeEntity> inventoryorderEntities = new ArrayList<>();
+
+            for (JSONObject jsonObject :WebResult.getResultDtt() ) {
+                cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(jsonObject);
+                inventoryorderEntities.add(inventoryorderBarcode.inventoryorderBarcodeEntity);
+            }
+
+            cInventoryorderBarcode.pInsertAllInDatabaseBln(inventoryorderEntities);
+            return true;
+        }
+
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBARCODES);
+            return  false;
+        }
+    }
+
+    public boolean pAddUnkownBarcodeBln(cBarcodeScan pvBarcodeScan) {
+
+        cInventoryorder.currentInventoryOrder.unknownVariantCounterInt += 1;
+
+        cWebresult WebResult;
+
+        WebResult =  cInventoryorder.getInventoryorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+
+            if (WebResult.getResultDtt().size() == 1) {
+                cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(WebResult.getResultDtt().get(0));
+                inventoryorderBarcode.pInsertInDatabaseBln();
+                cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
+                return  true;
+            }
+        }
+        else {
+            cInventoryorder.currentInventoryOrder.unknownVariantCounterInt -= 1;
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE);
+            return  false;
+        }
+
+        return  true;
+    }
+
+    public boolean pAddERPBarcodeBln(cBarcodeScan pvBarcodeScan) {
+
+
+        //Get article info via the web service
+        cArticle.currentArticle  = cArticle.pGetArticleByBarcodeViaWebservice(pvBarcodeScan);
+
+        //We failed to get the article
+        if (cArticle.currentArticle == null) {
+            return false;
+        }
+
+        //Get barcodes for this article
+        if (!cArticle.currentArticle.pGetBarcodesViaWebserviceBln()) {
+            return false;
+        }
+
+        //Search for the scanned barcode in the article barcodes
+        cArticleBarcode matchedArticleBarcode = null;
+        for (cArticleBarcode articleBarcode : cArticle.currentArticle.barcodesObl) {
+            if (articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                    articleBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
+                matchedArticleBarcode = articleBarcode;
+                break;
+            }
+        }
+
+        //We didn't find a match, so no use in adding the line
+        if (matchedArticleBarcode == null) {
+            return  false;
+        }
+
+        cWebresult WebResult;
+        WebResult =  cInventoryorder.getInventoryorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            for (cArticleBarcode articleBarcode :  cArticle.currentArticle.barcodesObl) {
+                cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(articleBarcode);
+                inventoryorderBarcode.pInsertInDatabaseBln();
+
+                if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                        inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
+                    cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
+                }
+            }
+        }
+        else {
+            cInventoryorder.currentInventoryOrder.unknownVariantCounterInt -= 1;
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE);
+            return  false;
+        }
+
+        return  true;
+    }
+
+    //End Region Barcodes
+
+    //Region Line Barcode
+
+    public boolean pGetLineBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cInventoryorderLineBarcode.allLineBarcodesObl = null;
+            cInventoryorderLineBarcode.pTruncateTableBln();
+        }
+
+        cWebresult WebResult =  cInventoryorder.getInventoryorderViewModel().pGetLineBarcodesFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            List<cInventoryorderLineBarcodeEntity> insertObl = new ArrayList<>();
+
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cInventoryorderLineBarcode inventoryorderLineBarcode = new cInventoryorderLineBarcode(jsonObject);
+                insertObl.add((inventoryorderLineBarcode.inventoryorderLineBarcodeEntity));
+
+                //Search for line that belongs to this barcode
+                cInventoryorderLine inventoryorderLine = cInventoryorder.currentInventoryOrder.mGetLineWithLineNo(inventoryorderLineBarcode.getLineNoLng());
+
+                //If we can't find it, skip this
+                if (inventoryorderLine == null) {
+                    continue;
+                }
+
+                //Add barcode to line
+                inventoryorderLine.pAddLineBarcode(inventoryorderLineBarcode.getBarcodeStr(),inventoryorderLineBarcode.getQuantityhandledDbl());
+
+            }
+
+            cInventoryorderLineBarcode.pInsertAllInDatabase(insertObl);
+
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERLINEBARCODES);
+            return  false;
+        }
+
+        return  true;
+    }
+
+    //End Region Line Barcode
+
+    //Region Barcode
+
     public cInventoryorderBarcode pGetOrderBarcode(cBarcodeScan pvBarcodescan) {
 
         if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
@@ -897,7 +957,7 @@ public class cInventoryorder {
         for (cInventoryorderBarcode inventoryorderBarcode : this.barcodesObl()) {
 
             if (inventoryorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeOriginalStr()) ||
-                inventoryorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodescan.getBarcodeFormattedStr())) {
+                    inventoryorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodescan.getBarcodeFormattedStr())) {
                 return  inventoryorderBarcode;
             }
         }
@@ -906,105 +966,110 @@ public class cInventoryorder {
 
     }
 
-    public cInventoryorderLine pGetLineForArticleAndBin() {
+    //End Region Barcode
 
+    //Region Images
+
+    public boolean pGetArticleImagesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (!cInventoryorder.currentInventoryOrder.isInventoryWithPictureBln()  || !cInventoryorder.currentInventoryOrder.inventoryWithPicturePrefetchBln) {
+            return  true;
+        }
+
+        if (pvRefreshBln) {
+            cArticleImage.allImages = null;
+            cArticleImage.pTruncateTableBln();
+        }
+
+        if (this.imagesObl()  != null) {
+            return  true;
+        }
 
         if (this.linesObl() == null || this.linesObl().size() == 0) {
+            return  false;
+        }
+
+        List<String> itemNoAndVariantCodeObl;
+        itemNoAndVariantCodeObl = new ArrayList<>();
+
+        for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
+            String itemNoAndVariantCodeStr = inventoryorderLine.getItemNoStr() + ";" + inventoryorderLine.getVariantCodeStr();
+
+            if (!itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr)) {
+                itemNoAndVariantCodeObl.add(itemNoAndVariantCodeStr);
+            }
+        }
+
+        cWebresult WebResult;
+        WebResult =  cArticleImage.getArticleImageViewModel().pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()){
+
+            cArticleImage.allImages = new ArrayList<>();
+            List<JSONObject> myList = WebResult.getResultDtt();
+
+            for (int i = 0; i < myList.size(); i++) {
+                JSONObject jsonObject;
+                jsonObject = myList.get(i);
+
+                cArticleImage articleImage = new cArticleImage(jsonObject);
+
+                if ( !cArticleImage.allImages.contains(articleImage)) {
+                    articleImage.pInsertInDatabaseBln();
+                    cArticleImage.allImages.add((articleImage));
+                }
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
+            return  false;
+        }
+    }
+
+    //End Region Images
+
+    //Region Comments
+
+    public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
+
+        if (pvRefeshBln) {
+            cComment.allCommentsObl = null;
+            cComment.pTruncateTableBln();
+            cComment.commentsShownBln = false;
+        }
+
+        cWebresult webresult;
+        webresult = cInventoryorder.getInventoryorderViewModel().pGetCommentsFromWebserviceWrs();
+        if (webresult.getResultBln()&& webresult.getSuccessBln()) {
+
+            cComment.allCommentsObl = new ArrayList<>();
+
+            List<JSONObject> myList = webresult.getResultDtt();
+            for (int i = 0; i < myList.size(); i++) {
+                JSONObject jsonObject;
+                jsonObject = myList.get(i);
+                cComment comment = new cComment(jsonObject);
+                comment.pInsertInDatabaseBln();
+            }
+            return true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERCOMMENTS);
+            return false;
+        }
+    }
+
+    public List<cComment> pFeedbackCommentObl(){
+
+        if (cInventoryorder.currentInventoryOrder.commentsObl() == null || cInventoryorder.currentInventoryOrder.commentsObl().size() == 0) {
             return  null;
         }
 
-        for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
-
-            //Check if BIN matches current BIN
-            if (! inventoryorderLine.getBinCodeStr().equalsIgnoreCase(   cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr())) {
-                continue;
-            }
-
-            //Check if item matches scanned item
-            if (inventoryorderLine.getItemNoStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getItemNoStr()) &&
-                inventoryorderLine.getVariantCodeStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getVariantCodeStr())) {
-                return  inventoryorderLine;
-            }
-        }
-
-        return  null;
-    }
-
-    public cResult pOrderHandledViaWebserviceRst() {
-
-        cResult result;
-        result = new cResult();
-        result.resultBln = true;
-
-
-        cWebresult webresult;
-
-        webresult =  cInventoryorder.getInventoryorderViewModel().pHandledViaWebserviceWrs();
-
-        //No result, so something really went wrong
-        if (webresult == null) {
-            result.resultBln = false;
-            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
-            return result;
-        }
-
-        //Everything was fine, so we are done
-        if (webresult.getSuccessBln() && webresult.getResultBln()) {
-            result.resultBln = true;
-            return result;
-        }
-
-        //Something really went wrong
-        if (!webresult.getSuccessBln()) {
-            result.resultBln = false;
-            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
-            return result;
-        }
-
-        // We got a succesfull response, but we need to do something with this activity
-        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
-
-            Long actionLng = 0L;
-
-            if (webresult.getResultLng() < 10 ) {
-                actionLng = webresult.getResultLng();
-            }
-
-            if (webresult.getResultLng() > 100) {
-                actionLng  = webresult.getResultLng()/100;
-            }
-
-            //Try to convert action long to action enumerate
-            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
-
-            result.resultBln = false;
-            result.activityActionEnu = activityActionEnu;
-
-            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
-                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
-            }
-
-            cInventoryorder.currentInventoryOrder.mGetCommentsViaWebErrorBln(webresult.getResultDtt());
-            return result;
-        }
-
-        return  result;
-
+        return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
 
     }
 
-    //Region Public Methods
-
-    //Region Private Methods
-
-    private static boolean mTruncateTableBln() {
-        cInventoryorder.getInventoryorderViewModel().deleteAll();
-        return true;
-    }
-
-    private boolean mGetCommentsViaWebErrorBln(List<JSONObject> pvResultDtt) {
+    private void mGetCommentsViaWebError(List<JSONObject> pvResultDtt) {
 
         cComment.allCommentsObl = new ArrayList<>();
         for (JSONObject jsonObject : pvResultDtt) {
@@ -1012,36 +1077,9 @@ public class cInventoryorder {
             comment.pInsertInDatabaseBln();
         }
 
-        return true;
 
     }
 
-    private cInventoryorderLine mGetLineWithLineNo(Long pvLineNoLng) {
-
-        if (this.linesObl() == null || this.linesObl().size() == 0) {
-            return  null;
-        }
-
-        for (cInventoryorderLine inventoryorderLine : this.linesObl()) {
-
-            if (cText.pIntToStringStr(inventoryorderLine.getLineNoInt()).equalsIgnoreCase(cText.pLongToStringStr(pvLineNoLng))) {
-                return  inventoryorderLine;
-            }
-
-        }
-
-        return  null;
-
-    }
-
-    //End Region Private Methods
-
-
-
-
-
-    //End Region Private Methods
-
-
+    //End Region Comments
 
 }

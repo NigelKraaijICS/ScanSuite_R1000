@@ -1,6 +1,7 @@
 package nl.icsvertex.scansuite.Activities.Pick;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import com.google.android.material.tabs.TabLayout;
@@ -8,8 +9,13 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +30,7 @@ import java.util.concurrent.Future;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cConnection;
 import ICS.Utils.cNoSwipeViewPager;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
@@ -75,8 +82,9 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     private static PickorderLinesPagerAdapter pickorderLinesPagerAdapter;
     static private ImageView imageButtonComments;
 
-    private static  ImageView toolbarImage;
+    private static ImageView toolbarImage;
     private static TextView toolbarTitle;
+
 
 
     //End Region Views
@@ -109,6 +117,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     protected void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cConnection.pRegisterWifiChangedReceiver();
         cUserInterface.pEnableScanner();
     }
 
@@ -116,6 +125,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     protected void onPause() {
         try {
             cBarcodeScan.pUnregisterBarcodeReceiver();
+            cConnection.pUnregisterWifiChangedReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -192,7 +202,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         PickorderLinesActivity.pickorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
-                pickorderLinesViewPager.setCurrentItem(pvTab.getPosition());
+                PickorderLinesActivity.pickorderLinesViewPager.setCurrentItem(pvTab.getPosition());
                 mChangeSelectedTab(pvTab);
             }
 
@@ -220,7 +230,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         PickorderLinesActivity.mShowComments();
 
         //Call this here, because this is called everytime the activiy gets shown
-        this.mCheckAllDone();
+        PickorderLinesActivity.pCheckAllDone();
 
     }
 
@@ -483,15 +493,21 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private void mCheckAllDone() {
+    public static void pCheckAllDone() {
 
         // If not everything is done, then leave
-        if (!this.mAllLinesDoneBln()) {
+        if (!PickorderLinesActivity.mAllLinesDoneBln()) {
+            return;
+        }
+
+        //All lines are done
+        if (!cConnection.isInternetConnectedBln()) {
+            cConnection.pShowTryAgainDialog();
             return;
         }
 
         // If not everything is sent, then leave
-        if (!this.mCheckAndSentLinesBln()) {
+        if (!PickorderLinesActivity.mCheckAndSentLinesBln()) {
             return;
         }
 
@@ -509,7 +525,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Show Current Location fragment
-        if (cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
+        if (cPickorder.currentPickOrder.isPickActivityBinRequiredBln() &&
                 cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
             // Show order done fragment
             PickorderLinesActivity.mShowCurrentLocationFragment();
@@ -591,7 +607,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
-    private Boolean mCheckAndSentLinesBln() {
+    private static Boolean mCheckAndSentLinesBln() {
 
         final List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabasObl();
 
@@ -641,7 +657,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private Boolean mAllLinesDoneBln() {
+    private static Boolean mAllLinesDoneBln() {
         return cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0;
     }
 

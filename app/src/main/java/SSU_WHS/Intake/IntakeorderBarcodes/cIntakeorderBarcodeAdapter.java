@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.R;
@@ -59,11 +60,13 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
     @Override
     public void onBindViewHolder(intakeorderBarcodeViewHolder pvHolder, int pvPositionInt) {
 
-        if (cIntakeorderMATLine.currentIntakeorderMATLine == null || cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl == null || cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl.size() == 0) {
+        if ( cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size() == 0) {
             return;
         }
 
-       final cIntakeorderBarcode intakeorderBarcode = cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl.get(pvPositionInt);
+
+
+       final cIntakeorderBarcode intakeorderBarcode = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(pvPositionInt);
         pvHolder.textViewBarcode.setText(intakeorderBarcode.getBarcodeStr());
         pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(intakeorderBarcode.getQuantityPerUnitOfMeasureDbl()));
 
@@ -78,8 +81,8 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
 
     @Override
     public int getItemCount () {
-        if (cIntakeorderMATLine.currentIntakeorderMATLine != null && cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl != null)
-            return cIntakeorderMATLine.currentIntakeorderMATLine.barcodesObl.size();
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine != null && cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() != null)
+            return cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size();
         else return 0;
     }
 }

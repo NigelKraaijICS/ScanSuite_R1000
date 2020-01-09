@@ -48,7 +48,6 @@ public class PickorderLinesTotalFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.mFindViews();
-        this.mFillRecycler();
         cUserInterface.pEnableScanner();
     }
 
@@ -67,6 +66,7 @@ public class PickorderLinesTotalFragment extends Fragment {
         super.onResume();
         cUserInterface.pEnableScanner();
         PickorderLinesActivity.currentLineFragment = this;
+        this.mFillRecycler();
     }
 
     private void mFindViews() {

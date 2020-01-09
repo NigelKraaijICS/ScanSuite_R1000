@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cDateAndTime;
 import ICS.Utils.cResult;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
@@ -20,7 +21,7 @@ import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderBin {
 
-    private cInventoryorderBinEntity inventoryorderBinEntity;
+    public cInventoryorderBinEntity inventoryorderBinEntity;
     public boolean indatabaseBln;
 
     private static cInventoryorderBinViewModel gInventoryorderBinViewModel;
@@ -47,7 +48,7 @@ public class cInventoryorderBin {
     }
 
     private String handledTimeStampStr;
-    public String getHhandledTimeStampStr() {
+    public String getHandledTimeStampStr() {
         return handledTimeStampStr;
     }
 
@@ -107,13 +108,17 @@ public class cInventoryorderBin {
         return  true;
     }
 
-    public boolean pUpdateStatusInDatabaseBln(){
+    public static  void pInsertAllInDatabase(List<cInventoryorderBinEntity> pvInventoryorderBinEntities ) {
+        cInventoryorderBin.getInventoryorderBinViewModel().insertAll (pvInventoryorderBinEntities);
+    }
+
+    public boolean pUpdateStatusAndTimeStampInDatabaseBln(){
 
         boolean resultBln;
 
         cInventoryorderBin.currentInventoryOrderBin = this;
 
-        resultBln =   cInventoryorderBin.getInventoryorderBinViewModel().pUpdateStatusBln();
+        resultBln =   cInventoryorderBin.getInventoryorderBinViewModel().pUpdateStatusAndTimeStampBln();
 
         if (!resultBln) {
             cInventoryorderBin.currentInventoryOrderBin = null;
@@ -133,38 +138,57 @@ public class cInventoryorderBin {
 
         cWebresult WebResult;
 
-        WebResult =  cInventoryorderBin.getInventoryorderBinViewModel().pResetBinViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
+        if (!cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
 
-           // Reset all lines and details via webservice
-           List<cInventoryorderLine> hulpObl =cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(this.getBinCodeStr());
-           for (cInventoryorderLine inventoryorderLine : hulpObl) {
-
-               cInventoryorderLine.currentInventoryOrderLine = inventoryorderLine;
-               inventoryorderLine.pResetRst();
-               cInventoryorderLine.currentInventoryOrderLine = null;
-           }
-
-           //Reset statusInt
-           this.statusInt = cWarehouseorder.InventoryBinStatusEnu.New;
-           this.pUpdateStatusInDatabaseBln();
-
-            return  result;
+            WebResult =  cInventoryorderBin.getInventoryorderBinViewModel().pReopenBinViaWebserviceWrs();
+            if (!WebResult.getResultBln() || !WebResult.getSuccessBln()){
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINOPEN);
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_bin_via_webservice_failed));
+                return  result;
+            }
         }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET);
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_bin_via_webservice_failed));
-            return  result;
-        }
+
+            WebResult =  cInventoryorderBin.getInventoryorderBinViewModel().pResetBinViaWebserviceWrs();
+            if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+
+                // Reset all lines and details via webservice
+                List<cInventoryorderLine> hulpObl =cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(this.getBinCodeStr());
+                for (cInventoryorderLine inventoryorderLine : hulpObl) {
+
+                    cInventoryorderLine.currentInventoryOrderLine = inventoryorderLine;
+                    inventoryorderLine.pResetRst();
+                    cInventoryorderLine.currentInventoryOrderLine = null;
+                }
+
+                //Reset statusInt
+                this.statusInt = cWarehouseorder.InventoryBinStatusEnu.New;
+                this.pUpdateStatusAndTimeStampInDatabaseBln();
+
+                return  result;
+            }
+            else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET);
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_bin_via_webservice_failed));
+                return  result;
+            }
+
+
+
+
+
+
     }
 
     public boolean pCloseBln(Boolean pvCloseViaWebserviceBln) {
 
         if (!pvCloseViaWebserviceBln) {
             this.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
-            this.pUpdateStatusInDatabaseBln();
+            this.handledTimeStampStr =  cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
+            this.pUpdateStatusAndTimeStampInDatabaseBln();
             return true;
         }
 
@@ -173,7 +197,8 @@ public class cInventoryorderBin {
         if (webresult.getResultBln()&& webresult.getSuccessBln()) {
 
             this.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
-            this.pUpdateStatusInDatabaseBln();
+            this.handledTimeStampStr =  cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
+            this.pUpdateStatusAndTimeStampInDatabaseBln();
             return true;
         }
         else {
@@ -181,7 +206,6 @@ public class cInventoryorderBin {
             return false;
         }
     }
-
 
     private static cInventoryorderBinAdapter gInventoryorderBinAdapter;
     public static cInventoryorderBinAdapter getInventoryorderBinAdapter() {

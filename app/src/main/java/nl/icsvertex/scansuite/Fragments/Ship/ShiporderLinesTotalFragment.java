@@ -49,7 +49,6 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        this.mFragmentInitialize();
     }
 
     @Override
@@ -67,6 +66,8 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
         super.onResume();
         cUserInterface.pEnableScanner();
         ShiporderLinesActivity.currentLineFragment = this;
+        this.mFragmentInitialize();
+
     }
 
     //End Region Default Methods

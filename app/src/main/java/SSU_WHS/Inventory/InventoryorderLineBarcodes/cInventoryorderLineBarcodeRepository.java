@@ -3,6 +3,8 @@ package SSU_WHS.Inventory.InventoryorderLineBarcodes;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import java.util.List;
+
 import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cInventoryorderLineBarcodeRepository {
@@ -28,6 +30,10 @@ public class cInventoryorderLineBarcodeRepository {
 
     public void pInsert (cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity) {
         new insertAsyncTask(inventoryorderLineBarcodeDao).execute(inventoryorderLineBarcodeEntity);
+    }
+
+    public void insertAll(List<cInventoryorderLineBarcodeEntity> pvInventoryorderLineBarcodeEntities) {
+        new mInsertAllAsyncTask(inventoryorderLineBarcodeDao).execute(pvInventoryorderLineBarcodeEntities);
     }
 
     public void pDelete (cInventoryorderLineBarcodeEntity inventoryorderLineBarcodeEntity) {
@@ -64,8 +70,6 @@ public class cInventoryorderLineBarcodeRepository {
         }
     }
 
-
-
     private static class insertAsyncTask extends AsyncTask<cInventoryorderLineBarcodeEntity, Void, Void> {
         private iInventoryorderLineBarcodeDao mAsyncTaskDao;
 
@@ -78,6 +82,22 @@ public class cInventoryorderLineBarcodeRepository {
             return null;
         }
     }
+
+    private static class mInsertAllAsyncTask extends AsyncTask<List<cInventoryorderLineBarcodeEntity>, Void, Void> {
+        private iInventoryorderLineBarcodeDao mAsyncTaskDao;
+
+        mInsertAllAsyncTask(iInventoryorderLineBarcodeDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(final List<cInventoryorderLineBarcodeEntity>... params) {
+            mAsyncTaskDao.insertAll(params[0]);
+            return null;
+        }
+    }
+
 
     private static class deleteAsyncTask extends AsyncTask<cInventoryorderLineBarcodeEntity, Void, Void> {
         private iInventoryorderLineBarcodeDao mAsyncTaskDao;

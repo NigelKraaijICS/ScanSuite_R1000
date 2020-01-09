@@ -25,7 +25,7 @@ import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderLine {
 
-    private  cInventoryorderLineEntity inventoryorderLineEntity;
+    public   cInventoryorderLineEntity inventoryorderLineEntity;
 
     public static List<cInventoryorderLine> allLinesObl;
     public static cInventoryorderLine currentInventoryOrderLine;
@@ -266,6 +266,13 @@ public class cInventoryorderLine {
         return  true;
     }
 
+    public static  void pInsertAllInDatabase(List<cInventoryorderLine> pvInventoryOrderLinesObl, List<cInventoryorderLineEntity> pvInventoryOrderLineEntityObl ) {
+
+        cInventoryorderLine.allLinesObl.addAll(pvInventoryOrderLinesObl);
+        cInventoryorderLine.getInventoryorderLineViewModel().insertAll (pvInventoryOrderLineEntityObl);
+
+    }
+
     public static boolean pTruncateTableBln(){
         cInventoryorderLine.getInventoryorderLineViewModel().deleteAll();
         return true;
@@ -388,6 +395,9 @@ public class cInventoryorderLine {
             return  result;
         }
     }
+
+
+
 
 
 }

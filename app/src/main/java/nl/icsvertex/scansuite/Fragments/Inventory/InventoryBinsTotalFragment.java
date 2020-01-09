@@ -54,7 +54,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
 
     @Override
     public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
-        this.mFragmentInitialize();
+
     }
 
     @Override
@@ -72,6 +72,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
         super.onResume();
         cUserInterface.pEnableScanner();
         InventoryorderBinsActivity.currentBinFragment = this;
+        this.mFragmentInitialize();
     }
 
     @Override
@@ -81,7 +82,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
         }
 
         cInventoryorderBin.currentInventoryOrderBin = cInventoryorderBin.allInventoryorderBinsObl.get(pvPositionInt);
-        if ( cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) <= 0) {
+        if ( cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) <= 0) {
             cUserInterface.pShowSnackbarMessage(pvViewHolder.itemView,cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset),null,true);
             cInventoryorderBin.getInventoryorderBinTotalAdapter().notifyItemChanged(pvPositionInt);
             return;
@@ -191,7 +192,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
 
         //Change counters
         InventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
-        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalCountDbl()));
+        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalItemCountDbl()));
     }
 
     private static void mNoLinesAvailable(Boolean pvEnabledBln) {

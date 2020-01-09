@@ -169,7 +169,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         InventoryorderBinsActivity.toolbarTitle.setText(pvScreenTitleStr);
         InventoryorderBinsActivity.toolbarTitle.setSelected(true);
         InventoryorderBinsActivity.toolbarSubTitle.setSelected(true);
-        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalCountDbl()) );
+        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalItemCountDbl()) );
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

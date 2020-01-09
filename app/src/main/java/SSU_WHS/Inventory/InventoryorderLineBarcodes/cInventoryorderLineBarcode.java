@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModelProviders;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 
 public class cInventoryorderLineBarcode {
 
@@ -74,6 +76,10 @@ public class cInventoryorderLineBarcode {
         }
         cInventoryorderLineBarcode.allLineBarcodesObl.add(this);
         return  true;
+    }
+
+    public static  void pInsertAllInDatabase(List<cInventoryorderLineBarcodeEntity> pvInventoryorderLineBarcodeEntities ) {
+        cInventoryorderLineBarcode.getInventoryorderLineBarcodeViewModel().insertAll (pvInventoryorderLineBarcodeEntities);
     }
 
     public boolean pDeleteFromDatabaseBln() {

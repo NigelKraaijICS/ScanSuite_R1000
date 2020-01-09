@@ -54,7 +54,6 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        this.mFragmentInitialize();
     }
 
     @Override
@@ -72,6 +71,8 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
         super.onResume();
         cUserInterface.pEnableScanner();
         ShiporderLinesActivity.currentLineFragment = this;
+        this.mFragmentInitialize();
+
     }
 
     //End Region Default Methods

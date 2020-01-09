@@ -619,6 +619,14 @@
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
     <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
     <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
+    <string name="message_exactly_what_you_needed">Exactly what you needed</string>
+    <string name="message_bin_required">"Scan a bin to close the line "</string>
+    <string name="message_no_connection_try_again">No connection, try again</string>
+    <string name="message_no_connection_header">No connection</string>
+    <string name="message_checking_connection">Checking connection....</string>
+    <string name="message_please_wait">Please wait...</string>
+    <string name="connected">Connected</string>
+    <string name="not_connected">Not connected</string>
     <!--endregion move-->
 
 </resources>

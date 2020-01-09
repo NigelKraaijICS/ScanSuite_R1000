@@ -4,17 +4,21 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
+import java.util.List;
+
 public class cInventoryorderLineBarcodeViewModel extends AndroidViewModel {
-    public cInventoryorderLineBarcodeRepository inventoryorderLineBarcodeRepository;
+    public cInventoryorderLineBarcodeRepository repository;
 
     public cInventoryorderLineBarcodeViewModel(Application pvApplication) {
         super(pvApplication);
-        this.inventoryorderLineBarcodeRepository = new cInventoryorderLineBarcodeRepository(pvApplication);
+        this.repository = new cInventoryorderLineBarcodeRepository(pvApplication);
     }
 
-    public void deleteAll() { this.inventoryorderLineBarcodeRepository.pDeleteAll(); }
+    public void deleteAll() { this.repository.pDeleteAll(); }
 
-    public void insert(cInventoryorderLineBarcodeEntity pvInventoryorderLineBarcodeEntity) { inventoryorderLineBarcodeRepository.pInsert(pvInventoryorderLineBarcodeEntity); }
-    public void delete(cInventoryorderLineBarcodeEntity pvInventoryorderLineBarcodeEntity) { inventoryorderLineBarcodeRepository.pDelete(pvInventoryorderLineBarcodeEntity); }
+    public void insert(cInventoryorderLineBarcodeEntity pvInventoryorderLineBarcodeEntity) { repository.pInsert(pvInventoryorderLineBarcodeEntity); }
+    public void insertAll(List<cInventoryorderLineBarcodeEntity> pvInventoryorderLineEntities) {this.repository.insertAll(pvInventoryorderLineEntities);}
+
+    public void delete(cInventoryorderLineBarcodeEntity pvInventoryorderLineBarcodeEntity) { repository.pDelete(pvInventoryorderLineBarcodeEntity); }
 
 }

@@ -357,6 +357,19 @@ public class cIntakeorderMATLine {
         return resultObl;
     }
 
+    public Boolean pQuantityReachedBln(List<cIntakeorderBarcode> pvScannedBarcodesObl){
+
+        Double quantityTotalDbl = this.quantityHandledDbl;
+
+        for (cIntakeorderBarcode intakeorderBarcode : pvScannedBarcodesObl) {
+            quantityTotalDbl += intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
+        }
+
+        return quantityTotalDbl >= this.getQuantityDbl();
+
+    }
+
+
     public static boolean pTruncateTableBln() {
         cIntakeorderMATLine.getIntakeorderMATLineViewModel().deleteAll();
         return true;

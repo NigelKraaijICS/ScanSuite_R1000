@@ -68,7 +68,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        this.mFragmentInitialize();
+
     }
 
     @Override
@@ -86,6 +86,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         super.onResume();
         cUserInterface.pEnableScanner();
         PickorderLinesActivity.currentLineFragment = this;
+        this.mFragmentInitialize();
     }
 
     @Override

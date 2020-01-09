@@ -217,8 +217,6 @@ public class cIntakeorder {
 
     }
 
-
-
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
@@ -271,94 +269,30 @@ public class cIntakeorder {
         return  resultObl;
     }
 
+    private List<cIntakeorderMATLine> mGetLinesToHandleForVariantObl(String pvItemNoStr, String pvVariantCodeStr) {
 
-
-    public List<cIntakeorderMATLine> pGetIntakeorderMATLinesToSendFromDatabaseObl() {
-
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-        List<cIntakeorderMATLineEntity> hulpResultObl;
-
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesToSendFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
-            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
-            resultObl.add(intakeorderMATLine);
-        }
-        return  resultObl;
-    }
-
-
-    public List<cIntakeorderMATLine> pGetLinesBusyFromDatabasObl() {
-
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-        List<cIntakeorderMATLineEntity> hulpResultObl;
-
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesBusyFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
-            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
-            resultObl.add(intakeorderMATLine);
-        }
-        return  resultObl;
-    }
-
-    public List<cIntakeorderMATLine> pGetLinesHandledFromDatabasObl() {
-
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-        List<cIntakeorderMATLineEntity> hulpResultObl;
-
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesHandledFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
-            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
-            resultObl.add(intakeorderMATLine);
-        }
-        return  resultObl;
-    }
-
-    public List<cIntakeorderMATLine> pGetLinesToSendFromDatabasObl() {
-
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-        List<cIntakeorderMATLineEntity> hulpResultObl;
-
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesToSendFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
-            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
-            resultObl.add(intakeorderMATLine);
-        }
-        return  resultObl;
-    }
-
-    public List<cIntakeorderMATLine> pGetLinesForBinObl(String pvBinCodeStr) {
-
-        List <cIntakeorderMATLine> hulpObl = this.mGetLinesFromDatabasObl();
         List <cIntakeorderMATLine> resultObl = new ArrayList<>();
 
-        if (hulpObl == null || hulpObl.size() ==0 ) {
-            return  null;
+        if (this.linesObl() == null || this.linesObl().size() <= 0 ) {
+            return  resultObl;
         }
 
-        for (cIntakeorderMATLine intakeorderMATLine : hulpObl) {
+        for (cIntakeorderMATLine intakeorderMATLine : this.linesObl()) {
 
-            if (intakeorderMATLine.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr) || intakeorderMATLine.getBinCodeHandledStr().equalsIgnoreCase(pvBinCodeStr)) {
-                resultObl.add(intakeorderMATLine);
+            //If this is the wrong article, skip this line
+            if (!intakeorderMATLine.getItemNoStr().equalsIgnoreCase(pvItemNoStr) || (!intakeorderMATLine.getVariantCodeStr().equalsIgnoreCase(pvVariantCodeStr))) {
+                continue;
             }
+
+            //This line is handled, so skip it
+            if (intakeorderMATLine.getQuantityHandledDbl() >= intakeorderMATLine.getQuantityDbl()) {
+                continue;
+            }
+
+            resultObl.add(intakeorderMATLine);
         }
 
-        return  null;
+        return  resultObl;
 
     }
 
@@ -445,8 +379,6 @@ public class cIntakeorder {
         return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
 
     }
-
-
 
     public cResult pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu pvStepCodeEnu, int pvWorkFlowStepInt) {
 
@@ -565,16 +497,6 @@ public class cIntakeorder {
         }
     }
 
-    public double pQuantityNotHandledDbl() {
-        Double resultDbl =  cIntakeorder.getIntakeorderViewModel().pQuantityNotHandledDbl();
-        if (resultDbl == null) {
-            resultDbl  = 0.0;
-        }
-
-        return  resultDbl;
-
-    }
-
     public double pQuantityHandledDbl() {
 
         Double resultDbl =cIntakeorder.getIntakeorderViewModel().pQuantityHandledDbl();
@@ -584,36 +506,6 @@ public class cIntakeorder {
         }
 
         return  resultDbl;
-    }
-
-    public double pQuantityTotalDbl() {
-        return  cIntakeorder.getIntakeorderViewModel().pGetQuantityTotalDbl();
-    }
-
-    public int pGetIndexOfNotHandledLineInt(cIntakeorderMATLine pvIntakeorderMATLine) {
-
-        int resultInt = -1;
-
-        if (this.mGetLinesNotHandledFromDatabasObl() == null || this.mGetLinesNotHandledFromDatabasObl().size() == 0) {
-            return  resultInt;
-        }
-
-
-        int indexInt = -1;
-
-        for (cIntakeorderMATLine intakeorderMATLine : this.mGetLinesNotHandledFromDatabasObl()) {
-
-            indexInt += 1;
-
-            if (cText.pIntToStringStr(intakeorderMATLine.getLineNoInt()).equalsIgnoreCase(cText.pIntToStringStr(pvIntakeorderMATLine.getLineNoInt()))  ) {
-
-                resultInt =  indexInt;
-                break;
-            }
-        }
-
-        return  resultInt;
-
     }
 
     public boolean pDeleteDetailsBln(){
@@ -736,44 +628,6 @@ public class cIntakeorder {
 
     }
 
-
-
-    public boolean pCheckItemVariantBln(String pvItemNoStr, String pvVariantCodeStr) {
-
-        if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
-            return  false;
-        }
-
-        for (cIntakeorderBarcode intakeorderBarcode : this.barcodesObl()) {
-
-            if (intakeorderBarcode.getItemNoStr().equalsIgnoreCase(pvItemNoStr) && intakeorderBarcode.getVariantCodeStr().equalsIgnoreCase(pvVariantCodeStr)) {
-                return  true;
-            }
-        }
-
-        return  false;
-    }
-
-    public boolean pCheckLinesForBinAndItemVariantBln(String pvBinCodeStr, String pvItemNoStr, String pvVariantCodeStr) {
-
-
-        List<cIntakeorderMATLine> hulpObl = this.mGetLinesFromDatabasObl();
-
-        if (hulpObl== null || hulpObl.size() == 0)  {
-            return  false;
-        }
-
-        for (cIntakeorderMATLine intakeorderMATLine : hulpObl) {
-
-            if (intakeorderMATLine.getItemNoStr().equalsIgnoreCase(pvItemNoStr) && intakeorderMATLine.getVariantCodeStr().equalsIgnoreCase(pvVariantCodeStr) && intakeorderMATLine.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr)) {
-                return  true;
-            }
-        }
-
-        return  false;
-
-    }
-
     private static boolean mTruncateTableBln() {
         cIntakeorder.getIntakeorderViewModel().deleteAll();
         return true;
@@ -792,23 +646,6 @@ public class cIntakeorder {
         for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
             cIntakeorderMATLine IntakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
             resultObl.add(IntakeorderMATLine);
-        }
-        return  resultObl;
-    }
-
-    private List<cIntakeorderMATLine> mGetLinesNotHandledFromDatabasObl() {
-
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-        List<cIntakeorderMATLineEntity> hulpResultObl;
-
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesNotHandledFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
-            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
-            resultObl.add(intakeorderMATLine);
         }
         return  resultObl;
     }

@@ -59,7 +59,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
 
     @Override
     public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
-        this.mFragmentInitialize();
+
     }
 
     @Override
@@ -77,6 +77,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
         super.onResume();
         cUserInterface.pEnableScanner();
         InventoryorderBinsActivity.currentBinFragment = this;
+        this.mFragmentInitialize();
     }
 
     //End Region Default Methods

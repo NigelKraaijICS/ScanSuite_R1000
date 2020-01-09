@@ -328,7 +328,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             cSalesOrderPackingTable.pDeleteFromDatabaseBln(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
         }
         cPickorderLine.currentPickOrderLine.pUpdateProcessingSequenceBln("");
-        cPickorderLine.currentPickOrderLine.quantityHandledDbl = 0.0;
         cPickorderLine.currentPickOrderLine.pCancelIndatabaseBln();
         PickorderPickActivity.mGoBackToLinesActivity();
     }

@@ -8,14 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cConnection;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -34,6 +37,10 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     //Region Private Properties
     private static TextView textViewCurrentLocationHeader;
     private static TextView textViewCurrentLocationText;
+
+    private static CardView cardViewConnection;
+    private static TextView textViewConnection;
+    private static ImageButton imageButtonWifiReconnect;
 
     private static EditText editTextCurrentLocation;
     private static Button setLocationButton;
@@ -60,12 +67,20 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         cAppExtension.dialogFragment  = this;
         this.mFragmentInitialize();
+
+        if (!cConnection.isInternetConnectedBln()) {
+            cConnection.pReconnectWifi();
+        }
+
+
     }
 
     @Override
     public void onDestroy() {
         try {
             cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cConnection.pUnregisterWifiChangedFragmentReceiver();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,6 +91,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     public void onPause() {
         try {
             cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cConnection.pUnregisterWifiChangedFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,6 +102,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     public void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cConnection.pRegisterWifiChangedFragmentReceiver();
         cUserInterface.pEnableScanner();
     }
 
@@ -96,6 +113,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         this.mSetListeners();
 
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cConnection.pRegisterWifiChangedFragmentReceiver();
     }
 
     @Override
@@ -104,6 +122,10 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         if (getView() != null) {
             CurrentLocationFragment.textViewCurrentLocationHeader = getView().findViewById(R.id.textViewCurrentLocationHeader);
             CurrentLocationFragment.textViewCurrentLocationText = getView().findViewById(R.id.textViewCurrentLocationText);
+            CurrentLocationFragment.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
+            CurrentLocationFragment.cardViewConnection = getView().findViewById(R.id.cardViewConnection);
+            CurrentLocationFragment.textViewConnection = getView().findViewById(R.id.textViewConnection);
+            CurrentLocationFragment.imageButtonWifiReconnect = getView().findViewById(R.id.imageButtonWifiReconnect);
             CurrentLocationFragment.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
             CurrentLocationFragment.setLocationButton = getView().findViewById(R.id.setLocationButton);
             CurrentLocationFragment.cancelButton = getView().findViewById(R.id.cancelButton);
@@ -115,6 +137,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     public void mFieldsInitialize() {
         CurrentLocationFragment.textViewCurrentLocationHeader.setText(R.string.currentlocation_header_default);
         CurrentLocationFragment.textViewCurrentLocationText.setText(R.string.currentlocation_text_default);
+        CurrentLocationFragment.pSetConnectionState();
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
@@ -186,5 +209,23 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
             //no prefix, fine
         CurrentLocationFragment.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
         CurrentLocationFragment.setLocationButton.callOnClick();
+    }
+
+    public static void pSetConnectionState() {
+        if (cConnection.isInternetConnectedBln()) {
+            CurrentLocationFragment.textViewConnection.setText(R.string.connected);
+            CurrentLocationFragment.imageButtonWifiReconnect.setVisibility(View.INVISIBLE);
+            CurrentLocationFragment.cardViewConnection.setVisibility(View.INVISIBLE);
+            CurrentLocationFragment.cancelButton.setVisibility(View.VISIBLE);
+            CurrentLocationFragment.setLocationButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            CurrentLocationFragment.textViewConnection.setText(R.string.not_connected);
+            CurrentLocationFragment.imageButtonWifiReconnect.setVisibility(View.VISIBLE);
+            CurrentLocationFragment.cardViewConnection.setVisibility(View.VISIBLE);
+            CurrentLocationFragment.cancelButton.setVisibility(View.INVISIBLE);
+            CurrentLocationFragment.setLocationButton.setVisibility(View.INVISIBLE);
+
+        }
     }
 }

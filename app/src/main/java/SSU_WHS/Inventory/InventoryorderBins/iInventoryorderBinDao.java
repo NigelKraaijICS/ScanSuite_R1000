@@ -12,8 +12,14 @@ import SSU_WHS.General.cDatabase;
 
 @Dao
 public interface iInventoryorderBinDao {
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(cInventoryorderBinEntity inventoryorderBinEntity);
+
+    @Insert
+    void insertAll(List<cInventoryorderBinEntity> pvInventoryorderBinEntities);
+
 
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN)
     void deleteAll();
@@ -22,14 +28,14 @@ public interface iInventoryorderBinDao {
     List<cInventoryorderBinEntity> getAll();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN +
-           " WHERE " + cDatabase.STATUS_NAMESTR + " = " + cWarehouseorder.InventoryBinStatusEnu.New)
+           " WHERE " + cDatabase.STATUS_NAMESTR + " = " + cWarehouseorder.InventoryBinStatusEnu.New + " ORDER BY " + cDatabase.SORTINGSEQUENCENO_NAMESTR + " ASC")
     List<cInventoryorderBinEntity> getInventoryorderBinNotDone();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN +
-            " WHERE " + cDatabase.STATUS_NAMESTR + " = " + cWarehouseorder.InventoryBinStatusEnu.InventoryDone)
+            " WHERE " + cDatabase.STATUS_NAMESTR + " = " + cWarehouseorder.InventoryBinStatusEnu.InventoryDone + " ORDER BY " + cDatabase.HANDLEDTIMESTAMP_NAMESTR + " DESC" )
     List<cInventoryorderBinEntity> getInventoryorderBinDone();
 
-    @Query("SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN)
+    @Query("SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN + " ORDER BY " + cDatabase.SORTINGSEQUENCENO_NAMESTR + " ASC")
     List<cInventoryorderBinEntity> getInventoryorderBinTotal();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN +
@@ -38,8 +44,8 @@ public interface iInventoryorderBinDao {
     cInventoryorderBinEntity checkBin(String pvBincode, Integer pvStatus);
 
 
-    @Query("UPDATE InventoryOrderBin SET Status = :pvStatusInt   WHERE  BinCode = :pvBinCodeStr")
-    int updateBinStatus(String pvBinCodeStr, int pvStatusInt);
+    @Query("UPDATE InventoryOrderBin SET Status = :pvStatusInt , HandledTimestamp = :pvTimeStampStr   WHERE  BinCode = :pvBinCodeStr")
+    int updateBinStatus(String pvBinCodeStr, int pvStatusInt, String pvTimeStampStr);
 
 
 }

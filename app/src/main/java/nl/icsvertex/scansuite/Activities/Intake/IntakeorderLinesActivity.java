@@ -653,7 +653,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         cUserInterface.pCheckAndCloseOpenDialogs();
         String messageStr = "";
         if (cIntakeorderMATSummaryLine.totalItemsDifference() == 0 ) {
-            messageStr = "Exactly what you needed";
+            messageStr = (cAppExtension.activity.getString(R.string.message_exactly_what_you_needed));
         }
 
         if (cIntakeorderMATSummaryLine.totalItems() > cIntakeorderMATSummaryLine.totalItemsHandled()) {

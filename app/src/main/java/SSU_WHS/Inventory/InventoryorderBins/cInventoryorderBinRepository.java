@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import ICS.Utils.cDateAndTime;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
@@ -27,10 +28,12 @@ public class cInventoryorderBinRepository {
     private static class UpdateInventoryBinStatusParams {
         String binCodeStr;
         int statusInt;
+        String timestampStr;
 
-        UpdateInventoryBinStatusParams(String pvBinCodeStr, int statusInt) {
+        UpdateInventoryBinStatusParams(String pvBinCodeStr, int pvStatusInt, String pvTimeStampStr) {
             this.binCodeStr = pvBinCodeStr;
-            this.statusInt = statusInt;
+            this.statusInt = pvStatusInt;
+            this.timestampStr = pvTimeStampStr;
         }
     }
 
@@ -48,11 +51,16 @@ public class cInventoryorderBinRepository {
         new mInsertAsyncTask(inventoryorderBinDao).execute(inventoryorderBinEntity);
     }
 
-    public boolean pUpdateStatusBln() {
+    public void insertAll(List<cInventoryorderBinEntity> pvInventoryorderLineBarcodeEntities) {
+        new mInsertAllAsyncTask(inventoryorderBinDao).execute(pvInventoryorderLineBarcodeEntities);
+    }
+
+    public boolean pUpdateStatusAndTimestampBln() {
 
         Integer integerValue;
         UpdateInventoryBinStatusParams updateInventorylineQuantityParams = new UpdateInventoryBinStatusParams(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr(),
-                                                                                                              cInventoryorderBin.currentInventoryOrderBin.getStatusInt());
+                                                                                                              cInventoryorderBin.currentInventoryOrderBin.getStatusInt(),
+                                                                                                              cInventoryorderBin.currentInventoryOrderBin.getHandledTimeStampStr());
 
 
         try {
@@ -98,6 +106,29 @@ public class cInventoryorderBinRepository {
         return webResultWrs;
     }
 
+    public cWebresult pReopenBinViaWebserviceWrs() {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mReopenBinViaViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+
     private static class mInsertAsyncTask extends AsyncTask<cInventoryorderBinEntity, Void, Void> {
         private iInventoryorderBinDao mAsyncTaskDao;
 
@@ -111,6 +142,23 @@ public class cInventoryorderBinRepository {
             return null;
         }
     }
+
+    private static class mInsertAllAsyncTask extends AsyncTask<List<cInventoryorderBinEntity>, Void, Void> {
+        private iInventoryorderBinDao mAsyncTaskDao;
+
+        mInsertAllAsyncTask(iInventoryorderBinDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(final List<cInventoryorderBinEntity>... params) {
+            mAsyncTaskDao.insertAll(params[0]);
+            return null;
+        }
+    }
+
+
 
     private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private iInventoryorderBinDao mAsyncTaskDao;
@@ -131,7 +179,7 @@ public class cInventoryorderBinRepository {
         updateStatusAsyncTask(iInventoryorderBinDao dao) { mAsyncTaskDao = dao; }
         @Override
         protected Integer doInBackground(UpdateInventoryBinStatusParams... params) {
-            return mAsyncTaskDao.updateBinStatus(params[0].binCodeStr, params[0].statusInt);
+            return mAsyncTaskDao.updateBinStatus(params[0].binCodeStr, params[0].statusInt, params[0].timestampStr);
         }
     }
 
@@ -145,7 +193,7 @@ public class cInventoryorderBinRepository {
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
@@ -165,6 +213,50 @@ public class cInventoryorderBinRepository {
 
 
                 webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINRESET, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mReopenBinViaViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_HANDLEDTIMESTAMP;
+                l_PropertyInfo4Pin.setValue(cDateAndTime.pGetCurrentDateTimeForWebserviceStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_BINCODETINY;
+                l_PropertyInfo5Pin.setValue(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+
+                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINOPEN, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

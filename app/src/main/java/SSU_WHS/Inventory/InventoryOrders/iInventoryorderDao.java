@@ -14,8 +14,12 @@ import SSU_WHS.Picken.Pickorders.cPickorderEntity;
 
 @Dao
 public interface iInventoryorderDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(cInventoryorderEntity inventoryorderEntity);
+
+    @Insert
+    void insertAll(List<cInventoryorderEntity> inventoryorderEntity);
 
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDER)
     void deleteAll();

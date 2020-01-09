@@ -23,7 +23,7 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cInventoryorderLineRepository {
     //Region Public Properties
-    public iInventoryorderLineDao inventoryorderLineDao;
+    private iInventoryorderLineDao inventoryorderLineDao;
     //End Region Public Properties
 
     //Region Private Properties
@@ -39,8 +39,6 @@ public class cInventoryorderLineRepository {
         }
     }
 
-
-
     //Region Constructor
     cInventoryorderLineRepository(Application pvApplication) {
         this.db = acScanSuiteDatabase.getDatabase(pvApplication);
@@ -52,6 +50,10 @@ public class cInventoryorderLineRepository {
 
     public void insert(cInventoryorderLineEntity inventoryorderLineEntity) {
         new mInsertAsyncTask(inventoryorderLineDao).execute(inventoryorderLineEntity);
+    }
+
+    public void insertAll(List<cInventoryorderLineEntity>  pvInventoryorderLineEntities) {
+        new mInsertAllAsyncTask(inventoryorderLineDao).execute(pvInventoryorderLineEntities);
     }
 
     public void delete(cInventoryorderLineEntity inventoryorderLineEntity) {
@@ -72,6 +74,21 @@ public class cInventoryorderLineRepository {
         @Override
         protected Void doInBackground(final cInventoryorderLineEntity... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+    private static class mInsertAllAsyncTask extends AsyncTask<List<cInventoryorderLineEntity>, Void, Void> {
+        private iInventoryorderLineDao mAsyncTaskDao;
+
+        mInsertAllAsyncTask(iInventoryorderLineDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @SafeVarargs
+        @Override
+        protected final Void doInBackground(final List<cInventoryorderLineEntity>... params) {
+            mAsyncTaskDao.insertAll(params[0]);
             return null;
         }
     }

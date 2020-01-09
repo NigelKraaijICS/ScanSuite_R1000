@@ -59,7 +59,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     }
     @Override
     public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
-        this.mFragmentInitialize();
+
     }
 
     @Override
@@ -78,7 +78,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         super.onResume();
         cUserInterface.pEnableScanner();
         InventoryorderBinsActivity.currentBinFragment = this;
-
+        this.mFragmentInitialize();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         positionSwiped = pvPositionInt;
 
         cInventoryorderBin.currentInventoryOrderBin = cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().get(pvPositionInt);
-        if ( cInventoryorder.currentInventoryOrder.pGetCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) <= 0) {
+        if ( cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) <= 0 && cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
             cUserInterface.pShowSnackbarMessage(pvViewHolder.itemView,cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset),null,true);
             cInventoryorderBin.getInventoryorderBinDoneAdapter().notifyItemChanged(pvPositionInt);
             return;
@@ -237,7 +237,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
 
         //Reset counters
         InventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().size()) + "/" + cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
-        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalCountDbl()));
+        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalItemCountDbl()));
 
     }
 

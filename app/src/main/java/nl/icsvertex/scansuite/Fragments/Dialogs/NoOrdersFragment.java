@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
@@ -97,6 +98,10 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
 
                 if (cAppExtension.activity instanceof ShiporderSelectActivity) {
                     ShiporderSelectActivity.pFillOrders();
+                }
+
+                if (cAppExtension.activity instanceof InventoryorderSelectActivity) {
+                    InventoryorderSelectActivity.pFillOrders();
                 }
 
             }

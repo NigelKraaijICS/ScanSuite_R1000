@@ -103,6 +103,9 @@
     <dimen name="order_done_image_width">72dp</dimen>
     <dimen name="order_done_image_height">72dp</dimen>
 
+    <dimen name="header_image_width">48dp</dimen>
+    <dimen name="header_image_height">48dp</dimen>
+
     <dimen name="zerobutton_marginright">72dp</dimen>
 
     <dimen name="recyclerItemImageWidth">28dp</dimen>

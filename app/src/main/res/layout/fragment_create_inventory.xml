@@ -4,13 +4,21 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/createInventoryContainer"
+    android:padding="@dimen/default_double_padding"
     >
     <TextView
         android:id="@+id/textViewCreateInventoryHeader"
         style="@style/createInventoryHeader"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/createImageView"
         app:layout_constraintEnd_toEndOf="parent"
+        />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/createImageView"
+        style="@style/createImageView"
+        app:layout_constraintTop_toTopOf="@id/textViewCreateInventoryHeader"
+        app:layout_constraintBottom_toBottomOf="@id/textViewCreateInventoryHeader"
+        app:layout_constraintStart_toStartOf="parent"
         />
     <EditText
         android:imeOptions="actionDone"
