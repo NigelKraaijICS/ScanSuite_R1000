@@ -234,6 +234,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
+        MenuActivity.refreshBln = true;
         cAppExtension.activity.startActivity(intent);
     }
 
@@ -254,11 +255,13 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         cUser.usersAvailableBln = false;
         cBarcodeLayout.barcodeLayoutsAvailableBln  =false;
         cSetting.settingsAvailableBln = false;
+        cBranch.BranchesAvailableBln = false;
         cShippingAgent.shippingAgentsAvailableBln = false;
         cShippingAgentService.shippingAgentServicesAvailableBln = false;
         cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln = false;
         cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln = false;
         cItemProperty.itemPropertiesAvaliableBln = false;
+
 
     }
 

@@ -48,6 +48,8 @@ public class cWarehouseorder {
         PV,
         BC,
         BP,
+        PA,
+        PF,
         IVS,
         MV
     }
@@ -126,6 +128,7 @@ public class cWarehouseorder {
 
 
     public class InventoryBinStatusEnu {
+        public static final int Possible = 0;
         public static final int New = 10;
         public static final int InventoryDoneOnServer = 20;
         public static final int InventoryDone = 30;
@@ -164,7 +167,7 @@ public class cWarehouseorder {
     }
 
 
-    public static cWarehouseorderViewModel gWarehouseorderViewModel;
+    private static cWarehouseorderViewModel gWarehouseorderViewModel;
     public static cWarehouseorderViewModel getWarehouseorderViewModel() {
         if (gWarehouseorderViewModel == null) {
             gWarehouseorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cWarehouseorderViewModel.class);

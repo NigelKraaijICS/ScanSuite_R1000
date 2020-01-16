@@ -171,6 +171,8 @@ public class cInventoryorder {
 
     }
 
+    private static List<String> binsObl;
+
     public static cInventoryorder currentInventoryOrder;
 
     //Region Public Properties
@@ -652,6 +654,7 @@ public class cInventoryorder {
         if (pvRefreshBln) {
             cInventoryorderBin.allInventoryorderBinsObl = null;
             cInventoryorderBin.pTruncateTableBln();
+            cInventoryorder.binsObl = new ArrayList<>();
         }
 
         cWebresult WebResult;
@@ -670,6 +673,8 @@ public class cInventoryorder {
 
 
                 cInventoryorderBin inventoryorderBin = new cInventoryorderBin(jsonObject);
+                cInventoryorder.binsObl.add(inventoryorderBin.getBinCodeStr());
+
                 insertObl.add(inventoryorderBin.inventoryorderBinEntity);
 
                 if (inventoryorderBin.getStatusInt() ==  cWarehouseorder.InventoryBinStatusEnu.InventoryDoneOnServer && !cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
@@ -683,6 +688,42 @@ public class cInventoryorder {
             //Close all BINS in database after they got inserted
             for (cInventoryorderBin inventoryorderBin : closedBinsObl) {
                 inventoryorderBin.pCloseBln(false);
+            }
+
+            return  true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBINS);
+            return false;
+        }
+    }
+
+    public boolean pGetPossibleBinsViaWebserviceBln() {
+
+
+        cWebresult WebResult;
+
+        WebResult = cInventoryorder.getInventoryorderViewModel().pGetPossibleBinsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            if (cInventoryorderBin.allInventoryorderBinsObl == null) {
+                cInventoryorderBin.allInventoryorderBinsObl = new ArrayList<>();
+            }
+
+            for ( JSONObject jsonObject : WebResult.getResultDtt()) {
+
+
+                cInventoryorderBin inventoryorderBin = new cInventoryorderBin(jsonObject);
+
+                if (cInventoryorder.binsObl.contains(inventoryorderBin.getBinCodeStr())) {
+                    continue;
+                }
+
+                cInventoryorder.binsObl.add(inventoryorderBin.getBinCodeStr());
+                inventoryorderBin.pInsertInDatabaseBln();
+                inventoryorderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.New;
+                inventoryorderBin.pUpdateStatusAndTimeStampInDatabaseBln();
+
             }
 
             return  true;

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import ICS.Utils.cText;
@@ -32,20 +30,24 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
 
         private TextView textViewBinCode;
         private TextView textViewQuantity;
-        private LinearLayout intakeOrderMATItemLinearLayout;
+        private FrameLayout intakeOrderMATItemFrameLayout;
+
+        public RelativeLayout viewBackground;
+        public ConstraintLayout viewForeground;
 
 
         public IntakeorderMATLineViewHolder(View pvItemView) {
             super(pvItemView);
 
-            this.intakeOrderMATItemLinearLayout = pvItemView.findViewById(R.id.intakeorderLineItemLinearLayout);
+            this.intakeOrderMATItemFrameLayout = pvItemView.findViewById(R.id.intakeorderLineItemLinearLayout);
 
             this.textViewBinCode = pvItemView.findViewById(R.id.bincodeText);
             this.textViewBinCode.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewBinCode.setSingleLine(true);
             this.textViewBinCode.setMarqueeRepeatLimit(5);
             this.textViewBinCode.setSelected(true);
-
+            this.viewBackground = pvItemView.findViewById(R.id.view_background);
+            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
             this.textViewQuantity = pvItemView.findViewById(R.id.storedQuantityText);
 
         }
@@ -57,7 +59,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     private List<cIntakeorderMATLine> localIntakeorderMATLinesObl;
     //End Region Private Propertiess
 
-    private List<LinearLayout> intakeorderLineItemFrameLayout = new ArrayList<>();
+    private List<FrameLayout> intakeorderLineItemFrameLayout = new ArrayList<>();
     private RecyclerView RecyclerView;
 
     //Region Constructor
@@ -84,7 +86,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     @Override
     public void onBindViewHolder(final cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder pvHolder, final int pvPositionInt) {
 
-        this.intakeorderLineItemFrameLayout.add(pvHolder.intakeOrderMATItemLinearLayout);
+        this.intakeorderLineItemFrameLayout.add(pvHolder.intakeOrderMATItemFrameLayout);
 
         if (this.localIntakeorderMATLinesObl == null || this.localIntakeorderMATLinesObl.size() == 0 ) {
             return;
@@ -97,7 +99,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
         String binCodeStr;
 
         if (currentIntakeorderMatLine.getBinCodeHandledStr().isEmpty()) {
-            binCodeStr = currentIntakeorderMatLine.binCodeStr;
+            binCodeStr = currentIntakeorderMatLine.getBinCodeStr();
         } else {
             binCodeStr = currentIntakeorderMatLine.getBinCodeHandledStr();
         }
@@ -107,14 +109,14 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
         pvHolder.textViewBinCode.setText(binCodeStr);
 
         //Start On Click Listener
-        pvHolder.intakeOrderMATItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+        pvHolder.intakeOrderMATItemFrameLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View pvView) {
 
                 //deselect all
-                for (LinearLayout linearLayout : intakeorderLineItemFrameLayout) {
-                    linearLayout.setSelected(false);
+                for (FrameLayout frameLayout : intakeorderLineItemFrameLayout) {
+                    frameLayout.setSelected(false);
                 }
 
                 //select current
@@ -129,7 +131,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
 
         //Select the first one, or selected index
         if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderLinesActivity &&  RecyclerView.getId() == R.id.recyclerViewLines) {
-            pvHolder.intakeOrderMATItemLinearLayout.performClick();
+            pvHolder.intakeOrderMATItemFrameLayout.performClick();
         }
     }
 

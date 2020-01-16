@@ -29,6 +29,7 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
@@ -52,7 +53,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     //Region Views
 
     private static TextView textViewChosenOrder;
-   private static ImageView imageButtonComments;
+    private static ImageView imageButtonComments;
 
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
@@ -332,6 +333,15 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         IntakeorderLinesActivity.mFillRecycler(pvDataObl);
     }
 
+    public static void pPasswordSuccess() {
+        cBarcodeScan.pRegisterBarcodeReceiver();
+        IntakeorderLinesActivity.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close_order));
+    }
+
+    public static void pPasswordCancelled() {
+        cBarcodeScan.pRegisterBarcodeReceiver();
+    }
+
 
     //End Region Public Methods
 
@@ -457,10 +467,18 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     }
 
     private void mSetSendOrderListener() {
+
         IntakeorderLinesActivity.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close_order));
+
+                //do we need an administrator for this?
+                if (!cSetting.RECEIVE_STORE_DEVIATIONS_PASSWORD().isEmpty() && cIntakeorderMATSummaryLine.totalItemsDifference() > 0 ) {
+                    cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_deviations_password_text), false);
+                    return;
+                }
+
+                IntakeorderLinesActivity.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close_order));
             }
         });
     }
@@ -517,6 +535,42 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         IntakeorderLinesActivity.mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pCommentObl(), "");
         cComment.commentsShownBln = true;
     }
+
+    private static void mShowCloseOrderDialog(String pvRejectStr,String pvAcceptStr) {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        String messageStr = "";
+        if (cIntakeorderMATSummaryLine.totalItemsDifference() == 0 ) {
+            messageStr = (cAppExtension.activity.getString(R.string.message_exactly_what_you_needed));
+        }
+
+        if (cIntakeorderMATSummaryLine.totalItems() > cIntakeorderMATSummaryLine.totalItemsHandled()) {
+            messageStr =   cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " LESS items";
+        }
+
+        if (cIntakeorderMATSummaryLine.totalItems() < cIntakeorderMATSummaryLine.totalItemsHandled()) {
+            messageStr =   cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " EXTRA items";
+        }
+
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
+                cAppExtension.activity.getString(R.string.message_close_storeorder_text,
+                        cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsHandled()),
+                        cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItems()), messageStr),
+                pvRejectStr,
+                pvAcceptStr ,
+                false);
+
+        acceptRejectFragment.setCancelable(true);
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // show my popup
+                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+            }
+        });
+
+    }
+
 
     private static void mStartStoreActivity(){
 
@@ -648,40 +702,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
     }
 
-    private static void mShowCloseOrderDialog(String pvRejectStr,String pvAcceptStr) {
 
-        cUserInterface.pCheckAndCloseOpenDialogs();
-        String messageStr = "";
-        if (cIntakeorderMATSummaryLine.totalItemsDifference() == 0 ) {
-            messageStr = (cAppExtension.activity.getString(R.string.message_exactly_what_you_needed));
-        }
-
-        if (cIntakeorderMATSummaryLine.totalItems() > cIntakeorderMATSummaryLine.totalItemsHandled()) {
-            messageStr =   cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " LESS items";
-        }
-
-        if (cIntakeorderMATSummaryLine.totalItems() < cIntakeorderMATSummaryLine.totalItemsHandled()) {
-            messageStr =   cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " EXTRA items";
-        }
-
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
-                cAppExtension.activity.getString(R.string.message_close_storeorder_text,
-                        cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsHandled()),
-                        cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItems()), messageStr),
-                pvRejectStr,
-                pvAcceptStr ,
-                false);
-
-        acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
-            }
-        });
-
-    }
 
 
     //End Region Private Methods

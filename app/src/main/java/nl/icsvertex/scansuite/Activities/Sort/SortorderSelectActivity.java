@@ -594,7 +594,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         //Get all PLACE linesInt for current order, if size = 0 or webservice error then stop
         if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true, cWarehouseorder.PickOrderTypeEnu.SORT)) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
             return result;
         }
 

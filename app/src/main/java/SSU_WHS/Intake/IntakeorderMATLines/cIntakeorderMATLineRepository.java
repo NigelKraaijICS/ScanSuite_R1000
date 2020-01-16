@@ -334,7 +334,7 @@ public class cIntakeorderMATLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
-                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENOTAKE;
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENO;
                 l_PropertyInfo4Pin.setValue(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt());
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 

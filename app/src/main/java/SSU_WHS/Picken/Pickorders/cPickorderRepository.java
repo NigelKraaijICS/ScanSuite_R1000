@@ -92,17 +92,6 @@ public class cPickorderRepository {
         }
     }
 
-    private class UpdatePickorderWorkplaceLocalParams {
-        String ordernumber;
-        String workplace;
-
-        UpdatePickorderWorkplaceLocalParams(String pv_ordernumber, String pv_workplace) {
-            this.ordernumber = pv_ordernumber;
-            this.workplace = pv_workplace;
-        }
-    }
-
-
     private class PickorderLocalParams {
         String userNameStr;
         String branchStr;
@@ -119,16 +108,6 @@ public class cPickorderRepository {
             this.pickStep = pvPickStepInt;
             this.searchTextStr = pvSearchTextStr;
             this.mainTypeStr = pvMainTypeStr;
-        }
-    }
-
-    private static class GetSortorderLineNotHandledByItemNoAndVariantParams {
-        String itemNoStr;
-        String variantCodeStr;
-
-        GetSortorderLineNotHandledByItemNoAndVariantParams(String pvItemNoStr, String pvVariantCodeStr) {
-            this.itemNoStr = pvItemNoStr;
-            this.variantCodeStr = pvVariantCodeStr;
         }
     }
 
@@ -162,8 +141,31 @@ public class cPickorderRepository {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
+        String mainTypeStr;
+
         PickorderLocalParams pickorderLocalParams;
-        pickorderLocalParams = new PickorderLocalParams(cUser.currentUser.getNameStr(),cUser.currentUser.currentBranch.getBranchStr(),pvInprogressBln,0, pvSearchTextStr,"");
+
+
+        switch (cUser.currentUser.currentAuthorisation.getAutorisationEnu()){
+
+            case PICK:
+                mainTypeStr = "";
+                break;
+
+            case PICK_PF:
+                mainTypeStr = "Transfer";
+                break;
+
+            case PICK_PV:
+                mainTypeStr = "Sales";
+                break;
+
+            default:
+                mainTypeStr = "";
+                break;
+        }
+
+        pickorderLocalParams = new PickorderLocalParams(cUser.currentUser.getNameStr(),cUser.currentUser.currentBranch.getBranchStr(),pvInprogressBln,0, pvSearchTextStr,mainTypeStr);
 
         try {
             webResultWrs = new mGetPickordersFromWebserviceAsyncTask().execute(pickorderLocalParams).get();
@@ -267,6 +269,8 @@ public class cPickorderRepository {
                 SQLStatementStr += " AND (IsProcessingOrParked) ";
             }
         }
+
+        SQLStatementStr += " ORDER BY Priority, Ordernumber ASC";
 
         try {
             SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
@@ -385,19 +389,6 @@ public class cPickorderRepository {
         }
     }
 
-    public Boolean pPickorderUpdateWorkplaceInDatabaseBln() {
-
-        Integer integerValue;
-        UpdatePickorderWorkplaceLocalParams updatePickorderWorkplaceLocalParams = new UpdatePickorderWorkplaceLocalParams(cPickorder.currentPickOrder.getOrderNumberStr(), cWorkplace.currentWorkplace.getWorkplaceStr());
-        try {
-            integerValue = new mUpdatePickorderWorkplaceInDatabaseAsyncTask(pickorderDao).execute(updatePickorderWorkplaceLocalParams).get();
-            return integerValue != 0;
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return  false;
-        }
-    }
-
     public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {
 
         List<String> resultObl = new ArrayList<>();
@@ -477,6 +468,16 @@ public class cPickorderRepository {
         return resultObl;
     }
 
+    public List<cPickorderLineEntity> pGetLinesNotHandledForBranchFromDatabaseObl(String pvBranchStr) {
+        List<cPickorderLineEntity> resultObl = null;
+        try {
+            resultObl = new mGetNotHandledLinesForBranchAsyncTask(pickorderLineDao).execute(pvBranchStr).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return resultObl;
+    }
+
     public List<cPickorderLineEntity> pGetLinesBusyFromDatabaseObl() {
         List<cPickorderLineEntity> resultObl = null;
         try {
@@ -530,6 +531,7 @@ public class cPickorderRepository {
 
 
     //Pick Order details
+
     public cWebresult pGetAddressesFromWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
@@ -546,8 +548,6 @@ public class cPickorderRepository {
         }
         return webResultWrs;
     }
-
-
 
     public cWebresult pGetBarcodesFromWebservice(){
         ArrayList<String> resultObl = new ArrayList<>();
@@ -702,7 +702,7 @@ public class cPickorderRepository {
 
             PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
             l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_MAINTYPE;
-            l_PropertyInfo5Pin.setValue(params[0].mainTypeStr);
+            l_PropertyInfo5Pin.setValue(params[0].mainTypeStr.toUpperCase());
             l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
             try {
@@ -975,15 +975,6 @@ public class cPickorderRepository {
         }
     }
 
-    private static class mUpdatePickorderWorkplaceInDatabaseAsyncTask extends AsyncTask<UpdatePickorderWorkplaceLocalParams, Void, Integer> {
-        private iPickorderDao mAsyncTaskDao;
-        mUpdatePickorderWorkplaceInDatabaseAsyncTask(iPickorderDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Integer doInBackground(UpdatePickorderWorkplaceLocalParams... params) {
-            return mAsyncTaskDao.updatePickorderWorkplace(params[0].ordernumber, params[0].workplace);
-        }
-    }
-
     private static class mUpdatePickorderCurrentLocationInDatabaseAsyncTask extends AsyncTask<UpdatePickorderCurrentLocationLocalParams, Void, Integer> {
         private iPickorderDao mAsyncTaskDao;
         mUpdatePickorderCurrentLocationInDatabaseAsyncTask(iPickorderDao dao) { mAsyncTaskDao = dao; }
@@ -1092,6 +1083,16 @@ public class cPickorderRepository {
         }
     }
 
+    private static class mGetNotHandledLinesForBranchAsyncTask extends AsyncTask<String, Void, List<cPickorderLineEntity>> {
+        private iPickorderLineDao mAsyncTaskDao;
+
+        mGetNotHandledLinesForBranchAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected List<cPickorderLineEntity> doInBackground(final String... params) {
+            return mAsyncTaskDao.getNotHandledPickorderLineForBranchEntitiesLin(params[0]);
+        }
+    }
+
     private static class mGetBusyLinesAsyncTask extends AsyncTask<Void, Void, List<cPickorderLineEntity>> {
         private iPickorderLineDao mAsyncTaskDao;
 
@@ -1149,7 +1150,6 @@ public class cPickorderRepository {
             return mAsyncTaskDao.getTotalQuantityDbl();
         }
     }
-
 
     private static class mGetPickorderAdressesFromWebserviceTask extends AsyncTask<List<String>, Void, cWebresult> {
         @SafeVarargs
@@ -1340,7 +1340,6 @@ public class cPickorderRepository {
             return webresult;
         }
     }
-
 
     //End Region Private Methods
 

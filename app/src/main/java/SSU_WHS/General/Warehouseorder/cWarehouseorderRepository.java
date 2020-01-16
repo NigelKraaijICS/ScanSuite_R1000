@@ -102,13 +102,7 @@ public class cWarehouseorderRepository {
 
         try {
             webResultWrs = new mWarehouseorderUnLockAsyncTask().execute(warehouseorderUnLockParams).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -122,16 +116,10 @@ public class cWarehouseorderRepository {
         cWebresult webResultWrs = new cWebresult();
 
         List<String> resultObl = new ArrayList<>();
-        WarehouseorderLockParams warehouseorderLockParams = new WarehouseorderLockParams(cUser.currentUser.getNameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr, pvWorkflowStepStr, pv_WorkflowStepInt, pvIgnoreBusyBln);
+        WarehouseorderLockParams warehouseorderLockParams = new WarehouseorderLockParams(cUser.currentUser.getUsernameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr, pvWorkflowStepStr, pv_WorkflowStepInt, pvIgnoreBusyBln);
         try {
             webResultWrs = new mWarehouseorderLockAsyncTask().execute(warehouseorderLockParams).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -148,13 +136,7 @@ public class cWarehouseorderRepository {
         WarehouseorderLockReleaseParams warehouseorderLockReleaseParams = new WarehouseorderLockReleaseParams(cUser.currentUser.getNameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr,pvWorkFlowStepStr, pvWorkFlowStepInt);
         try {
             webResultWrs = new mWarehouseorderLockReleaseAsyncTask().execute(warehouseorderLockReleaseParams).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -195,7 +177,8 @@ public class cWarehouseorderRepository {
                 l_PropertyInfo4Pin.setValue(params[0].orderNumberStr);
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
-                webResultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEORDERUNLOCK, l_PropertyInfoObl);
+                new cWebresult();
+                webResultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEORDERUNLOCK, l_PropertyInfoObl);
             } catch (JSONException e) {
                 webResultWrs.setSuccessBln(false);
                 webResultWrs.setResultBln(false);
@@ -256,7 +239,8 @@ public class cWarehouseorderRepository {
                 l_PropertyInfo9Pin.setValue(params[0].ignoreBusyBln);
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEORDERLOCK, l_PropertyInfoObl);
+                new cWebresult();
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEORDERLOCK, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setSuccessBln(false);
                 l_WebresultWrs.setResultBln(false);
@@ -312,7 +296,8 @@ public class cWarehouseorderRepository {
                 l_PropertyInfo8Pin.setValue(params[0].workFlowStepInt);
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
-                webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEORDERLOCKRELEASE, l_PropertyInfoObl);
+                new cWebresult();
+                webResult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEORDERLOCKRELEASE, l_PropertyInfoObl);
             } catch (JSONException e) {
                 webResult.setSuccessBln(false);
                 webResult.setResultBln(false);

@@ -49,6 +49,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
+import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
 import nl.icsvertex.scansuite.R;
 
 public class PickorderPickActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -64,7 +65,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private static Handler minusHandler;
     private static Handler plusHandler;
+
     private static ConstraintLayout pickorderPickContainer;
+
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubtext;
@@ -74,14 +77,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private static TextView articleItemText;
     private static TextView articleBarcodeText;
     private static TextView articleVendorItemText;
-    private static TextView binText;
-    private static TextView containerText;
-    private static TextView quantityText;
-    private static TextView quantityRequiredText;
-    private static ImageView articleThumbImageView;
-    private static ImageView imageButtonBarcode;
-    private static TextView sourcenoText;
-    private static CardView sourcenoContainer;
     private static TextView genericItemExtraField1Text;
     private static TextView genericItemExtraField2Text;
     private static TextView genericItemExtraField3Text;
@@ -90,10 +85,27 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private static TextView genericItemExtraField6Text;
     private static TextView genericItemExtraField7Text;
     private static TextView genericItemExtraField8Text;
+    private static TextView binText;
+    private static TextView containerText;
+
+    private static TextView quantityText;
+    private static TextView quantityRequiredText;
+
+    private static ImageView articleThumbImageView;
+    private static ImageView imageButtonBarcode;
+
+    private static TextView sourcenoText;
+    private static CardView sourcenoContainer;
+
+    private static TextView destinationText;
+    private static CardView destinationContainer;
+
     private static AppCompatImageButton imageButtonMinus;
     private static AppCompatImageButton imageButtonPlus;
-    private static  AppCompatImageButton imageButtonDone;
+    private static AppCompatImageButton imageButtonDone;
     private static TextView textViewAction;
+
+    private static boolean destionationScannedBln;
 
     //End Region Private Properties
 
@@ -188,6 +200,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     public void mFindViews() {
 
         PickorderPickActivity.pickorderPickContainer = findViewById(R.id.pickorderPickContainer);
+
         PickorderPickActivity.toolbarImage = findViewById(R.id.toolbarImage);
         PickorderPickActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
         PickorderPickActivity.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -198,9 +211,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.articleBarcodeText = findViewById(R.id.articleBarcodeText);
         PickorderPickActivity.articleVendorItemText = findViewById(R.id.articleVendorItemText);
         PickorderPickActivity.binText = findViewById(R.id.binText);
-        PickorderPickActivity.sourcenoText = findViewById(R.id.sourcenoText);
-        PickorderPickActivity.sourcenoContainer = findViewById(R.id.sourcenoContainer);
-
         PickorderPickActivity.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
         PickorderPickActivity.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
         PickorderPickActivity.genericItemExtraField3Text = findViewById(R.id.genericItemExtraField3Text);
@@ -210,9 +220,17 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.genericItemExtraField7Text = findViewById(R.id.genericItemExtraField7Text);
         PickorderPickActivity.genericItemExtraField8Text = findViewById(R.id.genericItemExtraField8Text);
 
+        PickorderPickActivity.sourcenoText = findViewById(R.id.sourcenoText);
+        PickorderPickActivity.sourcenoContainer = findViewById(R.id.sourceNoContainer);
+
+        PickorderPickActivity.destinationText = findViewById(R.id.destinationText);
+        PickorderPickActivity.destinationContainer = findViewById(R.id.destinationContainer);
+
         PickorderPickActivity.containerText = findViewById(R.id.containerText);
+
         PickorderPickActivity.quantityText = findViewById(R.id.quantityText);
         PickorderPickActivity.quantityRequiredText = findViewById(R.id.quantityRequiredText);
+
         PickorderPickActivity.articleThumbImageView = findViewById(R.id.articleThumbImageView);
         PickorderPickActivity.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
         PickorderPickActivity.imageButtonMinus = findViewById(R.id.imageButtonMinus);
@@ -224,10 +242,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        toolbarImage.setImageResource(R.drawable.ic_menu_pick);
-        toolbarTitle.setText(pvScreenTitle);
-        toolbarTitle.setSelected(true);
-        toolbarSubtext.setSelected(true);
+        PickorderPickActivity.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
+        PickorderPickActivity.toolbarTitle.setText(pvScreenTitle);
+        PickorderPickActivity.toolbarTitle.setSelected(true);
+        PickorderPickActivity.toolbarSubtext.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -246,17 +264,24 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cBarcodeScan.pRegisterBarcodeReceiver();
 
+        if (cPickorder.currentPickOrder.destionationBranch() == null) {
+            PickorderPickActivity.destionationScannedBln = false;
+        }
+        else {
+            PickorderPickActivity.destionationScannedBln = true;
+        }
+
         //We scanned a BIN, so nu current barcode known
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             //Initialise article scanned boolean
-            articleScannedLastBln = false;
+            PickorderPickActivity.articleScannedLastBln = false;
             return;
         }
 
          // We scanned an ARTICLE, so handle barcide
 
         if (cSetting.PICK_BIN_IS_ITEM()) {
-            articleScannedLastBln = false;
+            PickorderPickActivity.articleScannedLastBln = false;
             PickorderPickActivity.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
         }
 
@@ -286,6 +311,21 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
+        if (!cPickorder.currentPickOrder.isPABln()) {
+            PickorderPickActivity.destionationScannedBln = true;
+        }
+
+        //If we still need a destination scan, make sure we scan this first
+        if (!PickorderPickActivity.destionationScannedBln) {
+            cResult hulpRst = PickorderPickActivity.mCheckDestionationRst(pvBarcodeScan);
+            if (! hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"", true, true);
+                return;
+            }
+
+            return;
+        }
+
         if (cPickorder.currentPickOrder.isPVBln()) {
             PickorderPickActivity.mHandlePVScan(pvBarcodeScan);
             return;
@@ -298,7 +338,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //If we found the barcode, currentbarcode is alreay filled, so make this selected
         PickorderPickActivity.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
-
 
     }
 
@@ -317,7 +356,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         if (!cPickorderLine.currentPickOrderLine.getProcessingSequenceStr().isEmpty() && !cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
             cPickorderLine.currentPickOrderLine.processingSequenceStr = "";
             cPickorderLine.currentPickOrderLine.pUpdateProcessingSequenceBln("");
-            articleScannedLastBln = true;
+            PickorderPickActivity.articleScannedLastBln = true;
         }
 
     }
@@ -368,6 +407,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         PickorderPickActivity.mShowBarcodeInfo();
         PickorderPickActivity.mShowSortingInstruction();
+        PickorderPickActivity.mShowDestination();
+
+        PickorderPickActivity.mCheckLineDone();
 
     }
 
@@ -537,6 +579,20 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //Set scan instruction
             PickorderPickActivity.sourcenoText.setText(recordForSalesOrder.getPackingtableStr());
         }
+    }
+
+    private static void mShowDestination() {
+
+        //First show the SourceNumber
+        if (cPickorder.currentPickOrder.isTransferBln()) {
+            PickorderPickActivity.destinationText.setText(cPickorderLine.currentPickOrderLine.getDestinationAndDescriptionStr());
+            PickorderPickActivity.destinationContainer.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        PickorderPickActivity.destinationText.setText("");
+        PickorderPickActivity.destinationContainer.setVisibility(View.GONE);
+
     }
 
     private static void mEnablePlusMinusAndBarcodeSelectViews() {
@@ -736,7 +792,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         // If this is VKO after each piece, then show new instructions
         if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
             PickorderPickActivity.imageButtonDone.setVisibility(View.VISIBLE);
-            PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
+            PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
             PickorderPickActivity.articleScannedLastBln = false;
         }
 
@@ -789,9 +845,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
     }
 
-    // Lines, Barcodes and Packing Tables
+    // Lines, Barcodes, Packing Tables and destionation
 
-    private static Boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
+    private static boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
 
         if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
             return false;
@@ -807,11 +863,63 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         return false;
     }
 
+    private static cResult mCheckDestionationRst(cBarcodeScan pvBarcodeScan) {
+
+        cResult resultRst = new cResult();
+
+        if (PickorderPickActivity.destionationScannedBln) {
+            resultRst.resultBln = true;
+            return  resultRst;
+        }
+
+        if (cPickorder.currentPickOrder.destionationBranch() != null) {
+            PickorderPickActivity.destionationScannedBln = true;
+            resultRst.resultBln = true;
+            return  resultRst;
+        }
+
+        if (pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getDestinationNoStr())) {
+            PickorderPickActivity.destionationScannedBln = true;
+            resultRst.resultBln = true;
+            return  resultRst;
+        }
+
+        //Check if we have scanned a BIN and check if there are not handled linesInt for this BIN
+        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.LOCATION)) {
+            PickorderPickActivity.destionationScannedBln = false;
+            resultRst.resultBln = false;
+            resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_scan_is_not_location));
+            return  resultRst;
+        }
+
+        //Strip regex
+        String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+
+        //Check if destination is correct
+        if (!barcodewithoutPrefix.equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getDestinationNoStr())) {
+            PickorderPickActivity.destionationScannedBln = false;
+            resultRst.resultBln = false;
+            resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_location_incorrect));
+            return  resultRst;
+        }
+
+        PickorderPickActivity.destionationScannedBln = true;
+        resultRst.resultBln = true;
+        return  resultRst;
+
+    }
+
     private static void mCheckLineDone() {
 
-        //Start with complete
+        //Start with defaults
         boolean incompleteBln = false;
         PickorderPickActivity.imageButtonDone.setVisibility(View.VISIBLE);
+        PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
+
+        //Set instruction
+        if (cPickorder.currentPickOrder.isPABln() && !PickorderPickActivity.destionationScannedBln) {
+            PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_destination));
+        }
 
         //Check if quantityDbl is sufficient
         if (cPickorderLine.currentPickOrderLine.quantityHandledDbl < cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
@@ -840,7 +948,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 //Not complete and pickcart/salesorder last scanned so we have to scan an article, set the instruction
                 if (PickorderPickActivity.articleScannedLastBln && incompleteBln) {
                     PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-                    PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
+                    PickorderPickActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
                     PickorderPickActivity.imageButtonDone.setVisibility(View.VISIBLE);
                     return;
                 }
@@ -930,6 +1038,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //Clear current barcode and reset defaults
         cPickorderBarcode.currentPickorderBarcode = null;
         PickorderPickActivity.articleScannedLastBln = false;
+
+        if (cPickorder.currentPickOrder.destionationBranch() == null) {
+            PickorderPickActivity.destionationScannedBln = false;
+        }
 
         //Show animation and initialize fields
         Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.shrink_and_fade);
@@ -1249,6 +1361,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private static void mGoBackToLinesActivity() {
+
+        //Reset current branch
+        if (cPickorder.currentPickOrder.destionationBranch() == null) {
+            cPickorder.currentPickOrder.scannedBranch =  null;
+        }
+
         Intent intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();

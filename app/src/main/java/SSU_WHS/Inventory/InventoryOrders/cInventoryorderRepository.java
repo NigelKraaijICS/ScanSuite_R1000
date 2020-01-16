@@ -75,13 +75,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mCreateInventoryOrderViaWebserviceAsyncTask().execute(pvDocumentStr).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -98,13 +92,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mGetInventoryordersFromWebserviceAsyncTask().execute(pvSearchTextStr).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -118,9 +106,7 @@ public class cInventoryorderRepository {
         List<cInventoryorderEntity> ResultObl = null;
         try {
             ResultObl = new mGetInventoryordersFromDatabaseAsyncTask(inventoryorderDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -177,9 +163,7 @@ public class cInventoryorderRepository {
             SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
             ResultObl = new cInventoryorderRepository.mGetInventoriesFromDatabaseWithFilterAsyncTask(inventoryorderDao).execute(query).get();
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -191,13 +175,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mInventoryorderHandledViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -215,13 +193,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mInventoryorderAddLineViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -238,13 +210,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mGetLinesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -263,13 +229,24 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mGetBinsViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
             webResultWrs.setResultObl(resultObl);
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetPossibleBinsFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetPossibleBinsViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -285,13 +262,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mInventoryorderBinAddViaWebserviceAsyncTask().execute(pvBinCodeStr).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -307,13 +278,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mInventoryorderBinCloseViaWebserviceAsyncTask().execute(pvBinCodeStr).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -327,9 +292,7 @@ public class cInventoryorderRepository {
         List<cInventoryorderBinEntity> ResultObl = null;
         try {
             ResultObl = new mGetInventoryorderBinNotDoneFromDatabaseAsyncTask(inventoryorderBinDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -339,9 +302,7 @@ public class cInventoryorderRepository {
         List<cInventoryorderBinEntity> ResultObl = null;
         try {
             ResultObl = new mGetInventoryorderBinDoneFromDatabaseAsyncTask(inventoryorderBinDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -352,9 +313,7 @@ public class cInventoryorderRepository {
         CheckBinInDatabaseParams checkBinInDatabaseParams = new CheckBinInDatabaseParams(pvBincode, pvStatus);
         try {
             inventoryorderBinEntity = new mCheckBinInDatabaseAsyncTask(inventoryorderBinDao).execute(checkBinInDatabaseParams).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return inventoryorderBinEntity;
@@ -364,9 +323,7 @@ public class cInventoryorderRepository {
         List<cInventoryorderBinEntity> ResultObl = null;
         try {
             ResultObl = new pGetInventoryorderBinTotalFromDatabaseAsyncTask(inventoryorderBinDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -380,13 +337,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mInventoryorderUnknownItemAddViaWebserviceAsyncTask().execute(pvBarcodeScan).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -402,13 +353,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mInventoryorderERPItemAddViaWebserviceAsyncTask().execute(pvArticleBarcode).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -427,13 +372,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mGetLineBarcodesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -452,13 +391,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mGetBarcodesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -476,13 +409,7 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mGetCommentsFromWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -583,7 +510,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo8Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYCREATE, l_PropertyInfoObl);
+                new cWebresult();
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYCREATE, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setSuccessBln(false);
                 l_WebresultWrs.setResultBln(false);
@@ -615,7 +543,8 @@ public class cInventoryorderRepository {
             l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERS, l_PropertyInfoObl);
+                new cWebresult();
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERS, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -683,7 +612,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo6Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYHANDLED, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYHANDLED, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -716,7 +646,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo3Pin.setValue(cDeviceInfo.getSerialnumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERLINES, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERLINES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -748,7 +679,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo3Pin.setValue(cDeviceInfo.getSerialnumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERLINEBARCODES, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERLINEBARCODES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -806,7 +738,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINECREATE, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINECREATE, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -834,7 +767,36 @@ public class cInventoryorderRepository {
                 l_PropertyInfo2Pin.setValue(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBINS, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBINS, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mGetPossibleBinsViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo2Pin.setValue(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERPOSSIBLEBINS, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -925,7 +887,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo4Pin.setValue(params[0]);
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_ADD_BIN, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_ADD_BIN, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -967,7 +930,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo5Pin.setValue(params[0]);
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINCLOSE, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINCLOSE, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -1041,7 +1005,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo11Pin.setValue(cText.pIntToStringStr(cWarehouseorder.ItemTypeEnu.Item));
                 l_PropertyInfoObl.add(l_PropertyInfo11Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -1114,7 +1079,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo11Pin.setValue(cText.pIntToStringStr(cWarehouseorder.ItemTypeEnu.Item));
                 l_PropertyInfoObl.add(l_PropertyInfo11Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -1142,7 +1108,8 @@ public class cInventoryorderRepository {
                 l_PropertyInfo2Pin.setValue(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBARCODES, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINVENTORYORDERBARCODES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

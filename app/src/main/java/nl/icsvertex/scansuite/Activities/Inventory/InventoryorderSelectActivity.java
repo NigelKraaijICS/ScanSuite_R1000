@@ -423,14 +423,21 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         //Get all bins for current order, if webservice error then stop
         if (!cInventoryorder.currentInventoryOrder.pGetBinsViaWebserviceBln(true)) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_bins_failed));
             return result;
         }
 
         //Get all linesInt for current order, if size = 0 or webservice error then stop
         if (!cInventoryorder.currentInventoryOrder.pGetLinesViaWebserviceBln(true)) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_inventorylines_failed));
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
+            return result;
+        }
+
+        //Get all linesInt for current order, if size = 0 or webservice error then stop
+        if (!cInventoryorder.currentInventoryOrder.pGetPossibleBinsViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_possible_bins_failed));
             return result;
         }
 
@@ -744,7 +751,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     private static boolean mCheckOrderIsLockableBln(cInventoryorder pvInventoryorder){
 
         //If there is no assigned user, then always oke
-        if (pvInventoryorder.getAssignedUserIdStr().isEmpty()) {
+        if (pvInventoryorder.getAssignedUserIdStr().isEmpty() && pvInventoryorder.getCurrentUserIdStr().isEmpty()) {
             return true;
         }
 

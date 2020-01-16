@@ -24,6 +24,7 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
@@ -61,6 +62,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         cAppExtension.dialogFragment = this;
         this.mFragmentInitialize();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -68,6 +70,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
     }
+
     @Override
     public void onDestroy() {
         try {
@@ -77,6 +80,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         }
         super.onDestroy();
     }
+
     @Override
     public void onPause() {
         try {
@@ -96,6 +100,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
 
         //cBarcodeScan.pRegisterWifiChangedFragmentReceiver();
     }
+
     @Override
     public void mFindViews() {
         if (getView() != null) {
@@ -179,6 +184,14 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                         mWrongPassword();
                     }
                 }
+                if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
+                    if (editPassword.getText().toString().equals(cSetting.RECEIVE_STORE_DEVIATIONS_PASSWORD())) {
+                        mRightPassword();
+                    }
+                    else {
+                        mWrongPassword();
+                    }
+                }
             }
         });
     }
@@ -195,6 +208,9 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                     if (cAppExtension.activity instanceof InventoryorderBinActivity) {
                         InventoryorderBinActivity.pPasswordCancelled();
                     }
+                    if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
+                        IntakeorderLinesActivity.pPasswordCancelled();
+                    }
                     if (cAppExtension.activity instanceof LoginActivity) {
                         LoginActivity.pHandlePasswordFragmentDismissed();
                     }
@@ -202,6 +218,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             }
         });
     }
+
     private void mWrongPassword() {
         PasswordFragment.textPasswordIncorrect.setVisibility(View.VISIBLE);
         cUserInterface.pDoNope(editPassword, false, false);
@@ -209,29 +226,41 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         PasswordFragment.editPassword.requestFocus();
         PasswordFragment.editPassword.setSelection(0,editPassword.getText().toString().length());
     }
+
     private void mRightPassword() {
+
         if ((getActivity()) == null) {
             return;
         }
+
         if (cAppExtension.activity instanceof LoginActivity) {
             LoginActivity.pLoginSuccess();
             dismiss();
             return;
         }
+
         if (cAppExtension.activity instanceof MainDefaultActivity) {
             dismiss();
             MainDefaultActivity.pPasswordSuccess();
         }
+
         if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
             InventoryBinsDoneFragment.pPasswordSuccess();
             dismiss();
         }
+
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
             InventoryorderBinActivity.pPasswordSuccess();
             dismiss();
         }
 
+        if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
+            IntakeorderLinesActivity.pPasswordSuccess();
+            dismiss();
+        }
+
     }
+
     private void mSetTextChangedListener() {
         editPassword.addTextChangedListener(new TextWatcher() {
             @Override
@@ -250,6 +279,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             }
         });
     }
+
     private void mSetEditorActionListener() {
         PasswordFragment.editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

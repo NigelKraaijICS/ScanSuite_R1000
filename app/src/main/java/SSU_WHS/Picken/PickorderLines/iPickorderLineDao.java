@@ -40,6 +40,9 @@ public interface iPickorderLineDao {
     @Query("SELECT * FROM Pickorderlines WHERE Localstatus <= " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)
     List<cPickorderLineEntity> getNotHandledPickorderLineEntitiesLin();
 
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus <= " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY  + " AND DestinationNo = :pvDestinationNoStr ORDER BY recordid")
+    List<cPickorderLineEntity> getNotHandledPickorderLineForBranchEntitiesLin(String pvDestinationNoStr);
+
     @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)
     List<cPickorderLineEntity> getBusyPickorderLineEntitiesLin();
 

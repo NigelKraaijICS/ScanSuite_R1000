@@ -3,7 +3,7 @@
     style="@style/addressContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:layout_constraintTop_toBottomOf="@id/sourcenoContainer"
+    app:layout_constraintTop_toBottomOf="@id/destinationContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/default_double_padding"

@@ -234,6 +234,7 @@ public class cSetting {
         RECEIVE_STORE_AUTO_ACCEPT_AT_NEW_ITEM,
         RECEIVE_STORE_AUTO_ACCEPT_AT_REQUESTED,
         RECEIVE_STORE_AUTO_ACCEPT_VALIDATION_MESSAGE,
+        RECEIVE_STORE_DEVIATIONS_PASSWORD,
         RETOUR_AMOUNT_MANUAL,
         RETOUR_AUTO_ACCEPT_AT_NEW_ITEM,
         RETOUR_AUTO_CREATE_ORDER_RV,
@@ -697,6 +698,16 @@ public class cSetting {
         }
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static String RECEIVE_STORE_DEVIATIONS_PASSWORD(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_STORE_DEVIATIONS_PASSWORD);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
     }
 
     //End Region Settings

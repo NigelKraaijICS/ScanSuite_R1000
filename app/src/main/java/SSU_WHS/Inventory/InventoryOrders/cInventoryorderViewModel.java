@@ -59,6 +59,8 @@ public class cInventoryorderViewModel extends AndroidViewModel {
 
     public cWebresult pGetBinsFromWebserviceWrs( ) {return this.Repository.pGetBinsFromWebserviceWrs();}
 
+    public cWebresult pGetPossibleBinsFromWebserviceWrs( ) {return this.Repository.pGetPossibleBinsFromWebserviceWrs();}
+
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebserviceWrs();}

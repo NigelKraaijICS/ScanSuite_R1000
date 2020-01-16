@@ -119,8 +119,8 @@
     <string name="menuitem_move_mv">Move (pick and place)</string>
     <string name="menuitem_moveitem">Move item</string>
     <string name="menuitem_pick">Pick</string>
-    <string name="menuitem_pick_pf">Pick branch</string>
-    <string name="menuitem_pick_pv">Pick sales</string>
+    <string name="menuitem_pick_pf">Pick store</string>
+    <string name="menuitem_pick_pv">Pick salesorder</string>
     <string name="menuitem_return">Returns</string>
     <string name="menuitem_selfpick">Picking done by client</string>
     <string name="menuitem_sort">Sorting</string>
@@ -196,8 +196,8 @@
     <string name="tab_pickorderline_picked">Picked</string>
     <string name="tab_pickorderline_total">Total</string>
     <string name="im_at">I\'m at</string>
-    <string name="scan_bincode">Scan location</string>
-    <string name="scan_article_or_bincode">Scan article or location</string>
+    <string name="scan_bincode">Scan BIN</string>
+    <string name="scan_article_or_bincode">Scan article or BIN</string>
     <string name="nothing_more_todo_for_bin">There is nothing to do for this location</string>
     <!--endregion Pickorder Lines-->
 
@@ -333,7 +333,7 @@
     <string name="message_scan_article_first">Scan article first</string>
     <string name="message_packingtable_already_assigned">This packing table is already assigned to a different sales order</string>
     <string name="message_salesorder_assigned_different_packingtable">This sales order is already assigned to a different packing table</string>
-    <string name="scan_article">Scan article</string>
+    <string name="message_scan_article">Scan article</string>
     <string name="scan_packingtable_parameter1">Scan packing table %1$s</string>
     <string name="question_open_sort">Do you want to continue with sorting?</string>
     <string name="question_open_sort_title">Open sort?</string>
@@ -435,7 +435,9 @@
     <string name="error_unknown_autorisation">Autorisation is unknown</string>
     <string name="error_get_pickorders_failed">Getting pickorders from server failed</string>
     <string name="error_couldnt_delete_details">Could not delete order details</string>
-    <string name="error_get_picklines_failed">Getting lines from server failed</string>
+    <string name="error_get_lines_failed">Getting lines from server failed</string>
+    <string name="error_get_bins_failed">Getting bins from server failed</string>
+    <string name="error_get_possible_bins_failed">Getting possible bins from server failed</string>
     <string name="error_couldnt_unlock_order">Couldn\'t unlock order</string>
     <string name="error_get_article_images_failed">Getting article images failed</string>
     <string name="error_couldnt_release_lock_order">Couln\'t release order lock</string>
@@ -598,6 +600,7 @@
     <!--region supervisor-->
     <string name="supervisor_password_header">Supervisor</string>
     <string name="supervisor_password_text">You need to be a supervisor for this</string>
+    <string name="supervisor_deviations_password_text">You need to be a supervisor for this, because you have deviations</string>
     <!--endregion supervisor-->
 
     <!--region move-->
@@ -624,9 +627,13 @@
     <string name="message_no_connection_try_again">No connection, try again</string>
     <string name="message_no_connection_header">No connection</string>
     <string name="message_checking_connection">Checking connection....</string>
-    <string name="message_please_wait">Please wait...</string>
+    <string name="message_please_wait">Please wait…</string>
     <string name="connected">Connected</string>
     <string name="not_connected">Not connected</string>
+    <string name="message_scan_destination">Scan destination</string>
+    <string name="message_scan_is_not_location">Please scan a location</string>
+    <string name="message_location_incorrect">Location incorrect</string>
+    <string name="zero">0</string>
     <!--endregion move-->
 
 </resources>

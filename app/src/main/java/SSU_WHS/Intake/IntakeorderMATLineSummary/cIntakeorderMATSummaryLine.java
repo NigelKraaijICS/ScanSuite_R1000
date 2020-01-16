@@ -160,7 +160,13 @@ public class cIntakeorderMATSummaryLine {
 
 
         if (this.MATLinesObl.size() == 1) {
-            return  this.MATLinesObl;
+
+            if (!this.MATLinesObl.get(0).getBinCodeStr().isEmpty()) {
+                resultObl.addAll(this.MATLinesObl);
+
+            }
+
+            return resultObl;
         }
 
         //Loop through all lines, so we can make a list of scanned locations
@@ -176,7 +182,7 @@ public class cIntakeorderMATSummaryLine {
 
 
             //If the quantity is zero and the binlist containt this bin, we only show the scanned line
-            if (intakeorderMATLine.getQuantityHandledDbl() ==0 && scannedBINSObl.contains(intakeorderMATLine.getBinCodeStr())) {
+            if (intakeorderMATLine.getQuantityHandledDbl() ==0 && ! scannedBINSObl.contains(intakeorderMATLine.getBinCodeStr())) {
                 continue;
             }
 

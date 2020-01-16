@@ -19,7 +19,7 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cInventoryorderBinRepository {
     //Region Public Properties
-    public iInventoryorderBinDao inventoryorderBinDao;
+    private iInventoryorderBinDao inventoryorderBinDao;
     //End Region Public Properties
 
     //Region Private Properties
@@ -66,15 +66,8 @@ public class cInventoryorderBinRepository {
         try {
             integerValue = new updateStatusAsyncTask(inventoryorderBinDao).execute(updateInventorylineQuantityParams).get();
 
-            if (integerValue != 0) {
-                return  true;}
-            else{
-                return false;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  false;
         }
@@ -84,19 +77,17 @@ public class cInventoryorderBinRepository {
         new mDeleteAllAsyncTask(inventoryorderBinDao).execute();
     }
 
+    public void allNew() {
+        new mAllNewAsyncTask(inventoryorderBinDao).execute();
+    }
+
     public cWebresult pResetBinViaWebserviceWrs() {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
         try {
             webResultWrs = new mResetBinViaViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -112,13 +103,7 @@ public class cInventoryorderBinRepository {
 
         try {
             webResultWrs = new mReopenBinViaViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -174,6 +159,20 @@ public class cInventoryorderBinRepository {
         }
     }
 
+    private static class mAllNewAsyncTask extends AsyncTask<Void, Void, Void> {
+        private iInventoryorderBinDao mAsyncTaskDao;
+
+        mAllNewAsyncTask(iInventoryorderBinDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            mAsyncTaskDao.allNew();
+            return null;
+        }
+    }
+
     private static class updateStatusAsyncTask extends AsyncTask<UpdateInventoryBinStatusParams, Void, Integer> {
         private iInventoryorderBinDao mAsyncTaskDao;
         updateStatusAsyncTask(iInventoryorderBinDao dao) { mAsyncTaskDao = dao; }
@@ -212,7 +211,8 @@ public class cInventoryorderBinRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINRESET, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINRESET, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -256,7 +256,8 @@ public class cInventoryorderBinRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINOPEN, l_PropertyInfoObl);
+                new cWebresult();
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYBINOPEN, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

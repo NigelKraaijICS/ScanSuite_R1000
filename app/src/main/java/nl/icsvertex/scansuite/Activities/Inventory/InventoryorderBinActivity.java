@@ -338,15 +338,15 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             }
 
             InventoryorderBinActivity.pCloseBin();
-        }
-
-        if (pvAskCloseBln) {
-            mShowCloseBinDialog();
             return;
         }
 
-
         if (! cInventoryorder.currentInventoryOrder.isGeneratedBln() && cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) == 0) {
+
+            if (pvAskCloseBln) {
+                mShowCloseBinDialog();
+                return;
+            }
 
             //Clear cache
             cInventoryorderBin.currentInventoryOrderBin = null;

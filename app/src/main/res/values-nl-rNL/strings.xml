@@ -83,8 +83,8 @@
     <string name="menuitem_move_mv">Verplaatsen (pick en place)</string>
     <string name="menuitem_moveitem">Verplaats item</string>
     <string name="menuitem_pick">Pick</string>
-    <string name="menuitem_pick_pf">Pick vestiging</string>
-    <string name="menuitem_pick_pv">Pick sales</string>
+    <string name="menuitem_pick_pf">Picken filiaal</string>
+    <string name="menuitem_pick_pv">Picken verkooporders</string>
     <string name="menuitem_return">Retouren</string>
     <string name="menuitem_selfpick">Picken door klant</string>
     <string name="menuitem_sort">Sorteren</string>
@@ -211,7 +211,7 @@
     <string name="packing_table">Paktafel</string>
     <string name="question_open_sort">Doorgaan met sorteren?</string>
     <string name="question_open_sort_title">Sorteren openen?</string>
-    <string name="scan_article">Scan artikel</string>
+    <string name="message_scan_article">Scan artikel</string>
     <string name="scan_packingtable_parameter1">Scan paktafel %1$s</string>
     <string name="scan_sort_location">Scan sorteer lokatie</string>
     <string name="scan_sort_location_parameter1">Scan sorteer lokatie %1$s</string>
@@ -326,7 +326,7 @@
     <string name="error_get_autorisations_failed">Autorisaties ophalen mislukt</string>
     <string name="error_get_barcodes_failed">Barcodes ophalen mislukt</string>
     <string name="error_get_comments_failed">Opmerkingen ophalen mislukt</string>
-    <string name="error_get_picklines_failed">Regels van server ophalen mislukt</string>
+    <string name="error_get_lines_failed">Regels van server ophalen mislukt</string>
     <string name="error_get_pickorders_failed">Orders van server ophalen mislukt</string>
     <string name="error_get_workplaces_failed">Werkplekken ophalen mislukt</string>
     <string name="error_getting_sort_lines_failed">Sorteerregels ophalen mislukt</string>
@@ -508,6 +508,13 @@
     <string name="message_checking_connection">Connectie controleren.....</string>
     <string name="message_no_connection_header">Geen connectie</string>
     <string name="message_no_connection_try_again">Geen connectie, probeer nogmaals</string>
-    <string name="message_please_wait">Een moment...</string>
+    <string name="message_please_wait">Een moment…</string>
     <string name="not_connected">Niet verbonden</string>
+    <string name="error_get_bins_failed">Locaties ophalen van server mislukt</string>
+    <string name="error_get_possible_bins_failed">Mogelijke locaties ophalen van server mislukt</string>
+    <string name="message_location_incorrect">Vestiging niet juist</string>
+    <string name="message_scan_destination">Scan vestiging</string>
+    <string name="message_scan_is_not_location">U dient een vestiging te scannen</string>
+    <string name="supervisor_deviations_password_text">U moet een supervisor zijn om dit uit te voeren omdat er afwijkingen zijn waargenomen</string>
+    <string name="zero">0</string>
 </resources>

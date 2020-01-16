@@ -21,11 +21,8 @@ public interface iPickorderDao {
     @Query("SELECT * FROM Pickorders")
     List<cPickorderEntity> getAll();
 
-    @Query("SELECT * FROM Pickorders")
+    @Query("SELECT * FROM Pickorders ORDER BY Priority, Ordernumber ASC")
     List<cPickorderEntity> getPickordersFromDatabase();
-
-    @Query("SELECT * FROM Pickorders WHERE Ordernumber = :ordernumber LIMIT 1")
-    cPickorderEntity getPickorderByOrderNumber(String ordernumber);
 
     @RawQuery(observedEntities = cPickorderEntity.class)
     List<cPickorderEntity> getFilteredPickorders(SupportSQLiteQuery query);

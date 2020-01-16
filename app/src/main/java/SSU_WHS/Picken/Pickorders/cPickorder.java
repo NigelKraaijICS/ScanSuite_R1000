@@ -13,6 +13,7 @@ import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
+import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
@@ -122,6 +123,24 @@ public class cPickorder{
         return isProcessingOrParkedBln;
     }
 
+    public  String getDestinationAndDescriptionStr(){
+
+        String resultStr ;
+
+        cBranch branch = cBranch.pGetBranchByCode(this.getExternalReferenceStr());
+
+
+        if (branch == null) {
+            resultStr = this.getExternalReferenceStr();
+        }
+        else {
+            resultStr = branch.getBranchNameStr() + "  (" + this.getExternalReferenceStr() + ")";
+        }
+
+        return  resultStr;
+
+    }
+
     public Boolean isBMBln() {
         return this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.BM.toString());
     }
@@ -136,6 +155,59 @@ public class cPickorder{
 
     public Boolean isBPBln() {
         return this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.BP.toString());
+    }
+
+    public Boolean isPABln() {
+        return this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PA.toString());
+    }
+
+    public Boolean isPFBln() {
+        return this.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PF.toString());
+    }
+
+    public boolean isTransferBln(){
+
+        return this.isPABln() || this.isPFBln();
+
+    }
+
+    private boolean isSingleDestinationBln(){
+
+        if (!this.isTransferBln()) {
+            return  false;
+        }
+
+        String destinationStr = "";
+
+        for (cPickorderLine pickorderLine : this.linesObl()) {
+
+            if (destinationStr.isEmpty()) {
+                destinationStr =  pickorderLine.getDestinationNoStr();
+            }
+
+            if (!destinationStr.equalsIgnoreCase(pickorderLine.getDestinationNoStr())) {
+                return  false;
+            }
+        }
+
+        return  true;
+
+    }
+
+    public cBranch destionationBranch() {
+
+        if (!this.isSingleDestinationBln()) {
+            return  null;
+        }
+
+        return  cBranch.pGetBranchByCode(this.linesObl().get(0).getDestinationNoStr());
+
+    }
+
+    public boolean isSortableBln(){
+
+        return this.isBCBln() || this.isBPBln();
+
     }
 
     public boolean PackAndShipNeededBln(){
@@ -158,9 +230,7 @@ public class cPickorder{
        return  false;
     }
 
-    public boolean SortNeededBln(){
-        return this.isBPBln() || this.isBCBln();
-    }
+    public cBranch scannedBranch;
 
     public int lastSelectedIndexInt;
     public int getLastSelectedIndexInt() {
@@ -188,6 +258,7 @@ public class cPickorder{
 
     public static List<cPickorder> allPickordersObl;
     public static cPickorder currentPickOrder;
+
 
     public List<cPickorderLine> linesObl(){
         return  cPickorderLine.allLinesObl;
@@ -496,6 +567,23 @@ public class cPickorder{
 
     }
 
+    public List<cComment> pFeedbackAndPickCommentObl(){
+
+        List<cComment> resultObl = new ArrayList<>();
+
+        if (this.pFeedbackCommentObl() != null) {
+            resultObl.addAll(this.pFeedbackCommentObl());
+        }
+
+        if (this.pPickCommentObl() != null) {
+            resultObl.addAll(this.pPickCommentObl());
+        }
+
+
+        return resultObl;
+
+    }
+
     public boolean pGetLinesViaWebserviceBln(Boolean pvRefreshBln,cWarehouseorder.PickOrderTypeEnu pvPickOrderTypeEnu) {
 
         if (pvRefreshBln) {
@@ -584,7 +672,13 @@ public class cPickorder{
         List<cPickorderLine> resultObl = new ArrayList<>();
         List<cPickorderLineEntity> hulpResultObl;
 
-        hulpResultObl =  cPickorder.getPickorderViewModel().pGetLinesNotHandledFromDatabaseObl();
+        if (this.scannedBranch == null) {
+            hulpResultObl =  cPickorder.getPickorderViewModel().pGetLinesNotHandledFromDatabaseObl();
+        }
+        else {
+            hulpResultObl =  cPickorder.getPickorderViewModel().pGetLinesNotHandledForBranchFromDatabaseObl(this.scannedBranch.getBranchStr());
+        }
+
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -630,6 +724,28 @@ public class cPickorder{
         return  resultObl;
     }
 
+    public cBranch pGetBranchForOpenLines(String pvScannedBranchStr){
+
+        cBranch resultBranch;
+        List<cPickorderLine> hulpObl = this.pGetLinesNotHandledFromDatabasObl();
+
+        if (hulpObl == null || hulpObl.size() == 0) {
+            return  null;
+        }
+
+        for (cPickorderLine pickorderLine : hulpObl) {
+
+            if (pickorderLine.getDestinationNoStr().equalsIgnoreCase(pvScannedBranchStr)) {
+
+                resultBranch =  cBranch.pGetBranchByCode(pickorderLine.getDestinationNoStr());
+                return  resultBranch;
+            }
+        }
+
+       return  null;
+
+    }
+
     public cPickorderLine pGetNetxLineToHandleForBin(String pvBinCodeStr) {
 
         List <cPickorderLine> hulpObl = this.pGetLinesNotHandledFromDatabasObl();
@@ -641,7 +757,15 @@ public class cPickorder{
         for (cPickorderLine pickorderLine : hulpObl) {
 
             if (pickorderLine.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr)) {
-                return  pickorderLine;
+
+                if (cPickorder.currentPickOrder.scannedBranch == null) {
+                    return  pickorderLine;
+                }
+
+                if (pickorderLine.getDestinationNoStr().equalsIgnoreCase(cPickorder.currentPickOrder.scannedBranch.getBranchStr())) {
+                    return  pickorderLine;
+                }
+
             }
         }
 
@@ -681,7 +805,7 @@ public class cPickorder{
         }
 
         cWebresult WebResult;
-        WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs(cUser.currentUser.getNameStr(),cWarehouseorder.StepCodeEnu.Pick_Sorting,pvSearchTextStr);
+        WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs(cUser.currentUser.getUsernameStr(),cWarehouseorder.StepCodeEnu.Pick_Sorting,pvSearchTextStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
@@ -705,7 +829,7 @@ public class cPickorder{
         }
 
         cWebresult WebResult;
-        WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs(cUser.currentUser.getNameStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip,pvSearchTextStr);
+        WebResult =  cPickorder.getPickorderViewModel().pGetSortOrShipordersFromWebserviceWrs(cUser.currentUser.getUsernameStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip,pvSearchTextStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             for (JSONObject jsonObject :WebResult.getResultDtt()) {
@@ -1054,7 +1178,7 @@ public class cPickorder{
         List<cPickorder> resultObl = new ArrayList<>();
         List<cPickorderEntity> hulpResultObl;
 
-        hulpResultObl =  cPickorder.getPickorderViewModel().pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getNameStr(),cSharedPreferences.userFilterBln());
+        hulpResultObl =  cPickorder.getPickorderViewModel().pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(),cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -1252,8 +1376,6 @@ public class cPickorder{
             return false;
         }
     }
-
-
 
     public boolean pGetSortingDetailsBln(){
 

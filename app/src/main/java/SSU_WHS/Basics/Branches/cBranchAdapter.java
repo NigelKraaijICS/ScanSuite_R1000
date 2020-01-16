@@ -1,5 +1,6 @@
 package SSU_WHS.Basics.Branches;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -25,14 +26,14 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
 
         public BranchViewHolder(View itemView) {
             super(itemView);
-            imageViewMenuItem = itemView.findViewById(R.id.imageViewMenuItem);
-            textViewDescription = itemView.findViewById(R.id.textViewDescription);
-            textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewDescription.setSingleLine(true);
-            textViewDescription.setMarqueeRepeatLimit(5);
-            textViewDescription.setSelected(true);
-            textViewBranch = itemView.findViewById(R.id.textViewBranch);
-            branchItemLinearLayout = itemView.findViewById(R.id.branchItemLinearLayout);
+            this.imageViewMenuItem = itemView.findViewById(R.id.imageViewMenuItem);
+            this.textViewDescription = itemView.findViewById(R.id.textViewDescription);
+            this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDescription.setSingleLine(true);
+            this.textViewDescription.setMarqueeRepeatLimit(5);
+            this.textViewDescription.setSelected(true);
+            this.textViewBranch = itemView.findViewById(R.id.textViewBranch);
+            this.branchItemLinearLayout = itemView.findViewById(R.id.branchItemLinearLayout);
         }
     }
     //End Region Public Properties
@@ -49,14 +50,15 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
 
     // Region Default Methods
 
+    @NonNull
     @Override
-    public cBranchAdapter.BranchViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewType) {
+    public cBranchAdapter.BranchViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewType) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_branch, pvParent, false);
         return new cBranchAdapter.BranchViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(cBranchAdapter.BranchViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull cBranchAdapter.BranchViewHolder holder, int position) {
         if (cUser.currentUser != null && cUser.currentUser.branchesObl != null) {
 
             final cBranch branch = cUser.currentUser.branchesObl.get(position);

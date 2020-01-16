@@ -25,6 +25,7 @@ public class cInventoryorderBinViewModel extends AndroidViewModel {
     public void insertAll(List< cInventoryorderBinEntity> pvInventoryorderBinEntitiesObl) {this.Repository.insertAll(pvInventoryorderBinEntitiesObl);}
     public  Boolean pUpdateStatusAndTimeStampBln() {return  this.Repository.pUpdateStatusAndTimestampBln();}
     public void deleteAll() {this.Repository.deleteAll();}
+    public void allNew() {this.Repository.allNew();}
     public cWebresult  pResetBinViaWebserviceWrs() {return this.Repository.pResetBinViaWebserviceWrs();}
     public cWebresult  pReopenBinViaWebserviceWrs() {return this.Repository.pReopenBinViaWebserviceWrs();}
 }

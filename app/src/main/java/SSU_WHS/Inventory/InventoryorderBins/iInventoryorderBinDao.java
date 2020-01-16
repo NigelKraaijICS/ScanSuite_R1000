@@ -20,6 +20,8 @@ public interface iInventoryorderBinDao {
     @Insert
     void insertAll(List<cInventoryorderBinEntity> pvInventoryorderBinEntities);
 
+    @Query("UPDATE " + cDatabase.TABLENAME_INVENTORYORDERBIN + " SET Status = " + cWarehouseorder.InventoryBinStatusEnu.New)
+    int allNew();
 
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDERBIN)
     void deleteAll();

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 import ICS.Utils.cDateAndTime;
@@ -13,6 +14,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
+import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -248,6 +250,24 @@ public class cPickorderLine {
 
     public cArticleImage articleImage;
 
+    public  String getDestinationAndDescriptionStr(){
+
+       String resultStr ;
+
+       cBranch branch = cBranch.pGetBranchByCode(this.getDestinationNoStr());
+
+
+        if (branch == null) {
+            resultStr = this.getDestinationNoStr();
+        }
+        else {
+            resultStr = branch.getBranchNameStr() + "  (" + this.getDestinationNoStr() + ")";
+        }
+
+        return  resultStr;
+
+    }
+
     private cPickorderLineEntity PickorderLineEntity;
     public boolean indatabaseBln;
 
@@ -470,7 +490,7 @@ public class cPickorderLine {
         cResult result = new cResult();
         result.resultBln = false;
 
-        if (cPickorderLine.currentPickOrderLine.mGetBarcodesObl() == null || cPickorderLine.currentPickOrderLine.mGetBarcodesObl().size() == 0) {
+        if (cPickorderLine.currentPickOrderLine.mGetBarcodesObl() == null || Objects.requireNonNull(cPickorderLine.currentPickOrderLine.mGetBarcodesObl()).size() == 0) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line));
             return result;
@@ -494,7 +514,7 @@ public class cPickorderLine {
         cResult result = new cResult();
         result.resultBln = false;
 
-        if (this.mGetBarcodesObl() == null || cPickorderLine.currentPickOrderLine.mGetBarcodesObl().size() == 0) {
+        if (this.mGetBarcodesObl() == null || Objects.requireNonNull(cPickorderLine.currentPickOrderLine.mGetBarcodesObl()).size() == 0) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line));
             return result;

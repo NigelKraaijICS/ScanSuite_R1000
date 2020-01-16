@@ -302,14 +302,23 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         hulpResult = new cResult();
         hulpResult.resultBln = false;
 
-        for (cInventoryorderBin inventoryorderBin : cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl()) {
+        if (!cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
+            for (cInventoryorderBin inventoryorderBin : cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl()) {
 
-            if (!inventoryorderBin.pCloseBln(true)) {
-                mShowNotSend(inventoryorderBin.getBinCodeStr() + ' ' +  cAppExtension.activity.getString(R.string.message_bin_close_failed));
-                return;
+                if (!inventoryorderBin.pCloseBln(true)) {
+                    mShowNotSend(inventoryorderBin.getBinCodeStr() + ' ' +  cAppExtension.activity.getString(R.string.message_bin_close_failed));
+                    return;
+                }
             }
         }
-
+        else {
+            for (cInventoryorderBin inventoryorderBin : cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl()) {
+                if (!inventoryorderBin.pCloseBln(true)) {
+                    mShowNotSend(inventoryorderBin.getBinCodeStr() + ' ' +  cAppExtension.activity.getString(R.string.message_bin_close_failed));
+                    return;
+                }
+            }
+        }
         hulpResult = cInventoryorder.currentInventoryOrder.pOrderHandledViaWebserviceRst();
 
         //Everything was fine, so we are done

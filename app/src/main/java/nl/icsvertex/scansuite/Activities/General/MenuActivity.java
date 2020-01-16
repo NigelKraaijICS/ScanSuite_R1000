@@ -40,17 +40,20 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 public class MenuActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
+
+    public static boolean refreshBln;
+
     //End Region Public Properties
 
     //Region Private Properties
 
     //Region views
-    private ShimmerFrameLayout shimmerViewContainer;
-    private RecyclerView recyclerViewMenu;
+    private static ShimmerFrameLayout shimmerViewContainer;
+    private static RecyclerView recyclerViewMenu;
 
-    private ImageView toolbarImage;
-    private TextView toolbarTitle;
-    private TextView toolbarSubtext;
+    private static ImageView toolbarImage;
+    private static TextView toolbarTitle;
+    private static TextView toolbarSubtext;
     //End region views
 
     //End Region Private Properties
@@ -130,19 +133,19 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     @Override
     public void mFindViews() {
-        this.toolbarImage = findViewById(R.id.toolbarImage);
-        this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
-        this.recyclerViewMenu = findViewById(R.id.recyclerViewMenu);
-        this.shimmerViewContainer = findViewById(R.id.shimmerViewContainer);
+        MenuActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        MenuActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        MenuActivity.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        MenuActivity.recyclerViewMenu = findViewById(R.id.recyclerViewMenu);
+        MenuActivity.shimmerViewContainer = findViewById(R.id.shimmerViewContainer);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarTitle.setText(pvScreenTitle);
-        this.toolbarImage.setImageResource(R.drawable.ic_menu);
-        this.toolbarTitle.setSelected(true);
-        this.toolbarSubtext.setSelected(true);
+        MenuActivity.toolbarTitle.setText(pvScreenTitle);
+        MenuActivity.toolbarImage.setImageResource(R.drawable.ic_menu);
+        MenuActivity.toolbarTitle.setSelected(true);
+        MenuActivity.toolbarSubtext.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -154,9 +157,9 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     @Override
     public void mFieldsInitialize() {
-        toolbarSubtext.setText(cUser.currentUser.nameStr);
+        MenuActivity.toolbarSubtext.setText(cUser.currentUser.getNameStr());
 
-        if (! cUser.currentUser.pGetAutorisationsBln()){
+        if (! cUser.currentUser.pGetAutorisationsBln(MenuActivity.refreshBln)){
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_autorisations_failed), cUser.currentUser.getUsernameStr(), true, true );
             this.mStopShimmering();
             return;
@@ -168,7 +171,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             return;
         }
 
-        if (! cUser.currentUser.currentBranch.pGetWorkplacesBln()) {
+        if (! cUser.currentUser.currentBranch.pGetWorkplacesBln(MenuActivity.refreshBln)) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_workplaces_failed), cUser.currentUser.currentBranch.getBranchNameStr(), true, true );
             this.mStopShimmering();
             return;
@@ -182,6 +185,8 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
         this.mSetAuthorisationRecycler();
         this.mStopShimmering();
+
+        MenuActivity.refreshBln = false;
     }
 
     @Override
@@ -207,7 +212,9 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         final View clickedText;
         final ActivityOptionsCompat activityOptions;
 
-        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK) {
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK  ||
+            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PF ||
+            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PV){
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
             if (!  cLicense.pGetLicenseViaWebserviceBln()) {
@@ -275,7 +282,9 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             return;
         }
 
-        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE) {
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE||
+            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE_EO ||
+            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE_MA) {
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Intake;
             if (!  cLicense.pGetLicenseViaWebserviceBln()) {
@@ -284,8 +293,8 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             }
 
             intent = new Intent(cAppExtension.context, IntakeorderSelectActivity.class);
-            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_INVENTORY);
-            clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INVENTORY);
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_INTAKE);
+            clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INTAKE);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, IntakeorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, IntakeorderSelectActivity.VIEW_NAME_HEADER_TEXT));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
         }
@@ -310,21 +319,21 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     private void mSetAuthorisationRecycler() {
 
-        this.recyclerViewMenu.setHasFixedSize(false);
-        this.recyclerViewMenu.setAdapter(cAuthorisation.getAuthorisationAdapter());
-        this.recyclerViewMenu.setLayoutManager(new LinearLayoutManager(this));
+        MenuActivity.recyclerViewMenu.setHasFixedSize(false);
+        MenuActivity.recyclerViewMenu.setAdapter(cAuthorisation.getAuthorisationAdapter());
+        MenuActivity.recyclerViewMenu.setLayoutManager(new LinearLayoutManager(this));
         cAuthorisation.getAuthorisationAdapter().setAuthorisations();
     }
 
     private void mStartShimmering(){
         //Start Shimmer Effect's animation until data is loaded
-        this.  shimmerViewContainer.startShimmerAnimation();
+        MenuActivity.shimmerViewContainer.startShimmerAnimation();
 }
 
     private void mStopShimmering(){
         //Stopping Shimmer Effect's animation after data is loaded
-        this.shimmerViewContainer.stopShimmerAnimation();
-        this.shimmerViewContainer.setVisibility(View.GONE);
+        MenuActivity.shimmerViewContainer.stopShimmerAnimation();
+        MenuActivity.shimmerViewContainer.setVisibility(View.GONE);
     }
 
     private void mLeaveActivity(){

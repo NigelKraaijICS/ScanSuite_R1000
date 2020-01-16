@@ -10,6 +10,14 @@
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     >
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        style="@style/defaultSwipeToRefreshLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPickorderLinesTopick"
         style="@style/defaultRecyclerView"
@@ -17,6 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/currentBINView"
         />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/pillButton"
         android:id="@+id/currentBINView"

@@ -1,5 +1,6 @@
 package SSU_WHS.Basics.Authorisations;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -52,8 +53,9 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
     //End Region Constructor
 
     //Region Public Methods
+    @NonNull
     @Override
-    public cAuthorisationAdapter.AuthorisationViewHolder onCreateViewHolder(ViewGroup pvViewGroup, int pvViewTypeInt) {
+    public cAuthorisationAdapter.AuthorisationViewHolder onCreateViewHolder(@NonNull ViewGroup pvViewGroup, int pvViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_authorisation, pvViewGroup, false);
         return new cAuthorisationAdapter.AuthorisationViewHolder(itemView);
     }
@@ -63,7 +65,7 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
     }
 
     @Override
-    public void onBindViewHolder(cAuthorisationAdapter.AuthorisationViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cAuthorisationAdapter.AuthorisationViewHolder pvHolder, int pvPositionInt) {
         if (cUser.currentUser.autorisationObl != null) {
             final cAuthorisation authorisation = cUser.currentUser.autorisationObl.get(pvPositionInt);
 
@@ -77,16 +79,22 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKE) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_intake);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_INTAKE);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_INTAKE);
             }
 
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKE_EO) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_intake_eo);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_eo);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_INTAKE);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_INTAKE);
             }
 
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKE_MA) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_intake_ma);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_ma);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_INTAKE);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_INTAKE);
             }
 
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.INTAKE_OM) {
@@ -159,11 +167,15 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PICK_PF) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_pick_pf);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_pick_pf);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_PICK);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_PICK);
             }
 
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PICK_PV) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_pick_pv);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_pick_pv);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_PICK);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_PICK);
             }
 
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.RETURN) {

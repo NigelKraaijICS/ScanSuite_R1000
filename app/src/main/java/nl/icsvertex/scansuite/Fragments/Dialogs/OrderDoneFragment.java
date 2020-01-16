@@ -142,13 +142,13 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         OrderDoneFragment.pSetConnectionState();
 
        if (!OrderDoneFragment.showCurrentLocationBln) {
-           OrderDoneFragment.editTextCurrentLocation.setVisibility(View.INVISIBLE);
+           OrderDoneFragment.editTextCurrentLocation.setVisibility(View.GONE);
            return;
        }
 
 
         if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 && !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
-            OrderDoneFragment.editTextCurrentLocation.setVisibility(View.INVISIBLE);
+            OrderDoneFragment.editTextCurrentLocation.setVisibility(View.GONE);
         } else {
             InputFilter[] filterArray = new InputFilter[1];
             filterArray[0] = new InputFilter.LengthFilter(20);
@@ -240,8 +240,8 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     public static void pSetConnectionState() {
         if (cConnection.isInternetConnectedBln()) {
            OrderDoneFragment.textViewConnection.setText(R.string.connected);
-           OrderDoneFragment.imageButtonWifiReconnect.setVisibility(View.INVISIBLE);
-           OrderDoneFragment.cardViewConnection.setVisibility(View.INVISIBLE);
+           OrderDoneFragment.imageButtonWifiReconnect.setVisibility(View.GONE);
+           OrderDoneFragment.cardViewConnection.setVisibility(View.GONE);
            OrderDoneFragment.closeOrderButton.setVisibility(View.VISIBLE);
            OrderDoneFragment.cancelButton.setVisibility(View.VISIBLE);
         }
@@ -249,8 +249,8 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
             OrderDoneFragment.textViewConnection.setText(R.string.not_connected);
             OrderDoneFragment.imageButtonWifiReconnect.setVisibility(View.VISIBLE);
             OrderDoneFragment.cardViewConnection.setVisibility(View.VISIBLE);
-            OrderDoneFragment.closeOrderButton.setVisibility(View.INVISIBLE);
-            OrderDoneFragment.cancelButton.setVisibility(View.INVISIBLE);
+            OrderDoneFragment.closeOrderButton.setVisibility(View.GONE);
+            OrderDoneFragment.cancelButton.setVisibility(View.GONE);
         }
     }
 

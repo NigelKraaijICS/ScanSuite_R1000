@@ -167,7 +167,7 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
 
     private static void mBranchScanned(String pvBarcodeStr) {
 
-        cBranch branch = cBranch.pGetBranchByCode(pvBarcodeStr);
+        cBranch branch = cBranch.pGetUserBranchByCode(pvBarcodeStr);
         if (branch == null) {
             cUserInterface.pDoNope(branchRecyclerview, true, true);
             return;

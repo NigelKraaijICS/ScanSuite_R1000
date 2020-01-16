@@ -1,7 +1,7 @@
 <androidx.cardview.widget.CardView
-    android:id="@+id/sourceNoContainer"
+    android:id="@+id/destinationContainer"
     style="@style/articleInfoContainer"
-    app:layout_constraintTop_toBottomOf="@id/numberAndButtonBottomBarrier"
+    app:layout_constraintTop_toBottomOf="@id/sourceNoContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/default_double_padding"
@@ -14,20 +14,20 @@
         android:animateLayoutChanges="true"
         >
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/sourceNoImageView"
+            android:id="@+id/destinationImageView"
             android:layout_width="@dimen/textsize_enormous"
             android:layout_height="@dimen/textsize_enormous"
-            app:srcCompat="@drawable/ic_document_black_24dp"
+            app:srcCompat="@drawable/ic_domain_black_24dp"
             android:tint="@color/colorDivider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/sourcenoText"
-            app:layout_constraintBottom_toBottomOf="@id/sourcenoText"/>
+            app:layout_constraintTop_toTopOf="@id/destinationText"
+            app:layout_constraintBottom_toBottomOf="@id/destinationText"/>
         <TextView
-            android:id="@+id/sourcenoText"
+            android:id="@+id/destinationText"
             style="@style/defaultinfoSmallerText"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/sourceNoImageView"
+            app:layout_constraintStart_toEndOf="@id/destinationImageView"
             app:layout_constraintEnd_toEndOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,32 +12,31 @@ public class cSalesOrderPackingTable {
 
     //Region Public Properties
 
-    public String salesorderStr;
+    private String salesorderStr;
     public String getSalesorderStr() {
         return salesorderStr;
     }
 
-    public String packingtableStr;
-
+    private String packingtableStr;
     public String getPackingtableStr() {
         return packingtableStr;
     }
 
-    public cSalesOrderPackingTableEntity salesOrderPackingTableEntity;
+    private cSalesOrderPackingTableEntity salesOrderPackingTableEntity;
     public boolean indatabaseBln;
 
     public static List<cSalesOrderPackingTable> allSalesOrderPackingTabelsObl;
 
-    public static cSalesOrderPackingTableViewModel gSalesOrderPackingTableViewModel;
+    private static cSalesOrderPackingTableViewModel gSalesOrderPackingTableViewModel;
 
-    public static cSalesOrderPackingTableViewModel getSalesOrderPackingTableViewModel() {
+    private static cSalesOrderPackingTableViewModel getSalesOrderPackingTableViewModel() {
         if (gSalesOrderPackingTableViewModel == null) {
             gSalesOrderPackingTableViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cSalesOrderPackingTableViewModel.class);
         }
         return gSalesOrderPackingTableViewModel;
     }
 
-    public static cSalesOrderPackingTable currentSalesOrderPackingTable;
+    private static cSalesOrderPackingTable currentSalesOrderPackingTable;
 
     //End Region Public Properties
 
@@ -71,6 +70,10 @@ public class cSalesOrderPackingTable {
     public static boolean pDeleteFromDatabaseBln(String pvProcessingSequenceStr) {
 
         cSalesOrderPackingTable.getSalesOrderPackingTableViewModel().delete(pvProcessingSequenceStr);
+
+        if (cSalesOrderPackingTable.allSalesOrderPackingTabelsObl == null) {
+            return true;
+        }
 
         for (cSalesOrderPackingTable salesOrderPackingTable : cSalesOrderPackingTable.allSalesOrderPackingTabelsObl) {
 

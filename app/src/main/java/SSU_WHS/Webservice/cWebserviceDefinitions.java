@@ -15,6 +15,7 @@ public class cWebserviceDefinitions {
 
     public static String WEBMETHOD_GETUSERS = "p_GebruikersGetJsonStr";
     public static String WEBMETHOD_GETWORKPLACES = "p_MagazijnWerkplekkenGetJsonStr";
+    public static String WEBMETHOD_GETBRANCHES = "p_VestigingGetJsonStr";
     public static String WEBMETHOD_GETBRANCHESFORUSER = "p_GebruikerVestigingenGetJsonStr";
     public static String WEBMETHOD_GETPROCESSINGORPARKEDORDERS = "p_PickordersInBehandlingOfInWachtJsonStr";
     public static String WEBMETHOD_GETPICKORDERS = "p_PickordersGetJsonStr";
@@ -54,6 +55,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETINVENTORYORDERS = "p_InventoryOrdersGetJsonStr";
     public static String WEBMETHOD_GETINVENTORYORDERLINES = "p_InventoryOrderRegelsGetJsonStr";
     public static String WEBMETHOD_GETINVENTORYORDERBINS = "p_InventoryOrderBinsGetJsonStr";
+    public static String WEBMETHOD_GETINVENTORYORDERPOSSIBLEBINS = "p_InventoryOrderPossibleBinsGetJsonStr";
     public static String WEBMETHOD_GETINVENTORYORDERCOMMENTS = "p_InventoryOrderCommentsGetJsonStr";
     public static String WEBMETHOD_GETINVENTORYORDERBARCODES = "p_InventoryOrderBarcodesGetJsonStr";
     public static String WEBMETHOD_ADD_BIN = "p_InventoryOrderAddExtraBinJsonStr";

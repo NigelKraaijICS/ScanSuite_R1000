@@ -110,6 +110,7 @@ public class cInventoryorderBin {
 
     public static  void pInsertAllInDatabase(List<cInventoryorderBinEntity> pvInventoryorderBinEntities ) {
         cInventoryorderBin.getInventoryorderBinViewModel().insertAll (pvInventoryorderBinEntities);
+        cInventoryorderBin.getInventoryorderBinViewModel().allNew();
     }
 
     public boolean pUpdateStatusAndTimeStampInDatabaseBln(){

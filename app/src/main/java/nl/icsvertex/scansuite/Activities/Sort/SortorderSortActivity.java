@@ -196,7 +196,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         SortorderSortActivity.articleVendorItemText = findViewById(R.id.articleVendorItemText);
 
         SortorderSortActivity.sourcenoText = findViewById(R.id.sourcenoText);
-        SortorderSortActivity.sourcenoContainer = findViewById(R.id.sourcenoContainer);
+        SortorderSortActivity.sourcenoContainer = findViewById(R.id.destinationContainer);
         SortorderSortActivity.textViewPackingTable = findViewById(R.id.textViewPackingTable);
 
         SortorderSortActivity.containerText = findViewById(R.id.containerText);
@@ -236,7 +236,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         SortorderSortActivity.textAdviceLocation.setSingleLine(true);
         SortorderSortActivity.textAdviceLocation.setMarqueeRepeatLimit(5);
         SortorderSortActivity.textAdviceLocation.setSelected(true);
-        SortorderSortActivity.textAdviceLocation.setText(cAppExtension.context.getString(R.string.scan_article));
+        SortorderSortActivity.textAdviceLocation.setText(cAppExtension.context.getString(R.string.message_scan_article));
 
         SortorderSortActivity.pickCounterPlusHelperInt = 0;
         SortorderSortActivity.pickCounterMinusHelperInt = 0;
@@ -327,6 +327,13 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     //Region Private Methods
 
     private static void mHandleArticleScanned(cBarcodeScan pvBarcodeScan) {
+
+
+        if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
+            //You have to scan a pickcart or salesorder after the last article scan
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_packinglocation_or_salesorder), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+            return;
+        }
 
         //We didn't scan an article yet, so handle it as a "normal" scan
         if (!articleScannedLastBln) {
@@ -506,7 +513,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         // If this is VKO after each piece, then show new instructions
         if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
-            SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article));
+            SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
             SortorderSortActivity.articleScannedLastBln = false;
         }
 
@@ -738,7 +745,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             //Update orderline info (quantityDbl, timestamp, localStatusInt)
             cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln();
 
-            if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
+            if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() ||
+                cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
                 SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_sort_location));
             }
             else {

@@ -8,8 +8,8 @@ public class cAuthorisation {
 
     //region Public Properties
 
-    public String authorisationStr;
-    public String getAuthorisationStr() {
+    private String authorisationStr;
+    private String getAuthorisationStr() {
         return authorisationStr;
     }
 
@@ -81,26 +81,20 @@ public class cAuthorisation {
         }
     }
 
-    public Integer orderInt;
+    private Integer orderInt;
     public Integer getOrderInt() {
         return orderInt;
     }
 
-    public String licenseStr;
+    private String licenseStr;
     public String getLicenseStr() {
         return licenseStr;
     }
 
-    public List<String> errorMessagesObl;
-    public List<String> getErrorMessagesObl() {
-        return errorMessagesObl;
-    }
-
-
-    public cAuthorisationEntity authorisationEntity;
+    private cAuthorisationEntity authorisationEntity;
     public boolean inDatabaseBln;
 
-    public static cAuthorisationViewModel gAutorisationViewModel;
+    private static cAuthorisationViewModel gAutorisationViewModel;
 
     public static cAuthorisationViewModel getAutorisationViewModel() {
         if (gAutorisationViewModel == null) {
@@ -109,7 +103,7 @@ public class cAuthorisation {
         return gAutorisationViewModel;
     }
 
-    public static cAuthorisationAdapter gAuthorisationAdapter;
+    private static cAuthorisationAdapter gAuthorisationAdapter;
 
     public static cAuthorisationAdapter getAuthorisationAdapter() {
         if (gAuthorisationAdapter == null) {
@@ -118,7 +112,7 @@ public class cAuthorisation {
         return gAuthorisationAdapter;
     }
 
-    public static List<cAuthorisation> allAutorisations;
+    private static List<cAuthorisation> allAutorisations;
 
     public enum AutorisationEnu {
         DEMO,
@@ -144,6 +138,9 @@ public class cAuthorisation {
         SORTING,
         SHIPPING
     }
+
+    public static String TAG_IMAGE_INTAKE = "TAG_IMAGE_INTAKE";
+    public static String TAG_TEXT_INTAKE = "TAG_TEXT_INTAKE";
 
     public static String TAG_IMAGE_INVENTORY = "TAG_IMAGE_INVENTORY";
     public static String TAG_TEXT_INVENTORY = "TAG_TEXT_INVENTORY";

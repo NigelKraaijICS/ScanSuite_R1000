@@ -3,7 +3,6 @@ package SSU_WHS.Basics.Branches;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
@@ -12,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.Picken.Shipment.cShipment;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -23,7 +20,7 @@ import SSU_WHS.General.acScanSuiteDatabase;
 public class cBranchRepository {
 
     //Region Public Properties
-    public iBranchDao branchDao;
+    private iBranchDao branchDao;
     //End Region Public Properties
 
     //Region Private Properties
@@ -38,6 +35,23 @@ public class cBranchRepository {
     //End Region Constructor
 
     //Region Public Methods
+    public cWebresult pGetUserBranchesFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new userBranchesFromWebserviceGetAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     public cWebresult pGetBranchesFromWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
@@ -45,13 +59,7 @@ public class cBranchRepository {
 
         try {
             webResultWrs = new branchesFromWebserviceGetAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -68,13 +76,7 @@ public class cBranchRepository {
 
         try {
             webResultWrs = new binFromWebserviceGetAsyncTask().execute(pvBinCodeStr).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -123,7 +125,25 @@ public class cBranchRepository {
         }
     }
 
-    private static class branchesFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+       private static class branchesFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(final Void... params) {
+            cWebresult WebresultWrs = new cWebresult();
+
+            try {
+                new cWebresult();
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETBRANCHES, null);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
+        }
+    }
+
+    private static class userBranchesFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final Void... params) {
             cWebresult WebresultWrs = new cWebresult();
@@ -136,7 +156,8 @@ public class cBranchRepository {
             l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER, l_PropertyInfoObl);
+                new cWebresult();
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -146,6 +167,7 @@ public class cBranchRepository {
             return WebresultWrs;
         }
     }
+
 
     private static class binFromWebserviceGetAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
@@ -168,7 +190,8 @@ public class cBranchRepository {
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSELOCATIONS, l_PropertyInfoObl);
+                new cWebresult();
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSELOCATIONS, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);

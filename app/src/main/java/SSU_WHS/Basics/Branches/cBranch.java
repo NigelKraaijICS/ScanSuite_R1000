@@ -9,7 +9,6 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
-import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import ICS.cAppExtension;
@@ -19,70 +18,70 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cBranch {
 
     //Region Public Properties
-    public String branchStr;
+    private String branchStr;
     public String getBranchStr() {
         return branchStr;
     }
 
-    public String branchTypeStr;
+    private String branchTypeStr;
     public String getBranchTypeStr() {
         return branchTypeStr;
     }
 
-    public String branchNameStr;
+    private String branchNameStr;
     public String getBranchNameStr() {
         return branchNameStr;
     }
 
-    public boolean binMandatoryBln;
+    private boolean binMandatoryBln;
     public boolean getBinMandatoryBln() {
         return binMandatoryBln;
     }
 
-    public String pickDefaultRejectReasonStr;
+    private String pickDefaultRejectReasonStr;
     public String getPickDefaultRejectReasonStr() {
         return pickDefaultRejectReasonStr;
     }
 
-    public String pickDefaultStorageBinStr;
+    private String pickDefaultStorageBinStr;
     public String getPickDefaultStorageBinStr() {
         return pickDefaultStorageBinStr;
     }
 
-    public String receiveDefaultBinStr;
+    private String receiveDefaultBinStr;
     public String getReceiveDefaultBinStr() {
         return receiveDefaultBinStr;
     }
 
-    public String returnDefaultBinStr;
+    private String returnDefaultBinStr;
     public String getReturnDefaultBinStr() {
         return returnDefaultBinStr;
     }
 
-    public String moveDefaultBinStr;
+    private String moveDefaultBinStr;
     public String getMoveDefaultBinStr() {
         return moveDefaultBinStr;
     }
 
-    public String shipDefaultBinStr;
+    private String shipDefaultBinStr;
     public String getShipDefaultBinStr() {
         return shipDefaultBinStr;
     }
 
-    public List<String> errorMessagesObl;
+    private List<String> errorMessagesObl;
     public List<String> getErrorMessagesObl() {
         return errorMessagesObl;
     }
 
-    public cBranchEntity branchEntity;
-    public boolean inDatabaseBln;
+    private cBranchEntity branchEntity;
+
     public ArrayList<cWorkplace>  workplacesObl() {
         return  cWorkplace.allWorkplacesObl;
 
     }
-    public ArrayList<cBranchBin>  binsObl;
+    private ArrayList<cBranchBin>  binsObl;
 
-    public static cBranchViewModel gBranchViewModel;
+    private static cBranchViewModel gBranchViewModel;
     public static cBranchViewModel getBranchViewModel() {
         if (gBranchViewModel == null) {
             gBranchViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cBranchViewModel.class);
@@ -90,13 +89,17 @@ public class cBranch {
         return gBranchViewModel;
     }
 
-    public static cBranchAdapter gBranchAdapter;
+    private static cBranchAdapter gBranchAdapter;
     public static cBranchAdapter getBranchAdapter() {
         if (gBranchAdapter == null) {
             gBranchAdapter = new cBranchAdapter();
         }
         return gBranchAdapter;
     }
+
+    private static List<cBranch> allBranchesObl;
+
+    public  static  boolean BranchesAvailableBln;
 
        public enum brachTypeEnum {
         INTRANSIT,
@@ -124,13 +127,63 @@ public class cBranch {
 
     //Region Public Methods
 
+    public static boolean pGetBranchesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cBranch.allBranchesObl = null;
+            cBranch.pTruncateTableBln();
+        }
+
+        if (cBranch.allBranchesObl != null) {
+            return  true;
+        }
+
+        cWebresult WebResult;
+        WebResult =  cBranch.getBranchViewModel().pGetBranchesFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cBranch branch = new cBranch(jsonObject);
+                branch.pInsertInDatabaseBln();
+            }
+
+            cBranch.BranchesAvailableBln = true;
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETBRANCHES);
+            return  false;
+        }
+    }
+
     public boolean pInsertInDatabaseBln() {
         cBranch.getBranchViewModel().insert(this.branchEntity);
-        this.inDatabaseBln = true;
+
+        if (cBranch.allBranchesObl == null){
+            cBranch.allBranchesObl = new ArrayList<>();
+        }
+        cBranch.allBranchesObl .add(this);
+
         return true;
     }
 
     public static cBranch pGetBranchByCode(String pvBranchStr){
+        if(cBranch.allBranchesObl == null || cBranch.allBranchesObl.size() == 0){
+            return null;
+        }
+
+        for (cBranch branch :  cBranch.allBranchesObl )
+        {
+            if(branch.branchStr.equalsIgnoreCase(pvBranchStr)){
+                return  branch;
+            }
+        }
+
+        return null;
+    }
+
+    public static cBranch pGetUserBranchByCode(String pvBranchStr){
         if(cUser.currentUser == null || cUser.currentUser.branchesObl == null){
             return null;
         }
@@ -157,8 +210,7 @@ public class cBranch {
             }
         }
 
-        cBranchBin branchBin = this.pGetBinViaWebservice(pvBinCodeStr);
-        return  branchBin;
+        return   this.mGetBinViaWebservice(pvBinCodeStr);
     }
 
     public static boolean pTruncateTableBln(){
@@ -166,7 +218,11 @@ public class cBranch {
         return true;
     }
 
-    public boolean pGetWorkplacesBln() {
+    public boolean pGetWorkplacesBln(boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cWorkplace.allWorkplacesObl = null;
+        }
 
         if (this.workplacesObl() != null){
             return  true;
@@ -178,7 +234,7 @@ public class cBranch {
         cWebresult WebResult;
         WebResult =  cWorkplace.getWorkplaceViewModel().pGetWorkplacesFromWebserviceWrs();
 
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             List<JSONObject> myList = WebResult.getResultDtt();
             if( cWorkplace.allWorkplacesObl == null) {
@@ -199,19 +255,16 @@ public class cBranch {
         return false;
     }
 
-    public cBranchBin pGetBinViaWebservice(String pvBinCodeStr) {
+    //End Region Public Methods
 
-      cWebresult WebResult;
+    //Region Private Methods
+    private cBranchBin mGetBinViaWebservice(String pvBinCodeStr) {
+
+        cWebresult WebResult;
         WebResult =  cBranch.getBranchViewModel().pGetBinFromWebserviceWrs(pvBinCodeStr);
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
-                cBranchBin branchBin = new cBranchBin(jsonObject);
-
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            if (WebResult.getResultDtt() != null && WebResult.getResultDtt().size() == 1) {
+                cBranchBin branchBin = new cBranchBin(WebResult.getResultDtt().get(0));
                 if (this.binsObl == null) {
                     this.binsObl = new ArrayList<>();
                 }
@@ -219,6 +272,7 @@ public class cBranch {
                 this.binsObl.add(branchBin);
                 return  branchBin;
             }
+
             return  null;
         }
         else {
@@ -226,6 +280,5 @@ public class cBranch {
             return  null;
         }
     }
-
-    //End Region Public Methods
+    //End Region Private Methods
 }

@@ -324,7 +324,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     private void mSetToolbar() {
 
-        InventoryArticleDetailFragment.toolbarTitle.setText(cAppExtension.activity.getString(R.string.scan_article));
+        InventoryArticleDetailFragment.toolbarTitle.setText(cAppExtension.activity.getString(R.string.message_scan_article));
         InventoryArticleDetailFragment.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         InventoryArticleDetailFragment.toolbarTitle.setSingleLine(true);
         InventoryArticleDetailFragment.toolbarTitle.setMarqueeRepeatLimit(5);

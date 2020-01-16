@@ -17,12 +17,12 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cUser {
 
     //region Public Properties
-    public String usernameStr;
+    private String usernameStr;
     public String getUsernameStr() {
         return usernameStr;
     }
 
-    public String nameStr;
+    private String nameStr;
     public String getNameStr() {
         return nameStr;
     }
@@ -60,35 +60,23 @@ public class cUser {
 
     }
 
-
-    public Integer importfileInt;
-    public Integer getImportfileInt() {
-        return importfileInt;
-    }
-
-    public List<String> errorMessagesObl;
-    public List<String> getErrorMessageObl() {
-        return errorMessagesObl;
-    }
-
-    public cUserEntity userEntity;
+    private cUserEntity userEntity;
     public ArrayList<cBranch> branchesObl;
     public ArrayList<cAuthorisation> autorisationObl;
     public  cBranch currentBranch;
     public  cAuthorisation currentAuthorisation;
     public boolean loggedInBln;
-    public boolean indatabaseBln;
 
-    public static cUserViewModel gUserViewModel;
+    private static cUserViewModel gUserViewModel;
 
-    public static cUserViewModel getUserViewModel() {
+    private static cUserViewModel getUserViewModel() {
         if (gUserViewModel == null) {
             gUserViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cUserViewModel.class);
         }
         return gUserViewModel;
     }
 
-    public static cUserAdapter gUserAdapter;
+    private static cUserAdapter gUserAdapter;
 
     public static cUserAdapter getUserAdapter() {
         if (gUserAdapter == null) {
@@ -104,18 +92,16 @@ public class cUser {
     //end region Public Properties
 
      //Region Constructor
-    cUser(JSONObject pvJsonObject) {
+     private cUser(JSONObject pvJsonObject) {
         this.userEntity = new cUserEntity(pvJsonObject);
         this.usernameStr = userEntity.getUsernameStr();
         this.nameStr = userEntity.getNameStr();
-        this.importfileInt = cText.pStringToIntegerInt(userEntity.getImportfileStr());
     }
     //End Region Constructor
 
     //Region Public Methods
     public boolean pInsertInDatabaseBln() {
         cUser.getUserViewModel().insert(this.userEntity);
-        this.indatabaseBln = true;
 
         if (cUser.allUsersObl == null){
             cUser.allUsersObl = new ArrayList<>();
@@ -128,19 +114,18 @@ public class cUser {
         cWebresult WebResult;
         WebResult =  cUser.getUserViewModel().pUserLoginViaWebserviceWrs(pvPassword);
 
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             this.loggedInBln = true;
             return  true;
         }
         else {
-            if  (WebResult.getSuccessBln() == false ){
-                this.errorMessagesObl = WebResult.getResultObl();
+            if  (!WebResult.getSuccessBln()){
                 this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_USERLOGIN);
                 return  false;
             }
 
-            if  (WebResult.getResultBln() == false ){
+            if  (!WebResult.getResultBln()){
                 this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_USERLOGIN);
                 return  false;
@@ -159,9 +144,9 @@ public class cUser {
         this.branchesObl = null;
 
         cWebresult WebResult;
-        WebResult =  cBranch.getBranchViewModel().pGetBranchesFromWebserviceWrs();
+        WebResult =  cBranch.getBranchViewModel().pGetUserBranchesFromWebserviceWrs();
 
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             List<JSONObject> myList = WebResult.getResultDtt();
             for (int i = 0; i < myList.size(); i++) {
@@ -169,7 +154,6 @@ public class cUser {
                 jsonObject = myList.get(i);
 
                 cBranch branch = new cBranch(jsonObject);
-                branch.pInsertInDatabaseBln();
                 if(this.branchesObl == null) {
                     this.branchesObl =  new ArrayList<>();
                 }
@@ -183,14 +167,13 @@ public class cUser {
         else {
 
 
-            if  (WebResult.getSuccessBln() == false ){
-                this.errorMessagesObl = WebResult.getResultObl();
+            if  (!WebResult.getSuccessBln()){
                 this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER);
                 return  false;
             }
 
-            if  (WebResult.getResultBln() == false ){
+            if  (!WebResult.getResultBln()){
                 this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER);
                 return  false;
@@ -199,7 +182,11 @@ public class cUser {
         return false;
     }
 
-    public boolean pGetAutorisationsBln() {
+    public boolean pGetAutorisationsBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            this.autorisationObl = null;
+        }
 
         if (this.autorisationObl != null){
             return  true;
@@ -208,10 +195,13 @@ public class cUser {
         cAuthorisation.pTruncateTableBln();
         this.autorisationObl = null;
 
+        boolean shippingAddedBln = false;
+        boolean sortingAddedBln = false;
+
         cWebresult WebResult;
         WebResult =  cAuthorisation.getAutorisationViewModel().pGetAutorisationsFromWebserviceWrs();
 
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             List<JSONObject> myList = WebResult.getResultDtt();
             for (int i = 0; i < myList.size(); i++) {
@@ -220,10 +210,6 @@ public class cUser {
 
                 cAuthorisation authorisation = new cAuthorisation(jsonObject);
 
-//                if (authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK) {
-//                    continue;
-//                }
-
                 authorisation.pInsertInDatabaseBln();
                 if(this.autorisationObl == null) {
                     this.autorisationObl =  new ArrayList<>();
@@ -231,15 +217,26 @@ public class cUser {
 
                 this.autorisationObl.add((authorisation));
 
-                if (authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK) {
+                if (authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK ||
+                    authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PV) {
                     if (cSetting.PICK_SORT_FASE_AVAILABLE()) {
+
                         cAuthorisation authorisationSorting = new cAuthorisation(cAuthorisation.AutorisationEnu.SORTING.toString(), this.autorisationObl.size() *10 + 10 );
-                        this.autorisationObl.add(authorisationSorting);
+
+                        if (!sortingAddedBln) {
+                            this.autorisationObl.add(authorisationSorting);
+                            sortingAddedBln = true;
+                        }
+
                     }
 
                     if (cSetting.PICK_PACK_AND_SHIP_FASE_AVAILABLE()) {
                         cAuthorisation authorisationShipping = new cAuthorisation(cAuthorisation.AutorisationEnu.SHIPPING.toString(), this.autorisationObl.size() *10 + 10 );
-                        this.autorisationObl.add(authorisationShipping);
+
+                      if (!shippingAddedBln) {
+                          this.autorisationObl.add(authorisationShipping);
+                          shippingAddedBln = true;
+                      }
                     }
                 }
 
@@ -252,14 +249,13 @@ public class cUser {
         else {
 
 
-            if  (WebResult.getSuccessBln() == false ){
-                this.errorMessagesObl = WebResult.getResultObl();
+            if  (!WebResult.getSuccessBln()){
                 this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETAUTHORISATIONSFORUSERINLOCATION);
                 return  false;
             }
 
-            if  (WebResult.getResultBln() == false ){
+            if  (!WebResult.getResultBln()){
                 this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETAUTHORISATIONSFORUSERINLOCATION);
                 return  false;
@@ -290,7 +286,7 @@ public class cUser {
 
     public static boolean pGetUsersViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cUser.allUsersObl = null;
             cUser.pTruncateTableBln();
         }
@@ -301,7 +297,7 @@ public class cUser {
 
         cWebresult WebResult;
         WebResult =  cUser.getUserViewModel().pGetUsersFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
             List<JSONObject> myList = WebResult.getResultDtt();

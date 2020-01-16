@@ -15,7 +15,7 @@ import SSU_WHS.General.cDatabase;
 public class cPickorderLineEntity {
     @PrimaryKey(autoGenerate = true)
     public Integer recordid;
-//    @PrimaryKey
+    //    @PrimaryKey
 //    @NonNull
     @ColumnInfo(name = "LineNo")
     public Integer lineno;
@@ -159,7 +159,7 @@ public class cPickorderLineEntity {
                     }
                 }
             }
-            
+
             //region extraField1Str
             if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {
                 try {

@@ -46,11 +46,11 @@ public class cPickorderViewModel extends AndroidViewModel {
     public Double pQuantityHandledDbl() {return this.PickorderRepository.pQuantityHandledDbl();}
     public Double pGetQuantityTotalDbl() {return this.PickorderRepository.pGetTotalQuantityDbl();}
 
-
     public cWebresult pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu ) {return this.PickorderRepository.pGetLinesFromWebserviceWrs(pvActionTypeEnu);}
     public List<cPickorderLineEntity> pGetAllLinesFromDatabaseObl(){return  this.PickorderRepository.pGetAllLinesFromDatabaseObl();}
     public List<cPickorderLineEntity> pGetPickorderLinesToSendFromDatabaseObl(){return  this.PickorderRepository.pGetPickorderLinesToSendFromDatabaseObl();}
     public List<cPickorderLineEntity> pGetLinesNotHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesNotHandledFromDatabaseObl();}
+    public List<cPickorderLineEntity> pGetLinesNotHandledForBranchFromDatabaseObl(String pvDestinationNoStr){return  this.PickorderRepository.pGetLinesNotHandledForBranchFromDatabaseObl(pvDestinationNoStr);}
     public List<cPickorderLineEntity> pGetLinesBusyFromDatabaseObl(){return  this.PickorderRepository.pGetLinesBusyFromDatabaseObl();}
     public List<cPickorderLineEntity> pGetLinesHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesHandledFromDatabaseObl();}
 

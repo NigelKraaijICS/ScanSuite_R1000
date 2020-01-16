@@ -21,6 +21,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +43,8 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineAdapter;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineRecyclerItemTouchHelper;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
@@ -51,7 +54,7 @@ import nl.icsvertex.scansuite.R;
 
 import static ICS.Utils.cText.pDoubleToStringStr;
 
-public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICSDefaultActivity, cIntakeorderMATLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     //Region Private Properties
     static final String NUMBERFRAGMENT_TAG = "NUMBERFRAGMENT_TAG";
@@ -178,6 +181,21 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.mShowAcceptFragment();
     }
 
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder pvViewHolder, int direction, int pvPositionInt) {
+
+        if (!(pvViewHolder instanceof  cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder)) {
+            return;
+        }
+
+        cIntakeorderMATLine.currentIntakeorderMATLine = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinestoShowObl().get(pvPositionInt);
+
+        //Remove the enviroment
+        this.mRemoveAdapterFromFragment();
+
+    }
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity Methods
@@ -288,6 +306,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.mSetMinusListener();
         this.mSetDoneListener();
 
+        this.mSetRecyclerTouchListener();
+
     }
 
     // End Region iICSDefaultActivity Methods
@@ -359,6 +379,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         IntakeOrderIntakeActivity.mGoBackToLinesActivity();
     }
 
+
+
     //End Region Public Methods
 
     //Region Private Methods
@@ -388,6 +410,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private static void mShowLines() {
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinestoShowObl() == null  || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinestoShowObl().size() == 0) {
+            IntakeOrderIntakeActivity.mFillRecycler(new ArrayList<cIntakeorderMATLine>());
             return;
         }
 
@@ -424,6 +447,12 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
             }
         });
+    }
+
+    private void mSetRecyclerTouchListener(){
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cIntakeorderMATLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(IntakeOrderIntakeActivity.recyclerScanActions);
     }
 
     private static void mShowOrHideGenericExtraFields() {
@@ -846,7 +875,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
          IntakeOrderIntakeActivity.recyclerScanActions.setHasFixedSize(false);
          IntakeOrderIntakeActivity.recyclerScanActions.setAdapter( cIntakeorderMATLine.getIntakeorderMATLineAdapter());
          IntakeOrderIntakeActivity.recyclerScanActions.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-
      }
 
     //Listeners
@@ -1134,6 +1162,22 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         IntakeOrderIntakeActivity.plusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
         IntakeOrderIntakeActivity.counterPlusHelperInt += 1;
     }
+
+    private void mRemoveAdapterFromFragment(){
+
+        //remove the item from recyclerview
+        boolean resultBln = cIntakeorderMATLine.currentIntakeorderMATLine.pResetBln();
+        if (! resultBln) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed),"",true,true);
+            return;
+        }
+
+        //Renew data, so only current lines are shown
+        IntakeOrderIntakeActivity.mFieldsInitializeStatic();
+
+    }
+
+
 
     //End Region Number Broadcaster
 

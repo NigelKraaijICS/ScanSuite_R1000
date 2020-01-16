@@ -27,36 +27,41 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
     public class PickorderViewHolder extends RecyclerView.ViewHolder{
 
-        private View viewOrderStatus;
         private TextView textViewOrdernumber;
         private TextView textViewOrderUser;
         private TextView textViewOrdertype;
         private TextView  textViewExternalreference;
         private TextView textViewCurrentLocation;
         private TextView textViewQuantityTotal;
-        private ImageView imageViewPickorder;
         private ImageView imageViewIsSingleArticle;
         private ImageView imageViewIsProcessedOrWait;
         public LinearLayout pickorderItemLinearLayout;
 
         public PickorderViewHolder(View pvItemView) {
             super(pvItemView);
-            this.viewOrderStatus = pvItemView.findViewById(R.id.viewOrderStatus);
+
             this.textViewOrderUser = pvItemView.findViewById(R.id.textViewOrderUser);
             this.textViewOrderUser.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewOrderUser.setSingleLine(true);
             this.textViewOrderUser.setMarqueeRepeatLimit(5);
             this.textViewOrderUser.setSelected(true);
+
             this.textViewOrdernumber = pvItemView.findViewById(R.id.textViewOrdernumber);
-            this.textViewCurrentLocation = pvItemView.findViewById(R.id.textViewCurrentLocation);
             this.textViewOrdernumber.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewOrdernumber.setSingleLine(true);
             this.textViewOrdernumber.setMarqueeRepeatLimit(5);
             this.textViewOrdernumber.setSelected(true);
+
             this.textViewExternalreference = pvItemView.findViewById(R.id.textViewExternalreference);
+            this.textViewExternalreference.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewExternalreference.setSingleLine(true);
+            this.textViewExternalreference.setMarqueeRepeatLimit(5);
+            this.textViewExternalreference.setSelected(true);
+
+            this.textViewCurrentLocation = pvItemView.findViewById(R.id.textViewCurrentLocation);
+
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
             this.textViewQuantityTotal = pvItemView.findViewById(R.id.textViewQuantityTotal);
-            this.imageViewPickorder = pvItemView.findViewById(R.id.imageViewPickorder);
             this.pickorderItemLinearLayout = pvItemView.findViewById(R.id.pickorderItemLinearLayout);
             this.imageViewIsSingleArticle = pvItemView.findViewById(R.id.imageViewIsSingleArticle);
             this.imageViewIsProcessedOrWait = pvItemView.findViewById(R.id.imageViewIsProcessedOrWait);
@@ -95,9 +100,6 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
         final cPickorder  selectedPickorder = localPickorderObl.get(pvPositionInt);
 
-        if (!selectedPickorder.getAssignedUserIdStr().isEmpty()) {
-            pvHolder.viewOrderStatus.setBackgroundResource(R.color.colorOrderStatusAssignedUser);
-        }
 
         if (selectedPickorder.getStatusInt() == 10 ) {
             pvHolder.textViewOrderUser.setText(selectedPickorder.getAssignedUserIdStr());
@@ -123,7 +125,13 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
         pvHolder.textViewOrdernumber.setText(selectedPickorder.getOrderNumberStr());
         pvHolder.textViewOrdernumber.setTag(selectedPickorder.getOrderNumberStr());
-        pvHolder.textViewExternalreference.setText(selectedPickorder.getExternalReferenceStr());
+
+
+        if (selectedPickorder.isTransferBln()) {
+            pvHolder.textViewExternalreference.setText(selectedPickorder.getDestinationAndDescriptionStr());
+        } else {
+            pvHolder.textViewExternalreference.setText(selectedPickorder.getExternalReferenceStr());
+        }
 
         pvHolder.textViewCurrentLocation.setText(selectedPickorder.getCurrentLocationStr());
         pvHolder.textViewCurrentLocation.setVisibility(View.VISIBLE);

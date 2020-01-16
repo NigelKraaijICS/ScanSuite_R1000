@@ -332,6 +332,13 @@
         <item name="android:textSize">@dimen/textsize_big</item>
         <item name="android:layout_marginLeft">@dimen/default_margin</item>
     </style>
+    <style name="defaultRecyclerDestinationText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+    </style>
     <style name="defaultLineRecyclerQuantityText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -748,8 +755,8 @@
         <item name="android:layout_margin">@dimen/default_double_margin</item>
     </style>
     <style name="orderDoneImageView">
-        <item name="android:layout_width">@dimen/order_done_image_width</item>
-        <item name="android:layout_height">@dimen/order_done_image_height</item>
+        <item name="android:layout_width">@dimen/maintopbutton_width</item>
+        <item name="android:layout_height">@dimen/maintopbutton_height</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
         <item name="srcCompat">@drawable/ic_trophy</item>
     </style>

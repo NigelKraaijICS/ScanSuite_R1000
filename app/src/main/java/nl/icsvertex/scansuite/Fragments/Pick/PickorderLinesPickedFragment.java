@@ -99,7 +99,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
         cPickorderLine.currentPickOrderLine = PickorderLinesPickedFragment.localLinesObl.get(pvPositionInt);
 
-        //Remove the enviroment
+        //Reset the line
         this.mRemoveAdapterFromFragment();
 
 

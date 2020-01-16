@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +36,7 @@ import ICS.Utils.cNoSwipeViewPager;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
@@ -84,8 +86,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
-
-
 
     //End Region Views
 
@@ -288,7 +288,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     public static void pHandleScan(cBarcodeScan pvBarcodeScan, Boolean pvBinSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
-
         cResult hulpResult;
 
         //BIN button has been pressed, so we already have a current line
@@ -309,6 +308,23 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
             //we have a line to handle, so start Pick activity
             PickorderLinesActivity.mStartPickActivity();
+            return;
+        }
+
+        //If we scan a branch reset current branch
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.LOCATION)) {
+            cPickorder.currentPickOrder.scannedBranch  = null;
+        }
+
+        //If we still need a destination scan, make sure we scan this first
+        if (cPickorder.currentPickOrder.scannedBranch  == null && cPickorder.currentPickOrder.isPFBln() ) {
+            cResult hulpRst = PickorderLinesActivity.mCheckDestionationRst(pvBarcodeScan);
+            if (! hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"", true, true);
+            }
+
+            //If we scanned, refresh to pick fragment and leave this void
+            PickorderLinesToPickFragment.pBranchScanned();
             return;
         }
 
@@ -386,7 +402,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-     public static void pPickingDone(String pvCurrentLocationStr) {
+    public static void pPickingDone(String pvCurrentLocationStr) {
 
         //If we received a current location, then update it via the webservice and locally
         //If we didn't receive a location, then we picked 0 items, so it's oke
@@ -397,11 +413,26 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             }
         }
 
-        //Check if we need to select a workplaceStr
-        if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.SortNeededBln()&&
+         //Pick Transfer
+        if (cPickorder.currentPickOrder.isTransferBln()) {
+            if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
+               cPickorder.currentPickOrder.isPickTransferAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
+                mShowWorkplaceFragment();
+                return;
+            }
+        }
+
+        else {
+
+            //Pick Sales
+
+            //Check if we need to select a workplaceStr
+            if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
                 cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
-            mShowWorkplaceFragment();
-            return;
+                mShowWorkplaceFragment();
+                return;
+            }
+
         }
 
         PickorderLinesActivity.pClosePickAndDecideNextStep();
@@ -482,14 +513,12 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        if (cPickorder.currentPickOrder.isBCBln() || cPickorder.currentPickOrder.isBPBln()) {
+        if (cPickorder.currentPickOrder.isSortableBln()) {
             mSortNextStep();
         }
-
-        if (cPickorder.currentPickOrder.isBMBln() ||cPickorder.currentPickOrder.isPVBln() ) {
+        else {
             mPackAndShipNextStap();
         }
-
 
     }
 
@@ -558,7 +587,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         PickorderLinesActivity.imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl(),"");
+                mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackAndPickCommentObl(),"");
             }
         });
     }
@@ -920,7 +949,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private static void mShowComments(){
 
-        if (cPickorder.currentPickOrder.pPickCommentObl() == null || cPickorder.currentPickOrder.pPickCommentObl().size() == 0) {
+        if (cPickorder.currentPickOrder.pFeedbackAndPickCommentObl() == null || cPickorder.currentPickOrder.pFeedbackAndPickCommentObl().size() == 0) {
             PickorderLinesActivity.imageButtonComments.setVisibility(View.INVISIBLE);
             return;
         }
@@ -932,7 +961,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        PickorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pPickCommentObl(),"");
+        PickorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackAndPickCommentObl(),"");
         cComment.commentsShownBln = true;
     }
 
@@ -1043,6 +1072,51 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         return result;
+    }
+
+    private static cResult mCheckDestionationRst(cBarcodeScan pvBarcodeScan) {
+
+        cResult resultRst = new cResult();
+
+        //If we don't need a branch, we are done
+        if (!cPickorder.currentPickOrder.isPFBln()) {
+            resultRst.resultBln = true;
+            return  resultRst;
+        }
+
+        if (cPickorder.currentPickOrder.destionationBranch() != null) {
+            cPickorder.currentPickOrder.scannedBranch = cPickorder.currentPickOrder.destionationBranch();
+            resultRst.resultBln = true;
+            return  resultRst;
+        }
+
+        //Check if scan matches a branch in open lines
+        cPickorder.currentPickOrder.scannedBranch = cPickorder.currentPickOrder.pGetBranchForOpenLines(pvBarcodeScan.getBarcodeOriginalStr());
+        if (cPickorder.currentPickOrder.scannedBranch  != null) {
+            resultRst.resultBln = true;
+            return  resultRst;
+        }
+
+        //If we don't have a match, check if we have a location scan
+        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.LOCATION)) {
+            cPickorder.currentPickOrder.scannedBranch  = null;
+            resultRst.resultBln = false;
+            resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_scan_is_not_location));
+            return  resultRst;
+        }
+
+        //We have a location scan, now strip the prefix and check if plain value matches a branch in open lines
+        String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+        cPickorder.currentPickOrder.scannedBranch  = cPickorder.currentPickOrder.pGetBranchForOpenLines(barcodewithoutPrefix);
+        if (cPickorder.currentPickOrder.scannedBranch  != null) {
+            resultRst.resultBln = true;
+            return  resultRst;
+        }
+
+        resultRst.resultBln = false;
+        resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_location_incorrect));
+        return  resultRst;
+
     }
 
     //End Region Private Methods

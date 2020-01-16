@@ -29,6 +29,7 @@ import ICS.Utils.cPower;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
@@ -258,6 +259,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cUser.usersAvailableBln &&
                 cBarcodeLayout.barcodeLayoutsAvailableBln &&
                 cSetting.settingsAvailableBln &&
+                cBranch.BranchesAvailableBln &&
                 cShippingAgent.shippingAgentsAvailableBln &&
                 cShippingAgentService.shippingAgentServicesAvailableBln &&
                 cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln &&
@@ -278,6 +280,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         if (!cSetting.pGetSettingsViaWebserviceBln(true)) {
             return false;
+        }
+
+        if (!cBranch.pGetBranchesViaWebserviceBln(true)) {
+            return  false;
         }
 
         if (!cUser.pGetUsersViaWebserviceBln(true)) {

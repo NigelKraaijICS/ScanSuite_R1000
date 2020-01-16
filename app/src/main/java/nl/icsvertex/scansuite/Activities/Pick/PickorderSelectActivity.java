@@ -299,7 +299,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             @Override
             public void run() {
                 //Fill and show recycler
-                PickorderSelectActivity.mSetPickorderRecycler(cPickorder.allPickordersObl);
+                PickorderSelectActivity.mSetPickorderRecycler(cPickorder.pGetPicksFromDatabasObl());
                 PickorderSelectActivity.mShowNoOrdersIcon(false);
                 if (cSharedPreferences.userFilterBln()) {
                     mApplyFilter();
@@ -352,7 +352,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         //Get all TAKE linesInt for current order, if size = 0 or webservice error then stop
         if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true, cWarehouseorder.PickOrderTypeEnu.PICK)) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_picklines_failed));
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
             return result;
         }
 

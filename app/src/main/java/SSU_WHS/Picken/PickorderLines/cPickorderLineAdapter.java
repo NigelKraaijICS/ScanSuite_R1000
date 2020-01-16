@@ -35,6 +35,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         private TextView textViewDescription;
         private TextView textViewQuantity;
         private TextView textViewSourceNo;
+        private TextView textViewDestination;
         private FrameLayout pickorderLineItemFrameLayout;
         private ImageView imageSendStatus;
 
@@ -48,16 +49,25 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
             this.textViewBIN.setSingleLine(true);
             this.textViewBIN.setMarqueeRepeatLimit(5);
             this.textViewBIN.setSelected(true);
+
             this.textViewDescription = pvItemView.findViewById(R.id.textViewDescription);
             this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewDescription.setSingleLine(true);
             this.textViewDescription.setMarqueeRepeatLimit(5);
             this.textViewDescription.setSelected(true);
+
             this.textViewSourceNo = pvItemView.findViewById(R.id.textViewSourceNo);
             this.textViewSourceNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewSourceNo.setSingleLine(true);
             this.textViewSourceNo.setMarqueeRepeatLimit(5);
             this.textViewSourceNo.setSelected(true);
+
+            this.textViewDestination = pvItemView.findViewById(R.id.textViewDestination);
+            this.textViewDestination.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDestination.setSingleLine(true);
+            this.textViewDestination.setMarqueeRepeatLimit(5);
+            this.textViewDestination.setSelected(true);
+
             this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
             this.pickorderLineItemFrameLayout = pvItemView.findViewById(R.id.pickorderLineItemLinearLayout);
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
@@ -109,6 +119,15 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
         String lineDescriptionStr = currentPickorderLine.getItemNoStr() + "~" + currentPickorderLine.getVariantCodeStr() + ": " + currentPickorderLine.getDescriptionStr();
         String quantityToShowStr = "";
+
+        if (!cPickorder.currentPickOrder.isTransferBln()) {
+            pvHolder.textViewDestination.setVisibility(View.GONE);
+        }
+        else {
+            pvHolder.textViewDestination.setVisibility(View.VISIBLE);
+            pvHolder.textViewDestination.setText(currentPickorderLine.getDestinationAndDescriptionStr());
+        }
+
 
         //Pick recyclers
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
