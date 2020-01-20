@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/createReturnContainer">
+    <include layout="@layout/toolbar_default"/>
+    <EditText
+        android:id="@+id/editTextDocument"
+        style="@style/createReturnDocument"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_document"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <TextView
+        android:id="@+id/textViewCreateReturnText"
+        style="@style/createReturnText"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.906"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextDocument" />
+
+    <EditText
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:id="@+id/editTextBin"
+        style="@style/createReturnDocument"
+        android:hint="@string/hint_add_bin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextDocument"/>
+
+    <TextView
+        android:id="@+id/textViewCreateReturnBin"
+        style="@style/createReturnText"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.906"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextBin" />
+    <Switch
+        android:id="@+id/multipleDocumentSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="168dp"
+        android:defaultValue="false"
+        android:key="@string/multiple_documents_switch"
+        android:text="@string/multiple_documents"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewCreateReturnBin" />
+    <TextView
+        android:id="@+id/textViewCreateReturnReason"
+        style="@style/createReturnText"
+        android:layout_marginTop="120dp"
+        android:hint="@string/hint_add_reason"
+        android:layout_width="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/multipleDocumentSwitch" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageButtonReason"
+        style="@style/createInventoryImageView"
+        app:srcCompat="@drawable/ic_dislike"
+        app:layout_constraintStart_toEndOf="@id/textViewCreateReturnReason"
+        app:layout_constraintTop_toTopOf="@id/textViewCreateReturnReason"/>
+    <Button
+        android:id="@+id/createOrderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:text="@string/button_create_inventory"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

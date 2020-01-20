@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/returnArticleDetailContainer"
+    android:layout_width="match_parent"
+    android:translationZ="2dp"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.Returns.ReturnArticleDetailFragment"
+    android:background="@color/colorBart"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="0dp"
+        >
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/probeersel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="2dp"
+        android:background="@color/colorBart"
+        >
+        <include layout="@layout/toolbar_subtext_default" />
+        <include layout="@layout/default_articleinfo" />
+        <include layout="@layout/default_bininfo" />
+        <include layout="@layout/default_reasoninfo" />
+        <EditText
+            android:id="@+id/quantityText"
+            style="@style/quantityTextInventory"
+            app:layout_constraintTop_toBottomOf="@id/reasonContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+        <androidx.appcompat.widget.AppCompatImageButton
+            style="@style/countButton"
+            android:id="@+id/imageButtonMinus"
+            app:srcCompat="@drawable/ic_remove_black_24dp"
+
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/imageButtonPlus"
+            style="@style/countButton"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:srcCompat="@drawable/ic_add_black_24dp" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            style="@style/defaultBottomButton"
+            android:id="@+id/imageButtonDone"
+            app:srcCompat="@drawable/ic_check_black_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
