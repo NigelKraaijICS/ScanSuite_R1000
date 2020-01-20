@@ -280,28 +280,28 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     private static boolean mCheckBarcodeWithLineBarcodesBln(cBarcodeScan pvBarcodeScan){
 
-        //If scanned value matches the current barcode, then we have a match
+        //If scanned value matches the current barcodeStr, then we have a match
         if (pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cInventoryorderLineBarcode.currentInventoryorderLineBarcode.getBarcodeStr()) ||
            pvBarcodeScan.getBarcodeFormattedStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeWithoutCheckDigitStr()) ) {
             //We have a match, so leave
             return  true;
         }
 
-        //Check if this is a barcode we already know
+        //Check if this is a barcodeStr we already know
         cInventoryorderBarcode inventoryorderBarcode = cInventoryorder.currentInventoryOrder.pGetOrderBarcode(pvBarcodeScan);
 
-        //We scanned a barcode unknown to the order
+        //We scanned a barcodeStr unknown to the order
         if (inventoryorderBarcode == null) {
             return false;
         }
 
-        //We scanned a barcode for a different article
+        //We scanned a barcodeStr for a different article
         if (!inventoryorderBarcode.getItemNoStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getItemNoStr()) ||
             ! inventoryorderBarcode.getVariantCodeStr().equalsIgnoreCase(cInventoryorderBarcode.currentInventoryOrderBarcode.getVariantCodeStr())) {
             return false;
         }
 
-        //We scanned a barcode that belongs to the current article, so check if we already have a line barcode
+        //We scanned a barcodeStr that belongs to the current article, so check if we already have a line barcodeStr
         for (cInventoryorderLineBarcode inventoryorderLineBarcode : cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl()) {
 
             //We have a match, so set
@@ -314,7 +314,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
             }
         }
 
-        //Scanned barcode is correct, but we need to create a line barcode
+        //Scanned barcodeStr is correct, but we need to create a line barcodeStr
         cInventoryorderLineBarcode.currentInventoryorderLineBarcode =  cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(inventoryorderBarcode.getBarcodeStr(),inventoryorderBarcode.getQuantityPerUnitOfMeasureDbl());
         cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
         InventoryArticleDetailFragment.mShowBarcodeInfo();
@@ -368,7 +368,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
             @Override
             public void onClick(View view) {
 
-                //There is no selected barcode, select one first
+                //There is no selected barcodeStr, select one first
                 if (cInventoryorderBarcode.currentInventoryOrderBarcode == null) {
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
                     return;
@@ -406,7 +406,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
             public void onClick(View view) {
 
 
-                //There is no selected barcode, select one first
+                //There is no selected barcodeStr, select one first
                 if (cInventoryorderBarcode.currentInventoryOrderBarcode == null) {
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
                     return;
@@ -667,7 +667,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
                     return;
                 }
 
-                //If we only have one barcode, then automatticaly select that barcode
+                //If we only have one barcodeStr, then automatticaly select that barcodeStr
                 if (cInventoryorderLine.currentInventoryOrderLine.barcodesObl().size() == 1) {
                     InventoryArticleDetailFragment.pHandleScan(cBarcodeScan.pFakeScan(cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr()));
                     return;

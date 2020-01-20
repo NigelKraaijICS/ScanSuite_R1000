@@ -700,6 +700,36 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean RETOUR_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean RETOUR_AMOUNT_MANUAL(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_AMOUNT_MANUAL);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static String RETOUR_NEW_WORKFLOWS(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
     public static String RECEIVE_STORE_DEVIATIONS_PASSWORD(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_STORE_DEVIATIONS_PASSWORD);
@@ -709,6 +739,8 @@ public class cSetting {
 
         return Setting.valueStr;
     }
+
+
 
     //End Region Settings
 

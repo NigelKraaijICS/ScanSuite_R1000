@@ -87,7 +87,7 @@ public class cWarehouseorderRepository {
 
     //Region Constructor
     cWarehouseorderRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
     }
     //End Region Constructor
 
@@ -116,7 +116,7 @@ public class cWarehouseorderRepository {
         cWebresult webResultWrs = new cWebresult();
 
         List<String> resultObl = new ArrayList<>();
-        WarehouseorderLockParams warehouseorderLockParams = new WarehouseorderLockParams(cUser.currentUser.getUsernameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr, pvWorkflowStepStr, pv_WorkflowStepInt, pvIgnoreBusyBln);
+        WarehouseorderLockParams warehouseorderLockParams = new WarehouseorderLockParams(cUser.currentUser.getNameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr, pvWorkflowStepStr, pv_WorkflowStepInt, pvIgnoreBusyBln);
         try {
             webResultWrs = new mWarehouseorderLockAsyncTask().execute(warehouseorderLockParams).get();
         } catch (ExecutionException | InterruptedException e) {

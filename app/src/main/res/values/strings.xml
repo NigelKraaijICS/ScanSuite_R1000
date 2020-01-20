@@ -616,7 +616,6 @@
     <string name="tab_moveorderline_total">Total</string>
     <string name="screentitle_moveordertake">Move take</string>
     <string name="message_moveorderbusy_header">Orderline still busy</string>
-    <string name="message_unknown_bin">Unknown bin</string>
     <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
     <string name="show_only_deviations">Show deviations</string>
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
@@ -635,5 +634,32 @@
     <string name="message_location_incorrect">Location incorrect</string>
     <string name="zero">0</string>
     <!--endregion move-->
+
+    <!--Region return-->
+    <string name="multiple_documents">Multiple documents</string>
+    <string name="multiple_documents_switch" translatable="false">Multiple_documents_switch</string>
+    <string name="message_close_document">Close document</string>
+    <string name="message_document_text_sure">Are you sure you want to close the document</string>
+    <string name="message_document_close_fail">Document closing failed</string>
+    <string name="screentitle_returnorderdocument">Return document</string>
+    <string name="message_document_add_not_allowed">Not allowed to add a document</string>
+    <string name="message_remove_return_order">Return order not removed</string>
+    <string name="error_get_returnorderlines_failed">Getting returnorder lines failed</string>
+    <string name="error_get_returnorders_failed">Getting returnorders failed</string>
+    <string name="error_get_returnordersdocuments_failed">Getting returnorderdocuments failed</string>
+    <string name="create_return">Create return</string>
+    <string name="createreturn_text_default">Create return</string>
+    <string name="message_scan_return_document">Scan return document</string>
+    <string name="message_scan_return_bin">Scan return bin</string>
+    <string name="message_unknown_bin">Bin unknown at current location</string>
+    <string name="message_bin_not_allowed_for_return">Bin not allowed for return</string>
+    <string name="screentitle_return">Return</string>
+    <string name="button_add_document">Add document</string>
+    <string name="add_document_header_default">Add Document</string>
+    <string name="error_getting_return_reasons">Getting return reasons failes</string>
+    <string name="choose_reason">Choose returnreason</string>
+    <string name="hint_add_reason">Scan or select reason</string>
+    <!--End Region return-->
+
 
 </resources>

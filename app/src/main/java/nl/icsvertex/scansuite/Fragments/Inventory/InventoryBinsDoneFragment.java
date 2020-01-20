@@ -86,7 +86,8 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
         if (!(pvViewHolder instanceof cInventoryorderBinAdapter.InventoryorderBinViewHolder)) {
             return;
         }
-        positionSwiped = pvPositionInt;
+
+        InventoryBinsDoneFragment.positionSwiped = pvPositionInt;
 
         cInventoryorderBin.currentInventoryOrderBin = cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().get(pvPositionInt);
         if ( cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) <= 0 && cInventoryorder.currentInventoryOrder.isGeneratedBln()) {

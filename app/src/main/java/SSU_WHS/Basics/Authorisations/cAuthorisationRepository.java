@@ -27,7 +27,7 @@ public class cAuthorisationRepository {
 
     //Region Constructor
     cAuthorisationRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.authorisationDao = db.authorisationDao();
     }
     //End Region Constructor

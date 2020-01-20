@@ -22,7 +22,7 @@ public class cPickorderShipPackageRepository {
     private cWebresult webResult;
 
     cPickorderShipPackageRepository(Application application) {
-        acScanSuiteDatabase db = acScanSuiteDatabase.getDatabase(application);
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(application);
         pickorderShipPackageDao = db.pickorderShipPackageDao();
     }
 

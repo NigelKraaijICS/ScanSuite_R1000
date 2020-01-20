@@ -46,7 +46,7 @@ public class cInventoryorderRepository {
 
     //Region Constructor
     cInventoryorderRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.inventoryorderDao = db.inventoryorderDao();
         this.inventoryorderBinDao = db.inventoryorderBinDao();
     }

@@ -77,6 +77,23 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_INTAKELINEMATHANDLEDPART = "p_ReceiveRegelHandledPartPlaceMATJsonStr";
     public static String WEBMETHOD_INTAKEHANLED= "p_ReceiveMATOrderHandledJsonStr";
     public static String WEBMETHOD_INTAKEITEMHANLED= "p_ReceiveMATItemHandledJsonStr";
+
+
+    public static String WEBMETHOD_RETURNORDERSGET = "p_RetourOrdersGetJsonStr";
+    public static String WEBMETHOD_RETURNLINESGET = "p_RetourOrderItemInTakeGetJsonStr";
+    public static String WEBMETHOD_RETURNLINERESET = "p_RetourInTakeRegelResetJsonStr";
+    public static String WEBMETHOD_RETURNBARCODEGET = "p_RetourOrderBarcodesGetJsonStr";
+    public static String WEBMETHOD_RETURNBARCODECREATE = "p_RetourBarcodeCreateJsonStr";
+    public static String WEBMETHOD_RETURNLINESAVE = "p_RetourInTakeItemJsonStr";
+    public static String WEBMETHOD_RETURNORDERHANDLED = "p_RetourInTakeOrderHandledJsonStr";
+    public static String WEBMETHOD_RETURNORDERCREATE = "p_RetourOrderCreateJsonStr";
+    public static String WEBMETHOD_RETURNLINESCANNEDGET = "p_RetourOrderScannedRegelsInTakeGetJsonStr";
+    public static String WEBMETHOD_RETURNORDERDISPOSED = "p_RetourVervallenJsonStr";
+    public static String WEBMETHOD_RETURNLINESCANNEDBARCODESGET = "p_RetourOrderRegelTakeBarcodesGetJsonStr";
+    public static String WEBMETHOD_RETURNORDERCOMMENTSGET = "p_RetourOrderCommentsGetJsonStr";
+    public static String WEBMETHOD_RETURNCREATEITEMVARIANT = "p_RetourInTakeWarehouseopdrachtItemVariantCreateJsonStr";
+    public static String WEBMETHOD_GETWAREHOUSEREASONS = "p_MagazijnRedenenGetJsonStr";
+
     public static String WEBMETHOD_MOVEBARCODECREATE = "p_MoveBarcodeCreateJsonStr";
     public static String WEBMETHOD_MOVEHANDLED = "p_MoveOrderHandledJsonStr";
     public static String WEBMETHOD_MOVEORDERCREATE = "p_MoveOrderCreateJsonStr";
@@ -171,6 +188,14 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_CURRENTLOCATION_SHORT = "pv_CurrentLocationStr";
     public static String WEBPROPERTY_MOVEBARCODECHECK = "pv_MoveBarcodeCheckBln";
     public static String WEBPROPERTY_MIBATCHTRAKEBIN = "pv_MiBatchTakeBinStr";
+
+    public static String WEBPROPERTY_RETURNBIN = "pv_RetourBinStr";
+    public static String WEBPROPERTY_RETURNBARCODECHECK = "pv_RetourBarcodeCheckBln";
+    public static String WEBPROPERTY_RETURNMULTIPLEDOCUMENTS = "pv_RetourMultipleDocumentsBln";
+    public static String WEBPROPERTY_RETURNREASONNL = "pv_RetourredenStr";
+    public static String WEBPROPERTY_RETURNREASONBIGNL = "pv_RetourRedenStr";
+    public static String WEBPROPERTY_RECEIVEDDAT = "pv_ReceivedDat";
+    public static String WEBPROPERTY_REASON = "pv_ReasonStr";
 
     //endregion Properties
 

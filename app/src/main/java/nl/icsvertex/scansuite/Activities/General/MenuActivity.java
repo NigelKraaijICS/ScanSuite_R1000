@@ -31,6 +31,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import ICS.cAppExtension;
@@ -213,8 +214,8 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         final ActivityOptionsCompat activityOptions;
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK  ||
-            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PF ||
-            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PV){
+                cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PF ||
+                cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PV){
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
             if (!  cLicense.pGetLicenseViaWebserviceBln()) {
@@ -282,9 +283,11 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             return;
         }
 
+
+
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE||
-            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE_EO ||
-            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE_MA) {
+                cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE_EO ||
+                cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE_MA) {
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Intake;
             if (!  cLicense.pGetLicenseViaWebserviceBln()) {
@@ -297,20 +300,37 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INTAKE);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, IntakeorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, IntakeorderSelectActivity.VIEW_NAME_HEADER_TEXT));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.RETURN) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Return;
+            if (! cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+            intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_RETURN);
+            clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_RETURN);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, ReturnorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, ReturnorderSelectActivity.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
         }
 
     }
 
     public static void pHandleScan(cBarcodeScan pvScannedBarcode){
 
-     cArticle article =   cArticle.pGetArticleByBarcodeViaWebservice(pvScannedBarcode);
+        cArticle article =   cArticle.pGetArticleByBarcodeViaWebservice(pvScannedBarcode);
 
-     if (article == null) {
-         return;
-     }
+        if (article == null) {
+            return;
+        }
 
-     article.pGetBarcodesViaWebserviceBln();
-     article.pGetStockViaWebserviceBln();
+        article.pGetBarcodesViaWebserviceBln();
+        article.pGetStockViaWebserviceBln();
     }
 
     //End Region Public Methods
@@ -328,7 +348,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     private void mStartShimmering(){
         //Start Shimmer Effect's animation until data is loaded
         MenuActivity.shimmerViewContainer.startShimmerAnimation();
-}
+    }
 
     private void mStopShimmering(){
         //Stopping Shimmer Effect's animation after data is loaded

@@ -2,6 +2,11 @@ package SSU_WHS.General;
 
 
 public class cPublicDefinitions {
+
+
+    public static String ADDDOCUMENT_TAG = "ADDDOCUMENT_TAG";
+    public static String ADDREASON_TAG = "ADDREASON_TAG";
+
     public static String SETTINGS_PASSWORD = "ics";
     public static String UPDATE_BASE_URL = "http://ssupdate.icsvertex.nl";
     public static String UPDATE_PACKAGE_NAME = "scansuite.apk";

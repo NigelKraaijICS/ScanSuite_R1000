@@ -20,7 +20,7 @@ public class cSalesOrderPackingTableRepository {
 
     //Region Constructor
     cSalesOrderPackingTableRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.salesOrderPackingTableDao = this.db.salesOrderPackingTableDao();
     }
     //End Region Constructor

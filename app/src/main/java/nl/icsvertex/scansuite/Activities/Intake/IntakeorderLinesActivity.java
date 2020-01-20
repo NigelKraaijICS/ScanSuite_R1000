@@ -247,7 +247,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         //BIN button has been pressed, so we already have a current line
         if (pvLineSelectedBln) {
 
-            //Clear current barcode
+            //Clear current barcodeStr
             cIntakeorderBarcode.currentIntakeOrderBarcode = null;
 
             hulpResult = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pSummaryLineBusyRst();
@@ -354,7 +354,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         String searchStr;
 
-        //Check if this is a barcode we already know
+        //Check if this is a barcodeStr we already know
         cIntakeorderBarcode.currentIntakeOrderBarcode = cIntakeorder.currentIntakeOrder.pGetOrderBarcode(pvBarcodeScan);
         if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
             result.resultBln = false;
@@ -362,14 +362,14 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             return result;
         }
 
-        //Get all lines for this barcode
+        //Get all lines for this barcodeStr
         if (cIntakeorderBarcode.currentIntakeOrderBarcode.linesObl().size() == 0) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_lines_for_this_barcode));
             return result;
         }
 
-        //Set the scanned barcode, so we can raise quantity in next activity
+        //Set the scanned barcodeStr, so we can raise quantity in next activity
         cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcode.currentIntakeOrderBarcode;
 
 

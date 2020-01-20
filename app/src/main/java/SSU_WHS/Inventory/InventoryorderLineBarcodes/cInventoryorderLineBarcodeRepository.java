@@ -20,7 +20,7 @@ public class cInventoryorderLineBarcodeRepository {
 
     //Region Constructor
     cInventoryorderLineBarcodeRepository(Application application) {
-        this.db = acScanSuiteDatabase.getDatabase(application);
+        this.db = acScanSuiteDatabase.pGetDatabase(application);
         this.inventoryorderLineBarcodeDao = db.inventoryorderLineBarcodeDao();
     }
 

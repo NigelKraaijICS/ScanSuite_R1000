@@ -161,7 +161,7 @@ public class cIntakeorderMATSummaryLine {
 
         if (this.MATLinesObl.size() == 1) {
 
-            if (!this.MATLinesObl.get(0).getBinCodeStr().isEmpty()) {
+            if (!this.MATLinesObl.get(0).getBinCodeStr().isEmpty() || !this.MATLinesObl.get(0).getBinCodeHandledStr().isEmpty()) {
                 resultObl.addAll(this.MATLinesObl);
 
             }

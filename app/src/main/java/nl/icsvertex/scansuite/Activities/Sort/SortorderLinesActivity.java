@@ -292,7 +292,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
-        // Get line forthis barcode
+        // Get line forthis barcodeStr
         cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetLineNotHandledByBarcode(barcodewithoutPrefix);
         if (cPickorderLine.currentPickOrderLine == null) {
             mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);

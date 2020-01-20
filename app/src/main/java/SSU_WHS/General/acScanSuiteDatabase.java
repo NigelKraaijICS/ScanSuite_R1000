@@ -53,6 +53,16 @@ import SSU_WHS.Picken.Pickorders.cPickorderEntity;
 import SSU_WHS.Picken.Pickorders.iPickorderDao;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTableEntity;
 import SSU_WHS.Picken.SalesOrderPackingTable.iSalesOrderPackingTableDao;
+import SSU_WHS.Return.ReturnOrder.cReturnorderEntity;
+import SSU_WHS.Return.ReturnOrder.iReturnorderDao;
+import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcodeEntity;
+import SSU_WHS.Return.ReturnorderBarcode.iReturnorderBarcodeDao;
+import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocumentEntity;
+import SSU_WHS.Return.ReturnorderDocument.iReturnorderDocumentDao;
+import SSU_WHS.Return.ReturnorderLine.cReturnorderLineEntity;
+import SSU_WHS.Return.ReturnorderLine.iReturnorderLineDao;
+import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcodeEntity;
+import SSU_WHS.Return.ReturnorderLineBarcode.iReturnorderLineBarcodeDao;
 import SSU_WHS.ScannerLogon.cScannerLogonEntity;
 import SSU_WHS.ScannerLogon.iScannerLogonDao;
 import SSU_WHS.Basics.Settings.iSettingsDao;
@@ -110,7 +120,12 @@ import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
         cIntakeorderMATLineEntity.class,
         cIntakeorderBarcodeEntity.class,
         cIntakeorderMATLineBarcodeEntity.class,
-        },version = 81)
+        cReturnorderEntity.class,
+        cReturnorderBarcodeEntity.class,
+        cReturnorderDocumentEntity.class,
+        cReturnorderLineEntity.class,
+        cReturnorderLineBarcodeEntity.class
+        },version = 83)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -147,11 +162,16 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iIntakeorderDao intakeorderDao();
     public abstract iIntakeorderBarcodeDao intakeorderBarcodeDao();
     public abstract iIntakeorderMATLineBarcodeDao intakeorderMATLineBarcodeDao();
+    public abstract iReturnorderDao returnorderDao();
+    public abstract iReturnorderDocumentDao returnorderDocumentDao();
+    public abstract iReturnorderLineDao returnorderLineDao();
+    public abstract iReturnorderBarcodeDao returnorderBarcodeDao();
+    public abstract iReturnorderLineBarcodeDao returnorderLineBarcodeDao();
       //public abstract iEnvironmentDao environmentDao();
 
     private static acScanSuiteDatabase INSTANCE;
 
-    public static acScanSuiteDatabase getDatabase(final Context context) {
+    public static acScanSuiteDatabase pGetDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (acScanSuiteDatabase.class) {
                 if (INSTANCE == null) {

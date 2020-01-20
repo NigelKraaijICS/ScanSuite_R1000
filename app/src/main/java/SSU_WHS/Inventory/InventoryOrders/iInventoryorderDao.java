@@ -24,10 +24,11 @@ public interface iInventoryorderDao {
     @Query("DELETE FROM " + cDatabase.TABLENAME_INVENTORYORDER)
     void deleteAll();
 
-    @Query("SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDER)
+
+    @Query("SELECT * FROM InventoryOrder ORDER BY Priority, Opdrachtnummer ASC")
     List<cInventoryorderEntity> getAll();
 
-    @Query("SELECT * FROM " +  cDatabase.TABLENAME_INVENTORYORDER)
+    @Query("SELECT * FROM InventoryOrder ORDER BY Priority, Opdrachtnummer ASC")
     List<cInventoryorderEntity> getInventoryordersFromDatabase();
 
     @RawQuery(observedEntities = cInventoryorderEntity.class)

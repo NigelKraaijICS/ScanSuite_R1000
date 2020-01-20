@@ -225,7 +225,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
-        //Set filter with scanned barcode if there is no prefix
+        //Set filter with scanned barcodeStr if there is no prefix
         if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
             IntakeorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);

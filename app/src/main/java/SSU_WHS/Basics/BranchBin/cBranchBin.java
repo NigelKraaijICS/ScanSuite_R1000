@@ -6,35 +6,35 @@ import org.json.JSONObject;
 public class cBranchBin {
 
     //Region Public Properties
-    public String branchStr;
+    private String branchStr;
     public String getBranchStr() {
         return branchStr;
     }
 
-    public String binCodeStr;
+    private String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
     }
 
-    public String descriptionStr;
+    private String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    public String zoneStr;
+    private String zoneStr;
     public String getZoneStr() {
         return zoneStr;
     }
 
-    public String binTypeStr;
+    private String binTypeStr;
     public String getBinTypeStr() { return binTypeStr; }
 
-    public Boolean useForStorageBln;
+    private Boolean useForStorageBln;
     public Boolean isUseForStorageBln() {
         return useForStorageBln;
     }
 
-    public Boolean useForReturnSalesBln;
+    private Boolean useForReturnSalesBln;
     public Boolean isUseForReturnSalesBln() {
         return useForReturnSalesBln;
     }
@@ -49,7 +49,6 @@ public class cBranchBin {
         this.branchBinEntity = new cBranchBinEntity(pvJsonObject);
         this.branchStr = this.branchBinEntity.getBranchStr();
         this.binCodeStr =  this.branchBinEntity.getbinCodeStr();
-        this.descriptionStr = this.branchBinEntity.getDescriptionStr();
         this.zoneStr = this.branchBinEntity.getZoneStr();
         this.binTypeStr = this.branchBinEntity.getBinTypeStr();
         this.useForStorageBln = this.branchBinEntity.getUseForStorageBln();

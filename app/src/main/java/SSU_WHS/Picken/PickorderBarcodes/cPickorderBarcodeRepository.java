@@ -1,22 +1,8 @@
 package SSU_WHS.Picken.PickorderBarcodes;
 
 import android.app.Application;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.ksoap2.serialization.PropertyInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.Picken.Pickorders.cPickorder;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
 import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cPickorderBarcodeRepository {
@@ -30,7 +16,7 @@ public class cPickorderBarcodeRepository {
 
     //Region Constructor
     cPickorderBarcodeRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.pickorderBarcodeDao = db.pickorderBarcodeDao();
     }
     //End Region Constructor

@@ -17,7 +17,8 @@ public class cWarehouseorder {
         PICKEN,
         INVENTARISATIE,
         ONTVANGST,
-        VERPLAATS
+        VERPLAATS,
+        RETOUR
     }
 
     public enum StepCodeEnu {
@@ -26,7 +27,8 @@ public class cWarehouseorder {
         Pick_PackAndShip,
         Inventory,
         Receive_Store,
-        Move
+        Move,
+        Retour
     }
 
     public enum PickOrderTypeEnu {
@@ -51,7 +53,8 @@ public class cWarehouseorder {
         PA,
         PF,
         IVS,
-        MV
+        MV,
+        RVS
     }
 
     public class ItemTypeEnu {
@@ -61,8 +64,6 @@ public class cWarehouseorder {
         public static final int Container = 21;
         public static final int Pallet = 22;
     }
-
-
 
     public class WorkflowPickStepEnu {
         public static final int PickPicking = 10;
@@ -125,13 +126,24 @@ public class cWarehouseorder {
         public final static int LOCALSTATUS_DONE_SENT = 40;
     }
 
-
-
     public class InventoryBinStatusEnu {
         public static final int Possible = 0;
         public static final int New = 10;
         public static final int InventoryDoneOnServer = 20;
         public static final int InventoryDone = 30;
+    }
+
+    public class ReturnDocumentStatusEnu {
+        public static final int New = 10;
+        public static final int InventoryPause = 20;
+        public static final int ReturnDone = 30;
+    }
+
+    public class WorkflowReturnStepEnu {
+        public static final int Return = 10;
+        public static final int ReturnBusy = 11;
+        public static final int ReturnPause = 12;
+        public static final int ReturnHandled = 13;
     }
 
     public enum ActivityActionEnu{
@@ -142,7 +154,6 @@ public class cWarehouseorder {
         Store,
         Next
     }
-
 
     public class SoureDocumentTypeEnu {
 
@@ -165,7 +176,6 @@ public class cWarehouseorder {
 
         public final static int Generated = 99;
     }
-
 
     private static cWarehouseorderViewModel gWarehouseorderViewModel;
     public static cWarehouseorderViewModel getWarehouseorderViewModel() {

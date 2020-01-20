@@ -903,7 +903,7 @@ public class cInventoryorder {
             return false;
         }
 
-        //Search for the scanned barcode in the article barcodes
+        //Search for the scanned barcodeStr in the article barcodes
         cArticleBarcode matchedArticleBarcode = null;
         for (cArticleBarcode articleBarcode : cArticle.currentArticle.barcodesObl) {
             if (articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
@@ -961,7 +961,7 @@ public class cInventoryorder {
                 cInventoryorderLineBarcode inventoryorderLineBarcode = new cInventoryorderLineBarcode(jsonObject);
                 insertObl.add((inventoryorderLineBarcode.inventoryorderLineBarcodeEntity));
 
-                //Search for line that belongs to this barcode
+                //Search for line that belongs to this barcodeStr
                 cInventoryorderLine inventoryorderLine = cInventoryorder.currentInventoryOrder.mGetLineWithLineNo(inventoryorderLineBarcode.getLineNoLng());
 
                 //If we can't find it, skip this
@@ -969,7 +969,7 @@ public class cInventoryorder {
                     continue;
                 }
 
-                //Add barcode to line
+                //Add barcodeStr to line
                 inventoryorderLine.pAddLineBarcode(inventoryorderLineBarcode.getBarcodeStr(),inventoryorderLineBarcode.getQuantityhandledDbl());
 
             }

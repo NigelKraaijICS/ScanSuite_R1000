@@ -1,17 +1,18 @@
 package SSU_WHS.Basics.Branches;
 
 import androidx.lifecycle.ViewModelProviders;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
+import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
-import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -33,46 +34,6 @@ public class cBranch {
         return branchNameStr;
     }
 
-    private boolean binMandatoryBln;
-    public boolean getBinMandatoryBln() {
-        return binMandatoryBln;
-    }
-
-    private String pickDefaultRejectReasonStr;
-    public String getPickDefaultRejectReasonStr() {
-        return pickDefaultRejectReasonStr;
-    }
-
-    private String pickDefaultStorageBinStr;
-    public String getPickDefaultStorageBinStr() {
-        return pickDefaultStorageBinStr;
-    }
-
-    private String receiveDefaultBinStr;
-    public String getReceiveDefaultBinStr() {
-        return receiveDefaultBinStr;
-    }
-
-    private String returnDefaultBinStr;
-    public String getReturnDefaultBinStr() {
-        return returnDefaultBinStr;
-    }
-
-    private String moveDefaultBinStr;
-    public String getMoveDefaultBinStr() {
-        return moveDefaultBinStr;
-    }
-
-    private String shipDefaultBinStr;
-    public String getShipDefaultBinStr() {
-        return shipDefaultBinStr;
-    }
-
-    private List<String> errorMessagesObl;
-    public List<String> getErrorMessagesObl() {
-        return errorMessagesObl;
-    }
-
     private cBranchEntity branchEntity;
 
     public ArrayList<cWorkplace>  workplacesObl() {
@@ -80,6 +41,7 @@ public class cBranch {
 
     }
     private ArrayList<cBranchBin>  binsObl;
+    public ArrayList<cBranchReason>  returnReasonObl;
 
     private static cBranchViewModel gBranchViewModel;
     public static cBranchViewModel getBranchViewModel() {
@@ -115,13 +77,7 @@ public class cBranch {
         this.branchStr = branchEntity.getBranchStr();
         this.branchTypeStr = branchEntity.getBranchtypeStr();
         this.branchNameStr = branchEntity.getBranchnameStr();
-        this.binMandatoryBln = cText.pStringToBooleanBln(branchEntity.getBinmandatoryStr(),true);
-        this.pickDefaultRejectReasonStr = branchEntity.getPickdefaultrejectreasonStr();
-        this.pickDefaultStorageBinStr = branchEntity.getPickdefaultstoragebinStr();
-        this.receiveDefaultBinStr = branchEntity.getReceivedefaultbinStr();
-        this.returnDefaultBinStr = branchEntity.getReturndefaultbinStr();
-        this.moveDefaultBinStr = branchEntity.getMovedefaultbinStr();
-        this.shipDefaultBinStr = branchEntity.getShipdefaultbinStr();
+
     }
     //End Region Constructor
 
@@ -253,6 +209,51 @@ public class cBranch {
 
         }
         return false;
+    }
+
+    public boolean pGetReasonBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln){
+            this.returnReasonObl = null;
+            this.returnReasonObl = new ArrayList<>();
+        }
+
+        cWebresult WebResult;
+        WebResult =  cBranch.getBranchViewModel().pGetReasonFromWebserviceWrs();
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+
+            if (this.returnReasonObl == null){
+                this.returnReasonObl = new ArrayList<>();
+            }
+
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+
+                cBranchReason branchReason = new cBranchReason(jsonObject);
+                if(branchReason.isReturn()) {
+                    this.returnReasonObl.add(branchReason);
+                }
+            }
+            return  true;
+
+        }
+        return false;
+    }
+
+    public cBranchReason pGetReasonByName(String pvReasonStr){
+        if(cUser.currentUser.currentBranch.returnReasonObl == null){
+            return null;
+        }
+
+        for (cBranchReason branchReason : cUser.currentUser.currentBranch.returnReasonObl)
+        {
+            if(branchReason.getReasonStr().equalsIgnoreCase(pvReasonStr)){
+                return  branchReason;
+            }
+        }
+        return null;
     }
 
     //End Region Public Methods

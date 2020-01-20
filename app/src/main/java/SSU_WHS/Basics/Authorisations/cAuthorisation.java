@@ -154,6 +154,9 @@ public class cAuthorisation {
     public static String TAG_IMAGE_SHIP = "TAG_IMAGE_SHIP";
     public static String TAG_TEXT_SHIP = "TAG_TEXT_SHIP";
 
+    public static String TAG_IMAGE_RETURN = "TAG_IMAGE_RETURN";
+    public static String TAG_TEXT_RETURN = "TAG_TEXT_RETURN";
+
     //end region Public Propties
 
 

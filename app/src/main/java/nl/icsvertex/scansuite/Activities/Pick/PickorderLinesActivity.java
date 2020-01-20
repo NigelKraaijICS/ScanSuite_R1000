@@ -293,7 +293,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         //BIN button has been pressed, so we already have a current line
         if (pvBinSelectedBln) {
 
-            //Clear current barcode
+            //Clear current barcodeStr
             cPickorderBarcode.currentPickorderBarcode = null;
 
             hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
@@ -333,7 +333,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
             String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
-            //Clear current barcode
+            //Clear current barcodeStr
             cPickorderBarcode.currentPickorderBarcode = null;
 
             cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetNetxLineToHandleForBin(barcodewithoutPrefix);

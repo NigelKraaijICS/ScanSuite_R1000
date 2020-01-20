@@ -283,7 +283,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         cBarcodeScan.pRegisterBarcodeReceiver();
 
-        //No barcode selected, so don't simulate scan
+        //No barcodeStr selected, so don't simulate scan
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             return;
         }
@@ -348,7 +348,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             //Succesfull article scanned
             articleScannedLastBln = true;
 
-            //If we found the barcode, currentbarcode is alreay filled, so make this selected
+            //If we found the barcodeStr, currentbarcode is alreay filled, so make this selected
             SortorderSortActivity.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
             return;
         }
@@ -393,7 +393,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         }
 
 
-        //We found a record for this barcode
+        //We found a record for this barcodeStr
         if (recordForBarcode != null) {
 
             if (!recordForBarcode.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr())) {
@@ -445,7 +445,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         SortorderSortActivity.imageButtonDone.setVisibility(View.VISIBLE);
 
-        //Strip barcode from regex
+        //Strip barcodeStr from regex
         String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
         boolean adviceMatchedBln = false;
 
@@ -463,7 +463,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         //We don't have a match check differently
         if (!adviceMatchedBln) {
-            //Check if scanned barcode is a SalesOrder or PickCartBox
+            //Check if scanned barcodeStr is a SalesOrder or PickCartBox
             boolean isSalesOrderBln = cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER);
             boolean isPackingTableBinBln = cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.PACKINGTABLEBIN);
 
@@ -616,7 +616,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
                 mEnablePlusMinusAndBarcodeSelectViews();
 
-                //If we only have one barcode, then automatticaly select that barcode
+                //If we only have one barcodeStr, then automatticaly select that barcodeStr
                 if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
                     mBarcodeSelected(cPickorderLine.currentPickOrderLine.barcodesObl.get(0));
                     return;
@@ -739,7 +739,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
             SortorderSortActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
-            //Add or update line barcode
+            //Add or update line barcodeStr
             cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln(pvAmountDbl);
 
             //Update orderline info (quantityDbl, timestamp, localStatusInt)
@@ -787,7 +787,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_sort_location));
         }
 
-        //Remove or update line barcode
+        //Remove or update line barcodeStr
         cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcodeBln();
 
     }

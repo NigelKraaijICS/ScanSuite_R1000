@@ -24,7 +24,7 @@ public class cWarehouseLocationRepository {
     private cWebresult webResult;
 
     cWarehouseLocationRepository(Application application) {
-        acScanSuiteDatabase db = acScanSuiteDatabase.getDatabase(application);
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(application);
         warehouseLocationDao = db.warehouseLocationDao();
     }
     public LiveData<List<cWarehouseLocationEntity>> getWarehouseLocations(final Boolean forceRefresh, final String branch, List<String> bins) {

@@ -22,6 +22,7 @@ public class cBranchViewModel extends AndroidViewModel {
     public cWebresult pGetBranchesFromWebserviceWrs() {return this.Repository.pGetBranchesFromWebserviceWrs(); }
     public cWebresult pGetUserBranchesFromWebserviceWrs() {return this.Repository.pGetUserBranchesFromWebserviceWrs(); }
     public cWebresult pGetBinFromWebserviceWrs(String pvBinCodeStr) {return this.Repository.pGetBinFromWebserviceWrs(pvBinCodeStr); }
+    public cWebresult pGetReasonFromWebserviceWrs() {return this.Repository.pGetReasonFromWebserviceWrs(); }
     public void insert(cBranchEntity pvBranchEntity) {this.Repository.pInsert(pvBranchEntity);}
     public void deleteAll() {Repository.pDeleteAll();}
 

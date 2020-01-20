@@ -42,7 +42,12 @@ public class cDatabase {
     public static final String TABLENAME_MOVEORDERLINE = "MoveOrderLine";
     public static final String TABLENAME_MOVEORDERLINEBARCODE = "MoveOrderLineBarcode";
     public static final String TABLENAME_MOVEORDERBARCODE = "MoveOrdeBarcode";
-
+    public static final String TABLENAME_RETURNORDER = "Returnorder";
+    public static final String TABLENAME_RETURNORDERLINE = "ReturnorderLine";
+    public static final String TABLENAME_RETURNORDERLINEBARCODE = "ReturnorderLineBarcode";
+    public static final String TABLENAME_RETURNORDERBARCODE = "ReturnorderBarcode";
+    public static final String TABLENAME_RETURNORDERDOCUMENT = "ReturnorderDocument";
+    public static final String TABLENAME_BRANCHREASON = "BranchReason";
 
     //endregion Tables
 
@@ -130,6 +135,10 @@ public class cDatabase {
     public static final String EXTRAFIELD7_NAMESTR = "ExtraField7";
     public static final String EXTRAFIELD8_NAMESTR = "ExtraField8";
     //endregion E
+
+    //Region G
+    public static final String GENERATED_NAMESTR = "Generated";
+    //End Region G
 
     //region H
     public static final String HANDLEDTIMESTAMP_NAMESTR = "HandledTimestamp";
@@ -249,11 +258,14 @@ public class cDatabase {
     public static final String QUANTITYREJECTED_NAMESTR = "QuantityRejected";
     public static final String QUANTITYTOTAL_NAMESTR = "QuantityTotal";
     public static final String QUANTITYTAKEN_NAMESTR = "QuantityTaken";
+    public static final String QUANTITYHANDLEDTAKE_NAMESTR = "QuantityHandled_take";
+    public static final String QUANTITYTAKE_NAMESTR = "Quantity_take";
 
     //endregion Q
 
     //region R
     public static final String RECEIVEDEFAULTBIN_NAMESTR = "Receive_default_bin";
+    public static final String REJECTPICK_NAMESTR = "RejectPick";
     public static final String RECEIVEWITHPICTURE_NAMESTR = "Receive_with_picture";
     public static final String RECEIVEWITHPICTURE_AUTO_OPEN_NAMESTR = "Receive_with_picture_auto_open";
     public static final String RECEIVEWITHPICTURE_PREFETCH_NAMESTR = "Receive_with_picture_prefetch";
@@ -277,6 +289,15 @@ public class cDatabase {
     public static final String RECEIVENOEXTRAITEMS_NAMESTR = "Receive_no_extra_items";
     public static final String RECEIVENOEXTRAPIECES_NAMESTR = "Receive_no_extra_pieces";
     public static final String RECEIVEMATAUTOSPLITINCOMPLETELINE_NAMESTR = "Receive_mat_auto_split_incomplete_line";
+
+    public static final String RETOURREDEN_NAMESTR = "Retourreden";
+    public static final String RETOURAMAOUNTMANUAL_NAMESTR = "Retour_Amount_manual";
+    public static final String RETOURBARCODECHECK_NAMESTR = "Retour_Barcode_check";
+    public static final String RETOURMULTIDOCUMENT_NAMESTR = "Retour_multi_document";
+    public static final String REASON_NAMESTR = "Reason";
+    public static final String REASONNL_NAMESTR = "Reden";
+    public static final String RETURN_NAMESTR = "Return";
+    public static final String RETURNEXTERNAL_NAMESTR = "ReturnExternal";
     //endregion R
 
     //region S
@@ -296,6 +317,7 @@ public class cDatabase {
     public static final String SOURCENO_NAMESTR = "SourceNo";
     public static final String SORTINGSEQUENCENO_NAMESTR = "SortingSequenceNo";
     public static final String STORAGEBINCODE_NAMESTR = "StorageBinCode";
+    public static final String STOREBINCODE_NAMESTR = "StoreBinCode";
     public static final String STORESOURCEORDER_NAMESTR = "StoreSourceOpdracht";
     public static final String STREET_NAMESTR = "Straat";
     public static final String SEQUENCE_NAMESTR = "Order";
@@ -311,6 +333,7 @@ public class cDatabase {
     public static final String SHIPPINGAGENTSERVICECODE_NAMESTR = "ShippingAgentServiceCode";
     public static final String SHOWONTERMINAL_NAMESTR = "ShowOnTerminal";
     public static final String SOURCETYPE_NAMESTR = "SourceType";
+    public static final String SORTINGSEQUENCENOTAKE_NAMESTR = "SortingSequenceNo_take";
     //endregion S
 
     //region T

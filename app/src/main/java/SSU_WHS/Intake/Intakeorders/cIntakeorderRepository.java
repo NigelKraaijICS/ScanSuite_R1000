@@ -21,7 +21,6 @@ import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineEntity;
 import SSU_WHS.Intake.IntakeorderMATLines.iIntakeorderMATLineDao;
-import SSU_WHS.Picken.Pickorders.cPickorderRepository;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -62,7 +61,7 @@ public class cIntakeorderRepository {
 
     //Region Constructor
     cIntakeorderRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.intakeorderDao = db.intakeorderDao();
         this.intakeorderMATLineDao = db.intakeorderMATLineDao();
     }

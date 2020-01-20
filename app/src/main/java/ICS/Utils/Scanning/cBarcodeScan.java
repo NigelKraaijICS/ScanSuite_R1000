@@ -16,6 +16,10 @@ import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.Returns.CreateReturnActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
@@ -31,12 +35,14 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AddEnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
+import nl.icsvertex.scansuite.Fragments.Returns.ReturnArticleDetailFragment;
 
 public class cBarcodeScan {
 
@@ -110,7 +116,7 @@ public class cBarcodeScan {
                 @Override
                 public void onReceive(Context context, Intent intent) {
 
-                    //Fill a barcode scan object
+                    //Fill a barcodeStr scan object
                     cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.pGetBarcode(intent, true);
 
                     //Login
@@ -188,6 +194,23 @@ public class cBarcodeScan {
                         IntakeOrderIntakeActivity.pHandleScan(barcodeScan);
                     }
 
+                    //Return
+                    if (cAppExtension.activity instanceof ReturnorderSelectActivity){
+                        ReturnorderSelectActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
+                        ReturnorderDocumentsActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
+                        ReturnorderDocumentActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof CreateReturnActivity) {
+                        CreateReturnActivity.pHandleScan(barcodeScan);
+                    }
+
                 }
             };
         }
@@ -202,7 +225,7 @@ public class cBarcodeScan {
                 @Override
                 public void onReceive(Context context, Intent intent) {
 
-                    //Fill a barcode scan object
+                    //Fill a barcodeStr scan object
                     cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.pGetBarcode(intent, true);
 
                     if (cAppExtension.dialogFragment instanceof BranchFragment) {
@@ -263,6 +286,15 @@ public class cBarcodeScan {
                     if (cAppExtension.dialogFragment instanceof PasswordFragment) {
                         PasswordFragment.pHandleScan(barcodeScan);
                         return;
+                    }
+
+
+                    if (cAppExtension.dialogFragment instanceof ReturnArticleDetailFragment) {
+                        ReturnArticleDetailFragment.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.dialogFragment instanceof ReasonFragment) {
+                        ReasonFragment.pHandleScan(barcodeScan);
                     }
                 }
             };
@@ -348,7 +380,7 @@ public class cBarcodeScan {
             returnBarcodeStr = scannedBarcodeStr;
         }
 
-        //If it's an EAN barcode cut off checkdigit
+        //If it's an EAN barcodeStr cut off checkdigit
         if (barcodeTypeStr.toUpperCase().contains("EAN") ) {
 
             if (returnBarcodeStr.length() == 13) {

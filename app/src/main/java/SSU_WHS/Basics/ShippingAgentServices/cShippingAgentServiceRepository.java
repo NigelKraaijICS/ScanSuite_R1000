@@ -26,7 +26,7 @@ public class cShippingAgentServiceRepository {
 
     //Region Constructor
     cShippingAgentServiceRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.shippingAgentServiceDao = db.shippingAgentServiceDao();
     }
     //End Region Constructor

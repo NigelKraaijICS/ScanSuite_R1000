@@ -23,7 +23,7 @@ public interface iIntakeorderDao {
     @Query("SELECT * FROM " + cDatabase.TABLENAME_INTAKEORDER)
     List<cIntakeorderEntity> getAll();
 
-    @Query("SELECT * FROM " +  cDatabase.TABLENAME_INTAKEORDER)
+    @Query("SELECT * FROM IntakeOrders ORDER BY Priority, Opdrachtnummer ASC")
     List<cIntakeorderEntity> getIntakeordersFromDatabase();
 
     @RawQuery(observedEntities = cIntakeorderEntity.class)

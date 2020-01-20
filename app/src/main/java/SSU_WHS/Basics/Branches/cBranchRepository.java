@@ -29,7 +29,7 @@ public class cBranchRepository {
 
     //Region Constructor
     cBranchRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.branchDao = db.branchDao();
     }
     //End Region Constructor
@@ -41,7 +41,7 @@ public class cBranchRepository {
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new userBranchesFromWebserviceGetAsyncTask().execute().get();
+            webResultWrs = new mUserBranchesFromWebserviceGetAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -58,7 +58,7 @@ public class cBranchRepository {
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new branchesFromWebserviceGetAsyncTask().execute().get();
+            webResultWrs = new mBranchesFromWebserviceGetAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -75,7 +75,7 @@ public class cBranchRepository {
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new binFromWebserviceGetAsyncTask().execute(pvBinCodeStr).get();
+            webResultWrs = new mBinFromWebserviceGetAsyncTask().execute(pvBinCodeStr).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -86,24 +86,47 @@ public class cBranchRepository {
         return webResultWrs;
     }
 
+    public cWebresult pGetReasonFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mReasonsFromWebserviceGetAsyncTask().execute().get();
+        } catch (ExecutionException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
 
 
     public void pInsert(cBranchEntity branchEntity) {
-        new insertAsyncTask(branchDao).execute(branchEntity);
+        new mInsertAsyncTask(branchDao).execute(branchEntity);
     }
 
     public void pDeleteAll() {
 
-        new   cBranchRepository.deleteAllAsyncTask(branchDao).execute();
+        new mDeleteAllAsyncTask(branchDao).execute();
     }
 
     //End Region Public Methods
 
     //Region Private Methods
-    private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
+
+    private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private iBranchDao mAsyncTaskDao;
 
-        deleteAllAsyncTask(iBranchDao dao) {
+        mDeleteAllAsyncTask(iBranchDao dao) {
             mAsyncTaskDao = dao;
         }
         @Override
@@ -112,10 +135,11 @@ public class cBranchRepository {
             return null;
         }
     }
-    private static class insertAsyncTask extends AsyncTask<cBranchEntity, Void, Void> {
+
+    private static class mInsertAsyncTask extends AsyncTask<cBranchEntity, Void, Void> {
         private iBranchDao mAsyncTaskDao;
 
-        insertAsyncTask(iBranchDao dao) {
+        mInsertAsyncTask(iBranchDao dao) {
             mAsyncTaskDao = dao;
         }
         @Override
@@ -125,7 +149,7 @@ public class cBranchRepository {
         }
     }
 
-       private static class branchesFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+     private static class mBranchesFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final Void... params) {
             cWebresult WebresultWrs = new cWebresult();
@@ -143,7 +167,7 @@ public class cBranchRepository {
         }
     }
 
-    private static class userBranchesFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+    private static class mUserBranchesFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final Void... params) {
             cWebresult WebresultWrs = new cWebresult();
@@ -168,8 +192,7 @@ public class cBranchRepository {
         }
     }
 
-
-    private static class binFromWebserviceGetAsyncTask extends AsyncTask<String, Void, cWebresult> {
+    private static class mBinFromWebserviceGetAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final String... params) {
             cWebresult WebresultWrs = new cWebresult();
@@ -192,6 +215,30 @@ public class cBranchRepository {
             try {
                 new cWebresult();
                 WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSELOCATIONS, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
+        }
+    }
+
+    private static class mReasonsFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(final Void... params) {
+            cWebresult WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            try {
+                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSEREASONS, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);

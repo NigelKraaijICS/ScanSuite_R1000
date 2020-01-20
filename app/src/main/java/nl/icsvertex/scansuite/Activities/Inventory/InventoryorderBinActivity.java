@@ -309,16 +309,16 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        //Check if this is a barcode we already know
+        //Check if this is a barcodeStr we already know
         cInventoryorderBarcode inventoryorderBarcode = cInventoryorder.currentInventoryOrder.pGetOrderBarcode(pvBarcodeScan);
 
-        //We scanned an unkown barcode
+        //We scanned an unkown barcodeStr
         if (inventoryorderBarcode == null) {
             InventoryorderBinActivity.mHandleUnknownBarcodeScan(pvBarcodeScan);
             return;
         }
 
-        //We scanned a barcode we already know
+        //We scanned a barcodeStr we already know
         InventoryorderBinActivity.mHandleKnownBarcodeScan(inventoryorderBarcode);
 
     }
@@ -425,7 +425,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private static void mAddUnkownArticle(cBarcodeScan pvBarcodeScan){
 
-        //Add the barcode via the webservice
+        //Add the barcodeStr via the webservice
         if (!cInventoryorder.currentInventoryOrder.pAddUnkownBarcodeBln(pvBarcodeScan)) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_adding_unkown_article_failed),"",true,true);
             InventoryorderBinActivity.busyBln = false;
@@ -439,11 +439,11 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        //Add quantityDbl of the current barcode
+        //Add quantityDbl of the current barcodeStr
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
         cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandled += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
-        //Make line barcode the current line barcode
+        //Make line barcodeStr the current line barcodeStr
         cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl().get(0);
 
 
@@ -454,7 +454,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private static void mAddERPArticle(cBarcodeScan pvBarcodeScan){
 
-        //Add the barcode via the webservice
+        //Add the barcodeStr via the webservice
         if (!cInventoryorder.currentInventoryOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
             InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed), pvBarcodeScan.barcodeOriginalStr);
             InventoryorderBinActivity.busyBln = false;
@@ -468,11 +468,11 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        //Add quantityDbl of the current barcode
+        //Add quantityDbl of the current barcodeStr
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
         cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandled += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
-        //Make line barcode the current line barcode
+        //Make line barcodeStr the current line barcodeStr
         cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl().get(0);
 
 
@@ -505,10 +505,10 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         boolean updateQuantityBln = true;
 
-        //Set the current barcode
+        //Set the current barcodeStr
         cInventoryorderBarcode.currentInventoryOrderBarcode = pvInventoryorderBarcode;
 
-        //Check if this barcode belongs to this BIN
+        //Check if this barcodeStr belongs to this BIN
         cInventoryorderLine.currentInventoryOrderLine = cInventoryorder.currentInventoryOrder.pGetLineForArticleAndBin();
 
         //Line doesn't belong to this BIN and we are not allowed to add lines
@@ -531,7 +531,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         }
 
-        //We scanned a barcode that belongs to the current article, so check if we already have a line barcode for this barcode
+        //We scanned a barcodeStr that belongs to the current article, so check if we already have a line barcodeStr for this barcodeStr
         cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cBarcodeScan.pFakeScan(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()));
 
         if (cInventoryorderLineBarcode.currentInventoryorderLineBarcode != null) {
@@ -542,14 +542,14 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         } else {
 
-            //This is a new barcode, so add it
+            //This is a new barcodeStr, so add it
             cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
 
             //Make added line the current line
             cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cBarcodeScan.pFakeScan(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()));
         }
 
-        //Add quantityDbl of the current barcode
+        //Add quantityDbl of the current barcodeStr
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
         //Open the line (found or created), so we can edit it

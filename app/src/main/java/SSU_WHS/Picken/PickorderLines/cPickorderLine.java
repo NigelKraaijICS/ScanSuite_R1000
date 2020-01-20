@@ -615,7 +615,7 @@ public class cPickorderLine {
             return  false;
         }
 
-        //Remove or update line barcode
+        //Remove or update line barcodeStr
         cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcodeBln();
         if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)) {
             return  false;

@@ -3,19 +3,7 @@ package SSU_WHS.Intake.IntakeorderMATLineBarcodes;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.ksoap2.serialization.PropertyInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineRepository;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cIntakeorderMATLineBarcodeRepository {
     //Public Properties
@@ -30,7 +18,7 @@ public class cIntakeorderMATLineBarcodeRepository {
 
     //Region Constructor
     cIntakeorderMATLineBarcodeRepository(Application application) {
-        this.db = acScanSuiteDatabase.getDatabase(application);
+        this.db = acScanSuiteDatabase.pGetDatabase(application);
         this.intakeorderMATLineBarcodeDao = db.intakeorderMATLineBarcodeDao();
     }
 

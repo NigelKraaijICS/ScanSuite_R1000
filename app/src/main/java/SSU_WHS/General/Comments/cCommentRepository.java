@@ -3,17 +3,6 @@ package SSU_WHS.General.Comments;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.ksoap2.serialization.PropertyInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.Picken.Pickorders.cPickorder;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
 import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cCommentRepository {
@@ -27,7 +16,7 @@ public class cCommentRepository {
 
     //Constructor
     cCommentRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.commentDao = db.commentDao();
     }
     //End Constructor

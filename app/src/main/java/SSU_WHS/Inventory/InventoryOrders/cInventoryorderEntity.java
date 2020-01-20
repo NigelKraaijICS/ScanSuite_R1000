@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ICS.Utils.cText;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
 
@@ -109,6 +110,9 @@ public class cInventoryorderEntity {
     public String inventoryWithPicturePrefetch;
     public String getInventoryWithPicturePrefetchStr() {return this.inventoryWithPicturePrefetch;}
 
+    @ColumnInfo(name="Priority")
+    public int priorityInt;
+    public int getPriorityInt() {return this.priorityInt;}
 
     //End Region Public Properties
 
@@ -151,6 +155,32 @@ public class cInventoryorderEntity {
             this.inventoryWithPicture = pvJsonObject.getString(cDatabase.INVENTORYWITHPICTURE_NAMESTR);
             this.inventoryWithPictureAutoOpen = pvJsonObject.getString(cDatabase.INVENTORYWITHPICTURE_AUTO_OPEN_NAMESTR);
             this.inventoryWithPicturePrefetch = pvJsonObject.getString(cDatabase.INVENTORYWITHPICTURE_PREFETCH_NAMESTR);
+
+            this.priorityInt = 6;
+
+            if (this.currentUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (this.isprocessingorparked)) {
+                this.priorityInt = 1;
+                return;
+            }
+
+            if (this.currentUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (!this.isprocessingorparked)) {
+                this.priorityInt = 2;
+                return;
+            }
+
+            if (this.assignedUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
+                this.priorityInt = 3;
+                return;
+            }
+
+            if (this.assignedUserId.isEmpty()) {
+                this.priorityInt = 4;
+                return;
+            }
+
+            if (!this.assignedUserId.equalsIgnoreCase(cUser.currentUser.getNameStr())) {
+                this.priorityInt = 5;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

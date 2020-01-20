@@ -272,7 +272,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
                 return;
             }
 
-            //Get shipment with scanned barcode
+            //Get shipment with scanned barcodeStr
             cShipment.currentShipment = cShipment.pGetShipmentWithScannedArticleBarcode(pvBarcodeScan);
 
             // We did not find a match, so stop
@@ -338,7 +338,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        //Register barcode receiver, because the workplaceStr fragment has been shown
+        //Register barcodeStr receiver, because the workplaceStr fragment has been shown
         cBarcodeScan.pRegisterBarcodeReceiver();
 
         cUserInterface.pShowSnackbarMessage(ShiporderLinesActivity.container,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);

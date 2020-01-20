@@ -28,7 +28,7 @@ public class cItemPropertyRepository {
 
     //Region Constructor
     cItemPropertyRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.itemPropertyDao = db.itemPropertyDao();
     }
 

@@ -27,7 +27,7 @@ public class cScannerLogonRepository {
 
     //Region Constructor
     cScannerLogonRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.scannerLogonDao = db.scannerLogonDao();
     }
     //End Region Constructor

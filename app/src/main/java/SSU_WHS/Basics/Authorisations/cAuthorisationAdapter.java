@@ -181,6 +181,8 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.RETURN) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_return);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_return);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_RETURN);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_RETURN);
             }
 
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.SELFPICK) {

@@ -353,7 +353,7 @@ public class cInventoryorderLine {
             this.quantityHandledDbl = 0.0;
         }
 
-        //We scanned a barcode that belongs to the current article, so check if we already have a line barcode
+        //We scanned a barcodeStr that belongs to the current article, so check if we already have a line barcodeStr
         for (cInventoryorderLineBarcode inventoryorderLineBarcode : this.lineBarcodesObl()) {
 
             //We have a match, so set the current line

@@ -271,7 +271,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             PickorderPickActivity.destionationScannedBln = true;
         }
 
-        //We scanned a BIN, so nu current barcode known
+        //We scanned a BIN, so nu current barcodeStr known
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             //Initialise article scanned boolean
             PickorderPickActivity.articleScannedLastBln = false;
@@ -336,7 +336,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        //If we found the barcode, currentbarcode is alreay filled, so make this selected
+        //If we found the barcodeStr, currentbarcode is alreay filled, so make this selected
         PickorderPickActivity.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
 
     }
@@ -434,7 +434,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
                 mEnablePlusMinusAndBarcodeSelectViews();
 
-                //If we only have one barcode, then automatticaly select that barcode
+                //If we only have one barcodeStr, then automatticaly select that barcodeStr
                 if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
                     PickorderPickActivity.pHandleScan(cBarcodeScan.pFakeScan(cPickorderLine.currentPickOrderLine.barcodesObl.get(0).getBarcodeStr()));
                     return;
@@ -690,7 +690,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
             PickorderPickActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
-            //Add or update line barcode
+            //Add or update line barcodeStr
             cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln(pvAmountDbl);
 
             //Update orderline info (quantityDbl, timestamp, localStatusInt)
@@ -725,14 +725,14 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderPickActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
         PickorderPickActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
 
-        //Remove or update line barcode
+        //Remove or update line barcodeStr
         cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcodeBln();
 
     }
 
     private static void mHandleSalesOrderOrPickCartScanned(cBarcodeScan pvBarcodeScan) {
 
-        //Strip barcode from regex
+        //Strip barcodeStr from regex
         String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
         // Check if article is already scanned
@@ -742,7 +742,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        //Check if scanned barcode is a SalesOrder or PickCartBox
+        //Check if scanned barcodeStr is a SalesOrder or PickCartBox
         boolean isSalesOrderBln = cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER);
         boolean isPickCartBoxBln = cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.PICKCARTBOX);
 
@@ -827,7 +827,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //Succesfull article scanned
             PickorderPickActivity.articleScannedLastBln = true;
 
-            //If we found the barcode, currentbarcode is alreay filled, so make this selected
+            //If we found the barcodeStr, currentbarcode is alreay filled, so make this selected
             PickorderPickActivity.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
             return;
         }
@@ -930,9 +930,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //PV
         if (cPickorder.currentPickOrder.isPVBln()) {
 
-            if (incompleteBln) {
-                PickorderPickActivity.imageButtonDone.setVisibility(View.INVISIBLE);
-            }
+            //todo: check this
+//            if (incompleteBln) {
+//                PickorderPickActivity.imageButtonDone.setVisibility(View.INVISIBLE);
+//            }
 
             //todo: check if this code is still correct
             //We have to scan a pickcart/salesorder after each article scan
@@ -1008,7 +1009,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
        //There is no next line, so close this activity
         if (nextLine == null) {
-            //Clear current barcode and reset defaults
+            //Clear current barcodeStr and reset defaults
             cPickorderLine.currentPickOrderLine = null;
             PickorderPickActivity.articleScannedLastBln = false;
             mGoBackToLinesActivity();
@@ -1035,7 +1036,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //Play a sound
         cUserInterface.pPlaySound(R.raw.message, null);
 
-        //Clear current barcode and reset defaults
+        //Clear current barcodeStr and reset defaults
         cPickorderBarcode.currentPickorderBarcode = null;
         PickorderPickActivity.articleScannedLastBln = false;
 
@@ -1177,7 +1178,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
 
-        //We found a record for this barcode
+        //We found a record for this barcodeStr
         if (recordForBarcode != null) {
 
             if (!recordForBarcode.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr())) {
@@ -1238,7 +1239,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             @Override
             public void onClick(View view) {
 
-                //There is no selected barcode, select one first
+                //There is no selected barcodeStr, select one first
                 if (cPickorderBarcode.currentPickorderBarcode == null) {
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
                     return;
@@ -1277,7 +1278,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             public void onClick(View view) {
 
 
-                //There is no selected barcode, select one first
+                //There is no selected barcodeStr, select one first
                 if (cPickorderBarcode.currentPickorderBarcode == null) {
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
                     return;

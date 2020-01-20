@@ -260,7 +260,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
-        //Set filter with scanned barcode if there is no prefix
+        //Set filter with scanned barcodeStr if there is no prefix
         if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
             ShiporderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);

@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import ICS.Utils.cSharedPreferences;
 import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Webservice.cWebresult;
@@ -29,7 +27,7 @@ public class cWorkplaceRepository {
 
     //Region Constructor
     cWorkplaceRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.workplaceDao = db.workplaceDao();
     }
     //End Region Constructor

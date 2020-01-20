@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Picken.PickorderLines.cPickorderLineRepository;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -41,7 +40,7 @@ public class cArticleImageRepository {
 
     //Region Constructor
     cArticleImageRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.articleImageDao = db.articleImageDao();
     }
     //End Region Constructor

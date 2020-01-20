@@ -19,7 +19,7 @@ public class cPickorderLineBarcodeRepository {
 
     //Region Constructor
     cPickorderLineBarcodeRepository(Application application) {
-        this.db = acScanSuiteDatabase.getDatabase(application);
+        this.db = acScanSuiteDatabase.pGetDatabase(application);
         this.pickorderLineBarcodeDao = db.pickorderLineBarcodeDao();
     }
 

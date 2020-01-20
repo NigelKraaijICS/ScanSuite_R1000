@@ -945,4 +945,47 @@
         <item name="android:layout_margin">@dimen/default_double_margin</item>
         <item name="srcCompat">@drawable/ic_create</item>
     </style>
+    <style name="createReturnHeader">
+        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+    </style>
+    <style name="createReturnText">
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="returnRecyclerDescrptionText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textColor">@color/colorTextLightest</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+    </style>
+    <style name="createReturnDocument">
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+    <style name="createReturnImageView">
+        <item name="android:layout_width">@dimen/order_done_image_width</item>
+        <item name="android:layout_height">@dimen/order_done_image_height</item>
+        <item name="android:layout_margin">@dimen/default_double_margin</item>
+        <item name="srcCompat">@drawable/ic_create</item>
+    </style>
+    <style name="returnorderRecyclerOrdernumberText">
+        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+    </style>
+    <style name="returnorderRecyclerDescriptionText">
+        <item name="android:layout_width">300dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textColor">@color/colorTextLighter</item>
+    </style>
 </resources>

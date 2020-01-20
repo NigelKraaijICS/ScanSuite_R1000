@@ -17,11 +17,14 @@ import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
+import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
 import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSortActivity;
@@ -208,6 +211,15 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             this.dismiss();
         }
 
+        if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
+            if (!cReturnorder.currentReturnOrder.isRetourMultiDocument()){
+                ReturnorderDocumentsActivity.pCloseOrder();
+            }
+            else{
+                ReturnorderDocumentActivity.pCloseDocument();
+            }
+            this.dismiss();
+        }
     }
 
     private void mReject() {

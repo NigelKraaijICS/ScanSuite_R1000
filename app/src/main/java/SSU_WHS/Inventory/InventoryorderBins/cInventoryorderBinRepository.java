@@ -39,7 +39,7 @@ public class cInventoryorderBinRepository {
 
     //Region Constructor
     cInventoryorderBinRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.inventoryorderBinDao = db.inventoryorderBinDao();
     }
     //End Region Constructor

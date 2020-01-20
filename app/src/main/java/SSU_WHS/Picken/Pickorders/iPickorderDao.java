@@ -27,9 +27,6 @@ public interface iPickorderDao {
     @RawQuery(observedEntities = cPickorderEntity.class)
     List<cPickorderEntity> getFilteredPickorders(SupportSQLiteQuery query);
 
-    @Query("UPDATE Pickorders SET Workplace =:workplace WHERE Ordernumber=:ordernumber")
-    int updatePickorderWorkplace(String ordernumber, String workplace);
-
     @Query("UPDATE Pickorders SET Currentlocation =:CurrentLocationStr WHERE Ordernumber=:pvOrderNumberStr")
     int updatePickorderCurrentLocation(String pvOrderNumberStr, String CurrentLocationStr);
 

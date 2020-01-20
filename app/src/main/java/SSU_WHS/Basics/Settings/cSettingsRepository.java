@@ -27,7 +27,7 @@ public class cSettingsRepository {
 
     //Region Constructor
     cSettingsRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.settingsDao = db.settingsDao();
     }
     //End Region Constructor

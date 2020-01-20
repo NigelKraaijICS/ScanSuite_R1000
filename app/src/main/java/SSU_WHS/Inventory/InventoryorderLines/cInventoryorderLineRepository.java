@@ -41,7 +41,7 @@ public class cInventoryorderLineRepository {
 
     //Region Constructor
     cInventoryorderLineRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.inventoryorderLineDao = db.inventoryorderLineDao();
     }
     //End Region Constructor

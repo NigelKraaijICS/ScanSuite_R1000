@@ -108,7 +108,7 @@ public class cPickorderLineRepository {
 
     //Region Constructor
     public cPickorderLineRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.pickorderLineDao = this.db.pickorderLineDao();
     }
     //End Region Constructor

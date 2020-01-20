@@ -283,7 +283,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     public void mInitScreen() {
         cBarcodeScan.pRegisterBarcodeReceiver();
 
-        //Raise quantity with scanned barcode, if we started this activity with a scan
+        //Raise quantity with scanned barcodeStr, if we started this activity with a scan
         if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned != null) {
 
             IntakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
@@ -437,7 +437,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
                 mEnablePlusMinusAndBarcodeSelectViews();
 
-                //If we only have one barcode, then automatticaly select that barcode
+                //If we only have one barcodeStr, then automatticaly select that barcodeStr
                 if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size() == 1) {
                     IntakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(0).getBarcodeStr()));
                     return;
@@ -620,7 +620,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             return result;
         }
 
-        //Strip barcode from regex
+        //Strip barcodeStr from regex
         String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodescan.getBarcodeOriginalStr());
 
         //Get the current BIN
@@ -693,12 +693,12 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
                 newQuantityDbl = pvAmountDbl;
 
 
-                //Clear the barcode list and refill it
+                //Clear the barcodeStr list and refill it
                 IntakeOrderIntakeActivity.scannedBarcodesObl.clear();
                 int countInt = 0;
                 do{
                     countInt += 1;
-                    //Add a barcode to the scanned barcode list, so you can use it later when line is determined
+                    //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
                     IntakeOrderIntakeActivity.scannedBarcodesObl.add(cIntakeorderBarcode.currentIntakeOrderBarcode);
                 }
                 while(countInt < newQuantityDbl);
@@ -734,7 +734,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             IntakeOrderIntakeActivity.quantityScannedDbl = newQuantityDbl;
             IntakeOrderIntakeActivity.quantityText.setText(pDoubleToStringStr(IntakeOrderIntakeActivity.quantityScannedDbl));
 
-            //Add a barcode to the scanned barcode list, so you can use it later when line is determined
+            //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
             IntakeOrderIntakeActivity.scannedBarcodesObl.add(cIntakeorderBarcode.currentIntakeOrderBarcode);
 
             //Check if this line is done
@@ -767,12 +767,12 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         if (pvAmountFixedBln) {
             newQuantityDbl = pvAmountDbl;
 
-            //Clear the barcode list and refill it
+            //Clear the barcodeStr list and refill it
             IntakeOrderIntakeActivity.scannedBarcodesObl.clear();
             int countInt = 0;
             do{
                 countInt += 1;
-                //Add a barcode to the scanned barcode list, so you can use it later when line is determined
+                //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
                 IntakeOrderIntakeActivity.scannedBarcodesObl.add(cIntakeorderBarcode.currentIntakeOrderBarcode);
                             }while(countInt < newQuantityDbl);
 
@@ -783,7 +783,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
 
         }else {
-            //Remove the last barcode in the list
+            //Remove the last barcodeStr in the list
             IntakeOrderIntakeActivity.scannedBarcodesObl.remove( IntakeOrderIntakeActivity.scannedBarcodesObl.size()-1);
             newQuantityDbl= IntakeOrderIntakeActivity.quantityScannedDbl - pvAmountDbl;
         }
@@ -916,7 +916,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             @Override
             public void onClick(View view) {
 
-                //There is no selected barcode, select one first
+                //There is no selected barcodeStr, select one first
                 if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
                     return;
@@ -953,7 +953,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             public void onClick(View view) {
 
 
-                //There is no selected barcode, select one first
+                //There is no selected barcodeStr, select one first
                 if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
                     return;

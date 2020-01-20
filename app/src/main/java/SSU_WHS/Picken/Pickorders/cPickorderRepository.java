@@ -18,7 +18,6 @@ import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
 import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
@@ -115,7 +114,7 @@ public class cPickorderRepository {
 
     //Region Constructor
     cPickorderRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.getDatabase(pvApplication);
+        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.pickorderDao = db.pickorderDao();
         this.pickorderLineDao = db.pickorderLineDao();
         this.pickorderLinePackAndShipDao = db.pickorderLinePackAndShipDao();

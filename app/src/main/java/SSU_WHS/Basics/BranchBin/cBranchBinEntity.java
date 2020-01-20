@@ -28,10 +28,6 @@ public class cBranchBinEntity {
     public String binCode;
     public String getbinCodeStr() {return this.binCode;}
 
-    @ColumnInfo(name=cDatabase.DESCRIPTION_NAMESTR)
-    public String description;
-    public String getDescriptionStr() {return this.description;}
-
     @ColumnInfo(name=cDatabase.ZONE_NAMESTR)
     public String zone;
     public String getZoneStr() {return this.zone;}
@@ -59,7 +55,6 @@ public class cBranchBinEntity {
         try {
             this.branch = cUser.currentUser.currentBranch.getBranchStr();
             this.binCode = jsonObject.getString(cDatabase.BINCODENL_NAMESTR);
-            this.description = jsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
             this.zone = jsonObject.getString(cDatabase.ZONE_NAMESTR);
             this.binType = jsonObject.getString(cDatabase.BINTYPE_NAMESTR);
             this.useForStorageBln = cText.pStringToBooleanBln(jsonObject.getString(cDatabase.USEFORSTORAGE_NAMESTR),false) ;
