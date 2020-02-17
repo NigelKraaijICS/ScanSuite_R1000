@@ -1,10 +1,9 @@
 package SSU_WHS.Basics.Settings;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;

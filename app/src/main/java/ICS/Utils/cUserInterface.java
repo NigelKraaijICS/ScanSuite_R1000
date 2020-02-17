@@ -5,33 +5,33 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
-
-import com.datalogic.decode.BarcodeManager;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
+import com.datalogic.decode.BarcodeManager;
+import com.datalogic.device.input.KeyboardManager;
+import com.datalogic.device.input.Trigger;
+import com.google.android.material.snackbar.Snackbar;
+
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Fragments.Dialogs.GettingDataFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.HugeErrorFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
+import nl.icsvertex.scansuite.R;
 
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HEADER;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HINT;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_ISNUMERIC;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TAG;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TEXT;
-
-import com.datalogic.device.input.KeyboardManager;
-import com.datalogic.device.input.Trigger;
 
 public class cUserInterface {
 
@@ -234,10 +234,10 @@ public class cUserInterface {
             @Override
             public void run() {
                 pCheckAndCloseOpenDialogs();
-                if (pvPlaysoundBln) {
+                if (pvPlaysoundBln != null && pvPlaysoundBln) {
                     pPlaySound(R.raw.badsound, null);
                 }
-                if (pvVibrateBln) {
+                if (pvVibrateBln != null &&  pvVibrateBln) {
                     mDoVibrate();
                 }
                 final HugeErrorFragment hugeErrorFragment = new HugeErrorFragment();
@@ -357,18 +357,19 @@ public class cUserInterface {
                         trigger.setEnabled(false);
                     }
                     else {
-                         trigger.setEnabled(true);
+                        trigger.setEnabled(true);
                     }
 
 
                 }
-
+                break;
             case "ZEBRA":
 
                 Intent i = new Intent();
                 i.setAction("com.symbol.datawedge.api.ACTION_SCANNERINPUTPLUGIN");
                 i.putExtra("com.symbol.datawedge.api.EXTRA_PARAMETER", "ENABLE_PLUGIN");
                 cAppExtension.context.sendBroadcast(i);
+                break;
 
             default:
         }

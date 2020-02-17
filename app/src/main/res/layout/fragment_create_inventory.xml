@@ -4,8 +4,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/createInventoryContainer"
-    android:padding="@dimen/default_double_padding"
     >
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/createImageView"
+        style="@style/createImageView"
+        android:layout_marginStart="@dimen/default_double_margin"
+        app:layout_constraintTop_toTopOf="@id/textViewCreateInventoryHeader"
+        app:layout_constraintBottom_toBottomOf="@id/textViewCreateInventoryHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        />
     <TextView
         android:id="@+id/textViewCreateInventoryHeader"
         style="@style/createInventoryHeader"
@@ -13,24 +20,24 @@
         app:layout_constraintStart_toEndOf="@+id/createImageView"
         app:layout_constraintEnd_toEndOf="parent"
         />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/createImageView"
-        style="@style/createImageView"
-        app:layout_constraintTop_toTopOf="@id/textViewCreateInventoryHeader"
-        app:layout_constraintBottom_toBottomOf="@id/textViewCreateInventoryHeader"
-        app:layout_constraintStart_toStartOf="parent"
+    <TextView
+        android:id="@+id/textViewBranch"
+        style="@style/branchText"
+        app:layout_constraintTop_toBottomOf="@id/textViewCreateInventoryHeader"
+        app:layout_constraintStart_toStartOf="@+id/createImageView"
+        app:layout_constraintEnd_toEndOf="parent"
         />
     <EditText
         android:imeOptions="actionDone"
         android:singleLine="true"
         android:id="@+id/editTextDocument"
         style="@style/createInventoryDocument"
-        android:hint="@string/hint_document"
+        android:hint="@string/hint_document_inventory"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewCreateInventoryHeader"/>
+        app:layout_constraintTop_toBottomOf="@id/textViewBranch"/>
     <TextView
         android:id="@+id/textViewCreateInventoryText"
         style="@style/createInventoryText"
@@ -38,22 +45,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/createInventoryImageView"
-        style="@style/createInventoryImageView"
-        app:layout_constraintTop_toBottomOf="@id/textViewCreateInventoryText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        />
     <Button
-        android:id="@+id/closeOrderButton"
+        android:id="@+id/createOrderButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_double_margin"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:text="@string/button_create_inventory"
-        app:layout_constraintTop_toBottomOf="@id/createInventoryImageView"
+        app:layout_constraintTop_toBottomOf="@id/textViewCreateInventoryText"
         app:layout_constraintEnd_toEndOf="parent"
         />
     <Button
@@ -64,6 +63,6 @@
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
         android:text="@string/cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/createInventoryImageView"
+        app:layout_constraintTop_toBottomOf="@id/textViewCreateInventoryText"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

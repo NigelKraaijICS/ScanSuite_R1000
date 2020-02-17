@@ -64,6 +64,9 @@ public class cReturnorder {
     private String documentStr;
     public String getDocumentStr() {return this.documentStr;}
 
+    private String reasonStr;
+    public String getReasonStr() {return this.reasonStr;}
+
     public int unknownVariantCounterInt = 0;
     public int getUnknownVariantCounterInt() {
         return unknownVariantCounterInt;
@@ -73,7 +76,7 @@ public class cReturnorder {
     public boolean isRetourMultiDocument(){return this.retourMultiDocument;}
 
     public static String getNumberOfOrdersStr(){
-        return  "(" + cText.pIntToStringStr(cReturnorder.allReturnordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders);
+        return  cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cReturnorder.allReturnordersObl.size(),cReturnorder.allReturnordersObl.size());
     }
 
     public static String getNumberOfFilteredOrdersStr(){
@@ -138,6 +141,7 @@ public class cReturnorder {
         this.retourMultiDocumentBln = this.returnorderEntity.getRetourMultiDocumentBln();
         this.sourceDocumentInt = cText.pStringToIntegerInt(this.returnorderEntity.getSourceDocumentStr());
         this.documentStr = this.returnorderEntity.getDocumentStr();
+        this.reasonStr = this.returnorderEntity.getReasonStr();
         this.retourMultiDocument = this.returnorderEntity.getRetourMultiDocumentBln();
 
     }
@@ -155,8 +159,8 @@ public class cReturnorder {
         this.retourMultiDocumentBln = this.returnorderEntity.getRetourMultiDocumentBln();
         this.sourceDocumentInt = cText.pStringToIntegerInt(this.returnorderEntity.getSourceDocumentStr());
         this.documentStr = this.returnorderEntity.getDocumentStr();
+        this.reasonStr = this.returnorderEntity.getReasonStr();
         this.retourMultiDocument = this.returnorderEntity.getRetourMultiDocumentBln();
-
     }
 
     //End Region Constructor
@@ -442,6 +446,7 @@ public class cReturnorder {
         }
 
         cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.clear();
+        cReturnorderDocument.currentReturnOrderDocument.statusInt = cWarehouseorder.ReturnDocumentStatusEnu.New;
         return result;
 
     }
@@ -599,7 +604,6 @@ public class cReturnorder {
         return  null;
     }
 
-
     public boolean pGetHandledLinesViaWebserviceBln(Boolean pvRefreshBln) {
 
         if (pvRefreshBln) {
@@ -719,7 +723,6 @@ public class cReturnorder {
 
         return  true;
     }
-
     public boolean pAddUnkownBarcodeBln(cBarcodeScan pvBarcodeScan) {
 
         cReturnorder.currentReturnOrder.unknownVariantCounterInt += 1;
@@ -743,6 +746,10 @@ public class cReturnorder {
                     cReturnorderBarcode.currentReturnOrderBarcode = returnorderBarcode;
                 }
             }
+            cReturnorderLine returnorderLine = new cReturnorderLine(cReturnorderBarcode.currentReturnOrderBarcode);
+            returnorderLine.pInsertInDatabaseBln();
+            returnorderLine.nieuweRegelBln = true;
+            cReturnorderLine.currentReturnOrderLine = returnorderLine;
 
         } else {
             cReturnorder.currentReturnOrder.unknownVariantCounterInt -= 1;
@@ -751,10 +758,6 @@ public class cReturnorder {
         }
         return  true;
     }
-
-
-
-
 
     public boolean pAddERPBarcodeBln(cBarcodeScan pvBarcodeScan) {
 

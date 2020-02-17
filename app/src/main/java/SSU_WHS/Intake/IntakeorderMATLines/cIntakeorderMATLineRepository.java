@@ -151,7 +151,7 @@ public class cIntakeorderMATLineRepository {
     public boolean pUpdateBinCodeHandledBln(String pvBinCodeStr) {
 
 //        Integer integerValue;
-//        UpdateOrderlineBinCodeHandledParams updateOrderlineBinCodeHandledParams = new UpdateOrderlineBinCodeHandledParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvBinCodeStr);
+//        UpdateOrderlineBinCodeHandledParams updateOrderlineBinCodeHandledParams = new UpdateOrderlineBinCodeHandledParams(cReceiveorderLine.currentIntakeorderMATLine.getLineNoInt(), pvBinCodeStr);
 //
 //        try {
 //            integerValue = new updateOrderLineBinCodeHandledyAsyncTask(intakeorderMATLineDao).execute(updateOrderlineBinCodeHandledParams).get();
@@ -172,7 +172,7 @@ public class cIntakeorderMATLineRepository {
         return  true;
     }
 
-    public cWebresult pResetViaWebserviceWrs() {
+    public cWebresult pResetMATLineViaWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
@@ -189,12 +189,12 @@ public class cIntakeorderMATLineRepository {
         return webResultWrs;
     }
 
-    public cWebresult pLineHandledViaWebserviceWrs() {
+    public cWebresult pMATLineHandledViaWebserviceWrs() {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mLineHandledViaWebserviceAsyncTask().execute().get();
+            webResultWrs = new mMATLineHandledViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -205,12 +205,14 @@ public class cIntakeorderMATLineRepository {
         return webResultWrs;
     }
 
-    public cWebresult pLineSplitViaWebserviceWrs() {
+
+
+    public cWebresult pMATLineSplitViaWebserviceWrs() {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mLineSplitViaWebserviceAsyncTask().execute().get();
+            webResultWrs = new mMATLineSplitViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -221,13 +223,13 @@ public class cIntakeorderMATLineRepository {
         return webResultWrs;
     }
 
-    public cWebresult pCreateLineViaWebserviceWrs(String pvBinCodeStr, List<cIntakeorderBarcode> pvBarcodeObl) {
+    public cWebresult pCreateMATLineViaWebserviceWrs(String pvBinCodeStr, List<cIntakeorderBarcode> pvBarcodeObl) {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
         CreateLineParams createLineParams = new CreateLineParams(pvBinCodeStr, pvBarcodeObl);
         try {
-            webResultWrs = new mLineCreateViaWebserviceAsyncTask().execute(createLineParams).get();
+            webResultWrs = new mMATLineCreateViaWebserviceAsyncTask().execute(createLineParams).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -346,7 +348,7 @@ public class cIntakeorderMATLineRepository {
         }
     }
 
-    private static class mLineHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+    private static class mMATLineHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
             cWebresult webresult = new cWebresult();
@@ -423,7 +425,7 @@ public class cIntakeorderMATLineRepository {
         }
     }
 
-    private static class mLineSplitViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+    private static class mMATLineSplitViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
             cWebresult webresult = new cWebresult();
@@ -500,7 +502,7 @@ public class cIntakeorderMATLineRepository {
         }
     }
 
-    private static class mLineCreateViaWebserviceAsyncTask extends AsyncTask<CreateLineParams, Void, cWebresult> {
+    private static class mMATLineCreateViaWebserviceAsyncTask extends AsyncTask<CreateLineParams, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(CreateLineParams... params) {
             cWebresult webresult = new cWebresult();
@@ -580,5 +582,7 @@ public class cIntakeorderMATLineRepository {
             return webresult;
         }
     }
+
+
 
 }

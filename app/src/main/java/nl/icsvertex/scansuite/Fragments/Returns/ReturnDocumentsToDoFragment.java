@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -42,6 +44,10 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
 
     private static ImageView imageAddDocument;
     private static RecyclerView recyclerViewReturnDocumentsToDo;
+
+    private static TextView quickhelpText;
+    private static ImageView quickhelpIcon;
+    private static ConstraintLayout quickhelpContainer;
     //End Region Private Properties
 
 
@@ -66,7 +72,7 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
 
     @Override
     public void onPause() {
-           super.onPause();
+        super.onPause();
     }
 
     @Override
@@ -99,6 +105,9 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
         if (getView() != null) {
             ReturnDocumentsToDoFragment.imageAddDocument = getView().findViewById(R.id.imageAddDocument);
             ReturnDocumentsToDoFragment.recyclerViewReturnDocumentsToDo = getView().findViewById(R.id.recyclerViewReturnDocumentsToDo);
+            ReturnDocumentsToDoFragment.quickhelpText = getView().findViewById(R.id.quickhelpText);
+            ReturnDocumentsToDoFragment.quickhelpContainer = getView().findViewById(R.id.quickhelpContainer);
+            ReturnDocumentsToDoFragment.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
         }
 
     }
@@ -106,11 +115,13 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
     @Override
     public void mFieldsInitialize() {
 
+        ReturnDocumentsToDoFragment.quickhelpText.setText(R.string.scan_or_select_document);
+
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cReturnorderDocumentRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(ReturnDocumentsToDoFragment.recyclerViewReturnDocumentsToDo);
 
-       if (!cReturnorder.currentReturnOrder.isGeneratedBln()) {
-           ReturnDocumentsToDoFragment.imageAddDocument.setVisibility(View.INVISIBLE);
+        if (!cReturnorder.currentReturnOrder.isGeneratedBln()) {
+            ReturnDocumentsToDoFragment.imageAddDocument.setVisibility(View.INVISIBLE);
         }
         else {
             if (!cReturnorder.currentReturnOrder.getRetourMultiDocumentBln()) {
@@ -121,6 +132,7 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
 
     @Override
     public void mSetListeners() {
+        this.mSetQuickHelpListener();
         this.mSetAddDocumentListener();
     }
 
@@ -144,7 +156,7 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
         ReturnDocumentsToDoFragment.imageAddDocument.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               mShowAddDocumentFragment();
+                mShowAddDocumentFragment();
             }
         });
     }
@@ -246,6 +258,20 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
     }
 
 
+    private void mSetQuickHelpListener() {
+        ReturnDocumentsToDoFragment.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cUserInterface.pDoRotate(quickhelpIcon, 0);
+                if (quickhelpText.getVisibility() == View.VISIBLE) {
+                    quickhelpText.setVisibility(View.GONE);
+                }
+                else {
+                    quickhelpText.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
     //End Region Private Methods
 }
 

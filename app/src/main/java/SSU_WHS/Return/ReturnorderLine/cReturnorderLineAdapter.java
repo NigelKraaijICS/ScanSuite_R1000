@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -101,10 +103,23 @@ public class cReturnorderLineAdapter extends RecyclerView.Adapter<SSU_WHS.Return
         final cReturnorderLine returnorderLine = localReturnorderLineObl.get(pvPositionInt);
 
         pvHolder.textViewArticle.setText(returnorderLine.getItemNoAndVariantCodeStr());
-        pvHolder.textViewDescription.setText(returnorderLine.getDescriptionStr());
+
+
+        String  descriptionStr = returnorderLine.getDescriptionStr();
+
+        if (returnorderLine.getItemNoStr().equalsIgnoreCase("UNKNOWN")) {
+            descriptionStr = returnorderLine.getDescription2Str();
+        }
+
+        pvHolder.textViewDescription.setText(descriptionStr);
         pvHolder.textViewDescription.setVisibility(View.VISIBLE);
+        if (cReturnorder.currentReturnOrder.isGeneratedBln()){
+            pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(returnorderLine.getQuantityHandledTakeDbl()));
+        }
+        else {
         pvHolder.textViewCounted.setText(returnorderLine.getQuantityToShowInAdapterStr());
-        pvHolder.textViewReason.setText(returnorderLine.getRetourredenStr());
+        }
+        pvHolder.textViewReason.setText(returnorderLine.getReturnReasonDescriptoinStr());
 
         pvHolder.viewForeground.setOnClickListener(new View.OnClickListener() {
             @Override

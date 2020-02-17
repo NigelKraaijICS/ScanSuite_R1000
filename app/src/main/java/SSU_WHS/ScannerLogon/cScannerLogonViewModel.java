@@ -1,8 +1,8 @@
 package SSU_WHS.ScannerLogon;
 
 import android.app.Application;
+
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 import SSU_WHS.Webservice.cWebresult;
 

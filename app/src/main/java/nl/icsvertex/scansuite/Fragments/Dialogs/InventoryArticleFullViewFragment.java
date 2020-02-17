@@ -189,7 +189,7 @@ public class InventoryArticleFullViewFragment extends DialogFragment implements 
         String barcodeWithoutPrefixStr;
 
         //No prefix
-        if (!cRegex.hasPrefix(pvBarcodeStr)) {
+        if (!cRegex.pHasPrefix(pvBarcodeStr)) {
             InventoryArticleFullViewFragment.mArticleScanned(pvBarcodeStr);
             return;
         }

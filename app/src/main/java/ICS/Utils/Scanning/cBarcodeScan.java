@@ -7,15 +7,22 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.Activities.Returns.CreateReturnActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
@@ -26,21 +33,18 @@ import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSortActivity;
-import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Activities.General.LoginActivity;
-import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddEnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
-import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
 import nl.icsvertex.scansuite.Fragments.Returns.ReturnArticleDetailFragment;
 
@@ -178,13 +182,26 @@ public class cBarcodeScan {
                     }
 
                     if (cAppExtension.activity instanceof InventoryorderBinActivity){
-                        InventoryorderBinActivity.pHandleScan(barcodeScan);
+                        InventoryorderBinActivity.pHandleScan(barcodeScan, false);
                     }
 
                     //Intake
-                    if (cAppExtension.activity instanceof IntakeorderSelectActivity){
-                        IntakeorderSelectActivity.pHandleScan(barcodeScan);
+                    if (cAppExtension.activity instanceof IntakeAndReceiveSelectActivity){
+                        IntakeAndReceiveSelectActivity.pHandleScan(barcodeScan);
                     }
+
+                    if (cAppExtension.activity instanceof CreateReceiveActivity){
+                        CreateReceiveActivity.pHandleScan(barcodeScan,false,false,false);
+                    }
+
+                    if (cAppExtension.activity instanceof ReceiveLinesActivity){
+                        ReceiveLinesActivity.pHandleScan(barcodeScan,false);
+                    }
+
+                    if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity){
+                        ReceiveOrderReceiveActivity.pHandleScan(barcodeScan);
+                    }
+
 
                     if (cAppExtension.activity instanceof IntakeorderLinesActivity){
                         IntakeorderLinesActivity.pHandleScan(barcodeScan,false);
@@ -208,7 +225,7 @@ public class cBarcodeScan {
                     }
 
                     if (cAppExtension.activity instanceof CreateReturnActivity) {
-                        CreateReturnActivity.pHandleScan(barcodeScan);
+                        CreateReturnActivity.pHandleScan(barcodeScan,false,false);
                     }
 
                 }
@@ -331,7 +348,7 @@ public class cBarcodeScan {
     public static void pUnregisterBarcodeReceiver(){
 
         try {
-            cAppExtension.context.unregisterReceiver(BarcodeReceiver);
+         cAppExtension.context.unregisterReceiver(BarcodeReceiver);
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -407,7 +424,6 @@ public class cBarcodeScan {
         result.barcodeTypeStr = cText.pIntToStringStr( BarcodeType.Unknown);
         return  result;
     }
-
 
     private static String mCleanBarcodeStr(String pvDirtyBarcodeStr) {
         return  pvDirtyBarcodeStr.replaceAll("(\\r|\\n|\\t)","");

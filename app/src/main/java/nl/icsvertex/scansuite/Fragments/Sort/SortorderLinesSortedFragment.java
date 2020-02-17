@@ -1,32 +1,30 @@
 package nl.icsvertex.scansuite.Fragments.Sort;
 
 import android.app.AlertDialog;
-
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-
-import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
-import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import ICS.cAppExtension;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Picken.Pickorders.cPickorder;
+import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
 

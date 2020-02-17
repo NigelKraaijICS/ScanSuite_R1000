@@ -128,7 +128,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
             OrderDoneFragment.imageButtonWifiReconnect = getView().findViewById(R.id.imageButtonWifiReconnect);
             OrderDoneFragment.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
             OrderDoneFragment.orderDoneContainer = getView().findViewById(R.id.orderDoneContainer);
-            OrderDoneFragment.closeOrderButton = getView().findViewById(R.id.closeOrderButton);
+            OrderDoneFragment.closeOrderButton = getView().findViewById(R.id.createOrderButton);
             OrderDoneFragment.cancelButton = getView().findViewById(R.id.cancelButton);
         }
 
@@ -213,7 +213,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         String barcodeWithoutPrefixStr;
 
         //No prefix
-        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             OrderDoneFragment.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
             OrderDoneFragment.closeOrderButton.callOnClick();
             return;

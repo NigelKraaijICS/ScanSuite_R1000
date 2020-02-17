@@ -1,7 +1,9 @@
 package SSU_WHS.Basics.ShippingAgentServices;
 
 import androidx.lifecycle.ViewModelProviders;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +57,6 @@ public class cShippingAgentService {
 
 
         if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null || cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl.size() == 0) {
-            resultObl = null;
             return  resultObl;
         }
 

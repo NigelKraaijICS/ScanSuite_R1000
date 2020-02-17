@@ -17,12 +17,12 @@ import java.util.List;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
-import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
+import nl.icsvertex.scansuite.R;
 
 public class ShiporderLinesShippedFragment extends Fragment implements iICSDefaultFragment {
 

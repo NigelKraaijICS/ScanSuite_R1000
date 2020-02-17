@@ -16,29 +16,6 @@
         android:translationZ="0dp"
         >
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/probeersel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:translationZ="2dp"
-        android:background="@color/colorBart"
-        >
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:id="@+id/theBigPictureContainer"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:translationZ="20dp"-->
-<!--            android:background="@color/colorBart"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/toolbar"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            >-->
-<!--            <ImageView-->
-<!--                android:id="@+id/theBigPicture"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:clickable="true"-->
-<!--                android:focusable="true"/>-->
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
     <include layout="@layout/toolbar_subtext_default" />
     <include layout="@layout/default_articleinfo" />
     <include layout="@layout/default_bininfo" />
@@ -72,4 +49,3 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>

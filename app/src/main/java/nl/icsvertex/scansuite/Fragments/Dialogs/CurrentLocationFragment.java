@@ -184,7 +184,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
 
         //Has prefix, so check if this is a BIN
-        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
             boolean foundBin = false;
 

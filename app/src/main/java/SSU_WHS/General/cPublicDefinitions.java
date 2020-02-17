@@ -30,7 +30,7 @@ public class cPublicDefinitions {
     public static int CHANGEWIFI_REQUESTCODE = 47;
 
     public static String DATEPATTERNSHOW = "dd-MM-yyyy";
-
+    public static String DATEPATTERNWITHTIMESHOW = "dd-MM HH:mm";
     public static String DATEPATTERNWEBSERVICE = "yyyy-MM-dd'T'hh:mm:ss'Z'";
 
 

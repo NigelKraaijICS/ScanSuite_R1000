@@ -4,8 +4,6 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
-
 import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Webservice.cWebresult;
 

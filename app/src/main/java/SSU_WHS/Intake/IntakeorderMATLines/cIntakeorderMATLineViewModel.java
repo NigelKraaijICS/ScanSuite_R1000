@@ -7,7 +7,6 @@ import androidx.lifecycle.AndroidViewModel;
 import java.util.List;
 
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
-import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cIntakeorderMATLineViewModel extends AndroidViewModel {
@@ -27,13 +26,11 @@ public class cIntakeorderMATLineViewModel extends AndroidViewModel {
     public void deleteAll() {this.Repository.deleteAll();}
 
 
-    public List<cIntakeorderMATLineEntity> pGetIntakeorderMATLinesFromDatabaseObl() {return this.Repository.pGetIntakeorderMATLinesFromDatabaseObl();}
     public boolean pUpdateLocalStatusBln(Integer pvNewStatusInt) {return this.Repository.pUpdateLocalStatusBln(pvNewStatusInt);}
-    public boolean pUpdateQuantityBln(Double pvQuantityDbl) {return this.Repository.pUpdateQuantitydBln(pvQuantityDbl);}
     public boolean pUpdateQuantityHandledBln(Double pvQuantityHandledDbl) {return this.Repository.pUpdateQuantityHandledBln(pvQuantityHandledDbl);}
     public boolean pUpdateBinCodeHandledBln(String pvBinCodeHandledStr) {return this.Repository.pUpdateBinCodeHandledBln(pvBinCodeHandledStr);}
-    public cWebresult pResetViaWebserviceWrs() {return this.Repository.pResetViaWebserviceWrs();}
-    public cWebresult pLineHandledViaWebserviceWrs() {return this.Repository.pLineHandledViaWebserviceWrs();}
-    public cWebresult pLineSplitViaWebserviceWrs() {return this.Repository.pLineSplitViaWebserviceWrs();}
-    public cWebresult pCreateLineViaWebserviceWrs(String pvBarcodeStr, List<cIntakeorderBarcode> pvBarcodeObl) {return this.Repository.pCreateLineViaWebserviceWrs(pvBarcodeStr,pvBarcodeObl);}
+    public cWebresult pResetMATLineViaWebserviceWrs() {return this.Repository.pResetMATLineViaWebserviceWrs();}
+    public cWebresult pMATLineHandledViaWebserviceWrs() {return this.Repository.pMATLineHandledViaWebserviceWrs();}
+    public cWebresult pMATLineSplitViaWebserviceWrs() {return this.Repository.pMATLineSplitViaWebserviceWrs();}
+    public cWebresult pMATCreateLineViaWebserviceWrs(String pvBarcodeStr, List<cIntakeorderBarcode> pvBarcodeObl) {return this.Repository.pCreateMATLineViaWebserviceWrs(pvBarcodeStr,pvBarcodeObl);}
 }

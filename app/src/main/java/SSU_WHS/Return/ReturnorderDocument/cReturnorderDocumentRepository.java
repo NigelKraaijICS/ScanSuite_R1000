@@ -71,6 +71,10 @@ public class cReturnorderDocumentRepository {
 
             }
         }
+        if (cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.size() == 0 ){
+            completeBln = false;
+        }
+
         if (!completeBln){
             returnDocumentStatusEnu = cWarehouseorder.ReturnDocumentStatusEnu.InventoryPause;
 

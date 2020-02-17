@@ -9,11 +9,8 @@ import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
-import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cInventoryorderBarcode {
     public cInventoryorderBarcodeEntity inventoryorderBarcodeEntity;

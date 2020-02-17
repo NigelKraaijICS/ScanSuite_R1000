@@ -1,7 +1,8 @@
 package SSU_WHS.ScannerLogon;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.widget.FrameLayout;
+
+import androidx.lifecycle.ViewModelProviders;
 
 import java.util.ArrayList;
 import java.util.List;

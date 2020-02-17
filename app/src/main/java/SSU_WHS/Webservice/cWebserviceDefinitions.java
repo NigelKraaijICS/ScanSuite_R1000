@@ -73,10 +73,22 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETINTAKEORDERMATLINEBARCODES = "p_ReceiveMATRegelBarcodesGetJsonStr";
     public static String WEBMETHOD_GETINTAKEARCODES = "p_ReceiveOrderBarcodesGetJsonStr";
     public static String WEBMETHOD_INTAKELINEMATRESET = "p_ReceiveMATRegelResetJsonStr";
+    public static String WEBMETHOD_GETINTAKEORDERLINES = "p_ReceiveOrderScannerRegelsInTakeGetJsonStr";
+    public static String WEBMETHOD_GETINTAKEORDERITEMS = "p_ReceiveOrderItemInTakeGetJsonStr";
+    public static String WEBMETHOD_RECEIVEITEMVARIANTCREATE = "p_ReceiveInTakeWarehouseopdrachtItemVariantCreateJsonStr";
+    public static String WEBMETHOD_RECEIVEBARCODECREATE =  "p_ReceiveBarcodeCreateJsonStr";
+    public static String WEBMETHOD_RECEIVEINTAKEITEM =  "p_ReceiveInTakeItemJsonStr";
+    public static String WEBMETHOD_RECEIVELINRESET = "p_ReceiveInTakeRegelResetJsonStr";
+
+
     public static String WEBMETHOD_INTAKELINEMATHANDLED = "p_ReceiveMATLineHandledJsonStr";
     public static String WEBMETHOD_INTAKELINEMATHANDLEDPART = "p_ReceiveRegelHandledPartPlaceMATJsonStr";
     public static String WEBMETHOD_INTAKEHANLED= "p_ReceiveMATOrderHandledJsonStr";
     public static String WEBMETHOD_INTAKEITEMHANLED= "p_ReceiveMATItemHandledJsonStr";
+    public static String WEBMETHOD_RECEIVECREATE = "p_ReceiveOrderCreateJsonStr";
+    public static String WEBMETHOD_RECEIVEINVALIDATE = "p_ReceiveVervallenJsonStr";
+    public static String WEBMETHOD_RECEIVEHANDLED = "p_ReceiveInTakeOrderHandledJsonStr";
+    public static String WEBMETHOD_GETRECEIVEBINS = "p_MagazijnlocatieReceiveGetJsonStr";
 
 
     public static String WEBMETHOD_RETURNORDERSGET = "p_RetourOrdersGetJsonStr";
@@ -174,6 +186,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_STOCKOWNER = "pv_StockOwnerStr";
     public static String WEBPROPERTY_WORKFLOW = "pv_WorkflowStr";
     public static String WEBPROPERTY_DOCUMENT = "pv_DocumentStr";
+    public static String WEBPROPERTY_DOCUMENT2= "pv_Document2Str";
     public static String WEBPROPERTY_EXTERNALREFERENCE = "pv_ExternalReferenceStr";
     public static String WEBPROPERTY_INVENTORYBARCODECHECK = "pv_InventoryBarcodeCheckBln";
     public static String WEBPROPERTY_ADMINISTRATION = "pv_AdministrationStr";
@@ -182,6 +195,9 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_QUANTITYPERUNITOFMEASURE = "pv_QtyPerUnitOfMeasureDbl";
     public static String WEBPROPERTY_UNITOFMEASURE = "pv_UnitOfMeasureStr";
     public static String WEBPROPERTY_ITEMTYPE = "pv_ItemsoortStr";
+    public static String WEBPROPERTY_ORIGINNO = "pv_OriginNoStr";
+    public static String WEBPROPERTY_RECEIVEBIN = "pv_ReceiveBinStr";
+    public static String WEBPROPERTY_RECEIVEBARCODECHECK = "pv_ReceiveBarcodeCheckBln";
     public static String WEBPROPERTY_CONTAINER = "pv_ContainerStr";
     public static String WEBPROPERTY_PROPERTIESHANDLEDLIST = "pv_PropertiesHandledObl";
     public static String WEBPROPERTY_ACTIONTYPECODE_CAMELCASE = "pv_ActionTypeCodeStr";
@@ -227,6 +243,9 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_ARTICLEINPUT_COMPLEX = "c_ArtikelInputUari";
     public static String WEBPROPERTY_ITEMNO_COMPLEX = "g_ItemNoStr";
     public static String WEBPROPERTY_VARIANTCODE_COMPLEX = "g_VariantCodeStr";
+
+
+
     //endregion complex types
 
     //region cWebservice defaults

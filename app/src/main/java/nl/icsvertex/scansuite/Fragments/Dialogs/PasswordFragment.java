@@ -1,9 +1,6 @@
 package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -17,20 +14,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
-import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
+import nl.icsvertex.scansuite.Activities.General.LoginActivity;
+import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Activities.General.LoginActivity;
-import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HEADER;
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HINT;

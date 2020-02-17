@@ -66,6 +66,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubTitle;
+    private static TextView toolbarSubTitle2;
     private static SearchView recyclerSearchView;
     private static SwipeRefreshLayout swipeRefreshLayout;
     private static Activity currentActivity;
@@ -163,6 +164,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         ReturnorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
         ReturnorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
         ReturnorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        ReturnorderSelectActivity.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
         ReturnorderSelectActivity.recyclerViewReturnorders = findViewById(R.id.recyclerViewReturnorders);
         ReturnorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         ReturnorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
@@ -175,6 +177,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     public void mSetToolbar(String pvScreenTitle) {
         ReturnorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
         ReturnorderSelectActivity.toolbarTitle.setText(pvScreenTitle);
+        ReturnorderSelectActivity.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -254,15 +257,15 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         }
 
         //Delete the detail, so we can get them from the webservice
-       if (!cReturnorder.currentReturnOrder.pDeleteDetailsBln()) {
-           mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-           return;
-       }
+        if (!cReturnorder.currentReturnOrder.pDeleteDetailsBln()) {
+            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            return;
+        }
 
-       if(!cUser.currentUser.currentBranch.pGetReasonBln(true)){
-           mStepFailed(cAppExtension.context.getString(R.string.error_getting_return_reasons));
-           return;
-       }
+        if(!cUser.currentUser.currentBranch.pGetReasonBln(true)){
+            mStepFailed(cAppExtension.context.getString(R.string.error_getting_return_reasons));
+            return;
+        }
 
         hulpResult = ReturnorderSelectActivity.mGetOrderDetailsRst();
         if (!hulpResult.resultBln) {
@@ -355,7 +358,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
         //Something went wrong, the order has been deleted, so show comments and refresh
         if ( hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
-             hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
+                hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
 
 
             //If we got any comments, show them
@@ -819,7 +822,6 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mLeaveActivity(){
         this.mReleaseLicense();
-
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);

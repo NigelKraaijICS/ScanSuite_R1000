@@ -120,7 +120,7 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
             @Override
             public void onClick(View view) {
                 cAppExtension.dialogFragment.dismiss();
-                ReturnorderDocumentsActivity.pHandleAddBinFragmentDismissed();
+                ReturnorderDocumentsActivity.pHandleFragmentDismissed();
             }
         });
     }
@@ -136,7 +136,7 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
                     }
 
                     cAppExtension.dialogFragment.dismiss();
-                    ReturnorderDocumentsActivity.pHandleScan(cBarcodeScan.pFakeScan(AddDocumentFragment.editTextAddDocument.getText().toString()));
+                    ReturnorderDocumentsActivity.pHandleAddDocument(AddDocumentFragment.editTextAddDocument.getText().toString());
 
                 }
             }
@@ -147,7 +147,7 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
     public static void pHandleScan(String pvScannedBarcodeStr) {
 
         //Has prefix, so check if this is a BIN
-        if (cRegex.hasPrefix(pvScannedBarcodeStr)) {
+        if (cRegex.pHasPrefix(pvScannedBarcodeStr)) {
 
             boolean foundBin = false;
 

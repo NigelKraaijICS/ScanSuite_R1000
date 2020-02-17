@@ -156,8 +156,8 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         ReturnorderDocumentActivity.toolbarImage = findViewById(R.id.toolbarImage);
         ReturnorderDocumentActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
         ReturnorderDocumentActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        ReturnorderDocumentActivity.documentText = findViewById(R.id.binText);
-        ReturnorderDocumentActivity.imageDocument = findViewById(R.id.imageBin);
+        ReturnorderDocumentActivity.documentText = findViewById(R.id.documentText);
+        ReturnorderDocumentActivity.imageDocument = findViewById(R.id.imageDocument);
         ReturnorderDocumentActivity.imageDocumentDone = findViewById(R.id.imageViewDocumentDone);
         ReturnorderDocumentActivity.recyclerViewReturnorderLines = findViewById(R.id.recyclerViewReturnorderLines);
         ReturnorderDocumentActivity.imageAddArticle = findViewById(R.id.imageAddArticle);
@@ -257,6 +257,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         cReturnorderLine.currentReturnOrderLine = null;
         cReturnorderBarcode.currentReturnOrderBarcode = null;
         cReturnorderLineBarcode.currentreturnorderLineBarcode = null;
+        cBranchReason.currentBranchReason = null;
 
         //Fill lines of Document
         ReturnorderDocumentActivity.pFillLines();
@@ -285,11 +286,18 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
+    public static void  pStartDocumentsActivity(){
+
+        //Clear cache
+        cReturnorderDocument.currentReturnOrderDocument = null;
+
+        //Start Documents activity
+        ReturnorderDocumentActivity.mStartDocumentsActivity();
+    }
+
     //End Region Public Methods
 
     //Region Private Methods
-
-
 
     private static void mHandleScan(cBarcodeScan pvBarcodeScan){
 
@@ -300,7 +308,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             if (cReturnorder.currentReturnOrder.isGeneratedBln() && !cReturnorder.currentReturnOrder.getRetourMultiDocumentBln() ) {
                 ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_document_add_not_allowed));
                 ReturnorderDocumentActivity.busyBln = false;
-               return;
+                return;
             }
 
             //Close current Document
@@ -350,7 +358,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     private void mTryToLeaveActivity() {
 
-        if (cReturnorder.currentReturnOrder.linesObl().size() > 0) {
+        if (cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.size() > 0) {
             mShowCloseDocumentDialog();
             return;
         }
@@ -431,9 +439,12 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             return;
         }
 
+        //Add line barcode to line
+        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandled());
+
         //Add quantityDbl of the current barcodeStr
-        cReturnorderLine.currentReturnOrderLine.quantitytakeDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
-        cReturnorderBarcode.currentReturnOrderBarcode.quantityHandled += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
         //Make line barcodeStr the current line barcodeStr
         if (cReturnorderLine.currentReturnOrderLine.lineBarcodesObl != null) {
@@ -513,6 +524,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         //Line doesn't belong to this Document and we are not allowed to add lines
         if (cReturnorderLine.currentReturnOrderLine == null )  {
 
+            if (cSetting.RETOUR_BARCODE_CHECK()) {
             if (!cReturnorder.currentReturnOrder.isGeneratedBln()) {
                 ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_now_allowed));
                 ReturnorderDocumentActivity.busyBln = false;
@@ -525,11 +537,17 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             returnorderLine.nieuweRegelBln = true;
             cReturnorderLine.currentReturnOrderLine = returnorderLine;
 
-            if (!cReturnorder.currentReturnOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-                ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed));
-                ReturnorderDocumentActivity.busyBln = false;
+                if (!cReturnorder.currentReturnOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
+                    ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed));
+                    ReturnorderDocumentActivity.busyBln = false;
+                    return;
+                }
+            }
+            else {
+                mHandleUnknownBarcodeScan(pvBarcodeScan);
                 return;
             }
+
         }
 
         //Create new line barcodeStr
@@ -539,7 +557,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         if (cReturnorderLine.currentReturnOrderLine.getQuantitytakeDbl() == 0.0){
             cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
             cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
-           }
+        }
         else{
             if (cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl < cReturnorderLine.currentReturnOrderLine.quantitytakeDbl){
                 cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
@@ -633,7 +651,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
                 }
             });
         }
-      }
+    }
 
 
     private void mSetAddArticleListener() {

@@ -1,7 +1,5 @@
 package SSU_WHS.Picken.Pickorders;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +8,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
-import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
-import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.PickorderViewHolder>  {

@@ -880,7 +880,7 @@ public class cInventoryorder {
         }
         else {
             cInventoryorder.currentInventoryOrder.unknownVariantCounterInt -= 1;
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYBARCODECREATE);
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEITEMVARIANTCREATE);
             return  false;
         }
 

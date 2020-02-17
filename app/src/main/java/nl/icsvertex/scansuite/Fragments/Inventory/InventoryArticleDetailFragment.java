@@ -2,12 +2,10 @@ package nl.icsvertex.scansuite.Fragments.Inventory;
 
 
 import android.annotation.SuppressLint;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
-
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -32,13 +29,15 @@ import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
-
 import ICS.Utils.cNumberTextWatcher;
+import ICS.Utils.cRegex;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
@@ -206,8 +205,10 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
         InventoryArticleDetailFragment.binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
 
+        InventoryArticleDetailFragment.quantityText.setImeOptions(EditorInfo.IME_ACTION_DONE);
         InventoryArticleDetailFragment.quantityText.setSelectAllOnFocus(true);
         InventoryArticleDetailFragment.quantityText.requestFocus();
+        InventoryArticleDetailFragment.quantityText.setSingleLine();
         InventoryArticleDetailFragment.quantityText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_NORMAL);
         InventoryArticleDetailFragment.quantityText.setCursorVisible(false);
 
@@ -240,14 +241,35 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     public static void pHandleScan(cBarcodeScan pvBarcodeScan){
 
+        boolean binCheckedBln = false;
+
+        //This barcode matches multiple lay-outs so this can be a BIN or an article
+        if (cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr()).size() > 1) {
+
+            //First check if this is a BIN
+            cBranchBin branchBin =  cUser.currentUser.currentBranch.pGetBinByCode(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+
+            if (branchBin != null) {
+                //Click done
+                InventoryArticleDetailFragment.imageButtonDone.performClick();
+
+                //Pass this scan to the BIN activity
+                InventoryorderBinActivity.pHandleScan(pvBarcodeScan, false);
+                return;
+            }
+
+            binCheckedBln = true;
+
+        }
+
         //BIN scans are allowed
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+        if (!binCheckedBln && cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
 
             //Click done
             InventoryArticleDetailFragment.imageButtonDone.performClick();
 
             //Pass this scan to the BIN activity
-            InventoryorderBinActivity.pHandleScan(pvBarcodeScan);
+            InventoryorderBinActivity.pHandleScan(pvBarcodeScan, false);
             return;
         }
 
@@ -264,7 +286,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
             InventoryArticleDetailFragment.mHandleDone();
 
             //Handle scan in BIN activity,
-            InventoryorderBinActivity.pHandleScan(pvBarcodeScan);
+            InventoryorderBinActivity.pHandleScan(pvBarcodeScan, true);
             return;
         }
 

@@ -72,7 +72,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
     <Button
-        android:id="@+id/closeOrderButton"
+        android:id="@+id/createOrderButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_double_margin"

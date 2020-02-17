@@ -1,6 +1,5 @@
 package SSU_WHS.Picken.PickorderLineBarcodes;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import ICS.Utils.cText;
-import nl.icsvertex.scansuite.R;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.R;
 
 
 public class cPickorderLineBarcodeAdapter extends RecyclerView.Adapter<cPickorderLineBarcodeAdapter.pickorderLineBarcodeViewHolder>  {

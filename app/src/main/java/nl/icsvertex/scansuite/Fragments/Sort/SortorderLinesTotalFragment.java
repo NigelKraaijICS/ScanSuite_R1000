@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,11 +16,11 @@ import java.util.List;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
-import ICS.cAppExtension;
+import nl.icsvertex.scansuite.R;
 
 public class SortorderLinesTotalFragment extends Fragment implements iICSDefaultFragment {
 

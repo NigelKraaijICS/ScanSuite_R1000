@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         >
-        <include layout="@layout/toolbar_subtext_default"/>
+        <include layout="@layout/toolbar_subtext_expanded_default"/>
         <androidx.appcompat.widget.SearchView
             android:id="@+id/recyclerSearchView"
             style="@style/recyclerSearchView"

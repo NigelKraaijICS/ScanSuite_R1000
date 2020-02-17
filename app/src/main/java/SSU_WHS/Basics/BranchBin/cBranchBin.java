@@ -54,6 +54,7 @@ public class cBranchBin {
         this.useForStorageBln = this.branchBinEntity.getUseForStorageBln();
         this.useForReturnSalesBln = this.branchBinEntity.getUseForReturnSalesBln();
     }
+
     //End Region Constructor
 
     //Region Public Methods

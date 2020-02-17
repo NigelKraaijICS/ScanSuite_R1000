@@ -12,6 +12,7 @@ import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 
 public class cIntakeorderBarcode {
 
@@ -85,7 +86,7 @@ public class cIntakeorderBarcode {
         return this.variantCodeStr;
     }
 
-    private Double quantityPerUnitOfMeasureDbl;
+    public Double quantityPerUnitOfMeasureDbl;
     public Double getQuantityPerUnitOfMeasureDbl() {
         return this.quantityPerUnitOfMeasureDbl;
     }
@@ -95,7 +96,7 @@ public class cIntakeorderBarcode {
         return this.unitOfMeasureStr;
     }
 
-    private Double quantityHandledDbl;
+    public Double quantityHandledDbl;
     public Double getQuantityHandledDbl() {
         return this.quantityHandledDbl;
     }
@@ -136,16 +137,39 @@ public class cIntakeorderBarcode {
         this.receiveAmountManualBln = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
     }
 
+    public cIntakeorderBarcode(cIntakeorderBarcode pvBarcodeToCopyObj) {
+        this.barcodeStr = pvBarcodeToCopyObj.getBarcodeStr();
+        this.itemNoStr = pvBarcodeToCopyObj.getItemNoStr();
+        this.variantCodeStr = pvBarcodeToCopyObj.getVariantCodeStr();
+    }
+
     public cIntakeorderBarcode() {
 
     }
 
-    //End Region Constructor
 
+    //End Region Constructor
 
     public static boolean pTruncateTableBln(){
         cIntakeorderBarcode.getIntakeorderBarcodeViewModel().deleteAll();
         return true;
+    }
+
+    public  static void pTryToSetStandardBarcode(cReceiveorderSummaryLine pvReceiveorderSummaryLine) {
+
+        if (cIntakeorderBarcode.allBarcodesObl == null || cIntakeorderBarcode.allBarcodesObl.size() == 0) {
+            return;
+        }
+
+        for (cIntakeorderBarcode intakeorderBarcode : cIntakeorderBarcode.allBarcodesObl) {
+
+            if (intakeorderBarcode.getItemNoStr().equalsIgnoreCase(pvReceiveorderSummaryLine.getItemNoStr()) && intakeorderBarcode.getItemNoStr().equalsIgnoreCase(pvReceiveorderSummaryLine.getItemNoStr())) {
+                if (intakeorderBarcode.getBarcodeStr().equalsIgnoreCase(pvReceiveorderSummaryLine.getItemNoStr()) ) {
+                    cIntakeorderBarcode.currentIntakeOrderBarcode = intakeorderBarcode;
+                    return;
+                }
+            }
+        }
     }
 
     public boolean pInsertInDatabaseBln() {
@@ -158,15 +182,17 @@ public class cIntakeorderBarcode {
         return  true;
     }
 
+
+
     public List<cIntakeorderMATLine> linesObl(){
 
         List<cIntakeorderMATLine> resultObl = new ArrayList<>();
 
-        if (cIntakeorder.currentIntakeOrder == null || cIntakeorder.currentIntakeOrder.linesObl() == null || cIntakeorder.currentIntakeOrder.linesObl().size() == 0) {
+        if (cIntakeorder.currentIntakeOrder == null || cIntakeorder.currentIntakeOrder.linesMATObl() == null || cIntakeorder.currentIntakeOrder.linesMATObl().size() == 0) {
             return resultObl;
         }
 
-        for (cIntakeorderMATLine intakeorderMATLine :cIntakeorder.currentIntakeOrder.linesObl() ) {
+        for (cIntakeorderMATLine intakeorderMATLine :cIntakeorder.currentIntakeOrder.linesMATObl() ) {
             if (intakeorderMATLine.getItemNoStr().equalsIgnoreCase(this.getItemNoStr()) && intakeorderMATLine.getVariantCodeStr().equalsIgnoreCase(this.getVariantCodeStr())) {
                 resultObl.add(intakeorderMATLine);
             }

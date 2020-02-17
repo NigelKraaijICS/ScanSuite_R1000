@@ -4,9 +4,6 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-import SSU_WHS.General.Comments.cCommentEntity;
-import SSU_WHS.General.Comments.cCommentRepository;
-import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeEntity;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cLicenseViewModel extends AndroidViewModel {

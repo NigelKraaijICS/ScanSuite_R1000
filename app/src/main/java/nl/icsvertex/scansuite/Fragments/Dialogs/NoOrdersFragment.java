@@ -1,24 +1,25 @@
 package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
-
+import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
-import ICS.cAppExtension;
+import nl.icsvertex.scansuite.R;
 
 
 public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
@@ -98,6 +99,14 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
 
                 if (cAppExtension.activity instanceof ShiporderSelectActivity) {
                     ShiporderSelectActivity.pFillOrders();
+                }
+
+                if (cAppExtension.activity instanceof IntakeAndReceiveSelectActivity) {
+                    IntakeAndReceiveSelectActivity.pFillOrders();
+                }
+
+                if (cAppExtension.activity instanceof ReturnorderSelectActivity) {
+                    ReturnorderSelectActivity.pFillOrders();
                 }
 
                 if (cAppExtension.activity instanceof InventoryorderSelectActivity) {

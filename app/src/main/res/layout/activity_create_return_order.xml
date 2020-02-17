@@ -10,15 +10,16 @@
         style="@style/createReturnDocument"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_document"
+        android:hint="@string/hint_document_inventory"
         android:imeOptions="actionDone"
         android:singleLine="true"
+        android:cursorVisible="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <TextView
-        android:id="@+id/textViewCreateReturnText"
+        android:id="@+id/textViewBinHint"
         style="@style/createReturnText"
         android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,6 +33,7 @@
         android:id="@+id/editTextBin"
         style="@style/createReturnDocument"
         android:hint="@string/hint_add_bin"
+        android:cursorVisible="false"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@id/editTextDocument"/>
 
     <TextView
-        android:id="@+id/textViewCreateReturnBin"
+        android:id="@+id/textViewCreateReceive"
         style="@style/createReturnText"
         android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,7 +59,19 @@
         android:key="@string/multiple_documents_switch"
         android:text="@string/multiple_documents"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewCreateReturnBin" />
+        app:layout_constraintTop_toBottomOf="@id/textViewCreateReceive" />
+    <Switch
+        android:id="@+id/selectReasonSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="168dp"
+        android:defaultValue="false"
+        android:key="@string/select_reason_switch"
+        android:text="@string/select_reason"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/multipleDocumentSwitch" />
     <TextView
         android:id="@+id/textViewCreateReturnReason"
         style="@style/createReturnText"
@@ -65,11 +79,11 @@
         android:hint="@string/hint_add_reason"
         android:layout_width="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/multipleDocumentSwitch" />
+        app:layout_constraintTop_toBottomOf="@id/selectReasonSwitch" />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageButtonReason"
         style="@style/createInventoryImageView"
-        app:srcCompat="@drawable/ic_dislike"
+        app:srcCompat="@drawable/ic_return_reason"
         app:layout_constraintStart_toEndOf="@id/textViewCreateReturnReason"
         app:layout_constraintTop_toTopOf="@id/textViewCreateReturnReason"/>
     <Button

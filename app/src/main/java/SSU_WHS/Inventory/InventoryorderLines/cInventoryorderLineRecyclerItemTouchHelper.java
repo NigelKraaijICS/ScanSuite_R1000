@@ -1,11 +1,10 @@
 package SSU_WHS.Inventory.InventoryorderLines;
 
 import android.graphics.Canvas;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.View;
 
-import ICS.Environments.cEnvironmentAdapter;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class cInventoryorderLineRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
 

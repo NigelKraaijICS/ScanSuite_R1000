@@ -1,9 +1,8 @@
 package SSU_WHS.Picken.PickorderLineBarcodes;
 
 import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
 
-import ICS.Utils.cText;
+import androidx.lifecycle.AndroidViewModel;
 
 public class cPickorderLineBarcodeViewModel extends AndroidViewModel {
     public cPickorderLineBarcodeRepository pickorderLineBarcodeRepository;

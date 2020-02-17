@@ -5,14 +5,9 @@ import androidx.lifecycle.ViewModelProviders;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ICS.Utils.cText;
-import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cIntakeorderMATLineBarcode {
 

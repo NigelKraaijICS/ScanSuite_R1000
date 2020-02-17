@@ -1,9 +1,9 @@
 package SSU_WHS.ScannerLogon;
 
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.annotation.NonNull;
 
 import java.util.List;
 

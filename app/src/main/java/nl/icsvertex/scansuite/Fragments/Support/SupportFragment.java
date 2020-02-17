@@ -1,19 +1,21 @@
 package nl.icsvertex.scansuite.Fragments.Support;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.PagerAdapters.SupportPagerAdapter;
+import nl.icsvertex.scansuite.R;
 
 public class SupportFragment extends Fragment implements iICSDefaultFragment {
 

@@ -34,6 +34,13 @@ public class cDateAndTime {
         return resultStr;
     }
 
+    public static String pGetCurrentDateTimeForIntakeStr() {
+        String resultStr;
+        Calendar calendar = new GregorianCalendar();
+        resultStr = new SimpleDateFormat(cPublicDefinitions.DATEPATTERNWITHTIMESHOW,Locale.getDefault()).format(calendar.getTime());
+        return resultStr;
+    }
+
     public static String pGetCurrentTimeZoneStr() {
         String resultStr;
         resultStr = TimeZone.getDefault().getDisplayName(Locale.getDefault());

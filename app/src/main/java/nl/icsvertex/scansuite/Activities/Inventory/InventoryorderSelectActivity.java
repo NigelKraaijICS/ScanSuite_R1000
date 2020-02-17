@@ -44,9 +44,9 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -67,6 +67,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubTitle;
+    private static TextView toolbarSubTitle2;
     private static SearchView recyclerSearchView;
     private static SwipeRefreshLayout swipeRefreshLayout;
 
@@ -164,11 +165,12 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         InventoryorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
         InventoryorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
         InventoryorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        InventoryorderSelectActivity.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
         InventoryorderSelectActivity.recyclerViewInventoryorders = findViewById(R.id.recyclerViewInventoryorders);
         InventoryorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         InventoryorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
         InventoryorderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        InventoryorderSelectActivity.imageViewNewOrder = findViewById(R.id.imageViewBinDone);
+        InventoryorderSelectActivity.imageViewNewOrder = findViewById(R.id.imageViewNewOrder);
         InventoryorderSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
     }
 
@@ -176,6 +178,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     public void mSetToolbar(String pvScreenTitle) {
         InventoryorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
         InventoryorderSelectActivity.toolbarTitle.setText(pvScreenTitle);
+        InventoryorderSelectActivity.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
         InventoryorderSelectActivity.toolbarTitle.setSelected(true);
         InventoryorderSelectActivity.toolbarSubTitle.setSelected(true);
         ViewCompat.setTransitionName( InventoryorderSelectActivity.toolbarImage, VIEW_NAME_HEADER_IMAGE);
@@ -853,7 +856,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         }
         String subtitleStr;
         if (!cSharedPreferences.userFilterBln()) {
-            subtitleStr = (cText.pIntToStringStr(cInventoryorder.allInventoryOrdersObl(false).size()) + " " + cAppExtension.activity.getString(R.string.orders)   );
+            subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cInventoryorder.allInventoryOrdersObl(false).size(),cInventoryorder.allInventoryOrdersObl(false).size());
         } else {
             subtitleStr = cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryOrdersObl(false).size()) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }

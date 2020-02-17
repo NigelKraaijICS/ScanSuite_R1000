@@ -30,14 +30,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-        <androidx.appcompat.widget.AppCompatImageView
-            style="@style/defaultBottomButton"
-            android:id="@+id/imageEnvironment"
-            app:srcCompat="@drawable/ic_environment_black_24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/mainmenuNavigation"

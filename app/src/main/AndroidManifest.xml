@@ -150,7 +150,7 @@
         </activity>
 
         <activity
-            android:name=".Activities.Intake.IntakeorderSelectActivity"
+            android:name=".Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -158,15 +158,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.General.MenuActivity" />
         </activity>
+        <activity android:name=".Activities.Receive.CreateReceiveActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity" />
+        </activity>
 
         <activity android:name=".Activities.Intake.IntakeorderLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:parentActivityName=".Activities.Intake.IntakeorderSelectActivity"
+            android:parentActivityName=".Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity" />
         </activity>
 
         <activity android:name=".Activities.Intake.IntakeOrderIntakeActivity"
@@ -176,13 +185,65 @@
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity" />
+                android:value="nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity" />
         </activity>
-        <activity android:name=".Activities.Returns.CreateReturnActivity" />
-        <activity android:name=".Activities.Returns.ReturnorderSelectActivity" />
-        <activity android:name=".Activities.Returns.ReturnorderDocumentsActivity" />
-        <activity android:name=".Activities.Returns.ReturnorderDocumentActivity" />
 
+        <activity android:name=".Activities.Receive.ReceiveLinesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity" />
+        </activity>
+
+        <activity android:name=".Activities.Receive.ReceiveOrderReceiveActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".Activities.Receive.ReceiveLinesActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity" />
+        </activity>
+
+        <activity android:name=".Activities.Returns.ReturnorderSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.General.MenuActivity" />
+        </activity>
+        <activity android:name=".Activities.Returns.CreateReturnActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity" />
+        </activity>
+        <activity android:name=".Activities.Returns.ReturnorderDocumentsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity" />
+        </activity>
+        <activity android:name=".Activities.Returns.ReturnorderDocumentActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity" />
+        </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0a3a15057e61fb1e84d5024bd01b5657d9a4c76e" />

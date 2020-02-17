@@ -10,7 +10,6 @@ import androidx.sqlite.db.SupportSQLiteQuery;
 import java.util.List;
 
 import SSU_WHS.General.cDatabase;
-import SSU_WHS.Picken.Pickorders.cPickorderEntity;
 
 @Dao
 public interface iInventoryorderDao {

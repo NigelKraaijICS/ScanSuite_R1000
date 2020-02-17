@@ -138,7 +138,7 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
 
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
         String barcodeWithoutPrefixStr ;
-        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             boolean foundBin = false;
 
             if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.REASON)) {

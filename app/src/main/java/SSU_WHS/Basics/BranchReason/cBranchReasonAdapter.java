@@ -28,13 +28,14 @@ public class cBranchReasonAdapter extends RecyclerView.Adapter<cBranchReasonAdap
 
         public ReasonViewHolder(View itemView) {
             super(itemView);
-            textViewDescription = itemView.findViewById(R.id.textViewDescription);
-            textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewDescription.setSingleLine(true);
-            textViewDescription.setMarqueeRepeatLimit(5);
-            textViewDescription.setSelected(true);
-            textViewReason = itemView.findViewById(R.id.textViewReason);
-            reasonItemLinearLayout = itemView.findViewById(R.id.reasonItemLinearLayout);
+            this.textViewDescription = itemView.findViewById(R.id.textViewDescription);
+            this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDescription.setSingleLine(true);
+            this.textViewDescription.setMarqueeRepeatLimit(5);
+            this.textViewDescription.setSelected(true);
+
+            this.textViewReason = itemView.findViewById(R.id.textViewReason);
+            this.reasonItemLinearLayout = itemView.findViewById(R.id.reasonItemLinearLayout);
         }
     }
 

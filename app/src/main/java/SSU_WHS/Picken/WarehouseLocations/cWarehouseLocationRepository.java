@@ -1,9 +1,10 @@
 package SSU_WHS.Picken.WarehouseLocations;
 
 import android.app.Application;
+import android.os.AsyncTask;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import android.os.AsyncTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
-import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cWarehouseLocationRepository {
     private iWarehouseLocationDao warehouseLocationDao;

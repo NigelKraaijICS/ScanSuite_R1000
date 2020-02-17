@@ -1,42 +1,41 @@
 package nl.icsvertex.scansuite.Activities.General;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.core.util.Pair;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
-import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 
 public class MenuActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -55,6 +54,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubtext;
+    private static TextView toolbarSubtext2;
     //End region views
 
     //End Region Private Properties
@@ -137,6 +137,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         MenuActivity.toolbarImage = findViewById(R.id.toolbarImage);
         MenuActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
         MenuActivity.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        MenuActivity.toolbarSubtext2 = findViewById(R.id.toolbarSubtext2);
         MenuActivity.recyclerViewMenu = findViewById(R.id.recyclerViewMenu);
         MenuActivity.shimmerViewContainer = findViewById(R.id.shimmerViewContainer);
     }
@@ -158,7 +159,9 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     @Override
     public void mFieldsInitialize() {
+
         MenuActivity.toolbarSubtext.setText(cUser.currentUser.getNameStr());
+        MenuActivity.toolbarSubtext2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
         if (! cUser.currentUser.pGetAutorisationsBln(MenuActivity.refreshBln)){
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_autorisations_failed), cUser.currentUser.getUsernameStr(), true, true );
@@ -295,10 +298,27 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
                 return;
             }
 
-            intent = new Intent(cAppExtension.context, IntakeorderSelectActivity.class);
+            switch (cUser.currentUser.currentAuthorisation.getAutorisationEnu()) {
+                case INTAKE:
+                    IntakeAndReceiveSelectActivity.currentMainTypeEnu = cWarehouseorder.ReceiveAndStoreMainTypeEnu.Unknown;
+                    break;
+
+                case INTAKE_EO:
+                    IntakeAndReceiveSelectActivity.currentMainTypeEnu = cWarehouseorder.ReceiveAndStoreMainTypeEnu.External;
+                    break;
+
+                case INTAKE_MA:
+                    IntakeAndReceiveSelectActivity.currentMainTypeEnu = cWarehouseorder.ReceiveAndStoreMainTypeEnu.Store;
+                    break;
+            }
+
+            //Initialise the activity
+            intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
+            IntakeAndReceiveSelectActivity.startedViaMenuBln = true;
+
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_INTAKE);
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INTAKE);
-            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, IntakeorderSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, IntakeorderSelectActivity.VIEW_NAME_HEADER_TEXT));
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, IntakeAndReceiveSelectActivity.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, IntakeAndReceiveSelectActivity.VIEW_NAME_HEADER_TEXT));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;
         }

@@ -156,7 +156,6 @@ public class ReturnDocumentsDoneFragment extends Fragment implements iICSDefault
     @Override
     public void mSetListeners() {
         this.mSetDoneListener();
-
     }
 
     //End Region iICSDefaultActivity defaults
@@ -231,6 +230,6 @@ public class ReturnDocumentsDoneFragment extends Fragment implements iICSDefault
         });
     }
 
-       //End Region Private Methods
+    //End Region Private Methods
 
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    tools:context=".Activities.Receive.ReceiveLinesActivity"
+    style="@style/defaultScreen">
+    <include layout="@layout/toolbar_subtext_default" />
+    <include layout="@layout/default_orderinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        />
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/recyclerSearchView"
+        style="@style/recyclerSearchView"
+        app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewLines"
+        style="@style/defaultRecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerSearchView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/imageViewStart"
+        />
+    <Switch
+        android:id="@+id/switchDeviations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_double_margin"
+        android:text="@string/show_only_deviations"
+        app:layout_constraintTop_toBottomOf="@id/recyclerScanActions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="16dp"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        style="@style/defaultBottomButton"
+        android:id="@+id/imageAddArticle"
+        app:srcCompat="@drawable/ic_add_location_black_24dp"
+        app:layout_constraintStart_toEndOf="@id/switchDeviations"
+        app:layout_constraintEnd_toStartOf="@id/imageViewStart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <androidx.appcompat.widget.AppCompatImageView
+        style="@style/defaultBottomButton"
+        android:id="@+id/imageViewStart"
+        app:srcCompat="@drawable/ic_start_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

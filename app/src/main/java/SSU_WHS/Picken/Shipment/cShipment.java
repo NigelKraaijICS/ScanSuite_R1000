@@ -6,7 +6,6 @@ import java.util.List;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
-import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -36,7 +35,7 @@ public class cShipment {
     }
 
     public Boolean handledBln;
-    public Boolean getHandledBln(){return  this.handledBln;}
+    public Boolean isHandledBln(){return  this.handledBln;}
 
     public List<cPickorderLinePackAndShip> packAndShipLineObl;
 
@@ -202,7 +201,7 @@ public class cShipment {
         String strippedBarcodeStr = pvBarcodeScan.getBarcodeOriginalStr();
 
 
-        if (cRegex.hasPrefix(strippedBarcodeStr)) {
+        if (cRegex.pHasPrefix(strippedBarcodeStr)) {
             strippedBarcodeStr = cRegex.pStripRegexPrefixStr(strippedBarcodeStr);
         }
 
@@ -231,8 +230,7 @@ public class cShipment {
         }
 
         //If there are no shipments to handle, we are done
-        List<cPickorderLinePackAndShip> hulpObl = cPickorder.currentPickOrder.pGetPackAndShipLinesNotHandledFromDatabasObl();
-        if (hulpObl== null || hulpObl.size() == 0) {
+        if (cPickorderLinePackAndShip.allPackAndShipLinesObl == null || cPickorderLinePackAndShip.allPackAndShipLinesObl.size() == 0) {
             return  null;
         }
 
@@ -244,7 +242,12 @@ public class cShipment {
                 pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr.getBarcodeFormattedStr())) {
 
                 //Get not handled line for this ItemNo and VariantCoce
-              for  (cPickorderLinePackAndShip  pickorderLinePackAndShip : hulpObl) {
+              for  (cPickorderLinePackAndShip  pickorderLinePackAndShip : cPickorderLinePackAndShip.allPackAndShipLinesObl) {
+
+
+                  if (pickorderLinePackAndShip.getStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) {
+                      continue;
+                  }
 
                   //We found a match on ItemNo and VariantCode
                   if (pickorderLinePackAndShip.getItemNoStr().equalsIgnoreCase(pickorderBarcode.getItemNoStr()) && pickorderLinePackAndShip.getVariantCodeStr().equalsIgnoreCase(pickorderBarcode.getVariantcodeStr())) {
@@ -278,6 +281,10 @@ public class cShipment {
 
             //Leave, we are done
             return result;
+        }
+
+        for (cPickorderLinePackAndShip pickorderLinePackAndShip : this.packAndShipLineObl) {
+            pickorderLinePackAndShip.statusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
         }
 
         //We are done, so this shipmemt is handled and result is true

@@ -1,15 +1,9 @@
 package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -18,17 +12,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
-import ICS.cAppExtension;
+import nl.icsvertex.scansuite.R;
 
 public class ArticleFullViewFragment extends DialogFragment implements iICSDefaultFragment {
 
@@ -187,7 +187,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
 
         //No prefix
-        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             ArticleFullViewFragment.mArticleScanned(pvBarcodeScan);
             return;
         }

@@ -3,7 +3,9 @@ package ICS.Utils;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+
 import androidx.core.app.ActivityCompat;
+
 import ICS.cAppExtension;
 
 public class cPermissions {

@@ -4,7 +4,9 @@ package nl.icsvertex.scansuite.Activities.Returns;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,12 +45,13 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     private static ConstraintLayout createReturnContainer;
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
-    private static TextView textViewCreateReturnReason;
+    private static TextView textViewReturnReason;
     static private EditText editTextDocument;
     static private EditText editTextBin;
     static private Button createReturnButton;
     static private Button cancelButton;
     private static Switch switchMultipleDocuments;
+    private static Switch switchReason;
     private static ImageView imageReason;
     //End Region private Properties
 
@@ -57,16 +60,15 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     }
     //End Region Constructor
 
+
+    //Region Default Methods
+
     @Override
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_create_return_order);
         this.mActivityInitialize();
 
-    }
-
-    public static void pSetReason(){
-        CreateReturnActivity.textViewCreateReturnReason.setText(cBranchReason.currentBranchReason.getReasonStr());
     }
 
     @Override
@@ -79,6 +81,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         super.onPause();
         cBarcodeScan.pUnregisterBarcodeReceiver();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -90,6 +93,10 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         this.mLeaveActivity();
     }
 
+
+    //End Region Default Methods
+
+    //Region iICSDefaultActivity defaults
 
     @Override
     public void mActivityInitialize() {
@@ -122,7 +129,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     public void mFindViews() {
         CreateReturnActivity.toolbarImage = findViewById(R.id.toolbarImage);
         CreateReturnActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        CreateReturnActivity.textViewCreateReturnReason = findViewById(R.id.textViewCreateReturnReason);
+        CreateReturnActivity.textViewReturnReason = findViewById(R.id.textViewCreateReturnReason);
         CreateReturnActivity.editTextDocument = findViewById(R.id.editTextDocument);
         CreateReturnActivity.editTextBin = findViewById(R.id.editTextBin);
         CreateReturnActivity.createReturnContainer = findViewById(R.id.createReturnContainer);
@@ -130,6 +137,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         CreateReturnActivity.cancelButton = findViewById(R.id.cancelButton);
         CreateReturnActivity.imageReason = findViewById(R.id.imageButtonReason);
         CreateReturnActivity.switchMultipleDocuments = findViewById(R.id.multipleDocumentSwitch);
+        CreateReturnActivity.switchReason = findViewById(R.id.selectReasonSwitch);
     }
 
     @Override
@@ -147,7 +155,6 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         }
     }
 
-
     @Override
     public void mFieldsInitialize() {
 
@@ -156,9 +163,24 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(50);
         CreateReturnActivity.editTextDocument.setFilters(filterArray);
+        CreateReturnActivity.imageReason.setVisibility(View.INVISIBLE);
+        CreateReturnActivity.textViewReturnReason.setVisibility(View.INVISIBLE);
+
         if(!cUser.currentUser.currentBranch.pGetReasonBln(true)){
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.error_getting_return_reasons), null);
         }
+
+
+        if (cUser.currentUser.currentBranch.isBinMandatoryBln()) {
+            CreateReturnActivity.editTextBin.setVisibility(View.VISIBLE);
+            mSetBin();
+        }
+        else
+        {
+            CreateReturnActivity.editTextBin.setVisibility(View.GONE);
+        }
+
+
 
     }
 
@@ -167,12 +189,109 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         this.mSetImageListener();
         this.mSetCreateListener();
         this.mSetCancelListener();
+        this.mSetReasonSwitchListener();
+        this.mSetEditorActionListener();
     }
 
     @Override
     public void mInitScreen() {
 
     }
+
+    //End Region iICSDefaultActivity defaults
+
+    //Region Public Methods
+
+    public static void pSetReason(){
+        CreateReturnActivity.textViewReturnReason.setText(cBranchReason.currentBranchReason.getDescriptionStr());
+    }
+
+    public static void pHandleScan(cBarcodeScan pvBarcodeScan, boolean pvDocumentBln, boolean pvBinBln) {
+
+        String barcodeWithoutPrefixStr;
+        cBranchBin branchBin;
+        boolean documentBln = false;
+        boolean binBln = false;
+        boolean reasonBln = false;
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
+            documentBln = true;
+        }
+
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+            binBln = true;
+        }
+
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.REASON)){
+            reasonBln = true;
+        }
+
+        if (pvDocumentBln) {
+            documentBln = true;
+        }
+
+        if (pvBinBln) {
+            binBln = true;
+        }
+
+        //has prefix, is DOCUMENT
+        if (documentBln) {
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+            CreateReturnActivity.editTextDocument.setText(barcodeWithoutPrefixStr);
+            CreateReturnActivity.editTextBin.requestFocus();
+            //has prefix, is Bin
+            return;
+
+        }
+        if (binBln) {
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+
+            branchBin = cUser.currentUser.currentBranch.pGetBinByCode(barcodeWithoutPrefixStr);
+
+            if (branchBin == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_unknown_bin), null);
+                return;
+            }
+
+            if (!branchBin.getBinCodeStr().equalsIgnoreCase(cUser.currentUser.currentBranch.getReturnDefaultBinStr())) {
+                if (!branchBin.isUseForReturnSalesBln()){
+                    cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_bin_not_allowed_for_return),"",true,true);
+                    return;
+                }
+            }
+
+            CreateReturnActivity.editTextBin.setText(barcodeWithoutPrefixStr);
+            return;
+
+
+        }
+        if (reasonBln){
+            CreateReturnActivity.switchReason.setChecked(true);
+            CreateReturnActivity.mHandleReasonSwitch(true);
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+            cBranchReason branchReason = cUser.currentUser.currentBranch.pGetReasonByName(barcodeWithoutPrefixStr);
+            if (branchReason != null) {
+                cBranchReason.currentBranchReason = branchReason;
+                CreateReturnActivity.textViewReturnReason.setText(cBranchReason.currentBranchReason.getDescriptionStr());
+            }
+        }
+
+        else {
+            //has prefix, isn't DOCUMENT
+            cUserInterface.pDoNope(createReturnContainer, true, true);
+        }
+    }
+
+    public static void pHandleFragmentDismissed(){
+        cBarcodeScan.pRegisterBarcodeReceiver();
+    }
+
+    //End Region Public Methods
+
+    //Region Private Methods
 
     private void mSetImageListener() {
         CreateReturnActivity.imageReason.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +311,24 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         });
     }
 
+    private void mSetReasonSwitchListener() {
+        CreateReturnActivity.switchReason.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View pvView) {
+                if (CreateReturnActivity.switchReason.isChecked()) {
+                    CreateReturnActivity.switchReason.setText(cAppExtension.activity.getString(R.string.message_clear_reason));
+                    CreateReturnActivity.mHandleReasonSwitch(false);
+                } else {
+                    cBranchReason.currentBranchReason = null;
+                    CreateReturnActivity.textViewReturnReason.setText("");
+                    CreateReturnActivity.imageReason.setVisibility(View.INVISIBLE);
+                    CreateReturnActivity.textViewReturnReason.setVisibility(View.INVISIBLE);
+                    CreateReturnActivity.switchReason.setText(cAppExtension.activity.getString(R.string.select_reason));
+                }
+            }
+        });
+    }
+
     private static void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
@@ -205,82 +342,16 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_document),null);
                     return;
                 }
-                if (CreateReturnActivity.editTextBin.getText().toString().isEmpty()){
+                if (CreateReturnActivity.editTextBin.getText().toString().isEmpty() && cUser.currentUser.currentBranch.isBinMandatoryBln()){
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_bin),null);
                     return;
                 }
-                    ReturnorderSelectActivity.pCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
+                ReturnorderSelectActivity.pCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
             }
         });
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan ) {
-
-        String barcodeWithoutPrefixStr;
-        cBranchBin branchBin;
-        boolean documentBln = false;
-        boolean binBln = false;
-        boolean reasonBln = false;
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
-            documentBln = true;
-        }
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
-            binBln = true;
-        }
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.REASON)){
-            reasonBln = true;
-        }
-
-        //has prefix, is DOCUMENT
-        if (documentBln) {
-            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-            CreateReturnActivity.editTextDocument.setText(barcodeWithoutPrefixStr);
-            //has prefix, is Bin
-            return;
-
-        }
-        if (binBln) {
-            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-            branchBin = cUser.currentUser.currentBranch.pGetBinByCode(barcodeWithoutPrefixStr);
-
-            if (branchBin == null) {
-                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_unknown_bin), null);
-                return;
-            }
-
-            if (!branchBin.isUseForReturnSalesBln()){
-                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_bin_not_allowed_for_return),"",true,true);
-                return;
-            }
-
-            CreateReturnActivity.editTextBin.setText(barcodeWithoutPrefixStr);
-            return;
-
-
-        }
-        if (reasonBln){
-            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-            cBranchReason branchReason = cUser.currentUser.currentBranch.pGetReasonByName(barcodeWithoutPrefixStr);
-            if (branchReason != null) {
-                cBranchReason.currentBranchReason = branchReason;
-                CreateReturnActivity.textViewCreateReturnReason.setText(cBranchReason.currentBranchReason.getReasonStr());
-            }
-        }
-
-        else {
-            //has prefix, isn't DOCUMENT
-            cUserInterface.pDoNope(createReturnContainer, true, true);
-        }
-    }
-    public static void pHandleFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
-    }
-
-    private void mShowAddReasonFragment(){
+    private static void mShowAddReasonFragment(){
 
         ReasonFragment reasonFragment = new ReasonFragment();
         reasonFragment.setCancelable(true);
@@ -288,6 +359,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
 
     }
+
     private void mLeaveActivity(){
 
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
@@ -295,5 +367,55 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         cAppExtension.activity.finish();
 
     }
+
+    private static void mHandleReasonSwitch(boolean pvScanBln){
+        CreateReturnActivity.imageReason.setVisibility(View.VISIBLE);
+        CreateReturnActivity.textViewReturnReason.setVisibility(View.VISIBLE);
+        if (!pvScanBln) {
+            CreateReturnActivity.mShowAddReasonFragment();
+        }
+    }
+
+    private void mSetEditorActionListener() {
+        CreateReturnActivity.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+
+                    CreateReturnActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateReturnActivity.editTextDocument.getText().toString()),true,false);
+                    cUserInterface.pHideKeyboard();
+
+                }
+                return true;
+            }
+        });
+
+        CreateReturnActivity.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+
+                    CreateReturnActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateReturnActivity.editTextBin.getText().toString()),false,true);
+                    cUserInterface.pHideKeyboard();
+
+                }
+                return true;
+            }
+        });
+
+    }
+
+    private void mSetBin(){
+
+
+        if (!cUser.currentUser.currentBranch.getReturnDefaultBinStr().isEmpty()) {
+            CreateReturnActivity.editTextBin.setText(cUser.currentUser.currentBranch.getReturnDefaultBinStr());
+        }
+
+
+
+    }
+    //End Region Private Methods
+
 
 }

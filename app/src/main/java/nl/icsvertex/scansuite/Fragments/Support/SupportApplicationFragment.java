@@ -86,6 +86,11 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.mFragmentInitialize();
+    }
 
     //End Region Default Methods
 

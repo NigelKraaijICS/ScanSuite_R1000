@@ -26,25 +26,20 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
-
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-
-
 import SSU_WHS.Picken.Pickorders.cPickorder;
-
 import SSU_WHS.Picken.Shipment.cShipment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
-import nl.icsvertex.scansuite.Fragments.Ship.ShiporderLinesToShipFragment;
-import nl.icsvertex.scansuite.R;
-
-import nl.icsvertex.scansuite.PagerAdapters.ShiporderLinesPagerAdapter;
-import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
+import nl.icsvertex.scansuite.Fragments.Ship.ShiporderLinesToShipFragment;
+import nl.icsvertex.scansuite.PagerAdapters.ShiporderLinesPagerAdapter;
+import nl.icsvertex.scansuite.R;
 
 //import android.app.Fragment;
 
@@ -254,9 +249,16 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     public static void pHandleScan(cBarcodeScan pvBarcodeScan, Boolean pvSourceNoSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+        cResult hulpRst;
 
         //SourceNo button has been pressed, so we already have a current line
         if (pvSourceNoSelectedBln) {
+
+            hulpRst = mCheckShipmentRst();
+            if (!hulpRst.resultBln ){
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
+                return;
+            }
 
             //we have a SourceDocument to handle, so start Pick activity
             ShiporderLinesActivity.mStartShipActivity();
@@ -280,6 +282,25 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
                 mStepFailed(cAppExtension.context.getString(R.string.message_unknown_barcode));
                 return;
             }
+
+            //Check if we have everything we need to ship the order before showing next activity
+            if (cShipment.currentShipment.shippingAgent() == null ||
+                    cShipment.currentShipment.shippingAgentService() == null ||
+                    cShipment.currentShipment.shippingAgentService().shippingUnitsObl() == null ||
+                    cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 0 ) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_shipping_basics_invalid),"",true,true);
+                return;
+            }
+
+            if (cShipment.currentShipment.isHandledBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_shipment_already_handled),"",true,true);
+                return;
+            }
+
+            //We found a match in open shipments
+            ShiporderLinesActivity.mStartShipActivity();
+            return;
+
         }
 
         //Get shipment by SourceNo or pickcartbox
@@ -291,12 +312,14 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        //Check if we have everything we need to ship the order before showing next activity
-        if (cShipment.currentShipment.shippingAgent() == null ||
-            cShipment.currentShipment.shippingAgentService() == null ||
-            cShipment.currentShipment.shippingAgentService().shippingUnitsObl() == null ||
-            cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 0 ) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_shipping_basics_invalid),"",true,true);
+        hulpRst = mCheckShipmentRst();
+        if (!hulpRst.resultBln ){
+            cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
+            return;
+        }
+
+        if (cShipment.currentShipment.isHandledBln()) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_shipment_already_handled),"",true,true);
             return;
         }
 
@@ -500,6 +523,40 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         //we have a SourceDocument to handle, so start Ship activity
         Intent intent = new Intent(cAppExtension.context, ShiporderShipActivity.class);
         cAppExtension.activity.startActivity(intent);
+    }
+
+    private static cResult mCheckShipmentRst(){
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        if (cShipment.currentShipment == null) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_current_shipment_unknown));
+            return  result;
+        }
+
+        if (cShipment.currentShipment.shippingAgent() == null) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agent_unkown_or_empty));
+            return  result;
+        }
+
+        if (cShipment.currentShipment.shippingAgentService() == null) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agentservice_unkown_or_empty));
+            return  result;
+        }
+
+        if (cShipment.currentShipment.shippingAgentService().shippingUnitsObl() == null || cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 0 ) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agentservice_shippingingunits_unkown_or_empty));
+            return  result;
+        }
+
+        return  result;
+
+
     }
 
 }

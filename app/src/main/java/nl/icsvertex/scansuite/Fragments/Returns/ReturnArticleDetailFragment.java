@@ -42,6 +42,7 @@ import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -49,6 +50,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
 
     //Region Private Properties
+    private static final String BARCODEFRAGMENT_TAG = "BARCODERAGMENT_TAG";
     private static int returnCounterMinusHelperInt;
     private static int returnCounterPlusHelperInt;
     private static Handler minusHandler;
@@ -57,7 +59,6 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
     private static ImageView toolbarImage;
     private static  TextView toolbarTitle;
     private static TextView toolbarSubtext;
-
 
     private static ImageView articleThumbImageView;
     private static TextView binText;
@@ -118,8 +119,8 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
     @Override
     public void onPause() {
-            super.onPause();
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        super.onPause();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
     }
 
     @Override
@@ -128,7 +129,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
     }
 
     public static void pSetReason(){
-        ReturnArticleDetailFragment.reasonText.setText(cBranchReason.currentBranchReason.getReasonStr());
+        ReturnArticleDetailFragment.reasonText.setText(cBranchReason.currentBranchReason.getDescriptionStr());
         cReturnorderLine.currentReturnOrderLine.retourredenStr = cBranchReason.currentBranchReason.getReasonStr();
 
     }
@@ -141,6 +142,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
         Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cUserInterface.pEnableScanner();
     }
 
     //End Region Default Methods
@@ -173,6 +175,10 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             ReturnArticleDetailFragment.imageButtonBarcode = getView().findViewById(R.id.imageButtonBarcode);
 
             ReturnArticleDetailFragment.reasonText = getView().findViewById(R.id.reasonText);
+            ReturnArticleDetailFragment.reasonText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            ReturnArticleDetailFragment.reasonText.setSingleLine(true);
+            ReturnArticleDetailFragment.reasonText.setMarqueeRepeatLimit(5);
+            ReturnArticleDetailFragment.reasonText.setSelected(true);
             ReturnArticleDetailFragment.imageButtonReason = getView().findViewById(R.id.imageButtonReason);
 
             ReturnArticleDetailFragment.articleDescriptionText = getView().findViewById(R.id.articleDescriptionText);
@@ -234,7 +240,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             }
         }
         if (cBranchReason.currentBranchReason != null){
-            ReturnArticleDetailFragment.reasonText.setText(cBranchReason.currentBranchReason.getReasonStr());
+            ReturnArticleDetailFragment.reasonText.setText(cBranchReason.currentBranchReason.getDescriptionStr());
         }
 
         ReturnArticleDetailFragment.binText.setText(cReturnorder.currentReturnOrder.getBinCodeStr());
@@ -253,30 +259,19 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
         ReturnArticleDetailFragment.mShowArticleImage();
         ReturnArticleDetailFragment.mShowOrHideGenericExtraFields();
-        if (!cReturnorderLine.currentReturnOrderLine.isGeneratedBln()) {
-            ReturnArticleDetailFragment.imageButtonReason.setVisibility(View.INVISIBLE);
 
-        }
-        else {
-            if (!cReturnorderLine.currentReturnOrderLine.nieuweRegelBln) {
-                ReturnArticleDetailFragment.imageButtonReason.setVisibility(View.INVISIBLE);
-                return;
-            }
-
-            ReturnArticleDetailFragment.imageButtonReason.setVisibility(View.VISIBLE);
-
-        }
     }
 
     @Override
     public void mSetListeners() {
-             this.mSetDoneListener();
-             this.mSetReasonListener();
+        this.mSetDoneListener();
+        this.mSetReasonListener();
 
         if (cSetting.RETOUR_AMOUNT_MANUAL()) {
             this.mSetPlusListener();
             this.mSetMinusListener();
             this.mSetEditorActionListener();
+            this.mSetImageButtonBarcodeListener();
         }
     }
 
@@ -287,7 +282,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
     public static void pHandleScan(cBarcodeScan pvBarcodeScan){
 
-        String barcodeWithoutPrefixStr;
+        String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
         boolean newReasonAllowedBln;
 
         //Check if REASON scans are allowed
@@ -298,33 +293,114 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             newReasonAllowedBln = cReturnorderLine.currentReturnOrderLine.nieuweRegelBln;
         }
 
-        //Set reason if allowed
-        if (newReasonAllowedBln){
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.REASON)) {
+        //We scan 3 diffent things here
+        // Article
+        // Reason
+        // Document
+        boolean regexDecidedBln = false;
+        boolean isArticleBln = false;
+        boolean isReasonBln = false;
+        boolean isDocumentBln = false;
 
-                barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-                cBranchReason branchReason = cUser.currentUser.currentBranch.pGetReasonByName(barcodeWithoutPrefixStr);
-                if (branchReason != null) {
-                    cBranchReason.currentBranchReason = branchReason;
-                    ReturnArticleDetailFragment.pSetReason();
-                }
+        //If we have no match, we are done here
+        if (cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr()).size() == 0) {
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_unknown_barcode), null);
+            return;
+        }
+
+        if (cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr()).size() == 1) {
+
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+                isArticleBln = true;
+                regexDecidedBln = true;
+            }
+
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.REASON)) {
+                isReasonBln = true;
+                regexDecidedBln = true;
+
+            }
+
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
+                isDocumentBln = true;
+                regexDecidedBln = true;
+            }
+        }
+
+        //We have multiple possible matches
+        else
+        {
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutPrefixBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.REASON)) {
+                isReasonBln = true;
+                regexDecidedBln = true;
+            }
+
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutPrefixBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
+                isDocumentBln = true;
+                regexDecidedBln = true;
+            }
+
+            if (!regexDecidedBln) {
+                regexDecidedBln = true;
+                isArticleBln = true;
+            }
+        }
+
+        if (isReasonBln && !newReasonAllowedBln) {
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_reason_scan_not_allowed), null);
+            ReturnorderDocumentActivity.busyBln = false;
+            return;
+        }
+
+
+        //Try to set the reason
+        if (isReasonBln) {
+            cBranchReason branchReason = cUser.currentUser.currentBranch.pGetReasonByName(barcodeWithoutPrefixStr);
+            if (branchReason != null) {
+                cBranchReason.currentBranchReason = branchReason;
+                ReturnArticleDetailFragment.pSetReason();
+                return;
+            }
+            else {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_reason_unknown), null);
                 return;
             }
         }
 
-        //Only ARTICLE scans are allowed
-        for ( cBarcodeLayout barcodeLayout :  cBarcodeLayout.allBarcodeLayoutsObl) {
-            if (barcodeLayout.getBarcodeLayoutEnu() != cBarcodeLayout.barcodeLayoutEnu.ARTICLE){
-                if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), barcodeLayout.getBarcodeLayoutEnu())) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.error_article_scan_mandatory), null);
-                    ReturnorderDocumentActivity.busyBln = false;
+        if (isArticleBln) {
+
+            if (!ReturnArticleDetailFragment.mCheckBarcodeWithLineBarcodesBln(pvBarcodeScan)) {
+
+                if (cReturnorderLine.currentReturnOrderLine.getRetourredenStr().isEmpty()) {
+                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_reason_first), null);
                     return;
                 }
+
+                //Close this fragment, we are done here
+                ReturnArticleDetailFragment.mHandleDone();
+
+                //Handle scan in BIN activity,
+                ReturnorderDocumentActivity.pHandleScan(pvBarcodeScan);
+                return;
             }
+
+            //Try to raise quantityDbl
+            ReturnArticleDetailFragment.mTryToChangeReturnorderQuantity(true, false,cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl() );
+
         }
 
-        //Check if the scanned value belongs to this line
-        if (!ReturnArticleDetailFragment.mCheckBarcodeWithLineBarcodesBln(pvBarcodeScan)) {
+        if (isDocumentBln) {
+
+
+            if (cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr().equalsIgnoreCase(barcodeWithoutPrefixStr)) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_document_already_active), null);
+                return;
+            }
+
+            if (cReturnorderLine.currentReturnOrderLine.getRetourredenStr().isEmpty()) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_reason_first), null);
+                return;
+            }
 
             //Close this fragment, we are done here
             ReturnArticleDetailFragment.mHandleDone();
@@ -332,10 +408,8 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             //Handle scan in BIN activity,
             ReturnorderDocumentActivity.pHandleScan(pvBarcodeScan);
             return;
-        }
 
-        //Try to raise quantityDbl
-        ReturnArticleDetailFragment.mTryToChangeReturnorderQuantity(true, false,cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl() );
+        }
 
     }
 
@@ -343,7 +417,6 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
         cAppExtension.dialogFragment = dialogFragment;
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
     }
-
 
     //End Region Public Methods
 
@@ -353,7 +426,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
         //If scanned value matches the current barcodeStr, then we have a match
         if (pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cReturnorderLineBarcode.currentreturnorderLineBarcode.getBarcodeStr()) ||
-           pvBarcodeScan.getBarcodeFormattedStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr()) ) {
+                pvBarcodeScan.getBarcodeFormattedStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr()) ) {
             //We have a match, so leave
             return  true;
         }
@@ -368,7 +441,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
         //We scanned a barcodeStr for a different article
         if (!returnorderBarcode.getItemNoStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getItemNoStr()) ||
-            ! returnorderBarcode.getVariantCodeStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getVariantCodeStr())) {
+                ! returnorderBarcode.getVariantCodeStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getVariantCodeStr())) {
             return false;
 
         }
@@ -378,7 +451,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
             //We have a match, so set
             if (returnorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
-               returnorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
+                    returnorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
                 cReturnorderLineBarcode.currentreturnorderLineBarcode = returnorderLineBarcode;
                 cReturnorderBarcode.currentReturnOrderBarcode = returnorderBarcode;
                 return true;
@@ -499,9 +572,9 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
 
-                  ReturnArticleDetailFragment.mTryToChangeReturnorderQuantity(true,
-                                                                               true,
-                                                                                cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl());
+                    ReturnArticleDetailFragment.mTryToChangeReturnorderQuantity(true,
+                            true,
+                            cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl());
 
                     ReturnArticleDetailFragment.imageButtonDone.callOnClick();
                 }
@@ -515,7 +588,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
         ReturnArticleDetailFragment.imageButtonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               ReturnArticleDetailFragment.mHandleDone();
+                ReturnArticleDetailFragment.mHandleDone();
             }
         });
 
@@ -525,17 +598,18 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
         ReturnArticleDetailFragment.imageButtonReason.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-               mShowAddReasonFragment();
+                if (cReturnorderLine.currentReturnOrderLine.nieuweRegelBln) {
+                    mShowAddReasonFragment();
+                }
             }
         });
     }
-
 
     private void mDoDelayedMinus(Runnable pvRunnable, long pvMilliSecsLng) {
         ReturnArticleDetailFragment.minusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
         ReturnArticleDetailFragment.returnCounterMinusHelperInt += 1;
 
-}
+    }
 
     private void mDoDelayedPlus(Runnable pvRunnable, long pvMilliSecsLng) {
         ReturnArticleDetailFragment.plusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
@@ -545,6 +619,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
     private static void mTryToChangeReturnorderQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
 
         String newQuantityStr;
+        Double newQuantityDbl;
 
         if (pvIsPositiveBln) {
 
@@ -586,17 +661,24 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             }
 
         }
-        if (pvAmountDbl < 0) {
+        if (pvAmountDbl <= 0) {
             cUserInterface.pDoNope(ReturnArticleDetailFragment.quantityText, true, true);
             return;
         }
 
         //Determine the new amount
         if (pvAmountFixedBln) {
-
             cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl = pvAmountDbl;
             cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl = pvAmountDbl;
         } else {
+
+            newQuantityDbl =  cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl - pvAmountDbl;
+
+            if (newQuantityDbl == 0 ) {
+                cUserInterface.pDoNope(ReturnArticleDetailFragment.quantityText, true, true);
+                return;
+            }
+
             cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl -= pvAmountDbl;
             cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl -= pvAmountDbl;
 
@@ -625,7 +707,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
     private static void mShowOrHideGenericExtraFields() {
 
         if (!cReturnorderLine.currentReturnOrderLine.getExtraField1Str().isEmpty()) {
-           ReturnArticleDetailFragment.genericItemExtraField1Text.setVisibility(View.VISIBLE);
+            ReturnArticleDetailFragment.genericItemExtraField1Text.setVisibility(View.VISIBLE);
             ReturnArticleDetailFragment.genericItemExtraField1Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField1Str());
         }
         if (!cReturnorderLine.currentReturnOrderLine.getExtraField2Str().isEmpty()) {
@@ -668,6 +750,10 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             return;
         }
         cReturnorderLine.currentReturnOrderLine.retourredenStr = cBranchReason.currentBranchReason.getReasonStr();
+
+        //Try to match item, variantcode and reason with previous lines so we can show 1 line in recycler
+        cReturnorderLine.pCheckIfLineIsAlreadyInUse();
+
 
         //Try to save the line to the database
         if (cReturnorderLine.currentReturnOrderLine.isGeneratedBln() && cReturnorderLine.currentReturnOrderLine.nieuweRegelBln){
@@ -739,5 +825,32 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
         reasonFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDREASON_TAG);
 
     }
-    //End Region Private Methods
+
+    private void mSetImageButtonBarcodeListener() {
+        ReturnArticleDetailFragment.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View pvView) {
+
+                if (cReturnorderLine.currentReturnOrderLine.barcodeObl() == null || cReturnorderLine.currentReturnOrderLine.barcodeObl().size() == 0) {
+                    return;
+                }
+
+                //If we only have one barcodeStr, then automatticaly select that barcodeStr
+                if (cReturnorderLine.currentReturnOrderLine.barcodeObl().size() == 1) {
+                    ReturnArticleDetailFragment.pHandleScan(cBarcodeScan.pFakeScan(cReturnorderLine.currentReturnOrderLine.barcodeObl().get(0).getBarcodeStr()));
+                    return;
+                }
+
+                mShowBarcodeSelectFragment();
+
+            }
+        });
+    }
+
+    private void mShowBarcodeSelectFragment() {
+        BarcodeFragment barcodeFragment = new BarcodeFragment();
+        barcodeFragment.show(cAppExtension.fragmentManager, BARCODEFRAGMENT_TAG);
+    }
+
+     //End Region Private Methods
 }

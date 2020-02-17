@@ -53,7 +53,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageBin"
+            android:id="@+id/imageTime"
             style="@style/recyclerItemImage"
             app:srcCompat="@drawable/ic_location_black_24dp"
             app:layout_constraintStart_toEndOf="@id/viewOrderStatus"
@@ -62,7 +62,7 @@
         <TextView
             android:id="@+id/textViewBin"
             style="@style/inventoryorderRecyclerOrdernumberText"
-            app:layout_constraintStart_toEndOf="@id/imageBin"
+            app:layout_constraintStart_toEndOf="@id/imageTime"
             app:layout_constraintEnd_toEndOf="@id/imageChevronDown"
             app:layout_constraintTop_toTopOf="parent"
             />

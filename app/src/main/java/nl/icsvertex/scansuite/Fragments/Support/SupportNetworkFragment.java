@@ -4,23 +4,23 @@ package nl.icsvertex.scansuite.Fragments.Support;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
-import ICS.Utils.cUserInterface;
-import SSU_WHS.General.cPublicDefinitions;
 import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
+import ICS.Utils.cUserInterface;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
 
 public class SupportNetworkFragment extends Fragment implements iICSDefaultFragment {
@@ -47,7 +47,11 @@ public class SupportNetworkFragment extends Fragment implements iICSDefaultFragm
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.mFragmentInitialize();
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.mFragmentInitialize();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == cPublicDefinitions.CHANGEWIFI_REQUESTCODE) {

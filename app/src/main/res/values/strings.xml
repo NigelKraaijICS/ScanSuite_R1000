@@ -85,6 +85,7 @@
     <string name="mainmenu_support">Support and info</string>
     <string name="mainmenu_language">Language</string>
     <string name="mainmenu_datetime">Date and time</string>
+    <string name="mainmenu_environments">Environments</string>
     <string name="changelanguage_description">Change language</string>
     <string name="changedatetime_description">Change date and time</string>
     <string name="tab_support_network">Network</string>
@@ -106,11 +107,11 @@
 
     <!--region Menu Items-->
     <string name="menuitem_external_return">Picking return supplier</string>
-    <string name="menuitem_intake">Intake</string>
-    <string name="menuitem_intake_eo">External intake</string>
-    <string name="menuitem_intake_ma">Warehouse intake</string>
-    <string name="menuitem_intake_om">Internal intake</string>
-    <string name="menuitem_intake_close">Close intake</string>
+    <string name="menuitem_intake">Reception and Storage</string>
+    <string name="menuitem_intake_eo">External reception</string>
+    <string name="menuitem_intake_ma">Storage reception</string>
+    <string name="menuitem_intake_om">Internal reception</string>
+    <string name="menuitem_intake_close">Close reception</string>
     <string name="menuitem_inventory">Inventory</string>
     <string name="menuitem_inventoryclose">Inventory close</string>
     <string name="menuitem_move">Move</string>
@@ -503,7 +504,7 @@
     <string name="error_get_inventoryorders_failed">Getting inventoryorders from server failed</string>
     <string name="error_get_inventorylines_failed">Getting inventorylines from server failed</string>
     <string name="button_new_inventoryorder">New</string>
-    <string name="hint_document">Document</string>
+    <string name="hint_document_inventory">Document</string>
     <string name="button_create_inventory">Create</string>
     <string name="createinventory_header_default">Create inventory</string>
     <string name="createinventory_text_default">Create new inventory?</string>
@@ -512,6 +513,7 @@
     <string name="tab_inventorybin_done">done</string>
     <string name="tab_inventorybin_total">total</string>
     <string name="hint_add_bin">Scan or type new bin</string>
+    <string name="hint_add_packingslip">Packingslip</string>
     <string name="add_bin_header_default">Add bin</string>
     <string name="button_add_bin">Add bin</string>
     <string name="message_bin_added">Bin %1$s was added</string>
@@ -619,6 +621,7 @@
     <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
     <string name="show_only_deviations">Show deviations</string>
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
+    <string name="message_close_receiveorder_generated_text">You received %1$s items\n\n\n\nWould you like to close the order?</string>
     <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
     <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
     <string name="message_exactly_what_you_needed">Exactly what you needed</string>
@@ -636,8 +639,10 @@
     <!--endregion move-->
 
     <!--Region return-->
+    <string name="message_check_barcodes">Check barcodes with ERP</string>
     <string name="multiple_documents">Multiple documents</string>
     <string name="multiple_documents_switch" translatable="false">Multiple_documents_switch</string>
+    <string name="check_receive_barcodes_switch" translatable="false">check_receive_barcodes_switch</string>
     <string name="message_close_document">Close document</string>
     <string name="message_document_text_sure">Are you sure you want to close the document</string>
     <string name="message_document_close_fail">Document closing failed</string>
@@ -651,15 +656,60 @@
     <string name="createreturn_text_default">Create return</string>
     <string name="message_scan_return_document">Scan return document</string>
     <string name="message_scan_return_bin">Scan return bin</string>
+    <string name="message_scan_receive_bin">Scan receive bin</string>
     <string name="message_unknown_bin">Bin unknown at current location</string>
     <string name="message_bin_not_allowed_for_return">Bin not allowed for return</string>
+    <string name="message_bin_not_allowed_for_receive">Bin not allowed for receive</string>
     <string name="screentitle_return">Return</string>
     <string name="button_add_document">Add document</string>
     <string name="add_document_header_default">Add Document</string>
     <string name="error_getting_return_reasons">Getting return reasons failes</string>
     <string name="choose_reason">Choose returnreason</string>
     <string name="hint_add_reason">Scan or select reason</string>
+    <string name="select_reason_switch" translatable="false">Select_reason_switch</string>
+    <string name="select_reason">Select reason</string>
+    <string name="screentitle_returnorderdocuments">Return documents</string>
+    <string name="scan_or_select_document">Scan or select document</string>
+    <string name="message_clear_reason">Clear reason</string>
+    <string name="message_shipment_already_handled">This shipment is already handled</string>
+    <string name="message_reason_scan_not_allowed">Reason scan is not allowed</string>
+    <string name="message_reason_unknown">Reason unknown</string>
+    <string name="message_scan_reason_first">Decide reason, before you scan a different article</string>
+    <string name="message_document_already_active">This document is the current document</string>
+    <string name="create_external_receive">Create external receive</string>
+    <string name="message_scan_receive_document">Scan/type document</string>
+    <string name="screentitle_receive">Receive</string>
+    <string name="error_could_not_invalidate_order">Could not invalidate order</string>
+    <string name="message_order_invalidated">Order invalidated</string>
+    <string name="order_has_deleted_by_erp">Order deleted by ERP</string>
+    <string name="message_next_activity_not_found">Next activity can\'t be found</string>
+    <string name="message_less_items">LESS items</string>
+    <string name="message_extra_items">EXTRA items</string>
+    <string name="screentitle_inventorybincount">Bin count</string>
+    <string name="message_current_shipment_unknown">Current shipment unknown</string>
+    <string name="message_shipping_agent_unkown_or_empty">Shipping agent unknown or empty</string>
+    <string name="message_shipping_agentservice_unkown_or_empty">ShippingAgentService unknown or empty</string>
+    <string name="message_shipping_agentservice_shippingingunits_unkown_or_empty">Shipping units unknown or empty</string>
+    <string name="hint_document_receive">Document</string>
+    <string name="error_get_next_activity_failed">Getting next activity failed</string>
+    <string name="message_locking_order_failed">Locking order failed</string>
+    <string name="message_order_not_created">Order could not be created</string>
+    <string name="message_scan_is_not_document">Scan doesn\'t match document, please scan a document</string>
+    <string name="message_unknown">Unknown</string>
+    <string name="message_orderlinebusy_header">Orderline busy</string>
+    <string name="message_orderlinebusy_text">Line is still busy, what do you want to do with your current scans</string>
     <!--End Region return-->
 
+    <!--Region plurals-->
+    <plurals name="plural_orders">
+        <item quantity="one">order</item>
+        <item quantity="other">orders</item>
+    </plurals>
 
+    <plurals name="plural_parameter1_orders">
+        <item quantity="one">%d order</item>
+        <item quantity="other">%d orders</item>
+    </plurals>
+
+    <!--End Region plurals-->
 </resources>

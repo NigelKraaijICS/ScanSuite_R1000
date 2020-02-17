@@ -2,27 +2,28 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cRegex;
+import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
-import ICS.cAppExtension;
-import ICS.Utils.cRegex;
-import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
 
 public class WorkplaceFragment extends DialogFragment implements iICSDefaultFragment {
@@ -130,7 +131,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
         String barcodeWithoutPrefixStr ;
 
-        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             boolean foundBin = false;
 
             if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.WORKPLACE)) {

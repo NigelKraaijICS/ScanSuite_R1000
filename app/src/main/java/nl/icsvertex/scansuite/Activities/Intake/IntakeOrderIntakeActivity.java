@@ -69,7 +69,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private static AppCompatImageButton imageButtonPlus;
     private static AppCompatImageButton imageButtonDone;
 
- private static ConstraintLayout intakeorderIntakeContainer;
+   private static ConstraintLayout intakeorderIntakeContainer;
 
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
@@ -189,7 +189,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        cIntakeorderMATLine.currentIntakeorderMATLine = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinestoShowObl().get(pvPositionInt);
+        cIntakeorderMATLine.currentIntakeorderMATLine = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowObl().get(pvPositionInt);
 
         //Remove the enviroment
         this.mRemoveAdapterFromFragment();
@@ -282,14 +282,11 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     @Override
     public void mInitScreen() {
         cBarcodeScan.pRegisterBarcodeReceiver();
-
         //Raise quantity with scanned barcodeStr, if we started this activity with a scan
         if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned != null) {
-
             IntakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
             cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned =null;
         }
-
     }
 
     @Override
@@ -320,20 +317,33 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         cResult hulpRst;
 
-        //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this BIN
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+        boolean binCheckedBln = false;
 
-            hulpRst = IntakeOrderIntakeActivity.mHandleArticleScanRst(pvBarcodeScan);
-            if (! hulpRst.resultBln) {
-                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",null,true);
+        //This barcode matches multiple lay-outs so this can be a BIN or an article
+        if (cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr()).size() > 1) {
+
+            //First check if this is a BIN
+            cBranchBin branchBin =  cUser.currentUser.currentBranch.pGetBinByCode(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+
+            if (branchBin != null) {
+
+                hulpRst = IntakeOrderIntakeActivity.mHandleBINScanRst(pvBarcodeScan);
+                if (! hulpRst.resultBln) {
+                    cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,hulpRst.messagesStr(),null,true);
+                    return;
+                }
+
+                //We are done
+                IntakeOrderIntakeActivity.mStoreDone();
                 return;
             }
-            return;
+
+            binCheckedBln = true;
+
         }
 
-
         //Check if we have scanned a BIN and check if there are not handled linesInt for this BIN
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+        if (!binCheckedBln && cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
 
             hulpRst = IntakeOrderIntakeActivity.mHandleBINScanRst(pvBarcodeScan);
             if (! hulpRst.resultBln) {
@@ -343,8 +353,19 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
             //We are done
             IntakeOrderIntakeActivity.mStoreDone();
+            return;
 
+        }
 
+        //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this BIN
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+
+            hulpRst = IntakeOrderIntakeActivity.mHandleArticleScanRst(pvBarcodeScan);
+            if (! hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
+                return;
+            }
+            return;
         }
 
         cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,cAppExtension.activity.getString(R.string.message_unknown_barcode),null,true);
@@ -379,8 +400,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         IntakeOrderIntakeActivity.mGoBackToLinesActivity();
     }
 
-
-
     //End Region Public Methods
 
     //Region Private Methods
@@ -409,12 +428,12 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     private static void mShowLines() {
 
-        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinestoShowObl() == null  || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinestoShowObl().size() == 0) {
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowObl() == null  || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowObl().size() == 0) {
             IntakeOrderIntakeActivity.mFillRecycler(new ArrayList<cIntakeorderMATLine>());
             return;
         }
 
-        IntakeOrderIntakeActivity.mFillRecycler(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinestoShowObl());
+        IntakeOrderIntakeActivity.mFillRecycler(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowObl());
     }
 
     private void mSetArticleImageListener() {
@@ -431,7 +450,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             @Override
             public void onClick(View pvView) {
 
-                if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() == null ||cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size() == 0) {
+                if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size() == 0) {
                     return;
                 }
 
@@ -627,7 +646,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         IntakeOrderIntakeActivity.currentBin =  cUser.currentUser.currentBranch.pGetBinByCode(barcodeWithoutPrefixStr);
         if ( IntakeOrderIntakeActivity.currentBin  == null) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_unknown));
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_unknown,barcodeWithoutPrefixStr));
             return result;
         }
 
@@ -1088,7 +1107,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         IntakeOrderIntakeActivity.quantityRequiredText.setText(pDoubleToStringStr(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGetQuantityToHandleDbl()));
 
     }
-
 
     private static void mSetBinInfo(){
         IntakeOrderIntakeActivity.binContainer.setVisibility(View.GONE);

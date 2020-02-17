@@ -3,11 +3,6 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +10,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.R;
 
 public class NumberpickerFragment extends DialogFragment implements iICSDefaultFragment {

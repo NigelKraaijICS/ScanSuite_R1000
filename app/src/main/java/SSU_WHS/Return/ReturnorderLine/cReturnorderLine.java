@@ -2,6 +2,7 @@ package SSU_WHS.Return.ReturnorderLine;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -12,7 +13,11 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Basics.BranchReason.cBranchReason;
+import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.cDatabase;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
+import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
 import SSU_WHS.Webservice.cWebresult;
@@ -30,6 +35,24 @@ public class cReturnorderLine {
     public List<Long> lineNumberObl;
 
     public List<cReturnorderLineBarcode> lineBarcodesObl;
+
+    public List<cReturnorderBarcode> barcodeObl() {
+        List<cReturnorderBarcode> resultObl = new ArrayList<>();
+
+        if (cReturnorder.currentReturnOrder.barcodesObl() == null || cReturnorder.currentReturnOrder.barcodesObl().size() == 0) {
+            return  resultObl;
+        }
+
+        //Loop through all barcodes, and if item matches add it to the list
+        for (cReturnorderBarcode returnorderBarcode : cReturnorder.currentReturnOrder.barcodesObl()) {
+            if (returnorderBarcode.getItemNoStr().equalsIgnoreCase(this.getItemNoStr()) && returnorderBarcode.getVariantCodeStr().equalsIgnoreCase(this.getVariantCodeStr())) {
+                resultObl.add(returnorderBarcode);
+            }
+        }
+
+        return  resultObl;
+    }
+
 
     private static cReturnorderLineViewModel gReturnorderLineViewModel;
     public static cReturnorderLineViewModel getReturnorderLineViewModel() {
@@ -109,6 +132,15 @@ public class cReturnorderLine {
         return  cText.pDoubleToStringStr(this.getQuantityHandledTakeDbl()) + "/" + cText.pDoubleToStringStr(this.getQuantitytakeDbl());
     }
 
+    public String getReturnReasonDescriptoinStr(){
+        cBranchReason  branchReason = cUser.currentUser.currentBranch.pGetReasonByName(this.getRetourredenStr());
+        if (branchReason != null){
+            return branchReason.getDescriptionStr();
+        } else {
+            return "";
+        }
+    }
+
     private String extraField1Str;
     public String getExtraField1Str() {
         return extraField1Str;
@@ -181,7 +213,7 @@ public class cReturnorderLine {
         this.generatedBln = this.returnorderLineEntity.getGeneratedBln();
     }
 
-    public cReturnorderLine(cArticle pvArticle){
+      public cReturnorderLine(cArticle pvArticle){
         this.returnorderLineEntity = new cReturnorderLineEntity(pvArticle);
         this.itemNoStr = this.returnorderLineEntity.getItemNoStr();
         this.variantCodeStr = this.returnorderLineEntity.getVariantCodeStr();
@@ -204,6 +236,32 @@ public class cReturnorderLine {
         this.extraField8Str =  this.returnorderLineEntity.getExtraField8Str();
         this.generatedBln = this.returnorderLineEntity.getGeneratedBln();
     }
+
+    public cReturnorderLine(cReturnorderBarcode pvReturnorderBarcode){
+        this.returnorderLineEntity = new cReturnorderLineEntity(pvReturnorderBarcode);
+        this.itemNoStr = this.returnorderLineEntity.getItemNoStr();
+        this.variantCodeStr = this.returnorderLineEntity.getVariantCodeStr();
+        this.documentStr = this.returnorderLineEntity.getDocumentStr();
+        this.retourredenStr = this.returnorderLineEntity.getRetourreden();
+        this.descriptionStr = this.returnorderLineEntity.getDescriptionStr();
+        this.description2Str = this.returnorderLineEntity.getDescription2Str();
+        this.vendorItemNoStr = this.returnorderLineEntity.getVendorItemNoStr();
+        this.vendorItemDescriptionStr = this.returnorderLineEntity.getVendorItemDescriptionStr();
+        this.sortingSequenceNoInt = this.returnorderLineEntity.getSortingsequencenoInt();
+        this.quantitytakeDbl = this.returnorderLineEntity.getQuantitytakeDbl();
+        this.quantityHandledTakeDbl = this.returnorderLineEntity.getQuantityHandledtake();
+        this.extraField1Str =  this.returnorderLineEntity.getExtraField1Str();
+        this.extraField2Str = this.returnorderLineEntity.getExtraField2Str();
+        this.extraField3Str =  this.returnorderLineEntity.getExtraField3Str();
+        this.extraField4Str =  this.returnorderLineEntity.getExtraField4Str();
+        this.extraField5Str =  this.returnorderLineEntity.getExtraField5Str();
+        this.extraField6Str =  this.returnorderLineEntity.getExtraField6Str();
+        this.extraField7Str =  this.returnorderLineEntity.getExtraField7Str();
+        this.extraField8Str =  this.returnorderLineEntity.getExtraField8Str();
+        this.generatedBln = this.returnorderLineEntity.getGeneratedBln();
+    }
+
+
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
@@ -251,6 +309,16 @@ public class cReturnorderLine {
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             cReturnorderLine.currentReturnOrderLine.lineNumberObl.add(WebResult.getResultLng());
             cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.clear();
+
+            if (cReturnorderLine.currentReturnOrderLine.getItemNoStr().equalsIgnoreCase("UNKNOWN")) {
+                JSONObject jsonObject = WebResult.getResultDtt().get(0);
+                try {
+                    cReturnorderLine.currentReturnOrderLine.variantCodeStr =    jsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
+                    cReturnorderLine.currentReturnOrderLine.description2Str =  jsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
             return  true;
             }
         else {
@@ -289,7 +357,7 @@ public class cReturnorderLine {
             cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.clear();
 
             cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.remove(cReturnorderLine.currentReturnOrderLine);
-
+            cBranchReason.currentBranchReason = null;
             return  result;
         }
         else {
@@ -319,7 +387,9 @@ public class cReturnorderLine {
 
             //Reset this line
             cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
-            cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.clear();
+            if (cReturnorderLine.currentReturnOrderLine.lineBarcodesObl != null){
+                cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.clear();
+            }
 
             return  result;
         }
@@ -330,5 +400,24 @@ public class cReturnorderLine {
             return  result;
         }
     }
+
+    public static void pCheckIfLineIsAlreadyInUse () {
+
+        ArrayList<cReturnorderLineBarcode> lineBarcodeObl;
+        lineBarcodeObl = new ArrayList<>();
+
+        for (cReturnorderLine returnorderLine : cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl){
+            if (returnorderLine.getRetourredenStr().equals(cReturnorderLine.currentReturnOrderLine.getRetourredenStr())
+                    && returnorderLine.getItemNoStr().equals(cReturnorderLine.currentReturnOrderLine.getItemNoStr())
+                    && returnorderLine.getVariantCodeStr().equals(cReturnorderLine.currentReturnOrderLine.getVariantCodeStr())){
+
+                lineBarcodeObl.addAll(cReturnorderLine.currentReturnOrderLine.lineBarcodesObl);
+                returnorderLine.quantityHandledTakeDbl += cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl();
+                cReturnorderLine.currentReturnOrderLine = returnorderLine;
+                cReturnorderLine.currentReturnOrderLine.lineBarcodesObl = lineBarcodeObl;
+            }
+        }
+    }
+
 
 }

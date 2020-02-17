@@ -2,7 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/intakeorderLineItemSummaryLinearLayout"
+    android:id="@+id/receiveorderLineItemSummaryLinearLayout"
     style="@style/defaultLineRecyclerLinearLayout"
     >
     <RelativeLayout
@@ -74,7 +74,7 @@
         <View
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"
-            app:layout_constraintStart_toStartOf="@id/imageSendStatus"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

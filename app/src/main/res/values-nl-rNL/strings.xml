@@ -70,11 +70,11 @@
     <string name="connectiontype_unknown">Geen idee</string>
     <string name="screentitle_menu">Menu</string>
     <string name="menuitem_external_return">Picking return supplier</string>
-    <string name="menuitem_intake">Ontvangst/Opslag</string>
-    <string name="menuitem_intake_eo">External intake</string>
-    <string name="menuitem_intake_ma">Warehouse intake</string>
-    <string name="menuitem_intake_om">Internal intake</string>
-    <string name="menuitem_intake_close">Close intake</string>
+    <string name="menuitem_intake">Ontvangst en Opslag</string>
+    <string name="menuitem_intake_eo">Externe Ontvangsten</string>
+    <string name="menuitem_intake_ma">Magazijnopslag</string>
+    <string name="menuitem_intake_om">Interne Ontvangsten</string>
+    <string name="menuitem_intake_close">Afsluiten ontvangst</string>
     <string name="menuitem_inventory">Inventarisatie</string>
     <string name="menuitem_inventoryclose">Inventarisatie sluiten</string>
     <string name="menuitem_move">Verplaatsen</string>
@@ -388,7 +388,7 @@
     <string name="createinventory_text_default">Wilt u een nieuwe inventarisatie opdracht aanmaken?</string>
     <string name="dont_care">Negeer</string>
     <string name="tab_inventorybin_done">klaar</string>
-    <string name="hint_document">Document</string>
+    <string name="hint_document_inventory">Document</string>
     <string name="message_add_article_now_allowed">Artikel toevoegen niet toegestaan</string>
     <string name="message_adding_erp_article_failed">ERP artikel toevoegen mislukt</string>
     <string name="message_adding_line_failed">Regel toevoegen mislukt</string>
@@ -418,7 +418,7 @@
     <string name="message_workplace_selected">Werkplek geselecteerd</string>
     <string name="message_add_bin_not_allowed">Het is niet toegestaan om een locatie toe te voegen</string>
     <string name="items">Stuks</string>
-    <string name="lines">Regels:</string>
+    <string name="lines">Regels</string>
     <string name="message_close_order_text">U gaat de opdracht sluiten, weet u het zeker?</string>
     <string name="message_bin_already_closed">Deze locatie is reeds gesloten, scan een andere locatie.</string>
     <string name="message_bin_text_sure">Deze locatie is leeg, weet u het zeker?</string>
@@ -466,6 +466,7 @@
     <string name="battery_wireless">draadloos</string>
     <string name="label_application_installed">Geinstalleerd op</string>
     <string name="message_bin_not_allowed">Locatie scans niet toegestaan</string>
+    <string name="hint_document_receive">Document</string>
     <string name="message_close_now">Nu sluiten</string>
     <string name="message_finish_later">Later afmaken</string>
     <string name="message_no_lines_for_this_barcode">Geen regels beschikbaar voor deze barcode</string>
@@ -502,7 +503,7 @@
     <string name="tab_moveorderline_done">Klaar</string>
     <string name="tab_moveorderline_notdone">Niet klaar</string>
     <string name="tab_moveorderline_total">Totaal</string>
-    <string name="message_exactly_what_you_needed">Conform</string>
+    <string name="message_exactly_what_you_needed">De opdracht is conform</string>
     <string name="message_bin_required">Scan locatie om regel te sluiten</string>
     <string name="connected">Verbonden</string>
     <string name="message_checking_connection">Connectie controleren.....</string>
@@ -538,6 +539,53 @@
     <string name="error_getting_return_reasons">Ophalen retour redenen mislukt</string>
     <string name="choose_reason">Kies retourreden</string>
     <string name="hint_add_reason">Scan of selecteer reden</string>
+    <string name="select_reason_switch" translatable="false">Select_reason_switch</string>
 
+    <!--Region plurals-->
+    <plurals name="plural_orders">
+        <item quantity="one">opdracht</item>
+        <item quantity="other">opdrachten</item>
+    </plurals>
+
+    <plurals name="plural_parameter1_orders">
+        <item quantity="one">%d opdracht</item>
+        <item quantity="other">%d opdrachten</item>
+    </plurals>
+    <string name="mainmenu_environments">Omgevingen</string>
+    <string name="select_reason">Selecteer retourreden</string>
+    <string name="screentitle_returnorderdocuments">Retour documenten</string>
+    <string name="scan_or_select_document">Scan of selecteer document</string>
+    <string name="message_clear_reason">Verwijder reden</string>
+    <string name="message_shipment_already_handled">Deze zending is reeds behandeld</string>
+    <string name="message_reason_scan_not_allowed">Retourreden scan is niet toegestaan</string>
+    <string name="hint_add_packingslip">Pakbon</string>
+    <string name="message_document_already_active">Dit document is het huidige document</string>
+    <string name="message_reason_unknown">Retourreden onbekend</string>
+    <string name="message_scan_reason_first">Geef reden in voordat u een nieuw artikel scanned</string>
+    <string name="message_close_receiveorder_generated_text">U heeft %1$s items ontvangen\n\nWilt u de opdracht sluiten?</string>
+    <string name="create_external_receive">Creeer externe ontvangst</string>
+    <string name="error_could_not_invalidate_order">Opdracht vervallen mislukt</string>
+    <string name="message_scan_receive_document">Scan/type document</string>
+    <string name="screentitle_receive">Ontvangen</string>
+    <string name="message_order_invalidated">Order is vervallen</string>
+    <string name="message_scan_receive_bin">Scan ontvangst locatie</string>
+    <string name="message_bin_not_allowed_for_receive">BIN niet geschikt voor ontvangst</string>
+    <string name="message_check_barcodes">Controleer barcodes bij ERP</string>
+    <string name="order_has_deleted_by_erp">Order verwijderd door ERP</string>
+    <string name="message_extra_items">EXTRA ontvangen</string>
+    <string name="message_less_items">MINDER ontvangen</string>
+    <string name="message_next_activity_not_found">Volgende activeit kan niet worden gevonden</string>
+    <string name="message_current_shipment_unknown">Huidige zending onbekend</string>
+    <string name="message_shipping_agent_unkown_or_empty">Vervoerder onbekend of leeg</string>
+    <string name="message_shipping_agentservice_shippingingunits_unkown_or_empty">Paketten onbekend of leeg</string>
+    <string name="message_shipping_agentservice_unkown_or_empty">Vervoerder afdeling leeg of onbekend</string>
+    <string name="screentitle_inventorybincount">Locatie aantal</string>
+    <string name="error_get_next_activity_failed">Volgende activiteit ophalen mislukt</string>
+    <string name="message_locking_order_failed">Opdracht blokkeren mislukt</string>
+    <string name="message_order_not_created">Opdracht kon niet aangemaakt worden</string>
+    <string name="message_scan_is_not_document">De scan komt niet overeen met een document, scan een document</string>
+    <string name="message_unknown">Onbekend</string>
+    <string name="message_orderlinebusy_header">Regel in behandeling</string>
+    <string name="message_orderlinebusy_text">Regel nog in behandeling, weet u zeker dat u de huidige scans wilt laten vervallen?</string>
 
 </resources>

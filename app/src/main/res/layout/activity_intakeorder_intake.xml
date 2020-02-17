@@ -79,6 +79,7 @@
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
+        android:elevation="@dimen/default_elevation"
         app:layout_constraintTop_toBottomOf="@id/sourceNoContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

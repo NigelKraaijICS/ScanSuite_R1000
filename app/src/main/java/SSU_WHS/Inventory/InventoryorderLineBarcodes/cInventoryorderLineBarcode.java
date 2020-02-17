@@ -9,7 +9,6 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 
 public class cInventoryorderLineBarcode {
 

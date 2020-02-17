@@ -1,4 +1,4 @@
-package nl.icsvertex.scansuite.Activities.Intake;
+package nl.icsvertex.scansuite.Activities.IntakeAndReceive;
 
 
 import android.content.Intent;
@@ -29,6 +29,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -45,11 +50,14 @@ import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.R;
 
-public class IntakeorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
+public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
     //Region Public Properties
 
@@ -65,13 +73,20 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubTitle;
+    private static TextView toolbarSubTitle2;
     private static SearchView recyclerSearchView;
 
     private static ImageView imageViewFilter;
+    private static ImageView imageViewNewOrder;
+
     private  static ConstraintLayout constraintFilterOrders;
     private static SwipeRefreshLayout swipeRefreshLayout;
 
     private static BottomSheetBehavior bottomSheetBehavior;
+
+    public static cWarehouseorder.ReceiveAndStoreMainTypeEnu currentMainTypeEnu;
+
+    public static boolean startedViaMenuBln;
 
     // End Region Views
 
@@ -82,8 +97,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     @Override
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
-        setContentView(R.layout.activity_intakeorderselect);
-        this.mActivityInitialize();
+        setContentView(R.layout.activity_intake_and_receive_orderselect);
     }
 
     @Override
@@ -104,6 +118,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
         cUserInterface.pEnableScanner();
+        mActivityInitialize();
     }
 
     @Override
@@ -124,7 +139,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     @Override
     public void onRefresh() {
-        IntakeorderSelectActivity.pFillOrders();
+        IntakeAndReceiveSelectActivity.pFillOrders();
     }
 
 
@@ -160,22 +175,25 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     @Override
     public void mFindViews() {
-        IntakeorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        IntakeorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        IntakeorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        IntakeorderSelectActivity.recyclerViewIntakeorders = findViewById(R.id.recyclerViewIntakeorders);
-        IntakeorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        IntakeorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
-        IntakeorderSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
-        IntakeorderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        IntakeAndReceiveSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
+        IntakeAndReceiveSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        IntakeAndReceiveSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        IntakeAndReceiveSelectActivity.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
+        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders = findViewById(R.id.recyclerViewIntakeorders);
+        IntakeAndReceiveSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
+        IntakeAndReceiveSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
+        IntakeAndReceiveSelectActivity.imageViewNewOrder = findViewById(R.id.imageViewNewOrder);
+        IntakeAndReceiveSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
+        IntakeAndReceiveSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        IntakeorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
-        IntakeorderSelectActivity.toolbarTitle.setText(pvScreenTitle);
-        IntakeorderSelectActivity.toolbarTitle.setSelected(true);
-        IntakeorderSelectActivity.toolbarSubTitle.setSelected(true);
+        IntakeAndReceiveSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
+        IntakeAndReceiveSelectActivity.toolbarTitle.setText(pvScreenTitle);
+        IntakeAndReceiveSelectActivity.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
+        IntakeAndReceiveSelectActivity.toolbarTitle.setSelected(true);
+        IntakeAndReceiveSelectActivity.toolbarSubTitle.setSelected(true);
         ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -190,7 +208,8 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     public void mFieldsInitialize() {
         this.mInitBottomSheet();
         this.mResetCurrents();
-        IntakeorderSelectActivity.pFillOrders();
+        this.mSetNewOrderButton();
+        IntakeAndReceiveSelectActivity.pFillOrders();
     }
 
     @Override
@@ -199,6 +218,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         this.mSetSearchListener();
         this.mSetFilterListener();
         this.mSetSwipeRefreshListener();
+        this.mSetNewOrderListener();
     }
 
     @Override
@@ -209,6 +229,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
+
 
     public static void pFillOrders() {
 
@@ -226,23 +247,23 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Set filter with scanned barcodeStr if there is no prefix
-        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
-            IntakeorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
-            IntakeorderSelectActivity.recyclerSearchView.callOnClick();
+            IntakeAndReceiveSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
+            IntakeAndReceiveSelectActivity.recyclerSearchView.callOnClick();
             return;
         }
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
             //has prefix, is salesorderStr
-            IntakeorderSelectActivity.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
-            IntakeorderSelectActivity.recyclerSearchView.callOnClick();
+            IntakeAndReceiveSelectActivity.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
+            IntakeAndReceiveSelectActivity.recyclerSearchView.callOnClick();
             return;
         }
 
         //If there is a prefix but it's not a salesorder tgen do nope
-        cUserInterface.pDoNope(IntakeorderSelectActivity.recyclerSearchView, true, true);
+        cUserInterface.pDoNope(IntakeAndReceiveSelectActivity.recyclerSearchView, true, true);
 
     }
 
@@ -274,6 +295,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private static void mHandleFillOrders(){
 
+
         //all Intakeorders
         if (!cIntakeorder.pGetIntakeOrdersViaWebserviceBln(true, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_intakeorders_failed), "", true, true );
@@ -281,7 +303,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         }
 
         if (cIntakeorder.allIntakeordersObl == null || cIntakeorder.allIntakeordersObl.size() == 0) {
-            IntakeorderSelectActivity.mShowNoOrdersIcon(true);
+            IntakeAndReceiveSelectActivity.mShowNoOrdersIcon(true);
             return;
         }
 
@@ -289,8 +311,8 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
             @Override
             public void run() {
                 //Fill and show recycler
-                IntakeorderSelectActivity.mSetIntakeorderRecycler(cIntakeorder.allIntakeordersObl);
-                IntakeorderSelectActivity.mShowNoOrdersIcon(false);
+                IntakeAndReceiveSelectActivity.mSetIntakeorderRecycler(cIntakeorder.allIntakeordersObl);
+                IntakeAndReceiveSelectActivity.mShowNoOrdersIcon(false);
                 if (cSharedPreferences.userFilterBln()) {
                     mApplyFilter();
                 }
@@ -305,8 +327,8 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         cResult hulpResult;
 
         //Try to lock the intakeorder
-        if (!IntakeorderSelectActivity.mTryToLockOrderBln()) {
-            IntakeorderSelectActivity.pFillOrders();
+        if (!IntakeAndReceiveSelectActivity.mTryToLockOrderBln()) {
+            IntakeAndReceiveSelectActivity.pFillOrders();
             return;
         }
 
@@ -316,24 +338,46 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        hulpResult = IntakeorderSelectActivity.mGetOrderDetailsRst();
-        if (!hulpResult.resultBln) {
-            IntakeorderSelectActivity.mStepFailed(hulpResult.messagesStr());
-            return;
+        switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr()) {
+            case "MAT":
+                hulpResult = IntakeAndReceiveSelectActivity.mGetMATOrderDetailsRst();
+                if (!hulpResult.resultBln) {
+                    IntakeAndReceiveSelectActivity.mStepFailed(hulpResult.messagesStr());
+                    return;
+                }
+
+                cAppExtension.activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // If everything went well, then start Lines Activity
+                        IntakeAndReceiveSelectActivity.mShowIntakeLinesActivity();
+                    }
+                });
+
+                break;
+
+
+            case "EOS":
+                hulpResult = IntakeAndReceiveSelectActivity.mGetReceiveOrderDetailsRst();
+                if (!hulpResult.resultBln) {
+                    IntakeAndReceiveSelectActivity.mStepFailed(hulpResult.messagesStr());
+                    return;
+                }
+
+                cAppExtension.activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // If everything went well, then start Lines Activity
+                        IntakeAndReceiveSelectActivity.mShowReceiveLinesActivity();
+                    }
+                });
+
+                break;
+
         }
-
-
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                IntakeorderSelectActivity.mShowIntakeLinesActivity();
-            }
-        });
-
     }
 
-    private static cResult mGetOrderDetailsRst(){
+    private static cResult mGetMATOrderDetailsRst(){
 
         cResult result;
 
@@ -379,6 +423,44 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         return  result;
     }
 
+    private static cResult mGetReceiveOrderDetailsRst(){
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all Items for current order, if size = 0 or webservice error then stop
+        if (!cIntakeorder.currentIntakeOrder.pGetReceiveItemsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
+            return result;
+        }
+
+        //Get all linesInt for current order, if size = 0 or webservice error then stop
+        if (!cIntakeorder.currentIntakeOrder.pGetReceiveLinesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
+            return result;
+        }
+
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!cIntakeorder.currentIntakeOrder.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        return  result;
+    }
+
     private static void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cIntakeorder.currentIntakeOrder.getOrderNumberStr(), true, true );
         cIntakeorder.currentIntakeOrder.pLockReleaseViaWebserviceBln();
@@ -398,6 +480,33 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
     }
 
+    private static void mShowReceiveLinesActivity() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
+
+        Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
+
+        if (container != null) {
+            View clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, ReceiveLinesActivity.VIEW_CHOSEN_ORDER));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
+        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+
+    }
+
+    private static void mShowCreateReceiveActivity() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        Intent intent = new Intent(cAppExtension.context, CreateReceiveActivity.class);
+        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+    }
+
     // End Region Private Methods
 
     // Region View Methods
@@ -406,10 +515,10 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mInitBottomSheet() {
 
-        IntakeorderSelectActivity.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
-        IntakeorderSelectActivity.bottomSheetBehavior.setHideable(true);
-        IntakeorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        IntakeorderSelectActivity.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        IntakeAndReceiveSelectActivity.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
+        IntakeAndReceiveSelectActivity.bottomSheetBehavior.setHideable(true);
+        IntakeAndReceiveSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        IntakeAndReceiveSelectActivity.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View pvBottomSheet, int pvNewStateInt) {
                 if (pvNewStateInt == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -436,11 +545,11 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     private void mShowHideBottomSheet(Boolean pvShowBln) {
 
         if (pvShowBln) {
-            IntakeorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            IntakeAndReceiveSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return;
         }
 
-        IntakeorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        IntakeAndReceiveSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     }
 
@@ -450,11 +559,11 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private  static void mApplyFilter() {
 
-        IntakeorderSelectActivity.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        IntakeAndReceiveSelectActivity.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
 
         List<cIntakeorder> filteredIntakesObl = cIntakeorder.pGetIntakesWithFilterFromDatabasObl();
 
-        IntakeorderSelectActivity.mSetIntakeorderRecycler(filteredIntakesObl);
+        IntakeAndReceiveSelectActivity.mSetIntakeorderRecycler(filteredIntakesObl);
 
         if (filteredIntakesObl.size() == 0) {
             mShowNoOrdersIcon(true);
@@ -474,7 +583,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetFilterListener() {
-        IntakeorderSelectActivity.imageViewFilter.setOnClickListener(new View.OnClickListener() {
+        IntakeAndReceiveSelectActivity.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -488,8 +597,8 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetSwipeRefreshListener() {
-        IntakeorderSelectActivity.swipeRefreshLayout.setOnRefreshListener(this);
-        IntakeorderSelectActivity.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
+        IntakeAndReceiveSelectActivity.swipeRefreshLayout.setOnRefreshListener(this);
+        IntakeAndReceiveSelectActivity.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
     }
 
 
@@ -499,13 +608,13 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private static void mSetIntakeorderRecycler(List<cIntakeorder> pvIntakeorderObl) {
 
-        IntakeorderSelectActivity.swipeRefreshLayout.setRefreshing(false);
+        IntakeAndReceiveSelectActivity.swipeRefreshLayout.setRefreshing(false);
 
         if (pvIntakeorderObl == null) {
             return;
         }
 
-        IntakeorderSelectActivity.imageViewFilter.setVisibility(View.VISIBLE);
+        IntakeAndReceiveSelectActivity.imageViewFilter.setVisibility(View.VISIBLE);
 
         for (Fragment fragment: cAppExtension.fragmentManager.getFragments()) {
             if (fragment instanceof NoOrdersFragment) {
@@ -513,9 +622,9 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
             }
         }
 
-        IntakeorderSelectActivity.recyclerViewIntakeorders.setHasFixedSize(false);
-        IntakeorderSelectActivity.recyclerViewIntakeorders.setAdapter(cIntakeorder.getIntakeorderAdapter());
-        IntakeorderSelectActivity.recyclerViewIntakeorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders.setHasFixedSize(false);
+        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders.setAdapter(cIntakeorder.getIntakeorderAdapter());
+        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
         cIntakeorder.getIntakeorderAdapter().pFillData(pvIntakeorderObl);
     }
@@ -540,11 +649,11 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
                     if(itemPosition==0){
                         // Prepare the View for the animation
-                        IntakeorderSelectActivity.recyclerSearchView.setVisibility(View.VISIBLE);
-                        IntakeorderSelectActivity.recyclerSearchView.setAlpha(0.0f);
+                        IntakeAndReceiveSelectActivity.recyclerSearchView.setVisibility(View.VISIBLE);
+                        IntakeAndReceiveSelectActivity.recyclerSearchView.setAlpha(0.0f);
 
                         // Start the animation
-                        IntakeorderSelectActivity.recyclerSearchView.animate()
+                        IntakeAndReceiveSelectActivity.recyclerSearchView.animate()
                                 .translationY(0)
                                 .alpha(1.0f)
                                 .setListener(null);
@@ -570,7 +679,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mSetSearchListener() {
         //make whole view clickable
-        IntakeorderSelectActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        IntakeAndReceiveSelectActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 recyclerSearchView.setIconified(false);
@@ -578,7 +687,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         });
 
         //query entered
-        IntakeorderSelectActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        IntakeAndReceiveSelectActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String pvString) {
                 return false;
@@ -605,10 +714,10 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
             public void run() {
 
                 cUserInterface.pHideGettingData();
-                IntakeorderSelectActivity.swipeRefreshLayout.setRefreshing(false);
+                IntakeAndReceiveSelectActivity.swipeRefreshLayout.setRefreshing(false);
 
 
-                IntakeorderSelectActivity.mSetToolBarTitleWithCounters();
+                IntakeAndReceiveSelectActivity.mSetToolBarTitleWithCounters();
 
 
                 if (pvShowBln) {
@@ -619,6 +728,8 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
                     NoOrdersFragment fragment = new NoOrdersFragment();
                     fragmentTransaction.replace(R.id.intakeorderContainer, fragment);
                     fragmentTransaction.commit();
+
+                    mAutoOpenCreateActivity();
                     return;
                 }
 
@@ -633,7 +744,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
                     }
                 }
             }
-            });
+        });
     }
 
     private static boolean mCheckOrderIsLockableBln(cIntakeorder pvIntakeorder){
@@ -661,8 +772,18 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     private static boolean mTryToLockOrderBln(){
 
-        cResult hulpResult;
-        hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Receive_Store, cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store);
+        cResult hulpResult = new cResult();
+
+        switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr()){
+            case "MAT":
+                hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Receive_Store, cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store);
+                break;
+
+            case "EOS":
+                hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Receive_InTake, cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External);
+                break;
+        }
+
 
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
@@ -680,7 +801,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         //TODO error
         //            if (cIntakeorder.currentIntakeOrder.pFeedbackCommentObl() != null && cIntakeorder.currentIntakeOrder.pFeedbackCommentObl().size() > 0 ) {
         //                //Process comments from webresult
-        //                IntakeorderSelectActivity.mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+        //                IntakeAndReceiveSelectActivity.mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
         //            }
         return (hulpResult.activityActionEnu != cWarehouseorder.ActivityActionEnu.Delete) &&
                 (hulpResult.activityActionEnu != cWarehouseorder.ActivityActionEnu.NoStart);
@@ -693,17 +814,17 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
         String subTitleStr;
 
         if (cIntakeorder.allIntakeordersObl == null ) {
-            IntakeorderSelectActivity.toolbarSubTitle.setText("(0)");
+            IntakeAndReceiveSelectActivity.toolbarSubTitle.setText("0 " + cAppExtension.activity.getString(R.string.orders));
             return;
         }
 
         if (!cSharedPreferences.userFilterBln()) {
-            subTitleStr = "(" + cText.pIntToStringStr(cIntakeorder.allIntakeordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders);
+            subTitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cIntakeorder.allIntakeordersObl.size(),cIntakeorder.allIntakeordersObl.size());
         } else {
             subTitleStr = "(" + cText.pIntToStringStr(cIntakeorder.pGetIntakesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cIntakeorder.allIntakeordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }
 
-        IntakeorderSelectActivity.toolbarSubTitle.setText(subTitleStr);
+        IntakeAndReceiveSelectActivity.toolbarSubTitle.setText(subTitleStr);
 
     }
 
@@ -718,7 +839,7 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
     }
 
     private void mLeaveActivity(){
-      this.mReleaseLicense();
+        this.mReleaseLicense();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);
@@ -726,7 +847,61 @@ public class IntakeorderSelectActivity extends AppCompatActivity implements iICS
 
     }
 
-     // End No orders icon
+    private void mSetNewOrderButton() {
+
+        if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Store) {
+            imageViewNewOrder.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        if (cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.EOS.toString().toUpperCase()) |
+                cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.EOR.toString().toUpperCase())) {
+            imageViewNewOrder.setVisibility(View.VISIBLE);
+        }
+        else {
+            imageViewNewOrder.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void mSetNewOrderListener() {
+        IntakeAndReceiveSelectActivity.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View pvView) {
+                mShowCreateReceiveActivity();
+            }
+        });
+    }
+
+    private static void  mAutoOpenCreateActivity(){
+
+        // We returned in this form, so don't start create activity
+        if (!IntakeAndReceiveSelectActivity.startedViaMenuBln) {
+            return;
+        }
+
+        // We can't create, so don't start create activity
+        if (cSetting.RECEIVE_NEW_WORKFLOWS().isEmpty()) {
+            return;
+        }
+
+        // We can't create STORE, so don't start create activity
+        if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Store) {
+            return;
+        }
+
+        if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.External ||IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Unknown ) {
+
+            if (!cSetting.RECEIVE_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.EOS.toString()) && !cSetting.RECEIVE_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.EOR.toString())
+                    || !cSetting.RECEIVE_AUTO_CREATE_ORDER_EO()) {
+                return;
+            }
+
+            mShowCreateReceiveActivity();
+            return;
+        }
+    }
+
+    // End No orders icon
 
     // End Region View Method
 

@@ -168,7 +168,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Has prefix, so check if this is a BIN
-        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
             boolean foundBin = false;
 

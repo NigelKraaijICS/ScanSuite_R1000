@@ -1,12 +1,14 @@
 package ICS.Weberror;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebservice;
 

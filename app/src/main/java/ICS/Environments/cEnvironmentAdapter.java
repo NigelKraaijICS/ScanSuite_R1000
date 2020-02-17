@@ -1,8 +1,5 @@
 package ICS.Environments;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,13 +9,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 
 import ICS.Utils.Scanning.cBarcodeGenerator;
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
+import nl.icsvertex.scansuite.R;
 
 public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapter.EnvironmentViewHolder>{
 

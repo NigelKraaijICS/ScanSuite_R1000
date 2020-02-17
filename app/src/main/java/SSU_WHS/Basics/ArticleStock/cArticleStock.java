@@ -4,10 +4,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.Article.cArticle;
-import SSU_WHS.Basics.ArticleBarcode.cArticleBarcodeEntity;
 import SSU_WHS.Basics.Users.cUser;
 
 public class cArticleStock {

@@ -1,7 +1,5 @@
 package ICS.Utils;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
@@ -15,10 +13,8 @@ import android.text.format.Formatter;
 import androidx.annotation.NonNull;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.BuildConfig;

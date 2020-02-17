@@ -11,7 +11,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
             android:id="@+id/imageViewMenuItem"
-            app:srcCompat="@drawable/ic_dislike"
+            app:srcCompat="@drawable/ic_return_reason"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

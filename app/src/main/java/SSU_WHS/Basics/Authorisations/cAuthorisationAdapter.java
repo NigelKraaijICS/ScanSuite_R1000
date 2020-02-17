@@ -1,7 +1,5 @@
 package SSU_WHS.Basics.Authorisations;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +8,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import SSU_WHS.Basics.Users.cUser;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.R;
+import SSU_WHS.Basics.Users.cUser;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.R;
 
 public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAdapter.AuthorisationViewHolder> {
 
@@ -70,7 +71,6 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             final cAuthorisation authorisation = cUser.currentUser.autorisationObl.get(pvPositionInt);
 
 
-            //todo: put this back, but differently
             if (authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.EXTERNAL_RETURN) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_external_return);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_external_return);

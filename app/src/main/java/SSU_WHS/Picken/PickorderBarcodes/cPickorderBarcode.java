@@ -9,8 +9,8 @@ import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import ICS.cAppExtension;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 
 public class cPickorderBarcode {
 

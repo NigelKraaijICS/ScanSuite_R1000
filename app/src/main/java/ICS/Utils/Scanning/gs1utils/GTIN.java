@@ -23,7 +23,6 @@ import java.util.List;
 import static ICS.Utils.Scanning.gs1utils.Internals.isDigits;
 import static ICS.Utils.Scanning.gs1utils.Internals.leftPadWithZeroes;
 import static ICS.Utils.Scanning.gs1utils.Internals.startsWithNZeroes;
-import static ICS.Utils.Scanning.gs1utils.Internals.*;
 
 /**
  * Utility methods for global trade item numbers (GTIN).

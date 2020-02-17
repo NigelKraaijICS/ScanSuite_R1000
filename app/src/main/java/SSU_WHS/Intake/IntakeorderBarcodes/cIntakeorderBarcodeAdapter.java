@@ -13,8 +13,10 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorderBarcodeAdapter.intakeorderBarcodeViewHolder>  {
@@ -41,6 +43,7 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
 
     //Region Private Properties
     private final LayoutInflater layoutInflaterObject;
+    private static cIntakeorderBarcode  intakeorderBarcode;
     //End Region Private Properties
 
     //Region Constructor
@@ -60,20 +63,37 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
     @Override
     public void onBindViewHolder(intakeorderBarcodeViewHolder pvHolder, int pvPositionInt) {
 
-        if ( cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size() == 0) {
-            return;
+
+        if (cAppExtension.activity instanceof  IntakeOrderIntakeActivity) {
+            if ( cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size() == 0) {
+                return;
+            }
+
+           cIntakeorderBarcodeAdapter.intakeorderBarcode = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(pvPositionInt);
         }
 
+        if (cAppExtension.activity instanceof  ReceiveOrderReceiveActivity) {
+            if ( cReceiveorderSummaryLine.currentReceiveorderSummaryLine == null || cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl() == null || cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().size() == 0) {
+                return;
+            }
+            cIntakeorderBarcodeAdapter.intakeorderBarcode=  cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().get(pvPositionInt);
+        }
 
-
-       final cIntakeorderBarcode intakeorderBarcode = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(pvPositionInt);
-        pvHolder.textViewBarcode.setText(intakeorderBarcode.getBarcodeStr());
-        pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(intakeorderBarcode.getQuantityPerUnitOfMeasureDbl()));
+        pvHolder.textViewBarcode.setText(cIntakeorderBarcodeAdapter.intakeorderBarcode.getBarcodeStr());
+        pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(cIntakeorderBarcodeAdapter.intakeorderBarcode.getQuantityPerUnitOfMeasureDbl()));
 
         pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(intakeorderBarcode.getBarcodeStr()));
+
+                if (cAppExtension.activity instanceof  IntakeOrderIntakeActivity) {
+                    IntakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcodeAdapter.intakeorderBarcode.getBarcodeStr()));
+                }
+
+                if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
+                    cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcodeAdapter.intakeorderBarcode;
+                    ReceiveOrderReceiveActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcodeAdapter.intakeorderBarcode.getBarcodeStr()));
+                }
 
             }
         });
@@ -81,8 +101,20 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
 
     @Override
     public int getItemCount () {
-        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine != null && cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() != null)
-            return cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size();
-        else return 0;
+
+        if (cAppExtension.activity instanceof  IntakeOrderIntakeActivity) {
+            if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine != null && cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() != null) {
+                return cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size();
+            }
+        }
+
+        if (cAppExtension.activity instanceof  ReceiveOrderReceiveActivity) {
+            if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine != null && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl() != null) {
+                return cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().size();
+            }
+        }
+
+        return 0;
     }
+
 }

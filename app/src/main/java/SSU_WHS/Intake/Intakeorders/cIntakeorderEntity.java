@@ -220,20 +220,21 @@ public class cIntakeorderEntity {
             this.interfaceresultmethod = pvJsonObject.getString(cDatabase.INTERFACERESULTMETHOD_NAMESTR);
             this.sorting = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.SORTING_NAMESTR));
 
-            //todo: do this the correct way
-//            this.receiveWithPicture = pvJsonObject.getString(pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_NAMESTR));
-//            this.receiveWithPictureAutoOpen = pvJsonObject.getString(pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_AUTO_OPEN_NAMESTR));
-//            this.receiveWithPicturePrefetch = pvJsonObject.getString(pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_PREFETCH_NAMESTR));
-
-            this.receiveWithPicture = "false";
-            this.receiveWithPictureAutoOpen ="false";
-            this.receiveWithPicturePrefetch = "false";
+            this.receiveWithPicture =   pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_NAMESTR);
+            this.receiveWithPictureAutoOpen = pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_AUTO_OPEN_NAMESTR);
+            this.receiveWithPicturePrefetch = pvJsonObject.getString(cDatabase.RECEIVEWITHPICTURE_PREFETCH_NAMESTR);
 
 
             //Is processing
+            switch (this.getOrderTypeStr()) {
+                case "EOS":
+                    this.isprocessingorparked = !cText.pIntToStringStr(this.getStatusInt()).equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External));
+                    break;
 
-            this.isprocessingorparked = !cText.pIntToStringStr(this.status).equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store));
-
+                case "MAT":
+                    this.isprocessingorparked = !cText.pIntToStringStr(this.getStatusInt()).equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store));
+                    break;
+            }
 
             this.priorityInt = 6;
 

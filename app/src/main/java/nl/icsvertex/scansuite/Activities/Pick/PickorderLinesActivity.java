@@ -1,27 +1,22 @@
 package nl.icsvertex.scansuite.Activities.Pick;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.view.ViewCompat;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
-
-import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -33,10 +28,12 @@ import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
 import ICS.Utils.cNoSwipeViewPager;
+import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
@@ -44,16 +41,13 @@ import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
-import ICS.cAppExtension;
-import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.cRegex;
-import ICS.Utils.cUserInterface;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
@@ -465,6 +459,47 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         mShowCurrentLocationFragment();
+
+    }
+
+    public static void pAskAbort() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
+        builder.setTitle(R.string.message_abort_header);
+        builder.setMessage(cAppExtension.activity.getString(R.string.message_abort_text));
+        builder.setPositiveButton(R.string.button_abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cUserInterface.pCheckAndCloseOpenDialogs();
+                PickorderLinesActivity.mAbortOrder();
+            }
+        });
+
+        builder.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cUserInterface.pCheckAndCloseOpenDialogs();
+            }
+        });
+
+        builder.show();
+    }
+
+    private static void mAbortOrder() {
+
+        cUserInterface.pShowGettingData();
+
+        if (!cPickorder.currentPickOrder.pAbortBln()) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_couldnt_abort_order), cPickorderLine.currentPickOrderLine.getLineNoInt().toString(), true, true );
+            return;
+        }
+
+        cUserInterface.pHideGettingData();
+
+        //Check if we are done
+        PickorderLinesActivity.pCheckAllDone();
 
     }
 

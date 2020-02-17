@@ -1,40 +1,40 @@
 package nl.icsvertex.scansuite.Activities.Ship;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.ContextCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.util.Pair;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
-
-
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
+import ICS.Utils.cSharedPreferences;
+import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
@@ -46,18 +46,14 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import ICS.Utils.cRegex;
-import ICS.Utils.cSharedPreferences;
-import ICS.Utils.cUserInterface;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
-import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -81,6 +77,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     private static SearchView recyclerSearchView;
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
+    private static TextView toolbarSubTitle;
     private static RecyclerView recyclerViewShiporders;
 
     private static ConstraintLayout constraintFilterOrders;
@@ -173,6 +170,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     public void mFindViews() {
         ShiporderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
         ShiporderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        ShiporderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         ShiporderSelectActivity.recyclerViewShiporders = findViewById(R.id.recyclerViewShiporders);
         ShiporderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         ShiporderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
@@ -185,6 +183,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         ShiporderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
         ShiporderSelectActivity.toolbarTitle.setText(pvScreenTitleStr);
         ShiporderSelectActivity.toolbarTitle.setSelected(true);
+        ShiporderSelectActivity.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -261,7 +260,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Set filter with scanned barcodeStr if there is no prefix
-        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
             ShiporderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
             ShiporderSelectActivity.recyclerSearchView.callOnClick();

@@ -21,12 +21,15 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
@@ -35,10 +38,10 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineAdapter;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineRecyclerItemTouchHelper;
-import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -123,7 +126,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         this.mFindViews();
 
-        this.mSetToolbar(getResources().getString(R.string.screentitle_inventoryordercount));
+        this.mSetToolbar(getResources().getString(R.string.screentitle_inventorybincount));
 
         this.mFieldsInitialize();
 
@@ -148,8 +151,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         InventoryorderBinActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
         InventoryorderBinActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         InventoryorderBinActivity.binText = findViewById(R.id.binText);
-        InventoryorderBinActivity.imageBin = findViewById(R.id.imageBin);
-        InventoryorderBinActivity.imageBinDone = findViewById(R.id.imageViewBinDone);
+        InventoryorderBinActivity.imageBin = findViewById(R.id.imageTime);
+        InventoryorderBinActivity.imageBinDone = findViewById(R.id.imageViewNewOrder);
         InventoryorderBinActivity.recyclerViewInventoryorderLines = findViewById(R.id.recyclerViewInventoryorderLines);
         InventoryorderBinActivity.imageAddArticle = findViewById(R.id.imageAddArticle);
     }
@@ -195,7 +198,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     //Region Public Methods
 
-    public static void pHandleScan(final cBarcodeScan pvBarcodeScan) {
+    public static void pHandleScan(final cBarcodeScan pvBarcodeScan, final boolean pvIsArticleBln) {
 
         if (InventoryorderBinActivity.busyBln) {
             return;
@@ -210,7 +213,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         new Thread(new Runnable() {
             public void run() {
-                mHandleScan(pvBarcodeScan);
+                mHandleScan(pvBarcodeScan, pvIsArticleBln);
             }
         }).start();
 
@@ -277,15 +280,40 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     //Region Private Methods
 
-    private static void mHandleScan(cBarcodeScan pvBarcodeScan){
+    private static void mHandleScan(cBarcodeScan pvBarcodeScan, boolean pvIsArticleBln){
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+
+        boolean binCheckedBln = false;
+
+        //This barcode matches multiple lay-outs so this can be a BIN or an article
+        if (cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr()).size() > 1) {
+
+          //First check if this is a BIN
+          cBranchBin branchBin =  cUser.currentUser.currentBranch.pGetBinByCode(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+
+          if (branchBin != null) {
+              //Close current BIN
+              InventoryorderBinActivity.pCloseBin();
+
+              //We are not busy anymore
+              InventoryorderBinActivity.busyBln = false;
+
+              //Pass this new BIN scan on to the BINS activity
+              InventoryorderBinsActivity.pHandleScan(pvBarcodeScan);
+              return;
+          }
+
+            binCheckedBln = true;
+
+        }
+
+
+        if (!binCheckedBln &&  !pvIsArticleBln && cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN) )  {
 
             if (!cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
                 mDoUnknownScan(cAppExtension.context.getString(R.string.message_bin_not_allowed),pvBarcodeScan.getBarcodeOriginalStr());
                 return;
             }
-
 
             //Close current BIN
             InventoryorderBinActivity.pCloseBin();
@@ -296,16 +324,11 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             //Pass this new BIN scan on to the BINS activity
             InventoryorderBinsActivity.pHandleScan(pvBarcodeScan);
             return;
-
-
-
         }
 
         //Only ARTICLE scans are allowed
         if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_mandatory), pvBarcodeScan.getBarcodeOriginalStr());
-
-
             return;
         }
 

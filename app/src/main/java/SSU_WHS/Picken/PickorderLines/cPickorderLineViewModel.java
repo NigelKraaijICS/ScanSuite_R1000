@@ -1,12 +1,11 @@
 package SSU_WHS.Picken.PickorderLines;
 
 import android.app.Application;
+
 import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
-import SSU_WHS.Basics.ArticleImages.cArticleImageEntity;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cPickorderLineViewModel extends AndroidViewModel {

@@ -1,6 +1,7 @@
 package SSU_WHS.Basics.Branches;
 
 import android.app.Application;
+
 import androidx.lifecycle.AndroidViewModel;
 
 import SSU_WHS.Webservice.cWebresult;
@@ -20,6 +21,7 @@ public class cBranchViewModel extends AndroidViewModel {
 
     //Region Public Methods
     public cWebresult pGetBranchesFromWebserviceWrs() {return this.Repository.pGetBranchesFromWebserviceWrs(); }
+    public cWebresult pGetReceiveBinsFromWebserviceWrs() {return this.Repository.pGetReceiveBinsFromWebserviceWrs(); }
     public cWebresult pGetUserBranchesFromWebserviceWrs() {return this.Repository.pGetUserBranchesFromWebserviceWrs(); }
     public cWebresult pGetBinFromWebserviceWrs(String pvBinCodeStr) {return this.Repository.pGetBinFromWebserviceWrs(pvBinCodeStr); }
     public cWebresult pGetReasonFromWebserviceWrs() {return this.Repository.pGetReasonFromWebserviceWrs(); }

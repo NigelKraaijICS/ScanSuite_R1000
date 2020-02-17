@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +23,9 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.Users.cUser;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -35,10 +36,11 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
     private static ConstraintLayout createInventoryContainer;
     private static TextView textViewCreateInventoryHeader;
     private static TextView textViewCreateInventoryText;
+    private static TextView textViewBranch;
     private static EditText editTextDocument;
     private static Button createInventoryButton;
     private static Button cancelButton;
-    private static ImageView createInventoryImageView;
+
     private static Boolean showDocumentBln;
 
     //End Region private Properties
@@ -78,6 +80,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -97,11 +100,12 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
         if (getView() != null) {
             CreateInventoryFragment.textViewCreateInventoryHeader = getView().findViewById(R.id.textViewCreateInventoryHeader);
             CreateInventoryFragment.textViewCreateInventoryText = getView().findViewById(R.id.textViewCreateInventoryText);
+            CreateInventoryFragment.textViewBranch = getView().findViewById(R.id.textViewBranch);
             CreateInventoryFragment.editTextDocument = getView().findViewById(R.id.editTextDocument);
             CreateInventoryFragment.createInventoryContainer = getView().findViewById(R.id.createInventoryContainer);
-            CreateInventoryFragment.createInventoryButton = getView().findViewById(R.id.closeOrderButton);
+            CreateInventoryFragment.createInventoryButton = getView().findViewById(R.id.createOrderButton);
             CreateInventoryFragment.cancelButton = getView().findViewById(R.id.cancelButton);
-            CreateInventoryFragment.createInventoryImageView = getView().findViewById(R.id.createInventoryImageView);
+
         }
     }
 
@@ -111,6 +115,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
 
         CreateInventoryFragment.textViewCreateInventoryHeader.setText(cAppExtension.context.getString(R.string.createinventory_header_default));
         CreateInventoryFragment.textViewCreateInventoryText.setText(cAppExtension.context.getString(R.string.createinventory_text_default));
+        CreateInventoryFragment.textViewBranch.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
         if (!CreateInventoryFragment.showDocumentBln) {
             CreateInventoryFragment.editTextDocument.setVisibility(View.INVISIBLE);
@@ -125,19 +130,12 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
 
     @Override
     public void mSetListeners() {
-        this.mSetImageListener();
+
         this.mSetCreateListener();
         this.mSetCancelListener();
         this.mSetEditorActionListener();
     }
-    private void mSetImageListener() {
-        CreateInventoryFragment.createInventoryImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                cUserInterface.pDoRotate(pvView, 0);
-            }
-        });
-    }
+
 
     private void mSetCancelListener() {
         CreateInventoryFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +163,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
         String barcodeWithoutPrefixStr;
 
         //No prefix
-        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             CreateInventoryFragment.editTextDocument.setText(pvBarcodeScan.getBarcodeOriginalStr());
             CreateInventoryFragment.createInventoryButton.performClick();
             return;

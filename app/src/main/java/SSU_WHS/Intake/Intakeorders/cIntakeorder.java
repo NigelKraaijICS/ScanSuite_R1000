@@ -14,7 +14,7 @@ import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -22,7 +22,9 @@ import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineEntity;
+import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -52,6 +54,9 @@ public class cIntakeorder {
 
     private String workplaceStr;
     public String getWorkplaceStr() {return this.workplaceStr;}
+
+    private int sourceDocumentInt;
+    public int getSourceDocumentInt(){return  this.sourceDocumentInt;}
 
     private boolean receiveExportPartBln;
     public boolean getReceiveExportPartBln() {return this.receiveExportPartBln;}
@@ -107,6 +112,16 @@ public class cIntakeorder {
         return receiveWithAutoOpenBln;
     }
 
+    public  boolean isGenerated(){
+
+        if (this.sourceDocumentInt == cWarehouseorder.SoureDocumentTypeEnu.Generated) {
+            return true;
+        }
+
+        return  false;
+
+    }
+
     private boolean receiveWithPicturePrefetchBln;
     private boolean isReceiveWithPicturePrefetchBln() {
         return receiveWithPicturePrefetchBln;
@@ -133,12 +148,27 @@ public class cIntakeorder {
     public static List<cIntakeorder> allIntakeordersObl;
     public static cIntakeorder currentIntakeOrder;
 
-    public List<cIntakeorderMATSummaryLine> summaryLinesObl(){
+    public int unknownVariantCounterInt = 0;
+    public int getUnknownVariantCounterInt() {
+        return unknownVariantCounterInt;
+    }
+
+    public List<cIntakeorderMATSummaryLine> summaryMATLinesObl(){
         return  cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl;
     }
-    public List<cIntakeorderMATLine> linesObl(){
+
+    public List<cIntakeorderMATLine> linesMATObl(){
         return  cIntakeorderMATLine.allIntakeorderMATLinesObl;
     }
+
+    public List<cReceiveorderSummaryLine> summaryReceiveLinesObl(){
+        return  cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl;
+    }
+
+    public List<cIntakeorderMATLine> linesReceiveObl(){
+        return  cIntakeorderMATLine.allIntakeorderMATLinesObl;
+    }
+
     private List<cComment> commentsObl(){
         return  cComment.allCommentsObl;
     }
@@ -181,6 +211,9 @@ public class cIntakeorder {
         this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
         this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
         this.receiveWithPicturePrefetchBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPicturePrefetchStr(),false);
+
+        this.sourceDocumentInt = this.intakeorderEntity.getSourceDocumentInt();
+
     }
 
     public cIntakeorder(cIntakeorderEntity pvIntakeorderEntity) {
@@ -215,6 +248,9 @@ public class cIntakeorder {
         this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
         this.receiveWithPicturePrefetchBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPicturePrefetchStr(),false);
 
+
+        this.sourceDocumentInt = this.intakeorderEntity.getSourceDocumentInt();
+
     }
 
     //End Region Constructor
@@ -233,7 +269,7 @@ public class cIntakeorder {
 
         if (pvRefreshBln) {
             cIntakeorder.allIntakeordersObl = null;
-            cIntakeorder.mTruncateTableBln();
+            cIntakeorder.mTruncateTable();
         }
 
         cWebresult WebResult;
@@ -269,34 +305,7 @@ public class cIntakeorder {
         return  resultObl;
     }
 
-    private List<cIntakeorderMATLine> mGetLinesToHandleForVariantObl(String pvItemNoStr, String pvVariantCodeStr) {
-
-        List <cIntakeorderMATLine> resultObl = new ArrayList<>();
-
-        if (this.linesObl() == null || this.linesObl().size() <= 0 ) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLine intakeorderMATLine : this.linesObl()) {
-
-            //If this is the wrong article, skip this line
-            if (!intakeorderMATLine.getItemNoStr().equalsIgnoreCase(pvItemNoStr) || (!intakeorderMATLine.getVariantCodeStr().equalsIgnoreCase(pvVariantCodeStr))) {
-                continue;
-            }
-
-            //This line is handled, so skip it
-            if (intakeorderMATLine.getQuantityHandledDbl() >= intakeorderMATLine.getQuantityDbl()) {
-                continue;
-            }
-
-            resultObl.add(intakeorderMATLine);
-        }
-
-        return  resultObl;
-
-    }
-
-    public cResult pHandledViaWebserviceRst() {
+    public cResult pInvalidateViaWebserviceRst() {
 
         cResult result;
         result = new cResult();
@@ -305,7 +314,35 @@ public class cIntakeorder {
         cWebresult webresult;
 
 
-        webresult =  cIntakeorder.getIntakeorderViewModel().pHandledViaWebserviceWrs();
+        webresult =  cIntakeorder.getIntakeorderViewModel().pInvalidateViaWebserviceWrs();
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
+
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (!webresult.getSuccessBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_could_not_invalidate_order));
+            return result;
+        }
+
+        return  result;
+
+    }
+
+    public cResult pMATHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult webresult;
+
+
+        webresult =  cIntakeorder.getIntakeorderViewModel().pMATHandledViaWebserviceWrs();
 
         //No result, so something really went wrong
         if (webresult == null) {
@@ -352,7 +389,71 @@ public class cIntakeorder {
                 result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
             }
 
-            cIntakeorder.currentIntakeOrder.mGetCommentsViaWebErrorBln(webresult.getResultDtt());
+            cIntakeorder.currentIntakeOrder.mGetCommentsViaWebError(webresult.getResultDtt());
+            return result;
+        }
+
+        return  result;
+
+    }
+
+    public cResult pReceiveHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult webresult;
+
+
+        webresult =  cIntakeorder.getIntakeorderViewModel().pReceiveHandledViaWebserviceWrs();
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (!webresult.getSuccessBln()) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
+
+            Long actionLng = 0L;
+
+            if (webresult.getResultLng() < 10 ) {
+                actionLng = webresult.getResultLng();
+            }
+
+            if (webresult.getResultLng() > 100) {
+                actionLng  = webresult.getResultLng()/100;
+            }
+
+            //Try to convert action long to action enumerate
+            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            result.resultBln = false;
+            result.activityActionEnu = activityActionEnu;
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+            }
+
+            cIntakeorder.currentIntakeOrder.mGetCommentsViaWebError(webresult.getResultDtt());
             return result;
         }
 
@@ -455,7 +556,7 @@ public class cIntakeorder {
             }
 
             //TODO WTF is this?
-            //cIntakeorder.currentIntakeOrder.mGetCommentsViaWebErrorBln(Webresult.getResultDtt());
+            //cIntakeorder.currentIntakeOrder.mGetCommentsViaWebError(Webresult.getResultDtt());
             return result;
         }
 
@@ -465,9 +566,21 @@ public class cIntakeorder {
 
     public boolean pLockReleaseViaWebserviceBln() {
 
-        cWebresult Webresult;
+        cWebresult Webresult = null;
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_Store.toString(), cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_StoreBezig);
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
+            Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_Store.toString(), cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_StoreBezig);
+        }
+
+        //We try to release an order thats not created
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("EOR")){
+            return  true;
+        }
+
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("EOS")){
+            Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_InTake.toString(), cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External);
+        }
+
 
         return Webresult.getSuccessBln() && Webresult.getResultBln();
     }
@@ -586,6 +699,69 @@ public class cIntakeorder {
         }
     }
 
+    public boolean pGetReceiveLinesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cReceiveorderLine.allReceiveorderLines = null;
+            cIntakeorderMATLine.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderReceiveLinesFromWebserviceWrs();
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cReceiveorderLine receiveorderLine = new cReceiveorderLine(jsonObject);
+                receiveorderLine.pInsertInDatabaseBln();
+
+                cReceiveorderSummaryLine receiveorderSummaryLine = cReceiveorderSummaryLine.pGetSummaryLine(receiveorderLine.getItemNoStr(),
+                        receiveorderLine.getVariantCodeStr());
+
+                if (receiveorderSummaryLine == null ) {
+                    //Thats weird, but continue
+                    continue;
+                }
+
+                receiveorderSummaryLine.pAddLine(receiveorderLine);
+            }
+            return true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
+            return false;
+        }
+    }
+
+    public boolean pGetReceiveItemsViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl = null;
+            cReceiveorderLine.pTruncateTableBln();
+        }
+
+        cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl = new ArrayList<>();
+
+        cWebresult WebResult;
+        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderReceiveItemsFromWebserviceWrs();
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cReceiveorderSummaryLine receiveorderSummaryLine  = new cReceiveorderSummaryLine(jsonObject);
+                cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
+
+                if (receiveorderSummaryLine.getItemNoStr().equalsIgnoreCase("UNKNOWN")) {
+                    cIntakeorder.currentIntakeOrder.unknownVariantCounterInt += 1;
+                }
+
+            }
+            return true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
+            return false;
+        }
+    }
+
     public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
 
         if (pvRefreshBln) {
@@ -594,8 +770,7 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATBarcodesFromWebserviceWrs();
-
+        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderBarcodesFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
@@ -608,6 +783,109 @@ public class cIntakeorder {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
             return false;
         }
+    }
+
+    public boolean pAddUnkownBarcodeAndItemVariantBln(cBarcodeScan pvBarcodeScan) {
+
+        cIntakeorder.currentIntakeOrder.unknownVariantCounterInt += 1;
+
+        cWebresult WebResult;
+
+        //First create Item Varianr
+        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+
+            if (WebResult.getResultDtt().size() == 1) {
+                cReceiveorderSummaryLine receiveorderSummaryLine = new cReceiveorderSummaryLine(WebResult.getResultDtt().get(0));
+                cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
+                cReceiveorderSummaryLine.currentReceiveorderSummaryLine = receiveorderSummaryLine;
+            }
+        }
+
+        else {
+            cIntakeorder.currentIntakeOrder.unknownVariantCounterInt -= 1;
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEITEMVARIANTCREATE);
+            return  false;
+        }
+
+        //Then add barcode
+        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+
+            if (WebResult.getResultDtt().size() == 1) {
+                cIntakeorderBarcode intakeorderBarcode = new cIntakeorderBarcode(WebResult.getResultDtt().get(0));
+
+                if (cIntakeorderBarcode.allBarcodesObl == null) {
+                    cIntakeorderBarcode.allBarcodesObl = new ArrayList<>();
+                }
+
+                cIntakeorderBarcode.allBarcodesObl.add(intakeorderBarcode);
+                cIntakeorderBarcode.currentIntakeOrderBarcode = intakeorderBarcode;
+                cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = intakeorderBarcode;
+            }
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEBARCODECREATE);
+            return  false;
+        }
+
+
+
+        return  true;
+    }
+    public boolean pAddERPBarcodeBln(cBarcodeScan pvBarcodeScan) {
+
+        //Get article info via the web service
+        cArticle.currentArticle  = cArticle.pGetArticleByBarcodeViaWebservice(pvBarcodeScan);
+
+        //We failed to get the article
+        if (cArticle.currentArticle == null) {
+            return false;
+        }
+
+        //Get barcodes for this article
+        if (!cArticle.currentArticle.pGetBarcodesViaWebserviceBln()) {
+            return false;
+        }
+
+        cWebresult WebResult;
+        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pAddERPItemViaWebserviceWrs(pvBarcodeScan);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+
+            if (WebResult.getResultDtt().size() == 1) {
+                cReceiveorderSummaryLine receiveorderSummaryLine = new cReceiveorderSummaryLine(WebResult.getResultDtt().get(0));
+                cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
+                cReceiveorderSummaryLine.currentReceiveorderSummaryLine = receiveorderSummaryLine;
+            }
+        }
+
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEITEMVARIANTCREATE);
+            return  false;
+        }
+
+        //Then add barcode
+        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+
+            if (WebResult.getResultDtt().size() == 1) {
+                cIntakeorderBarcode intakeorderBarcode = new cIntakeorderBarcode(WebResult.getResultDtt().get(0));
+
+                if (cIntakeorderBarcode.allBarcodesObl == null) {
+                    cIntakeorderBarcode.allBarcodesObl = new ArrayList<>();
+                }
+
+                cIntakeorderBarcode.allBarcodesObl.add(intakeorderBarcode);
+                cIntakeorderBarcode.currentIntakeOrderBarcode = intakeorderBarcode;
+                cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = intakeorderBarcode;
+            }
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEBARCODECREATE);
+            return  false;
+        }
+
+        return  true;
     }
 
     public cIntakeorderBarcode pGetOrderBarcode(cBarcodeScan pvBarcodescan) {
@@ -628,29 +906,99 @@ public class cIntakeorder {
 
     }
 
-    private static boolean mTruncateTableBln() {
+    public static cResult pCreateReceiveOrderViaWebserviceRst(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {
+
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult;
+        WebResult = cIntakeorder.getIntakeorderViewModel().pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
+
+
+        //No result, so something really went wrong
+        if (WebResult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+
+
+            // We got a succesfull response, but we need to do something with this activity
+
+            Long actionLng = WebResult.getResultLng();
+
+            if (WebResult.getResultLng() < 10 ) {
+                actionLng = WebResult.getResultLng();
+            }
+
+            if (WebResult.getResultLng() > 100) {
+                actionLng  = WebResult.getResultLng()/100;
+            }
+
+
+
+            //Try to convert action long to action enumerate
+            result.activityActionEnu= cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_cant_be_started)));
+                return  result;
+            }
+
+            if (result.activityActionEnu== cWarehouseorder.ActivityActionEnu.Delete) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_has_deleted_by_erp)));
+                return  result;
+            }
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Next) {
+                result.resultBln = true;
+                result.pSetResultAction(WebResult.pGetNextActivityObl());
+                return  result;
+            }
+
+            //No activty created
+            if (WebResult.getResultDtt() == null || WebResult.getResultDtt().size() == 0) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_order_not_created)));
+                return  result;
+            }
+
+            //Something went wrong, we received a comment
+            if (actionLng == 80) {
+                result.resultBln = false;
+                cComment comment = new cComment(WebResult.getResultDtt().get(0));
+                result.pAddErrorMessage(comment.commentTextStr);
+                return  result;
+            }
+
+            cIntakeorder intakeorder = new cIntakeorder(WebResult.getResultDtt().get(0));
+            intakeorder.pInsertInDatabaseBln();
+            cIntakeorder.currentIntakeOrder = intakeorder;
+
+
+
+            return result;
+
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVECREATE);
+            result.resultBln = false;
+            return result;
+        }
+
+     }
+
+    private static void mTruncateTable() {
         cIntakeorder.getIntakeorderViewModel().deleteAll();
-        return true;
     }
 
-    private List<cIntakeorderMATLine> mGetLinesFromDatabasObl() {
-
-        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
-        List<cIntakeorderMATLineEntity> hulpResultObl;
-
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetAllLinesFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cIntakeorderMATLineEntity intakeorderMATLineEntity : hulpResultObl ) {
-            cIntakeorderMATLine IntakeorderMATLine = new cIntakeorderMATLine(intakeorderMATLineEntity);
-            resultObl.add(IntakeorderMATLine);
-        }
-        return  resultObl;
-    }
-
-    private boolean mGetCommentsViaWebErrorBln(List<JSONObject> pvResultDtt) {
+    private void mGetCommentsViaWebError(List<JSONObject> pvResultDtt) {
 
         cComment.allCommentsObl = new ArrayList<>();
 
@@ -658,10 +1006,6 @@ public class cIntakeorder {
             cComment comment = new cComment(jsonObject);
             comment.pInsertInDatabaseBln();
         }
-
-        return true;
-
     }
-
 
 }

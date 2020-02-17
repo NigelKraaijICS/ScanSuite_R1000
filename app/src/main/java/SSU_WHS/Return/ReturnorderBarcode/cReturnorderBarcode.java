@@ -24,6 +24,15 @@ public class cReturnorderBarcode {
         return gReturnorderBarcodeViewModel;
     }
 
+    private static cReturnorderBarcodeAdapter gReturnorderBarcodeAdapter;
+    public static cReturnorderBarcodeAdapter getReturnorderBarcodeAdapter() {
+        if (gReturnorderBarcodeAdapter == null) {
+            gReturnorderBarcodeAdapter = new cReturnorderBarcodeAdapter();
+        }
+        return gReturnorderBarcodeAdapter;
+    }
+
+
     public static List<SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode> allReturnorderBarcodesObl;
     public static SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode currentReturnOrderBarcode;
 

@@ -4,8 +4,6 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-import SSU_WHS.Webservice.cWebresult;
-
 public class cIntakeorderMATLineBarcodeViewModel extends AndroidViewModel {
     public cIntakeorderMATLineBarcodeRepository Repository;
 

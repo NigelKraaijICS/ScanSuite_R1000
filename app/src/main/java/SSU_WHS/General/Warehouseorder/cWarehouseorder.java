@@ -27,6 +27,7 @@ public class cWarehouseorder {
         Pick_PackAndShip,
         Inventory,
         Receive_Store,
+        Receive_InTake,
         Move,
         Retour
     }
@@ -34,6 +35,13 @@ public class cWarehouseorder {
     public enum PickOrderTypeEnu {
         PICK,
         SORT
+    }
+
+    public  enum ReceiveAndStoreMainTypeEnu {
+        Unknown,
+        External,
+        Internal,
+        Store
     }
 
     public enum CommentTypeEnu {
@@ -54,7 +62,10 @@ public class cWarehouseorder {
         PF,
         IVS,
         MV,
-        RVS
+        RVS,
+        MAT,
+        EOS,
+        EOR
     }
 
     public class ItemTypeEnu {
@@ -77,6 +88,12 @@ public class cWarehouseorder {
         public static final int InventoryBusy = 11;
         public static final int InventoryPause = 12;
         public static final int InventoryHandled = 13;
+    }
+
+    public class WorkflowExternalReceiveStepEnu {
+        public static final int Receive_External = 10;
+        public static final int Receive_ExternalBezig = 11;
+        public static final int Receive_ExternalWacht = 12;
     }
 
     public class WorkflowReceiveStoreStepEnu {

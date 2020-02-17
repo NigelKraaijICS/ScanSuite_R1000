@@ -1,7 +1,6 @@
 package SSU_WHS.Basics.ShippingAgents;
 
 import android.app.Application;
-
 import android.os.AsyncTask;
 
 import org.json.JSONException;
@@ -11,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
-import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cShippingAgentRepository {
 

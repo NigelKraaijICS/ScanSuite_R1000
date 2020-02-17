@@ -6,8 +6,6 @@ import android.view.View;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineAdapter;
-
 public class cInventoryorderBinRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
 
     //Region Public Properties

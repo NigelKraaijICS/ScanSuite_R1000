@@ -2,10 +2,6 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +9,28 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
-import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSortActivity;
-import ICS.cAppExtension;
+import nl.icsvertex.scansuite.R;
 
 public class AcceptRejectFragment extends DialogFragment implements iICSDefaultFragment {
 
@@ -137,6 +139,14 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
                     PickorderPickActivity.pAcceptRejectDialogDismissed();
                 }
 
+                if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
+                    ReturnorderDocumentActivity.pHandleFragmentDismissed();
+                }
+                if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
+                    ReturnorderDocumentsActivity.pHandleFragmentDismissed();
+                }
+
+
                 dismiss();
             }
         });
@@ -220,6 +230,20 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             }
             this.dismiss();
         }
+
+        if (cAppExtension.activity instanceof ReceiveLinesActivity) {
+            ReceiveLinesActivity.pDone();
+            this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
+            ReceiveOrderReceiveActivity.pAcceptReceive();
+        }
+
+        if (cAppExtension.activity instanceof ReturnorderDocumentsActivity) {
+            ReturnorderDocumentsActivity.pCloseOrder();
+            this.dismiss();
+        }
     }
 
     private void mReject() {
@@ -253,6 +277,23 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
             IntakeorderLinesActivity.pLeaveActivity();
+            this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof ReceiveLinesActivity) {
+            ReceiveLinesActivity.pLeaveActivity();
+        }
+
+        if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
+            ReceiveOrderReceiveActivity.pCancelReceive();
+        }
+
+        if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
+            ReturnorderDocumentActivity.pStartDocumentsActivity();
+            this.dismiss();
+        }
+        if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
+            ReturnorderDocumentsActivity.pHandleFragmentDismissed();
             this.dismiss();
         }
 

@@ -3,7 +3,6 @@ package SSU_WHS.Basics.ItemProperty;
 import android.app.Application;
 import android.os.AsyncTask;
 
-
 import org.json.JSONException;
 import org.ksoap2.serialization.PropertyInfo;
 

@@ -50,7 +50,7 @@
                 />
             <androidx.appcompat.widget.AppCompatImageView
                 style="@style/defaultBottomButton"
-                android:id="@+id/imageViewBinDone"
+                android:id="@+id/imageViewNewOrder"
                 app:srcCompat="@drawable/ic_check_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

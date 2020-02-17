@@ -1,7 +1,9 @@
 package SSU_WHS.Basics.BarcodeLayouts;
 
 import android.app.Application;
+
 import androidx.lifecycle.AndroidViewModel;
+
 import SSU_WHS.Webservice.cWebresult;
 
 public class cBarcodeLayoutViewModel extends AndroidViewModel{

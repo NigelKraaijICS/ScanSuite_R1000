@@ -12,7 +12,7 @@
         android:animateLayoutChanges="true"
         >
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageBin"
+            android:id="@+id/imageTime"
             android:layout_width="@dimen/textsize_enormous"
             android:layout_height="@dimen/textsize_enormous"
             app:srcCompat="@drawable/ic_location_black_24dp"

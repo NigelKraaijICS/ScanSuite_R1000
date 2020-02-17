@@ -20,16 +20,12 @@ import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
+import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.General.cDatabase;
-import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcodeEntity;
-import SSU_WHS.Return.ReturnorderBarcode.iReturnorderBarcodeDao;
-import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocumentEntity;
-import SSU_WHS.Return.ReturnorderDocument.iReturnorderDocumentDao;
-import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -39,8 +35,6 @@ public class cReturnorderRepository {
     //Region Public Properties
 
     private iReturnorderDao returnorderDao;
-    private iReturnorderDocumentDao returnorderDocumentDao;
-    private iReturnorderBarcodeDao returnorderBarcodeDao;
     //End Region Public Properties
 
     private static class CreateReturnorderParams {
@@ -261,16 +255,6 @@ public class cReturnorderRepository {
         new mInsertAsyncTask(returnorderDao).execute(inventoryorderEntity);
     }
 
-    public List<cReturnorderEntity> pGetReturnordersFromDatabaseObl() {
-        List<cReturnorderEntity> ResultObl = null;
-        try {
-            ResultObl = new mGetReturnordersFromDatabaseAsyncTask(returnorderDao).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
-    }
-
     public void deleteAll() {
         new mDeleteAllAsyncTask(returnorderDao).execute();
     }
@@ -352,7 +336,10 @@ public class cReturnorderRepository {
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_REASON;
-                l_PropertyInfo8Pin.setValue("");
+                if (cBranchReason.currentBranchReason != null){
+                    l_PropertyInfo8Pin.setValue(cBranchReason.currentBranchReason.getReasonStr());
+                } else {
+                l_PropertyInfo8Pin.setValue("");}
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
@@ -415,19 +402,6 @@ public class cReturnorderRepository {
             }
 
             return WebresultWrs;
-        }
-    }
-
-    private static class mGetReturnordersFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cReturnorderEntity>> {
-        private iReturnorderDao mAsyncTaskDao;
-
-        mGetReturnordersFromDatabaseAsyncTask(iReturnorderDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected List<cReturnorderEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getReturnordersFromDatabase();
         }
     }
 
@@ -869,59 +843,6 @@ public class cReturnorderRepository {
             return WebresultWrs;
         }
     }
-    private static class mGetReturnorderDocumentNotDoneFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cReturnorderDocumentEntity>> {
-        private iReturnorderDocumentDao mAsyncTaskDao;
-        mGetReturnorderDocumentNotDoneFromDatabaseAsyncTask(iReturnorderDocumentDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected List<cReturnorderDocumentEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getReturnorderDocumentNotDone();
-        }
-    }
 
-    private static class mGetReturnorderDocumentDoneFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cReturnorderDocumentEntity>> {
-        private iReturnorderDocumentDao mAsyncTaskDao;
-        mGetReturnorderDocumentDoneFromDatabaseAsyncTask(iReturnorderDocumentDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected List<cReturnorderDocumentEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getReturnorderDocumentDone();
-        }
-    }
-
-    private static class mGetBarcodeForSelectedLineFromDatabaseAsyncTask extends AsyncTask<String, Void, cReturnorderBarcodeEntity> {
-        private iReturnorderBarcodeDao mAsyncTaskDao;
-        mGetBarcodeForSelectedLineFromDatabaseAsyncTask(iReturnorderBarcodeDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected cReturnorderBarcodeEntity doInBackground(final String... params) {
-            return mAsyncTaskDao.getBarcodeForLine(cReturnorderLine.currentReturnOrderLine.getItemNoStr(), cReturnorderLine.currentReturnOrderLine.getVariantCodeStr());
-        }
-    }
-
-    private static class mCheckDocumentInDatabaseAsyncTask extends AsyncTask<String, Void, cReturnorderDocumentEntity> {
-        private iReturnorderDocumentDao mAsyncTaskDao;
-        mCheckDocumentInDatabaseAsyncTask(iReturnorderDocumentDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected cReturnorderDocumentEntity doInBackground(final String... params) {
-            return mAsyncTaskDao.checkBin(params[0]);
-        }
-    }
-
-    private static class pGetInventoryorderBinTotalFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cReturnorderDocumentEntity>> {
-        private iReturnorderDocumentDao mAsyncTaskDao;
-        pGetInventoryorderBinTotalFromDatabaseAsyncTask(iReturnorderDocumentDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected List<cReturnorderDocumentEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getReturnorderDocumentTotal();
-        }
-    }
 }
 

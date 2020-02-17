@@ -68,11 +68,15 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shiporder_ship);
 
-        if (cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 1) {
-            for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit :cShipment.currentShipment.shippingAgentService().shippingUnitsObl() ) {
-                shippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 1;
+        if (cShipment.currentShipment.shippingAgent() != null && cShipment.currentShipment.shippingAgentService() != null) {
+            if (cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 1) {
+                for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit :cShipment.currentShipment.shippingAgentService().shippingUnitsObl() ) {
+                    shippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 1;
+                }
             }
-
+        }
+        else {
+            ShiporderShipActivity.pHandleBackToLines();
         }
 
         this.mActivityInitialize();
@@ -215,7 +219,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
         String barcodeWithoutPrefixStr = "";
 
-        if (cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
             boolean foundBln = false;
 

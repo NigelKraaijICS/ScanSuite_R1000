@@ -1,7 +1,5 @@
 package nl.icsvertex.scansuite.Fragments.Pick;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,7 +123,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             PickorderLinesPickedFragment.recyclerSearchView = getView().findViewById(R.id.recyclerSearchView);
             PickorderLinesPickedFragment.recyclerViewPickorderLinesPicked = getView().findViewById(R.id.recyclerViewPickorderLinesPicked);
             PickorderLinesPickedFragment.switchDefects = getView().findViewById(R.id.switchDefects);
-            PickorderLinesPickedFragment.abortOrderView = getView().findViewById(R.id.actionsConstraintView);
+            PickorderLinesPickedFragment.abortOrderView = getView().findViewById(R.id.abortConstraintView);
         }
 
     }
@@ -236,45 +234,12 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         PickorderLinesPickedFragment.abortOrderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAskAbort();
+                PickorderLinesActivity.pAskAbort();
             }
         });
     }
 
-    private void mAskAbort() {
 
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
-        builder.setTitle(R.string.message_abort_header);
-        builder.setMessage(getString(R.string.message_abort_text));
-        builder.setPositiveButton(R.string.button_abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mAbortOrder();
-            }
-        });
-
-        builder.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing (close the dialog)
-            }
-        });
-
-        builder.show();
-    }
-
-    private void mAbortOrder() {
-
-        if (!cPickorder.currentPickOrder.pAbortBln()) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_couldnt_abort_order), cPickorderLine.currentPickOrderLine.getLineNoInt().toString(), true, true );
-            return;
-        }
-
-        PickorderLinesPickedFragment.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
-
-    }
 
     private void mSetRecyclerOnScrollListener() {
         recyclerViewPickorderLinesPicked.addOnScrollListener(new RecyclerView.OnScrollListener() {

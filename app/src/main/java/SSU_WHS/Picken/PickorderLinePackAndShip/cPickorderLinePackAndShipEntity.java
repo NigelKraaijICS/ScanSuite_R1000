@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.General.cDatabase;
 
 @Entity(tableName=cDatabase.TABLENAME_PICKORDERLINEPACKANDSHIP)

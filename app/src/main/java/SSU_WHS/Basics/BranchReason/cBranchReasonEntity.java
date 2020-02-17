@@ -1,15 +1,15 @@
 package SSU_WHS.Basics.BranchReason;
 
-        import androidx.annotation.NonNull;
-        import androidx.room.ColumnInfo;
-        import androidx.room.Entity;
-        import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import ICS.Utils.cText;
-        import SSU_WHS.General.cDatabase;
+import ICS.Utils.cText;
+import SSU_WHS.General.cDatabase;
 @Entity(tableName= cDatabase.TABLENAME_BRANCHREASON)
 public class cBranchReasonEntity {
         //Region Public Properties

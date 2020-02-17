@@ -14,29 +14,6 @@ public class cPickorderLinePackAndShipRepository {
     //Region Private Properties
     private iPickorderLinePackAndShipDao pickorderLinePackAndShipDao;
     private acScanSuiteDatabase db;
-
-    private static class UpdateOrderlineQuantityParams {
-        Integer recordIdint;
-        Double quantityDbl;
-
-        UpdateOrderlineQuantityParams(Integer pvRecordIDInt, Double pvQuantityDbl) {
-            this.recordIdint = pvRecordIDInt;
-            this.quantityDbl = pvQuantityDbl;
-        }
-    }
-
-
-    private static class UpdateOrderlineLocaStatusParams {
-        Integer recordIDInt;
-        Integer newStatusInt;
-
-        UpdateOrderlineLocaStatusParams(Integer pvRecordIDInt, Integer pvNewsStatusInt) {
-            this.recordIDInt = pvRecordIDInt;
-            this.newStatusInt = pvNewsStatusInt;
-        }
-
-    }
-
     //End Region Private Properties
 
 
@@ -56,7 +33,6 @@ public class cPickorderLinePackAndShipRepository {
     public void pInsert(cPickorderLinePackAndShipEntity pickorderLinePackAndShipEntity){
         new insertAsyncTask(this.pickorderLinePackAndShipDao).execute(pickorderLinePackAndShipEntity);
     }
-
 
     public void deleteAll () {
         new deleteAllAsyncTask(pickorderLinePackAndShipDao).execute();

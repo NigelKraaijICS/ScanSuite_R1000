@@ -1,7 +1,5 @@
 package SSU_WHS.Intake.IntakeorderMATLineSummary;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +15,6 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
-import java.util.HashMap;
 
 
 public class cIntakeorderMATSummaryLine {
@@ -58,13 +55,13 @@ public class cIntakeorderMATSummaryLine {
     {
         Double resultDbl =  0.0;
 
-        if (this.MATLinesObl == null || this.MATLinesObl.size() == 0) {
-            return resultDbl ;
-        }
+            if (this.MATLinesObl == null || this.MATLinesObl.size() == 0) {
+                return resultDbl ;
+            }
 
-        for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
-            resultDbl += intakeorderMATLine.getQuantityDbl();
-        }
+            for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
+                resultDbl += intakeorderMATLine.getQuantityDbl();
+            }
 
         return resultDbl;
     }
@@ -149,7 +146,7 @@ public class cIntakeorderMATSummaryLine {
     public static List<cIntakeorderMATSummaryLine> allIntakeorderMATSummaryLinesObl;
     private List<cIntakeorderMATLine> MATLinesObl;
 
-    public List<cIntakeorderMATLine> MATLinestoShowObl() {
+    public List<cIntakeorderMATLine> MATLinesToShowObl() {
 
         List<cIntakeorderMATLine> resultObl = new ArrayList<>();
         List<String> scannedBINSObl = new ArrayList<>();
@@ -180,6 +177,10 @@ public class cIntakeorderMATSummaryLine {
         //Loop a second time, so we can build the list
         for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
 
+
+            if (intakeorderMATLine.getBinCodeHandledStr().isEmpty() && intakeorderMATLine.getSourceTypeInt() != cWarehouseorder.SoureDocumentTypeEnu.PurchaseLine) {
+                continue;
+            }
 
             //If the quantity is zero and the binlist containt this bin, we only show the scanned line
             if (intakeorderMATLine.getQuantityHandledDbl() ==0 && ! scannedBINSObl.contains(intakeorderMATLine.getBinCodeStr())) {
@@ -284,6 +285,7 @@ public class cIntakeorderMATSummaryLine {
         this.MATLinesObl = new ArrayList<>();
 
     }
+
 
     //End Region Constructor
 
@@ -398,7 +400,6 @@ public class cIntakeorderMATSummaryLine {
 
     }
 
-
     public cIntakeorderMATLine pGetLineForBinCode(cBranchBin pvBranchBin){
 
         if (this.MATLinesObl == null || this.MATLinesObl.size() == 0) {
@@ -449,7 +450,7 @@ public class cIntakeorderMATSummaryLine {
             //We have no match, so this will result in a new line
             case 0:
 
-                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pCreateLineViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl);
+                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pMATCreateLineViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl);
                 if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
                     if (this.getBinCodeStr().isEmpty()) {
@@ -504,9 +505,9 @@ public class cIntakeorderMATSummaryLine {
             cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
 
             //If quantity is equal or bigger then asked, the line is finished
-            if (this.pQuantityReachedBln(pvScannedBarcodesObl)) {
+            if (cIntakeorderMATLine.currentIntakeorderMATLine.pQuantityReachedBln()) {
 
-                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineHandledViaWebserviceWrs();
+                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pMATLineHandledViaWebserviceWrs();
                 if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
                     if (this.getBinCodeStr().isEmpty()) {
@@ -528,12 +529,10 @@ public class cIntakeorderMATSummaryLine {
                 }
 
             }
-
             else {
                 //if quantity is lower, we have to split the line
-                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pLineSplitViaWebserviceWrs();
+                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pMATLineSplitViaWebserviceWrs();
                 if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
-
 
                     //Set the quantity to the quantity scanned
                     cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = pvBinCodeStr;
@@ -541,7 +540,7 @@ public class cIntakeorderMATSummaryLine {
                     cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl = quantityScannedDbl;
                     cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
 
-                    //Add new line so the quanity gets raised again
+                    //Add new line so the quantity gets raised again
                     cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(WebResult.getResultDtt().get(0));
                     intakeorderMATLine.pInsertInDatabaseBln();
                     this.pAddMATLine(intakeorderMATLine);
@@ -553,7 +552,6 @@ public class cIntakeorderMATSummaryLine {
                 }
             }
         }
-
 
         //We have no match, so we have to add a line
         return  true;

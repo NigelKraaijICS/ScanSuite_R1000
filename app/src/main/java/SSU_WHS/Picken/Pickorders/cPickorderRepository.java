@@ -1,10 +1,10 @@
 package SSU_WHS.Picken.Pickorders;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.sqlite.db.SupportSQLiteQuery;
-import android.os.AsyncTask;
 
 import org.json.JSONException;
 import org.ksoap2.serialization.PropertyInfo;
@@ -19,15 +19,14 @@ import ICS.Utils.cSharedPreferences;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
+import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.Shipment.cShipment;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
-import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
+import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 import static ICS.Utils.cText.pAddSingleQuotesStr;
 
@@ -632,16 +631,6 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
-    public List<cPickorderLinePackAndShipEntity> pGetPackAndShipLinesNotHandledFromDatabaseObl() {
-        List<cPickorderLinePackAndShipEntity> resultObl = null;
-        try {
-            resultObl = new mGetNotHandledPackAndShipLinesAsyncTask(pickorderLinePackAndShipDao).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultObl;
-    }
-
     //End Region Public Methods
 
     //Region Private Methods
@@ -1109,16 +1098,6 @@ public class cPickorderRepository {
         @Override
         protected List<cPickorderLineEntity> doInBackground(final Void... params) {
             return mAsyncTaskDao.getHandledPickorderLineEntities();
-        }
-    }
-
-    private static class mGetNotHandledPackAndShipLinesAsyncTask extends AsyncTask<Void, Void, List<cPickorderLinePackAndShipEntity>> {
-        private iPickorderLinePackAndShipDao mAsyncTaskDao;
-
-        mGetNotHandledPackAndShipLinesAsyncTask(iPickorderLinePackAndShipDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cPickorderLinePackAndShipEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getNotHandledPickorderLinePackAndShipEntities();
         }
     }
 

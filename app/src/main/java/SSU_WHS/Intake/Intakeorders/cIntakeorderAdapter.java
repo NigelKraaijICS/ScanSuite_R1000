@@ -16,7 +16,7 @@ import java.util.List;
 
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapter.IntakeorderViewHolder>  {
@@ -124,8 +124,8 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
             @Override
             public void onClick(View v) {
 
-                if (cAppExtension.context instanceof IntakeorderSelectActivity) {
-                    IntakeorderSelectActivity.pIntakeorderSelected(selectedIntakeorder);
+                if (cAppExtension.context instanceof IntakeAndReceiveSelectActivity) {
+                    IntakeAndReceiveSelectActivity.pIntakeorderSelected(selectedIntakeorder);
                 }
                             }
         });

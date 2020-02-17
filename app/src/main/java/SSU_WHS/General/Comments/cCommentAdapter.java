@@ -1,6 +1,5 @@
 package SSU_WHS.General.Comments;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +8,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.R;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.R;
 
 public class cCommentAdapter extends RecyclerView.Adapter<cCommentAdapter.commentViewHolder>{
 

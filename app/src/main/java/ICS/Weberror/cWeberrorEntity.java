@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey;
 
 import ICS.Utils.cDateAndTime;
 import ICS.Utils.cDeviceInfo;
-import ICS.cICSDatabaseDefinitions;
 import ICS.cAppExtension;
+import ICS.cICSDatabaseDefinitions;
 import SSU_WHS.Webservice.cWebresult;
 
 @Entity(tableName= cICSDatabaseDefinitions.TABLENAME_WEBERRRORS)

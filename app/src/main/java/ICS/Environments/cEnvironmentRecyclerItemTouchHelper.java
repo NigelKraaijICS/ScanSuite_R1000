@@ -1,9 +1,10 @@
 package ICS.Environments;
 
 import android.graphics.Canvas;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.View;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class cEnvironmentRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
 

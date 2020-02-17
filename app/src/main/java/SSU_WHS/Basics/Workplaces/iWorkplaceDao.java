@@ -1,13 +1,13 @@
 package SSU_WHS.Basics.Workplaces;
 
-        import androidx.room.Dao;
-        import androidx.room.Insert;
-        import androidx.room.OnConflictStrategy;
-        import androidx.room.Query;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
-        import java.util.List;
+import java.util.List;
 
-        import SSU_WHS.General.cDatabase;
+import SSU_WHS.General.cDatabase;
 
 @Dao
 public interface iWorkplaceDao {

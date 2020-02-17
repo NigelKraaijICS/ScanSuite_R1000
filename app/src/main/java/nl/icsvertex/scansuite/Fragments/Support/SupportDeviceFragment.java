@@ -58,6 +58,15 @@ public class SupportDeviceFragment extends Fragment implements iICSDefaultFragme
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.mFragmentInitialize();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.mFragmentInitialize();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public void mFragmentInitialize() {
@@ -115,18 +124,25 @@ public class SupportDeviceFragment extends Fragment implements iICSDefaultFragme
     }
 
     public static void pBatteryLevelChanged() {
+        try {
         SupportDeviceFragment.textViewBatterypercentOverImage.setText(cDeviceInfo.getPercentageStr());
-
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void mSetBatteryInfo() {
-        SupportDeviceFragment.textChargeState.setText(cDeviceInfo.getChargingStatusString());
-        SupportDeviceFragment.textViewBatteryCharging.setText(cDeviceInfo.getChargingStatusString());
-        SupportDeviceFragment.textViewBatteryCharging.setVisibility(View.GONE);
-        SupportDeviceFragment.textViewBatterypercent.setText(cDeviceInfo.getChargingStr());
-        SupportDeviceFragment.textViewBatterypercent.setVisibility(View.GONE);
-        SupportDeviceFragment.textViewBatterypercentOverImage.setText(cDeviceInfo.getPercentageStr());
-        SupportDeviceFragment. mSetBatteryIcon();
+        try {
+            SupportDeviceFragment.textChargeState.setText(cDeviceInfo.getChargingStatusString());
+            SupportDeviceFragment.textViewBatteryCharging.setText(cDeviceInfo.getChargingStatusString());
+            SupportDeviceFragment.textViewBatteryCharging.setVisibility(View.GONE);
+            SupportDeviceFragment.textViewBatterypercent.setText(cDeviceInfo.getChargingStr());
+            SupportDeviceFragment.textViewBatterypercent.setVisibility(View.GONE);
+            SupportDeviceFragment.textViewBatterypercentOverImage.setText(cDeviceInfo.getPercentageStr());
+            SupportDeviceFragment.mSetBatteryIcon();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void mSetBatteryIcon() {

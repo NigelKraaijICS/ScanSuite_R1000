@@ -36,6 +36,7 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.R;
@@ -313,20 +314,31 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         mStartOrderSelectActivity();
     }
 
-    public static void pSetToolBarTitleWithCounters(String pvTextStr){
+    public static void pSetToolBarTitleWithCounters(final String pvTextStr){
 
-        IntakeorderLinesActivity.toolbarSubTitle.setText(pvTextStr);
 
-        //Close open dialogs, so keyboard will also close
-        cUserInterface.pHideKeyboard();
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                IntakeorderLinesActivity.toolbarSubTitle.setText(pvTextStr);
 
-        //Click to make even more sure that keyboard gets hidden
-        IntakeorderLinesActivity.toolbarSubTitle.performClick();
+                //Close open dialogs, so keyboard will also close
+                cUserInterface.pHideKeyboard();
+
+                //Click to make even more sure that keyboard gets hidden
+                IntakeorderLinesActivity.toolbarSubTitle.performClick();
+            }
+        });
+
 
     }
 
     public static  void pStartLine(){
-        IntakeorderLinesActivity.imageViewStart.performClick();
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                IntakeorderLinesActivity.imageViewStart.performClick();
+            }});
     }
 
     public static void pShowData(List<cIntakeorderMATSummaryLine> pvDataObl) {
@@ -335,7 +347,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
     public static void pPasswordSuccess() {
         cBarcodeScan.pRegisterBarcodeReceiver();
-        IntakeorderLinesActivity.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close_order));
+        IntakeorderLinesActivity.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
     }
 
     public static void pPasswordCancelled() {
@@ -392,7 +404,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         hulpResult = new cResult();
         hulpResult.resultBln = false;
 
-        hulpResult = cIntakeorder.currentIntakeOrder.pHandledViaWebserviceRst();
+        hulpResult = cIntakeorder.currentIntakeOrder.pMATHandledViaWebserviceRst();
 
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
@@ -478,7 +490,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
                     return;
                 }
 
-                IntakeorderLinesActivity.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close_order));
+                IntakeorderLinesActivity.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
             }
         });
     }
@@ -511,7 +523,8 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             public void run() {
-                Intent intent = new Intent(cAppExtension.context, IntakeorderSelectActivity.class);
+                Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
+                IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
                 cAppExtension.activity.startActivity(intent);
             }
         });
@@ -570,7 +583,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         });
 
     }
-
 
     private static void mStartStoreActivity(){
 
@@ -651,7 +663,13 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         IntakeorderLinesActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                IntakeorderLinesActivity.recyclerSearchView.setIconified(false);
+
+                cAppExtension.activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        IntakeorderLinesActivity.recyclerSearchView.setIconified(false);
+                    }
+                });
             }
         });
 
@@ -701,9 +719,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
 
     }
-
-
-
 
     //End Region Private Methods
 

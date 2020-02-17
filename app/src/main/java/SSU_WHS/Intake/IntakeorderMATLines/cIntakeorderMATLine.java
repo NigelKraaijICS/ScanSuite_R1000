@@ -7,19 +7,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
-import nl.icsvertex.scansuite.R;
 
 public class cIntakeorderMATLine {
 
@@ -152,7 +147,9 @@ public class cIntakeorderMATLine {
     }
 
     private int sourceTypeInt;
-    public int getSourceTypeInt(){return  this.sourceTypeInt;}
+    public  int getSourceTypeInt(){
+        return  sourceTypeInt;
+    }
 
     public  List<cIntakeorderBarcode> barcodesObl;
 
@@ -327,10 +324,18 @@ public class cIntakeorderMATLine {
     }
 
 
+    public Boolean pQuantityReachedBln(){
+
+        Double quantityTotalDbl = this.quantityHandledDbl;
+
+        return quantityTotalDbl >= this.getQuantityDbl();
+
+    }
+
     public boolean pResetBln() {
 
         cWebresult WebResult;
-        WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pResetViaWebserviceWrs();
+        WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pResetMATLineViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
@@ -349,6 +354,7 @@ public class cIntakeorderMATLine {
         }
 
     }
+
     public static boolean pTruncateTableBln() {
         cIntakeorderMATLine.getIntakeorderMATLineViewModel().deleteAll();
         return true;

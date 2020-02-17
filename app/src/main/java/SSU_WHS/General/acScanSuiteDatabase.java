@@ -1,19 +1,35 @@
 package SSU_WHS.General;
 
+import android.content.Context;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import android.content.Context;
 
 import SSU_WHS.Basics.ArticleImages.cArticleImageEntity;
 import SSU_WHS.Basics.ArticleImages.iArticleImageDao;
+import SSU_WHS.Basics.Authorisations.cAuthorisationEntity;
+import SSU_WHS.Basics.Authorisations.iAuthorisationDao;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
 import SSU_WHS.Basics.BarcodeLayouts.iBarcodeLayoutDao;
 import SSU_WHS.Basics.Branches.cBranchEntity;
 import SSU_WHS.Basics.Branches.iBranchDao;
-
 import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
 import SSU_WHS.Basics.ItemProperty.iItemPropertyDao;
+import SSU_WHS.Basics.Settings.cSettingsEntity;
+import SSU_WHS.Basics.Settings.iSettingsDao;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitEntity;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.iShippingAgentServiceShippingUnitDao;
+import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentServiceEntity;
+import SSU_WHS.Basics.ShippingAgentServices.iShippingAgentServiceDao;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgentEntity;
+import SSU_WHS.Basics.ShippingAgents.iShippingAgentDao;
+import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentServiceShipMethodEntity;
+import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.iShippingAgentServiceShipMethodDao;
+import SSU_WHS.Basics.Users.cUserEntity;
+import SSU_WHS.Basics.Users.iUserDao;
+import SSU_WHS.Basics.Workplaces.cWorkplaceEntity;
+import SSU_WHS.Basics.Workplaces.iWorkplaceDao;
 import SSU_WHS.General.Comments.cCommentEntity;
 import SSU_WHS.General.Comments.iCommentDao;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcodeEntity;
@@ -40,7 +56,6 @@ import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeEntity;
 import SSU_WHS.Picken.PickorderBarcodes.iPickorderBarcodeDao;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcodeEntity;
 import SSU_WHS.Picken.PickorderLineBarcodes.iPickorderLineBarcodeDao;
-
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
 import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
@@ -53,6 +68,10 @@ import SSU_WHS.Picken.Pickorders.cPickorderEntity;
 import SSU_WHS.Picken.Pickorders.iPickorderDao;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTableEntity;
 import SSU_WHS.Picken.SalesOrderPackingTable.iSalesOrderPackingTableDao;
+import SSU_WHS.Picken.WarehouseLocations.cWarehouseLocationEntity;
+import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
+import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineEntity;
+import SSU_WHS.Receive.ReceiveLines.iReceiveorderLineDao;
 import SSU_WHS.Return.ReturnOrder.cReturnorderEntity;
 import SSU_WHS.Return.ReturnOrder.iReturnorderDao;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcodeEntity;
@@ -65,26 +84,6 @@ import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcodeEntity;
 import SSU_WHS.Return.ReturnorderLineBarcode.iReturnorderLineBarcodeDao;
 import SSU_WHS.ScannerLogon.cScannerLogonEntity;
 import SSU_WHS.ScannerLogon.iScannerLogonDao;
-import SSU_WHS.Basics.Settings.iSettingsDao;
-import SSU_WHS.Basics.Settings.cSettingsEntity;
-
-import SSU_WHS.Basics.Authorisations.iAuthorisationDao;
-import SSU_WHS.Basics.Authorisations.cAuthorisationEntity;
-
-import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitEntity;
-import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.iShippingAgentServiceShippingUnitDao;
-import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentServiceEntity;
-import SSU_WHS.Basics.ShippingAgentServices.iShippingAgentServiceDao;
-import SSU_WHS.Basics.ShippingAgents.cShippingAgentEntity;
-import SSU_WHS.Basics.ShippingAgents.iShippingAgentDao;
-import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentServiceShipMethodEntity;
-import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.iShippingAgentServiceShipMethodDao;
-import SSU_WHS.Basics.Users.iUserDao;
-import SSU_WHS.Basics.Users.cUserEntity;
-import SSU_WHS.Basics.Workplaces.cWorkplaceEntity;
-import SSU_WHS.Basics.Workplaces.iWorkplaceDao;
-import SSU_WHS.Picken.WarehouseLocations.cWarehouseLocationEntity;
-import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
 
 @Database(entities = {
         cScannerLogonEntity.class,
@@ -124,8 +123,9 @@ import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
         cReturnorderBarcodeEntity.class,
         cReturnorderDocumentEntity.class,
         cReturnorderLineEntity.class,
-        cReturnorderLineBarcodeEntity.class
-        },version = 83)
+        cReturnorderLineBarcodeEntity.class,
+        cReceiveorderLineEntity.class
+        },version = 85)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -167,6 +167,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iReturnorderLineDao returnorderLineDao();
     public abstract iReturnorderBarcodeDao returnorderBarcodeDao();
     public abstract iReturnorderLineBarcodeDao returnorderLineBarcodeDao();
+    public abstract iReceiveorderLineDao receiveorderLineDao();
       //public abstract iEnvironmentDao environmentDao();
 
     private static acScanSuiteDatabase INSTANCE;

@@ -26,7 +26,7 @@
         android:singleLine="true"
         android:id="@+id/editTextAddDocument"
         style="@style/orderDoneCurrentLocation"
-        android:hint="@string/hint_document"
+        android:hint="@string/hint_document_inventory"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

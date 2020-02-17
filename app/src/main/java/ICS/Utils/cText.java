@@ -6,13 +6,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import ICS.cAppExtension;
 
@@ -23,9 +20,54 @@ public class cText {
     public static String NEWLINE = "\r\n";
     public static String LABEL_VALUE_SEPARATOR = " - ";
 
+    public  enum ePadLocation{
+        Left,
+        Right
+    }
+
     //End Region Public Properties
 
     //Region Public Methods
+
+
+
+    public static String rPadStr(String pvInputStr,String pvPadCharacterStr,int pvLenghtInt, cText.ePadLocation pvPadLocationEnu) {
+
+    String resultStr;
+    Character padCharachterChar;
+
+    resultStr = pvInputStr;
+
+    if (pvPadCharacterStr.isEmpty()) {
+        pvPadCharacterStr = " ";
+    }
+
+        padCharachterChar= pvPadCharacterStr.charAt(0);
+
+    if (pvPadLocationEnu == ePadLocation.Right) {
+
+     if (resultStr.length() > pvLenghtInt ) {
+         resultStr = resultStr.substring(0,pvLenghtInt);
+     }
+     else {
+         resultStr =  String.format("%1$" + pvLenghtInt + "s", pvInputStr).replace(' ', padCharachterChar);
+     }
+
+    }
+
+        if (pvPadLocationEnu == ePadLocation.Left) {
+            if (resultStr.length() >= pvLenghtInt) {
+                resultStr = resultStr.substring(resultStr.length() - pvLenghtInt);
+            }
+            else {
+                resultStr =  String.format("%1$" + pvLenghtInt + "s", pvInputStr).replace(' ', padCharachterChar);
+            }
+        }
+
+    return  resultStr;
+
+
+    }
 
     public static String pPadRight(String pvInputStr, int pvLengthInt) {
         String resultStr;
@@ -42,7 +84,7 @@ public class cText {
         return resultStr;
     }
 
-    public static String pPadLeftStr(String pvInputStr, int pvLengthInt) {
+    public static String pPadLeftStr(String pvInputStr, Character pvPadChar, int pvLengthInt) {
         String resultStr;
         String helpStr;
 
@@ -164,7 +206,7 @@ public class cText {
         return Integer.toString(pvInputInt);
     }
 
-    public static Boolean pStringToBooleanBln(String pvInputStr, Boolean pvDefaultValueBln) {
+    public static boolean pStringToBooleanBln(String pvInputStr, Boolean pvDefaultValueBln) {
         if (pvInputStr == null) {
             return pvDefaultValueBln;
         }
@@ -172,11 +214,13 @@ public class cText {
             case "N":
             case "FALSE":
             case "F":
+            case "0":
                 return false;
             case "J":
             case "Y":
             case "TRUE":
             case "T":
+            case "1":
                 return true;
             default:
                 return pvDefaultValueBln;

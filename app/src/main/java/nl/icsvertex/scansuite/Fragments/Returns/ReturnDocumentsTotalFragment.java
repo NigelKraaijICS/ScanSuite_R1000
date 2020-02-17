@@ -134,7 +134,6 @@ public class ReturnDocumentsTotalFragment extends Fragment implements iICSDefaul
 
         ReturnDocumentsTotalFragment.imageCloseOrder.setVisibility(View.INVISIBLE);
 
-
         if (cReturnorder.currentReturnOrder.pGetDocumentsDoneFromDatabasObl().size() >0 && cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().size() == 0 ) {
             ReturnDocumentsTotalFragment.imageCloseOrder.setVisibility(View.VISIBLE);
         }
@@ -185,7 +184,6 @@ public class ReturnDocumentsTotalFragment extends Fragment implements iICSDefaul
             }
         });
     }
-
 
     //End Region Private Methods
 

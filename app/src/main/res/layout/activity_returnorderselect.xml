@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Activities.returns.ReturnorderSelectActivity">
+    tools:context=".Activities.Returns.ReturnorderSelectActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/returnorderSelectcontainer"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         >
-        <include layout="@layout/toolbar_subtext_default"/>
+        <include layout="@layout/toolbar_subtext_expanded_default"/>
         <androidx.appcompat.widget.SearchView
             android:id="@+id/recyclerSearchView"
             style="@style/recyclerSearchView"

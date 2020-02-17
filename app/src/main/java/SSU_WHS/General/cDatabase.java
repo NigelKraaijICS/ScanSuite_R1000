@@ -48,6 +48,7 @@ public class cDatabase {
     public static final String TABLENAME_RETURNORDERBARCODE = "ReturnorderBarcode";
     public static final String TABLENAME_RETURNORDERDOCUMENT = "ReturnorderDocument";
     public static final String TABLENAME_BRANCHREASON = "BranchReason";
+    public static final String TABLENAME_RECEIVELINES  = "ReceiveLines";
 
     //endregion Tables
 
@@ -142,6 +143,7 @@ public class cDatabase {
 
     //region H
     public static final String HANDLEDTIMESTAMP_NAMESTR = "HandledTimestamp";
+    public static final String HANDLEDTIMESTAMPTAKENOTEXPORTED_NAMESTR = "HandledTimestamp_take_not_exported";
     //endregion H
 
 
@@ -260,7 +262,8 @@ public class cDatabase {
     public static final String QUANTITYTAKEN_NAMESTR = "QuantityTaken";
     public static final String QUANTITYHANDLEDTAKE_NAMESTR = "QuantityHandled_take";
     public static final String QUANTITYTAKE_NAMESTR = "Quantity_take";
-
+    public static final String QUANTITYTAKENOTEXPORTED_NAMESTR = "QuantityHandled_take_not_exported";
+    public static final String QUANTITYTAKEEXPORTED_NAMESTR = "QuantityHandled_take_exported";
     //endregion Q
 
     //region R

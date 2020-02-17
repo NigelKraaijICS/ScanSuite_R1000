@@ -1,11 +1,12 @@
 package SSU_WHS.Picken.Pickorders;
 
 import android.app.Application;
+
 import androidx.lifecycle.AndroidViewModel;
+
 import java.util.List;
 
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Webservice.cWebresult;
 
@@ -55,10 +56,7 @@ public class cPickorderViewModel extends AndroidViewModel {
     public List<cPickorderLineEntity> pGetLinesHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesHandledFromDatabaseObl();}
 
     public cWebresult pGetPackAndShipLinesFromWebserviceWrs( ) {return this.PickorderRepository.pGetPackAndShipLinesFromWebserviceWrs();}
-    public List<cPickorderLinePackAndShipEntity> pGetPackAndShipLinesNotHandledFromDatabaseObl(){return  this.PickorderRepository.pGetPackAndShipLinesNotHandledFromDatabaseObl();}
-
     public cWebresult pGetAdressesFromWebserviceWrs() {return this.PickorderRepository.pGetAddressesFromWebserviceWrs();}
-
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {return this.PickorderRepository.pGetBarcodesFromWebservice(); }
 

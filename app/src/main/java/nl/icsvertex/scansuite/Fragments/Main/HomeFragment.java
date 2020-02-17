@@ -3,10 +3,6 @@ package nl.icsvertex.scansuite.Fragments.Main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.cardview.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +10,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
-import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
+import nl.icsvertex.scansuite.R;
 
 public class HomeFragment extends Fragment implements iICSDefaultFragment {
 

@@ -1,6 +1,5 @@
 package SSU_WHS.Picken.Shipment;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +7,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
-import nl.icsvertex.scansuite.R;
-import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
+import nl.icsvertex.scansuite.R;
 
 public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.PickorderLinePackAndShipViewHolder> {
 

@@ -3,13 +3,14 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
@@ -40,7 +41,7 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
             setPreferencesFromResource(R.xml.filter_inventoryorders, rootKey);
         }
 
-        if (cAppExtension.context instanceof IntakeorderSelectActivity) {
+        if (cAppExtension.context instanceof IntakeAndReceiveSelectActivity) {
             setPreferencesFromResource(R.xml.filter_inventoryorders, rootKey);
         }
 

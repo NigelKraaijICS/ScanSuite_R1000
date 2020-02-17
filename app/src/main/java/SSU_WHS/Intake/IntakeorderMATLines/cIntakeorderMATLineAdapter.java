@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,7 +17,6 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -39,9 +37,9 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
         public IntakeorderMATLineViewHolder(View pvItemView) {
             super(pvItemView);
 
-            this.intakeOrderMATItemFrameLayout = pvItemView.findViewById(R.id.intakeorderLineItemLinearLayout);
+            this.intakeOrderMATItemFrameLayout = pvItemView.findViewById(R.id.receiveorderLineItemLinearLayout);
 
-            this.textViewBinCode = pvItemView.findViewById(R.id.bincodeText);
+            this.textViewBinCode = pvItemView.findViewById(R.id.timeText);
             this.textViewBinCode.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewBinCode.setSingleLine(true);
             this.textViewBinCode.setMarqueeRepeatLimit(5);
@@ -120,8 +118,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
                 }
 
                 //select current
-                pvView.setSelected(true);
-
+                //pvView.setSelected(true);
 
             }
         });
@@ -147,7 +144,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     //Region Public Methods
     public void pFillData(List<cIntakeorderMATLine> pvDataObl ) {
         this.localIntakeorderMATLinesObl = pvDataObl;
-        IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+        IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesMATObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
         notifyDataSetChanged();
     }
 

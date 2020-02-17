@@ -670,6 +670,26 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean RECEIVE_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static String RECEIVE_NEW_WORKFLOWS(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
     public static boolean RECEIVE_AMOUNT_MANUAL_MA(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_AMOUNT_MANUAL_MA);
@@ -679,6 +699,18 @@ public class cSetting {
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
+
+    public static boolean RECEIVE_AUTO_CREATE_ORDER_EO(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_AUTO_CREATE_ORDER_EO);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+
 
     public static boolean RECEIVE_STORE_AUTO_ACCEPT_AT_NEW_BIN(){
 

@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import ICS.Utils.cDateAndTime;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
@@ -23,6 +25,7 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineEntity;
 import SSU_WHS.Intake.IntakeorderMATLines.iIntakeorderMATLineDao;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 
 import static ICS.Utils.cText.pAddSingleQuotesStr;
 
@@ -37,27 +40,20 @@ public class cIntakeorderRepository {
     //Region Private Properties
     private acScanSuiteDatabase db;
 
-    private class IntakeStepHandledParams {
-        String userStr;
-        String languageStr;
-        String branchStr;
-        String orderNumberStr;
-        String deviceStr;
-        String workflowStepcodeStr;
 
-        String cultureStr;
+    private class IntakeCreateParams {
+        String documentStr;
+        String packingSlipStr;
+        String binCodeStr;
+        boolean checkBarcodesBln;
 
-        IntakeStepHandledParams(String pvUserStr, String pvLanguageStr, String pvBranchStr, String pvOrderNumberStr, String pvDeviceStr,String pvWorkflowStepCodeStr, String pvCultureStr) {
-            this.userStr = pvUserStr;
-            this.languageStr = pvLanguageStr;
-            this.branchStr = pvBranchStr;
-            this.orderNumberStr = pvOrderNumberStr;
-            this.deviceStr = pvDeviceStr;
-            this.workflowStepcodeStr = pvWorkflowStepCodeStr;
-            this.cultureStr = pvCultureStr;
+        IntakeCreateParams(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln ) {
+            this.documentStr = pvDocumentStr;
+            this.packingSlipStr = pvPackingSlipStr;
+            this.binCodeStr = pvBinCodeStr;
+            this.checkBarcodesBln = pvCheckBarcodesBln;
         }
     }
-
 
     //Region Constructor
     cIntakeorderRepository(Application pvApplication) {
@@ -76,13 +72,7 @@ public class cIntakeorderRepository {
 
         try {
             webResultWrs = new mGetIntakeordersFromWebserviceAsyncTask().execute(pvSearchTextStr).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -90,18 +80,6 @@ public class cIntakeorderRepository {
             e.printStackTrace();
         }
         return webResultWrs;
-    }
-
-    public List<cIntakeorderEntity> pGetIntakeordersFromDatabaseObl() {
-        List<cIntakeorderEntity> ResultObl = null;
-        try {
-            ResultObl = new mGetIntakeordersFromDatabaseAsyncTask(intakeorderDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
     }
 
     public List<cIntakeorderEntity> pGetIntakeordersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
@@ -151,9 +129,7 @@ public class cIntakeorderRepository {
             SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
             ResultObl = new cIntakeorderRepository.mGetIntakeordersFromDatabaseWithFilterAsyncTask(intakeorderDao).execute(query).get();
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return ResultObl;
@@ -174,13 +150,7 @@ public class cIntakeorderRepository {
 
         try {
             webResultWrs = new mGetMATLinesFromWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -190,65 +160,38 @@ public class cIntakeorderRepository {
         return webResultWrs;
     }
 
-    public List<cIntakeorderMATLineEntity> pGetAllMATLinesFromDatabaseObl() {
+    public cWebresult pGetReceiveLinesFromWebserviceWrs() {
 
-        List<cIntakeorderMATLineEntity> resultObl = null;
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
         try {
-            resultObl = new mGetAllLinesFromDatabaseAsyncTask(intakeorderMATLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+            webResultWrs = new mGetReceiveLinesFromWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
             e.printStackTrace();
         }
-        return resultObl;
+        return webResultWrs;
     }
 
-    public List<cIntakeorderMATLineEntity> pGetMATLinesToSendFromDatabaseObl() {
-        List<cIntakeorderMATLineEntity> resultObl = null;
-        try {
-            resultObl = new mGetMATLinesToSendFromDatabaseAsyncTask(intakeorderMATLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultObl;
-    }
+    public cWebresult pGetReceiveItemsFromWebserviceWrs() {
 
-    public List<cIntakeorderMATLineEntity> pGetMATLinesNotHandledFromDatabaseObl() {
-        List<cIntakeorderMATLineEntity> resultObl = null;
-        try {
-            resultObl = new mGetMATLinesNotHandledFromDatabaseAsyncTask(intakeorderMATLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultObl;
-    }
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
 
-    public List<cIntakeorderMATLineEntity> pGetMATLinesBusyFromDatabaseObl() {
-        List<cIntakeorderMATLineEntity> resultObl = null;
         try {
-            resultObl = new mGetBusyMATLinesAsyncTask(intakeorderMATLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+            webResultWrs = new mGetReceiveItemsFromWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
             e.printStackTrace();
         }
-        return resultObl;
-    }
-
-    public List<cIntakeorderMATLineEntity> pGetMATLinesHandledFromDatabaseObl() {
-        List<cIntakeorderMATLineEntity> resultObl = null;
-        try {
-            resultObl = new mGetMATLinesHandledFromDatabaseAsyncTask(intakeorderMATLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultObl;
+        return webResultWrs;
     }
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {
@@ -258,13 +201,7 @@ public class cIntakeorderRepository {
 
         try {
             webResultWrs = new mGetMATBarcodesFromWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -281,13 +218,7 @@ public class cIntakeorderRepository {
 
         try {
             webResultWrs = new mGetMATLineBarcodesFromWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -303,13 +234,7 @@ public class cIntakeorderRepository {
 
         try {
             webResultWrs = new mGetCommentsFromWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -319,67 +244,91 @@ public class cIntakeorderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pHandledViaWebserviceBln() {
+    public cWebresult pMATHandledViaWebserviceBln() {
 
         cWebresult webResult;
 
-        IntakeStepHandledParams intakeStepHandledParams;
-        intakeStepHandledParams = new IntakeStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cIntakeorder.currentIntakeOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() , cWarehouseorder.StepCodeEnu.Receive_Store.toString(), "");
 
         try {
 
-            webResult = new mIntakeorderStepHandledAsyncTask() .execute(intakeStepHandledParams).get();
+            webResult = new mIntakeorderStepHandledAsyncTask() .execute().get();
             return  webResult;
         }
 
-        catch (InterruptedException e) {
-            e.printStackTrace();
-            return  null;
-
-        } catch (ExecutionException e) {
+        catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  null;
 
         }
     }
 
-    //Pick quantityDbl's
-    public Double pQuantityNotHandledDbl() {
-        Double resultDbl = 0.0;
+    public cWebresult pReceiveHandledViaWebserviceBln() {
+
+        cWebresult webResult;
+
         try {
-            resultDbl = new mGetQuantityNotHandledAsyncTask(intakeorderDao).execute().get();
-        } catch (InterruptedException e) {
+
+            webResult = new mIntakeorderStepHandledAsyncTask() .execute().get();
+            return  webResult;
+        }
+
+        catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-        } catch (ExecutionException e) {
+            return  null;
+
+        }
+    }
+
+    public cWebresult pInvalidateViaWebserviceBln() {
+
+        cWebresult webResult;
+
+
+        try {
+
+            webResult = new mIntakeorderInvalidateAsyncTask() .execute().get();
+            return  webResult;
+        }
+
+        catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return  null;
+
+        }
+    }
+
+
+    public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {
+
+        List<String> resultObl = new ArrayList<>();
+        IntakeCreateParams intakeCreateParams;
+        intakeCreateParams = new IntakeCreateParams(pvDocumentStr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln);
+
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mCreateIntakeOrderViaWebserviceAsyncTask().execute(intakeCreateParams).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
             e.printStackTrace();
         }
-        return resultDbl;
+        return webResultWrs;
     }
+
+    //Quantity's
 
     public Double pQuantityHandledDbl() {
         Double resultDbl = 0.0;
         try {
             resultDbl = new mGetQuantityHandledAsyncTask(intakeorderDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultDbl;
     }
-
-    public Double pGetTotalQuantityDbl() {
-        Double resultDbl = 0.0;
-        try {
-            resultDbl = new mGetTotalQuanitityAsyncTask(intakeorderDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultDbl;
-    }
-
 
     //End Region Public Methods
 
@@ -391,6 +340,7 @@ public class cIntakeorderRepository {
             cWebresult WebresultWrs = new cWebresult();
 
             List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+            String maintTypeStr = "";
 
             PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
             l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
@@ -407,13 +357,31 @@ public class cIntakeorderRepository {
             l_PropertyInfo3Pin.setValue(params[0]);
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
+            switch (IntakeAndReceiveSelectActivity.currentMainTypeEnu) {
+                case Unknown:
+                    maintTypeStr = "";
+                    break;
+
+                case Store:
+                    maintTypeStr = "MA";
+                    break;
+
+                case External:
+                    maintTypeStr = "EO";
+                    break;
+
+                case Internal:
+                    maintTypeStr = "OM";
+                    break;
+            }
+
             PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
             l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_MAINTYPE;
-            l_PropertyInfo4Pin.setValue("");
+            l_PropertyInfo4Pin.setValue(maintTypeStr);
             l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERS, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERS, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -421,16 +389,6 @@ public class cIntakeorderRepository {
             }
 
             return WebresultWrs;
-        }
-    }
-
-    private static class mGetIntakeordersFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cIntakeorderEntity>> {
-        private iIntakeorderDao mAsyncTaskDao;
-
-        mGetIntakeordersFromDatabaseAsyncTask(iIntakeorderDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cIntakeorderEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getIntakeordersFromDatabase();
         }
     }
 
@@ -470,7 +428,6 @@ public class cIntakeorderRepository {
         }
     }
 
-
     private static class mGetMATLinesFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final String... params) {
@@ -489,7 +446,7 @@ public class cIntakeorderRepository {
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -500,56 +457,69 @@ public class cIntakeorderRepository {
         }
     }
 
-    private static class mGetAllLinesFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cIntakeorderMATLineEntity>> {
-        private iIntakeorderMATLineDao mAsyncTaskDao;
-
-        mGetAllLinesFromDatabaseAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
+    private static class mGetReceiveLinesFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
-        protected List<cIntakeorderMATLineEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getAll();
+        protected cWebresult doInBackground(final String... params) {
+            cWebresult WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+            l_PropertyInfo2Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNER;
+            l_PropertyInfo3Pin.setValue(cDeviceInfo.getSerialnumberStr());
+            l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+            try {
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERLINES, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
         }
     }
 
-    private static class mGetMATLinesNotHandledFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cIntakeorderMATLineEntity>> {
-        private iIntakeorderMATLineDao mAsyncTaskDao;
-
-        mGetMATLinesNotHandledFromDatabaseAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
+    private static class mGetReceiveItemsFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
-        protected List<cIntakeorderMATLineEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getNotHandledIntakeorderMATLineEntities();
+        protected cWebresult doInBackground(final String... params) {
+            cWebresult WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+            l_PropertyInfo2Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            try {
+                new cWebresult();
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERITEMS, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
         }
     }
-
-    private static class mGetBusyMATLinesAsyncTask extends AsyncTask<Void, Void, List<cIntakeorderMATLineEntity>> {
-        private iIntakeorderMATLineDao mAsyncTaskDao;
-
-        mGetBusyMATLinesAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cIntakeorderMATLineEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getBusyIntakeorderMATLineEntities();
-        }
-    }
-
-    private static class mGetMATLinesHandledFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cIntakeorderMATLineEntity>> {
-        private iIntakeorderMATLineDao mAsyncTaskDao;
-
-        mGetMATLinesHandledFromDatabaseAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cIntakeorderMATLineEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getHandledIntakeorderMATLineEntities();
-        }
-    }
-
-    private static class mGetMATLinesToSendFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cIntakeorderMATLineEntity>> {
-        private iIntakeorderMATLineDao mAsyncTaskDao;
-
-        mGetMATLinesToSendFromDatabaseAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cIntakeorderMATLineEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getIntakeorderMATLineEntitiesToSend();
-        }
-    }
-
 
     private static class mGetMATLineBarcodesFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
@@ -569,7 +539,7 @@ public class cIntakeorderRepository {
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINEBARCODES, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINEBARCODES, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -598,7 +568,8 @@ public class cIntakeorderRepository {
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEARCODES, l_PropertyInfoObl);
+
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETINTAKEARCODES, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -638,15 +609,6 @@ public class cIntakeorderRepository {
         }
     }
 
-    private static class mGetQuantityNotHandledAsyncTask extends AsyncTask<Void, Void, Double> {
-        private iIntakeorderDao mAsyncTaskDao;
-        mGetQuantityNotHandledAsyncTask(iIntakeorderDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getQuantityNotHandledDbl();
-        }
-    }
-
     private static class mGetQuantityHandledAsyncTask extends AsyncTask<Void, Void, Double> {
         private iIntakeorderDao mAsyncTaskDao;
         mGetQuantityHandledAsyncTask(iIntakeorderDao dao) { mAsyncTaskDao = dao; }
@@ -656,55 +618,55 @@ public class cIntakeorderRepository {
         }
     }
 
-    private static class mGetTotalQuanitityAsyncTask extends AsyncTask<Void, Void, Double> {
-        private iIntakeorderDao mAsyncTaskDao;
-
-        mGetTotalQuanitityAsyncTask(iIntakeorderDao dao) { mAsyncTaskDao = dao; }
+    private static class mIntakeorderStepHandledAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
-        protected Double doInBackground(Void... params) {
-            return mAsyncTaskDao.getTotalQuantityDbl();
-        }
-    }
-
-
-    private static class mIntakeorderStepHandledAsyncTask extends AsyncTask<IntakeStepHandledParams, Void, cWebresult> {
-        @Override
-        protected cWebresult doInBackground(IntakeStepHandledParams... params) {
+        protected cWebresult doInBackground(Void... params) {
             cWebresult webresult = new cWebresult();
             try {
                 List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(params[0].userStr);
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
                 l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
-                l_PropertyInfo2Pin.setValue(params[0].branchStr);
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
                 PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
                 l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
-                l_PropertyInfo3Pin.setValue(params[0].orderNumberStr);
+                l_PropertyInfo3Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
                 l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNER;
-                l_PropertyInfo4Pin.setValue(params[0].deviceStr);
+                l_PropertyInfo4Pin.setValue(cDeviceInfo.getSerialnumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
                 l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOWSTEPCODESTR;
-                l_PropertyInfo5Pin.setValue(params[0].workflowStepcodeStr);
+
+                String workflowStepcodeStr = "";
+
+                if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
+                    workflowStepcodeStr = cWarehouseorder.StepCodeEnu.Receive_Store.toString().toUpperCase();
+                }
+
+                if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("EOS")) {
+                    workflowStepcodeStr = cWarehouseorder.StepCodeEnu.Receive_InTake.toString().toUpperCase();
+                }
+
+                l_PropertyInfo5Pin.setValue(workflowStepcodeStr);
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
                 l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
-                l_PropertyInfo6Pin.setValue(params[0].cultureStr);
+                l_PropertyInfo6Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKEHANLED, l_PropertyInfoObl);
+                      webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKEHANLED, l_PropertyInfoObl);
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
                 webresult.setResultBln(false);
@@ -713,6 +675,192 @@ public class cIntakeorderRepository {
         }
     }
 
+
+    private static class mIntakeorderInvalidateAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
+                l_PropertyInfo4Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_RECEIVEINVALIDATE, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mCreateIntakeOrderViaWebserviceAsyncTask extends AsyncTask<IntakeCreateParams, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(IntakeCreateParams... params) {
+            cWebresult l_WebresultWrs = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+//                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+//                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
+//                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+//                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+//
+//                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+//                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LANGUAGEASCULTURE;
+//                l_PropertyInfo2Pin.setValue(cUser.currentUser.getNameStr());
+//                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+//
+//                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+//                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+//                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+//                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+//
+//                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+//                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
+//                l_PropertyInfo4Pin.setValue("");
+//                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+//
+//                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+//                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOW;
+//                l_PropertyInfo5Pin.setValue(cWarehouseorder.WorkflowEnu.EOS.toString());
+//                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+//
+//                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+//                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEDDAT;
+//                l_PropertyInfo6Pin.setValue(cDateAndTime.pGetCurrentDateTimeForWebserviceStr());
+//                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+//
+//                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+//                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT;
+//                l_PropertyInfo7Pin.setValue(params[0].documentStr);
+//                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+//
+//                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+//                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT2;
+//                l_PropertyInfo8Pin.setValue(params[0].packingSlipStr);
+//                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+//
+//                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
+//                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORIGINNO;
+//                l_PropertyInfo9Pin.setValue("");
+//                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
+//
+//                PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
+//                l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_EXTERNALREFERENCE;
+//                l_PropertyInfo10Pin.setValue(params[0].documentStr + ";" + params[0].packingSlipStr + ";" + cDateAndTime.pGetCurrentDateTimeForIntakeStr() );
+//                l_PropertyInfoObl.add(l_PropertyInfo10Pin);
+//
+//                PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
+//                l_PropertyInfo11Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBIN;
+//                l_PropertyInfo11Pin.setValue(params[0].binCodeStr);
+//                l_PropertyInfoObl.add(l_PropertyInfo11Pin);
+//
+//                PropertyInfo l_PropertyInfo12Pin = new PropertyInfo();
+//                l_PropertyInfo12Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBARCODECHECK;
+//                l_PropertyInfo12Pin.setValue(params[0].checkBarcodesBln);
+//                l_PropertyInfoObl.add(l_PropertyInfo12Pin);
+//
+//                PropertyInfo l_PropertyInfo13Pin = new PropertyInfo();
+//                l_PropertyInfo13Pin.name = cWebserviceDefinitions.WEBPROPERTY_ADMINISTRATION;
+//                l_PropertyInfo13Pin.setValue("");
+//                l_PropertyInfoObl.add(l_PropertyInfo13Pin);
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LANGUAGEASCULTURE;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
+                l_PropertyInfo4Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOW;
+                l_PropertyInfo5Pin.setValue(cSetting.RECEIVE_NEW_WORKFLOWS());
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEDDAT;
+                l_PropertyInfo6Pin.setValue(cDateAndTime.pGetCurrentDateTimeForWebserviceStr());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT;
+                l_PropertyInfo7Pin.setValue(params[0].documentStr);
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+
+                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT2;
+                l_PropertyInfo8Pin.setValue(params[0].packingSlipStr);
+                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
+                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
+                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORIGINNO;
+                l_PropertyInfo9Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
+
+                PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
+                l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_EXTERNALREFERENCE;
+                l_PropertyInfo10Pin.setValue(params[0].documentStr + ";" + params[0].packingSlipStr + ";" + cDateAndTime.pGetCurrentDateTimeForIntakeStr() );
+                l_PropertyInfoObl.add(l_PropertyInfo10Pin);
+
+                PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
+                l_PropertyInfo11Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBIN;
+                l_PropertyInfo11Pin.setValue(params[0].binCodeStr);
+                l_PropertyInfoObl.add(l_PropertyInfo11Pin);
+
+                PropertyInfo l_PropertyInfo12Pin = new PropertyInfo();
+                l_PropertyInfo12Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBARCODECHECK;
+                l_PropertyInfo12Pin.setValue(params[0].checkBarcodesBln);
+                l_PropertyInfoObl.add(l_PropertyInfo12Pin);
+
+                PropertyInfo l_PropertyInfo13Pin = new PropertyInfo();
+                l_PropertyInfo13Pin.name = cWebserviceDefinitions.WEBPROPERTY_ADMINISTRATION;
+                l_PropertyInfo13Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo13Pin);
+
+                new cWebresult();
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_RECEIVECREATE, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                l_WebresultWrs.setSuccessBln(false);
+                l_WebresultWrs.setResultBln(false);
+            }
+            return l_WebresultWrs;
+        }
+    }
+
+    //Region Items
 
     //End Region Private Methods
 

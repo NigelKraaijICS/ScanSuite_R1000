@@ -1,10 +1,8 @@
 package SSU_WHS.General.Comments;
 
 import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
-import java.util.List;
+import androidx.lifecycle.AndroidViewModel;
 
 public class cCommentViewModel  extends AndroidViewModel {
     public cCommentRepository commentRepository;

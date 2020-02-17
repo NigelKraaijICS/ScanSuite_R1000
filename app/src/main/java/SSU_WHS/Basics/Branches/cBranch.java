@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
@@ -32,6 +33,19 @@ public class cBranch {
     private String branchNameStr;
     public String getBranchNameStr() {
         return branchNameStr;
+    }
+
+    private boolean binMandatoryBln;
+    public  boolean isBinMandatoryBln() {return  binMandatoryBln;}
+
+    private String returnDefaultBinStr;
+    public String getReturnDefaultBinStr(){
+        return   returnDefaultBinStr;
+    }
+
+    private String receiveDefaultBinStr;
+    public String getReceiveDefaultBinStr(){
+        return   receiveDefaultBinStr;
     }
 
     private cBranchEntity branchEntity;
@@ -60,6 +74,7 @@ public class cBranch {
     }
 
     private static List<cBranch> allBranchesObl;
+    public  List<cBranchBin> receiveBinsObl;
 
     public  static  boolean BranchesAvailableBln;
 
@@ -77,6 +92,9 @@ public class cBranch {
         this.branchStr = branchEntity.getBranchStr();
         this.branchTypeStr = branchEntity.getBranchtypeStr();
         this.branchNameStr = branchEntity.getBranchnameStr();
+        this.returnDefaultBinStr = branchEntity.getReturndefaultbinStr();
+        this.receiveDefaultBinStr = branchEntity.getReceivedefaultbinStr();
+        this.binMandatoryBln = cText.pStringToBooleanBln(branchEntity.getBinmandatoryStr(),false) ;
 
     }
     //End Region Constructor
@@ -112,6 +130,31 @@ public class cBranch {
             return  false;
         }
     }
+
+
+    public boolean pGetReceiveBinsViaWebserviceBln() {
+
+        if (this.receiveBinsObl != null) {
+            return  true;
+        }
+
+        cWebresult WebResult;
+        WebResult =  cBranch.getBranchViewModel().pGetReceiveBinsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            this.receiveBinsObl = new ArrayList<>();
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cBranchBin branchBin = new cBranchBin(jsonObject);
+                this.receiveBinsObl.add(branchBin);
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETBRANCHES);
+            return  false;
+        }
+    }
+
 
     public boolean pInsertInDatabaseBln() {
         cBranch.getBranchViewModel().insert(this.branchEntity);

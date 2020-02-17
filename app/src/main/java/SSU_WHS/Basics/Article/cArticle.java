@@ -1,9 +1,5 @@
 package SSU_WHS.Basics.Article;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
-
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
@@ -15,10 +11,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
-import SSU_WHS.Basics.ArticleImages.cArticleImageEntity;
-import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.ArticleStock.cArticleStock;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 

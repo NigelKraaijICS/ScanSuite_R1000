@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineEntity;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cIntakeorderViewModel  extends AndroidViewModel {
@@ -26,28 +25,24 @@ public class cIntakeorderViewModel  extends AndroidViewModel {
     public void deleteAll() {this.Repository.pTruncateTable();}
 
     public cWebresult pGetIntakeordersFromWebserviceWrs(String pvSearchTextStr) {return this.Repository.pGetIntakeordersFromWebserviceWrs(pvSearchTextStr);}
-
-    public List<cIntakeorderEntity> pGetIntakeordersFromDatabaseObl() {return this.Repository.pGetIntakeordersFromDatabaseObl();}
-    public cWebresult pGetIntakeorderMATBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebserviceWrs();}
+    public cWebresult pGetIntakeorderBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebserviceWrs();}
     public cWebresult pGetIntakeorderMATLineBarcodesFromWebserviceWrs() {return this.Repository.pGetMATLineBarcodesFromWebserviceWrs();}
     public cWebresult pGetIntakeorderMATLinesFromWebserviceWrs() {return this.Repository.pGetMATLinesFromWebserviceWrs();}
-
+    public cWebresult pGetIntakeorderReceiveLinesFromWebserviceWrs() {return this.Repository.pGetReceiveLinesFromWebserviceWrs();}
+    public cWebresult pGetIntakeorderReceiveItemsFromWebserviceWrs() {return this.Repository.pGetReceiveItemsFromWebserviceWrs();}
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
+
+    public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);}
 
     public List<cIntakeorderEntity> pGetIntakeordersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.Repository.pGetIntakeordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 
-    public List<cIntakeorderMATLineEntity> pGetAllLinesFromDatabaseObl(){return  this.Repository.pGetAllMATLinesFromDatabaseObl();}
-    public List<cIntakeorderMATLineEntity> pGetIntakeorderMATLinesToSendFromDatabaseObl(){return  this.Repository.pGetMATLinesToSendFromDatabaseObl();}
-    public List<cIntakeorderMATLineEntity> pGetIntakeorderMATLinesNotHandledFromDatabaseObl(){return  this.Repository.pGetMATLinesNotHandledFromDatabaseObl();}
-    public List<cIntakeorderMATLineEntity> pGetIntakeorderMATLinesBusyFromDatabaseObl(){return  this.Repository.pGetMATLinesBusyFromDatabaseObl();}
-    public List<cIntakeorderMATLineEntity> pGetIntakeorderMATLinesHandledFromDatabaseObl(){return  this.Repository.pGetMATLinesHandledFromDatabaseObl();}
-
-    public Double pQuantityNotHandledDbl() {return this.Repository.pQuantityNotHandledDbl();}
     public Double pQuantityHandledDbl() {return this.Repository.pQuantityHandledDbl();}
-    public Double pGetQuantityTotalDbl() {return this.Repository.pGetTotalQuantityDbl();}
 
-    public cWebresult pHandledViaWebserviceWrs() { return this.Repository.pHandledViaWebserviceBln();}
 
+    public cWebresult pMATHandledViaWebserviceWrs() { return this.Repository.pMATHandledViaWebserviceBln();}
+    public cWebresult pReceiveHandledViaWebserviceWrs() { return this.Repository.pReceiveHandledViaWebserviceBln();}
+
+    public cWebresult pInvalidateViaWebserviceWrs() { return this.Repository.pInvalidateViaWebserviceBln();}
 
 
 }

@@ -12,6 +12,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -19,20 +20,18 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
-import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
-import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
-import SSU_WHS.Picken.Shipment.cShipment;
-import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackage;
-import nl.icsvertex.scansuite.R;
-import ICS.cAppExtension;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
+import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackage;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
+import SSU_WHS.Picken.Shipment.cShipment;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.R;
 
 public class cPickorder{
 
@@ -452,7 +451,14 @@ public class cPickorder{
     }
 
     public boolean pAbortBln() {
-        cPickorder.getPickorderViewModel().pAbortOrder();
+
+        for (cPickorderLine pickorderLine : cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl()) {
+            cPickorderLine.currentPickOrderLine = pickorderLine;
+            cPickorderLine.currentPickOrderLine.pLineBusyRst();
+            cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
+            cPickorderLine.currentPickOrderLine.pHandledBln();
+        }
+
         return true;
     }
 
@@ -926,23 +932,6 @@ public class cPickorder{
                 resultObl.add(shipment);
             }
 
-        }
-        return  resultObl;
-    }
-
-    public List<cPickorderLinePackAndShip> pGetPackAndShipLinesNotHandledFromDatabasObl() {
-
-        List<cPickorderLinePackAndShip> resultObl = new ArrayList<>();
-        List<cPickorderLinePackAndShipEntity> hulpResultObl;
-
-        hulpResultObl =  cPickorder.getPickorderViewModel().pGetPackAndShipLinesNotHandledFromDatabaseObl();
-        if (hulpResultObl == null || hulpResultObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cPickorderLinePackAndShipEntity cPickorderLinePackAndShipEntity : hulpResultObl ) {
-            cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(cPickorderLinePackAndShipEntity);
-            resultObl.add(pickorderLinePackAndShip);
         }
         return  resultObl;
     }

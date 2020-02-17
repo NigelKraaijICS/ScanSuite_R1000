@@ -15,18 +15,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.R;
 
 public class AddArticleFragment extends DialogFragment implements iICSDefaultFragment {
@@ -132,8 +132,16 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
         AddArticleFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cAppExtension.dialogFragment.dismiss();
-                InventoryorderBinActivity.pHandleAddArticleFragmentDismissed();
+
+                if (cAppExtension.activity instanceof  InventoryorderBinActivity) {
+                    cAppExtension.dialogFragment.dismiss();
+                    InventoryorderBinActivity.pHandleAddArticleFragmentDismissed();
+                    return;
+                }
+
+                dismiss();
+
+
             }
         });
     }
@@ -143,18 +151,34 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
             @Override
             public void onClick(View view) {
 
+
+                if (AddArticleFragment.editTextAddArticle.getText().toString().trim().isEmpty()) {
+                    cUserInterface.pDoNope(AddArticleFragment.editTextAddArticle, true, true);
+                    return;
+                }
+
+                cAppExtension.dialogFragment.dismiss();
+
                 if (cAppExtension.activity instanceof InventoryorderBinActivity) {
 
-                    if (AddArticleFragment.editTextAddArticle.getText().toString().trim().isEmpty()) {
-                        cUserInterface.pDoNope(AddArticleFragment.editTextAddArticle, true, true);
-                        return;
-                    }
-
-                    cAppExtension.dialogFragment.dismiss();
                     InventoryorderBinActivity.pHandleAddArticleFragmentDismissed();
                     //Pass fake scan
-                    InventoryorderBinActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()));
+                    InventoryorderBinActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()), true);
                 }
+
+                if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
+
+                    ReturnorderDocumentActivity.pHandleFragmentDismissed();
+                    //Pass fake scan
+                    ReturnorderDocumentActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()));
+                }
+
+                if (cAppExtension.activity instanceof ReceiveLinesActivity) {
+
+                    //Pass fake scan
+                    ReceiveLinesActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()), false);
+                }
+
             }
         });
     }

@@ -1,8 +1,9 @@
 package SSU_WHS.Basics.ShippingAgentServiceShippingUnits;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.annotation.NonNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

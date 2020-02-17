@@ -71,6 +71,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     private static ImageView toolbarImage;
     private static TextView toolbarTitle;
     private static TextView toolbarSubTitle;
+    private static TextView toolbarSubTitle2;
     private static androidx.appcompat.widget.SearchView recyclerSearchView;
 
     private static ImageView imageViewFilter;
@@ -168,6 +169,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         PickorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
         PickorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
         PickorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        PickorderSelectActivity.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
         PickorderSelectActivity.recyclerViewPickorders = findViewById(R.id.recyclerViewPickorders);
         PickorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         PickorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
@@ -179,6 +181,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     public void mSetToolbar(String pvScreenTitle) {
         PickorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
         PickorderSelectActivity.toolbarTitle.setText(pvScreenTitle);
+        PickorderSelectActivity.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
         PickorderSelectActivity.toolbarTitle.setSelected(true);
         PickorderSelectActivity.toolbarSubTitle.setSelected(true);
         ViewCompat.setTransitionName(PickorderSelectActivity.toolbarImage, VIEW_NAME_HEADER_IMAGE);
@@ -231,7 +234,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Set filter with scanned barcodeStr if there is no prefix
-        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
             PickorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
             PickorderSelectActivity.recyclerSearchView.callOnClick();
@@ -740,7 +743,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         }
         String subtitleStr;
         if (!cSharedPreferences.userFilterBln()) {
-            subtitleStr = cText.pIntToStringStr(cPickorder.allPickordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders);
+            subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cPickorder.allPickordersObl.size(),cPickorder.allPickordersObl.size());
         } else {
             subtitleStr = cText.pIntToStringStr(cPickorder.pGetPicksWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cPickorder.allPickordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }

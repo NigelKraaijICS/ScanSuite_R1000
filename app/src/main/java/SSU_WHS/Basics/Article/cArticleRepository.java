@@ -1,17 +1,17 @@
 package SSU_WHS.Basics.Article;
 
 import android.os.AsyncTask;
+
 import org.json.JSONException;
 import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cArticleRepository {

@@ -35,6 +35,7 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
@@ -46,12 +47,11 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
+import nl.icsvertex.scansuite.R;
 
 public class SortorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
@@ -68,6 +68,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     private static  androidx.appcompat.widget.SearchView recyclerSearchView;
     private static  ImageView toolbarImage;
     private static TextView toolbarTitle;
+    private static TextView toolbarSubTitle;
     private static RecyclerView recyclerViewSortorders;
 
     private static ConstraintLayout constraintFilterOrders;
@@ -167,6 +168,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     public void mFindViews() {
         SortorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
         SortorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        SortorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         SortorderSelectActivity.recyclerViewSortorders = findViewById(R.id.recyclerViewSortorders);
         SortorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         SortorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
@@ -180,6 +182,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         SortorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
         SortorderSelectActivity.toolbarTitle.setText(pvScreenTitleStr);
         SortorderSelectActivity.toolbarTitle.setSelected(true);
+        SortorderSelectActivity.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
         ViewCompat.setTransitionName(SortorderSelectActivity.toolbarImage, VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(SortorderSelectActivity.toolbarTitle, VIEW_NAME_HEADER_TEXT);
@@ -255,7 +258,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     public static void pHandleScan(cBarcodeScan pvBarcodescan) {
 
         //Set filter with scanned barcodeStr if there is no prefix
-        if (!cRegex.hasPrefix(pvBarcodescan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodescan.getBarcodeOriginalStr())) {
             //no prefix, fine
             SortorderSelectActivity.recyclerSearchView.setQuery(pvBarcodescan.getBarcodeOriginalStr(), true);
             SortorderSelectActivity.recyclerSearchView.callOnClick();

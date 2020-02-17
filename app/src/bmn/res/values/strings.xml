@@ -1,0 +1,703 @@
+<resources>
+    <string name="app_name">ScanSuite</string>
+    <!--region debugging and test-->
+    <string name="do_something">Do something</string>
+    <!--endregion General-->
+
+    <!--region General-->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
+    <string name="done">Done</string>
+    <string name="nothing_here">There\'s nothing here yet.</string>
+    <string name="string_divider">/</string>
+    <string name="articleimage_thumb_description">article image thumbnail</string>
+    <string name="articleimage_full_description">article image</string>
+    <!--endregion General-->
+
+    <!--region Numpad-->
+    <string name="plus_5">+5</string>
+    <string name="plus_10">+10</string>
+    <string name="plus_max">max</string>
+    <string name="minus_5">-5</string>
+    <string name="minus_10">-10</string>
+    <string name="minus_min">min</string>
+    <!--endregion Numpad-->
+
+    <!--region Device info-->
+    <string name="device_manufacturer">Manufacturer</string>
+    <string name="device_brand">Brand</string>
+    <string name="device_model">Model</string>
+    <string name="device_serialnumber">Serial number</string>
+    <string name="android_version">Android version</string>
+    <!--endregion Device info-->
+
+    <!--region Application info-->
+    <string name="application_version">Version</string>
+    <string name="update_file_not_found">Update file not found</string>
+    <string name="webservice">Webservice</string>
+    <string name="message_downloading">Downloading&#8230;</string>
+    <string name="message_webservice_not_live">Can\'t reach the webservice</string>
+    <string name="mysettings">My settings</string>
+    <string name="iconattribution_freepik">Icons made by Freepik from www.flaticon.com</string>
+    <string name="text_copied_to_clipboard">Text was copied to the clipboard</string>
+    <string name="text_not_copied_to_clipboard">Text was not copied to the clipboard</string>
+    <string name="application_unknown_install_date">Unknown install date</string>
+    <string name="label_application_installed">Installed on</string>
+    <string name="label_application_last_update">Last update</string>
+    <string name="application_unknown_update_date">Unknown update date</string>
+    <!--endregion Application info-->
+
+    <!--region Network info-->
+    <string name="label_ssid">Network name</string>
+    <string name="label_ip">IP number</string>
+    <string name="label_internet_connected">Internet?</string>
+    <string name="internet_connected">Connected to the internet</string>
+    <string name="internet_not_connected">Not connected to the internet</string>
+    <!--endregion Network info-->
+
+    <!--region Workplace-->
+    <string name="choose_workplace">Choose workplace</string>
+    <!--endregion Workplace-->
+
+    <!--region Screens-->
+    <!--region Main screen-->
+    <string name="screentitle_main">Welcome</string>
+    <string name="screentitle_settings">Settings</string>
+    <string name="screentitle_support">Support and info</string>
+    <string name="screentitle_language">Language</string>
+    <string name="screentitle_datetime">Date and time</string>
+    <string name="logo_description">ScanSuite logo</string>
+    <string name="text_gettingready">Just a minute, we\'re getting things ready.</string>
+    <string name="button_get_started">Get started</string>
+    <string name="question_no_internet_open_settings">Looks like this device is not connected to the internet. Do you want to open the internet settings screen?</string>
+    <string name="open">open</string>
+    <string name="question_no_internet_open_settings_title">No internet</string>
+    <!--endregion Main screen-->
+
+    <!--region Main Menu-->
+    <string name="mainmenu_title">Scansuite menu</string>
+    <string name="mainmenu_home">Home</string>
+    <string name="mainmenu_menu">Menu</string>
+    <string name="mainmenu_settings">Settings</string>
+    <string name="mainmenu_support">Support and info</string>
+    <string name="mainmenu_language">Language</string>
+    <string name="mainmenu_datetime">Date and time</string>
+    <string name="mainmenu_environments">Environments</string>
+    <string name="changelanguage_description">Change language</string>
+    <string name="changedatetime_description">Change date and time</string>
+    <string name="tab_support_network">Network</string>
+    <string name="tab_support_application">Application</string>
+    <string name="tab_support_device">Device</string>
+    <string name="error_couldnt_get_ip">Couldn\'t get the ip number</string>
+    <string name="error_couldnt_get_ssid">Couldn\'t get the network name</string>
+    <string name="label_connectiontype">Connection type</string>
+    <string name="connectiontype_none">Not connected</string>
+    <string name="connectiontype_wifi">WiFi</string>
+    <string name="connectiontype_ethernet">Ethernet</string>
+    <string name="connectiontype_mobiledata">Mobile data</string>
+    <string name="connectiontype_unknown">I don\'t know</string>
+    <!--endregion Main Menu-->
+
+    <!--region Menu Screen-->
+    <string name="screentitle_menu">Menu</string>
+    <!--endregion Menu Screen-->
+
+    <!--region Menu Items-->
+    <string name="menuitem_external_return">Picking return supplier</string>
+    <string name="menuitem_intake">Reception and Storage</string>
+    <string name="menuitem_intake_eo">External reception</string>
+    <string name="menuitem_intake_ma">Storage reception</string>
+    <string name="menuitem_intake_om">Internal reception</string>
+    <string name="menuitem_intake_close">Close reception</string>
+    <string name="menuitem_inventory">Inventory</string>
+    <string name="menuitem_inventoryclose">Inventory close</string>
+    <string name="menuitem_move">Move</string>
+    <string name="menuitem_move_mi">Move (only place)</string>
+    <string name="menuitem_move_mo">Move (only pick)</string>
+    <string name="menuitem_move_mv">Move (pick and place)</string>
+    <string name="menuitem_moveitem">Move item</string>
+    <string name="menuitem_pick">Pick</string>
+    <string name="menuitem_pick_pf">Pick store</string>
+    <string name="menuitem_pick_pv">Pick salesorder</string>
+    <string name="menuitem_return">Returns</string>
+    <string name="menuitem_selfpick">Picking done by client</string>
+    <string name="menuitem_sort">Sorting</string>
+    <string name="menuitem_ship">Shipping</string>
+    <!--endregion Menu Items-->
+
+    <!--region Order types-->
+    <string name="ordertype_bc">Batch picking sorting per VKO</string>
+    <string name="ordertype_bm">Batch pick manual sorting</string>
+    <string name="ordertype_bp">Batch picking</string>
+    <string name="ordertype_eom">External reception Multi-user</string>
+    <string name="ordertype_eoom">External reception and Storage Multi-user</string>
+    <string name="ordertype_eoos">External reception and Storage Single-user</string>
+    <string name="ordertype_eor">Registratie external reception</string>
+    <string name="ordertype_eos">External reception Single-user</string>
+    <string name="ordertype_er">Return supplier</string>
+    <string name="ordertype_ivm">Stocktaking Multi-user</string>
+    <string name="ordertype_ivs">Stocktaking Single-user</string>
+    <string name="ordertype_mam">Storage reception Multi-user</string>
+    <string name="ordertype_mas">Storage reception Single-user</string>
+    <string name="ordertype_mat">Storage reception through task</string>
+    <string name="ordertype_mi">Move place</string>
+    <string name="ordertype_mo">Move take</string>
+    <string name="ordertype_mt">Move task</string>
+    <string name="ordertype_mv">Move</string>
+    <string name="ordertype_mvi">Move item</string>
+    <string name="ordertype_omm">Internal reception Multi-user</string>
+    <string name="ordertype_omom">Internal reception and Storage Multi-user</string>
+    <string name="ordertype_omos">Internal reception and Storage Single-user</string>
+    <string name="ordertype_omr">Registration internal reception</string>
+    <string name="ordertype_oms">Internal reception Single-user</string>
+    <string name="ordertype_pa">Picking transfer / item</string>
+    <string name="ordertype_pf">Picking transfer / branch</string>
+    <string name="ordertype_pv">Pick and sort</string>
+    <string name="ordertype_rvr">Registration Return sales</string>
+    <string name="ordertype_rvs">Return sales</string>
+    <string name="ordertype_spv">Selfpicking</string>
+    <string name="ordertype_unknown">Unknown</string>
+    <!--endregion Order types-->
+
+    <!--region Login screen-->
+    <string name="screentitle_login">Login</string>
+    <string name="hint_password">Password</string>
+    <string name="button_login">Log in</string>
+    <string name="dialog_password_text">Enter password for %1$s</string>
+    <string name="dialog_password_title">Log in</string>
+    <string name="dialog_password_incorrect">Sorry, that\'s not it.</string>
+    <!--endregion Login screen-->
+
+    <!--region Password settings-->
+    <string name="dialog_password_settings_button_login">Log in</string>
+    <string name="dialog_password_settings_text">Enter password for settings</string>
+    <string name="dialog_password_settings_title">Log in</string>
+    <!--endregion Password Settings-->
+
+    <!--region Inventory-->
+    <string name="screentitle_inventory">Inventory</string>
+    <!--endregion Inventory-->
+
+    <!--region PickorderSelect-->
+    <string name="screentitle_pickorderselect">Pick orders</string>
+    <string name="pack">Pack</string>
+    <string name="second">De tweede knop</string>
+    <string name="question_show_processingorparkedorders_message">There are still orders parked or being processed \n\nDo you want to show them?</string>
+    <string name="question_show_processingorparkedorders_title">Show all orders?</string>
+    <string name="question_show">Show</string>
+    <string name="question_dontshow">Don\'t Show</string>
+    <!--endregion PickorderSelect-->
+
+    <!--region Pickorder Lines-->
+    <string name="screentitle_pickorderlines">Pick lines</string>
+    <string name="tab_pickorderline_topick">To pick</string>
+    <string name="tab_pickorderline_picked">Picked</string>
+    <string name="tab_pickorderline_total">Total</string>
+    <string name="im_at">I\'m at</string>
+    <string name="scan_bincode">Scan BIN</string>
+    <string name="scan_article_or_bincode">Scan article or BIN</string>
+    <string name="nothing_more_todo_for_bin">There is nothing to do for this location</string>
+    <!--endregion Pickorder Lines-->
+
+    <!--region Leave screen-->
+    <string name="message_sure_leave_screen_text">Do you really want to leave this screen?</string>
+    <string name="message_sure_leave_screen_positive">Leave</string>
+    <string name="message_sure_leave_screen_negative">Stay</string>
+    <string name="message_sure_leave_screen_title">Leave this screen?</string>
+    <!--endregion Leave screen-->
+
+    <!--region Sortorder Lines-->
+    <string name="screentitle_sortorderlines">Sort lines</string>
+    <string name="error_no_more_articles_to_sort">There are no more articles to sort</string>
+    <!--endregion Sortorder Lines-->
+
+    <!--region Shiporder Lines-->
+    <string name="error_no_more_articles_to_ship">There are no more articles to ship</string>
+    <string name="unknown_shippingagentservice">Unknown shipping service</string>
+    <string name="unknown_shippingagent">Unknown shipping agent</string>
+    <string name="error_unknown_shippingunit">Unknown shippingunit</string>
+    <string name="error_unknown_salesorder">Unknown salesorder</string>
+    <string name="scan_salesorder">scan salesorder</string>
+    <!--endregion Shiporder Lines-->
+
+    <!--region Pickorder Pick-->
+    <string name="screentitle_pickorderpick">Picking</string>
+    <string name="message_underpick_header">Finish order line?</string>
+    <string name="message_underpick_text">You need %1$s of these, you\'ve only picked %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
+    <string name="button_close_orderline">Finish</string>
+    <string name="choose_barcode">Choose barcode</string>
+    <string name="quantity_per_scan">Quantity per scan: </string>
+    <string name="error_could_not_close_order">The order could not be closed, please try again</string>
+    <!--endregion Pickorder Pick-->
+
+    <!--region Sortorderselect-->
+    <string name="screentitle_sortorderselect">Sortorders</string>
+    <!--endregion Screens-->
+
+    <!--region filter Pickorder Lines-->
+    <string name="filter_orderlines_title">Show orders that are: </string>
+    <string name="filter_orderlines_enable">Use filters</string>
+    <string name="filter_orderlines_enable_summary">Enable or disable all filters below</string>
+    <string name="filter_orderlines_enable_key" translatable="false">FILTERORDERLINES_ENABLE</string>
+    <string name="filter_orderlines_processing">Being processed or on hold</string>
+    <string name="filter_orderlines_processing_summary_on">Showing these</string>
+    <string name="filter_orderlines_processing_summary_off">Not showing these</string>
+    <string name="filter_orderlines_processing_key" translatable="false">FILTERORDERLINES_PROCESSING</string>
+    <string name="filter_orderlines_singlearticles">Single articles pick</string>
+    <string name="filter_orderlines_singlearticles_summary_on">Showing ONLY single articles</string>
+    <string name="filter_orderlines_singlearticles_summary_off">Don\'t care if single or not</string>
+
+    <string name="filter_orderlines_singlearticles_key" translatable="false">FILTERORDERLINES_SINGLEARTICLES</string>
+    <string name="filter_orderlines_my_orders">Assigned to me</string>
+    <string name="filter_orderlines_my_orders_summary">Orders that are assigned to me</string>
+    <string name="filter_orderlines_my_orders_key" translatable="false">FILTERORDERLINES_MYORDERS</string>
+    <string name="filter_orderlines_their_orders">Assigned to someone else</string>
+    <string name="filter_orderlines_their_orders_summary">Orders that are assigned to someone else</string>
+    <string name="filter_orderlines_their_orders_key" translatable="false">FILTERORDERLINES_THEIRORDERS</string>
+    <string name="filter_orderlines_nobodys_orders">Not assigned to anyone</string>
+    <string name="filter_orderlines_nobodys_orders_summary">Orders that are not assigned to anyone</string>
+    <string name="filter_orderlines_nobodys_orders_key" translatable="false">FILTERORDERLINES_NOBODYSORDERS</string>
+    <string name="filter_orderlines_apply_key" translatable="false">FILTERORDERLINES_APPLY</string>
+    <string name="filter_orderlines_apply">Click or swipe down to apply</string>
+
+    <string name="label_swipe_up_for_filters">Swipe up for filters</string>
+    <string name="label_swipe_down_to_hide">Swipe down to hide</string>
+
+    <!--endregion filter Pickorder Lines-->
+
+    <!--region shiporder select-->
+    <string name="screentitle_shiporderselect">Shiporder select</string>
+    <!--endregion shiporder select-->
+
+    <!--region errors-->
+    <string name="error_unspecified">Error</string>
+    <string name="error_unknown_barcode">Unknown barcode</string>
+    <!--endregion errors-->
+
+    <!--region orderdone-->
+    <string name="orderdone_header_default">Order is done!</string>
+    <string name="orderdone_text_default">You\'re all done with this order. Want to close it?</string>
+    <string name="currentlocation_header_default">Current location</string>
+    <string name="currentlocation_text_default">Please typ or scan the current location</string>
+    <string name="error_currentlocation_could_not_update">There was an error updating this order.\nPlease try again</string>
+    <string name="botton_set_currentlocation">Set location</string>
+    <!--endregion orderdone-->
+
+    <string name="choose_branch">Choose branch</string>
+    <string name="no_orders">There are no orders</string>
+    <string name="show_only_defects">Show only defects</string>
+    <string name="refreshorders_description">Refresh orders</string>
+    <string name="couldnt_connect">No connection</string>
+    <string name="message_header_orderdone">Order %1$s is done!</string>
+    <string name="message_text_orderdone">You\'re done with this order, do you want to close it?</string>
+    <string name="button_close_order">Close order</string>
+    <string name="reset">Reset</string>
+    <string name="message_reset_header">Reset this line?</string>
+    <string name="message_reset_text">The quantity will be reset to 0 with a status of \'to pick\'</string>
+    <string name="button_reset">Reset</string>
+    <string name="abort_order_abort">Abort</string>
+    <string name="abort_order_order">order</string>
+    <string name="message_abort_header">Abort this order?</string>
+    <string name="message_abort_text">All open lines will be closed with a quantity of 0</string>
+    <string name="button_abort">Abort</string>
+
+    <string name="message_orderbusy_header">Order still busy</string>
+    <string name="message_orderbusy_text">What do you want to do with the current order?</string>
+    <string name="message_orderbusy_accept">Accept</string>
+    <string name="message_orderbusy_reject">Reject</string>
+    <string name="error_no_more_articles_to_pick">There are no more articles to pick for this barcode</string>
+    <string name="error_couldnt_lock_order">This order could not be locked</string>
+    <string name="comments">comments</string>
+    <string name="button_roger">Roger</string>
+
+    <!--region lockorder-->
+    <string name="lockorder_order_assigned_to_another_user">This order is assigned to another user</string>
+    <string name="lockorder_order_already_busy_on_other_scanner">This order is already locked on another scanner.</string>
+    <string name="lockorder_order_already_assigned_to_user">Looks like you were already working on this order on another scanner, do you want to continue on this one?</string>
+    <string name="lockorder_order_could_not_be_locked">this order could not be locked</string>
+    <string name="button_lock">Lock</string>
+    <string name="button_dont_lock">Don\'t lock</string>
+    <string name="hint_current_location">Current location</string>
+    <string name="message_webservice_live">The webservice is up and running</string>
+    <string name="packing_table">Packing table</string>
+    <string name="tab_sortorderline_tosort">To sort</string>
+    <string name="tab_sortorderline_sorted">Sorted</string>
+    <string name="sortorder_nothing_selected">Select a line first</string>
+    <string name="message_sortorderbusy_text">What do you want to do with the current order?</string>
+    <string name="message_sortorderbusy_accept">Accept</string>
+    <string name="message_sortorderbusy_reject">Reject</string>
+    <string name="message_sortorderbusy_header">Sortorderline still busy</string>
+    <string name="screentitle_sortordersort">Sorting</string>
+    <string name="message_scan_article_first">Scan article first</string>
+    <string name="message_packingtable_already_assigned">This packing table is already assigned to a different sales order</string>
+    <string name="message_salesorder_assigned_different_packingtable">This sales order is already assigned to a different packing table</string>
+    <string name="message_scan_article">Scan article</string>
+    <string name="scan_packingtable_parameter1">Scan packing table %1$s</string>
+    <string name="question_open_sort">Do you want to continue with sorting?</string>
+    <string name="question_open_sort_title">Open sort?</string>
+    <string name="question_open_ship">Do you want to continue with shipping?</string>
+    <string name="question_open_ship_title">Open ship?</string>
+    <string name="unknow_sort_barcode_type">This barcode is neither an article, nor a sort location.</string>
+    <string name="scan_sort_location">Scan sort location</string>
+    <string name="scan_sort_location_parameter1">Scan sort location %1$s</string>
+    <string name="details">Details</string>
+    <string name="tab_shiporderline_toship">To ship</string>
+    <string name="tab_shiporderline_shipped">Shipped</string>
+    <string name="tab_shiporderline_total">Total</string>
+    <string name="screentitle_shiporderlines">Ship lines</string>
+    <!--endregion lockorder-->
+
+    <!--region packaging-->
+    <string name="choose_packiging_title">Choose packaging</string>
+    <string name="choose_packiging_subtitle">Click item to change quantity</string>
+    <!--endregion packaging-->
+
+    <!--region Determine transport-->
+    <string name="screentitle_determine_transport">Determine transport</string>
+    <string name="workplace_updated">Workplace was successfully updated</string>
+    <string name="error_unknown_user">Unknown user</string>
+    <string name="error_scan_packintable_first">Scan packingtable first</string>
+    <string name="no_advice_locations">No advice location</string>
+    <string name="advice_locations">Advice locations:</string>
+    <string name="ship_pick_at_least_one_package">Pick at least one package</string>
+    <string name="error_unknown_or_article">Unknown salesorder or article</string>
+    <string name="error_unknown_salesorder_or_article">Unknown salesorder or article</string>
+
+    <!--endregion Determine transport-->
+
+    <string name="parameter1_not_found">%1$s not found</string>
+    <string name="dialog_sending">Sending</string>
+    <string name="dialog_sent">Sent!</string>
+    <string name="dialog_notsent">Not sent!</string>
+    <string name="button_open_internet_settings">open internet settings</string>
+    <string name="button_try_again">try again</string>
+    <string name="getting_data">Getting data</string>
+    <string name="succes_scannerlogon">Scanner successfully logged on</string>
+    <string name="fail_scannerlogon">Scanner could not log on</string>
+    <string name="getdata_succes_scannerlogon">Scanner successfully logged on</string>
+    <string name="getdata_fail_scannerlogon">Scanner could not log on</string>
+    <string name="webservice_error_header">Oops!</string>
+    <string name="webservice_error_text">something went wrong</string>
+    <string name="getting_data_header">Getting data</string>
+    <string name="getting_data_text">please wait</string>
+    <string name="scan_pickcart_or_salesorder">Scan pickcart or salesorder</string>
+    <string name="message_scan_pickcart_or_salesorder">Scan pick cart or salesorder</string>
+    <string name="message_location_already_assigned">This location is already assigned to a different salesorder</string>
+    <string name="message_salesorder_assigned_different_location">This salesorder is already assigned to %1$s</string>
+    <string name="message_wrong_sourceno">Wrong source number</string>
+    <string name="message_unknown_pickcartbox">Unknown pickcartbox</string>
+    <string name="message_unknown_salesorder">Unknown salesorder</string>
+    <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>
+    <string name="message_wrong_pickcartbox">Wrong pickcartbox</string>
+    <string name="number_cannot_be_higher">Number can not be higher than required number</string>
+    <string name="select_shippingunit">Scan or select shippingunit</string>
+    <string name="choose_environment">Choose environment</string>
+    <string name="environment_set_to_parameter1">The environment has been set to: %1$s</string>
+    <string name="current_environment">Current environment</string>
+    <string name="label_current_environment">Currently using</string>
+    <string name="current_environment_unknown">unknown</string>
+    <string name="error_no_environments">Please set an environment first</string>
+    <string name="add_environment">Add environment</string>
+    <string name="environment_label_description">Description</string>
+    <string name="environment_hint_description">description</string>
+    <string name="environment_label_name">Name</string>
+    <string name="save">Save</string>
+    <string name="environment_label_url">URL</string>
+    <string name="environment_hint_url">url</string>
+    <string name="add_manually">Add manually</string>
+    <string name="environment_parameter1_saved">Environment %1$s was saved</string>
+    <string name="environment_hint_name">name</string>
+    <string name="delete">delete</string>
+    <string name="parameter1_is_removed">%1$s is removed</string>
+    <string name="undo">undo</string>
+    <string name="message_cant_delete_active_environment">You can\'t delete the active environment</string>
+    <string name="error_interface_version_should_be_parameter1_is_parameter2">Interface mismatch\nweb: %1$s\nlocal: %2$s</string>
+    <string name="message_downloading_update">Downloading program update</string>
+
+    <string name="choose_barcode_first">Please choose a barcode first</string>
+    <string name="manual_input_only_barcodenumber_bigger1">Manual input is only allowed when barcode quantity is 1</string>
+    <string name="couldnt_send_line">Could\'t send line</string>
+    <string name="all_orders_sent">All orders are sent</string>
+    <string name="order_done_button">Order done!</string>
+    <string name="order_done_close">Close</string>
+    <string name="message_couldnt_unlock_order">Could\'t unlock order</string>
+
+    <string name="password_header_default">Password</string>
+    <string name="password_text_default">Enter password</string>
+    <string name="password_hint_default">password</string>
+    <string name="error_unknown_branch">Unknown branch</string>
+    <string name="error_get_autorisations_failed">Getting Autorisations failed</string>
+    <string name="error_no_autorisations_available">No autorisations available for this user in this location</string>
+    <string name="error_get_workplaces_failed">Getting workplaces failed</string>
+    <string name="error_no_workplaces_available">There are no workplaces available for this location</string>
+    <string name="error_unknown_autorisation">Autorisation is unknown</string>
+    <string name="error_get_pickorders_failed">Getting pickorders from server failed</string>
+    <string name="error_couldnt_delete_details">Could not delete order details</string>
+    <string name="error_get_lines_failed">Getting lines from server failed</string>
+    <string name="error_get_bins_failed">Getting bins from server failed</string>
+    <string name="error_get_possible_bins_failed">Getting possible bins from server failed</string>
+    <string name="error_couldnt_unlock_order">Couldn\'t unlock order</string>
+    <string name="error_get_article_images_failed">Getting article images failed</string>
+    <string name="error_couldnt_release_lock_order">Couln\'t release order lock</string>
+    <string name="error_get_barcodes_failed">Getting barcodes failed</string>
+    <string name="error_getting_sort_lines_failed">Could not get sort lines</string>
+    <string name="error_get_adresses_failed">Getting adresses failed</string>
+    <string name="error_get_comments_failed">Getting comments failed</string>
+    <string name="error_couldnt_reset_line">Couldn\'t reset line</string>
+    <string name="error_couldnt_abort_order">Could not abort order</string>
+    <string name="error_article_scan_not_allowed">Article scan not allowed here</string>
+    <string name="nothing_more_todo_for_article">Nothing todo for scanned article</string>
+    <string name="lines_to_be_send">There are still unsend lines</string>
+    <string name="error_couldnt_set_line_on_busy">Couldn\'t set line on status busy</string>
+    <string name="no_barcodes_availabe_for_this_line">No barcodes available for this line</string>
+    <string name="mutiple_barcodes_posible">Multiple barcodes possible</string>
+    <string name="could_not_get_article_image">Could not get article image</string>
+    <string name="message_unknown_barcode">Unknown/unexpected barcode</string>
+    <string name="error_inserting_salesorderpackingtable">Could not add salesorder packing table</string>
+    <string name="error_updating_processing_sequence">Could not update processing sequence</string>
+    <string name="previous_barcode_could_not_be_deleted">Previous barcodes could not be deleted</string>
+    <string name="message_select_one_of_multiple_barcodes">Multiple barcodes available, please select one</string>
+    <string name="invalid_user_not_assigned">invalid_user_not_assigned</string>
+    <string name="message_meant_for_other_user">This assignment is assigned to another user:</string>
+    <string name="message_another_user_already_started">Another user already started:</string>
+    <string name="order_will_be_deleted">Order will be deleted</string>
+    <string name="order_cant_be_started">Order can\'t be started</string>
+    <string name="feedback">Feedback</string>
+    <string name="message_empty_name">Name is empty</string>
+    <string name="message_empty_description">Description is empty</string>
+    <string name="message_empty_URL">URL is empty</string>
+    <string name="message_empty_isdefault">IsDefault is not filled</string>
+    <string name="hold_the_order">Hold this order</string>
+    <string name="error_couldnt_handle_step">This step could not be handled</string>
+    <string name="send_order">(Re)Send order</string>
+    <string name="error_get_sorting_detals_failed">Getting sort details failed</string>
+    <string name="scan_pickcartbox">Scan pickcartbox</string>
+    <string name="all_lines_sent">All lines are sent</string>
+    <string name="error_article_scan_mandatory">You can only scan articles</string>
+    <string name="message_scan_packinglocation_or_salesorder">Scan packinglocation or salesorder</string>
+    <string name="scan_article_or_sort_location">Scan article or sort location</string>
+    <string name="couldnt_update_line">Could not update line</string>
+    <string name="message_progress_to_send">There is still progress that needs to be send</string>
+    <string name="message_send_now">Do you want to send the progress now?</string>
+    <string name="message_send">Send now</string>
+    <string name="error_get_linebarcodes_failed">Getting line barcodes failed</string>
+    <string name="error_no_shippingagents_available">There are no shipping agents available</string>
+    <string name="error_no_shippingagent_services_available">No shipping agent services available</string>
+    <string name="error_no_shippingagent_services_units_available">No shipping agent service units available</string>
+    <string name="error_getting_pack_and_ship_lines_failed">Getting pack and ship lines failed</string>
+    <string name="error_getting_packages_failed">Getting packages failed</string>
+    <string name="message_article_not_allowed">Article scan not allowed</string>
+    <string name="dialog_error">error detail</string>
+    <string name="shown">shown</string>
+    <string name="orders">orders</string>
+    <string name="dont_care">Don\'t care</string>
+    <string name="show_all">Show all</string>
+    <string name="message_license_error">Getting license failed</string>
+    <string name="message_license_release_error">License release failed</string>
+    <string name="message_workplace_selected">Workplace selected</string>
+
+    <!--region Inventory-->
+    <string name="screentitle_inventoryorderselect">Inventory</string>
+    <string name="error_get_inventoryorders_failed">Getting inventoryorders from server failed</string>
+    <string name="error_get_inventorylines_failed">Getting inventorylines from server failed</string>
+    <string name="button_new_inventoryorder">New</string>
+    <string name="hint_document_inventory">Document</string>
+    <string name="button_create_inventory">Create</string>
+    <string name="createinventory_header_default">Create inventory</string>
+    <string name="createinventory_text_default">Create new inventory?</string>
+    <string name="screentitle_inventoryorderbins">Inventory bins</string>
+    <string name="tab_inventorybin_todo">open</string>
+    <string name="tab_inventorybin_done">done</string>
+    <string name="tab_inventorybin_total">total</string>
+    <string name="hint_add_bin">Scan or type new bin</string>
+    <string name="hint_add_packingslip">Packingslip</string>
+    <string name="add_bin_header_default">Add bin</string>
+    <string name="button_add_bin">Add bin</string>
+    <string name="message_bin_added">Bin %1$s was added</string>
+    <string name="message_bin_not_added">Bin %1$s was not added</string>
+    <string name="screentitle_inventorybincount">Inventory bin count</string>
+    <string name="screentitle_inventoryordercount">Inventory count</string>
+    <string name="error_get_line_barcodes_failed">Getting line barcodes failed</string>
+    <string name="message_couldnt_create_order">Order could not be created</string>
+    <string name="message_add_bin_not_allowed">You are not allowed to add a BIN</string>
+    <string name="message_bin_could_not_be_added_via_webservice">Bin could not be added via web service</string>
+    <string name="message_add_article_now_allowed">Adding article not allowed</string>
+    <string name="message_adding_unkown_article_failed">Adding unknown article failed</string>
+    <string name="message_adding_line_failed">Adding line failed</string>
+    <string name="message_adding_erp_article_failed">Adding ERP article failed</string>
+    <string name="message_add_article_for_this_bin_now_allowed">Article belongs to another BIN, adding lines is not allowed</string>
+    <string name="error_barcode_doesnt_belong_to_line">This barcode doesn\'t belong to this line</string>
+    <string name="message_line_save_failed">Saving line failed, please try again</string>
+    <string name="message_workplace_not_updated">Workplace not updated on server</string>
+    <string name="lines">Lines</string>
+    <string name="items">Items</string>
+    <string name="message_bin_close_failed">Closing BIN failed</string>
+    <string name="message_close_bin">Close BIN</string>
+    <string name="message_bin_text_sure">There are no lines in this BIN. Are you sure you want to close it?</string>
+    <string name="message_bin_already_closed">This BIN has already been closed, scan another BIN</string>
+    <string name="message_close_order">Close order</string>
+    <string name="message_close_order_text">You are about to close the order, are you sure?</string>
+    <string name="message_removing_line_failed">Removing line failed</string>
+    <string name="message_reset_line_via_webservice_failed">Resetting line via webservice failed</string>
+    <string name="message_reset_bin_via_webservice_failed">Resetting BIN via webservice failed</string>
+    <string name="screentitle_intakeorderselect">Intake</string>
+    <string name="error_get_intakeorders_failed">Getting orders failed</string>
+    <string name="error_get_intakelines_failed">Getting lines failed</string>
+    <string name="screentitle_intakeorderlines">Lines</string>
+    <string name="message_cancel_line">Cancel scans</string>
+    <string name="message_accept_line">Accept scans</string>
+    <string name="message_cancel">Cancel</string>
+    <string name="message_leave">Leave</string>
+    <string name="message_close">Close</string>
+    <string name="message_shipping_basics_invalid">Shipping basics for this order are invalid, order can\'t be shipped</string>
+    <string name="tab_todo">Todo</string>
+    <string name="tab_done">Done</string>
+    <string name="tab_total">Total</string>
+    <string name="hint_add_article">Scan or type article</string>
+    <string name="button_add_article">Add article</string>
+    <string name="add_article_header_default">Add Article</string>
+    <string name="screentitle_intake">Intake</string>
+    <string name="message_bin_not_valid">Invalid BIN</string>
+    <string name="message_no_lines_for_this_bin">There are no lines for this BIN</string>
+    <string name="message_wrong_bin">Wrong bin</string>
+    <string name="message_extra_pieces_not_allowed">Extra pieces are not allowed</string>
+    <string name="message_extra_items_not_allowed">Extra items are not allowed</string>
+    <string name="message_current_line_missing">Current line is missing</string>
+    <string name="message_bin_or_item_missing">Bin or item missing</string>
+    <string name="message_bin_wrong">Bin is wrong</string>
+    <string name="message_bin_not_allowed">Bin scan not allowed</string>
+    <string name="message_no_lines_for_this_barcode">No lines available for this barcode</string>
+
+    <!--region battery-->
+    <string name="battery_at_parameter1_percent">Battery is at %1$s%%</string>
+    <string name="battery_ischarging_over_parameter1">Battery is charging over %1$s</string>
+    <string name="battery_isnotcharging">Battery is not charging</string>
+    <string name="battery_unknownnotcharging">I can\'t tell if the battery is charging</string>
+
+    <string name="battery_usb">USB</string>
+    <string name="battery_ac">AC</string>
+    <string name="battery_wireless">wireless</string>
+
+    <string name="battery_power_connected">Connected</string>
+    <string name="battery_power_disconnected">Disconnected</string>
+
+    <!--endregion battery-->
+
+    <string name="android_no_codename">No codename</string>
+    <string name="message_zero_lines_cant_be_reset">Lines with quantity 0 can\'t be reset</string>
+    <string name="message_finish_later">Finish later</string>
+    <string name="message_close_now">Close now</string>
+    <string name="message_bin_unknown">Bin %1$s unknown to this branch</string>
+    <string name="multiple_barcodes">Multiple barcodes</string>
+    <string name="message_unknown_barcode_for_this_line">Unknown barcode for this line</string>
+    <string name="message_adding_or_changing_bin_now_allowed">Adding/changing bins is not allowed</string>
+    <string name="quantity_scanned">Quantity scanned:</string>
+    <string name="message_split_line">Split line</string>
+    <string name="stored">Stored:</string>
+    <string name="error_unknown_location">Scan not recogised as a BIN</string>
+    <!--endregion Inventory-->
+
+    <!--region supervisor-->
+    <string name="supervisor_password_header">Supervisor</string>
+    <string name="supervisor_password_text">You need to be a supervisor for this</string>
+    <string name="supervisor_deviations_password_text">You need to be a supervisor for this, because you have deviations</string>
+    <!--endregion supervisor-->
+
+    <!--region move-->
+    <string name="screentitle_moveorderselect">Move orders</string>
+    <string name="error_get_moveorders_failed">Getting moveorders from server failed</string>
+    <string name="error_get_movelines_failed">Getting movelines from server failed</string>
+    <string name="button_create_move">Create</string>
+    <string name="createmove_header_default">Create moveorder</string>
+    <string name="createmove_text_default">Create new moveorder?</string>
+    <string name="screentitle_moveorderlines">Move lines</string>
+    <string name="tab_moveorderline_notdone">Not done</string>
+    <string name="tab_moveorderline_done">Done</string>
+    <string name="tab_moveorderline_total">Total</string>
+    <string name="screentitle_moveordertake">Move take</string>
+    <string name="message_moveorderbusy_header">Orderline still busy</string>
+    <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
+    <string name="show_only_deviations">Show deviations</string>
+    <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
+    <string name="message_close_receiveorder_generated_text">You received %1$s items\n\n\n\nWould you like to close the order?</string>
+    <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
+    <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
+    <string name="message_exactly_what_you_needed">Exactly what you needed</string>
+    <string name="message_bin_required">"Scan a bin to close the line "</string>
+    <string name="message_no_connection_try_again">No connection, try again</string>
+    <string name="message_no_connection_header">No connection</string>
+    <string name="message_checking_connection">Checking connection....</string>
+    <string name="message_please_wait">Please wait…</string>
+    <string name="connected">Connected</string>
+    <string name="not_connected">Not connected</string>
+    <string name="message_scan_destination">Scan destination</string>
+    <string name="message_scan_is_not_location">Please scan a location</string>
+    <string name="message_location_incorrect">Location incorrect</string>
+    <string name="zero">0</string>
+    <!--endregion move-->
+
+    <!--Region return-->
+    <string name="message_check_barcodes">Check barcodes with ERP</string>
+    <string name="multiple_documents">Multiple documents</string>
+    <string name="multiple_documents_switch" translatable="false">Multiple_documents_switch</string>
+    <string name="check_receive_barcodes_switch" translatable="false">check_receive_barcodes_switch</string>
+    <string name="message_close_document">Close document</string>
+    <string name="message_document_text_sure">Are you sure you want to close the document</string>
+    <string name="message_document_close_fail">Document closing failed</string>
+    <string name="screentitle_returnorderdocument">Return document</string>
+    <string name="message_document_add_not_allowed">Not allowed to add a document</string>
+    <string name="message_remove_return_order">Return order not removed</string>
+    <string name="error_get_returnorderlines_failed">Getting returnorder lines failed</string>
+    <string name="error_get_returnorders_failed">Getting returnorders failed</string>
+    <string name="error_get_returnordersdocuments_failed">Getting returnorderdocuments failed</string>
+    <string name="create_return">Create return</string>
+    <string name="createreturn_text_default">Create return</string>
+    <string name="message_scan_return_document">Scan return document</string>
+    <string name="message_scan_return_bin">Scan return bin</string>
+    <string name="message_scan_receive_bin">Scan receive bin</string>
+    <string name="message_unknown_bin">Bin unknown at current location</string>
+    <string name="message_bin_not_allowed_for_return">Bin not allowed for return</string>
+    <string name="message_bin_not_allowed_for_receive">Bin not allowed for receive</string>
+    <string name="screentitle_return">Return</string>
+    <string name="button_add_document">Add document</string>
+    <string name="add_document_header_default">Add Document</string>
+    <string name="error_getting_return_reasons">Getting return reasons failes</string>
+    <string name="choose_reason">Choose returnreason</string>
+    <string name="hint_add_reason">Scan or select reason</string>
+    <string name="select_reason_switch" translatable="false">Select_reason_switch</string>
+    <string name="select_reason">Select reason</string>
+    <string name="screentitle_returnorderdocuments">Return documents</string>
+    <string name="scan_or_select_document">Scan or select document</string>
+    <string name="message_clear_reason">Clear reason</string>
+    <string name="message_shipment_already_handled">This shipment is already handled</string>
+    <string name="message_reason_scan_not_allowed">Reason scan is not allowed</string>
+    <string name="message_reason_unknown">Reason unknown</string>
+    <string name="message_scan_reason_first">Decide reason, before you scan a different article</string>
+    <string name="message_document_already_active">This document is the current document</string>
+    <string name="create_external_receive">Create external receive</string>
+    <string name="message_scan_receive_document">Scan/type document</string>
+    <string name="screentitle_receive">Receive</string>
+    <string name="error_could_not_invalidate_order">Could not invalidate order</string>
+    <string name="message_order_invalidated">Order invalidated</string>
+    <string name="order_has_deleted_by_erp">Order deleted by ERP</string>
+    <string name="message_next_activity_not_found">Next activity can\'t be found</string>
+    <string name="message_less_items">LESS items</string>
+    <string name="message_extra_items">EXTRA items</string>
+    <!--End Region return-->
+
+    <!--Region plurals-->
+    <plurals name="plural_orders">
+        <item quantity="one">order</item>
+        <item quantity="other">orders</item>
+    </plurals>
+
+    <plurals name="plural_parameter1_orders">
+        <item quantity="one">%d order</item>
+        <item quantity="other">%d orders</item>
+    </plurals>
+
+    <!--End Region plurals-->
+</resources>

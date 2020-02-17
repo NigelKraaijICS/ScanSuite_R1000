@@ -1,15 +1,15 @@
 package SSU_WHS.General.Comments;
 
 import androidx.lifecycle.ViewModelProviders;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import ICS.cAppExtension;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 
 public class cComment {
 

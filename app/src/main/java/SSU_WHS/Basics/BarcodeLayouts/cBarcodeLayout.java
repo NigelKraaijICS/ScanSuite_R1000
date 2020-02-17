@@ -153,6 +153,7 @@ public class cBarcodeLayout {
     //End Region Constructor
 
     //Region Public Methods
+
     public boolean pInsertInDatabaseBln() {
         cBarcodeLayout.getBarcodeLayoutViewViewModel().insert(this.barcodeLayoutEntity);
         this.indatabaseBln = true;
@@ -176,7 +177,7 @@ public class cBarcodeLayout {
         }
 
         ArrayList<cBarcodeLayout> barcodeLayoutScannedObl;
-        barcodeLayoutScannedObl = cBarcodeLayout.mGetBarcodeLayoutByBarcodeObl(pvBarcodeStr);
+        barcodeLayoutScannedObl = cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeStr);
         if ( barcodeLayoutScannedObl.size() == 0){
             return  false;
         }
@@ -193,7 +194,31 @@ public class cBarcodeLayout {
 
     }
 
-    private static ArrayList<cBarcodeLayout> mGetBarcodeLayoutByBarcodeObl(String pvBarcodeStr){
+    public static boolean pCheckBarcodeWithLayoutPrefixBln(String pvBarcodeStr, barcodeLayoutEnu pvBarcodeLayoutEnu){
+
+        if(cBarcodeLayout.allBarcodeLayoutsObl == null){
+            return false;
+        }
+
+        cBarcodeLayout barcodeLayoutToCheck = cBarcodeLayout.mGetBarcodeLayoutByEnumerate(pvBarcodeLayoutEnu);
+        if (barcodeLayoutToCheck == null){
+            return  false;
+        }
+
+        if (!cRegex.pHasPrefix(pvBarcodeStr)) {
+            return  false;
+        }
+
+        //Check if prefix in barcode matches prefix in barcode layout
+        if (cRegex.pGetPrefix(pvBarcodeStr).equalsIgnoreCase(cRegex.pGetPrefixFromLayout(barcodeLayoutToCheck.getLayoutValueStr()))) {
+            return  true;
+        }
+
+        return  false;
+
+    }
+
+    public static ArrayList<cBarcodeLayout> pGetBarcodeLayoutByBarcodeObl(String pvBarcodeStr){
         if(cBarcodeLayout.allBarcodeLayoutsObl == null){
             return null;
         }
@@ -260,5 +285,6 @@ public class cBarcodeLayout {
             return  false;
         }
     }
+
     //End Region Public Methods
 }

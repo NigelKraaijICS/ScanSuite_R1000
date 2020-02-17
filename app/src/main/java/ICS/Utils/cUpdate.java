@@ -8,16 +8,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Environment;
-
-import androidx.core.content.FileProvider;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
-
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;

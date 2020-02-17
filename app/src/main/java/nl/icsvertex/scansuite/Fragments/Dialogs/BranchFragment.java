@@ -1,16 +1,16 @@
 package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -18,14 +18,14 @@ import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cRegex;
+import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Users.cUser;
-import ICS.cAppExtension;
-import ICS.Utils.cRegex;
-import ICS.Utils.cUserInterface;
-import nl.icsvertex.scansuite.R;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
+import nl.icsvertex.scansuite.R;
 
 public class BranchFragment extends DialogFragment implements iICSDefaultFragment {
 
@@ -139,7 +139,7 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
         String barcodeWithoutPrefixStr;
 
         //No prefix
-        if (!cRegex.hasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
 
             BranchFragment.mBranchScanned(pvBarcodeScan.getBarcodeOriginalStr());
             return;

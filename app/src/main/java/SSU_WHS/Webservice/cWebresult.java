@@ -1,6 +1,7 @@
 package SSU_WHS.Webservice;
 
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import java.util.List;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
+import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.Weberror.cWeberrorEntity;
 
@@ -269,7 +271,49 @@ public class cWebresult {
         }
     }
 
+    public List<String> pGetNextActivityObl() {
 
+        List<String> resultObl = new ArrayList<>();
+        boolean nextActivityFoundBln = false;
+        int indexInt = 0;
+        String nextActivityStr;
+
+
+        if (this.getResultObl() == null) {
+            return  resultObl;
+        }
+
+        if (this.getResultObl().size() < 1) {
+            return  resultObl;
+        }
+
+        for (String loopStr : this.getResultObl()) {
+
+            if (loopStr.equalsIgnoreCase("NEXT_ACTIVITY")) {
+                nextActivityFoundBln = true;
+                break;
+            }
+
+            indexInt += 1;
+
+        }
+
+        if (!nextActivityFoundBln) {
+            return  resultObl;
+        }
+
+        nextActivityStr = this.getResultObl().get(indexInt +1);
+
+        String[] value_split = nextActivityStr.split("\\þ");
+
+        for (String  loopStr : value_split) {
+            resultObl.add(loopStr);
+        }
+
+        return  resultObl;
+
+
+    }
 
 
 }

@@ -12,6 +12,7 @@ import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cDatabase;
+import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 
 @Entity(tableName= cDatabase.TABLENAME_RETURNORDERLINE)
@@ -270,9 +271,183 @@ public class cReturnorderLineEntity {
         }
     }
 
+    public cReturnorderLineEntity(JSONObject pvJsonObject, boolean pvAddedViaWebserviceBln, int pvLineNoInt) {
+        try {
+
+            if (pvAddedViaWebserviceBln) {
+                this.itemno = pvJsonObject.getString(cDatabase.ITEMNO_NAMESTR);
+                this.variantcode = pvJsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
+                this.document = pvJsonObject.getString(cDatabase.DOCUMENT_NAMESTR);
+                this.retourreden = pvJsonObject.getString(cDatabase.RETOURREDEN_NAMESTR);
+                this.description = pvJsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
+                this.description2 = pvJsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
+                this.vendoritemno = pvJsonObject.getString(cDatabase.VENDORITEMNO_NAMESTR);
+                this.vendoritemdescription = pvJsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
+                this.sortingsequenceno = pvJsonObject.getInt(cDatabase.SORTINGSEQUENCENOTAKE_NAMESTR);
+                this.quantitytake = cText.pStringToDoubleDbl(pvJsonObject.getString(cDatabase.QUANTITYTAKE_NAMESTR));
+                this.quantityHandledtake = cText.pStringToDoubleDbl(pvJsonObject.getString(cDatabase.QUANTITYHANDLEDTAKE_NAMESTR));
+                this.generated = cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.GENERATED_NAMESTR),false);
+
+                //region extraField1Str
+                if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {
+                    try {
+                        this.extrafield1 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD1());
+                    }
+                    catch (JSONException e) {
+                        this.extrafield1 = "";
+                    }
+                }
+                else {
+                    this.extrafield1 = "";
+                }
+                //endregion extraField1Str
+
+                //region extraField2Str
+                if (!cSetting.GENERIC_ITEM_EXTRA_FIELD2().trim().isEmpty()) {
+                    try {
+                        this.extrafield2 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD2());
+                    }
+                    catch (JSONException e) {
+                        this.extrafield2 = "";
+                    }
+                }
+                else {
+                    this.extrafield2 = "";
+                }
+                //endregion extraField2Str
+
+                //region extraField3Str
+                if (!cSetting.GENERIC_ITEM_EXTRA_FIELD3().trim().isEmpty()) {
+                    try {
+                        this.extrafield3 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD3());
+                    }
+                    catch (JSONException e) {
+                        this.extrafield3 = "";
+                    }
+                }
+                else {
+                    this.extrafield3 = "";
+                }
+                //endregion extraField3Str
+
+                //region extraField4Str
+                if (!cSetting.GENERIC_ITEM_EXTRA_FIELD4().trim().isEmpty()) {
+                    try {
+                        this.extrafield4 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD4());
+                    }
+                    catch (JSONException e) {
+                        this.extrafield4 = "";
+                    }
+                }
+                else {
+                    this.extrafield4 = "";
+                }
+                //endregion extraField4Str
+
+                //region extraField5Str
+                if (!cSetting.GENERIC_ITEM_EXTRA_FIELD5().trim().isEmpty()) {
+                    try {
+                        this.extrafield5 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD5());
+                    }
+                    catch (JSONException e) {
+                        this.extrafield5 = "";
+                    }
+                }
+                else {
+                    this.extrafield5 = "";
+                }
+                //endregion extraField5Str
+
+                //region extraField6Str
+                if (!cSetting.GENERIC_ITEM_EXTRA_FIELD6().trim().isEmpty()) {
+                    try {
+                        this.extrafield6 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD6());
+                    }
+                    catch (JSONException e) {
+                        this.extrafield6 = "";
+                    }
+                }
+                else {
+                    this.extrafield6 = "";
+                }
+                //endregion extraField6Str
+
+                //region extraField7Str
+                if (!cSetting.GENERIC_ITEM_EXTRA_FIELD7().trim().isEmpty()) {
+                    try {
+                        this.extrafield7 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD7());
+                    }
+                    catch (JSONException e) {
+                        this.extrafield7 = "";
+                    }
+                }
+                else {
+                    this.extrafield7 = "";
+                }
+                //endregion extraField7Str
+
+                //region extraField8Str
+                if (!cSetting.GENERIC_ITEM_EXTRA_FIELD8().trim().isEmpty()) {
+                    try {
+                        this.extrafield8 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD8());
+                    }
+                    catch (JSONException e) {
+                        this.extrafield8 = "";
+                    }
+                }
+                else {
+                    this.extrafield8 = "";
+                }
+                //endregion extraField8Str
+            }
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 public cReturnorderLineEntity(){
 
 }
+
+    public cReturnorderLineEntity(cReturnorderBarcode pvReturnorderBarcode){
+        int sortingSequenceInt;
+
+        if (cReturnorderLine.allLinesObl == null){
+            sortingSequenceInt = 1;
+        }
+        else {
+            sortingSequenceInt = 1 + cReturnorderLine.allLinesObl.size();
+        }
+        this.itemno = pvReturnorderBarcode.getItemNoStr();
+        this.variantcode = pvReturnorderBarcode.getVariantCodeStr();
+        this.document = cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr();
+        if (cBranchReason.currentBranchReason != null){
+            this.retourreden = cBranchReason.currentBranchReason.getReasonStr();
+        }
+        else {
+            this.retourreden = "";
+        }
+
+        this.description = "";
+        this.description2 = "";
+        this.vendoritemno = "";
+        this.vendoritemdescription = "";
+        this.sortingsequenceno = sortingSequenceInt ;
+        this.quantitytake = 0.0;
+        this.quantityHandledtake = 0.0;
+        this.extrafield1 = "";
+        this.extrafield2 = "";
+        this.extrafield3 = "";
+        this.extrafield4 = "";
+        this.extrafield5 = "";
+        this.extrafield6 = "";
+        this.extrafield7 = "";
+        this.extrafield8 = "";
+        this.generated = true;
+    }
 
 
 }

@@ -1,10 +1,8 @@
 package SSU_WHS.Picken.PickorderBarcodes;
 
 import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
-import java.util.List;
+import androidx.lifecycle.AndroidViewModel;
 
 public class cPickorderBarcodeViewModel extends AndroidViewModel {
 

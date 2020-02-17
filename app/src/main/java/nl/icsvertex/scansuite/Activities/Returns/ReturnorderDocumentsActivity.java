@@ -35,6 +35,8 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.BranchReason.cBranchReason;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
@@ -127,7 +129,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
         this.mFindViews();
 
-        this.mSetToolbar(getResources().getString(R.string.screentitle_returnorderdocument));
+        this.mSetToolbar(getResources().getString(R.string.screentitle_returnorderdocuments));
 
         this.mFieldsInitialize();
 
@@ -180,6 +182,10 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         ReturnorderDocumentsActivity.returnorderDocumentsTabLayout.addTab(ReturnorderDocumentsActivity.returnorderDocumentsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
         ReturnorderDocumentsActivity.returnorderDocumentsTabLayout.addTab(ReturnorderDocumentsActivity.returnorderDocumentsTabLayout.newTab().setText(R.string.tab_inventorybin_total));
 
+        if (cBranchReason.currentBranchReason == null){
+            cBranchReason.currentBranchReason = cUser.currentUser.currentBranch.pGetReasonByName(cReturnorder.currentReturnOrder.getReasonStr());
+        }
+
         ReturnorderDocumentsActivity.returnorderDocumentsPagerAdapter = new ReturnorderDocumentsPagerAdapter(ReturnorderDocumentsActivity.returnorderDocumentsTabLayout.getTabCount());
         ReturnorderDocumentsActivity.returnorderDocumentsViewpager.setAdapter(ReturnorderDocumentsActivity.returnorderDocumentsPagerAdapter);
 
@@ -201,9 +207,6 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
             }
         });
-
-
-
     }
 
     @Override
@@ -223,8 +226,8 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
             }
 
             for (cReturnorderDocument returnorderDocument : cReturnorderDocument.allReturnorderDocumentObl) {
-               cReturnorderDocument.currentReturnOrderDocument = returnorderDocument;
-               pReturnorderDocumentSelected();
+                cReturnorderDocument.currentReturnOrderDocument = returnorderDocument;
+                pReturnorderDocumentSelected();
             }
         }
     }
@@ -244,6 +247,20 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         new Thread(new Runnable() {
             public void run() {
                 mHandleScan(pvBarcodeScan.getBarcodeOriginalStr());
+            }
+        }).start();
+    }
+
+    public static void pHandleAddDocument(final String pvDocumentStr) {
+        //Close open Dialogs
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        // Show that we are getting data
+        cUserInterface.pShowGettingData();
+
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleAddDocument(pvDocumentStr);
             }
         }).start();
     }
@@ -271,7 +288,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         ReturnorderDocumentsActivity.quantityText.setText(pvTextStr);
     }
 
-    public static void pHandleAddBinFragmentDismissed() {
+    public static void pHandleFragmentDismissed() {
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
@@ -295,7 +312,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         hulpResult.resultBln = false;
 
         for (cReturnorderDocument returnorderDocument : cReturnorder.currentReturnOrder.pGetDocumentsDoneFromDatabasObl()) {
-                cReturnorderDocument.currentReturnOrderDocument = returnorderDocument;
+            cReturnorderDocument.currentReturnOrderDocument = returnorderDocument;
             if (!returnorderDocument.pCloseBln()) {
                 mShowNotSend(returnorderDocument.getSourceDocumentStr() + ' ' +  cAppExtension.activity.getString(R.string.message_document_close_fail));
                 return;
@@ -303,14 +320,15 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         }
 
         if (cReturnorder.currentReturnOrder.linesObl().size() == 0){
-           if(! cReturnorder.currentReturnOrder.pReturnorderDisposedBln()){
-               mShowNotSend(cReturnorder.currentReturnOrder.getOrderNumberStr() + ' ' +  cAppExtension.activity.getString(R.string.message_remove_return_order));
-               return;
-           }
+            if(! cReturnorder.currentReturnOrder.pReturnorderDisposedBln()){
+                mShowNotSend(cReturnorder.currentReturnOrder.getOrderNumberStr() + ' ' +  cAppExtension.activity.getString(R.string.message_remove_return_order));
+                return;
+            }
         }
 
         hulpResult = cReturnorder.currentReturnOrder.pOrderHandledViaWebserviceRst();
 
+        cBranchReason.currentBranchReason = null;
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
             mShowSent();
@@ -363,13 +381,30 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
                 // Actions to do after 0.3 seconds
             }
         }, 300);
-     }
+    }
+
+    private static void mHandleAddDocument(String pvDocumentStr){
+        cResult hulpRst;
+        hulpRst = ReturnorderDocumentsActivity.mCheckAndGetSourceDocumentRst(pvDocumentStr);
+        //Something went wrong, so show message and return
+        if (! hulpRst.resultBln) {
+            ReturnorderDocumentsActivity.mStepFailed(hulpRst.messagesStr());
+            return;
+        }
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                ReturnorderDocumentsActivity.pReturnorderDocumentSelected();
+                // Actions to do after 0.3 seconds
+            }
+        }, 300);
+    }
 
     private static cResult mCheckAndGetSourceDocumentRst(String pvSourceDocumentStr){
 
         cResult result = new cResult();
         result.resultBln = true;
-        int sortingSequenceInt;
 
         //Search for the Document in current Documents
         cReturnorderDocument.currentReturnOrderDocument = cReturnorder.currentReturnOrder.pGetDocument(pvSourceDocumentStr);
@@ -389,7 +424,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         else {
             cReturnorderDocument returnorderDocument = new cReturnorderDocument(pvSourceDocumentStr);
             returnorderDocument.pInsertInDatabaseBln();
-           cReturnorderDocument.currentReturnOrderDocument = returnorderDocument;
+            cReturnorderDocument.currentReturnOrderDocument = returnorderDocument;
         }
         return  result;
     }
@@ -419,8 +454,6 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        //cAppExtension.activity = ReturnorderDocumentsActivity.currentActivity;
-
         final ViewGroup container =  cAppExtension.activity.findViewById(R.id.returnorderDocumentscontainer);
 
         final Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentActivity.class);
@@ -428,13 +461,13 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         final View clickedDocumentImage = container.findViewWithTag(cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr() + "_IMG");
         if (clickedDocument != null &&clickedDocumentImage != null) {
 
-           cAppExtension.activity.runOnUiThread(new Runnable() {
-               @Override
-               public void run() {
-                   ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedDocument, ReturnorderDocumentActivity.VIEW_CHOSEN_DOCUMENT),new Pair<>(clickedDocumentImage, ReturnorderDocumentActivity.VIEW_CHOSEN_DOCUMENT_IMAGE) );
-                   ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-               }
-           });
+            cAppExtension.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedDocument, ReturnorderDocumentActivity.VIEW_CHOSEN_DOCUMENT),new Pair<>(clickedDocumentImage, ReturnorderDocumentActivity.VIEW_CHOSEN_DOCUMENT_IMAGE) );
+                    ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+                }
+            });
         }
         else {
             cAppExtension.activity.startActivity(intent);
@@ -470,6 +503,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     }
 
     private static void mStartOrderSelectActivity() {
+        cBranchReason.currentBranchReason = null;
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
     }
@@ -484,9 +518,9 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
-                                                                                   cAppExtension.activity.getString(R.string.message_close_order_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close),false);
+                cAppExtension.activity.getString(R.string.message_close_order_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close),false);
         acceptRejectFragment.setCancelable(true);
-       cAppExtension.activity.runOnUiThread(new Runnable() {
+        cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // show my popup
