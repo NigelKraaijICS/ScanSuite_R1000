@@ -9,12 +9,10 @@ import java.util.List;
 
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
-import nl.icsvertex.scansuite.R;
 
 public class cReceiveorderLine {
 
@@ -129,7 +127,7 @@ public class cReceiveorderLine {
     public  List<cIntakeorderBarcode> barcodesObl;
 
     private cReceiveorderLineEntity receiveorderLineEntity;
-    public boolean indatabaseBln;
+    public boolean inDatabaseBln;
 
     private static cReceiveorderLineViewModel gReceiveorderLineViewModel;
     public static cReceiveorderLineViewModel getReceiveorderLineViewModel() {
@@ -220,7 +218,7 @@ public class cReceiveorderLine {
 
     public boolean pInsertInDatabaseBln() {
         cReceiveorderLine.getReceiveorderLineViewModel().insert(this.receiveorderLineEntity);
-        this.indatabaseBln = true;
+        this.inDatabaseBln = true;
 
         if (cReceiveorderLine.allReceiveorderLines == null) {
             cReceiveorderLine.allReceiveorderLines= new ArrayList<>();
