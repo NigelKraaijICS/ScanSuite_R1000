@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +32,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Comments.cComment;
@@ -38,7 +40,11 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
+import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineRecyclerItemTouchHelper;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLineRecyclerItemTouchHelper;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiverorderSummaryLineAdapter;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
@@ -46,12 +52,14 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
 
-public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefaultActivity, cReceiveorderSummaryLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     //Region Public Properties
     public static String VIEW_CHOSEN_ORDER = "detail:header:text";
     static final String ACCEPTREJECTFRAGMENT_TAG = "ACCEPTREJECTFRAGMENT_TAG";
-    public static Boolean busyBln =false;
+    public static boolean busyBln =false;
+    public static boolean closeOrderClickedBln = false;
+    public  static cBarcodeScan barcodeScanToHandle;
     //End Region Public Properties
 
     //Region Private Properties
@@ -66,15 +74,18 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     private static TextView toolbarSubTitle;
 
     private static ImageView imageViewStart;
-    private static SearchView recyclerSearchView;
-    private static ImageView closeButton;
     private static RecyclerView recyclerViewLines;
+    private static List<cReceiveorderSummaryLine> linesToShowObl;
 
     private static Switch switchDeviations;
     public static Boolean showDefectsBln = false;
 
     private static ImageView imageAddArticle;
     private static ImageView imageButtonCloseOrder;
+
+    public static int positionSwiped;
+
+
 
     //End Region Views
 
@@ -120,6 +131,29 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         super.onPause();
     }
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder pvViewHolder, int pvDirectionInt, int pvPositionInt) {
+
+        if (!(pvViewHolder instanceof  cReceiverorderSummaryLineAdapter.ReceiverorderLineViewHolder)) {
+            return;
+        }
+
+        ReceiveLinesActivity.positionSwiped = pvPositionInt;
+
+        //todo: look at correct objectlist
+        cReceiveorderSummaryLine.currentReceiveorderSummaryLine = ReceiveLinesActivity.linesToShowObl.get(pvPositionInt);
+
+        //do we need an adult for this?
+        if (!cSetting.RECEIVE_RESET_PASSWORD().isEmpty()) {
+            cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_password_text), false);
+            return;
+        }
+
+        //Remove the enviroment
+        ReceiveLinesActivity.mRemoveAdapterFromFragment();
+
+    }
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -158,10 +192,6 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         ReceiveLinesActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         ReceiveLinesActivity.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         ReceiveLinesActivity.imageButtonComments = findViewById(R.id.imageButtonComments);
-
-        ReceiveLinesActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-
-        ReceiveLinesActivity.closeButton =  ReceiveLinesActivity.recyclerSearchView.findViewById(R.id.search_close_btn);
 
         ReceiveLinesActivity.recyclerViewLines = findViewById(R.id.recyclerViewLines);
 
@@ -225,14 +255,12 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
     @Override
     public void mSetListeners() {
-        this.mSetRecyclerOnScrollListener();
-        this.mSetSearchListener();
-        this.mSetSearchCloseListener();
         this.mSetShowCommentListener();
         this.mSetStartLineListener();
         this.mSetDeviationsListener();
         this.mSetAddArticleListener();
         this.mSetSendOrderListener();
+        this.mSetRecyclerTouchListener();
     }
 
     @Override
@@ -288,6 +316,8 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
     public static void pDone() {
 
+        ReceiveLinesActivity.closeOrderClickedBln = false;
+
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
@@ -301,6 +331,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
     public static void pLeaveActivity() {
 
+        ReceiveLinesActivity.closeOrderClickedBln = false;
 
         cResult hulpRst = new cResult();
         hulpRst.resultBln = true;
@@ -365,16 +396,36 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     }
 
     public static void pShowData(List<cReceiveorderSummaryLine> pvDataObl) {
-        ReceiveLinesActivity.mFillRecycler(pvDataObl);
+        ReceiveLinesActivity.linesToShowObl = pvDataObl;
+        ReceiveLinesActivity.mFillRecycler();
     }
 
     public static void pPasswordSuccess() {
         cBarcodeScan.pRegisterBarcodeReceiver();
-        ReceiveLinesActivity.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close_order));
+        ReceiveLinesActivity.mRemoveAdapterFromFragment();
     }
 
     public static void pPasswordCancelled() {
         cBarcodeScan.pRegisterBarcodeReceiver();
+    }
+
+    public static void pAddUnknownScan(cBarcodeScan pvBarcodeScan){
+
+        cUserInterface.pShowGettingData();
+
+        //Clear the scan that we kept
+        ReceiveLinesActivity.barcodeScanToHandle = null;
+
+        //We can add a line, but we don't check with the ERP, so add line and open it
+        if (! cSetting.RECEIVE_BARCODE_CHECK()) {
+            ReceiveLinesActivity.mAddUnkownArticle(pvBarcodeScan);
+            cUserInterface.pHideGettingData();
+            return;
+        }
+
+        //We can add a line, and we need to check with the ERP, so check, add and open it
+        ReceiveLinesActivity.mAddERPArticle(pvBarcodeScan);
+        cUserInterface.pHideGettingData();
     }
 
     //End Region Public Methods
@@ -385,8 +436,6 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
         cResult result = new cResult();
         result.resultBln = true;
-
-        String searchStr;
 
         //Check if this is a barcodeStr we already know
         cIntakeorderBarcode.currentIntakeOrderBarcode = cIntakeorder.currentIntakeOrder.pGetOrderBarcode(pvBarcodeScan);
@@ -400,14 +449,16 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         //Set the scanned barcodeStr, so we can raise quantity in next activity
         cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcode.currentIntakeOrderBarcode;
 
-        searchStr = cIntakeorderBarcode.currentIntakeOrderBarcode.getItemNoStr();
-
-        if (!cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr().isEmpty()) {
-            searchStr += ' ' + cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr();
+        cReceiveorderSummaryLine.currentReceiveorderSummaryLine = cReceiveorderSummaryLine.pGetSummaryLineWithItemNoAndVariantCode(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getItemNoStr(),cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getVariantCodeStr());
+        result = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pSummaryLineBusyRst();
+        if (!result.resultBln) {
+            mStepFailed(result.messagesStr(),pvBarcodeScan.getBarcodeOriginalStr());
+            cReceiveorderSummaryLine.currentReceiveorderSummaryLine = null;
+            ReceiveLinesActivity.busyBln = false;
+            return result;
         }
 
-        ReceiveLinesActivity.recyclerSearchView.setQuery(searchStr, true);
-        ReceiveLinesActivity.recyclerSearchView.callOnClick();
+        ReceiveLinesActivity.mStartReceiveActivity();
 
         //Article is known and also not handled, so everything is fine
         ReceiveLinesActivity.busyBln = false;
@@ -449,7 +500,8 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
             //Something went wrong, so show message and stop
             if (!hulpResult.resultBln) {
                 mDoUnknownScan(hulpResult.messagesStr(), pvBarcodeScan.getBarcodeOriginalStr());
-                ReceiveLinesActivity.mFillRecycler(cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl);
+                ReceiveLinesActivity.linesToShowObl = cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl;
+                ReceiveLinesActivity.mFillRecycler();
                 return;
             }
 
@@ -567,7 +619,8 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
                 }
 
                 //do we need an administrator for this?
-                if (!cSetting.RECEIVE_STORE_DEVIATIONS_PASSWORD().isEmpty() && cReceiveorderSummaryLine.totalItemsDifference() > 0 ) {
+                if (!cSetting.RECEIVE_DEVIATIONS_PASSWORD().isEmpty() && cReceiveorderSummaryLine.totalItemsDifference() > 0 ) {
+                    ReceiveLinesActivity.closeOrderClickedBln = true;
                     cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_deviations_password_text), false);
                     return;
                 }
@@ -575,6 +628,13 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
                 ReceiveLinesActivity.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
             }
         });
+    }
+
+    private void mSetRecyclerTouchListener(){
+
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cReceiveorderSummaryLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(ReceiveLinesActivity.recyclerViewLines);
     }
 
     private static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
@@ -635,6 +695,8 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         cUserInterface.pCheckAndCloseOpenDialogs();
         String messageStr = "";
 
+        ReceiveLinesActivity.closeOrderClickedBln = true;
+
 
         if (!cIntakeorder.currentIntakeOrder.isGenerated()) {
             if (cReceiveorderSummaryLine.totalItemsDifference() == 0 ) {
@@ -691,6 +753,45 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
     }
 
+    private static void mShowAddItemDialog(cBarcodeScan pvBarcodeScan, String pvRejectStr,String pvAcceptStr) {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        String pvItemStr = pvBarcodeScan.getBarcodeOriginalStr();
+
+        if (cSetting.RECEIVE_BARCODE_CHECK()) {
+
+            cUserInterface.pShowGettingData();
+
+            cArticle articleScanned =  cArticle.pGetArticleByBarcodeViaWebservice(pvBarcodeScan);
+            if (articleScanned != null) {
+                pvItemStr = articleScanned.getItemNoStr() + " " + articleScanned.getVariantCodeStr() + " "  + articleScanned.getDescriptionStr();
+            }
+
+            cUserInterface.pHideGettingData();
+
+        }
+
+
+        ReceiveLinesActivity.barcodeScanToHandle = pvBarcodeScan;
+
+            final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_add_item),
+                    cAppExtension.activity.getString(R.string.message_add_item_are_you_sure, pvItemStr) ,
+                    pvRejectStr,
+                    pvAcceptStr ,
+                    false);
+
+            acceptRejectFragment.setCancelable(true);
+            cAppExtension.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // show my popup
+                    acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+                }
+            });
+
+    }
+
     private static void mStartReceiveActivity(){
 
         ReceiveLinesActivity.busyBln = false;
@@ -701,9 +802,9 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    private static void mFillRecycler(List<cReceiveorderSummaryLine> pvDataObl) {
+    private static void mFillRecycler() {
 
-        if (pvDataObl.size() == 0) {
+        if (ReceiveLinesActivity.linesToShowObl .size() == 0) {
             ReceiveLinesActivity.imageViewStart.setVisibility(View.INVISIBLE);
             mNoLinesAvailable(true);
             return;
@@ -714,122 +815,11 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         ReceiveLinesActivity.imageViewStart.setVisibility(View.VISIBLE);
 
         //Show the recycler view
-        cReceiveorderSummaryLine.getSummaryLinesAdapter().pFillData(pvDataObl);
+        cReceiveorderSummaryLine.getSummaryLinesAdapter().pFillData(ReceiveLinesActivity.linesToShowObl );
         ReceiveLinesActivity.recyclerViewLines.setHasFixedSize(false);
         ReceiveLinesActivity.recyclerViewLines.setAdapter( cReceiveorderSummaryLine.getSummaryLinesAdapter());
         ReceiveLinesActivity.recyclerViewLines.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         ReceiveLinesActivity.recyclerViewLines.setVisibility(View.VISIBLE);
-    }
-
-    private void mSetRecyclerOnScrollListener() {
-        ReceiveLinesActivity.recyclerViewLines.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView pvRecyclerView, int pvNewStateInt) {
-                super.onScrollStateChanged(pvRecyclerView, pvNewStateInt);
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutmanager = (LinearLayoutManager)recyclerView.getLayoutManager();
-                if (dy < 0) {
-
-                    int itemPosition = 0;
-                    if (layoutmanager != null) {
-                        itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
-                    }
-
-                    if(itemPosition==0){
-                        // Prepare the View for the animation
-                        ReceiveLinesActivity.recyclerSearchView.setVisibility(View.VISIBLE);
-                        ReceiveLinesActivity.recyclerSearchView.setAlpha(0.0f);
-
-                        // Start the animation
-                        ReceiveLinesActivity.recyclerSearchView.animate()
-                                .translationY(0)
-                                .alpha(1.0f)
-                                .setListener(null);
-
-                    }
-
-                } else {
-
-                    int itemPosition = 0;
-                    if (layoutmanager != null) {
-                        itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
-                    }
-
-                    if(itemPosition>1){// your *second item your recyclerview
-                        // Start the animation
-                        ReceiveLinesActivity.recyclerSearchView.setVisibility(View.GONE);
-                    }
-
-                }
-            }
-        });
-    }
-
-    private void mSetSearchListener() {
-        //make whole view clickable
-        ReceiveLinesActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-
-                cAppExtension.activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReceiveLinesActivity.recyclerSearchView.setIconified(false);
-                    }
-                });
-
-            }
-        });
-
-        //query entered
-        ReceiveLinesActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String pvString) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String pvQueryTextStr) {
-
-                // If this object is filled, we set the filter with a scan
-                if (cIntakeorderBarcode.currentIntakeOrderBarcode != null){
-                    cReceiveorderSummaryLine.getSummaryLinesAdapter().pSetFilter(pvQueryTextStr, true);
-                }
-
-                //Someone typed the filter
-                else {
-                    cReceiveorderSummaryLine.getSummaryLinesAdapter().pSetFilter(pvQueryTextStr, false);
-                }
-                return true;
-            }
-
-        });
-
-    }
-
-    private void mSetSearchCloseListener() {
-        //make whole view clickable
-        ReceiveLinesActivity.closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                EditText et = findViewById(R.id.search_src_text);
-
-                //Clear the text from EditText view
-                et.setText("");
-
-                //Clear query
-                recyclerSearchView.setQuery("", false);
-
-            }
-        });
-
-        //query entered
-
-
     }
 
     private static void mNoLinesAvailable(final boolean pvShowBln) {
@@ -876,14 +866,15 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
             return;
         }
 
-        //We can add a line, but we don't check with the ERP, so add line and open it
-        if (! cSetting.RECEIVE_BARCODE_CHECK()) {
-            ReceiveLinesActivity.mAddUnkownArticle(pvBarcodeScan);
+        // Should we notify the user before adding extra item
+        if (cSetting.RECEIVE_INTAKE_EO_CREATE_EXTRA_ITEM_VALIDATION().equalsIgnoreCase("REQUIRED")) {
+            ReceiveLinesActivity.mShowAddItemDialog(pvBarcodeScan,cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_add_item));
             return;
         }
 
-        //We can add a line, and we need to check with the ERP, so check, add and open it
-        ReceiveLinesActivity.mAddERPArticle(pvBarcodeScan);
+        ReceiveLinesActivity.pAddUnknownScan(pvBarcodeScan);
+
+
     }
 
     private static void mAddUnkownArticle(cBarcodeScan pvBarcodeScan){
@@ -940,6 +931,25 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
     }
 
+    private static void mRemoveAdapterFromFragment(){
+
+        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl() == 0) {
+            cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset);
+            return;
+        }
+
+        //remove the item from recyclerview
+        cResult hulpRst = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pResetRst();
+        if (! hulpRst.resultBln) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_reset_variant_via_webservice_failed),"",true,true);
+            return;
+        }
+
+        //Renew data, so only current lines are shown
+        ReceiveLinesActivity.linesToShowObl = cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl;
+        ReceiveLinesActivity.mFillRecycler();
+
+    }
 
     //End Region Private Methods
 

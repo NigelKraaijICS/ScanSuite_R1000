@@ -70,8 +70,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
     private static ImageView imageButtonCloseOrder;
 
-
-
     //End Region Views
 
     //End Region Private Properties

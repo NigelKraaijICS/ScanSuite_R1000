@@ -5,10 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -68,6 +66,9 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     static final String NUMBERFRAGMENT_TAG = "NUMBERFRAGMENT_TAG";
     static final String BARCODEFRAGMENT_TAG = "BARCODEFRAGMENT_TAG";
     static final String ACCEPTREJECTFRAGMENT_TAG = "ACCEPTREJECTFRAGMENT_TAG";
+
+    public static boolean amountExceededDialogShowedBln = false;
+    public static int positionSwiped;
 
     private static int counterMinusHelperInt;
     private static int counterPlusHelperInt;
@@ -195,10 +196,17 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             return;
         }
 
+        ReceiveOrderReceiveActivity.positionSwiped = pvPositionInt;
         cReceiveorderLine.currentReceiveorderLine = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl.get(pvPositionInt);
 
+        //do we need an adult for this?
+        if (!cSetting.RECEIVE_RESET_PASSWORD().isEmpty()) {
+            cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_password_text), false);
+            return;
+        }
+
         //Remove the enviroment
-        this.mRemoveAdapterFromFragment();
+        ReceiveOrderReceiveActivity.mRemoveAdapterFromFragment();
 
     }
 
@@ -344,6 +352,17 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             return;
         }
 
+        if (!ReceiveOrderReceiveActivity.amountExceededDialogShowedBln) {
+            //Check if we exceed the allowed quantity, so we can inform the user
+            if (ReceiveOrderReceiveActivity.quantityScannedDbl > cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl()
+                && cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() > 0
+                && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0)  {
+                ReceiveOrderReceiveActivity.mShowExtraPiecesPercentageExceededFragment(ReceiveOrderReceiveActivity.quantityScannedDbl);
+                return;
+            }
+        }
+
+
         //We are done
          ReceiveOrderReceiveActivity.mReceiveDone();
 
@@ -356,6 +375,18 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     public static void pCancelReceive() {
         ReceiveOrderReceiveActivity.mResetCurrents();
         ReceiveOrderReceiveActivity.mGoBackToLinesActivity();
+    }
+
+    public static void pPasswordSuccess() {
+        cBarcodeScan.pRegisterBarcodeReceiver();
+
+        //Remove the line
+        ReceiveOrderReceiveActivity.mRemoveAdapterFromFragment();
+    }
+
+    public static void pPasswordCancelled() {
+        cBarcodeScan.pRegisterBarcodeReceiver();
+        cReceiveorderSummaryLine.getSummaryLinesAdapter().notifyItemChanged( ReceiveOrderReceiveActivity.positionSwiped );
     }
 
     //End Region Public Methods
@@ -599,24 +630,29 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             //We scanned a new barcode, finish barcode and pass scan on
             if (ReceiveOrderReceiveActivity.mSendScansBln()) {
                 ReceiveOrderReceiveActivity.mResetCurrents();
+                mGoBackToLinesActivity();
                 ReceiveLinesActivity.pHandleScan(pvBarcodeScan,false);
                 return result;
             }
 
         }
 
-        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl != null && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl.size() > 0) {
-            cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned  = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pGetBarcode(pvBarcodeScan);
-            if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned  == null) {
-                result.resultBln = true;
-                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line));
-                return result;
-            }
+        //Check if scanned barcode, belong to this item variant, if so raise quantity
+        cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned  = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pGetBarcode(pvBarcodeScan);
+        if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned  != null) {
+            ReceiveOrderReceiveActivity.mBarcodeSelected(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned );
+            return result;
         }
 
-        ReceiveOrderReceiveActivity.mBarcodeSelected(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned );
+        //We scanned a barcode that doesn't belong to this item variant, so let the previous activity handle the scan
+        if (ReceiveOrderReceiveActivity.mSendScansBln()) {
+            ReceiveOrderReceiveActivity.mResetCurrents();
+            mGoBackToLinesActivity();
+            ReceiveLinesActivity.pHandleScan(pvBarcodeScan,false);
+            return result;
+        }
 
-        return result;
+        return  result;
 
     }
 
@@ -685,14 +721,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
                 }
                 while(countInt < newQuantityDbl);
-
-                //Update activity and Check if this line is done
-                ReceiveOrderReceiveActivity.quantityScannedDbl = newQuantityDbl;
-                ReceiveOrderReceiveActivity.quantityText.setText(pDoubleToStringStr(ReceiveOrderReceiveActivity.quantityScannedDbl));
-                ReceiveOrderReceiveActivity.mCheckLineDone();
-                return;
-
-
             } else {
                 newQuantityDbl = ReceiveOrderReceiveActivity.quantityScannedDbl + pvAmountDbl;
             }
@@ -700,9 +728,20 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             //Check if we would exceed amount, then show message if needed
             if (newQuantityDbl > cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl()) {
 
-                if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln() && !cIntakeorder.currentIntakeOrder.isGenerated() ) {
+                if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln() && !cIntakeorder.currentIntakeOrder.isGenerated() && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0 ) {
                     ReceiveOrderReceiveActivity.mShowExtraPiecesNotAllowed();
                     return;
+                }
+
+                if (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() > 0 && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0  && (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY())) {
+
+                    //Check if the new quantity would exceed the allowed quantity
+                    if (newQuantityDbl > cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl()) {
+
+                        //We would exceed the allowed quantity so show that this is not allowed
+                        ReceiveOrderReceiveActivity.mShowExtraPiecesNotAllowedByPercentage(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl());
+                        return;
+                    }
                 }
             }
 
@@ -710,8 +749,10 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             ReceiveOrderReceiveActivity.quantityScannedDbl = newQuantityDbl;
             ReceiveOrderReceiveActivity.quantityText.setText(pDoubleToStringStr(ReceiveOrderReceiveActivity.quantityScannedDbl));
 
-            //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
-            ReceiveOrderReceiveActivity.scannedBarcodesObl.add(cIntakeorderBarcode.currentIntakeOrderBarcode);
+            if (!pvAmountFixedBln){
+                //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
+                ReceiveOrderReceiveActivity.scannedBarcodesObl.add(cIntakeorderBarcode.currentIntakeOrderBarcode);
+            }
 
             //Check if this line is done
             ReceiveOrderReceiveActivity.mCheckLineDone();
@@ -963,6 +1004,8 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
+        ReceiveOrderReceiveActivity.amountExceededDialogShowedBln = false;
+
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderlinebusy_header),
                                                                                    cAppExtension.activity.getString(R.string.message_orderlinebusy_text),
                                                                                    cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
@@ -977,11 +1020,39 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         });
     }
 
+    private static void mShowExtraPiecesPercentageExceededFragment(Double pvValueDbl){
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        ReceiveOrderReceiveActivity.amountExceededDialogShowedBln = true;
+
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderlinebusy_header),
+                cAppExtension.context.getString(R.string.number_received_total_eminently_more, cText.pDoubleToStringStr(pvValueDbl), cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl())),
+                cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
+        acceptRejectFragment.setCancelable(true);
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // show my popup
+                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+            }
+        });
+    }
+
     private static void mShowExtraPiecesNotAllowed(){
         ReceiveOrderReceiveActivity.quantityText.setText(cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl()));
         cUserInterface.pShowSnackbarMessage(toolbarImage , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
         cUserInterface.pDoNope(quantityText, true, true);
         cUserInterface.pDoNope(quantityText, false, false);
+    }
+
+    private static void mShowExtraPiecesNotAllowedByPercentage(Double pvValueDbl){
+
+            cUserInterface.pShowSnackbarMessage(toolbarImage , cAppExtension.context.getString(R.string.number_received_total_cant_be_higher_then, cText.pDoubleToStringStr(pvValueDbl)) , null, false);
+            cUserInterface.pDoNope(quantityText, true, true);
+            cUserInterface.pDoNope(quantityText, false, false);
+
     }
 
     private static void mGoBackToLinesActivity() {
@@ -1063,6 +1134,11 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         if (!cIntakeorder.currentIntakeOrder.isGenerated()) {
             ReceiveOrderReceiveActivity.quantityRequiredText.setVisibility(View.VISIBLE);
             ReceiveOrderReceiveActivity.quantityRequiredText.setText(pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pGetQuantityToHandleDbl()));
+
+            if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pGetQuantityToHandleDbl() == 0) {
+                ReceiveOrderReceiveActivity.quantityRequiredText.setVisibility(View.GONE);
+            }
+
         }
         else {
             ReceiveOrderReceiveActivity.quantityRequiredText.setVisibility(View.GONE);
@@ -1149,7 +1225,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         ReceiveOrderReceiveActivity.counterPlusHelperInt += 1;
     }
 
-    private void mRemoveAdapterFromFragment(){
+    private static void mRemoveAdapterFromFragment(){
 
         if (cReceiveorderLine.currentReceiveorderLine.quantityHandledDbl == 0) {
             cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset);
@@ -1168,7 +1244,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     }
 
-    private static  List<cIntakeorderBarcode> mSortBarcodeList(List<cIntakeorderBarcode> pvUnsortedBarcodeObl) {
+    private static List<cIntakeorderBarcode> mSortBarcodeList(List<cIntakeorderBarcode> pvUnsortedBarcodeObl) {
         List<cIntakeorderBarcode> resultList = new ArrayList<>();
         boolean barcodeFoundBln = false;
         for (cIntakeorderBarcode intakeorderBarcode : pvUnsortedBarcodeObl) {

@@ -42,7 +42,7 @@ public class cSetting {
     }
 
     private cSettingsEntity settingsEntity;
-     public boolean indatabaseBln;
+    public boolean indatabaseBln;
 
     private static cSettingsViewModel gSettingViewModel;
     private static cSettingsViewModel getSettingViewModel() {
@@ -263,6 +263,11 @@ public class cSetting {
         GENERIC_ITEM_EXTRA_FIELD7,
         GENERIC_ITEM_EXTRA_FIELD8,
         UPDATE_PACKAGE_URL,
+        RECEIVE_INTAKE_EO_CREATE_EXTRA_ITEM_VALIDATION,
+        RECEIVE_EXTRA_PIECES_PERCENTAGE,
+        RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY,
+        RECEIVE_RESET_PASSWORD,
+        RECEIVE_DEVIATIONS_PASSWORD,
         UNKNOWN
     }
 
@@ -710,7 +715,16 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public  static String RECEIVE_INTAKE_EO_CREATE_EXTRA_ITEM_VALIDATION(){
 
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_INTAKE_EO_CREATE_EXTRA_ITEM_VALIDATION);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+
+    }
 
     public static boolean RECEIVE_STORE_AUTO_ACCEPT_AT_NEW_BIN(){
 
@@ -772,7 +786,45 @@ public class cSetting {
         return Setting.valueStr;
     }
 
+    public static int RECEIVE_EXTRA_PIECES_PERCENTAGE(){
 
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_EXTRA_PIECES_PERCENTAGE);
+        if (Setting == null) {
+            return 0;
+        }
+
+        return  cText.pStringToIntegerInt(Setting.valueStr);
+    }
+
+    public static boolean RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static String RECEIVE_RESET_PASSWORD(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_RESET_PASSWORD);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static String RECEIVE_DEVIATIONS_PASSWORD(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_DEVIATIONS_PASSWORD);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
 
     //End Region Settings
 

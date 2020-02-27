@@ -698,6 +698,12 @@
     <string name="message_unknown">Unknown</string>
     <string name="message_orderlinebusy_header">Orderline busy</string>
     <string name="message_orderlinebusy_text">Line is still busy, what do you want to do with your current scans</string>
+    <string name="message_add_item">Add item</string>
+    <string name="message_add_item_are_you_sure">You are about to add an unexpected item:\n\n%1$s\n\nAre you sure?</string>
+    <string name="message_more_then_expected">Quantity higher then expected</string>
+    <string name="number_received_total_cant_be_higher_then">You are not allowed to receive more then %1$s items of this variant</string>
+    <string name="number_received_total_eminently_more">You are about to receive %1$s pieces\n\nThis is eminently more then the %2$s expected pieces.\n\nAre you sure?</string>
+    <string name="message_reset_variant_via_webservice_failed">Resetting variant via webservice failed</string>
     <!--End Region return-->
 
     <!--Region plurals-->

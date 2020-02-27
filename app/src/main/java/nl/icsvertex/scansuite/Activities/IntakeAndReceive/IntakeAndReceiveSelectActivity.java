@@ -98,6 +98,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_intake_and_receive_orderselect);
+        cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
     @Override
@@ -116,7 +117,6 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
         cUserInterface.pEnableScanner();
         mActivityInitialize();
     }

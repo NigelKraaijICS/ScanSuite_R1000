@@ -68,7 +68,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private static ImageView imageAddArticle;
 
-    static int positionSwiped;
+    public static int positionSwiped;
 
     //End Region Private Properties
 
@@ -669,7 +669,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         if (!(pvViewHolder instanceof cInventoryorderLineAdapter.InventoryorderLineViewHolder)) {
             return;
         }
-        positionSwiped = pvPositionInt;
+        InventoryorderBinActivity.positionSwiped = pvPositionInt;
 
         cInventoryorderLine.currentInventoryOrderLine = cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()).get(pvPositionInt);
         if (cInventoryorderLine.currentInventoryOrderLine.getQuantityHandledDbl() <= 0) {

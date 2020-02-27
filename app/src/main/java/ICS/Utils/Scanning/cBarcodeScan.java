@@ -120,6 +120,10 @@ public class cBarcodeScan {
                 @Override
                 public void onReceive(Context context, Intent intent) {
 
+                    if (context != cAppExtension.context) {
+                        return;
+                    }
+
                     //Fill a barcodeStr scan object
                     cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.pGetBarcode(intent, true);
 
@@ -241,6 +245,10 @@ public class cBarcodeScan {
 
                 @Override
                 public void onReceive(Context context, Intent intent) {
+
+                    if (context != cAppExtension.context) {
+                        return;
+                    }
 
                     //Fill a barcodeStr scan object
                     cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.pGetBarcode(intent, true);

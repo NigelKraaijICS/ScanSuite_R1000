@@ -199,7 +199,7 @@
     <string name="lockorder_order_could_not_be_locked">Deze opdracht kan niet gelocked worden</string>
     <string name="button_lock">Locken</string>
     <string name="button_dont_lock">Niet locken</string>
-    <string name="hint_current_location">Huidige lokatie</string>
+    <string name="hint_current_location">Huidige locatie</string>
     <string name="details">Details</string>
     <string name="error_no_more_articles_to_sort">Er zijn geen artikelen meer.</string>
     <string name="message_packingtable_already_assigned">Deze paktafel is al toegewezen aan een andere verkooporder</string>
@@ -213,15 +213,15 @@
     <string name="question_open_sort_title">Sorteren openen?</string>
     <string name="message_scan_article">Scan artikel</string>
     <string name="scan_packingtable_parameter1">Scan paktafel %1$s</string>
-    <string name="scan_sort_location">Scan sorteer lokatie</string>
-    <string name="scan_sort_location_parameter1">Scan sorteer lokatie %1$s</string>
+    <string name="scan_sort_location">Scan sorteer locatie</string>
+    <string name="scan_sort_location_parameter1">Scan sorteer locatie %1$s</string>
     <string name="screentitle_sortorderlines">Sorteerregels</string>
     <string name="screentitle_sortorderselect">Sorteer opdrachten</string>
     <string name="screentitle_sortordersort">Sorteren</string>
     <string name="sortorder_nothing_selected">Selecteer een regel</string>
     <string name="tab_sortorderline_sorted">Gesorteerd</string>
     <string name="tab_sortorderline_tosort">Te sorteren</string>
-    <string name="unknow_sort_barcode_type">Deze barcode is geen artikel en geen sorteerlokatie.</string>
+    <string name="unknow_sort_barcode_type">Deze barcode is geen artikel en geen sorteerlocatie.</string>
     <string name="message_sortorderbusy_header">Sorteerregels bezig</string>
     <string name="botton_set_currentlocation">Zet locatie</string>
     <string name="choose_packiging_subtitle">Klik om aantal te wijzigen</string>
@@ -269,7 +269,7 @@
     <string name="getting_data">Data ophalen</string>
     <string name="getting_data_header">Data ophalen</string>
     <string name="getting_data_text">Momentje</string>
-    <string name="nothing_more_todo_for_bin">Er is niets meer te doen voor deze lokatie</string>
+    <string name="nothing_more_todo_for_bin">Er is niets meer te doen voor deze locatie</string>
     <string name="succes_scannerlogon">Scanner is ingelogd</string>
     <string name="webservice_error_header">Oeps!</string>
     <string name="webservice_error_text">Er is iets mis gegaan</string>
@@ -476,7 +476,7 @@
     <string name="message_unknown_barcode_for_this_line">Onbekende barcode voor deze regel</string>
     <string name="message_adding_or_changing_bin_now_allowed">"Locaties toevoegen/wijzigen is niet toegestaan "</string>
     <string name="quantity_scanned">Aantal gescanned:</string>
-    <string name="error_unknown_location">Onbekende lokatie</string>
+    <string name="error_unknown_location">Onbekende locatie</string>
     <string name="message_split_line">Splits regel</string>
     <string name="supervisor_password_header">Supervisor</string>
     <string name="supervisor_password_text">Voor deze actie is een supervisor wachtwoord nodig</string>
@@ -587,5 +587,11 @@
     <string name="message_unknown">Onbekend</string>
     <string name="message_orderlinebusy_header">Regel in behandeling</string>
     <string name="message_orderlinebusy_text">Regel nog in behandeling, weet u zeker dat u de huidige scans wilt laten vervallen?</string>
+    <string name="message_add_item">Item toevoegen</string>
+    <string name="message_add_item_are_you_sure">U heeft een onverwacht item gescand:\n\n%1$s\n\nWeet u zeker dat u dit item wilt toevoegen?</string>
+    <string name="number_received_total_cant_be_higher_then">Het is niet toegestaan om meer dan %1$s stuks van dit artikel te ontvangen</string>
+    <string name="number_received_total_eminently_more">U staat op het punt om %1$s stuks te ontvangen\n\nDit is aanzienlijk meer dan het verwachte aantal van %2$s stuks\n\nWeet u het zeker?</string>
+    <string name="message_more_then_expected">Aantal hoger dan verwacht</string>
+    <string name="message_reset_variant_via_webservice_failed">Resetten variant via webservice mislukt</string>
 
 </resources>

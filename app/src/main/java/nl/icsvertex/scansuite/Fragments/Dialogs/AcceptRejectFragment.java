@@ -232,8 +232,16 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof ReceiveLinesActivity) {
-            ReceiveLinesActivity.pDone();
-            this.dismiss();
+
+            if (ReceiveLinesActivity.closeOrderClickedBln) {
+                ReceiveLinesActivity.pDone();
+                this.dismiss();
+            }
+            else {
+                ReceiveLinesActivity.pAddUnknownScan(ReceiveLinesActivity.barcodeScanToHandle);
+                this.dismiss();
+            }
+
         }
 
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
@@ -281,7 +289,14 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof ReceiveLinesActivity) {
-            ReceiveLinesActivity.pLeaveActivity();
+
+            if (ReceiveLinesActivity.closeOrderClickedBln) {
+                ReceiveLinesActivity.pLeaveActivity();
+                return;
+            }
+
+            ReceiveLinesActivity.barcodeScanToHandle = null;
+            this.dismiss();
         }
 
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {

@@ -13,6 +13,7 @@ import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
@@ -72,6 +73,11 @@ public class cReceiveorderSummaryLine {
         }
 
         return resultDbl;
+    }
+
+    private  Double allowedQuantityDbl;
+    public  Double getAllowedQuantityDbl(){
+        return this.getQuantityDbl() +  this.getQuantityDbl() * (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() / 100);
     }
 
     private Double quantityExportedDbl;
@@ -237,7 +243,7 @@ public class cReceiveorderSummaryLine {
             this.quantityHandledDbl = 0.0;
             this.quantityExportedDbl = cText.pStringToDoubleDbl(jsonObject.getString(cDatabase.QUANTITYTAKEEXPORTED_NAMESTR));
 
-            this.binCodeStr = "";
+            this.binCodeStr = jsonObject.getString(cDatabase.BINCODE_NAMESTR);
             this.extraField1Str = "";
             this.extraField2Str = "";
             this.extraField3Str = "";
@@ -260,6 +266,23 @@ public class cReceiveorderSummaryLine {
     //End Region Constructor
 
     //Region Public Methods
+
+    public static cReceiveorderSummaryLine pGetSummaryLineWithItemNoAndVariantCode(String pvItemNoStr, String pvVariantCodeStr) {
+
+
+        if (cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl == null || cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl.size() ==0 ) {
+            return null;
+        }
+
+        for (cReceiveorderSummaryLine receiveorderSummaryLine : cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl) {
+            if (receiveorderSummaryLine.getItemNoStr().equalsIgnoreCase(pvItemNoStr) && receiveorderSummaryLine.getVariantCodeStr().equalsIgnoreCase(pvVariantCodeStr)) {
+                return  receiveorderSummaryLine;
+            }
+        }
+
+        return  null;
+
+    }
 
     public static void pAddSummaryLine(cReceiveorderSummaryLine pReceiveorderSummaryLine) {
 
@@ -459,6 +482,28 @@ public class cReceiveorderSummaryLine {
 
     }
 
+    public cResult pResetRst(){
+
+        //nit the result
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        List<cReceiveorderLine> linesToResetObl = new ArrayList<>();
+        linesToResetObl.addAll(this.receiveLinesObl);
+
+            // Reset all lines and details via webservice
+            for (cReceiveorderLine receiveorderLine : linesToResetObl) {
+
+                cReceiveorderLine.currentReceiveorderLine = receiveorderLine;
+                cReceiveorderLine.currentReceiveorderLine.pResetBln();
+                cReceiveorderLine.currentReceiveorderLine= null;
+            }
+
+            this.receiveLinesObl.clear();
+
+            return  result;
+        }
+    }
 
 
     //End Region Public Methods
@@ -473,4 +518,3 @@ public class cReceiveorderSummaryLine {
 
 
 
-}

@@ -25,7 +25,7 @@ public class cRegex {
             l_resultStr = pvInputStr;
         }
 
-        return l_resultStr;
+        return l_resultStr.trim();
     }
     public static Boolean pHasPrefix(String pvInputStr) {
         boolean resultBln;

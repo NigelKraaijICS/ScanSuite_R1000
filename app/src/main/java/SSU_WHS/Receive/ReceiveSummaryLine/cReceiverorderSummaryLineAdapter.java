@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -17,7 +19,6 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -32,7 +33,8 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
         private FrameLayout receiveorderItemLinearLayout;
         private ImageView imageSendStatus;
 
-
+        public RelativeLayout viewBackground;
+        public ConstraintLayout viewForeground;
 
         public ReceiverorderLineViewHolder(View pvItemView) {
             super(pvItemView);
@@ -47,6 +49,9 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
 
             this.textViewDescription = pvItemView.findViewById(R.id.textViewDescription);
             this.textViewDescription.setSingleLine(false);
+
+            this.viewBackground = pvItemView.findViewById(R.id.view_background);
+            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
 
             this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
             this.imageSendStatus = pvItemView.findViewById(R.id.imageSendStatus);
@@ -165,7 +170,6 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
     public void pFillData(List<cReceiveorderSummaryLine> pvDataObl) {
         this.localReceiveorderSummaryLinesObl = pvDataObl;
         ReceiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
-        notifyDataSetChanged();
     }
 
     public void pShowDeviations() {
@@ -173,11 +177,10 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
         this.localReceiveorderSummaryLinesObl = mGetDeviationsListObl();
         ReceiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
 
-        if (cAppExtension.activity instanceof IntakeorderLinesActivity ) {
+        if (cAppExtension.activity instanceof ReceiveLinesActivity ) {
             ReceiveLinesActivity.pShowData(this.localReceiveorderSummaryLinesObl);
         }
 
-        notifyDataSetChanged();
     }
 
     public void pSetFilter(String pvQueryTextStr, Boolean pvScannedBln) {

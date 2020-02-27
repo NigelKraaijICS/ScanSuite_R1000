@@ -833,6 +833,7 @@ public class cIntakeorder {
 
         return  true;
     }
+
     public boolean pAddERPBarcodeBln(cBarcodeScan pvBarcodeScan) {
 
         //Get article info via the web service
