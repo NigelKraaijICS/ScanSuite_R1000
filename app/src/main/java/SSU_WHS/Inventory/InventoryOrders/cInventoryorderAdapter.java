@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.R;
@@ -94,15 +95,16 @@ public class cInventoryorderAdapter  extends RecyclerView.Adapter<cInventoryorde
         }
 
         if (selectedInventoryorder.getStatusInt() == 10 ) {
-            pvHolder.textViewOrderUser.setText(selectedInventoryorder.getAssignedUserIdStr());
+            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedInventoryorder.getAssignedUserIdStr()));
         }
         else {
-            pvHolder.textViewOrderUser.setText(selectedInventoryorder.getCurrentUserIdStr());
+            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedInventoryorder.getCurrentUserIdStr()));
         }
 
         pvHolder.textViewOrdernumber.setText(selectedInventoryorder.getOrderNumberStr());
         pvHolder.textViewOrdernumber.setTag(selectedInventoryorder.getOrderNumberStr());
         pvHolder.textViewDocument.setText(selectedInventoryorder.getDocumentStr());
+        pvHolder.textViewDocument.setTag(selectedInventoryorder.getDocumentStr());
         pvHolder.textViewQuantityTotal.setText(Integer.toString(selectedInventoryorder.getNumberOfBinsInt()));
 
         if(selectedInventoryorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.IVM.toString())) {

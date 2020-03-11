@@ -233,6 +233,13 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public static void pPicklineSelected(cPickorderLine pvPickorderLine) {
         cPickorderLine.currentPickOrderLine = pvPickorderLine;
+
+        if (cPickorderLine.currentPickOrderLine.barcodesObl != null && cPickorderLine.currentPickOrderLine.barcodesObl.size() > 0) {
+            cPickorderBarcode.currentPickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(0);
+        }
+        else {
+            cPickorderBarcode.currentPickorderBarcode = null;
+        }
     }
 
     public static void pPicklineToResetSelected(cPickorderLine pvPickorderLine) {

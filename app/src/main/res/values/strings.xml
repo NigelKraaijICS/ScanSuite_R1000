@@ -493,6 +493,8 @@
     <string name="dialog_error">error detail</string>
     <string name="shown">shown</string>
     <string name="orders">orders</string>
+    <string name="inventory_orders">orders</string>
+    <string name="no_inventory_orders">No open inventory orders</string>
     <string name="dont_care">Don\'t care</string>
     <string name="show_all">Show all</string>
     <string name="message_license_error">Getting license failed</string>
@@ -526,11 +528,13 @@
     <string name="message_add_article_now_allowed">Adding article not allowed</string>
     <string name="message_adding_unkown_article_failed">Adding unknown article failed</string>
     <string name="message_adding_line_failed">Adding line failed</string>
-    <string name="message_adding_erp_article_failed">Adding ERP article failed</string>
+    <string name="message_adding_erp_article_failed">Adding ERP article with barcode %1$s failed</string>
     <string name="message_add_article_for_this_bin_now_allowed">Article belongs to another BIN, adding lines is not allowed</string>
     <string name="error_barcode_doesnt_belong_to_line">This barcode doesn\'t belong to this line</string>
     <string name="message_line_save_failed">Saving line failed, please try again</string>
     <string name="message_workplace_not_updated">Workplace not updated on server</string>
+    <string name="message_close_inventoryorder_text">U are about to close this count order, are you sure?</string>
+    <string name="message_close_inventoryorder">Close count order</string>
     <string name="lines">Lines</string>
     <string name="items">Items</string>
     <string name="message_bin_close_failed">Closing BIN failed</string>
@@ -625,7 +629,7 @@
     <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
     <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
     <string name="message_exactly_what_you_needed">Exactly what you needed</string>
-    <string name="message_bin_required">"Scan a bin to close the line "</string>
+    <string name="message_bin_required">"Scan a bin to close the line"</string>
     <string name="message_no_connection_try_again">No connection, try again</string>
     <string name="message_no_connection_header">No connection</string>
     <string name="message_checking_connection">Checking connection....</string>
@@ -704,6 +708,11 @@
     <string name="number_received_total_cant_be_higher_then">You are not allowed to receive more then %1$s items of this variant</string>
     <string name="number_received_total_eminently_more">You are about to receive %1$s pieces\n\nThis is eminently more then the %2$s expected pieces.\n\nAre you sure?</string>
     <string name="message_reset_variant_via_webservice_failed">Resetting variant via webservice failed</string>
+    <string name="create_move">Create Move order</string>
+    <string name="tab_moveorderline_take">Take</string>
+    <string name="tab_moveorderline_place">Place</string>
+    <string name="screentitle_moveline_take">Take article</string>
+    <string name="message_article_required">Scan an article to close the line</string>
     <!--End Region return-->
 
     <!--Region plurals-->

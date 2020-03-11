@@ -388,10 +388,10 @@
     <string name="createinventory_text_default">Wilt u een nieuwe telling aanmaken?</string>
     <string name="dont_care">Negeer</string>
     <string name="tab_inventorybin_done">klaar</string>
-    <string name="hint_document_inventory">Reden van tellen</string>
+    <string name="hint_document_inventory">Omschrijving/Reden van telling</string>
     <string name="hint_document_receive">Document</string>
     <string name="message_add_article_now_allowed">Artikel toevoegen niet toegestaan</string>
-    <string name="message_adding_erp_article_failed">ERP artikel toevoegen mislukt</string>
+    <string name="message_adding_erp_article_failed">Artikel met barcode %1$s niet herkend, geef artikelnummer handmatig in</string>
     <string name="message_adding_line_failed">Regel toevoegen mislukt</string>
     <string name="message_adding_unkown_article_failed">Onbekend artikel toevoegen mislukt</string>
     <string name="message_add_article_for_this_bin_now_allowed">Artikel hoort bij een andere locatie, regels toevoegen is niet toegestaan</string>
@@ -408,6 +408,8 @@
     <string name="message_license_release_error">Licentie vrijgeven mislukt</string>
     <string name="tab_inventorybin_todo">open</string>
     <string name="message_couldnt_create_order">Order kon niet aangemaakt worden</string>
+    <string name="inventory_orders">Openstaande tellingen</string>
+    <string name="no_inventory_orders">Er zijn geen openstaande tellingen</string>
     <string name="orders">opdrachten</string>
     <string name="message_line_save_failed">Opslaan van regel mislukt, probeer het nogmaals</string>
     <string name="hint_add_bin">Geef locatie in</string>
@@ -421,6 +423,7 @@
     <string name="items">Stuks</string>
     <string name="lines">Regels</string>
     <string name="message_close_order_text">U gaat de opdracht sluiten, weet u het zeker?</string>
+    <string name="message_close_inventoryorder_text">U gaat de telling verzenden, weet u het zeker?</string>
     <string name="message_bin_already_closed">Deze locatie is reeds gesloten, scan een andere locatie.</string>
     <string name="message_bin_text_sure">Deze locatie is leeg, weet u het zeker?</string>
     <string name="message_reset_line_via_webservice_failed">Resetten regel via webservice is mislukt.</string>
@@ -428,6 +431,7 @@
     <string name="message_removing_line_failed">Regel verwijderen mislukt.</string>
     <string name="message_bin_close_failed">Locatie afsluiten mislukt.</string>
     <string name="message_close_order">Sluit opdracht</string>
+    <string name="message_close_inventoryorder">Telling afronden</string>
     <string name="message_close_bin">Sluit locatie</string>
     <string name="add_article_header_default">Voeg artikel toe</string>
     <string name="button_add_article">Voeg artikel toe</string>

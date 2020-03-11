@@ -160,6 +160,9 @@ public class cAuthorisation {
     public static String TAG_IMAGE_RETURN = "TAG_IMAGE_RETURN";
     public static String TAG_TEXT_RETURN = "TAG_TEXT_RETURN";
 
+    public static String TAG_IMAGE_MOVE = "TAG_IMAGE_MOVE";
+    public static String TAG_TEXT_MOVE = "TAG_TEXT_MOVE";
+
     //end region Public Propties
 
 

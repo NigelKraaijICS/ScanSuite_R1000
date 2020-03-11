@@ -22,13 +22,15 @@ public class cWarehouseorder {
     }
 
     public enum StepCodeEnu {
+        Unkown,
         Pick_Picking,
         Pick_Sorting,
         Pick_PackAndShip,
         Inventory,
         Receive_Store,
         Receive_InTake,
-        Move,
+        Move_Take,
+        Move_Place,
         Retour
     }
 
@@ -103,10 +105,21 @@ public class cWarehouseorder {
     }
 
     public class WorkflowMoveStepEnu {
-        public static final int Move = 10;
-        public static final int MoveBusy = 11;
+        public static final int Move_Take = 10;
+        public static final int Move_Take_Busy = 11;
+        public static final int Move_Place = 40;
+        public static final int Move_Place_Busy = 41;
         public static final int MovePause = 12;
         public static final int MoveHandled = 13;
+    }
+
+    public class MoveStatusEnu {
+        public static final int Move_Take = 10;
+        public static final int Move_Take_Busy = 11;
+        public static final int Move_Take_Wait = 12;
+        public static final int Move_Place = 40;
+        public static final int Move_Place_Busy = 41;
+        public static final int Move_Place_Wait = 42;
     }
 
     public class PicklineStatusEnu {

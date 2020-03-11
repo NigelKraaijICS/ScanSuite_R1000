@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
@@ -88,6 +89,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private static TextView articleDescription2Text;
     private static TextView articleItemText;
     private static TextView articleBarcodeText;
+    private static TextView articleUnitOfMeasureText;
     private static TextView articleVendorItemText;
     private static TextView genericItemExtraField1Text;
     private static TextView genericItemExtraField2Text;
@@ -197,7 +199,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         }
 
         ReceiveOrderReceiveActivity.positionSwiped = pvPositionInt;
-        cReceiveorderLine.currentReceiveorderLine = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl.get(pvPositionInt);
+        cReceiveorderLine.currentReceiveorderLine = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receivedLinesReversedObl().get(pvPositionInt);
 
         //do we need an adult for this?
         if (!cSetting.RECEIVE_RESET_PASSWORD().isEmpty()) {
@@ -248,6 +250,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         ReceiveOrderReceiveActivity.articleItemText = findViewById(R.id.articleItemText);
         ReceiveOrderReceiveActivity.articleBarcodeText = findViewById(R.id.articleBarcodeText);
         ReceiveOrderReceiveActivity.articleVendorItemText = findViewById(R.id.articleVendorItemText);
+        ReceiveOrderReceiveActivity.articleUnitOfMeasureText = findViewById(R.id.articleUnitOfMeasureText);
 
         ReceiveOrderReceiveActivity.sourceNoContainer = findViewById(R.id.sourceNoContainer);
         ReceiveOrderReceiveActivity.sourcenoText = findViewById(R.id.sourcenoText);
@@ -422,7 +425,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             return;
         }
 
-        ReceiveOrderReceiveActivity.mFillRecycler(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl);
+        ReceiveOrderReceiveActivity.mFillRecycler(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receivedLinesReversedObl());
     }
 
     private void mSetArticleImageListener() {
@@ -541,8 +544,10 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
         if (cIntakeorderBarcode.currentIntakeOrderBarcode!= null) {
             ReceiveOrderReceiveActivity.articleBarcodeText.setText(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeAndQuantityStr());
+            ReceiveOrderReceiveActivity.articleUnitOfMeasureText.setText(cIntakeorderBarcode.currentIntakeOrderBarcode.getUnitOfMeasureStr());
         } else {
             ReceiveOrderReceiveActivity.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
+            ReceiveOrderReceiveActivity.articleUnitOfMeasureText.setText("");
         }
     }
 
@@ -599,7 +604,13 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         } else {
             ReceiveOrderReceiveActivity.imageButtonMinus.setVisibility(View.VISIBLE);
             ReceiveOrderReceiveActivity.imageButtonPlus.setVisibility(View.VISIBLE);
-            ReceiveOrderReceiveActivity.imageButtonBarcode.setVisibility(View.VISIBLE);
+
+            if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
+                ReceiveOrderReceiveActivity.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            }
+            else{
+                ReceiveOrderReceiveActivity.imageButtonBarcode.setVisibility(View.VISIBLE);
+            }
         }
     }
 

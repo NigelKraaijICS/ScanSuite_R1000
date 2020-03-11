@@ -2,6 +2,7 @@ package nl.icsvertex.scansuite.Activities.Inventory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.util.List;
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cNoSwipeViewPager;
+import ICS.Utils.cProductFlavor;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
@@ -37,6 +39,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
+import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
@@ -180,8 +183,21 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     @Override
     public void mFieldsInitialize() {
+
         ViewCompat.setTransitionName(InventoryorderBinsActivity.textViewChosenOrder, InventoryorderBinsActivity.VIEW_CHOSEN_ORDER);
-        InventoryorderBinsActivity.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+
+        if (!cInventoryorder.currentInventoryOrder.getDocumentStr().isEmpty() && BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
+            InventoryorderBinsActivity.textViewChosenOrder.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            InventoryorderBinsActivity.textViewChosenOrder.setSingleLine(true);
+            InventoryorderBinsActivity.textViewChosenOrder.setMarqueeRepeatLimit(5);
+            InventoryorderBinsActivity.textViewChosenOrder.setSelected(true);
+            InventoryorderBinsActivity.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getDocumentStr());
+        }
+        else
+        {
+            InventoryorderBinsActivity.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+        }
+
         InventoryorderBinsActivity.inventoryorderBinsTabLayout.addTab(InventoryorderBinsActivity.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_todo));
         InventoryorderBinsActivity.inventoryorderBinsTabLayout.addTab(InventoryorderBinsActivity.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
         InventoryorderBinsActivity.inventoryorderBinsTabLayout.addTab(InventoryorderBinsActivity.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_total));
@@ -485,8 +501,8 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
-                                                                                   cAppExtension.activity.getString(R.string.message_close_order_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close), false);
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_inventoryorder),
+                                                                                   cAppExtension.activity.getString(R.string.message_close_inventoryorder_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close), false);
         acceptRejectFragment.setCancelable(true);
        cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override

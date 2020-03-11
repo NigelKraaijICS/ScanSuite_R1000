@@ -179,6 +179,8 @@ public class cDatabase {
     public static final String LINENO_NAMESTR = "LineNo";
     public static final String LINENOTAKE_NAMESTR = "LineNoTake";
     public static final String LOCALSTATUS_NAMESTR = "LocalStatus";
+    public static final String LOCAL_QUANTITYTAKEN_NAMESTR = "LocalQuantityTaken";
+    public static final String LOCAL_QUANTITYPLACED_NAMESTR = "LocalQuantityPlaced";
     //endregion L
 
     //region M

@@ -163,7 +163,7 @@ public class cPickorderRepository {
                 break;
         }
 
-        pickorderLocalParams = new PickorderLocalParams(cUser.currentUser.getNameStr(),cUser.currentUser.currentBranch.getBranchStr(),pvInprogressBln,0, pvSearchTextStr,mainTypeStr);
+        pickorderLocalParams = new PickorderLocalParams(cUser.currentUser.getUsernameStr(),cUser.currentUser.currentBranch.getBranchStr(),pvInprogressBln,0, pvSearchTextStr,mainTypeStr);
 
         try {
             webResultWrs = new mGetPickordersFromWebserviceAsyncTask().execute(pickorderLocalParams).get();
@@ -285,7 +285,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
 
         try {
 
@@ -305,7 +305,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
 
         try {
 
@@ -325,7 +325,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getNameStr(),
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(),
                                                                     "",
                                                                     cUser.currentUser.currentBranch.getBranchStr(),
                                                                     cPickorder.currentPickOrder.getOrderNumberStr(),
@@ -373,7 +373,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderUpdateWorkplaceParams pickorderUpdateWorkplaceParams;
-        pickorderUpdateWorkplaceParams   = new PickorderUpdateWorkplaceParams(cUser.currentUser.getNameStr(), cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), pvWorkplaceStr);
+        pickorderUpdateWorkplaceParams   = new PickorderUpdateWorkplaceParams(cUser.currentUser.getUsernameStr(), cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), pvWorkplaceStr);
 
         try {
             webResult = new mPickorderUpdateWorkplaceViaWebserviceAsyncTask().execute(pickorderUpdateWorkplaceParams).get();
@@ -839,7 +839,7 @@ public class cPickorderRepository {
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
@@ -1291,7 +1291,7 @@ public class cPickorderRepository {
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();

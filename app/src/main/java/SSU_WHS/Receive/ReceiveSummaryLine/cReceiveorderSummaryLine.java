@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -152,6 +153,20 @@ public class cReceiveorderSummaryLine {
 
     public static List<cReceiveorderSummaryLine> allReceiveorderSummaryLinesObl;
     public List<cReceiveorderLine> receiveLinesObl;
+
+    public  List<cReceiveorderLine> receivedLinesReversedObl(){
+
+        List<cReceiveorderLine> resultObl = new ArrayList<>();
+
+        if (this.receiveLinesObl == null || this.receiveLinesObl.size() == 0) {
+            return resultObl;
+        }
+
+        resultObl.addAll(this.receiveLinesObl);
+        Collections.reverse(resultObl);
+        return  resultObl;
+
+    }
 
     public List<cIntakeorderBarcode> barcodesObl(){
 

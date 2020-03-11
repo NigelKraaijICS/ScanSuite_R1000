@@ -52,6 +52,10 @@ public class cIntakeorder {
     private String externalReferenceStr;
     public String getExternalReferenceStr() {return this.externalReferenceStr;}
 
+    private String documentStr;
+    public  String getDocumentStr(){ return this.documentStr;
+    }
+
     private String workplaceStr;
     public String getWorkplaceStr() {return this.workplaceStr;}
 
@@ -190,8 +194,8 @@ public class cIntakeorder {
         this.statusInt = this.intakeorderEntity.getStatusInt();
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
+        this.documentStr = this.intakeorderEntity.getDocumentStr();
         this.workplaceStr = this.intakeorderEntity.getWorkplaceStr();
-
 
         this.receiveExportPartBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveExportPartStr(), false);
         this.receiveAmountManualEOBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualEOStr(), false);
@@ -227,6 +231,7 @@ public class cIntakeorder {
         this.statusInt = this.intakeorderEntity.getStatusInt();
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
+        this.documentStr = this.intakeorderEntity.getDocumentStr();
         this.workplaceStr = this.intakeorderEntity.getWorkplaceStr();
 
         this.receiveExportPartBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveExportPartStr(), false);
@@ -292,7 +297,7 @@ public class cIntakeorder {
         List<cIntakeorder> resultObl = new ArrayList<>();
         List<cIntakeorderEntity> hulpResultObl;
 
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeordersFromDatabaseWithFilterObl(cUser.currentUser.getNameStr(), cSharedPreferences.userFilterBln());
+        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeordersFromDatabaseWithFilterObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -491,7 +496,7 @@ public class cIntakeorder {
         cWebresult Webresult;
         boolean ignoreBusyBln = false;
 
-        if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
+        if (this.getStatusInt() > 10 && cUser.currentUser.getUsernameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
             ignoreBusyBln = true;
         }
 

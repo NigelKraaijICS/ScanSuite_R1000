@@ -100,8 +100,6 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-
-        //cBarcodeScan.pRegisterWifiChangedFragmentReceiver();
     }
 
     @Override

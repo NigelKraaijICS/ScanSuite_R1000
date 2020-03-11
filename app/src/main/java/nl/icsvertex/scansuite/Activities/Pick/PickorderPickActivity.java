@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -38,6 +39,7 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
@@ -657,11 +659,23 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private static void mTryToChangePickedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
 
       double newQuantityDbl;
-
+        List<cPickorderLineBarcode>  hulpObl;
         if (pvIsPositiveBln) {
 
             //Determine the new amount
             if (pvAmountFixedBln) {
+
+                //Check if we already have barcodes and clear them
+                if (cPickorderLine.currentPickOrderLine.handledBarcodesObl().size() > 0 ) {
+
+                    hulpObl = new ArrayList<>();
+                    hulpObl.addAll(cPickorderLine.currentPickOrderLine.handledBarcodesObl());
+
+                    for (cPickorderLineBarcode pickorderLineBarcode : hulpObl) {
+                        pickorderLineBarcode.pDeleteFromDatabaseBln();
+                    }
+                }
+
                 PickorderPickActivity.articleScannedLastBln = true;
                 newQuantityDbl = pvAmountDbl;
             } else {

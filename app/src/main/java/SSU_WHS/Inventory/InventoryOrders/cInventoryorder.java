@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProviders;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -305,7 +307,7 @@ public class cInventoryorder {
         cWebresult Webresult;
         boolean ignoreBusyBln = false;
 
-        if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
+        if (this.getStatusInt() > 10 && cUser.currentUser.getUsernameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
             ignoreBusyBln = true;
         }
 
@@ -349,7 +351,7 @@ public class cInventoryorder {
 
         //Check if this activity is meant for a different user
         if (!Webresult.getResultBln() && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-                Webresult.getResultObl().size() > 0 && ! Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr())) {
+                Webresult.getResultObl().size() > 0 && ! Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_another_user_already_started)) + " " + Webresult.getResultObl().get(0));
@@ -467,7 +469,7 @@ public class cInventoryorder {
         List<cInventoryorder> resultObl = new ArrayList<>();
         List<cInventoryorderEntity> hulpResultObl;
 
-        hulpResultObl =  cInventoryorder.getInventoryorderViewModel().pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getNameStr(), cSharedPreferences.userFilterBln());
+        hulpResultObl =  cInventoryorder.getInventoryorderViewModel().pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -515,6 +517,12 @@ public class cInventoryorder {
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
 
                 cInventoryorderLine inventoryorderLine = new cInventoryorderLine(jsonObject);
+
+                if (inventoryorderLine.getQuantityHandledAllScannersDbl() > inventoryorderLine.getQuantityDbl()) {
+                    inventoryorderLine.quantityHandledDbl = inventoryorderLine.getQuantityHandledAllScannersDbl();
+                }
+
+
                 importObl.add(inventoryorderLine.inventoryorderLineEntity);
                 objectObl.add((inventoryorderLine));
 
@@ -574,6 +582,10 @@ public class cInventoryorder {
             if (inventoryorderLine.getBinCodeStr().equalsIgnoreCase(pvBincodeStr)) {
                 resultObl.add((inventoryorderLine));
             }
+        }
+
+        if (resultObl.size() > 1) {
+            Collections.reverse(resultObl);
         }
 
         return resultObl;

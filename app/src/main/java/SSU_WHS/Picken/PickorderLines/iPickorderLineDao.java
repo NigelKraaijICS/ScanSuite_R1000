@@ -49,7 +49,7 @@ public interface iPickorderLineDao {
     @Query("SELECT * FROM Pickorderlines WHERE Localstatus > " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY + " ORDER BY TakenTimestamp DESC ")
     List<cPickorderLineEntity> getHandledPickorderLineEntities();
 
-    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)
+    @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT + " OR  Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING)
     List<cPickorderLineEntity> getPickorderLineEntitiesToSend();
 
     @Query("SELECT * FROM Pickorderlines WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW + " AND SourceNo = :pvSourceNoStr ORDER BY recordid")

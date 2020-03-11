@@ -11,7 +11,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     >
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewInventoryBinsToDo"
+        android:id="@+id/recyclerViewMoveLinesTake"
         style="@style/defaultRecyclerView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

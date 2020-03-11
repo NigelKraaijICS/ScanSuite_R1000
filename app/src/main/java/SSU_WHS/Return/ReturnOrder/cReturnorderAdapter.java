@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.R;
@@ -91,10 +92,10 @@ public class cReturnorderAdapter extends RecyclerView.Adapter<cReturnorderAdapte
         }
 
         if (selectedReturnorder.getStatusInt() == 10 ) {
-            pvHolder.textViewOrderUser.setText(selectedReturnorder.getAssignedUserIdStr());
+            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedReturnorder.getAssignedUserIdStr()));
         }
         else {
-            pvHolder.textViewOrderUser.setText(selectedReturnorder.getCurrentUserIdStr());
+            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedReturnorder.getCurrentUserIdStr()));
         }
 
         pvHolder.textViewOrdernumber.setText(selectedReturnorder.getOrderNumberStr());

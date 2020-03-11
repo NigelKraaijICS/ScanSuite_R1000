@@ -93,30 +93,11 @@ public class cWarehouseorderRepository {
 
     //Region Public Methods
 
-    public static cWebresult pWarehouseopdrachtUnlockViaWebserviceWrs(String pvOrdertypeStr,String pvOrderNumberStr) {
-
-        cWebresult webResultWrs = new cWebresult();
-
-        List<String> resultObl = new ArrayList<>();
-        WarehouseorderUnLockParams warehouseorderUnLockParams = new WarehouseorderUnLockParams(cUser.currentUser.getNameStr(), pvOrdertypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr);
-
-        try {
-            webResultWrs = new mWarehouseorderUnLockAsyncTask().execute(warehouseorderUnLockParams).get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
-
     public static cWebresult pWarehouseopdrachtLockViaWebserviceWrs(String pvOrderTypeStr, String pvOrderNumberStr, String pvDeviceStr, String pvWorkflowStepStr, Integer pv_WorkflowStepInt, Boolean pvIgnoreBusyBln) {
         cWebresult webResultWrs = new cWebresult();
 
         List<String> resultObl = new ArrayList<>();
-        WarehouseorderLockParams warehouseorderLockParams = new WarehouseorderLockParams(cUser.currentUser.getNameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr, pvWorkflowStepStr, pv_WorkflowStepInt, pvIgnoreBusyBln);
+        WarehouseorderLockParams warehouseorderLockParams = new WarehouseorderLockParams(cUser.currentUser.getUsernameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr, pvWorkflowStepStr, pv_WorkflowStepInt, pvIgnoreBusyBln);
         try {
             webResultWrs = new mWarehouseorderLockAsyncTask().execute(warehouseorderLockParams).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -133,7 +114,7 @@ public class cWarehouseorderRepository {
         cWebresult webResultWrs = new cWebresult();
 
         List<String> resultObl = new ArrayList<>();
-        WarehouseorderLockReleaseParams warehouseorderLockReleaseParams = new WarehouseorderLockReleaseParams(cUser.currentUser.getNameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr,pvWorkFlowStepStr, pvWorkFlowStepInt);
+        WarehouseorderLockReleaseParams warehouseorderLockReleaseParams = new WarehouseorderLockReleaseParams(cUser.currentUser.getUsernameStr().toUpperCase(), "", pvOrderTypeStr, cUser.currentUser.currentBranch.getBranchStr(), pvOrderNumberStr, pvDeviceStr,pvWorkFlowStepStr, pvWorkFlowStepInt);
         try {
             webResultWrs = new mWarehouseorderLockReleaseAsyncTask().execute(warehouseorderLockReleaseParams).get();
         } catch (ExecutionException | InterruptedException e) {
@@ -149,44 +130,6 @@ public class cWarehouseorderRepository {
     //End Region Public Methods
 
     //Region Private Methods
-
-    private static class mWarehouseorderUnLockAsyncTask extends AsyncTask<WarehouseorderUnLockParams, Void, cWebresult> {
-        @Override
-        protected cWebresult doInBackground(WarehouseorderUnLockParams... params) {
-            cWebresult webResultWrs = new cWebresult();
-            try {
-                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
-
-                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(params[0].userStr);
-                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
-
-                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
-                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
-                l_PropertyInfo2Pin.setValue(params[0].orderTypeStr);
-                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
-
-                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
-                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
-                l_PropertyInfo3Pin.setValue(params[0].branchStr);
-                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
-
-                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
-                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
-                l_PropertyInfo4Pin.setValue(params[0].orderNumberStr);
-                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
-
-                new cWebresult();
-                webResultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEORDERUNLOCK, l_PropertyInfoObl);
-            } catch (JSONException e) {
-                webResultWrs.setSuccessBln(false);
-                webResultWrs.setResultBln(false);
-            }
-            return webResultWrs;
-        }
-    }
-
     private static class mWarehouseorderLockAsyncTask extends AsyncTask<WarehouseorderLockParams, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(WarehouseorderLockParams... params) {

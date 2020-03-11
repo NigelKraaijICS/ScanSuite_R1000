@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cProductFlavor;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
+import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
 public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapter.IntakeorderViewHolder>  {
@@ -98,10 +101,10 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
         }
 
         if (selectedIntakeorder.getStatusInt() == 10 ) {
-            pvHolder.textViewOrderUser.setText(selectedIntakeorder.getAssignedUserIdStr());
+            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedIntakeorder.getAssignedUserIdStr()));
         }
         else {
-            pvHolder.textViewOrderUser.setText(selectedIntakeorder.getCurrentUserIdStr());
+            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedIntakeorder.getCurrentUserIdStr()));
         }
 
         if (selectedIntakeorder.getProcessingOrParkedBln()) {
@@ -113,6 +116,12 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
         pvHolder.textViewOrdernumber.setText(selectedIntakeorder.getOrderNumberStr());
         pvHolder.textViewOrdernumber.setTag(selectedIntakeorder.getOrderNumberStr());
+
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
+            pvHolder.textViewOrdernumber.setText(selectedIntakeorder.getDocumentStr());
+            pvHolder.textViewOrdernumber.setTag(selectedIntakeorder.getDocumentStr());
+        }
+
         pvHolder.textViewExternalreference.setText(selectedIntakeorder.getExternalReferenceStr());
 
         pvHolder.textViewCurrentLocation.setText("");

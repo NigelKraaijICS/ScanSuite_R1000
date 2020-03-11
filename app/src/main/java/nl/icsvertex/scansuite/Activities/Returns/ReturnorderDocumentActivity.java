@@ -460,7 +460,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
         //Add the barcodeStr via the webservice
         if (!cReturnorder.currentReturnOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-            ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed));
+            ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.getBarcodeOriginalStr()));
             ReturnorderDocumentActivity.busyBln = false;
             return;
         }
@@ -538,7 +538,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             cReturnorderLine.currentReturnOrderLine = returnorderLine;
 
                 if (!cReturnorder.currentReturnOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-                    ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed));
+                    ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.getBarcodeOriginalStr()));
                     ReturnorderDocumentActivity.busyBln = false;
                     return;
                 }

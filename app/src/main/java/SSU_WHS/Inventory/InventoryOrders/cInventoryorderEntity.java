@@ -178,7 +178,7 @@ public class cInventoryorderEntity {
                 return;
             }
 
-            if (!this.assignedUserId.equalsIgnoreCase(cUser.currentUser.getNameStr())) {
+            if (!this.assignedUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
                 this.priorityInt = 5;
             }
 

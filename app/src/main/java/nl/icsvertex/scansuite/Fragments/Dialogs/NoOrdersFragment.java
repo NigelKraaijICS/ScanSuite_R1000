@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +32,7 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Private Properties
     private static ImageButton buttonRefreshOrders;
+    private static TextView textViewNothingHere;
     //End Region Private Properties
 
     //Region Constructor
@@ -69,6 +71,7 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
 
         if (getView() != null) {
             NoOrdersFragment.buttonRefreshOrders = getView().findViewById(R.id.buttonRefreshOrders);
+            NoOrdersFragment.textViewNothingHere = getView().findViewById(R.id.textViewNothingHere);
         }
 
     }
@@ -77,6 +80,13 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
      @Override
     public void mFieldsInitialize() {
 
+         NoOrdersFragment.textViewNothingHere.setText(cAppExtension.activity.getString(R.string.no_orders));
+
+         if (cAppExtension.activity instanceof InventoryorderSelectActivity) {
+
+             NoOrdersFragment.textViewNothingHere.setText(cAppExtension.activity.getString(R.string.no_inventory_orders));
+
+         }
 
     }
 

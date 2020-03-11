@@ -16,6 +16,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
@@ -103,10 +104,10 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
 
         if (selectedPickorder.getStatusInt() == 10 ) {
-            pvHolder.textViewOrderUser.setText(selectedPickorder.getAssignedUserIdStr());
+            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedPickorder.getAssignedUserIdStr()));
         }
         else {
-            pvHolder.textViewOrderUser.setText(selectedPickorder.getCurrentUserIdStr());
+            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedPickorder.getCurrentUserIdStr()));
         }
 
         if (!selectedPickorder.isSingleArticleOrdersBln()) {

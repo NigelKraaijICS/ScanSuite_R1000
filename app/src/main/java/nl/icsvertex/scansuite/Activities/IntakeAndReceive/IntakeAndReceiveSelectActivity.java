@@ -29,14 +29,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cProductFlavor;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
@@ -53,6 +49,7 @@ import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
+import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.R;
@@ -179,7 +176,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         IntakeAndReceiveSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
         IntakeAndReceiveSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         IntakeAndReceiveSelectActivity.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
-        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders = findViewById(R.id.recyclerViewIntakeorders);
+        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders = findViewById(R.id.recyclerViewMoveorders);
         IntakeAndReceiveSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         IntakeAndReceiveSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
         IntakeAndReceiveSelectActivity.imageViewNewOrder = findViewById(R.id.imageViewNewOrder);
@@ -473,9 +470,18 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
+        View clickedOrder = null;
 
         Intent intent = new Intent(cAppExtension.context, IntakeorderLinesActivity.class);
-        View clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
+             clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getDocumentStr());
+        }
+        else
+        {
+             clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+        }
+
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, IntakeorderLinesActivity.VIEW_CHOSEN_ORDER));
         ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
     }
@@ -485,11 +491,21 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
+        View clickedOrder = null;
 
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
 
         if (container != null) {
-            View clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+
+
+            if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
+                clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getDocumentStr());
+            }
+            else
+            {
+                clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+            }
+
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, ReceiveLinesActivity.VIEW_CHOSEN_ORDER));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;
@@ -726,7 +742,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                     NoOrdersFragment fragment = new NoOrdersFragment();
-                    fragmentTransaction.replace(R.id.intakeorderContainer, fragment);
+                    fragmentTransaction.replace(R.id.moveorderContainer, fragment);
                     fragmentTransaction.commit();
 
                     mAutoOpenCreateActivity();
@@ -759,7 +775,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             return true;
         }
 
-        return cUser.currentUser.getNameStr().equalsIgnoreCase(pvIntakeorder.getAssignedUserIdStr());
+        return cUser.currentUser.getUsernameStr().equalsIgnoreCase(pvIntakeorder.getAssignedUserIdStr());
 
 
     }

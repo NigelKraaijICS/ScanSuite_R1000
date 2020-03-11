@@ -48,6 +48,12 @@ public class cBranch {
         return   receiveDefaultBinStr;
     }
 
+
+    private String moveDefaultBinStr;
+    public String getMoveDefaultBinStr(){
+        return   moveDefaultBinStr;
+    }
+
     private cBranchEntity branchEntity;
 
     public ArrayList<cWorkplace>  workplacesObl() {
@@ -94,6 +100,7 @@ public class cBranch {
         this.branchNameStr = branchEntity.getBranchnameStr();
         this.returnDefaultBinStr = branchEntity.getReturndefaultbinStr();
         this.receiveDefaultBinStr = branchEntity.getReceivedefaultbinStr();
+        this.moveDefaultBinStr = branchEntity.getMovedefaultbinStr();
         this.binMandatoryBln = cText.pStringToBooleanBln(branchEntity.getBinmandatoryStr(),false) ;
 
     }

@@ -527,7 +527,7 @@
     <string name="message_add_article_now_allowed">Adding article not allowed</string>
     <string name="message_adding_unkown_article_failed">Adding unknown article failed</string>
     <string name="message_adding_line_failed">Adding line failed</string>
-    <string name="message_adding_erp_article_failed">Adding ERP article failed</string>
+    <string name="message_adding_erp_article_failed">Adding ERP article with barcode %1$s failed</string>
     <string name="message_add_article_for_this_bin_now_allowed">Article belongs to another BIN, adding lines is not allowed</string>
     <string name="error_barcode_doesnt_belong_to_line">This barcode doesn\'t belong to this line</string>
     <string name="message_line_save_failed">Saving line failed, please try again</string>

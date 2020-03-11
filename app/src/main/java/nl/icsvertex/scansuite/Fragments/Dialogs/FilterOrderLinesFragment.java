@@ -12,6 +12,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
@@ -26,27 +27,31 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
 
 
         if (cAppExtension.context instanceof PickorderSelectActivity) {
-            setPreferencesFromResource(R.xml.filter_orders, rootKey);
+            setPreferencesFromResource(R.xml.pick_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof SortorderSelectActivity) {
-            setPreferencesFromResource(R.xml.filter_orders, rootKey);
+            setPreferencesFromResource(R.xml.pick_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof ShiporderSelectActivity) {
-            setPreferencesFromResource(R.xml.filter_orders, rootKey);
+            setPreferencesFromResource(R.xml.pick_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof InventoryorderSelectActivity) {
-            setPreferencesFromResource(R.xml.filter_inventoryorders, rootKey);
+            setPreferencesFromResource(R.xml.standard_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof IntakeAndReceiveSelectActivity) {
-            setPreferencesFromResource(R.xml.filter_inventoryorders, rootKey);
+            setPreferencesFromResource(R.xml.standard_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof ReturnorderSelectActivity) {
-            setPreferencesFromResource(R.xml.filter_inventoryorders, rootKey);
+            setPreferencesFromResource(R.xml.standard_filter, rootKey);
+        }
+
+        if (cAppExtension.context instanceof MoveorderSelectActivity) {
+            setPreferencesFromResource(R.xml.standard_filter, rootKey);
         }
     }
 

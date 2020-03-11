@@ -526,7 +526,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
             return true;
         }
 
-        return cUser.currentUser.getNameStr().equalsIgnoreCase(pvPickorder.getAssignedUserIdStr());
+        return cUser.currentUser.getUsernameStr().equalsIgnoreCase(pvPickorder.getAssignedUserIdStr());
 
 
     }

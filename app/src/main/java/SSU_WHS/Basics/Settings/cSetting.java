@@ -746,6 +746,27 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static String MOVE_NEW_WORKFLOWS(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static boolean MOVE_AUTO_CREATE_ORDER_MV(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_CREATE_ORDER_MV);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+
     public static boolean RETOUR_BARCODE_CHECK(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_BARCODE_CHECK);

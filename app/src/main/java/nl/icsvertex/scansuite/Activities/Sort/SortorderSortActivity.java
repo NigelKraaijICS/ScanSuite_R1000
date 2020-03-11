@@ -301,8 +301,15 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     public static void pHandleScan(cBarcodeScan pvBarcodeScan){
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+        boolean packingTableScannedBln = false;
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+        if (cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr()).size() > 1) {
+            if (cRegex.pHasPrefix(pvBarcodeScan.barcodeOriginalStr)) {
+                packingTableScannedBln = true;
+            }
+        }
+
+        if (!packingTableScannedBln && cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             SortorderSortActivity.mHandleArticleScanned(pvBarcodeScan);
             return;
         }

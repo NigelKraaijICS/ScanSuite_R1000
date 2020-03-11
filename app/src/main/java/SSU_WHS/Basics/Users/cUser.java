@@ -280,6 +280,21 @@ public class cUser {
         return null;
     }
 
+    public static String pUserToShowStr(String pvUserName){
+        if(cUser.allUsersObl == null){
+            return null;
+        }
+
+        for (cUser user : cUser.allUsersObl)
+        {
+            if(user.usernameStr.equalsIgnoreCase(pvUserName)){
+                return  user.getNameStr();
+            }
+        }
+
+        return pvUserName;
+    }
+
     public static boolean pTruncateTableBln(){
         cUser.getUserViewModel().deleteAll();
         return true;

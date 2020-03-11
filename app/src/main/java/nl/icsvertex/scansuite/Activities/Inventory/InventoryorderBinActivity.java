@@ -479,7 +479,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         //Add the barcodeStr via the webservice
         if (!cInventoryorder.currentInventoryOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-            InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed), pvBarcodeScan.barcodeOriginalStr);
+            InventoryorderBinActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed,pvBarcodeScan.barcodeOriginalStr),"" );
             InventoryorderBinActivity.busyBln = false;
             return;
         }

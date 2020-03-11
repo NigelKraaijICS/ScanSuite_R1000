@@ -31,6 +31,7 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cProductFlavor;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
@@ -44,6 +45,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
@@ -763,7 +765,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             return true;
         }
 
-        return cUser.currentUser.getNameStr().equalsIgnoreCase(pvInventoryorder.getAssignedUserIdStr());
+        return cUser.currentUser.getUsernameStr().equalsIgnoreCase(pvInventoryorder.getAssignedUserIdStr());
 
     }
 
@@ -818,6 +820,11 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         Intent intent = new Intent(cAppExtension.context, InventoryorderBinsActivity.class);
         View clickedOrder = container.findViewWithTag(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+
+        if (!cInventoryorder.currentInventoryOrder.getDocumentStr().isEmpty() && BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
+            clickedOrder =  container.findViewWithTag(cInventoryorder.currentInventoryOrder.getDocumentStr());
+        }
+
         if (clickedOrder != null) {
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, InventoryorderBinsActivity.VIEW_CHOSEN_ORDER));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
@@ -849,7 +856,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private static void mSetToolBarTitleWithCounters(){
 
-
         if (cInventoryorder.allInventoryOrdersObl(false) == null ) {
             InventoryorderSelectActivity.toolbarSubTitle.setText("(0)");
             return;
@@ -858,7 +864,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         if (!cSharedPreferences.userFilterBln()) {
             subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cInventoryorder.allInventoryOrdersObl(false).size(),cInventoryorder.allInventoryOrdersObl(false).size());
         } else {
-            subtitleStr = cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryOrdersObl(false).size()) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
+            subtitleStr = cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryOrdersObl(false).size()) + " " + cAppExtension.activity.getString(R.string.inventory_orders);
         }
         InventoryorderSelectActivity.toolbarSubTitle.setText(subtitleStr);
     }

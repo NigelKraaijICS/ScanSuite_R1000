@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/createReceiveContainer">
+    <include layout="@layout/toolbar_subtext_default"/>
+    <EditText
+        android:id="@+id/editTextDocument"
+        style="@style/createReceiveDocument"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_document_receive"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:cursorVisible="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+    <TextView
+        android:id="@+id/textViewBinHint"
+        style="@style/createReturnText"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.906"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextDocument" />
+
+    <EditText
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:id="@+id/editTextBin"
+        style="@style/createReturnDocument"
+        android:hint="@string/hint_add_bin"
+        android:cursorVisible="false"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextDocument"/>
+    <Switch
+        android:id="@+id/checkBarcodesSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="168dp"
+        android:defaultValue="false"
+        android:key="@string/check_receive_barcodes_switch"
+        android:text="@string/message_check_barcodes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextBin" />
+    <Button
+        android:id="@+id/createOrderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:text="@string/button_create_inventory"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

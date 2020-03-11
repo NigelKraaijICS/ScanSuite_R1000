@@ -565,6 +565,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //All lines are done
+
         if (!cConnection.isInternetConnectedBln()) {
             cConnection.pShowTryAgainDialog();
             return;

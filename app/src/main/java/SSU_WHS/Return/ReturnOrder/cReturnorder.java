@@ -304,7 +304,7 @@ public class cReturnorder {
 
 
         if (cSetting.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED()) {
-            if (this.getStatusInt() > 10 && cUser.currentUser.getNameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
+            if (this.getStatusInt() > 10 && cUser.currentUser.getUsernameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
                 ignoreBusyBln = true;
             }
         }
@@ -344,7 +344,7 @@ public class cReturnorder {
 
         //Check if this activity is meant for a different user
         if (!Webresult.getResultBln() && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-                Webresult.getResultObl().size() > 0 && !Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getNameStr())) {
+                Webresult.getResultObl().size() > 0 && !Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_another_user_already_started)) + " " + Webresult.getResultObl().get(0));
@@ -832,7 +832,7 @@ public class cReturnorder {
         List<cReturnorder> resultObl = new ArrayList<>();
         List<cReturnorderEntity> hulpResultObl;
 
-        hulpResultObl =  cReturnorder.getReturnorderViewModel().pGetReturnOrdersWithFilterFromDatabaseObl(cUser.currentUser.getNameStr(), cSharedPreferences.userFilterBln());
+        hulpResultObl =  cReturnorder.getReturnorderViewModel().pGetReturnOrdersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }

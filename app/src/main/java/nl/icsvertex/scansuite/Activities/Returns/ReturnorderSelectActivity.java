@@ -737,7 +737,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
             return true;
         }
 
-        return cUser.currentUser.getNameStr().equalsIgnoreCase(pvReturnorder.getAssignedUserIdStr());
+        return cUser.currentUser.getUsernameStr().equalsIgnoreCase(pvReturnorder.getAssignedUserIdStr());
 
     }
 

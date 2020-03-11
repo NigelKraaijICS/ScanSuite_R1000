@@ -99,7 +99,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
 
         if (getView() != null) {
             InventoryBinsToDoFragment.imageAddBin = getView().findViewById(R.id.imageAddBin);
-            InventoryBinsToDoFragment.recyclerViewInventoryBinsToDo = getView().findViewById(R.id.recyclerViewInventoryBinsToDo);
+            InventoryBinsToDoFragment.recyclerViewInventoryBinsToDo = getView().findViewById(R.id.recyclerViewMoveLinesTake);
             InventoryBinsToDoFragment.quickhelpText = getView().findViewById(R.id.quickhelpText);
             InventoryBinsToDoFragment.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
             InventoryBinsToDoFragment.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);

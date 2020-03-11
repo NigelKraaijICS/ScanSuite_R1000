@@ -28,6 +28,7 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cProductFlavor;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
@@ -46,6 +47,7 @@ import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLineRecyclerItemTouchHelper;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiverorderSummaryLineAdapter;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
+import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
@@ -223,8 +225,13 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     public void mFieldsInitialize() {
 
         ViewCompat.setTransitionName(ReceiveLinesActivity.textViewChosenOrder, ReceiveLinesActivity.VIEW_CHOSEN_ORDER);
-        ReceiveLinesActivity.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
+            ReceiveLinesActivity.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getDocumentStr());
+        }
+        else{
+            ReceiveLinesActivity.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+        }
 
         if (cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl.size() == 0 ) {
             mNoLinesAvailable(true);
@@ -907,7 +914,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
         //Add the barcodeStr via the webservice
         if (!cIntakeorder.currentIntakeOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed),"",true,true);
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.barcodeOriginalStr),"",true,true);
             ReceiveLinesActivity.busyBln = false;
             return;
         }

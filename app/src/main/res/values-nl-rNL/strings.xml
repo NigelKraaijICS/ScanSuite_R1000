@@ -390,7 +390,9 @@
     <string name="tab_inventorybin_done">klaar</string>
     <string name="hint_document_inventory">Document</string>
     <string name="message_add_article_now_allowed">Artikel toevoegen niet toegestaan</string>
-    <string name="message_adding_erp_article_failed">ERP artikel toevoegen mislukt</string>
+    <string name="message_adding_erp_article_failed">ERP artikel toevoegen met barcode %1$s mislukt</string>
+    <string name="message_close_inventoryorder_text">U gaat de inventarisatie verzenden, weet u het zeker?</string>
+    <string name="message_close_inventoryorder">Inventarisatie afronden</string>
     <string name="message_adding_line_failed">Regel toevoegen mislukt</string>
     <string name="message_adding_unkown_article_failed">Onbekend artikel toevoegen mislukt</string>
     <string name="message_add_article_for_this_bin_now_allowed">Artikel hoort bij een andere locatie, regels toevoegen is niet toegestaan</string>
@@ -593,5 +595,10 @@
     <string name="number_received_total_eminently_more">U staat op het punt om %1$s stuks te ontvangen\n\nDit is aanzienlijk meer dan het verwachte aantal van %2$s stuks\n\nWeet u het zeker?</string>
     <string name="message_more_then_expected">Aantal hoger dan verwacht</string>
     <string name="message_reset_variant_via_webservice_failed">Resetten variant via webservice mislukt</string>
+    <string name="create_move">Creeer verplaats opdracht</string>
+    <string name="tab_moveorderline_take">Neem</string>
+    <string name="tab_moveorderline_place">Plaats</string>
+    <string name="screentitle_moveline_take">Neem artikel</string>
+    <string name="message_article_required">Scan artikel om regel te sluiten</string>
 
 </resources>

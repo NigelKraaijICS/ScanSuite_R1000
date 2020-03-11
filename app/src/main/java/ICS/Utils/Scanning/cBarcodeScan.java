@@ -13,6 +13,8 @@ import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
@@ -230,6 +232,15 @@ public class cBarcodeScan {
 
                     if (cAppExtension.activity instanceof CreateReturnActivity) {
                         CreateReturnActivity.pHandleScan(barcodeScan,false,false);
+                    }
+
+                    //Move
+                    if (cAppExtension.activity instanceof MoveorderSelectActivity){
+                        MoveorderSelectActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof CreateMoveActivity){
+                        CreateMoveActivity.pHandleScan(barcodeScan, false,false);
                     }
 
                 }

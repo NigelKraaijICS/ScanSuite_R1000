@@ -122,6 +122,8 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_move);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_MOVE);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_MOVE);
             }
 
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MI) {
@@ -137,6 +139,8 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MV) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_move_mv);
                 pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mv);
+                pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_MOVE);
+                pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_MOVE);
             }
             if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVEITEM) {
                 pvHolder.textViewAuthorisation.setText(R.string.menuitem_moveitem);
