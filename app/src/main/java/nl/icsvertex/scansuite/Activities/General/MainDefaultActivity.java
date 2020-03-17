@@ -33,6 +33,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
+import SSU_WHS.Basics.Packaging.cPackaging;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
@@ -301,6 +302,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
 
         if (!mGetshippingInfoViawebserviceBln()) {
+            return false;
+        }
+
+        if (!cPackaging.pGetPackagingViaWebserviceBln(true)) {
             return false;
         }
 

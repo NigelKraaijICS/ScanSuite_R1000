@@ -49,6 +49,7 @@ public class cDatabase {
     public static final String TABLENAME_RETURNORDERDOCUMENT = "ReturnorderDocument";
     public static final String TABLENAME_BRANCHREASON = "BranchReason";
     public static final String TABLENAME_RECEIVELINES  = "ReceiveLines";
+    public static final String TABLENAME_PACKAGING = "Packaging";
 
     //endregion Tables
 
@@ -135,6 +136,7 @@ public class cDatabase {
     public static final String EXTRAFIELD6_NAMESTR = "ExtraField6";
     public static final String EXTRAFIELD7_NAMESTR = "ExtraField7";
     public static final String EXTRAFIELD8_NAMESTR = "ExtraField8";
+    public static final String EMBALLAGE_NAMESTR = "Emballage";
     //endregion E
 
     //Region G

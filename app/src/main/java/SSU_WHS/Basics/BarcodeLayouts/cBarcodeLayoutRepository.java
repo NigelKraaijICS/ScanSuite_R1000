@@ -27,7 +27,7 @@ public class cBarcodeLayoutRepository {
     //Region Constructor
     cBarcodeLayoutRepository(Application pvApplication) {
         this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
-        this.barcodeLayoutDao = db.barcodeLaoutDao();
+        this.barcodeLayoutDao = db.barcodeLayoutDao();
     }
     //End Region Constructor
 

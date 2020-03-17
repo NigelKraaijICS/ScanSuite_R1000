@@ -33,6 +33,7 @@ import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsTotalFragment;
 import nl.icsvertex.scansuite.R;
 
 import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HEADER;
@@ -215,7 +216,14 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                     cAppExtension.dialogFragment.dismiss();
 
                     if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-                        InventoryBinsDoneFragment.pPasswordCancelled();
+
+                        if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
+                            InventoryBinsDoneFragment.pPasswordCancelled();
+                        }
+
+                        if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
+                            InventoryBinsTotalFragment.pPasswordCancelled();
+                        }
                     }
 
                     if (cAppExtension.activity instanceof InventoryorderBinActivity) {
@@ -268,8 +276,17 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-            InventoryBinsDoneFragment.pPasswordSuccess();
-            dismiss();
+
+            if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
+                InventoryBinsDoneFragment.pPasswordSuccess();
+                dismiss();
+            }
+
+            if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
+                InventoryBinsTotalFragment.pPasswordSuccess();
+                dismiss();
+            }
+
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {

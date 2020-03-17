@@ -7,6 +7,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETSETTINGS = "p_InstellingenGetJsonStr";
     public static String WEBMETHOD_GET14SETTINGS = "p_Instellingen14GetJsonStr";
     public static String WEBMETHOD_GETBARCODELAYOUTS = "p_BarcodelayoutGetJsonStr";
+    public static String WEBMETHOD_GETPACKAGING = "p_EmballageGetJsonStr";
     public static String WEBMETHOD_GETAUTHORISATIONSFORUSERINLOCATION = "p_GebruikerVestigingAutorisatieGetJsonStr";
     //Used to be different for Android
 

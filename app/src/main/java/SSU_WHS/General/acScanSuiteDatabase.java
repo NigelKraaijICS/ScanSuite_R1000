@@ -16,6 +16,8 @@ import SSU_WHS.Basics.Branches.cBranchEntity;
 import SSU_WHS.Basics.Branches.iBranchDao;
 import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
 import SSU_WHS.Basics.ItemProperty.iItemPropertyDao;
+import SSU_WHS.Basics.Packaging.cPackagingEntity;
+import SSU_WHS.Basics.Packaging.iPackagingDao;
 import SSU_WHS.Basics.Settings.cSettingsEntity;
 import SSU_WHS.Basics.Settings.iSettingsDao;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitEntity;
@@ -136,14 +138,15 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cMoveorderEntity.class,
         cMoveorderLineEntity.class,
         cMoveorderBarcodeEntity.class,
-        cMoveorderLineBarcodeEntity.class
-        },version = 87)
+        cMoveorderLineBarcodeEntity.class,
+        cPackagingEntity.class
+        },version = 89)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iScannerLogonDao scannerLogonDao();
     public abstract iSettingsDao settingsDao();
-    public abstract iBarcodeLayoutDao barcodeLaoutDao();
+    public abstract iBarcodeLayoutDao barcodeLayoutDao();
     public abstract iAuthorisationDao authorisationDao();
     public abstract iWorkplaceDao workplaceDao();
     public abstract iBranchDao branchDao();
@@ -184,6 +187,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iMoveorderLineDao moveorderLineDao();
     public  abstract iMoveorderBarcodeDao moveorderBarcodeDao();
     public  abstract iMoveorderLineBarcodeDao moveorderLineBarcodeDao();
+    public  abstract iPackagingDao packagingDao();
       //public abstract iEnvironmentDao environmentDao();
 
     private static acScanSuiteDatabase INSTANCE;
