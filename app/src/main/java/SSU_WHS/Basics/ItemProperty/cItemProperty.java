@@ -1,5 +1,6 @@
 package SSU_WHS.Basics.ItemProperty;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
@@ -15,39 +16,34 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cItemProperty {
 
-    public String propertyStr;
+    private String propertyStr;
     public String getPropertyStr() { return propertyStr; }
 
-    public String layoutStr;
+    private String layoutStr;
     public String getLayoutStr() { return layoutStr; }
 
-    public String omschrijvingStr;
+    private String omschrijvingStr;
     public String getOmschrijvingStr() { return omschrijvingStr; }
 
-    public Boolean isUniqueBln;
+    private Boolean isUniqueBln;
     public Boolean getUniqueBln() { return isUniqueBln; }
 
-    public String uniquenessStr;
+    private String uniquenessStr;
     public String getUniquenessStr() { return uniquenessStr; }
 
-    public Boolean rememberValueBln;
+    private Boolean rememberValueBln;
     public Boolean getRememberValueBln() { return rememberValueBln; }
 
-    public String valueTypeStr;
+    private String valueTypeStr;
     public String getValueTypeStr() { return valueTypeStr; }
 
-    public boolean indatabaseBln;
     public static Boolean itemPropertiesAvaliableBln;
 
-    public static cItemPropertyViewModel itemPropertyViewModel;
-    public static cItemPropertyViewModel getItemPropertyViewModel() {
-        if (itemPropertyViewModel == null) {
-            itemPropertyViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cItemPropertyViewModel.class);
-        }
-        return itemPropertyViewModel;
+    private cItemPropertyViewModel getItemPropertyViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cItemPropertyViewModel.class);
     }
 
-    public cItemPropertyEntity itemPropertyEntity;
+    private cItemPropertyEntity itemPropertyEntity;
     public  static List<cItemProperty> allItemPropertiesObl;
 
     //Region Constructor
@@ -66,24 +62,24 @@ public class cItemProperty {
 
     //Region Public Methods
     public boolean pInsertInDatabaseBln() {
-        cItemProperty.getItemPropertyViewModel().insert(this.itemPropertyEntity);
-        this.indatabaseBln = true;
+        this.getItemPropertyViewModel().insert(this.itemPropertyEntity);
 
-        if (cItemProperty.allItemPropertiesObl == null) ;
-        { cItemProperty.allItemPropertiesObl = new ArrayList<>();
+        if (cItemProperty.allItemPropertiesObl == null) {
+            cItemProperty.allItemPropertiesObl = new ArrayList<>();
         }
         cItemProperty.allItemPropertiesObl.add(this);
         return true;
     }
 
     public static boolean pTruncateTableBln(){
-        cItemProperty.getItemPropertyViewModel().deleteAll();
+       cItemPropertyViewModel itemPropertyViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cItemPropertyViewModel.class);
+        itemPropertyViewModel.deleteAll();
         return true;
     }
 
     public static boolean pGetItemPropertiesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cItemProperty.allItemPropertiesObl = null;
             cItemProperty.pTruncateTableBln();
         }
@@ -93,8 +89,9 @@ public class cItemProperty {
         }
 
         cWebresult WebResult;
-        WebResult =  cItemProperty.getItemPropertyViewModel().pGetItemPropertyFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        cItemPropertyViewModel itemPropertyViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cItemPropertyViewModel.class);
+        WebResult =  itemPropertyViewModel.pGetItemPropertyFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             List<JSONObject> myList = WebResult.getResultDtt();
             for (int i = 0; i < myList.size(); i++) {
@@ -113,41 +110,12 @@ public class cItemProperty {
         }
     }
 
-    public static cItemProperty pCheckItemProperty(String pvPropertyStr){
-
-        if(cItemProperty.allItemPropertiesObl == null || cItemProperty.allItemPropertiesObl.size()==0 ){
-            return null;
-        }
-
-        for (cItemProperty property :  cItemProperty.allItemPropertiesObl)
-        {
-            if(property.propertyStr.equalsIgnoreCase(pvPropertyStr) == true){
-                return  property;
-            }
-        }
-        return  null;
-    }
 
     //End Region Public Methods
 
     //Region Private Methods
 
-    private static ArrayList<cItemProperty> mGetPropertyStrObl(String pvBarcodeStr){
-        if(cItemProperty.allItemPropertiesObl == null){
-            return null;
-        }
 
-        ArrayList<cItemProperty> resultObl;
-        resultObl = new ArrayList<>();
-
-        for (cItemProperty itemProperty : cItemProperty.allItemPropertiesObl)
-        {
-            if (cRegex.pCheckRegexBln(itemProperty.getLayoutStr(),pvBarcodeStr) == true) {
-                resultObl.add(itemProperty);
-            }
-        }
-        return resultObl;
-    }
 
     //End Region Private Methods
 }

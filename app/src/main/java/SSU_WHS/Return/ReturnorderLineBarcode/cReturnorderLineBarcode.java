@@ -1,6 +1,6 @@
 package SSU_WHS.Return.ReturnorderLineBarcode;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -24,16 +24,12 @@ public class cReturnorderLineBarcode {
     private cReturnorderLineBarcodeEntity returnorderLineBarcodeEntity;
 
     public static ArrayList<cReturnorderLineBarcode> allLineBarcodesObl;
-    private static cReturnorderLineBarcodeViewModel returnorderLineBarcodeViewModel;
-
     public static cReturnorderLineBarcode currentreturnorderLineBarcode;
 
-    public static cReturnorderLineBarcodeViewModel getReturnorderLineBarcodeViewModel() {
-        if (returnorderLineBarcodeViewModel == null) {
-            returnorderLineBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cReturnorderLineBarcodeViewModel.class);
-        }
-        return returnorderLineBarcodeViewModel;
+    private cReturnorderLineBarcodeViewModel getReturnorderLineBarcodeViewModel(){
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderLineBarcodeViewModel.class);
     }
+
 
     //End Public Properties
 
@@ -55,7 +51,7 @@ public class cReturnorderLineBarcode {
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cReturnorderLineBarcode.getReturnorderLineBarcodeViewModel().insert(this.returnorderLineBarcodeEntity);
+        this.getReturnorderLineBarcodeViewModel().insert(this.returnorderLineBarcodeEntity);
 
         if (cReturnorderLineBarcode.allLineBarcodesObl == null){
             cReturnorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
@@ -65,7 +61,8 @@ public class cReturnorderLineBarcode {
     }
 
    public static boolean pTruncateTableBln(){
-        cReturnorderLineBarcode.getReturnorderLineBarcodeViewModel().deleteAll();
+       cReturnorderLineBarcodeViewModel returnorderLineBarcodeViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderLineBarcodeViewModel.class);
+       returnorderLineBarcodeViewModel.deleteAll();
         return true;
     }
 

@@ -17,16 +17,13 @@ public class cUserEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = cDatabase.USERNAME_NAMESTR)
-    public String username;
+    public String username = "";
     public String getUsernameStr() {return this.username;}
 
     @ColumnInfo(name= cDatabase.NAME_NAMESTR)
-    public String name;
+    public String name = "";
     public String getNameStr() {return this.name;}
 
-    @ColumnInfo(name= cDatabase.IMPORTFILE_NAMESTR)
-    public String importfile;
-    public String getImportfileStr() {return this.importfile;}
     //End Region Public Properties
 
     //Region Constructor
@@ -38,7 +35,6 @@ public class cUserEntity {
         try {
             this.username = pvJsonObject.getString(cDatabase.USERNAME_NAMESTR);
             this.name = pvJsonObject.getString(cDatabase.NAME_NAMESTR);
-            this.importfile = pvJsonObject.getString(cDatabase.IMPORTFILE_NAMESTR);
 
         } catch (JSONException e) {
             e.printStackTrace();

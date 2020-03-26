@@ -24,11 +24,10 @@ public class cInventoryorderBarcodeRepository {
 
     //Region Private Properties
     private iInventoryorderBarcodeDao inventoryorderBarcodeDao;
-    private acScanSuiteDatabase db;
 
     //Region Constructor
     cInventoryorderBarcodeRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db=  acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.inventoryorderBarcodeDao = db.inventoryorderBarcodeDao();
     }
     //End Region Constructor

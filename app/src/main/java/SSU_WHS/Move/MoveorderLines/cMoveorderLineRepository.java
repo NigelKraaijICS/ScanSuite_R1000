@@ -30,9 +30,6 @@ public class cMoveorderLineRepository {
     private iMoveorderLineDao moveorderLineDao;
     //End Region Public Properties
 
-    //Region Private Properties
-    private acScanSuiteDatabase db;
-
     private static class MoveNewItemHandledViaWebserviceParams {
         String binCodeStr;
         List<cMoveorderBarcode> barcodeObl;
@@ -91,7 +88,8 @@ public class cMoveorderLineRepository {
 
     //Region Constructor
     cMoveorderLineRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        //Region Private Properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.moveorderLineDao = db.moveorderLineDao();
     }
     //End Region Constructor

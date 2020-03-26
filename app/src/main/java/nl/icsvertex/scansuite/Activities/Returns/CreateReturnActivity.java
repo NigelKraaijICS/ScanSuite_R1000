@@ -36,23 +36,22 @@ import nl.icsvertex.scansuite.R;
 public class CreateReturnActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
-    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:imageStr";
-    public static final String VIEW_NAME_HEADER_TEXT = "detail:header:text";
+
     //End Region Public Properties
 
     //Region Private Properties
 
-    private static ConstraintLayout createReturnContainer;
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView textViewReturnReason;
-    static private EditText editTextDocument;
-    static private EditText editTextBin;
-    static private Button createReturnButton;
-    static private Button cancelButton;
-    private static Switch switchMultipleDocuments;
-    private static Switch switchReason;
-    private static ImageView imageReason;
+    private  ConstraintLayout createReturnContainer;
+    private  ImageView toolbarImage;
+    private  TextView toolbarTitle;
+    private  TextView textViewReturnReason;
+    private EditText editTextDocument;
+    private EditText editTextBin;
+    private Button createReturnButton;
+    private Button cancelButton;
+    private Switch switchMultipleDocuments;
+    private Switch switchReason;
+    private ImageView imageReason;
     //End Region private Properties
 
     //Region Constructor
@@ -127,26 +126,26 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
     @Override
     public void mFindViews() {
-        CreateReturnActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        CreateReturnActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        CreateReturnActivity.textViewReturnReason = findViewById(R.id.textViewCreateReturnReason);
-        CreateReturnActivity.editTextDocument = findViewById(R.id.editTextDocument);
-        CreateReturnActivity.editTextBin = findViewById(R.id.editTextBin);
-        CreateReturnActivity.createReturnContainer = findViewById(R.id.createReturnContainer);
-        CreateReturnActivity.createReturnButton = findViewById(R.id.createOrderButton);
-        CreateReturnActivity.cancelButton = findViewById(R.id.cancelButton);
-        CreateReturnActivity.imageReason = findViewById(R.id.imageButtonReason);
-        CreateReturnActivity.switchMultipleDocuments = findViewById(R.id.multipleDocumentSwitch);
-        CreateReturnActivity.switchReason = findViewById(R.id.selectReasonSwitch);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.textViewReturnReason = findViewById(R.id.textViewCreateReturnReason);
+        this.editTextDocument = findViewById(R.id.editTextDocument);
+        this.editTextBin = findViewById(R.id.editTextBin);
+        this.createReturnContainer = findViewById(R.id.createReturnContainer);
+        this.createReturnButton = findViewById(R.id.createOrderButton);
+        this.cancelButton = findViewById(R.id.cancelButton);
+        this.imageReason = findViewById(R.id.imageButtonReason);
+        this.switchMultipleDocuments = findViewById(R.id.multipleDocumentSwitch);
+        this.switchReason = findViewById(R.id.selectReasonSwitch);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        CreateReturnActivity.toolbarImage.setImageResource(R.drawable.ic_menu_return);
-        CreateReturnActivity.toolbarTitle.setText(pvScreenTitle);
-        CreateReturnActivity.toolbarTitle.setSelected(true);
-        ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
-        ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_return);
+        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setSelected(true);
+        ViewCompat.setTransitionName(toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName(toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -162,9 +161,9 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(50);
-        CreateReturnActivity.editTextDocument.setFilters(filterArray);
-        CreateReturnActivity.imageReason.setVisibility(View.INVISIBLE);
-        CreateReturnActivity.textViewReturnReason.setVisibility(View.INVISIBLE);
+        this.editTextDocument.setFilters(filterArray);
+        this.imageReason.setVisibility(View.INVISIBLE);
+        this.textViewReturnReason.setVisibility(View.INVISIBLE);
 
         if(!cUser.currentUser.currentBranch.pGetReasonBln(true)){
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.error_getting_return_reasons), null);
@@ -172,16 +171,13 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
 
         if (cUser.currentUser.currentBranch.isBinMandatoryBln()) {
-            CreateReturnActivity.editTextBin.setVisibility(View.VISIBLE);
+            this.editTextBin.setVisibility(View.VISIBLE);
             mSetBin();
         }
         else
         {
-            CreateReturnActivity.editTextBin.setVisibility(View.GONE);
+            this.editTextBin.setVisibility(View.GONE);
         }
-
-
-
     }
 
     @Override
@@ -202,11 +198,11 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
     //Region Public Methods
 
-    public static void pSetReason(){
-        CreateReturnActivity.textViewReturnReason.setText(cBranchReason.currentBranchReason.getDescriptionStr());
+    public  void pSetReason(){
+        this.textViewReturnReason.setText(cBranchReason.currentBranchReason.getDescriptionStr());
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan, boolean pvDocumentBln, boolean pvBinBln) {
+    public  void pHandleScan(cBarcodeScan pvBarcodeScan, boolean pvDocumentBln, boolean pvBinBln) {
 
         String barcodeWithoutPrefixStr;
         cBranchBin branchBin;
@@ -240,8 +236,8 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         //has prefix, is DOCUMENT
         if (documentBln) {
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-            CreateReturnActivity.editTextDocument.setText(barcodeWithoutPrefixStr);
-            CreateReturnActivity.editTextBin.requestFocus();
+            this.editTextDocument.setText(barcodeWithoutPrefixStr);
+            this.editTextBin.requestFocus();
             //has prefix, is Bin
             return;
 
@@ -263,19 +259,19 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
                 }
             }
 
-            CreateReturnActivity.editTextBin.setText(barcodeWithoutPrefixStr);
+            this.editTextBin.setText(barcodeWithoutPrefixStr);
             return;
 
 
         }
         if (reasonBln){
-            CreateReturnActivity.switchReason.setChecked(true);
-            CreateReturnActivity.mHandleReasonSwitch(true);
+            this.switchReason.setChecked(true);
+            this.mHandleReasonSwitch(true);
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
             cBranchReason branchReason = cUser.currentUser.currentBranch.pGetReasonByName(barcodeWithoutPrefixStr);
             if (branchReason != null) {
                 cBranchReason.currentBranchReason = branchReason;
-                CreateReturnActivity.textViewReturnReason.setText(cBranchReason.currentBranchReason.getDescriptionStr());
+                this.textViewReturnReason.setText(cBranchReason.currentBranchReason.getDescriptionStr());
             }
         }
 
@@ -285,7 +281,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         }
     }
 
-    public static void pHandleFragmentDismissed(){
+    public void pHandleFragmentDismissed(){
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
@@ -294,7 +290,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     //Region Private Methods
 
     private void mSetImageListener() {
-        CreateReturnActivity.imageReason.setOnClickListener(new View.OnClickListener() {
+        this.imageReason.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 mShowAddReasonFragment();
@@ -303,55 +299,60 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     }
 
     private void mSetCancelListener() {
-        CreateReturnActivity.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                CreateReturnActivity.mStartOrderSelectActivity();
+                mStartOrderSelectActivity();
             }
         });
     }
 
     private void mSetReasonSwitchListener() {
-        CreateReturnActivity.switchReason.setOnClickListener(new View.OnClickListener() {
+        this.switchReason.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                if (CreateReturnActivity.switchReason.isChecked()) {
-                    CreateReturnActivity.switchReason.setText(cAppExtension.activity.getString(R.string.message_clear_reason));
-                    CreateReturnActivity.mHandleReasonSwitch(false);
+                if (switchReason.isChecked()) {
+                    switchReason.setText(cAppExtension.activity.getString(R.string.message_clear_reason));
+                    mHandleReasonSwitch(false);
                 } else {
                     cBranchReason.currentBranchReason = null;
-                    CreateReturnActivity.textViewReturnReason.setText("");
-                    CreateReturnActivity.imageReason.setVisibility(View.INVISIBLE);
-                    CreateReturnActivity.textViewReturnReason.setVisibility(View.INVISIBLE);
-                    CreateReturnActivity.switchReason.setText(cAppExtension.activity.getString(R.string.select_reason));
+                    textViewReturnReason.setText("");
+                    imageReason.setVisibility(View.INVISIBLE);
+                    textViewReturnReason.setVisibility(View.INVISIBLE);
+                    switchReason.setText(cAppExtension.activity.getString(R.string.select_reason));
                 }
             }
         });
     }
 
-    private static void mStartOrderSelectActivity() {
+    private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
     }
 
     private void mSetCreateListener() {
-        CreateReturnActivity.createReturnButton.setOnClickListener(new View.OnClickListener() {
+        this.createReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                if (CreateReturnActivity.editTextDocument.getText().toString().isEmpty()){
+                if (editTextDocument.getText().toString().isEmpty()){
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_document),null);
                     return;
                 }
-                if (CreateReturnActivity.editTextBin.getText().toString().isEmpty() && cUser.currentUser.currentBranch.isBinMandatoryBln()){
+                if (editTextBin.getText().toString().isEmpty() && cUser.currentUser.currentBranch.isBinMandatoryBln()){
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_bin),null);
                     return;
                 }
-                ReturnorderSelectActivity.pCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
+
+                if (cAppExtension.activity instanceof  ReturnorderSelectActivity) {
+                    ReturnorderSelectActivity returnorderSelectActivity = (ReturnorderSelectActivity)cAppExtension.activity;
+                    returnorderSelectActivity.pCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
+                }
+
             }
         });
     }
 
-    private static void mShowAddReasonFragment(){
+    private void mShowAddReasonFragment(){
 
         ReasonFragment reasonFragment = new ReasonFragment();
         reasonFragment.setCancelable(true);
@@ -368,21 +369,21 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    private static void mHandleReasonSwitch(boolean pvScanBln){
-        CreateReturnActivity.imageReason.setVisibility(View.VISIBLE);
-        CreateReturnActivity.textViewReturnReason.setVisibility(View.VISIBLE);
+    private  void mHandleReasonSwitch(boolean pvScanBln){
+        this.imageReason.setVisibility(View.VISIBLE);
+        this.textViewReturnReason.setVisibility(View.VISIBLE);
         if (!pvScanBln) {
-            CreateReturnActivity.mShowAddReasonFragment();
+            this.mShowAddReasonFragment();
         }
     }
 
     private void mSetEditorActionListener() {
-        CreateReturnActivity.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    CreateReturnActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateReturnActivity.editTextDocument.getText().toString()),true,false);
+                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false);
                     cUserInterface.pHideKeyboard();
 
                 }
@@ -390,12 +391,12 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
             }
         });
 
-        CreateReturnActivity.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    CreateReturnActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateReturnActivity.editTextBin.getText().toString()),false,true);
+                    pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,true);
                     cUserInterface.pHideKeyboard();
 
                 }
@@ -409,7 +410,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
 
         if (!cUser.currentUser.currentBranch.getReturnDefaultBinStr().isEmpty()) {
-            CreateReturnActivity.editTextBin.setText(cUser.currentUser.currentBranch.getReturnDefaultBinStr());
+            this.editTextBin.setText(cUser.currentUser.currentBranch.getReturnDefaultBinStr());
         }
 
 

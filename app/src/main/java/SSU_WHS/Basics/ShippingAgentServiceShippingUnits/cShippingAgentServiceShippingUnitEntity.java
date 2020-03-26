@@ -15,7 +15,7 @@ public class cShippingAgentServiceShippingUnitEntity {
     //Region Public Properties
     @NonNull
     @ColumnInfo(name = cDatabase.SHIPPINGAGENT_NAMESTR)
-    public String shippingagent;
+    public String shippingagent = "";
     @NonNull
     public String getShippingAgentStr() {
         return shippingagent;
@@ -23,16 +23,15 @@ public class cShippingAgentServiceShippingUnitEntity {
 
     @NonNull
     @ColumnInfo(name = cDatabase.SERVICE_NAMESTR)
-    public String service;
+    public String service = "";
     @NonNull
     public String getServiceStr() {
         return service;
     }
 
-
     @NonNull
     @ColumnInfo(name = cDatabase.SHIPPINGUNIT_NAMESTR)
-    public String shippingunit;
+    public String shippingunit = "";
     @NonNull
     public String getShippingunitStr() {
         return shippingunit;
@@ -45,23 +44,10 @@ public class cShippingAgentServiceShippingUnitEntity {
         return description;
     }
 
-    @ColumnInfo(name = cDatabase.DEFAULTWEIGHTINGRAMS_NAMESTR)
-    public String defaultweightingrams;
-
-    public String getDefaultWeightInGramStr() {
-        return defaultweightingrams;
-    }
-
     @ColumnInfo(name = cDatabase.CONTAINERTYPE_DUTCH_NAMESTR)
     public String containertype;
     public String getContainertype() {
         return containertype;
-    }
-
-    @ColumnInfo(name = cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR)
-    public Integer shippingunitquantityused;
-    public Integer getShippingUnitQuantityusedInt() {
-        return shippingunitquantityused;
     }
 
     //End Region Public Properties
@@ -76,9 +62,7 @@ public class cShippingAgentServiceShippingUnitEntity {
             this.service = jsonObject.getString(cDatabase.SERVICE_NAMESTR);
             this.shippingunit = jsonObject.getString(cDatabase.SHIPPINGUNIT_NAMESTR);
             this.description = jsonObject.getString(cDatabase.DESCRIPTION_DUTCH_NAMESTR);
-            this.defaultweightingrams = jsonObject.getString(cDatabase.DEFAULTWEIGHTINGRAMS_NAMESTR);
             this.containertype = jsonObject.getString(cDatabase.CONTAINERTYPE_DUTCH_NAMESTR);
-            this.shippingunitquantityused = jsonObject.getInt(cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

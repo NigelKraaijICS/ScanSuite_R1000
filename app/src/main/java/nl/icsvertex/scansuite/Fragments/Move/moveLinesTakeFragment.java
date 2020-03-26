@@ -19,6 +19,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLineAdapter;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendOrderFragment;
@@ -32,8 +33,16 @@ public class moveLinesTakeFragment extends Fragment implements iICSDefaultFragme
 
     //Region Private Properties
 
-    private static RecyclerView recyclerViewMoveLinesTake;
+    private RecyclerView recyclerViewMoveLinesTake;
 
+    private cMoveorderLineAdapter moveorderLineAdapter;
+    private cMoveorderLineAdapter getMoveorderLineAdapter() {
+        if (this.moveorderLineAdapter == null) {
+            this.moveorderLineAdapter = new cMoveorderLineAdapter();
+        }
+
+        return this.moveorderLineAdapter;
+    }
 
     //End Region Private Properties
 
@@ -80,7 +89,7 @@ public class moveLinesTakeFragment extends Fragment implements iICSDefaultFragme
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        moveLinesTakeFragment.mGetData();
+        this.mGetData();
 
     }
 
@@ -88,7 +97,7 @@ public class moveLinesTakeFragment extends Fragment implements iICSDefaultFragme
     public void mFindViews() {
 
         if (getView() != null) {
-            moveLinesTakeFragment.recyclerViewMoveLinesTake = getView().findViewById(R.id.recyclerViewMoveLinesTake);
+            this.recyclerViewMoveLinesTake = getView().findViewById(R.id.recyclerViewMoveLinesTake);
         }
 
     }
@@ -111,26 +120,26 @@ public class moveLinesTakeFragment extends Fragment implements iICSDefaultFragme
 
     //Region Private Methods
 
-    private static void mGetData() {
-        moveLinesTakeFragment.mFillRecycler(cMoveorder.currentMoveOrder.takeLinesObl());
+    private  void mGetData() {
+        this.mFillRecycler(cMoveorder.currentMoveOrder.takeLinesObl());
     }
 
-    private static void mFillRecycler(List<cMoveorderLine> pvDataObl) {
+    private  void mFillRecycler(List<cMoveorderLine> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            moveLinesTakeFragment.mNoLinesAvailable(true);
+            this.mNoLinesAvailable(true);
             return;
         }
-        moveLinesTakeFragment.mNoLinesAvailable(false);
+        this.mNoLinesAvailable(false);
 
-        cMoveorderLine.getMoveorderLineAdapter().pFillData(pvDataObl);
-        moveLinesTakeFragment.recyclerViewMoveLinesTake.setHasFixedSize(false);
-        moveLinesTakeFragment.recyclerViewMoveLinesTake.setAdapter(cMoveorderLine.getMoveorderLineAdapter());
-        moveLinesTakeFragment.recyclerViewMoveLinesTake.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        moveLinesTakeFragment.recyclerViewMoveLinesTake.setVisibility(View.VISIBLE);
+        this.getMoveorderLineAdapter().pFillData(pvDataObl);
+        this.recyclerViewMoveLinesTake.setHasFixedSize(false);
+        this.recyclerViewMoveLinesTake.setAdapter(this.getMoveorderLineAdapter());
+        this.recyclerViewMoveLinesTake.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewMoveLinesTake.setVisibility(View.VISIBLE);
     }
 
-    private static void mNoLinesAvailable(Boolean pvEnabledBln) {
+    private void mNoLinesAvailable(Boolean pvEnabledBln) {
 
         if (MoveLinesActivity.currentLineFragment  instanceof moveLinesTakeFragment) {
             //Close no orders fragment if needed
@@ -147,7 +156,7 @@ public class moveLinesTakeFragment extends Fragment implements iICSDefaultFragme
             }
 
             //Hide the recycler view
-           moveLinesTakeFragment.recyclerViewMoveLinesTake.setVisibility(View.INVISIBLE);
+            this.recyclerViewMoveLinesTake.setVisibility(View.INVISIBLE);
 
             //Hide location button and clear text
 

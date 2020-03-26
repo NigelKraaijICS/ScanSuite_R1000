@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Webservice.cWebresult;
 

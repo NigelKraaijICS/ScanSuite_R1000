@@ -20,7 +20,6 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.Shipment.cShipment;
@@ -40,9 +39,8 @@ public class cPickorderRepository {
     private acScanSuiteDatabase db;
     private iPickorderDao pickorderDao;
     private iPickorderLineDao pickorderLineDao;
-    private iPickorderLinePackAndShipDao pickorderLinePackAndShipDao;
 
-    private class PickorderStepHandledParams {
+    private static class PickorderStepHandledParams {
         String userStr;
         String languageStr;
         String branchStr;
@@ -116,7 +114,6 @@ public class cPickorderRepository {
         this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.pickorderDao = db.pickorderDao();
         this.pickorderLineDao = db.pickorderLineDao();
-        this.pickorderLinePackAndShipDao = db.pickorderLinePackAndShipDao();
     }
     //End Region Constructor
 
@@ -285,7 +282,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvWorkplaceStr, cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
 
         try {
 
@@ -305,7 +302,7 @@ public class cPickorderRepository {
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr() ,pvWorkplaceStr,cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvWorkplaceStr, cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
 
         try {
 
@@ -326,14 +323,14 @@ public class cPickorderRepository {
 
         PickorderStepHandledParams pickorderStepHandledParams;
         pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(),
-                                                                    "",
-                                                                    cUser.currentUser.currentBranch.getBranchStr(),
-                                                                    cPickorder.currentPickOrder.getOrderNumberStr(),
-                                                                    cDeviceInfo.getSerialnumberStr() ,
-                                                                    pvWorkplaceStr,
-                                                                    cWarehouseorder.StepCodeEnu.Pick_PackAndShip.toString(),
-                                                                    cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip,
-                                                                    "");
+                "",
+                cUser.currentUser.currentBranch.getBranchStr(),
+                cPickorder.currentPickOrder.getOrderNumberStr(),
+                cDeviceInfo.getSerialnumberStr(),
+                pvWorkplaceStr,
+                cWarehouseorder.StepCodeEnu.Pick_PackAndShip.toString(),
+                cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip,
+                "");
 
         try {
 

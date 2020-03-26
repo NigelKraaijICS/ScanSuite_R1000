@@ -15,24 +15,17 @@ public class cArticleImageEntity {
     //Region Public Properties
     @NonNull
     @ColumnInfo(name="Itemno")
-    public String itemno;
+    public String itemno = "";
     public String getItemnoStr() {return this.itemno;}
 
     @NonNull
     @ColumnInfo(name="Variantcode")
-    public String variantcode;
+    public String variantcode = "";
     public String getVariantCodeStr() {return this.variantcode;}
 
     @ColumnInfo(name="Image")
     public String image;
     public String getImageStr() {return this.image;}
-
-
-    @ColumnInfo(name="Datatimestamp")
-    public String datatimestamp;
-    public String getDataTimeStampStr() {
-        return datatimestamp;
-    }
 
     //End Region Public Properies
 

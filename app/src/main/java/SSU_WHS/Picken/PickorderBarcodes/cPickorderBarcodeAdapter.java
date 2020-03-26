@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Objects;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
@@ -19,7 +22,7 @@ import nl.icsvertex.scansuite.R;
 public class cPickorderBarcodeAdapter extends RecyclerView.Adapter<cPickorderBarcodeAdapter.pickorderBarcodeViewHolder>  {
 
     //Region Public Properties
-    public class pickorderBarcodeViewHolder extends RecyclerView.ViewHolder{
+    public static class pickorderBarcodeViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewBarcode;
         private TextView textViewQuantity;
         public LinearLayout barcodeItemLinearLayout;
@@ -50,27 +53,34 @@ public class cPickorderBarcodeAdapter extends RecyclerView.Adapter<cPickorderBar
 
     //Region Public Methods
 
+    @NonNull
     @Override
-    public pickorderBarcodeViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewTypeInt) {
+    public pickorderBarcodeViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.layoutInflaterObject.inflate(R.layout.recycler_barcode, pvParent, false);
         return new pickorderBarcodeViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(pickorderBarcodeViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull pickorderBarcodeViewHolder pvHolder, int pvPositionInt) {
 
         if (cPickorderLine.currentPickOrderLine == null || cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
             return;
         }
 
        final cPickorderBarcode pickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(pvPositionInt);
-        pvHolder.textViewBarcode.setText(pickorderBarcode.getBarcodeStr());
+        Objects.requireNonNull(pvHolder).textViewBarcode.setText(pickorderBarcode.getBarcodeStr());
         pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(pickorderBarcode.getQuantityPerUnitOfMeasureDbl()));
 
         pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PickorderPickActivity.pHandleScan(cBarcodeScan.pFakeScan(pickorderBarcode.getBarcodeStr()));
+
+
+                if (cAppExtension.activity instanceof  PickorderPickActivity) {
+                    PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+                    pickorderPickActivity.pHandleScan(cBarcodeScan.pFakeScan(pickorderBarcode.getBarcodeStr()));
+
+                }
             }
         });
     }

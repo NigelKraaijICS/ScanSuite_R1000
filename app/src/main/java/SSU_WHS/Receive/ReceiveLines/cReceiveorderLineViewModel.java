@@ -23,6 +23,7 @@ public class cReceiveorderLineViewModel extends AndroidViewModel {
     //End Region Constructor
 
     //Region Public Methods
+
     public void insert(cReceiveorderLineEntity pvReceiveorderLineEntity) {this.Repository.insert(pvReceiveorderLineEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
@@ -31,7 +32,6 @@ public class cReceiveorderLineViewModel extends AndroidViewModel {
 
     public cWebresult pResetReceiveLineViaWebserviceWrs() {return this.Repository.pResetReceiveLineViaWebserviceWrs();}
     public cWebresult pLineHandledViaWebserviceWrs(List<cIntakeorderBarcode> pvBarcodeObl ) {return this.Repository.pReceiveLineHandledViaWebserviceWrs(pvBarcodeObl);}
-
 
     public  cWebresult pAddUnknownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddUnkownItemViaWebserviceWrs(pvBarcodeScan);}
     public  cWebresult pAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}

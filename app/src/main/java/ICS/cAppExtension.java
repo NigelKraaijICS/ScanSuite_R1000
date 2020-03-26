@@ -8,6 +8,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import nl.icsvertex.scansuite.Activities.General.LoginActivity;
+
 public class cAppExtension extends Application {
 
     public static Context context;
@@ -15,6 +17,8 @@ public class cAppExtension extends Application {
     public static FragmentManager fragmentManager;
     public static Activity activity;
     public static DialogFragment dialogFragment;
+
+
 
 
 }

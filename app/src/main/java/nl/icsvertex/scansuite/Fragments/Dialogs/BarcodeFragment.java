@@ -16,11 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
-import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcodeAdapter;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeAdapter;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
-import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.R;
@@ -35,8 +34,24 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
 
     //Region Private Properties
 
-    private static RecyclerView barcodeRecyclerview;
-    private static Button buttonClose;
+    private  RecyclerView barcodeRecyclerview;
+    private  Button buttonClose;
+
+    private cIntakeorderBarcodeAdapter intakeorderBarcodeAdapter;
+    private cIntakeorderBarcodeAdapter getIntakeorderBarcodeAdapter(){
+        if (this.intakeorderBarcodeAdapter == null) {
+            this.intakeorderBarcodeAdapter = new cIntakeorderBarcodeAdapter();
+        }
+        return  this.intakeorderBarcodeAdapter;
+    }
+
+    private cPickorderBarcodeAdapter pickorderBarcodeAdapter;
+    private cPickorderBarcodeAdapter getPickorderBarcodeAdapter(){
+        if (this.pickorderBarcodeAdapter == null) {
+            this.pickorderBarcodeAdapter = new cPickorderBarcodeAdapter();
+        }
+        return  this.pickorderBarcodeAdapter;
+    }
 
     //End Region Private Properties
 
@@ -71,8 +86,8 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     public void mFindViews() {
 
         if (getView() != null) {
-            BarcodeFragment.barcodeRecyclerview = getView().findViewById(R.id.barcodeRecyclerview);
-            BarcodeFragment.buttonClose = getView().findViewById(R.id.buttonClose);
+            this.barcodeRecyclerview = getView().findViewById(R.id.barcodeRecyclerview);
+            this.buttonClose = getView().findViewById(R.id.buttonClose);
         }
     }
 
@@ -87,7 +102,7 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     }
 
     private void mSetCloseListener() {
-        BarcodeFragment.buttonClose.setOnClickListener(new View.OnClickListener() {
+        this.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                dismiss();
@@ -96,25 +111,21 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     }
 
     private void mFillRecyclerView() {
-        BarcodeFragment.barcodeRecyclerview.setHasFixedSize(false);
+        this.barcodeRecyclerview.setHasFixedSize(false);
 
 
         if (cAppExtension.activity instanceof PickorderPickActivity) {
-            BarcodeFragment.barcodeRecyclerview.setAdapter(cPickorderBarcode.getPickorderBarcodeAdapter());
+            this.barcodeRecyclerview.setAdapter(this.getPickorderBarcodeAdapter());
         }
 
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
-            BarcodeFragment.barcodeRecyclerview.setAdapter(cIntakeorderBarcode.getIntakeorderBarcodeAdapter());
+            this.barcodeRecyclerview.setAdapter(this.getIntakeorderBarcodeAdapter());
         }
 
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
-            BarcodeFragment.barcodeRecyclerview.setAdapter(cIntakeorderBarcode.getIntakeorderBarcodeAdapter());
+            this.barcodeRecyclerview.setAdapter(this.getIntakeorderBarcodeAdapter());
         }
 
-        if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-            BarcodeFragment.barcodeRecyclerview.setAdapter(cInventoryorderBarcode.getInventoryorderBarcodeAdapter());
-        }
-
-        BarcodeFragment.barcodeRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.barcodeRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
 }

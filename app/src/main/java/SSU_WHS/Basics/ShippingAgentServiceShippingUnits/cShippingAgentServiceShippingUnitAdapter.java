@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -27,7 +28,7 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
 
     //Region Public Properties
 
-    class ShippingAgentServiceShippingUnitViewHolder extends RecyclerView.ViewHolder{
+    static class ShippingAgentServiceShippingUnitViewHolder extends RecyclerView.ViewHolder{
 
         private LinearLayout shippingUnitItemLinearLayout;
         private ImageView imageViewShippingUnit;
@@ -71,7 +72,6 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
     //Region Private Properties
 
     private List<LinearLayout> shippingUnitItemLinearLayouts = new ArrayList<>();
-    private RecyclerView thisRecyclerView;
     private LayoutInflater layoutInflater;
     private List<cShippingAgentServiceShippingUnit> localShippingUnitsObl;
 
@@ -85,16 +85,16 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
 
     //Region Default Methods
 
+    @NonNull
     @Override
-    public cShippingAgentServiceShippingUnitAdapter.ShippingAgentServiceShippingUnitViewHolder onCreateViewHolder(ViewGroup pvViewGroup, int pvViewTypeInt) {
+    public cShippingAgentServiceShippingUnitAdapter.ShippingAgentServiceShippingUnitViewHolder onCreateViewHolder(@NonNull ViewGroup pvViewGroup, int pvViewTypeInt) {
         View itemView = layoutInflater.inflate(R.layout.recycler_shippingunit, pvViewGroup, false);
-        return new cShippingAgentServiceShippingUnitAdapter.ShippingAgentServiceShippingUnitViewHolder(itemView);
+        return new ShippingAgentServiceShippingUnitViewHolder(itemView);
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
         super.onAttachedToRecyclerView(pvRecyclerView);
-        this.thisRecyclerView = pvRecyclerView;
     }
 
 
@@ -156,14 +156,9 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
                     }
                 }
 
-                Boolean isExpanded;
+                boolean isExpanded;
 
-                if (pvHolder.secondaryContent.getVisibility() == View.VISIBLE) {
-                    isExpanded = true;
-                }
-                else {
-                    isExpanded = false;
-                }
+                isExpanded = pvHolder.secondaryContent.getVisibility() == View.VISIBLE;
 
                 if (isExpanded) {
                     pvHolder.imageChevronDown.animate().rotation(0).start();
@@ -188,9 +183,10 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
 
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit = shippingAgentServiceShippingUnit;
 
-                Integer currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
-                Integer newQuantity = currentQuantity + 1;
-                pvHolder.textViewQuantityUsed.setText(Integer.toString(newQuantity));
+                int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
+                Integer newQuantity;
+                newQuantity = currentQuantity + 1;
+                pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr((newQuantity)));
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
             }
         });
@@ -202,13 +198,13 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit = shippingAgentServiceShippingUnit;
 
 
-                Integer currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
+                int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
                 if (currentQuantity == 0) {
                     cUserInterface.pDoNope(pvHolder.textViewQuantityUsed, true, false);
                     return;
                 }
                 Integer newQuantity = currentQuantity - 1;
-                pvHolder.textViewQuantityUsed.setText(Integer.toString(newQuantity));
+                pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(newQuantity));
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
             }
         });
@@ -217,7 +213,7 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
             @Override
             public void onClick(View view) {
                 Integer newQuantity = 0;
-                pvHolder.textViewQuantityUsed.setText(Integer.toString(newQuantity));
+                pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(newQuantity));
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
             }
         });

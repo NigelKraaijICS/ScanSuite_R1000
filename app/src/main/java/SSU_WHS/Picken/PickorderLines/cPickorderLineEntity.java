@@ -13,92 +13,119 @@ import SSU_WHS.General.cDatabase;
 
 @Entity(tableName="Pickorderlines")
 public class cPickorderLineEntity {
+
+
     @PrimaryKey(autoGenerate = true)
     public Integer recordid;
-    //    @PrimaryKey
-//    @NonNull
+    public Integer getRecordidInt() {return this.recordid;}
+
     @ColumnInfo(name = "LineNo")
     public Integer lineno;
+    public Integer getLineNoInt() {return this.lineno;}
+
     @ColumnInfo(name = "ItemNo")
     public String itemno;
+    public String getItemNoStr() {return this.itemno;}
+
     @ColumnInfo(name = "VariantCode")
     public String variantcode;
+    public String getVariantCodeStr() {return this.variantcode;}
+
     @ColumnInfo(name = "Description")
     public String description;
+    public String getDescriptionStr() {return this.description;}
+
     @ColumnInfo(name = "Description2")
     public String description2;
+    public String getDescription2Str() {return this.description2;}
+
     @ColumnInfo(name = "BinCode")
     public String bincode;
-    @ColumnInfo(name = "Container")
-    public String container;
-    @ColumnInfo(name = "ContainerType")
-    public String containertype;
-    @ColumnInfo(name = "ContainerInput")
-    public String containerinput;
-    @ColumnInfo(name = "ContainerHandled")
-    public String containerhandled;
+    public String getBincodeStr() {return this.bincode;}
+
     @ColumnInfo(name = "Quantity")
     public Double quantity;
+    public Double getQuantityDbl() {return this.quantity;}
+
     @ColumnInfo(name = "QuantityHandled")
     public Double quantityhandled;
-    @ColumnInfo(name = "QuantityRejected")
-    public Double quantityrejected;
+    public Double getQuantityHandledDbl() {return this.quantityhandled;}
+
     @ColumnInfo(name = "SourceNo")
     public String sourceno;
+    public String getSourceNoStr() {return this.sourceno;}
+
     @ColumnInfo(name = "DestinationNo")
     public String destinationno;
-    @ColumnInfo(name = "IsPartOfMultiLineOrder")
-    public String ispartofmultilineorder;
-    @ColumnInfo(name = "ShippingAdvice")
-    public String shippingadvice;
+    public String getDestinationNoStr() {return this.destinationno;}
+
     @ColumnInfo(name = "ProcessingSequence")
     public String processingsequence;
-    @ColumnInfo(name = "StoreSourceOpdracht")
-    public String storesourceopdracht;
-    @ColumnInfo(name = "StorageBinCode")
-    public String storagebincode;
+    public String getProcessingSequenceStr() {return this.processingsequence;}
+
     @ColumnInfo(name = "VendorItemNo")
     public String vendoritemno;
+    public String getVendorItemNoStr() {return this.vendoritemno;}
+
     @ColumnInfo(name = "VendorItemDescription")
     public String vendoritemdescription;
-    @ColumnInfo(name = "Component10")
-    public String component10;
-    @ColumnInfo(name = "Brand")
-    public String brand;
-    @ColumnInfo(name = "PrintDocuments")
-    public String printdocuments;
+    public String getVendorItemDescriptionStr() {return this.vendoritemdescription;}
+
     @ColumnInfo(name = "Status")
     public Integer status;
+    public int getStatusInt() {return this.status;}
+
     @ColumnInfo(name = "StatusShipping")
     public Integer statusShipping;
+    public int getStatusShippingInt() {return this.statusShipping;}
+
     @ColumnInfo(name = "StatusPacking")
     public Integer statusPacking;
-    @ColumnInfo(name = "LineNoTake")
-    public int linenotake;
+    public int getStatusPackingInt() {return this.statusPacking;}
+
     @ColumnInfo(name = "QuantityTaken")
     public double quantitytaken;
-    @ColumnInfo(name = "TakenTimestamp")
-    public String takentimestamp;
+    public Double getQuantityTakenDbl() {return this.quantitytaken;}
+
+    @ColumnInfo(name = "TakenTimeStamp")
+    public String takenTimeStamp;
+    public String getTakenTimeStampStr() {return this.takenTimeStamp;}
+
     @ColumnInfo(name = "Localstatus")
     public int localstatus;
-    @ColumnInfo(name = "LocalSortLocation")
-    public String localsortlocation;
+    public int getLocalstatusInt() {return this.localstatus;}
+
     @ColumnInfo(name = "ExtraField1")
     public String extrafield1;
+    public String getExtraField1Str() {return this.extrafield1;}
+
     @ColumnInfo(name = "ExtraField2")
     public String extrafield2;
+    public String getExtraField2Str() {return this.extrafield2;}
+
     @ColumnInfo(name = "ExtraField3")
     public String extrafield3;
+    public String getExtraField3Str() {return this.extrafield3;}
+
     @ColumnInfo(name = "ExtraField4")
     public String extrafield4;
+    public String getExtraField4Str() {return this.extrafield4;}
+
     @ColumnInfo(name = "ExtraField5")
     public String extrafield5;
+    public String getExtraField5Str() {return this.extrafield5;}
+
     @ColumnInfo(name = "ExtraField6")
     public String extrafield6;
+    public String getExtraField6Str() {return this.extrafield6;}
+
     @ColumnInfo(name = "ExtraField7")
     public String extrafield7;
+    public String getExtraField7Str() {return this.extrafield7;}
+
     @ColumnInfo(name = "ExtraField8")
     public String extrafield8;
+    public String getExtraField8Str() {return this.extrafield8;}
 
     //empty constructor
     public cPickorderLineEntity() {
@@ -114,13 +141,10 @@ public class cPickorderLineEntity {
             this.description = pvJsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
             this.description2 = pvJsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
             this.bincode = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
-            this.container = pvJsonObject.getString(cDatabase.CONTAINER_NAMESTR);
-            this.containertype = pvJsonObject.getString(cDatabase.CONTAINERTYPE_NAMESTR);
-            this.containerinput = pvJsonObject.getString(cDatabase.CONTAINERINPUT_NAMESTR);
-            this.containerhandled = pvJsonObject.getString(cDatabase.CONTAINERHANDLED_NAMESTR);
+
             this.quantity = pvJsonObject.getDouble(cDatabase.QUANTITY_NAMESTR);
             this.quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
-            this.quantityrejected = pvJsonObject.getDouble(cDatabase.QUANTITYREJECTED_NAMESTR);
+
 
             if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
                 this.quantitytaken =  0;
@@ -130,21 +154,19 @@ public class cPickorderLineEntity {
 
             this.sourceno = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
             this.destinationno = pvJsonObject.getString(cDatabase.DESTINATIONNO_NAMESTR);
-            this.ispartofmultilineorder = pvJsonObject.getString(cDatabase.ISPARTOFMULTILINEORDER_NAMESTR);
-            this.shippingadvice = pvJsonObject.getString(cDatabase.SHIPPINGADVICE_NAMESTR);
+
             this.processingsequence = pvJsonObject.getString(cDatabase.PROCESSINGSEQUENCE_NAMESTR);
-            this.storesourceopdracht = pvJsonObject.getString(cDatabase.STORESOURCEORDER_NAMESTR);
-            this.storagebincode = pvJsonObject.getString(cDatabase.STORAGEBINCODE_NAMESTR);
+
             this.vendoritemno = pvJsonObject.getString(cDatabase.VENDORITEMNO_NAMESTR);
             this.vendoritemdescription = pvJsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
-            this.component10 = pvJsonObject.getString(cDatabase.COMPONENT10_NAMESTR);
 
-            this.printdocuments = pvJsonObject.getString(cDatabase.PRINTDOCUMENTS_NAMESTR);
             this.status = pvJsonObject.getInt(cDatabase.STATUS_NAMESTR);
             this.statusShipping = pvJsonObject.getInt(cDatabase.STATUSSHIPPING_NAMESTR);
             this.statusPacking = pvJsonObject.getInt(cDatabase.STATUSPACKING_NAMESTR);
 
             this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
+
+            this.takenTimeStamp = pvJsonObject.getString(cDatabase.TAKENTIMESTAMP_NAMESTR);
 
             if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
                 if (this.status > cWarehouseorder.PicklineStatusEnu.Needed) {
@@ -273,51 +295,14 @@ public class cPickorderLineEntity {
             //endregion extraField8Str
 
 
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public Integer getRecordidInt() {return this.recordid;}
-    public Integer getLineNoInt() {return this.lineno;}
-    public String getItemNoStr() {return this.itemno;}
-    public String getVariantCodeStr() {return this.variantcode;}
-    public String getDescriptionStr() {return this.description;}
-    public String getDescription2Str() {return this.description2;}
-    public String getBincodeStr() {return this.bincode;}
-    public String getContainerStr() {return this.container;}
-    public String getContainerTypeStr() {return this.containertype;}
-    public String getContainerinputsStr() {return this.containerinput;}
-    public String getContainerHandledStr() {return this.containerhandled;}
-    public Double getQuantityDbl() {return this.quantity;}
-    public Double getQuantityHandledDbl() {return this.quantityhandled;}
-    public Double getQuantityRejectedDbl() {return this.quantityrejected;}
-    public String getSourceNoStr() {return this.sourceno;}
-    public String getDestinationNoStr() {return this.destinationno;}
-    public String getIspartOfMultilLneOrderStr() {return this.ispartofmultilineorder;}
-    public String getShippingAdviceStr() {return this.shippingadvice;}
-    public String getProcessingSequenceStr() {return this.processingsequence;}
-    public String getStoreSourceOpdrachtStr() {return this.storesourceopdracht;}
-    public String getStorageBinCodeStr() {return this.storagebincode;}
-    public String getVendorItemNoStr() {return this.vendoritemno;}
-    public String getVendorItemDescriptionStr() {return this.vendoritemdescription;}
-    public String getComponent10Str() {return this.component10;}
-    public String getBrandStr(){return  this.brand;}
-    public String getPrintdocumentsStr() {return this.printdocuments;}
-    public int getStatusInt() {return this.status;}
-    public int getStatusShippingInt() {return this.statusShipping;}
-    public int getStatusPackingInt() {return this.statusPacking;}
-    public int getLinenoTakeInt() {return this.linenotake;}
-    public Double getQuantityTakenDbl() {return this.quantitytaken;}
-    public String getTakenTimestampStr() {return this.takentimestamp;}
-    public int getLocalstatusInt() {return this.localstatus;}
-    public String getLocalSortLocationStr() {return this.localsortlocation;}
-    public String getExtraField1Str() {return this.extrafield1;}
-    public String getExtraField2Str() {return this.extrafield2;}
-    public String getExtraField3Str() {return this.extrafield3;}
-    public String getExtraField4Str() {return this.extrafield4;}
-    public String getExtraField5Str() {return this.extrafield5;}
-    public String getExtraField6Str() {return this.extrafield6;}
-    public String getExtraField7Str() {return this.extrafield7;}
-    public String getExtraField8Str() {return this.extrafield8;}
+
+
+
+
 }

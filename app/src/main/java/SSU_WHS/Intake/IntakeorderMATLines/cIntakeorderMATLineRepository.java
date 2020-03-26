@@ -29,7 +29,6 @@ public class cIntakeorderMATLineRepository {
 
     //Region Private Properties
     private iIntakeorderMATLineDao intakeorderMATLineDao;
-    private acScanSuiteDatabase db;
 
     private static class UpdateOrderlineLocaStatusParams {
         Integer lineNoInt;
@@ -51,16 +50,6 @@ public class cIntakeorderMATLineRepository {
         }
     }
 
-    private static class UpdateOrderlineBinCodeHandledParams {
-        Integer lineNoInt;
-        String binCodeStr;
-
-        UpdateOrderlineBinCodeHandledParams(Integer pvLineNoInt, String pvBinCodeStr) {
-            this.lineNoInt = pvLineNoInt;
-            this.binCodeStr = pvBinCodeStr;
-        }
-    }
-
 
     private static class CreateLineParams {
         String binCodeStr;
@@ -75,7 +64,7 @@ public class cIntakeorderMATLineRepository {
 
     //Region Constructor
     cIntakeorderMATLineRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.intakeorderMATLineDao = db.intakeorderMATLineDao();
     }
     //End Region Constructor
@@ -86,16 +75,6 @@ public class cIntakeorderMATLineRepository {
 
     public void insert (cIntakeorderMATLineEntity intakeorderMATLineEntity) {
         new mInsertAsyncTask(intakeorderMATLineDao).execute(intakeorderMATLineEntity);
-    }
-
-    public List<cIntakeorderMATLineEntity> pGetIntakeorderMATLinesFromDatabaseObl() {
-        List<cIntakeorderMATLineEntity> ResultObl = null;
-        try {
-            ResultObl = new mGetIntakeorderMATLinesFromDatabaseAsyncTask(intakeorderMATLineDao).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
     }
 
     public void deleteAll () {
@@ -130,46 +109,6 @@ public class cIntakeorderMATLineRepository {
             return  false;
         }
 
-    }
-
-    public boolean pUpdateQuantitydBln(Double pvQuantityDbl) {
-
-        Integer integerValue;
-        UpdateOrderlineQuantityParams updateOrderlineQuantityParams = new UpdateOrderlineQuantityParams(cIntakeorderMATLine.currentIntakeorderMATLine.getLineNoInt(), pvQuantityDbl);
-
-        try {
-            integerValue = new updateOrderLineQuantityAsyncTask(intakeorderMATLineDao).execute(updateOrderlineQuantityParams).get();
-
-            return integerValue != 0;
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return  false;
-        }
-
-    }
-
-    public boolean pUpdateBinCodeHandledBln(String pvBinCodeStr) {
-
-//        Integer integerValue;
-//        UpdateOrderlineBinCodeHandledParams updateOrderlineBinCodeHandledParams = new UpdateOrderlineBinCodeHandledParams(cReceiveorderLine.currentIntakeorderMATLine.getLineNoInt(), pvBinCodeStr);
-//
-//        try {
-//            integerValue = new updateOrderLineBinCodeHandledyAsyncTask(intakeorderMATLineDao).execute(updateOrderlineBinCodeHandledParams).get();
-//
-//            if (integerValue != 0) {
-//                return  true;}
-//            else{
-//                return false;
-//            }
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//            return  false;
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//            return  false;
-//        }
-
-        return  true;
     }
 
     public cWebresult pResetMATLineViaWebserviceWrs() {
@@ -266,16 +205,6 @@ public class cIntakeorderMATLineRepository {
         }
     }
 
-    private static class mGetIntakeorderMATLinesFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cIntakeorderMATLineEntity>> {
-        private iIntakeorderMATLineDao mAsyncTaskDao;
-
-        mGetIntakeorderMATLinesFromDatabaseAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cIntakeorderMATLineEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getIntakeorderMATLinesFromDatabase();
-        }
-    }
-
     private static class updateOrderLineLocalStatusAsyncTask extends AsyncTask<UpdateOrderlineLocaStatusParams, Void, Integer> {
         private iIntakeorderMATLineDao mAsyncTaskDao;
         updateOrderLineLocalStatusAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
@@ -291,24 +220,6 @@ public class cIntakeorderMATLineRepository {
         @Override
         protected Integer doInBackground(UpdateOrderlineQuantityParams... params) {
             return mAsyncTaskDao.updateOrderLineQuantityHandled(params[0].lineNoInt, params[0].quantityDbl);
-        }
-    }
-
-    private static class updateOrderLineQuantityAsyncTask extends AsyncTask<UpdateOrderlineQuantityParams, Void, Integer> {
-        private iIntakeorderMATLineDao mAsyncTaskDao;
-        updateOrderLineQuantityAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Integer doInBackground(UpdateOrderlineQuantityParams... params) {
-            return mAsyncTaskDao.updateOrderLineQuantity(params[0].lineNoInt, params[0].quantityDbl);
-        }
-    }
-
-    private static class updateOrderLineBinCodeHandledyAsyncTask extends AsyncTask<UpdateOrderlineBinCodeHandledParams, Void, Integer> {
-        private iIntakeorderMATLineDao mAsyncTaskDao;
-        updateOrderLineBinCodeHandledyAsyncTask(iIntakeorderMATLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Integer doInBackground(UpdateOrderlineBinCodeHandledParams... params) {
-            return mAsyncTaskDao.updateOrderLineBinCodeHandled(params[0].lineNoInt, params[0].binCodeStr);
         }
     }
 

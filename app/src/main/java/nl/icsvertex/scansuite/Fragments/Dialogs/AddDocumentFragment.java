@@ -30,11 +30,11 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
     //End Region Public Properties
 
     //Region Private Properties
-    private static TextView textViewAddDocumentHeader;
-    private static TextView textViewAddDocumentText;
-    private static EditText editTextAddDocument;
-    private static Button addDocumentButton;
-    private static Button cancelButton;
+    private TextView textViewAddDocumentHeader;
+    private TextView textViewAddDocumentText;
+    private EditText editTextAddDocument;
+    private Button addDocumentButton;
+    private Button cancelButton;
     //End Region Private Properties
 
 
@@ -87,11 +87,11 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
     public void mFindViews() {
 
         if (getView() != null) {
-            AddDocumentFragment.textViewAddDocumentHeader = getView().findViewById(R.id.textViewAddDocumentHeader );
-            AddDocumentFragment.textViewAddDocumentText = getView().findViewById(R.id.textViewAddDocumentText);
-            AddDocumentFragment.editTextAddDocument = getView().findViewById(R.id.editTextAddDocument);
-            AddDocumentFragment.addDocumentButton = getView().findViewById(R.id.addDocumentButton);
-            AddDocumentFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+            this.textViewAddDocumentHeader = getView().findViewById(R.id.textViewAddDocumentHeader );
+            this.textViewAddDocumentText = getView().findViewById(R.id.textViewAddDocumentText);
+            this.editTextAddDocument = getView().findViewById(R.id.editTextAddDocument);
+            this.addDocumentButton = getView().findViewById(R.id.addDocumentButton);
+            this.cancelButton = getView().findViewById(R.id.cancelButton);
         }
 
 
@@ -100,13 +100,13 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
 
     @Override
     public void mFieldsInitialize() {
-        AddDocumentFragment.textViewAddDocumentHeader.setText(R.string.add_document_header_default);
+        this.textViewAddDocumentHeader.setText(R.string.add_document_header_default);
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
-        AddDocumentFragment.editTextAddDocument.setFilters(filterArray);
+        this.editTextAddDocument.setFilters(filterArray);
         cUserInterface.pShowKeyboard(editTextAddDocument);
-        AddDocumentFragment.textViewAddDocumentText.setVisibility(View.GONE);
+        this.textViewAddDocumentText.setVisibility(View.GONE);
     }
 
     @Override
@@ -116,27 +116,34 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
     }
 
     private void mSetCancelListener() {
-        AddDocumentFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cAppExtension.dialogFragment.dismiss();
-                ReturnorderDocumentsActivity.pHandleFragmentDismissed();
+
+                if (cAppExtension.activity instanceof  ReturnorderDocumentsActivity) {
+                    ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+                    returnorderDocumentsActivity.pHandleFragmentDismissed();
+                }
+
             }
         });
     }
     private void mSetAddDocumentListener() {
-        AddDocumentFragment.addDocumentButton.setOnClickListener(new View.OnClickListener() {
+        this.addDocumentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cAppExtension.activity instanceof ReturnorderDocumentsActivity) {
 
-                    if (AddDocumentFragment.editTextAddDocument.getText().toString().trim().isEmpty()) {
-                        cUserInterface.pDoNope(AddDocumentFragment.editTextAddDocument, true, true);
+                    ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+
+                    if (editTextAddDocument.getText().toString().trim().isEmpty()) {
+                        cUserInterface.pDoNope(editTextAddDocument, true, true);
                         return;
                     }
 
                     cAppExtension.dialogFragment.dismiss();
-                    ReturnorderDocumentsActivity.pHandleAddDocument(AddDocumentFragment.editTextAddDocument.getText().toString());
+                    returnorderDocumentsActivity.pHandleAddDocument(editTextAddDocument.getText().toString());
 
                 }
             }
@@ -144,7 +151,7 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
     }
 
 
-    public static void pHandleScan(String pvScannedBarcodeStr) {
+    public void pHandleScan(String pvScannedBarcodeStr) {
 
         //Has prefix, so check if this is a BIN
         if (cRegex.pHasPrefix(pvScannedBarcodeStr)) {
@@ -157,20 +164,20 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
 
             if (foundBin) {
                 //has prefix, is bin
-                AddDocumentFragment.editTextAddDocument.setText(cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr));
-                AddDocumentFragment.addDocumentButton.callOnClick();
+                this.editTextAddDocument.setText(cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr));
+                this.addDocumentButton.callOnClick();
                 return;
             }
             else {
                 //has prefix, isn't bin
-                cUserInterface.pDoNope(AddDocumentFragment.editTextAddDocument, true, true);
+                cUserInterface.pDoNope(this.editTextAddDocument, true, true);
                 return;
             }
         }
 
         //no prefix, fine
-        AddDocumentFragment.editTextAddDocument.setText(pvScannedBarcodeStr);
-        AddDocumentFragment.addDocumentButton.callOnClick();
+        this.editTextAddDocument.setText(pvScannedBarcodeStr);
+        this.addDocumentButton.callOnClick();
     }
 
 }

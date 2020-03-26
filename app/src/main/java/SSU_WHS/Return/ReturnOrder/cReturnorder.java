@@ -1,6 +1,6 @@
 package SSU_WHS.Return.ReturnOrder;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -22,7 +22,9 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
+import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcodeViewModel;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
@@ -30,7 +32,6 @@ import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.R;
-
 
 public class cReturnorder {
 
@@ -93,22 +94,6 @@ public class cReturnorder {
 
     private cReturnorderEntity returnorderEntity;
 
-    private static cReturnorderViewModel gReturnorderViewModel;
-    private static cReturnorderViewModel getReturnorderViewModel() {
-        if (gReturnorderViewModel == null) {
-            gReturnorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
-        }
-        return gReturnorderViewModel;
-    }
-
-    private static cReturnorderAdapter gReturnorderAdapter;
-    public static cReturnorderAdapter getReturnorderAdapter() {
-        if (gReturnorderAdapter == null) {
-            gReturnorderAdapter = new cReturnorderAdapter();
-        }
-        return gReturnorderAdapter;
-    }
-
     public Boolean isGeneratedBln() {
         return this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated;
     }
@@ -123,6 +108,19 @@ public class cReturnorder {
 
     public static List<cReturnorder> allReturnordersObl;
     public static cReturnorder currentReturnOrder;
+
+    private cReturnorderViewModel getReturnorderViewModel(){
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
+    }
+
+    private cWarehouseorderViewModel getWarehouseorderViewModel(){
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cWarehouseorderViewModel.class);
+    }
+
+    private cReturnorderBarcodeViewModel getReturnorderBarcodeViewModel(){
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderBarcodeViewModel.class);
+    }
+
 
     //Region Public Properties
 
@@ -169,7 +167,7 @@ public class cReturnorder {
 
     public boolean pInsertInDatabaseBln() {
 
-        SSU_WHS.Return.ReturnOrder.cReturnorder.getReturnorderViewModel().insert(this.returnorderEntity);
+        this.getReturnorderViewModel().insert(this.returnorderEntity);
 
         if (cReturnorder.allReturnordersObl == null) {
             cReturnorder.allReturnordersObl = new ArrayList<>();
@@ -183,7 +181,8 @@ public class cReturnorder {
 
         cWebresult WebResult;
 
-        WebResult = cReturnorder.getReturnorderViewModel().pCreateReturnOrderViaWebserviceWrs(pvDocumentStr, pvMultipleDocumentsBln, pvBinCodeStr);
+        cReturnorderViewModel returnorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
+        WebResult = returnorderViewModel.pCreateReturnOrderViaWebserviceWrs(pvDocumentStr, pvMultipleDocumentsBln, pvBinCodeStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
             if (WebResult.getResultDtt() != null && WebResult.getResultDtt().size() == 1) {
                 cReturnorder returnorder = new SSU_WHS.Return.ReturnOrder.cReturnorder(WebResult.getResultDtt().get(0));
@@ -206,7 +205,8 @@ public class cReturnorder {
             cReturnorder.mTruncateTableBln();
         }
 
-        cWebresult WebResult= cReturnorder.getReturnorderViewModel().pGetReturnordersFromWebserviceWrs(pvSearchTextStr);
+        cReturnorderViewModel returnorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
+        cWebresult WebResult= returnorderViewModel.pGetReturnordersFromWebserviceWrs(pvSearchTextStr);
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
@@ -231,7 +231,7 @@ public class cReturnorder {
         cReturnorderBarcode returnorderBarcode;
 
         //Get all lines from webservice
-        cWebresult WebResult=  cReturnorder.getReturnorderViewModel().pGetLinesFromWebserviceWrs();
+        cWebresult WebResult=  this.getReturnorderViewModel().pGetLinesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
 
 
@@ -309,7 +309,7 @@ public class cReturnorder {
             }
         }
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.RETOUR.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt, ignoreBusyBln);
+        Webresult = this.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.RETOUR.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt, ignoreBusyBln);
 
         //No result, so something really went wrong
         if (Webresult == null) {
@@ -380,7 +380,7 @@ public class cReturnorder {
 
         cWebresult Webresult;
 
-        Webresult = cReturnorder.getReturnorderViewModel().pReturnDisposedViaWebserviceWrs();
+        Webresult = this.getReturnorderViewModel().pReturnDisposedViaWebserviceWrs();
 
         if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RETURNORDERDISPOSED);
@@ -391,7 +391,7 @@ public class cReturnorder {
 
     public boolean pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu pvStepCodeEnu, int pvWorkFlowStepInt) {
 
-        cWebresult Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.RETOUR.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt);
+        cWebresult Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.RETOUR.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt);
         return Webresult.getSuccessBln() && Webresult.getResultBln();
     }
 
@@ -410,7 +410,7 @@ public class cReturnorder {
             cReturnorderLine.pTruncateTableBln();
         }
 
-        cWebresult WebResult = cReturnorder.getReturnorderViewModel().pGetLinesFromWebserviceWrs();
+        cWebresult WebResult = this.getReturnorderViewModel().pGetLinesFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
@@ -468,9 +468,15 @@ public class cReturnorder {
 
             if (!cReturnorderLine.currentReturnOrderLine.pSaveLineViaWebserviceBln()) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_line_save_failed),"",true,true);
-                ReturnorderDocumentActivity.pHandleFragmentDismissed();
-                cAppExtension.dialogFragment.dismiss();
-                return result;
+
+                if (cAppExtension.activity instanceof ReturnorderDocumentActivity ) {
+                    ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
+                    returnorderDocumentActivity.pHandleFragmentDismissed();
+                    cAppExtension.dialogFragment.dismiss();
+                    return result;
+                }
+
+
             }
             //Change quantityDbl handled in database
             cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
@@ -511,7 +517,7 @@ public class cReturnorder {
 
     public int pGetHandledCountForSourceDocumentInt(cReturnorderDocument pvReturnorderDocument) {
 
-        double resultDbl = (double) 0;
+        double resultDbl = 0;
         int resultInt = 0;
 
         for( cReturnorderLine returnorderLine : pvReturnorderDocument.returnorderLineObl){
@@ -613,7 +619,7 @@ public class cReturnorder {
 
         cWebresult WebResult;
 
-        WebResult = SSU_WHS.Return.ReturnOrder.cReturnorder.getReturnorderViewModel().pGetHandledLinesFromWebserviceWrs();
+        WebResult = this.getReturnorderViewModel().pGetHandledLinesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             if (cReturnorderLine.allLinesObl == null) {
@@ -641,7 +647,7 @@ public class cReturnorder {
             cComment.commentsShownBln = false;
         }
 
-        cWebresult webresult =  cReturnorder.getReturnorderViewModel().pGetCommentsFromWebserviceWrs();
+        cWebresult webresult =  this.getReturnorderViewModel().pGetCommentsFromWebserviceWrs();
         if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
             cComment.allCommentsObl = new ArrayList<>();
@@ -666,7 +672,7 @@ public class cReturnorder {
             cReturnorderBarcode.pTruncateTableBln();
         }
 
-        cWebresult WebResult = cReturnorder.getReturnorderViewModel().pGetBarcodesFromWebserviceWrs();
+        cWebresult WebResult = this.getReturnorderViewModel().pGetBarcodesFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
@@ -696,7 +702,7 @@ public class cReturnorder {
         }
 
         cReturnorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
-        cWebresult WebResult = cReturnorder.getReturnorderViewModel().pGetLineBarcodesFromWebserviceWrs();
+        cWebresult WebResult = this.getReturnorderViewModel().pGetLineBarcodesFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
@@ -723,10 +729,11 @@ public class cReturnorder {
 
         return  true;
     }
+
     public boolean pAddUnkownBarcodeBln(cBarcodeScan pvBarcodeScan) {
 
         cReturnorder.currentReturnOrder.unknownVariantCounterInt += 1;
-        cWebresult WebResult =  cReturnorder.getReturnorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
+        cWebresult WebResult =  this.getReturnorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
 
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
@@ -737,7 +744,7 @@ public class cReturnorder {
                 cReturnorderBarcode.currentReturnOrderBarcode = returnorderBarcode;
             }
 
-            WebResult = cReturnorderBarcode.getReturnorderBarcodeViewModel().pCreateBarcodeViaWebserviceWrs();
+            WebResult = this.getReturnorderBarcodeViewModel().pCreateBarcodeViaWebserviceWrs();
             if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
                 for (JSONObject jsonObject : WebResult.getResultDtt()) {
@@ -795,7 +802,7 @@ public class cReturnorder {
         returnorderLine.nieuweRegelBln = true;
         cReturnorderLine.currentReturnOrderLine = returnorderLine;
 
-        cWebresult WebResult =  cReturnorder.getReturnorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
+        cWebresult WebResult =  this.getReturnorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             for (cArticleBarcode articleBarcode :  cArticle.currentArticle.barcodesObl) {
                 cReturnorderBarcode returnorderBarcode = new cReturnorderBarcode(articleBarcode);
@@ -826,13 +833,13 @@ public class cReturnorder {
         return null;
     }
 
-
     public static List<cReturnorder> pGetReturnOrdersWithFilterFromDatabasObl() {
 
         List<cReturnorder> resultObl = new ArrayList<>();
         List<cReturnorderEntity> hulpResultObl;
 
-        hulpResultObl =  cReturnorder.getReturnorderViewModel().pGetReturnOrdersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        cReturnorderViewModel returnorderViewModel=  new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
+        hulpResultObl =  returnorderViewModel.pGetReturnOrdersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -854,7 +861,6 @@ public class cReturnorder {
         return cComment.pGetCommentsForTypeObl(cWarehouseorder.CommentTypeEnu.FEEDBACK);
 
     }
-
 
     public cReturnorderBarcode pGetOrderBarcode(cBarcodeScan pvBarcodescan) {
 
@@ -904,7 +910,7 @@ public class cReturnorder {
 
         cWebresult webresult;
 
-        webresult = cReturnorder.getReturnorderViewModel().pHandledViaWebserviceWrs();
+        webresult = this.getReturnorderViewModel().pHandledViaWebserviceWrs();
 
         //No result, so something really went wrong
         if (webresult == null) {
@@ -965,7 +971,8 @@ public class cReturnorder {
     //Region Private Methods
 
     private static void mTruncateTableBln() {
-        cReturnorder.getReturnorderViewModel().deleteAll();
+        cReturnorderViewModel returnorderViewModel=  new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
+        returnorderViewModel.deleteAll();
     }
 
     private void mGetCommentsViaWebError(List<JSONObject> pvResultDtt) {
@@ -1007,7 +1014,6 @@ public class cReturnorder {
 
     }
 
-
     private cReturnorderBarcode mGetBarcodeForLine(cReturnorderLine pvReturnorderLine){
         for (cReturnorderBarcode returnorderBarcode : cReturnorder.currentReturnOrder.barcodesObl()){
             if (returnorderBarcode.getItemNoStr().equalsIgnoreCase(pvReturnorderLine.getItemNoStr()) && returnorderBarcode.getVariantCodeStr().equalsIgnoreCase(pvReturnorderLine.getVariantCodeStr())){
@@ -1016,7 +1022,6 @@ public class cReturnorder {
         }
         return null;
     }
-
 
     private  cReturnorderLine mGetLineWithLineNo(Long pvLineNoLng) {
 
@@ -1036,7 +1041,6 @@ public class cReturnorder {
 
     }
 
-
     //End Region Private Methods
 
 
@@ -1044,7 +1048,5 @@ public class cReturnorder {
 
 
     //End Region Private Methods
-
-
 
 }

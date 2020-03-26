@@ -1,6 +1,6 @@
 package SSU_WHS.Basics.Branches;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -14,6 +14,7 @@ import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
+import SSU_WHS.Basics.Workplaces.cWorkplaceViewModel;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -48,7 +49,6 @@ public class cBranch {
         return   receiveDefaultBinStr;
     }
 
-
     private String moveDefaultBinStr;
     public String getMoveDefaultBinStr(){
         return   moveDefaultBinStr;
@@ -63,20 +63,9 @@ public class cBranch {
     private ArrayList<cBranchBin>  binsObl;
     public ArrayList<cBranchReason>  returnReasonObl;
 
-    private static cBranchViewModel gBranchViewModel;
-    public static cBranchViewModel getBranchViewModel() {
-        if (gBranchViewModel == null) {
-            gBranchViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cBranchViewModel.class);
-        }
-        return gBranchViewModel;
-    }
 
-    private static cBranchAdapter gBranchAdapter;
-    public static cBranchAdapter getBranchAdapter() {
-        if (gBranchAdapter == null) {
-            gBranchAdapter = new cBranchAdapter();
-        }
-        return gBranchAdapter;
+    private cBranchViewModel getBranchViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cBranchViewModel.class);
     }
 
     private static List<cBranch> allBranchesObl;
@@ -120,7 +109,9 @@ public class cBranch {
         }
 
         cWebresult WebResult;
-        WebResult =  cBranch.getBranchViewModel().pGetBranchesFromWebserviceWrs();
+
+        cBranchViewModel branchViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cBranchViewModel.class);
+        WebResult =  branchViewModel.pGetBranchesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
@@ -146,7 +137,7 @@ public class cBranch {
         }
 
         cWebresult WebResult;
-        WebResult =  cBranch.getBranchViewModel().pGetReceiveBinsFromWebserviceWrs();
+        WebResult =  this.getBranchViewModel().pGetReceiveBinsFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             this.receiveBinsObl = new ArrayList<>();
@@ -164,7 +155,7 @@ public class cBranch {
 
 
     public boolean pInsertInDatabaseBln() {
-        cBranch.getBranchViewModel().insert(this.branchEntity);
+        this.getBranchViewModel().insert(this.branchEntity);
 
         if (cBranch.allBranchesObl == null){
             cBranch.allBranchesObl = new ArrayList<>();
@@ -220,7 +211,9 @@ public class cBranch {
     }
 
     public static boolean pTruncateTableBln(){
-        cBranch.getBranchViewModel().deleteAll();
+
+        cBranchViewModel branchViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cBranchViewModel.class);
+        branchViewModel.deleteAll();
         return true;
     }
 
@@ -238,7 +231,9 @@ public class cBranch {
         cWorkplace.allWorkplacesObl = null;
 
         cWebresult WebResult;
-        WebResult =  cWorkplace.getWorkplaceViewModel().pGetWorkplacesFromWebserviceWrs();
+
+        cWorkplaceViewModel  workplaceViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cWorkplaceViewModel.class);
+        WebResult =  workplaceViewModel.pGetWorkplacesFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
@@ -269,7 +264,7 @@ public class cBranch {
         }
 
         cWebresult WebResult;
-        WebResult =  cBranch.getBranchViewModel().pGetReasonFromWebserviceWrs();
+        WebResult =  this.getBranchViewModel().pGetReasonFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
@@ -312,7 +307,7 @@ public class cBranch {
     private cBranchBin mGetBinViaWebservice(String pvBinCodeStr) {
 
         cWebresult WebResult;
-        WebResult =  cBranch.getBranchViewModel().pGetBinFromWebserviceWrs(pvBinCodeStr);
+        WebResult =  this.getBranchViewModel().pGetBinFromWebserviceWrs(pvBinCodeStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             if (WebResult.getResultDtt() != null && WebResult.getResultDtt().size() == 1) {
                 cBranchBin branchBin = new cBranchBin(WebResult.getResultDtt().get(0));

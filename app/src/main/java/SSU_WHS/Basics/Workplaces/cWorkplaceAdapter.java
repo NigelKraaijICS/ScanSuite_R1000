@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ICS.cAppExtension;
@@ -19,20 +20,20 @@ import nl.icsvertex.scansuite.R;
 public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.WorkplaceViewHolder>{
 
     //Region Public Properties
-    public class WorkplaceViewHolder extends RecyclerView.ViewHolder{
+    public static class WorkplaceViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewDescription;
         private TextView textViewWorkplace;
         public LinearLayout workplaceItemLinearLayout;
 
         public WorkplaceViewHolder(View itemView) {
             super(itemView);
-            textViewDescription = itemView.findViewById(R.id.textViewDescription);
-            textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            textViewDescription.setSingleLine(true);
-            textViewDescription.setMarqueeRepeatLimit(5);
-            textViewDescription.setSelected(true);
-            textViewWorkplace = itemView.findViewById(R.id.textViewWorkplace);
-            workplaceItemLinearLayout = itemView.findViewById(R.id.workplaceItemLinearLayout);
+            this.textViewDescription = itemView.findViewById(R.id.textViewDescription);
+            this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDescription.setSingleLine(true);
+            this.textViewDescription.setMarqueeRepeatLimit(5);
+            this.textViewDescription.setSelected(true);
+            this.textViewWorkplace = itemView.findViewById(R.id.textViewWorkplace);
+            this.workplaceItemLinearLayout = itemView.findViewById(R.id.workplaceItemLinearLayout);
         }
     }
 
@@ -48,15 +49,16 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
     private final LayoutInflater LayoutInflaterObject;
     //End Region Private Propertoes
 
+    @NonNull
     @Override
-    public cWorkplaceAdapter.WorkplaceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public cWorkplaceAdapter.WorkplaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_workplace, parent, false);
-        return new cWorkplaceAdapter.WorkplaceViewHolder(itemView);
+        return new WorkplaceViewHolder(itemView);
     }
 
 
     @Override
-    public void onBindViewHolder(cWorkplaceAdapter.WorkplaceViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull cWorkplaceAdapter.WorkplaceViewHolder holder, int position) {
         if (cWorkplace.allWorkplacesObl != null) {
 
             final cWorkplace workplace = cWorkplace.allWorkplacesObl.get(position);
@@ -72,21 +74,25 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
                     cWorkplace.currentWorkplace = workplace;
 
                     if (cAppExtension.context instanceof PickorderLinesActivity) {
-                        PickorderLinesActivity.pClosePickAndDecideNextStep();
+                        PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+                        pickorderLinesActivity.pClosePickAndDecideNextStep();
                         return;
                     }
 
                     if (cAppExtension.context instanceof SortorderLinesActivity) {
-                        SortorderLinesActivity.pCloseSortAndDecideNextStep();
+                        SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+                        sortorderLinesActivity.pCloseSortAndDecideNextStep();
                     }
 
                     if (cAppExtension.context instanceof ShiporderLinesActivity) {
+
+                        ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
 
                         if (cAppExtension.dialogFragment instanceof WorkplaceFragment) {
                             cAppExtension.dialogFragment.dismiss();
                         }
 
-                        ShiporderLinesActivity.pWorkplaceSelected();
+                        shiporderLinesActivity.pWorkplaceSelected();
 
                     }
                 }

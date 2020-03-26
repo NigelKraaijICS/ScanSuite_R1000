@@ -15,7 +15,7 @@ public class cItemPropertyEntity {
     //Region Public Properties
     @NonNull
     @ColumnInfo(name = cDatabase.PROPERTY_NAMESTR)
-    public String property;
+    public String property = "";
     public String getPropertyStr() { return property;}
 
     @ColumnInfo(name = cDatabase.LAYOUTVALUE_NAMESTR)

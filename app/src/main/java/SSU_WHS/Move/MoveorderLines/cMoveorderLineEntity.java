@@ -15,16 +15,8 @@ import SSU_WHS.General.cDatabase;
 @Entity(tableName= cDatabase.TABLENAME_MOVEORDERLINE)
 public class cMoveorderLineEntity {
 
-
-
-
-
-
     @PrimaryKey(autoGenerate = true)
     public Integer recordid;
-    //    @PrimaryKey
-    //    @NonNull
-
     @ColumnInfo(name = cDatabase.LINENO_NAMESTR)
     public int lineno;
     public int getLineNoInt() {return this.lineno;}
@@ -101,16 +93,13 @@ public class cMoveorderLineEntity {
     public String extrafield6;
     public String getExtraField6Str() {return this.extrafield6;}
 
-
     @ColumnInfo(name = cDatabase.EXTRAFIELD7_NAMESTR)
     public String extrafield7;
     public String getExtraField7Str() {return this.extrafield7;}
 
-
     @ColumnInfo(name = cDatabase.EXTRAFIELD8_NAMESTR)
     public String extrafield8;
     public String getExtraField8Str() {return this.extrafield8;}
-
 
     @ColumnInfo(name = cDatabase.LOCAL_QUANTITYTAKEN_NAMESTR)
     public double quantityTaken;

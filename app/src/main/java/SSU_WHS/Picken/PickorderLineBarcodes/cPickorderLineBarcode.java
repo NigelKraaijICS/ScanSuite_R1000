@@ -1,11 +1,10 @@
 package SSU_WHS.Picken.PickorderLineBarcodes;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
@@ -13,36 +12,27 @@ import ICS.cAppExtension;
 public class cPickorderLineBarcode {
 
     //Public Properties
-    public Long lineNoLng;
+    private Long lineNoLng;
     public Long getLineNoLng() {return lineNoLng;}
 
-    public String barcodeStr;
+    private String barcodeStr;
     public String getBarcodeStr() {return barcodeStr;}
 
     public double quantityHandledDbl;
     public double getQuantityhandledDbl() {return quantityHandledDbl;}
 
-    public Boolean isManualBln;
-    public Boolean getIsManualBln() {return isManualBln;}
-
-    public cPickorderLineBarcodeEntity pickorderLineBarcodeEntity;
-    public boolean inDatabaseBln;
+    private cPickorderLineBarcodeEntity pickorderLineBarcodeEntity;
 
     public static ArrayList<cPickorderLineBarcode> allLineBarcodesObl;
-    public static cPickorderLineBarcodeViewModel pickorderLineBarcodeViewModel;
 
-    public static cPickorderLineBarcodeViewModel getPickorderLineBarcodeViewModel() {
-        if (pickorderLineBarcodeViewModel == null) {
-            pickorderLineBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cPickorderLineBarcodeViewModel.class);
-        }
-        return pickorderLineBarcodeViewModel;
+    private cPickorderLineBarcodeViewModel getPickorderLineBarcodeViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLineBarcodeViewModel.class);
     }
 
     public cPickorderLineBarcode (JSONObject pvJsonObject) {
         this.pickorderLineBarcodeEntity = new cPickorderLineBarcodeEntity(pvJsonObject);
         this.barcodeStr = this.pickorderLineBarcodeEntity.getBarcodeStr();
         this.lineNoLng = cText.pStringToLongLng(this.pickorderLineBarcodeEntity.getLineNoStr());
-        this.isManualBln = cText.pStringToBooleanBln(this.pickorderLineBarcodeEntity.getIsManualStr(),false);
         this.quantityHandledDbl = cText.pStringToDoubleDbl(this.pickorderLineBarcodeEntity.getQuantityhandledStr());
     }
 
@@ -50,13 +40,12 @@ public class cPickorderLineBarcode {
         this.pickorderLineBarcodeEntity = new cPickorderLineBarcodeEntity(pvLineNoLng,pvBarcodeStr);
         this.barcodeStr = this.pickorderLineBarcodeEntity.getBarcodeStr();
         this.lineNoLng = cText.pStringToLongLng(this.pickorderLineBarcodeEntity.getLineNoStr());
-        this.isManualBln = cText.pStringToBooleanBln(this.pickorderLineBarcodeEntity.getIsManualStr(),false);
         this.quantityHandledDbl = cText.pStringToDoubleDbl(this.pickorderLineBarcodeEntity.getQuantityhandledStr());
     }
 
     public boolean pInsertInDatabaseBln() {
-        cPickorderLineBarcode.getPickorderLineBarcodeViewModel().insert(this.pickorderLineBarcodeEntity);
-        this.inDatabaseBln = true;
+        this.getPickorderLineBarcodeViewModel().insert(this.pickorderLineBarcodeEntity);
+
         if (cPickorderLineBarcode.allLineBarcodesObl == null) {
             cPickorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
         }
@@ -65,49 +54,36 @@ public class cPickorderLineBarcode {
     }
 
     public boolean pDeleteFromDatabaseBln() {
-        cPickorderLineBarcode.getPickorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoLng().intValue());
-        this.inDatabaseBln = false;
+        this.getPickorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoLng().intValue());
+
         if (cPickorderLineBarcode.allLineBarcodesObl != null) {
             cPickorderLineBarcode.allLineBarcodesObl.remove(this);
         }
         return true;
     }
 
-    public boolean pUpdateAmountInDatabaseBln(){
-        cPickorderLineBarcode.getPickorderLineBarcodeViewModel().pUpdateAmountForLineNo(this.getBarcodeStr(), this.getQuantityhandledDbl());
-        return true;
+    public void pUpdateAmountInDatabase(){
+        this.getPickorderLineBarcodeViewModel().pUpdateAmountForLineNo(this.getBarcodeStr(), this.getQuantityhandledDbl());
     }
 
     public static boolean pTruncateTableBln() {
-        cPickorderLineBarcode.getPickorderLineBarcodeViewModel().deleteAll();
+
+        cPickorderLineBarcodeViewModel pickorderLineBarcodeViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLineBarcodeViewModel.class);
+        pickorderLineBarcodeViewModel.deleteAll();
         cPickorderLineBarcode.allLineBarcodesObl = null;
         return true;
     }
 
-    public static cPickorderLineBarcode pPickorderLineBarcode(String pvScannedBarcode) {
-        if (cPickorderLineBarcode.allLineBarcodesObl == null || cPickorderLineBarcode.allLineBarcodesObl.size() == 0 ) {
-            return null;
-        }
-        for (cPickorderLineBarcode pickorderLineBarcode : cPickorderLineBarcode.allLineBarcodesObl) {
-            if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcode) == true) {
-                return pickorderLineBarcode;
-            }
-        }return null;
-    }
+    //todo: this is not used?
+//    public static cPickorderLineBarcode pPickorderLineBarcode(String pvScannedBarcode) {
+//        if (cPickorderLineBarcode.allLineBarcodesObl == null || cPickorderLineBarcode.allLineBarcodesObl.size() == 0 ) {
+//            return null;
+//        }
+//        for (cPickorderLineBarcode pickorderLineBarcode : cPickorderLineBarcode.allLineBarcodesObl) {
+//            if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcode)) {
+//                return pickorderLineBarcode;
+//            }
+//        }return null;
+//    }
 
-    public static List <cPickorderLineBarcode> pPickorderLineNumberBarcodeObl(Long pvLineNo) {
-        if (cPickorderLineBarcode.allLineBarcodesObl == null || cPickorderLineBarcode.allLineBarcodesObl.size() == 0 ) {
-        return null;
-        }
-        List <cPickorderLineBarcode> resultObl = null;
-
-        for (cPickorderLineBarcode pickorderLineBarcode : cPickorderLineBarcode.allLineBarcodesObl) {
-            if (pickorderLineBarcode.getLineNoLng().equals(pvLineNo) == true) {
-                if (resultObl == null ){
-                    resultObl = new ArrayList<>();
-                }
-                resultObl.add(pickorderLineBarcode);
-            }
-        }return resultObl;
-    }
 }

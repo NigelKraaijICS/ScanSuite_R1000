@@ -18,16 +18,16 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cAuthorisationRepository {
 
     //Region Public Properties
-    public iAuthorisationDao authorisationDao;
+    private iAuthorisationDao authorisationDao;
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
     //End Region Private Properties
 
     //Region Constructor
     cAuthorisationRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+         acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.authorisationDao = db.authorisationDao();
     }
     //End Region Constructor
@@ -40,13 +40,7 @@ public class cAuthorisationRepository {
 
         try {
             webResultWrs = new autorisationsFromWebserviceGetAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());

@@ -24,12 +24,12 @@ public class cBranchRepository {
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
     //End Region Private Properties
 
     //Region Constructor
     cBranchRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+         acScanSuiteDatabase db =  acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.branchDao = db.branchDao();
     }
     //End Region Constructor
@@ -110,13 +110,7 @@ public class cBranchRepository {
 
         try {
             webResultWrs = new mReasonsFromWebserviceGetAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -281,7 +275,7 @@ public class cBranchRepository {
             l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSEREASONS, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSEREASONS, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);

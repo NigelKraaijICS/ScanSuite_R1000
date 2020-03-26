@@ -1,5 +1,6 @@
 package SSU_WHS.Basics.Authorisations;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
@@ -95,27 +96,10 @@ public class cAuthorisation {
     }
 
     private cAuthorisationEntity authorisationEntity;
-    public boolean inDatabaseBln;
 
-    private static cAuthorisationViewModel gAutorisationViewModel;
-
-    public static cAuthorisationViewModel getAutorisationViewModel() {
-        if (gAutorisationViewModel == null) {
-            gAutorisationViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cAuthorisationViewModel.class);
-        }
-        return gAutorisationViewModel;
+    private cAuthorisationViewModel getAuthorisationViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cAuthorisationViewModel.class);
     }
-
-    private static cAuthorisationAdapter gAuthorisationAdapter;
-
-    public static cAuthorisationAdapter getAuthorisationAdapter() {
-        if (gAuthorisationAdapter == null) {
-            gAuthorisationAdapter = new cAuthorisationAdapter();
-        }
-        return gAuthorisationAdapter;
-    }
-
-    private static List<cAuthorisation> allAutorisations;
 
     public enum AutorisationEnu {
         DEMO,
@@ -183,27 +167,13 @@ public class cAuthorisation {
 //Region Public Methods
 
     public boolean pInsertInDatabaseBln() {
-        cAuthorisation.getAutorisationViewModel().insert(this.authorisationEntity);
-        this.inDatabaseBln = true;
+        this.getAuthorisationViewModel().insert(this.authorisationEntity);
         return true;
     }
 
-    private static cAuthorisation mGetAutorisationByEnumerate(AutorisationEnu pvAutorisationEnu){
-        if(cAuthorisation.allAutorisations == null){
-            return null;
-        }
-
-        for (cAuthorisation authorisation : cAuthorisation.allAutorisations)
-        {
-            if (authorisation.getAutorisationEnu() == pvAutorisationEnu) {
-                return  authorisation;
-            }
-        }
-        return null;
-    }
-
     public static boolean pTruncateTableBln(){
-        cAuthorisation.getAutorisationViewModel().deleteAll();
+         cAuthorisationViewModel authorisationViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cAuthorisationViewModel.class);
+        authorisationViewModel.deleteAll();
         return true;
     }
 

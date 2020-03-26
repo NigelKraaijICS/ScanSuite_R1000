@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,12 +23,13 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
+import SSU_WHS.Picken.Shipment.cShipmentAdapter;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
 
 
-public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaultFragment {
+public class ShiporderLinesToShipFragment extends DialogFragment implements iICSDefaultFragment {
 
     //Region Public Properties
 
@@ -36,13 +37,22 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     //Region Private Properties
 
-    private static TextView textViewSelectedOrder;
-    private static ConstraintLayout shipThisView;
+    private TextView textViewSelectedOrder;
+    private ConstraintLayout shipThisView;
 
-    private static TextView quickhelpText;
-    private static ImageView quickhelpIcon;
-    private static ConstraintLayout quickhelpContainer;
-    private static RecyclerView recyclerViewShiporderLinesToship;
+    private TextView quickhelpText;
+    private ImageView quickhelpIcon;
+    private ConstraintLayout quickhelpContainer;
+    private RecyclerView recyclerViewShiporderLinesToship;
+
+    private cShipmentAdapter shipmentAdapter;
+    private  cShipmentAdapter getShipmentAdapter(){
+        if (this.shipmentAdapter == null) {
+            this.shipmentAdapter = new cShipmentAdapter();
+        }
+
+        return  this.shipmentAdapter;
+    }
 
     //End Region Private Properties
 
@@ -83,6 +93,7 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
         super.onResume();
         cUserInterface.pEnableScanner();
         ShiporderLinesActivity.currentLineFragment = this;
+        cAppExtension.dialogFragment = this;
         this.mFragmentInitialize();
 
     }
@@ -105,12 +116,12 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
     public void mFindViews() {
 
         if (getView() != null) {
-            ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship = getView().findViewById(R.id.recyclerViewShiporderLinesToship);
-            ShiporderLinesToShipFragment.textViewSelectedOrder = getView().findViewById(R.id.textViewSelectedOrder);
-            ShiporderLinesToShipFragment.shipThisView = getView().findViewById(R.id.shipThisView);
-            ShiporderLinesToShipFragment.quickhelpText = getView().findViewById(R.id.quickhelpText);
-            ShiporderLinesToShipFragment.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
-            ShiporderLinesToShipFragment.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
+            this.recyclerViewShiporderLinesToship = getView().findViewById(R.id.recyclerViewShiporderLinesToship);
+            this.textViewSelectedOrder = getView().findViewById(R.id.textViewSelectedOrder);
+            this.shipThisView = getView().findViewById(R.id.shipThisView);
+            this.quickhelpText = getView().findViewById(R.id.quickhelpText);
+            this.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
+            this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
         }
 
 
@@ -119,7 +130,7 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     @Override
     public void mFieldsInitialize() {
-        ShiporderLinesToShipFragment.quickhelpText.setText(R.string.scan_salesorder);
+        this.quickhelpText.setText(R.string.scan_salesorder);
     }
 
     @Override
@@ -134,14 +145,14 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     //End Region Public Methods
 
-    public static void pSetChosenShipment(){
+    public  void pSetChosenShipment(){
 
         if (!cShipment.currentShipment.getProcessingSequenceStr().isEmpty()) {
-            ShiporderLinesToShipFragment.textViewSelectedOrder.setText(cShipment.currentShipment.getProcessingSequenceStr());
+            this.textViewSelectedOrder.setText(cShipment.currentShipment.getProcessingSequenceStr());
 
         }
         else {
-            ShiporderLinesToShipFragment.textViewSelectedOrder.setText(cShipment.currentShipment.getSourceNoStr());
+            this.textViewSelectedOrder.setText(cShipment.currentShipment.getSourceNoStr());
         }
 
     }
@@ -149,25 +160,29 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
     //Region Private Methods
 
     private void setQuickHelpListener() {
-        ShiporderLinesToShipFragment.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
+        this.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cUserInterface.pDoRotate(ShiporderLinesToShipFragment.quickhelpIcon, 0);
-                if (ShiporderLinesToShipFragment.quickhelpText.getVisibility() == View.VISIBLE) {
-                    ShiporderLinesToShipFragment.quickhelpText.setVisibility(View.GONE);
+                cUserInterface.pDoRotate(quickhelpIcon, 0);
+                if (quickhelpText.getVisibility() == View.VISIBLE) {
+                    quickhelpText.setVisibility(View.GONE);
                 }
                 else {
-                    ShiporderLinesToShipFragment.quickhelpText.setVisibility(View.VISIBLE);
+                    quickhelpText.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
     private void mSetCurrentSourceNoListener() {
-        ShiporderLinesToShipFragment.shipThisView.setOnClickListener(new View.OnClickListener() {
+        this.shipThisView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             ShiporderLinesActivity.pHandleScan(null,true);
+                if (cAppExtension.activity instanceof  ShiporderLinesActivity) {
+                    ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+                    shiporderLinesActivity.pHandleScan(null,true);
+
+                }
             }
         });
     }
@@ -181,40 +196,30 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
     private void mFillRecycler(List<cShipment> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            this.mNoLinesAvailable(true);
+            this.mNoLinesAvailable();
             return;
         }
 
-        cShipment.getShipmentsToshipAdapter().pFillData(pvDataObl);
-        ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship.setHasFixedSize(false);
-        ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship.setAdapter(cShipment.getShipmentsToshipAdapter());
-        ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.getShipmentAdapter().pFillData(pvDataObl);
+        this.recyclerViewShiporderLinesToship.setHasFixedSize(false);
+        this.recyclerViewShiporderLinesToship.setAdapter(this.getShipmentAdapter());
+        this.recyclerViewShiporderLinesToship.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
+        if (cAppExtension.activity instanceof  ShiporderLinesActivity) {
+            ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+            shiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
+        }
 
     }
 
-    //todo: check why this is always true
-    private void mNoLinesAvailable(Boolean pvEnabledBln) {
+    private void mNoLinesAvailable() {
 
         if (ShiporderLinesActivity.currentLineFragment == this) {
             //Close no linesInt fragment if needed
-            if (!pvEnabledBln) {
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment ) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
-                }
 
-                return;
-
-            }
 
             //Hide the recycler view
-            ShiporderLinesToShipFragment.recyclerViewShiporderLinesToship.setVisibility(View.INVISIBLE);
+            this.recyclerViewShiporderLinesToship.setVisibility(View.INVISIBLE);
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
@@ -223,14 +228,14 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
             fragmentTransaction.commit();
 
             //Change tabcounter text
-            ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
+            if (cAppExtension.activity instanceof  ShiporderLinesActivity) {
+                ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity) cAppExtension.activity;
+                shiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
+            }
 
         }
     }
 
-
     //End Region Private Methods
-
-
 
 }

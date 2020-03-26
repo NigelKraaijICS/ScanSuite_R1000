@@ -18,6 +18,7 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -30,7 +31,15 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
 
     //Region Private Properties
 
-    private static RecyclerView recyclerViewSortorderLinesTotal;
+    private RecyclerView recyclerViewSortorderLinesTotal;
+    private cPickorderLineAdapter pickorderLineAdapter;
+    private cPickorderLineAdapter getPickorderLineAdapter(){
+        if (this.pickorderLineAdapter == null) {
+            this.pickorderLineAdapter = new cPickorderLineAdapter();
+        }
+
+        return  this.pickorderLineAdapter;
+    }
 
     //End Region Private Properties
 
@@ -95,7 +104,7 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
     public void mFindViews() {
 
         if (getView() != null) {
-            SortorderLinesTotalFragment.recyclerViewSortorderLinesTotal = getView().findViewById(R.id.recyclerViewSortorderLinesTotal);
+            this.recyclerViewSortorderLinesTotal = getView().findViewById(R.id.recyclerViewSortorderLinesTotal);
         }
     }
 
@@ -124,13 +133,15 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
     private void mFillRecycler(List<cPickorderLine> pvDataObl) {
 
 
-        cPickorderLine.getPickorderLineTotalAdapter().pFillData(pvDataObl);
-        SortorderLinesTotalFragment.recyclerViewSortorderLinesTotal.setHasFixedSize(false);
-        SortorderLinesTotalFragment.recyclerViewSortorderLinesTotal.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
-        SortorderLinesTotalFragment.recyclerViewSortorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.getPickorderLineAdapter().pFillData(pvDataObl);
+        this.recyclerViewSortorderLinesTotal.setHasFixedSize(false);
+        this.recyclerViewSortorderLinesTotal.setAdapter(this.getPickorderLineAdapter());
+        this.recyclerViewSortorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-
+        if (cAppExtension.activity instanceof  SortorderLinesActivity) {
+            SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+            sortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+        }
     }
 
     //End Region Private Methods

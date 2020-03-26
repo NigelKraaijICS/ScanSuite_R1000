@@ -1,14 +1,12 @@
 package SSU_WHS.Basics.Packaging;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cRegex;
-import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
@@ -18,7 +16,7 @@ public class cPackaging {
 
     //region Public Properties
 
-    public String codeStr;
+    private String codeStr;
     public String getCodeStr() {
         return codeStr;
     }
@@ -28,22 +26,16 @@ public class cPackaging {
         return descriptionStr;
     }
 
-    public static cPackagingViewModel gPackagingViewModel;
-    public static cPackagingViewModel getPackagingViewModel() {
-        if (gPackagingViewModel == null) {
-            gPackagingViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cPackagingViewModel.class);
-        }
-        return gPackagingViewModel;
+    private cPackagingViewModel getPackagingViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPackagingViewModel.class);
     }
 
-    public cPackagingEntity packagingEntity;
-    public static List<cPackaging> allPackaging;
-
-    public  static Boolean packagingAvailableBln;
+    private cPackagingEntity packagingEntity;
+    private static List<cPackaging> allPackaging;
+    private static Boolean packagingAvailableBln;
 
     //end region Public Properties
 
-    ;
     //Region Constructor
     cPackaging(JSONObject pvJsonObject) {
         this.packagingEntity = new cPackagingEntity(pvJsonObject);
@@ -55,7 +47,7 @@ public class cPackaging {
     //Region Public Methods
 
     public boolean pInsertInDatabaseBln() {
-        cPackaging.getPackagingViewModel().insert(this.packagingEntity);
+        this.getPackagingViewModel().insert(this.packagingEntity);
 
         if (cPackaging.allPackaging == null){
             cPackaging.allPackaging = new ArrayList<>();
@@ -65,13 +57,14 @@ public class cPackaging {
     }
 
     public static boolean pTruncateTableBln(){
-        cPackaging.getPackagingViewModel().deleteAll();
+        cPackagingViewModel packagingViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPackagingViewModel.class);
+        packagingViewModel.deleteAll();
         return true;
     }
 
     public static boolean pGetPackagingViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cPackaging.allPackaging = null;
             cPackaging.pTruncateTableBln();
         }
@@ -81,8 +74,10 @@ public class cPackaging {
         }
 
         cWebresult WebResult;
-        WebResult =  cPackaging.getPackagingViewModel().pGetPackagingFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+
+        cPackagingViewModel packagingViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPackagingViewModel.class);
+        WebResult =  packagingViewModel.pGetPackagingFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {

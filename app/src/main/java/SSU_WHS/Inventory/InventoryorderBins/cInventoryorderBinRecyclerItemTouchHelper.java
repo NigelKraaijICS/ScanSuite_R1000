@@ -3,6 +3,7 @@ package SSU_WHS.Inventory.InventoryorderBins;
 import android.graphics.Canvas;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +33,7 @@ public class cInventoryorderBinRecyclerItemTouchHelper extends ItemTouchHelper.S
 
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         return true;
     }
 
@@ -46,7 +47,7 @@ public class cInventoryorderBinRecyclerItemTouchHelper extends ItemTouchHelper.S
     }
 
     @Override
-    public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
+    public void onChildDrawOver(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                 int actionState, boolean isCurrentlyActive) {
         final View foregroundView = ((cInventoryorderBinAdapter.InventoryorderBinViewHolder) viewHolder).viewForeground;
@@ -55,14 +56,14 @@ public class cInventoryorderBinRecyclerItemTouchHelper extends ItemTouchHelper.S
     }
 
     @Override
-    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         final View foregroundView = ((cInventoryorderBinAdapter.InventoryorderBinViewHolder) viewHolder).viewForeground;
         getDefaultUIUtil().clearView(foregroundView);
     }
 
     @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView,
-                            RecyclerView.ViewHolder viewHolder, float dX, float dY,
+    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                            @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
         final View foregroundView = ((cInventoryorderBinAdapter.InventoryorderBinViewHolder) viewHolder).viewForeground;
 
@@ -71,7 +72,7 @@ public class cInventoryorderBinRecyclerItemTouchHelper extends ItemTouchHelper.S
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         this.listener.onSwiped(viewHolder, direction, viewHolder.getAdapterPosition());
     }
 

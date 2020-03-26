@@ -1,11 +1,10 @@
 package SSU_WHS.Basics.Workplaces;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
@@ -15,42 +14,24 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cWorkplace {
 
     //region Public Properties
-    public String workplaceStr;
+    private String workplaceStr;
     public String getWorkplaceStr() {
         return workplaceStr;
     }
 
-    public String descriptionStr;
+    private String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    public List<String> errorMessagesObl;
-    public List<String> getErrorMessageObl() {
-        return errorMessagesObl;
-    }
-
-    public cWorkplaceEntity workplaceEntity;
-    public boolean inDatabaseBln;
+    private cWorkplaceEntity workplaceEntity;
 
 
     public static ArrayList<cWorkplace> allWorkplacesObl;
     public  static cWorkplace currentWorkplace;
 
-    public static cWorkplaceViewModel gWorkplaceViewModel;
-    public static cWorkplaceViewModel getWorkplaceViewModel() {
-        if (gWorkplaceViewModel == null) {
-            gWorkplaceViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cWorkplaceViewModel.class);
-        }
-        return gWorkplaceViewModel;
-    }
-
-    public static cWorkplaceAdapter gWorkplaceAdapter;
-    public static cWorkplaceAdapter getWorkplaceAdapter() {
-        if (gWorkplaceAdapter == null) {
-            gWorkplaceAdapter = new cWorkplaceAdapter();
-        }
-        return gWorkplaceAdapter;
+    private cWorkplaceViewModel getWorkplaceViewModel () {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cWorkplaceViewModel.class);
     }
 
     //end region Public Propties
@@ -65,8 +46,7 @@ public class cWorkplace {
 
     //Region Public Methods
     public boolean pInsertInDatabaseBln() {
-        cWorkplace.getWorkplaceViewModel().insert(this.workplaceEntity);
-        this.inDatabaseBln = true;
+         this.getWorkplaceViewModel().insert(this.workplaceEntity);
 
         if (cWorkplace.allWorkplacesObl == null){
             cWorkplace.allWorkplacesObl = new ArrayList<>();
@@ -81,18 +61,18 @@ public class cWorkplace {
         }
 
         for (cWorkplace workplace : cWorkplace.allWorkplacesObl)
-        {
-            if(workplace.workplaceStr.equalsIgnoreCase(pvWorkplace) == true ){
-                return  workplace;
+            if (workplace.workplaceStr.equalsIgnoreCase(pvWorkplace)) {
+                return workplace;
             }
-        }
         return null;
     }
 
     public static boolean pTruncateTableBln(){
-        cWorkplace.getWorkplaceViewModel().deleteAll();
+
+        cWorkplaceViewModel workplaceViewModel =     new ViewModelProvider(cAppExtension.fragmentActivity).get(cWorkplaceViewModel.class);
+        workplaceViewModel.deleteAll();
         return true;
-            }
+    }
 
     public static boolean pGetWorkplacesViaWebserviceBln() {
 
@@ -100,15 +80,13 @@ public class cWorkplace {
         cWorkplace.pTruncateTableBln();
 
         cWebresult WebResult;
-        WebResult =  cWorkplace.getWorkplaceViewModel().pGetWorkplacesFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
 
+        cWorkplaceViewModel workplaceViewModel =     new ViewModelProvider(cAppExtension.fragmentActivity).get(cWorkplaceViewModel.class);
 
-           List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+        WebResult =  workplaceViewModel.pGetWorkplacesFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
+            for ( JSONObject jsonObject :  WebResult.getResultDtt()) {
                 cWorkplace Workplace = new cWorkplace(jsonObject);
                 Workplace.pInsertInDatabaseBln();
             }

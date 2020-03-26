@@ -18,15 +18,13 @@ public class cIntakeorderBarcodeEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODE_NAMESTR)
-    public String barcode;
-
+    public String barcode = "";
     public String getBarcodeStr() {
         return this.barcode;
     }
 
     @ColumnInfo(name = cDatabase.BARCODETYPE_NAMESTR)
     public String barcodetype;
-
     public String getBarcodeTypesStr() {
         return this.barcodetype;
     }
@@ -73,13 +71,9 @@ public class cIntakeorderBarcodeEntity {
     @ColumnInfo(name = cDatabase.RECEIVE_AMOUNT_MANUAL_NAMESTR)
     public Boolean receiveAmountManual;
 
-    public Boolean getReceiveAmountManualBln() {
-        return this.receiveAmountManual;
-    }
     //End Region Public Properties
 
-    //Region Constructor
-    public cIntakeorderBarcodeEntity() {
+    public  cIntakeorderBarcodeEntity(){
 
     }
 

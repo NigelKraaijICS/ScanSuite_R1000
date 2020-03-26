@@ -1,5 +1,6 @@
 package SSU_WHS.General.Licenses;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import ICS.cAppExtension;
@@ -26,48 +27,27 @@ public class cLicense {
     public static LicenseEnu currentLicenseEnu = LicenseEnu.Unknown;
 
 
-    public static cLicenseViewModel licenseViewModel;
-    public static cLicenseViewModel getLicenseViewModel() {
-        if (licenseViewModel == null) {
-            licenseViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cLicenseViewModel.class);
-        } return licenseViewModel;
-    }
-
     public cLicense() {
 
     }
 
     public static Boolean pGetLicenseViaWebserviceBln() {
 
-        Boolean resultBln = true;
-
         cWebresult WebResult;
-        WebResult =  cLicense.getLicenseViewModel().pLicenseGetViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-            resultBln= true;
-            return  resultBln;
-        }
-        else {
 
-            resultBln = false;
-            return resultBln;
-        }
+        cLicenseViewModel licenseViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cLicenseViewModel.class);
+
+        WebResult =  licenseViewModel.pLicenseGetViaWebserviceWrs();
+        return WebResult.getResultBln() && WebResult.getSuccessBln();
     }
 
     public static Boolean pReleaseLicenseViaWebserviceBln() {
 
-        Boolean resultBln = true;
-
         cWebresult WebResult;
-        WebResult =  cLicense.getLicenseViewModel().pLicenseReleaseViaWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-            resultBln = true;
-            return  resultBln;
-        }
-        else {
-            resultBln = false;
-            return resultBln;
-        }
+        cLicenseViewModel licenseViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cLicenseViewModel.class);
+
+        WebResult =  licenseViewModel.pLicenseReleaseViaWebserviceWrs();
+        return WebResult.getResultBln() && WebResult.getSuccessBln();
     }
 
 }

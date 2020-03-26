@@ -4,8 +4,6 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
-
 import SSU_WHS.Webservice.cWebresult;
 
 public class cPickorderLineViewModel extends AndroidViewModel {
@@ -33,8 +31,5 @@ public class cPickorderLineViewModel extends AndroidViewModel {
     public cWebresult pPickLineHandledViaWebserviceWrs() {return this.Repository.pPickLineHandledViaWebserviceWrs();}
     public cWebresult pResetViaWebserviceWrs() {return this.Repository.pResetViaWebserviceWrs();}
     public cWebresult pGetSortLocationAdviceViaWebserviceWrs(String pvSourceNoStr) {return this.Repository.pGetSortLocationAdviceViaWebserviceWrs(pvSourceNoStr);}
-
-    public List<cPickorderLineEntity> pGetLinesForSourceNoObl(String pvSourceNoStr) {return this.Repository.pGetLinesForSourceNoObl(pvSourceNoStr);}
-    public List<cPickorderLineEntity> pGetSortLineForItemNoAndVariantCodeObl(String pvItemNoStr, String pvVariantCodeStr) {return this.Repository.pGetSortLineForItemNoAndVariantCodeObl(pvItemNoStr, pvVariantCodeStr);}
 
 }

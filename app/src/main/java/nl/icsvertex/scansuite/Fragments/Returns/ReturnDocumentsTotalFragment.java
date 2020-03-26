@@ -36,8 +36,17 @@ public class ReturnDocumentsTotalFragment extends Fragment implements iICSDefaul
 
     //Region Private Properties
 
-    private static RecyclerView recyclerViewReturnDocumentsTotal;
-    private static ImageView imageCloseOrder;
+    private  RecyclerView recyclerViewReturnDocumentsTotal;
+    private  ImageView imageCloseOrder;
+
+    private  cReturnorderDocumentAdapter returnorderDocumentAdapter;
+    private  cReturnorderDocumentAdapter getReturnorderDocumentAdapter(){
+        if (this.returnorderDocumentAdapter == null) {
+            this.returnorderDocumentAdapter = new cReturnorderDocumentAdapter();
+        }
+
+        return  this.returnorderDocumentAdapter;
+    }
 
     //End Region Private Properties
 
@@ -87,10 +96,7 @@ public class ReturnDocumentsTotalFragment extends Fragment implements iICSDefaul
 
         //Remove the enviroment
         this.mRemoveAdapterFromFragment();
-        ReturnDocumentsTotalFragment.mGetData();
-        ReturnDocumentsToDoFragment.pGetData();
-        ReturnDocumentsDoneFragment.pGetData();
-
+        this.mGetData();
     }
 
     private void mRemoveAdapterFromFragment(){
@@ -120,26 +126,26 @@ public class ReturnDocumentsTotalFragment extends Fragment implements iICSDefaul
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        ReturnDocumentsTotalFragment.mGetData();
+        this.mGetData();
     }
 
     @Override
     public void mFindViews() {
-        ReturnDocumentsTotalFragment.recyclerViewReturnDocumentsTotal = Objects.requireNonNull(getView()).findViewById(R.id.recyclerViewReturnDocumentsTotal);
-        ReturnDocumentsTotalFragment.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
+        this.recyclerViewReturnDocumentsTotal = Objects.requireNonNull(getView()).findViewById(R.id.recyclerViewReturnDocumentsTotal);
+        this.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
     }
 
     @Override
     public void mFieldsInitialize() {
 
-        ReturnDocumentsTotalFragment.imageCloseOrder.setVisibility(View.INVISIBLE);
+        this.imageCloseOrder.setVisibility(View.INVISIBLE);
 
         if (cReturnorder.currentReturnOrder.pGetDocumentsDoneFromDatabasObl().size() >0 && cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().size() == 0 ) {
-            ReturnDocumentsTotalFragment.imageCloseOrder.setVisibility(View.VISIBLE);
+            this.imageCloseOrder.setVisibility(View.VISIBLE);
         }
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cReturnorderDocumentRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(ReturnDocumentsTotalFragment.recyclerViewReturnDocumentsTotal);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewReturnDocumentsTotal);
 
 
     }
@@ -153,34 +159,35 @@ public class ReturnDocumentsTotalFragment extends Fragment implements iICSDefaul
 
     //Region Public Methods
 
-    public static void pGetData(){
-        mGetData();
-    }
-
     //End Region Public Methods
 
     //Region Private Methods
 
-    private static void mGetData() {
-        mFillRecycler(cReturnorder.currentReturnOrder.pGetDocumentsTotalFromDatabasObl());
+    private  void mGetData() {
+       this.mFillRecycler(cReturnorder.currentReturnOrder.pGetDocumentsTotalFromDatabasObl());
     }
 
-    private static void mFillRecycler(List<cReturnorderDocument> pvDataObl) {
+    private  void mFillRecycler(List<cReturnorderDocument> pvDataObl) {
+        this.getReturnorderDocumentAdapter().pFillData(pvDataObl);
+        this.recyclerViewReturnDocumentsTotal.setHasFixedSize(false);
+        this.recyclerViewReturnDocumentsTotal.setAdapter(this.getReturnorderDocumentAdapter());
+        this.recyclerViewReturnDocumentsTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewReturnDocumentsTotal.setVisibility(View.VISIBLE);
 
-        cReturnorderDocument.getReturnorderDocumentTotalAdapter().pFillData(pvDataObl);
-        recyclerViewReturnDocumentsTotal.setHasFixedSize(false);
-        recyclerViewReturnDocumentsTotal.setAdapter(cReturnorderDocument.getReturnorderDocumentTotalAdapter());
-        recyclerViewReturnDocumentsTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        recyclerViewReturnDocumentsTotal.setVisibility(View.VISIBLE);
-        ReturnorderDocumentsActivity.pChangeTabCounterText(cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsTotalFromDatabasObl().size()));
-
+        if (cAppExtension.activity instanceof ReturnorderDocumentsActivity ) {
+            ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+            returnorderDocumentsActivity.pChangeTabCounterText(cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsTotalFromDatabasObl().size()));
+        }
     }
 
     private void mSetDoneListener() {
-        ReturnDocumentsTotalFragment.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
+        this.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ReturnorderDocumentsActivity.pHandleOrderCloseClick();
+                if (cAppExtension.activity instanceof ReturnorderDocumentsActivity ) {
+                    ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity) cAppExtension.activity;
+                    returnorderDocumentsActivity.pHandleOrderCloseClick();
+                }
             }
         });
     }

@@ -1,6 +1,6 @@
 package SSU_WHS.Basics.Article;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -39,7 +39,7 @@ public class cArticle {
         return description2Str;
     }
 
-    public String itemInfoCodeStr;
+    private String itemInfoCodeStr;
     public String getItemInfoCodeStr() { return itemInfoCodeStr; }
 
     public String vendorItemNoStr;
@@ -48,25 +48,20 @@ public class cArticle {
     public String vendorItemDescriptionStr;
     public String getItemDescriptionStr() { return vendorItemDescriptionStr; }
 
-    public String component10Str;
+    private String component10Str;
     public String getComponent10Str() { return component10Str; }
 
-    public Double priceDbl;
+    private Double priceDbl;
     public Double getPriceDbl() { return priceDbl; }
 
-    public cArticleEntity articleEntity;
+    private cArticleEntity articleEntity;
     public  List<cArticleBarcode> barcodesObl;
     public  List<cArticleStock> stockObl;
 
-    public static cArticleViewModel gArticleViewModel;
-    public static cArticleViewModel getArticleViewModel() {
-        if (gArticleViewModel == null) {
-            gArticleViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cArticleViewModel.class);
-        }
-        return gArticleViewModel;
+    private cArticleViewModel getArticleViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleViewModel.class);
     }
 
-    public static List<cArticle> allArticles;
     public  static cArticle currentArticle;
 
     //End Region Public Properties
@@ -92,16 +87,12 @@ public class cArticle {
     public static cArticle pGetArticleByBarcodeViaWebservice(cBarcodeScan pvBarcodescan){
 
         cWebresult webresult;
-        webresult = cArticle.getArticleViewModel().pGetArticleByBarcodeViaWebserviceWrs(pvBarcodescan);
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
 
-
-            List<JSONObject> myList = webresult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-                cArticle article = new cArticle(jsonObject);
-                return  article;
+        cArticleViewModel articleViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleViewModel.class);
+        webresult = articleViewModel.pGetArticleByBarcodeViaWebserviceWrs(pvBarcodescan);
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
+            for (JSONObject jsonObject :  webresult.getResultDtt()) {
+                return new cArticle(jsonObject);
             }
             return null;
         }
@@ -114,13 +105,10 @@ public class cArticle {
     public boolean pGetBarcodesViaWebserviceBln(){
         cWebresult webresult;
 
-        webresult = cArticle.getArticleViewModel().pGetBarcodesViaWebserviceWrs(this);
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+        webresult = getArticleViewModel().pGetBarcodesViaWebserviceWrs(this);
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
-            List<JSONObject> myList = webresult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+            for (JSONObject jsonObject :  webresult.getResultDtt()) {
                 cArticleBarcode articleBarcode = new cArticleBarcode(jsonObject, this);
 
                 if (this.barcodesObl == null) {
@@ -138,16 +126,13 @@ public class cArticle {
         }
     }
 
-    public boolean pGetStockViaWebserviceBln(){
+    public void pGetStockViaWebserviceBln(){
         cWebresult webresult;
 
-        webresult = cArticle.getArticleViewModel().pGetStockViaWebserviceWrs(this);
-        if (webresult.getResultBln() == true && webresult.getSuccessBln() == true ) {
+        webresult = getArticleViewModel().pGetStockViaWebserviceWrs(this);
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
-            List<JSONObject> myList = webresult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
+            for (JSONObject jsonObject :  webresult.getResultDtt()) {
                 cArticleStock articleStock = new cArticleStock(jsonObject, this);
 
                 if (this.stockObl == null) {
@@ -157,11 +142,9 @@ public class cArticle {
                 this.stockObl.add(articleStock);
 
             }
-            return true;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES);
-            return false;
         }
     }
 

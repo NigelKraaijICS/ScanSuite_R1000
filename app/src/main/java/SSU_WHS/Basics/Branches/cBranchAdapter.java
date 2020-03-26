@@ -87,7 +87,8 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
 
                     if (cAppExtension.context instanceof LoginActivity) {
                         cUser.currentUser.currentBranch = branch;
-                        LoginActivity.pBranchSelected(branch);
+                        LoginActivity loginActivity = new LoginActivity();
+                        loginActivity.pBranchSelected(branch);
                     }
                 }
             });

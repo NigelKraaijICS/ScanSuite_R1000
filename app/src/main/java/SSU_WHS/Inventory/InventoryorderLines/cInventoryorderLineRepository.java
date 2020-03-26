@@ -27,7 +27,7 @@ public class cInventoryorderLineRepository {
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
 
     private static class UpdateInventorylineQuantityParams {
         Long lineNoLng;
@@ -41,7 +41,7 @@ public class cInventoryorderLineRepository {
 
     //Region Constructor
     cInventoryorderLineRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db= acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.inventoryorderLineDao = db.inventoryorderLineDao();
     }
     //End Region Constructor
@@ -122,24 +122,20 @@ public class cInventoryorderLineRepository {
     }
 
     public Double pGetTotalCountDbl() {
-        Double resultDbl = Double.valueOf(0);
+        Double resultDbl = (double) 0;
         try {
             resultDbl = new pGetTotalCountFromDatabaseAsyncTask(inventoryorderLineDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultDbl;
     }
 
     public Double pGetCountForBinCodeDbl(String pvBincode) {
-        Double resultDbl = Double.valueOf(0);
+        Double resultDbl = (double) 0;
         try {
             resultDbl = new pGetCountForBincodeFromDatabaseAsyncTask(inventoryorderLineDao).execute(pvBincode).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultDbl;
@@ -151,13 +147,7 @@ public class cInventoryorderLineRepository {
 
         try {
             webResultWrs = new mSaveLineViaViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -173,13 +163,7 @@ public class cInventoryorderLineRepository {
 
         try {
             webResultWrs = new mResetLineViaViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -189,7 +173,7 @@ public class cInventoryorderLineRepository {
         return webResultWrs;
     }
 
-    public boolean pUpdateQuantityBln() {
+    public boolean pUpdateQuantity() {
 
         Integer integerValue;
         UpdateInventorylineQuantityParams updateInventorylineQuantityParams = new UpdateInventorylineQuantityParams((long) cInventoryorderLine.currentInventoryOrderLine.getLineNoInt(),
@@ -199,15 +183,8 @@ public class cInventoryorderLineRepository {
         try {
             integerValue = new mUpdateQuantityHandledAsyncTask(inventoryorderLineDao).execute(updateInventorylineQuantityParams).get();
 
-            if (integerValue != 0) {
-                return  true;}
-            else{
-                return false;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return  false;
-        } catch (ExecutionException e) {
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return  false;
         }
@@ -298,7 +275,7 @@ public class cInventoryorderLineRepository {
                 l_PropertyInfo8Pin.setValue(propertiesHandledObl);
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINESAVE, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINESAVE, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -341,8 +318,7 @@ public class cInventoryorderLineRepository {
                 l_PropertyInfo5Pin.setValue(cInventoryorderLine.currentInventoryOrderLine.getLineNoInt());
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
-
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

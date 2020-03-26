@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ICS.Utils.cText;
@@ -43,14 +44,15 @@ public class cPickorderLineBarcodeAdapter extends RecyclerView.Adapter<cPickorde
         this.layoutInflaterObject = LayoutInflater.from(cAppExtension.context);
     }
 
+    @NonNull
     @Override
-    public pickorderLineBarcodeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public pickorderLineBarcodeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = this.layoutInflaterObject.inflate(R.layout.recycler_barcode, parent, false);
         return new pickorderLineBarcodeViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(pickorderLineBarcodeViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull pickorderLineBarcodeViewHolder holder, int position) {
         if (cPickorderLineBarcode.allLineBarcodesObl != null) {
             final cPickorderLineBarcode pickorderLineBarcode = cPickorderLineBarcode.allLineBarcodesObl.get(position);
             final String barcodeStr = pickorderLineBarcode.getBarcodeStr();
@@ -59,12 +61,13 @@ public class cPickorderLineBarcodeAdapter extends RecyclerView.Adapter<cPickorde
             holder.textViewPickorderLineBarcode.setText(barcodeStr);
             holder.textViewPickorderLineBarcodeQuantity.setText(quantity);
 
-            holder.pickorderLineBarcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mBarcodeSelected(barcodeStr);
-                }
-            });
+            //todo: this is not used
+//            holder.pickorderLineBarcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    mBarcodeSelected(barcodeStr);
+//                }
+//            });
         }
     }
 
@@ -75,7 +78,5 @@ public class cPickorderLineBarcodeAdapter extends RecyclerView.Adapter<cPickorde
         else return 0;
     }
 
-    private static void mBarcodeSelected(String pvBarcode) {
-        cPickorderLineBarcode.pPickorderLineBarcode(pvBarcode);
-    }
+
 }

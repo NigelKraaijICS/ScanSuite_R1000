@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +26,7 @@ import nl.icsvertex.scansuite.R;
 public class cReturnorderBarcodeAdapter extends RecyclerView.Adapter<cReturnorderBarcodeAdapter.returnorderBarcodeViewHolder>  {
 
     //Region Public Properties
-    public class returnorderBarcodeViewHolder extends RecyclerView.ViewHolder{
+    public static class returnorderBarcodeViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewBarcode;
         private TextView textViewQuantity;
         public LinearLayout barcodeItemLinearLayout;
@@ -56,14 +57,15 @@ public class cReturnorderBarcodeAdapter extends RecyclerView.Adapter<cReturnorde
 
     //Region Public Methods
 
+    @NonNull
     @Override
-    public returnorderBarcodeViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewTypeInt) {
+    public returnorderBarcodeViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.layoutInflaterObject.inflate(R.layout.recycler_barcode, pvParent, false);
         return new returnorderBarcodeViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(returnorderBarcodeViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull returnorderBarcodeViewHolder pvHolder, int pvPositionInt) {
 
         if (cReturnorderLine.currentReturnOrderLine == null || cReturnorderLine.currentReturnOrderLine.barcodeObl() == null || cReturnorderLine.currentReturnOrderLine.barcodeObl() .size() == 0) {
             return;
@@ -86,7 +88,11 @@ public class cReturnorderBarcodeAdapter extends RecyclerView.Adapter<cReturnorde
                     }
                 }
 
-                ReturnArticleDetailFragment.pHandleScan(cBarcodeScan.pFakeScan(cReturnorderLine.currentReturnOrderLine.barcodeObl().get(0).getBarcodeStr()));
+                if (cAppExtension.dialogFragment instanceof ReturnArticleDetailFragment ) {
+                    ReturnArticleDetailFragment returnArticleDetailFragment = (ReturnArticleDetailFragment)cAppExtension.dialogFragment;
+                    returnArticleDetailFragment.pHandleScan(cBarcodeScan.pFakeScan(cReturnorderLine.currentReturnOrderLine.barcodeObl().get(0).getBarcodeStr()));
+                }
+
             }
         });
     }

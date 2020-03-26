@@ -9,17 +9,16 @@ public class cPickorderLineBarcodeRepository {
 
     //Public Properties
 
-    public iPickorderLineBarcodeDao pickorderLineBarcodeDao;
+    private iPickorderLineBarcodeDao pickorderLineBarcodeDao;
 
     //End Public Properties
 
-    //Private properties
-    private  acScanSuiteDatabase db;
     //End Private properties
 
     //Region Constructor
     cPickorderLineBarcodeRepository(Application application) {
-        this.db = acScanSuiteDatabase.pGetDatabase(application);
+        //Private properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(application);
         this.pickorderLineBarcodeDao = db.pickorderLineBarcodeDao();
     }
 

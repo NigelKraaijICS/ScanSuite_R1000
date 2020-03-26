@@ -8,17 +8,16 @@ import SSU_WHS.General.acScanSuiteDatabase;
 public class cIntakeorderMATLineBarcodeRepository {
     //Public Properties
 
-    public iIntakeorderMATLineBarcodeDao intakeorderMATLineBarcodeDao;
+    private iIntakeorderMATLineBarcodeDao intakeorderMATLineBarcodeDao;
 
     //End Public Properties
 
-    //Private properties
-    private acScanSuiteDatabase db;
     //End Private properties
 
     //Region Constructor
     cIntakeorderMATLineBarcodeRepository(Application application) {
-        this.db = acScanSuiteDatabase.pGetDatabase(application);
+        //Private properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(application);
         this.intakeorderMATLineBarcodeDao = db.intakeorderMATLineBarcodeDao();
     }
 

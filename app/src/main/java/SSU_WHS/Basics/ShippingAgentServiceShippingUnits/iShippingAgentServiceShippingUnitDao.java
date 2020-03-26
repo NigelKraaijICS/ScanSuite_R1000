@@ -1,6 +1,5 @@
 package SSU_WHS.Basics.ShippingAgentServiceShippingUnits;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -29,19 +28,19 @@ public interface iShippingAgentServiceShippingUnitDao {
     @Query("SELECT * FROM " + cDatabase.TABLENAME_SHIPPINGAGENTSERVICESHIPPINGUNITS +
             " WHERE " + cDatabase.SHIPPINGAGENT_NAMESTR + " = :shippingAgent" +
             " AND " + cDatabase.SERVICE_NAMESTR + " = :shippingService")
-    LiveData<List<cShippingAgentServiceShippingUnitEntity>> getShippingUnitsByAgentAndServiceLive(String shippingAgent, String shippingService);
+    List<cShippingAgentServiceShippingUnitEntity> getShippingUnitsByAgentAndServiceLive(String shippingAgent, String shippingService);
 
-    @Query("UPDATE " + cDatabase.TABLENAME_SHIPPINGAGENTSERVICESHIPPINGUNITS +
-            " SET " + cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR + " = :newquantity" +
-            " WHERE " + cDatabase.SHIPPINGAGENT_NAMESTR + " = :shippingagent " +
-            " AND " + cDatabase.SERVICE_NAMESTR + " =:shippingagentservice" +
-            " AND " + cDatabase.SHIPPINGUNIT_NAMESTR + " =:shippingunit")
-    void updateShippingUnitQuantityUsed(Integer newquantity, String shippingagent, String shippingagentservice, String shippingunit);
+//    @Query("UPDATE " + cDatabase.TABLENAME_SHIPPINGAGENTSERVICESHIPPINGUNITS +
+//            " SET " + cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR + " = :newquantity" +
+//            " WHERE " + cDatabase.SHIPPINGAGENT_NAMESTR + " = :shippingagent " +
+//            " AND " + cDatabase.SERVICE_NAMESTR + " =:shippingagentservice" +
+//            " AND " + cDatabase.SHIPPINGUNIT_NAMESTR + " =:shippingunit")
+//    void updateShippingUnitQuantityUsed(Integer newquantity, String shippingagent, String shippingagentservice, String shippingunit);
 
 
-    @Query("UPDATE " + cDatabase.TABLENAME_SHIPPINGAGENTSERVICESHIPPINGUNITS +
-            " SET " + cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR + " = 0")
-    void resetShippingUnitQuantityUsed();
+//    @Query("UPDATE " + cDatabase.TABLENAME_SHIPPINGAGENTSERVICESHIPPINGUNITS +
+//            " SET " + cDatabase.SHIPPINGUNITQUANTITYUSED_NAMESTR + " = 0")
+//    void resetShippingUnitQuantityUsed();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_SHIPPINGAGENTSERVICESHIPPINGUNITS +
             " WHERE " + cDatabase.SHIPPINGAGENT_NAMESTR + " = :shippingAgent" +

@@ -1,6 +1,6 @@
 package SSU_WHS.Picken.SalesOrderPackingTable;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,20 +23,13 @@ public class cSalesOrderPackingTable {
     }
 
     private cSalesOrderPackingTableEntity salesOrderPackingTableEntity;
-    public boolean indatabaseBln;
 
     public static List<cSalesOrderPackingTable> allSalesOrderPackingTabelsObl;
 
-    private static cSalesOrderPackingTableViewModel gSalesOrderPackingTableViewModel;
-
-    private static cSalesOrderPackingTableViewModel getSalesOrderPackingTableViewModel() {
-        if (gSalesOrderPackingTableViewModel == null) {
-            gSalesOrderPackingTableViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cSalesOrderPackingTableViewModel.class);
-        }
-        return gSalesOrderPackingTableViewModel;
+    private cSalesOrderPackingTableViewModel getSalesOrderPackingTableViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cSalesOrderPackingTableViewModel.class);
     }
 
-    private static cSalesOrderPackingTable currentSalesOrderPackingTable;
 
     //End Region Public Properties
 
@@ -51,14 +44,16 @@ public class cSalesOrderPackingTable {
     //Region Public Methods
 
     public static void pTruncateTable() {
-        cSalesOrderPackingTable.getSalesOrderPackingTableViewModel().deleteAll();
+
+        cSalesOrderPackingTableViewModel salesOrderPackingTableViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cSalesOrderPackingTableViewModel.class);
+        salesOrderPackingTableViewModel.deleteAll();
         cSalesOrderPackingTable.allSalesOrderPackingTabelsObl = null;
-        cSalesOrderPackingTable.currentSalesOrderPackingTable = null;
+        //todo: this isn't used
+//        cSalesOrderPackingTable.currentSalesOrderPackingTable = null;
     }
 
     public boolean pInsertInDatabaseBln() {
-        cSalesOrderPackingTable.getSalesOrderPackingTableViewModel().insert(this.salesOrderPackingTableEntity);
-        this.indatabaseBln = true;
+        this.getSalesOrderPackingTableViewModel().insert(this.salesOrderPackingTableEntity);
 
         if (cSalesOrderPackingTable.allSalesOrderPackingTabelsObl == null){
             cSalesOrderPackingTable.allSalesOrderPackingTabelsObl = new ArrayList<>();
@@ -69,7 +64,8 @@ public class cSalesOrderPackingTable {
 
     public static boolean pDeleteFromDatabaseBln(String pvProcessingSequenceStr) {
 
-        cSalesOrderPackingTable.getSalesOrderPackingTableViewModel().delete(pvProcessingSequenceStr);
+        cSalesOrderPackingTableViewModel salesOrderPackingTableViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cSalesOrderPackingTableViewModel.class);
+        salesOrderPackingTableViewModel.delete(pvProcessingSequenceStr);
 
         if (cSalesOrderPackingTable.allSalesOrderPackingTabelsObl == null) {
             return true;

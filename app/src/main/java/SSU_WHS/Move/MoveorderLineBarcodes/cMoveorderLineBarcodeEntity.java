@@ -12,14 +12,17 @@ import SSU_WHS.General.cDatabase;
 
 @Entity(tableName = cDatabase.TABLENAME_MOVEORDERLINEBARCODE, primaryKeys = {cDatabase.LINENO_NAMESTR, cDatabase.BARCODE_NAMESTR})
 public class cMoveorderLineBarcodeEntity {
+
     @NonNull
     @ColumnInfo(name = cDatabase.LINENO_NAMESTR)
-    public Long lineNoLng;
+    public Long lineNoLng = 0L;
+    @NonNull
     public Long getLineNoLng() {return lineNoLng;}
 
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODE_NAMESTR)
-    public String barcodeStr;
+    public String barcodeStr = "";
+    @NonNull
     public String getBarcodeStr() {return barcodeStr;}
 
     @ColumnInfo(name = cDatabase.QUANTITYHANDLED_NAMESTR)
@@ -41,7 +44,7 @@ public class cMoveorderLineBarcodeEntity {
         }
     }
 
-    public cMoveorderLineBarcodeEntity(Long pvLineNoLng, String pvBarcodeStr) {
+    public cMoveorderLineBarcodeEntity(@NonNull Long pvLineNoLng, @NonNull String pvBarcodeStr) {
         this.lineNoLng = pvLineNoLng;
         this.barcodeStr = pvBarcodeStr;
         this.quantityHandledStr = "0";

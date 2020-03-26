@@ -23,6 +23,7 @@ import ICS.Utils.cText;
 import ICS.Utils.cUpdate;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Webservice.cWebservice;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BasicsFragment;
 import nl.icsvertex.scansuite.R;
@@ -37,16 +38,13 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
 
     //Region Private Properties
 
-    private static final String SETTINGSFRAGMENT_TAG = "SETTINGSFRAGMENT_TAG";
-
-    private static TextView textViewApplicationVersion;
-    private static TextView textViewWebservice;
-    private static TextView textViewApplicationInstalled;
-    private static TextView textViewApplicationLastUpdate;
-    private static ImageButton updateImageButton;
-    private static ImageButton testWebserviceImageButton;
-    private static Button buttonMySettings;
-
+    private  TextView textViewApplicationVersion;
+    private  TextView textViewWebservice;
+    private  TextView textViewApplicationInstalled;
+    private  TextView textViewApplicationLastUpdate;
+    private  ImageButton updateImageButton;
+    private  ImageButton testWebserviceImageButton;
+    private  Button buttonMySettings;
 
     //End Region Private Properties
 
@@ -108,23 +106,23 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
     public void mFindViews() {
 
         if (getView() != null) {
-            SupportApplicationFragment.textViewApplicationVersion = getView().findViewById(R.id.textViewApplicationVersion);
-            SupportApplicationFragment.textViewWebservice = getView().findViewById(R.id.textViewWebservice);
-            SupportApplicationFragment.updateImageButton = getView().findViewById(R.id.updateImageButton);
-            SupportApplicationFragment.testWebserviceImageButton = getView().findViewById(R.id.testWebserviceImageButton);
-            SupportApplicationFragment.buttonMySettings = getView().findViewById(R.id.buttonMySettings);
-            SupportApplicationFragment.textViewApplicationInstalled = getView().findViewById(R.id.textViewApplicationInstalled);
-            SupportApplicationFragment.textViewApplicationLastUpdate = getView().findViewById(R.id.textViewApplicationLastUpdate);
+            this.textViewApplicationVersion = getView().findViewById(R.id.textViewApplicationVersion);
+            this.textViewWebservice = getView().findViewById(R.id.textViewWebservice);
+            this.updateImageButton = getView().findViewById(R.id.updateImageButton);
+            this.testWebserviceImageButton = getView().findViewById(R.id.testWebserviceImageButton);
+            this.buttonMySettings = getView().findViewById(R.id.buttonMySettings);
+            this.textViewApplicationInstalled = getView().findViewById(R.id.textViewApplicationInstalled);
+            this.textViewApplicationLastUpdate = getView().findViewById(R.id.textViewApplicationLastUpdate);
         }
     }
 
     @Override
     public void mFieldsInitialize() {
-        SupportApplicationFragment.textViewApplicationVersion.setText(cDeviceInfo.getAppVersion());
-        SupportApplicationFragment.textViewWebservice.setText(cWebservice.WEBSERVICE_URL);
-        SupportApplicationFragment.updateImageButton.setVisibility(View.INVISIBLE);
-        SupportApplicationFragment.textViewApplicationInstalled.setText(cDeviceInfo.getInstalldate());
-        SupportApplicationFragment.textViewApplicationLastUpdate.setText(cDeviceInfo.getLastUpdateDate());
+        this.textViewApplicationVersion.setText(cDeviceInfo.getAppVersion());
+        this.textViewWebservice.setText(cWebservice.WEBSERVICE_URL);
+        this.updateImageButton.setVisibility(View.INVISIBLE);
+        this.textViewApplicationInstalled.setText(cDeviceInfo.getInstalldate());
+        this.textViewApplicationLastUpdate.setText(cDeviceInfo.getLastUpdateDate());
     }
 
     @Override
@@ -139,14 +137,14 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
     //Region Private Methods
 
     private void mSetUpdateListener() {
-        SupportApplicationFragment.updateImageButton.setOnClickListener(new View.OnClickListener() {
+        this.updateImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUpdate.mUpdateBln(updateImageButton ,"");
             }
         });
 
-        SupportApplicationFragment.buttonMySettings.setOnClickListener(new View.OnClickListener() {
+        this.buttonMySettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowSettings();
@@ -155,7 +153,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
     }
 
     private void mTestWebserviceListener() {
-        SupportApplicationFragment.testWebserviceImageButton.setOnClickListener(new View.OnClickListener() {
+        this.testWebserviceImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cWebservice.pGetWebserviceAvailableBln()) {
@@ -187,7 +185,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
 
     private void mShowSettings() {
         BasicsFragment basicsFragment = new BasicsFragment();
-        basicsFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), SETTINGSFRAGMENT_TAG);
+        basicsFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), cPublicDefinitions.SETTINGSFRAGMENT_TAG);
     }
 
     //End Region private Methods

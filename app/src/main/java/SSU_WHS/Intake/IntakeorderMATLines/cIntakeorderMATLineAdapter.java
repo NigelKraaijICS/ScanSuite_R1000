@@ -24,7 +24,7 @@ import nl.icsvertex.scansuite.R;
 public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder>  {
 
     //Region Public Properties
-    public class IntakeorderMATLineViewHolder extends RecyclerView.ViewHolder{
+    public static class IntakeorderMATLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewBinCode;
         private TextView textViewQuantity;
@@ -72,7 +72,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     @Override
     public cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_intakeorderline, pvParent, false);
-        return new cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder(itemView);
+        return new IntakeorderMATLineViewHolder(itemView);
     }
 
     @Override
@@ -144,7 +144,12 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     //Region Public Methods
     public void pFillData(List<cIntakeorderMATLine> pvDataObl ) {
         this.localIntakeorderMATLinesObl = pvDataObl;
-        IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesMATObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+
+        if (cAppExtension.activity instanceof IntakeorderLinesActivity ) {
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+            intakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesMATObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+        }
+
         notifyDataSetChanged();
     }
 

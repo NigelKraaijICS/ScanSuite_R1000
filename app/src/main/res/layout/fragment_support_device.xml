@@ -117,11 +117,10 @@
                 android:id="@+id/imageViewBatteryRefresh"
                 style="@style/smallButton"
                 app:layout_constraintStart_toStartOf="parent"
-                android:src="@drawable/ic_refresh_black_24dp"
+                app:srcCompat="@drawable/ic_refresh_black_24dp"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="@dimen/default_margin"
-                android:layout_marginLeft="@dimen/default_margin"
-                />
+                android:contentDescription="Batteruy refresg imageview" />
 
             <ImageView
                 android:id="@+id/imageViewBattery"
@@ -132,7 +131,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/textChargeState"
                 android:scaleType="fitCenter"
-                />
+                android:contentDescription="@string/image_view_battery" />
             <TextView
                 android:id="@+id/textViewBatterypercentOverImage"
                 android:layout_width="wrap_content"
@@ -147,7 +146,7 @@
                 android:id="@+id/imageIsCharging"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_batterycharging"
+                app:srcCompat="@drawable/ic_batterycharging"
                 app:layout_constraintStart_toStartOf="@id/textViewBatterypercentOverImage"
                 app:layout_constraintEnd_toEndOf="@id/textViewBatterypercentOverImage"
                 app:layout_constraintTop_toBottomOf="@id/textViewBatterypercentOverImage"
@@ -156,7 +155,7 @@
                 android:layout_marginBottom="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
                 android:scaleType="fitCenter"
-                />
+                android:contentDescription="@string/imageview_is_charging" />
             <TextView
                 android:id="@+id/textChargeState"
                 android:layout_width="wrap_content"

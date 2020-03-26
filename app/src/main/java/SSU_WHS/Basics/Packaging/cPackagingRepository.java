@@ -17,16 +17,16 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cPackagingRepository {
 
     //Region Public Properties
-    public iPackagingDao packagingDao;
+    private iPackagingDao packagingDao;
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
     //End Region Private Properties
 
     //Region Constructor
     cPackagingRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.packagingDao = db.packagingDao();
     }
     //End Region Constructor
@@ -39,13 +39,7 @@ public class cPackagingRepository {
 
         try {
             webResultWrs = new packagingFromWebserviceGetAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -99,7 +93,7 @@ public class cPackagingRepository {
             List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
 
             try {
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPACKAGING, l_PropertyInfoObl);
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPACKAGING, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setResultBln(false);
                 l_WebresultWrs.setSuccessBln(false);

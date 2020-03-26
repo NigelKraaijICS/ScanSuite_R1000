@@ -25,8 +25,8 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Private Properties
 
-    private static  TextView textViewCurrentLanguage;
-    private static ImageButton buttonChangeLanguage;
+    private TextView textViewCurrentLanguage;
+    private ImageButton buttonChangeLanguage;
 
     //End Region Private Properties
 
@@ -46,38 +46,39 @@ public class LanguageFragment extends Fragment implements iICSDefaultFragment {
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mFragmentInitialize();
+       this.mFragmentInitialize();
     }
+
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mFieldsInitialize();
-        mSetListeners();
+        this.mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
         cUserInterface.pEnableScanner();
     }
 
     @Override
     public void mFindViews() {
          if (getView() != null) {
-             LanguageFragment.textViewCurrentLanguage = getView().findViewById(R.id.textViewCurrentLanguage);
-             LanguageFragment.buttonChangeLanguage = getView().findViewById(R.id.buttonChangeLanguage);
+             this.textViewCurrentLanguage = getView().findViewById(R.id.textViewCurrentLanguage);
+             this.buttonChangeLanguage = getView().findViewById(R.id.buttonChangeLanguage);
          }
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        LanguageFragment.textViewCurrentLanguage.setText(Locale.getDefault().getDisplayLanguage());
+        this.textViewCurrentLanguage.setText(Locale.getDefault().getDisplayLanguage());
     }
 
     @Override
     public void mSetListeners() {
-        mChangeLanguageListener();
+        this.mChangeLanguageListener();
     }
 
 
     private void mChangeLanguageListener() {
-        LanguageFragment.buttonChangeLanguage.setOnClickListener(new View.OnClickListener() {
+        this.buttonChangeLanguage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (getActivity() != null) {

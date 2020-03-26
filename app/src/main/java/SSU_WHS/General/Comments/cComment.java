@@ -1,6 +1,6 @@
 package SSU_WHS.General.Comments;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -29,24 +29,14 @@ public class cComment {
         return commentTextStr;
     }
 
-    public cCommentEntity commentEntity;
-    public boolean inDatabaseBln;
+    private cCommentEntity commentEntity;
 
     public static ArrayList<cComment> allCommentsObl;
     public static Boolean commentsShownBln;
 
-    public static cCommentViewModel commentViewModel;
-       public static cCommentViewModel getCommentViewModel() {
-        if (commentViewModel == null) {
-            commentViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cCommentViewModel.class);
-        } return commentViewModel;
-    }
 
-    public static cCommentAdapter commentAdapter;
-    public static cCommentAdapter getcommentAdapter() {
-        if (commentAdapter == null) {
-            commentAdapter = new cCommentAdapter();
-        } return commentAdapter;
+    private cCommentViewModel getCommentViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cCommentViewModel.class);
     }
 
     public cComment (JSONObject pvJsonObject) {
@@ -57,8 +47,7 @@ public class cComment {
     }
 
     public boolean pInsertInDatabaseBln() {
-        cComment.getCommentViewModel().insert(this.commentEntity);
-        this.inDatabaseBln = true;
+        this.getCommentViewModel().insert(this.commentEntity);
         if (cComment.allCommentsObl == null) {
             cComment.allCommentsObl = new ArrayList<>();
         }
@@ -67,7 +56,9 @@ public class cComment {
     }
 
     public static boolean pTruncateTableBln() {
-        cComment.getCommentViewModel().deleteAll();
+
+        cCommentViewModel commentViewModel =     new ViewModelProvider(cAppExtension.fragmentActivity).get(cCommentViewModel.class);
+        commentViewModel.deleteAll();
         return true;
     }
 

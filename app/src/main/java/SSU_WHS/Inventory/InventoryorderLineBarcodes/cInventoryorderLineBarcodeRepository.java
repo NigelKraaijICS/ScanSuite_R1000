@@ -10,17 +10,16 @@ import SSU_WHS.General.acScanSuiteDatabase;
 public class cInventoryorderLineBarcodeRepository {
     //Public Properties
 
-    public iInventoryorderLineBarcodeDao inventoryorderLineBarcodeDao;
+    private iInventoryorderLineBarcodeDao inventoryorderLineBarcodeDao;
 
     //End Public Properties
 
     //Private properties
-    private acScanSuiteDatabase db;
     //End Private properties
 
     //Region Constructor
-    cInventoryorderLineBarcodeRepository(Application application) {
-        this.db = acScanSuiteDatabase.pGetDatabase(application);
+    cInventoryorderLineBarcodeRepository(Application pvApplication) {
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.inventoryorderLineBarcodeDao = db.inventoryorderLineBarcodeDao();
     }
 

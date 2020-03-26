@@ -18,16 +18,17 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.crashlytics.android.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.concurrent.ExecutionException;
+
 import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
 import ICS.Utils.cPermissions;
 import ICS.Utils.cPower;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
@@ -55,9 +56,6 @@ import nl.icsvertex.scansuite.R;
 public class MainDefaultActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
-   private static final int ACTIVITY_WIFI_SETTINGS = 1;
-   private static final String ENVIRONMENTFRAGMENT_TAG = "ENVIRONMENTFRAGMENT_TAG";
-
 
 
     //End Region Public Properties
@@ -65,22 +63,21 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     //Region Private Properties
 
     //region views
-    private static ImageView imageHome;
-    //private static ImageView imageEnvironment;
+    private  ImageView imageHome;
+    private  Toolbar Toolbar;
+    private  ImageView toolbarImage;
+    private  TextView toolbarTitle;
+    private  TextView toolbarSubtext;
 
-    private static Toolbar Toolbar;
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubtext;
-
-    private static FrameLayout mainFramelayout;
-    private static DrawerLayout menuMainDrawer;
-    private static NavigationView mainmenuNavigation;
+    private  FrameLayout mainFramelayout;
+    private  DrawerLayout menuMainDrawer;
+    private  NavigationView mainmenuNavigation;
     //End region views
 
     //End Region Private Properties
 
     //Region Default Methods
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -103,11 +100,26 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     @Override
     public void onResume() {
+        super.onResume();
         cPower.pRegisterPowerConnectReceiver();
         cPower.pRegisterPowerLevelChangedReceiver();
-        super.onResume();
         cUserInterface.pEnableScanner();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cPower.pUnregisterConnectPowerReceiver();
+        cPower.pUnregisterPowerLevelChangedReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
 
     @Override
     public void onActivityResult(int pvRequestCodeInt, int pvResultCodeInt, Intent data) {
@@ -116,14 +128,14 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         if (pvRequestCodeInt == cPublicDefinitions.CHANGELANGUAGE_REQUESTCODE) {
             //we've changed the language, or not, who cares, but go back to language
             this.setTitle(R.string.screentitle_language);
-            MainDefaultActivity.toolbarTitle.setText(R.string.screentitle_language);
+            this.toolbarTitle.setText(R.string.screentitle_language);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.mainFramelayout, new LanguageFragment());
             transaction.commit();
         }
 
         //internet set?
-        if (pvRequestCodeInt == ACTIVITY_WIFI_SETTINGS) {
+        if (pvRequestCodeInt == cPublicDefinitions.ACTIVITY_WIFI_SETTINGS) {
 
             if (!cConnection.isInternetConnectedBln()) {
                 cUserInterface.pCheckAndCloseOpenDialogs();
@@ -132,7 +144,11 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 noConnectionFragment.show(((MainDefaultActivity) cAppExtension.context).getSupportFragmentManager(), "NOCONNECTION");
                 return;
             }
-            this.pLetsGetThisPartyStartedOrNot();
+            try {
+                this.pLetsGetThisPartyStartedOrNot();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
     //End Region Default Methods
@@ -171,27 +187,27 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void mFindViews() {
 
-        MainDefaultActivity.Toolbar = findViewById(R.id.toolbar);
-        MainDefaultActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        MainDefaultActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        MainDefaultActivity.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        this.Toolbar = findViewById(R.id.toolbar);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-        MainDefaultActivity.imageHome = findViewById(R.id.imageHome);
+        this.imageHome = findViewById(R.id.imageHome);
 
-        MainDefaultActivity.mainFramelayout = findViewById(R.id.mainFramelayout);
-        MainDefaultActivity.menuMainDrawer = findViewById(R.id.menuMainDrawer);
-        MainDefaultActivity.mainmenuNavigation = findViewById(R.id.mainmenuNavigation);
+        this.mainFramelayout = findViewById(R.id.mainFramelayout);
+        this.menuMainDrawer = findViewById(R.id.menuMainDrawer);
+        this.mainmenuNavigation = findViewById(R.id.mainmenuNavigation);
     }
 
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
 
-        MainDefaultActivity.toolbarTitle.setText(pvScreenTitle);
-        MainDefaultActivity.toolbarImage.setImageResource(R.drawable.ic_welcome);
-        MainDefaultActivity.toolbarTitle.setSelected(true);
-        MainDefaultActivity.toolbarSubtext.setSelected(true);
-        setSupportActionBar(MainDefaultActivity.Toolbar);
+        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarImage.setImageResource(R.drawable.ic_welcome);
+        this.toolbarTitle.setSelected(true);
+        toolbarSubtext.setSelected(true);
+        setSupportActionBar(this.Toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -206,7 +222,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void mSetListeners() {
         this.mSetHomeListener();
-        this.mSetEnvironmentListener();
         this.mSetMenuListener();
     }
 
@@ -219,7 +234,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
 
     //Region Public Methods
-    public void pLetsGetThisPartyStartedOrNot() {
+    public void pLetsGetThisPartyStartedOrNot() throws ExecutionException {
 
         // If scanner had different interface version then web service, then stop
         if (!cWebservice.pWebserviceIsAvailableAndRightVersionBln()) {
@@ -228,17 +243,18 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         // If we already have everything we need, then next fragment
         if (this.mAllBasicsAvailableBln()) {
-            HomeFragment.pFragmentDone();
+            this.mStartLoginActivity();
         }
 
         // Get all basic data via webservice, then next fragment
         if (this.mGetBasicDataBln()) {
-            HomeFragment.pFragmentDone();
+            this.mStartLoginActivity();
         }
     }
 
-    public static void pSetChosenEnvironment() {
-        Fragment FragmentFrg = cAppExtension.fragmentManager.findFragmentByTag(ENVIRONMENTFRAGMENT_TAG);
+    public  void pSetChosenEnvironment() {
+
+        Fragment FragmentFrg = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.ENVIRONMENTFRAGMENT_TAG);
         if (FragmentFrg != null) {
             DialogFragment DialogFragmentDfr = (DialogFragment) FragmentFrg;
             DialogFragmentDfr.dismiss();
@@ -249,9 +265,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     }
 
-
-    public static void pPasswordSuccess(){
-        MainDefaultActivity.mShowEnvironmentFragment();
+    public  void pPasswordSuccess(){
+        this.mShowEnvironmentFragment();
     }
 
     //End Region Public Methods
@@ -270,7 +285,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cItemProperty.itemPropertiesAvaliableBln;
     }
 
-    private boolean mGetBasicDataBln() {
+    private boolean mGetBasicDataBln() throws ExecutionException {
 
         if (!cScannerLogon.pScannerLogonViaWebserviceBln()) {
             return  false;
@@ -279,7 +294,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         if (!cScannerLogon.currentScannerLogon.pScannerVersionCheckBln(mainFramelayout)){
             return  false;
         }
-
 
         if (!cSetting.pGetSettingsViaWebserviceBln(true)) {
             return false;
@@ -313,53 +327,51 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     }
 
-    private boolean mGetshippingInfoViawebserviceBln() {
+    private boolean mGetshippingInfoViawebserviceBln() throws ExecutionException {
 
-
-        cShippingAgent.pGetShippingAgentsViaWebserviceBln(true);
+        cShippingAgent.pGetShippingAgentsViaWebservice(true);
         if (!cShippingAgent.shippingAgentsAvailableBln) {
             return false;
         }
 
-        cShippingAgentService.pGetShippingAgentServicesViaWebserviceBln(true);
+        cShippingAgentService.pGetShippingAgentServicesViaWebservice(true);
         if (!cShippingAgentService.shippingAgentServicesAvailableBln) {
             return false;
         }
 
-        cShippingAgentServiceShippingUnit.pGetShippingAgentServicesShippingUnitsViaWebserviceBln(true);
+        cShippingAgentServiceShippingUnit.pGetShippingAgentServicesShippingUnitsViaWebservice(true);
         if (!cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln) {
             return false;
         }
 
-        cShippingAgentShipMethod.pGetShippingAgentServicesShippingUnitsViaWebserviceBln(true);
+        cShippingAgentShipMethod.pGetShippingAgentServicesShippingUnitsViaWebservice(true);
         return cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln;
     }
 
-    public static void pSetAddedEnvironment() {
+    public  void pSetAddedEnvironment() {
         cUserInterface.pCheckAndCloseOpenDialogs();
-        MainDefaultActivity.mShowEnvironmentFragment();
+        this.mShowEnvironmentFragment();
     }
 
     private void mSetEnviroment(){
         cEnvironment.pSetEnvironment();
         if (cEnvironment.currentEnvironment != null) {
-            MainDefaultActivity.toolbarSubtext.setText(cEnvironment.currentEnvironment.getDescriptionStr());
+            toolbarSubtext.setText(cEnvironment.currentEnvironment.getDescriptionStr());
         }
     }
 
     private void mShowHomeFragment() {
-        MainDefaultActivity.imageHome.setVisibility(View.GONE);
-        //MainDefaultActivity.imageEnvironment.setVisibility(View.VISIBLE);
-        MainDefaultActivity.toolbarTitle.setText(R.string.screentitle_main);
-        MainDefaultActivity.toolbarImage.setImageResource(R.drawable.ic_welcome);
+        this.imageHome.setVisibility(View.GONE);
+        this.toolbarTitle.setText(R.string.screentitle_main);
+        this.toolbarImage.setImageResource(R.drawable.ic_welcome);
         FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.mainFramelayout, new HomeFragment());
         transaction.commit();
     }
 
-    private static void mShowEnvironmentFragment() {
+    private  void mShowEnvironmentFragment() {
         final EnvironmentFragment environmentFragment = new EnvironmentFragment();
-        environmentFragment.show(cAppExtension.fragmentManager, ENVIRONMENTFRAGMENT_TAG);
+        environmentFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ENVIRONMENTFRAGMENT_TAG);
     }
 
 
@@ -369,7 +381,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     //Region Listeners
     private void mSetHomeListener() {
-        MainDefaultActivity.imageHome.setOnClickListener(new View.OnClickListener() {
+        this.imageHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowHomeFragment();
@@ -377,17 +389,9 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         });
     }
 
-    private void mSetEnvironmentListener() {
-//        MainDefaultActivity.imageEnvironment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
-//            }
-//        });
-    }
 
     private void mSetMenuListener() {
-        MainDefaultActivity.mainmenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        this.mainmenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Fragment selectedFragment = null;
@@ -395,7 +399,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
                     case R.id.action_home:
                         imageHome.setVisibility(View.GONE);
-//                        imageEnvironment.setVisibility(View.VISIBLE);
                         selectedFragment = new HomeFragment();
                         toolbarTitle.setText(R.string.screentitle_main);
                         toolbarImage.setImageResource(R.drawable.ic_welcome);
@@ -403,14 +406,12 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
                     case R.id.action_settings:
                         imageHome.setVisibility(View.VISIBLE);
-//                        imageEnvironment.setVisibility(View.GONE);
                         toolbarTitle.setText(R.string.screentitle_settings);
                         toolbarImage.setImageResource(R.drawable.ic_settings);
                         break;
 
                     case R.id.action_support:
                         imageHome.setVisibility(View.VISIBLE);
-//                        imageEnvironment.setVisibility(View.GONE);
                         selectedFragment = new SupportFragment();
                         toolbarTitle.setText(R.string.screentitle_support);
                         toolbarImage.setImageResource(R.drawable.ic_support);
@@ -418,7 +419,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
                     case R.id.action_language:
                         imageHome.setVisibility(View.VISIBLE);
-//                        imageEnvironment.setVisibility(View.GONE);
                         selectedFragment = new LanguageFragment();
                         toolbarTitle.setText(R.string.screentitle_language);
                         toolbarImage.setImageResource(R.drawable.ic_language);
@@ -426,7 +426,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
                     case R.id.action_datetime:
                         imageHome.setVisibility(View.VISIBLE);
-//                        imageEnvironment.setVisibility(View.GONE);
                         selectedFragment = new DateTimeFragment();
                         toolbarTitle.setText(R.string.screentitle_datetime);
                         toolbarImage.setImageResource(R.drawable.ic_calendar);
@@ -435,7 +434,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                         cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
                     default:
                         imageHome.setVisibility(View.GONE);
-//                        imageEnvironment.setVisibility(View.VISIBLE);
                         selectedFragment = new HomeFragment();
                         toolbarTitle.setText(R.string.screentitle_main);
                         toolbarImage.setImageResource(R.drawable.ic_welcome);
@@ -471,13 +469,19 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            MainDefaultActivity.menuMainDrawer.openDrawer(GravityCompat.START);
+            this.menuMainDrawer.openDrawer(GravityCompat.START);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
 
+    private void mStartLoginActivity() {
 
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
+        cAppExtension.context.startActivity(intent);
     }
 
 

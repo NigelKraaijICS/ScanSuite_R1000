@@ -19,7 +19,7 @@ public class cInventoryorderEntity {
     //Region Public Properties
     @PrimaryKey @NonNull
     @ColumnInfo(name= cDatabase.ORDERNUMBER_NAMESTR)
-    public String ordernumber;
+    public String ordernumber = "";
     public String getOrdernumberStr() {return this.ordernumber;}
 
     @ColumnInfo(name= cDatabase.ORDERTYPE_NAMESTR)
@@ -42,14 +42,6 @@ public class cInventoryorderEntity {
     public String status;
     public String getStatusStr() {return this.status;}
 
-    @ColumnInfo(name= cDatabase.INV_AUTOCLOSE_BIN_NAMESTR)
-    public String invAutoCloseBin;
-    public String getInvAutoCloseBinStr() {return this.invAutoCloseBin;}
-
-    @ColumnInfo(name= cDatabase.INV_PRECOUNT_NAMESTR)
-    public String invPrecount;
-    public String getInvPrecountStr() {return this.invPrecount;}
-
     @ColumnInfo(name= cDatabase.INV_AMOUNT_MANUAL_NAMESTR)
     public String invAmountManual;
     public String getInvAmountManualStr() {return this.invAmountManual;}
@@ -65,10 +57,6 @@ public class cInventoryorderEntity {
     @ColumnInfo(name= cDatabase.EXTERNALREFERENCE_NAMESTR)
     public String externalReference;
     public String getExternalReferenceStr() {return this.externalReference;}
-
-    @ColumnInfo(name= cDatabase.WORKPLACE_NAMESTR)
-    public String workplace;
-    public String getWorkplaceStr() {return this.workplace;}
 
     @ColumnInfo(name= cDatabase.STOCKOWNER_NAMESTR)
     public String stockOwner;
@@ -86,17 +74,13 @@ public class cInventoryorderEntity {
     public String document2;
     public String getDocument2Str() {return this.document2;}
 
-    @ColumnInfo(name= cDatabase.WEBSERVICETIMEOUTERPINS_NAMESTR)
-    public String webservicetimeouterpins;
-    public String getWebserviceTimeOutERPInsStr() {return this.webservicetimeouterpins;}
-
     @ColumnInfo(name= cDatabase.INTERFACERESULTMETHOD_NAMESTR)
     public String interfaceresultmethod;
     public String getInterfaceResultMethodStr() {return this.interfaceresultmethod;}
 
     @ColumnInfo(name="IsProcessingOrParked")
     public Boolean isprocessingorparked;
-    public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
+    private Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
 
     @ColumnInfo(name="Inventory_with_picture")
     public String inventoryWithPicture;
@@ -130,27 +114,21 @@ public class cInventoryorderEntity {
             this.currentUserId = pvJsonObject.getString(cDatabase.CURRENTUSERID_NAMESTR);
             this.status = pvJsonObject.getString(cDatabase.STATUS_NAMESTR);
 
-            this.invAutoCloseBin = pvJsonObject.getString(cDatabase.INV_AUTOCLOSE_BIN_NAMESTR);
-            this.invPrecount = pvJsonObject.getString(cDatabase.INV_PRECOUNT_NAMESTR);
             this.invAmountManual = pvJsonObject.getString(cDatabase.INV_AMOUNT_MANUAL_NAMESTR);
             this.invBarcodeCheck = pvJsonObject.getString(cDatabase.INV_BARCODECHECK_NAMESTR);
             this.invAddExtraBin = pvJsonObject.getString(cDatabase.INV_ADD_EXTRA_BIN_NAMESTR);
 
             this.externalReference = pvJsonObject.getString(cDatabase.EXTERNALREFERENCE_NAMESTR);
-            this.workplace = pvJsonObject.getString(cDatabase.WORKPLACE_NAMESTR);
+
             this.stockOwner = pvJsonObject.getString(cDatabase.STOCKOWNER_NAMESTR);
             this.sourceDocument = pvJsonObject.getString(cDatabase.SOURCEDOCUMENT_NAMESTR);
             this.document = pvJsonObject.getString(cDatabase.DOCUMENT_NAMESTR);
             this.document2 = pvJsonObject.getString(cDatabase.DOCUMENT2_NAMESTR);
-            this.webservicetimeouterpins = pvJsonObject.getString(cDatabase.WEBSERVICETIMEOUTERPINS_NAMESTR);
             this.interfaceresultmethod = pvJsonObject.getString(cDatabase.INTERFACERESULTMETHOD_NAMESTR);
 
             //Is processing
-            this.isprocessingorparked = true;
 
-            if (this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowInventoryStepEnu.Inventory))) {
-                this.isprocessingorparked = false;
-            }
+            this.isprocessingorparked = !this.getStatusStr().equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowInventoryStepEnu.Inventory));
 
             this.inventoryWithPicture = pvJsonObject.getString(cDatabase.INVENTORYWITHPICTURE_NAMESTR);
             this.inventoryWithPictureAutoOpen = pvJsonObject.getString(cDatabase.INVENTORYWITHPICTURE_AUTO_OPEN_NAMESTR);
@@ -158,12 +136,12 @@ public class cInventoryorderEntity {
 
             this.priorityInt = 6;
 
-            if (this.currentUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (this.isprocessingorparked)) {
+            if (this.currentUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (this.getIsProcessingOrParkedStr())) {
                 this.priorityInt = 1;
                 return;
             }
 
-            if (this.currentUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (!this.isprocessingorparked)) {
+            if (this.currentUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (!this.getIsProcessingOrParkedStr())) {
                 this.priorityInt = 2;
                 return;
             }

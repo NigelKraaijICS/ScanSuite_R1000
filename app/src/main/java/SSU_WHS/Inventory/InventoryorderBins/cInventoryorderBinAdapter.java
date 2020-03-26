@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,19 +72,20 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
 
 
     //Region Default Methods
+    @NonNull
     @Override
-    public cInventoryorderBinAdapter.InventoryorderBinViewHolder onCreateViewHolder(ViewGroup pvParent, int pbViewTypeInt) {
+    public cInventoryorderBinAdapter.InventoryorderBinViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_inventoryorderbin, pvParent, false);
         return new cInventoryorderBinAdapter.InventoryorderBinViewHolder(itemView);
     }
     @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
         this.thisRecyclerView = pvRecyclerView;
         super.onAttachedToRecyclerView( this.thisRecyclerView);
     }
 
     @Override
-    public void onBindViewHolder(cInventoryorderBinAdapter.InventoryorderBinViewHolder pvHolder, final int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cInventoryorderBinAdapter.InventoryorderBinViewHolder pvHolder, final int pvPositionInt) {
 
         if (localInventoryorderBinObl == null || localInventoryorderBinObl.size() == 0 ) {
             return;
@@ -117,7 +119,8 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
             public void onClick(View v) {
                 if (cAppExtension.context instanceof InventoryorderBinsActivity) {
                     cInventoryorderBin.currentInventoryOrderBin = inventoryorderBin;
-                   InventoryorderBinsActivity.pInventoryorderBinSelected();
+                    InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+                    inventoryorderBinsActivity.pInventoryorderBinSelected();
                 }
             }
         });

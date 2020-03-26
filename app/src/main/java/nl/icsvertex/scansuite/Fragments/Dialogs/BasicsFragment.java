@@ -15,13 +15,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.Settings.cSettingsAdapter;
 import nl.icsvertex.scansuite.R;
 
 
 public class BasicsFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private static  RecyclerView recyclerViewSettings;
+    private   RecyclerView recyclerViewSettings;
+
+    private cSettingsAdapter settingsAdapter;
+    private  cSettingsAdapter getSettingsAdapter(){
+        if (this.settingsAdapter == null) {
+            this.settingsAdapter = new cSettingsAdapter();
+        }
+
+        return  settingsAdapter;
+    }
 
     public BasicsFragment() {
         // Required empty public constructor
@@ -49,7 +58,7 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
     public void mFindViews() {
 
         if (getView() != null) {
-            BasicsFragment.recyclerViewSettings = getView().findViewById(R.id.recyclerViewSettings);
+            this.recyclerViewSettings = getView().findViewById(R.id.recyclerViewSettings);
         }
 
     }
@@ -69,10 +78,11 @@ public class BasicsFragment extends DialogFragment implements iICSDefaultFragmen
     private void mFillRecycler() {
         this.mSetSettingsRecycler();
     }
+
     private void mSetSettingsRecycler() {
-       BasicsFragment.recyclerViewSettings.setHasFixedSize(false);
-        BasicsFragment. recyclerViewSettings.setAdapter(cSetting.getSettingsAdapter());
-        BasicsFragment.recyclerViewSettings.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewSettings.setHasFixedSize(false);
+        this. recyclerViewSettings.setAdapter(this.getSettingsAdapter());
+        this.recyclerViewSettings.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
 
 

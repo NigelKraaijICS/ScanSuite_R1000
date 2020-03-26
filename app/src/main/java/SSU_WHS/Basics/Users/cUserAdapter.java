@@ -4,10 +4,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -23,7 +23,6 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
         private TextView textViewName;
         private TextView textViewUserName;
         private TextView textViewInitials;
-        private ImageView imageViewMenuItem;
         public LinearLayout userItemLinearLayout;
 
         public UserViewHolder(View pvItemView) {
@@ -35,7 +34,6 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
             this.textViewName.setSelected(true);
             this.textViewUserName = pvItemView.findViewById(R.id.textViewUserName);
             this.textViewInitials = pvItemView.findViewById(R.id.textViewInitials);
-            this.imageViewMenuItem = pvItemView.findViewById(R.id.imageViewMenuItem);
             this.userItemLinearLayout = pvItemView.findViewById(R.id.userItemLinearLayout);
         }
     }
@@ -53,14 +51,15 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
     //End Region Constructor
 
     //Region Public Methods
+    @NonNull
     @Override
-    public cUserAdapter.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public cUserAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_user, parent, false);
         return new cUserAdapter.UserViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(cUserAdapter.UserViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull cUserAdapter.UserViewHolder holder, int position) {
         if (cUser.allUsersObl != null) {
             final cUser User = cUser.allUsersObl.get(position);
             holder.textViewName.setText(User.getNameStr());
@@ -84,7 +83,8 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
 
     private static void mUserSelected(cUser pvUser){
         if (cAppExtension.context instanceof LoginActivity) {
-            LoginActivity.pUserSelected(cBarcodeScan.pFakeScan(pvUser.getUsernameStr()),false);
+            LoginActivity loginActivity = new LoginActivity();
+            loginActivity.pUserSelected(cBarcodeScan.pFakeScan(pvUser.getUsernameStr()),false);
         }
 
     }

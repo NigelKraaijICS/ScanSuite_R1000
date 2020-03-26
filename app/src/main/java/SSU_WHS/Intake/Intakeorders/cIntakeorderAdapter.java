@@ -26,7 +26,7 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
     //Region Public Properties
 
-    public class IntakeorderViewHolder extends RecyclerView.ViewHolder{
+    public static class IntakeorderViewHolder extends RecyclerView.ViewHolder{
 
         private View viewOrderStatus;
         private TextView textViewOrdernumber;
@@ -34,9 +34,6 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
         private TextView textViewOrdertype;
         private TextView  textViewExternalreference;
         private TextView textViewCurrentLocation;
-        private TextView textViewQuantityTotal;
-        private ImageView imageViewPickorder;
-        private ImageView imageViewIsSingleArticle;
         private ImageView imageViewIsProcessedOrWait;
         public LinearLayout intakeorderItemLinearLayout;
 
@@ -56,10 +53,7 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
             this.textViewOrdernumber.setSelected(true);
             this.textViewExternalreference = pvItemView.findViewById(R.id.textViewExternalreference);
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
-            this.textViewQuantityTotal = pvItemView.findViewById(R.id.textViewQuantityTotal);
-            this.imageViewPickorder = pvItemView.findViewById(R.id.imageViewPickorder);
             this.intakeorderItemLinearLayout = pvItemView.findViewById(R.id.intakeorderItemLinearLayout);
-            this.imageViewIsSingleArticle = pvItemView.findViewById(R.id.imageViewIsSingleArticle);
             this.imageViewIsProcessedOrWait = pvItemView.findViewById(R.id.imageViewIsProcessedOrWait);
 
         }
@@ -84,7 +78,7 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
     @Override
     public cIntakeorderAdapter.IntakeorderViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_intakeorder, pvParent, false);
-        return new cIntakeorderAdapter.IntakeorderViewHolder(itemView);
+        return new IntakeorderViewHolder(itemView);
     }
 
     @Override
@@ -134,7 +128,8 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
             public void onClick(View v) {
 
                 if (cAppExtension.context instanceof IntakeAndReceiveSelectActivity) {
-                    IntakeAndReceiveSelectActivity.pIntakeorderSelected(selectedIntakeorder);
+                    IntakeAndReceiveSelectActivity intakeAndReceiveSelectActivity = (IntakeAndReceiveSelectActivity)cAppExtension.activity;
+                    intakeAndReceiveSelectActivity.pIntakeorderSelected(selectedIntakeorder);
                 }
                             }
         });

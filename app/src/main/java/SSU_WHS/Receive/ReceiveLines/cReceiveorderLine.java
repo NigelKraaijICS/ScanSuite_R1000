@@ -1,6 +1,6 @@
 package SSU_WHS.Receive.ReceiveLines;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -10,6 +10,7 @@ import java.util.List;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineViewModel;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -54,11 +55,6 @@ public class cReceiveorderLine {
     public Double quantityHandledDbl;
     public Double getQuantityHandledDbl() {
         return quantityHandledDbl;
-    }
-
-    private int sortingSequenceNoInt;
-    public int getSortingSequenceNoInt() {
-        return sortingSequenceNoInt;
     }
 
     private String vendorItemNo;
@@ -127,22 +123,9 @@ public class cReceiveorderLine {
     public  List<cIntakeorderBarcode> barcodesObl;
 
     private cReceiveorderLineEntity receiveorderLineEntity;
-    public boolean inDatabaseBln;
 
-    private static cReceiveorderLineViewModel gReceiveorderLineViewModel;
-    public static cReceiveorderLineViewModel getReceiveorderLineViewModel() {
-        if (gReceiveorderLineViewModel == null) {
-            gReceiveorderLineViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cReceiveorderLineViewModel.class);
-        }
-        return gReceiveorderLineViewModel;
-    }
-
-    private static cReceiveorderLineAdapter gcReceiveorderLineAdapter;
-    public static cReceiveorderLineAdapter getReceiveorderLineAdapter() {
-        if (gcReceiveorderLineAdapter == null) {
-            gcReceiveorderLineAdapter = new cReceiveorderLineAdapter();
-        }
-        return gcReceiveorderLineAdapter;
+    private cReceiveorderLineViewModel  getReceiveorderLineViewModel () {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReceiveorderLineViewModel.class);
     }
 
     public static List<cReceiveorderLine> allReceiveorderLines;
@@ -163,7 +146,6 @@ public class cReceiveorderLine {
         this.quantityDbl = this.receiveorderLineEntity.getQuantityDbl();
         this.quantityHandledDbl = this.receiveorderLineEntity.getQuantityHandledDbl();
 
-        this.sortingSequenceNoInt = this.receiveorderLineEntity.getSortingSequenceInt();
         this.vendorItemNo = this.receiveorderLineEntity.getVendorItemNoStr();
         this.vendorItemDescriptionStr = this.receiveorderLineEntity.getVendorItemDescriptionStr();
         this.statusInt = this.receiveorderLineEntity.getStatusInt();
@@ -195,7 +177,6 @@ public class cReceiveorderLine {
             this.quantityDbl = this.receiveorderLineEntity.getQuantityDbl();
             this.quantityHandledDbl = this.receiveorderLineEntity.getQuantityHandledDbl();
 
-            this.sortingSequenceNoInt = pvLineNoint;
             this.vendorItemNo = this.receiveorderLineEntity.getVendorItemNoStr();
             this.vendorItemDescriptionStr = this.receiveorderLineEntity.getVendorItemDescriptionStr();
             this.localStatusInt =  this.receiveorderLineEntity.getLocalStatusInt();
@@ -217,8 +198,7 @@ public class cReceiveorderLine {
      //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cReceiveorderLine.getReceiveorderLineViewModel().insert(this.receiveorderLineEntity);
-        this.inDatabaseBln = true;
+        this.getReceiveorderLineViewModel().insert(this.receiveorderLineEntity);
 
         if (cReceiveorderLine.allReceiveorderLines == null) {
             cReceiveorderLine.allReceiveorderLines= new ArrayList<>();
@@ -229,7 +209,7 @@ public class cReceiveorderLine {
     public boolean pResetBln() {
 
         cWebresult WebResult;
-        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pResetReceiveLineViaWebserviceWrs();
+        WebResult =  this.getReceiveorderLineViewModel().pResetReceiveLineViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             cReceiveorderLine.allReceiveorderLines.remove(this);
             cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl.remove(this);
@@ -243,7 +223,9 @@ public class cReceiveorderLine {
     }
 
     public static boolean pTruncateTableBln() {
-        SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine.getIntakeorderMATLineViewModel().deleteAll();
+
+        cIntakeorderMATLineViewModel intakeorderMATLineViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderMATLineViewModel.class);
+        intakeorderMATLineViewModel.deleteAll();
         return true;
     }
 

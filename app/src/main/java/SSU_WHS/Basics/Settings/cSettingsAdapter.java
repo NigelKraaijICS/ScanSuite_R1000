@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ICS.cAppExtension;
@@ -16,7 +17,7 @@ public class cSettingsAdapter extends RecyclerView.Adapter<cSettingsAdapter.Sett
 
 
     //Region Public Properties
-    public class SettingsViewHolder extends RecyclerView.ViewHolder{
+    public static class SettingsViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewSettingKey;
         private TextView textViewSettingValue;
         public LinearLayout settingItemLinearLayout;
@@ -45,14 +46,15 @@ public class cSettingsAdapter extends RecyclerView.Adapter<cSettingsAdapter.Sett
     //End Region Constructor
 
     //Region Public Methods
+    @NonNull
     @Override
-    public cSettingsAdapter.SettingsViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewType) {
+    public cSettingsAdapter.SettingsViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewType) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_user, pvParent, false);
-        return new cSettingsAdapter.SettingsViewHolder(itemView);
+        return new SettingsViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(cSettingsAdapter.SettingsViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cSettingsAdapter.SettingsViewHolder pvHolder, int pvPositionInt) {
         if (cSetting.allSettingsObl != null) {
             final cSetting setting = cSetting.allSettingsObl.get(pvPositionInt);
             pvHolder.textViewSettingKey.setText(setting.getNameStr());

@@ -25,7 +25,7 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
     //End Region Public Properties
 
     //Region Private Properties
-    private static  ImageButton buttonSendOrder;
+    private ImageButton buttonSendOrder;
     //End Region Private Properties
 
     //Region Constructor
@@ -63,7 +63,7 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
     public void mFindViews() {
 
         if (getView() != null) {
-            SendOrderFragment.buttonSendOrder = getView().findViewById(R.id.buttonSendOrder);
+            this.buttonSendOrder = getView().findViewById(R.id.buttonSendOrder);
         }
     }
 
@@ -79,15 +79,17 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mSetListeners() {
 
-        SendOrderFragment.buttonSendOrder.setOnClickListener(new View.OnClickListener() {
+        this.buttonSendOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(buttonSendOrder, 2);
                 if (cAppExtension.activity instanceof PickorderLinesActivity) {
-                    PickorderLinesActivity.pPickingDone("");
+                    PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+                    pickorderLinesActivity.pPickingDone("");
                 }
                 if (cAppExtension.activity instanceof SortorderLinesActivity) {
-                    SortorderLinesActivity.pSortingDone();
+                    SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+                    sortorderLinesActivity.pSortingDone();
                 }
             }
         });

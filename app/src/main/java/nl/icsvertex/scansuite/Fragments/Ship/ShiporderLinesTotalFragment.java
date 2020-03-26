@@ -18,6 +18,7 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Picken.Shipment.cShipment;
+import SSU_WHS.Picken.Shipment.cShipmentAdapter;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -28,7 +29,16 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
     //End Region Public Properties
 
     //Region Private Properties
-    private static RecyclerView recyclerViewShiporderLinesTotal;
+    private  RecyclerView recyclerViewShiporderLinesTotal;
+
+    private cShipmentAdapter shipmentAdapter;
+    private  cShipmentAdapter getShipmentAdapter(){
+        if (this.shipmentAdapter == null) {
+            this.shipmentAdapter = new cShipmentAdapter();
+        }
+
+        return  this.shipmentAdapter;
+    }
     //End Region Private Properties
 
 
@@ -87,7 +97,7 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
     public void mFindViews() {
 
         if (getView() != null) {
-            ShiporderLinesTotalFragment.recyclerViewShiporderLinesTotal = getView().findViewById(R.id.recyclerViewShiporderLinesTotal);
+            this.recyclerViewShiporderLinesTotal = getView().findViewById(R.id.recyclerViewShiporderLinesTotal);
         }
     }
 
@@ -112,12 +122,14 @@ public class ShiporderLinesTotalFragment extends Fragment implements iICSDefault
 
     private void mFillRecycler(List<cShipment> pvDataObl) {
 
-        cShipment.getShipmentsTotalAdapter().pFillData(pvDataObl);
-        ShiporderLinesTotalFragment.recyclerViewShiporderLinesTotal.setHasFixedSize(false);
-        ShiporderLinesTotalFragment.recyclerViewShiporderLinesTotal.setAdapter(cShipment.getShipmentsTotalAdapter());
-        ShiporderLinesTotalFragment.recyclerViewShiporderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.getShipmentAdapter().pFillData(pvDataObl);
+        this.recyclerViewShiporderLinesTotal.setHasFixedSize(false);
+        this.recyclerViewShiporderLinesTotal.setAdapter(this.getShipmentAdapter());
+        this.recyclerViewShiporderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        ShiporderLinesActivity.pChangeTabCounterText( cText.pIntToStringStr(pvDataObl.size()));
-
+        if (cAppExtension.activity instanceof  ShiporderLinesActivity) {
+            ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+            shiporderLinesActivity.pChangeTabCounterText( cText.pIntToStringStr(pvDataObl.size()));
+        }
     }
 }

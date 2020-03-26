@@ -6,14 +6,15 @@ import android.os.AsyncTask;
 import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cPickorderAddressRepository {
-    public iPickorderAddressDao pickorderAddressDao;
+
+    private iPickorderAddressDao pickorderAddressDao;
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
     //End Region Private Properties
 
     cPickorderAddressRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db= acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.pickorderAddressDao = db.pickorderAddressDao();
     }
 

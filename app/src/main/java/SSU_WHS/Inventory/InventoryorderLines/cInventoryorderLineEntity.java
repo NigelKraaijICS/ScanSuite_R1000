@@ -208,18 +208,15 @@ public class cInventoryorderLineEntity {
         }
     }
 
-    public int getRecordidInt() {return this.recordid;}
     public int getLineNoInt() {return this.lineno;}
     public String getItemNoStr() {return this.itemno;}
     public String getVariantCodeStr() {return this.variantcode;}
-    public String getItemtypeStr() {return this.itemtype;}
     public String getDescriptionStr() {return this.description;}
     public String getDescription2Str() {return this.description2;}
     public String getBincodeStr() {return this.bincode;}
     public Double getQuantityDbl() {return this.quantity;}
     public String getVendorItemNoStr() {return this.vendoritemno;}
     public String getVendorItemDescriptionStr() {return this.vendoritemdescription;}
-    public int getSortingsequencenoInt() {return this.sortingsequenceno;}
     public int getStatusInt() {return this.status;}
     public int getSourceTypeInt() {return this.sourcetype;}
     public String getHandledtimestampStr() {return this.handledtimestamp;}

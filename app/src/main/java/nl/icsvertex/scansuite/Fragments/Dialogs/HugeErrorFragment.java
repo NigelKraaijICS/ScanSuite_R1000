@@ -20,12 +20,12 @@ import nl.icsvertex.scansuite.R;
 
 public class HugeErrorFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private static String errorMessage;
-    private static String extraMessage;
+    private  String errorMessage;
+    private  String extraMessage;
 
-    private static ConstraintLayout containerHugeError;
-    private static TextView textViewErrorMessage;
-    private static TextView textViewExtraError;
+    private  ConstraintLayout containerHugeError;
+    private  TextView textViewErrorMessage;
+    private  TextView textViewExtraError;
 
 
     public HugeErrorFragment() {
@@ -44,8 +44,8 @@ public class HugeErrorFragment extends DialogFragment implements iICSDefaultFrag
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle args = getArguments();
         if (args != null) {
-            HugeErrorFragment.errorMessage = args.getString(cPublicDefinitions.HUGEERROR_ERRORMESSAGE, getString(R.string.error_unspecified));
-            HugeErrorFragment.extraMessage = args.getString(cPublicDefinitions.HUGEERROR_EXTRASTRING, "");
+            this.errorMessage = args.getString(cPublicDefinitions.HUGEERROR_ERRORMESSAGE, getString(R.string.error_unspecified));
+            this.extraMessage = args.getString(cPublicDefinitions.HUGEERROR_EXTRASTRING, "");
         }
 
         this.mFragmentInitialize();
@@ -63,23 +63,21 @@ public class HugeErrorFragment extends DialogFragment implements iICSDefaultFrag
     public void mFindViews() {
 
         if (getView() != null) {
-            HugeErrorFragment.textViewErrorMessage = getView().findViewById(R.id.textViewErrorMessage);
-            HugeErrorFragment.textViewExtraError = getView().findViewById(R.id.textViewExtraError);
-            HugeErrorFragment.containerHugeError = getView().findViewById(R.id.containerHugeError);
+            this.textViewErrorMessage = getView().findViewById(R.id.textViewErrorMessage);
+            this.textViewExtraError = getView().findViewById(R.id.textViewExtraError);
+            this.containerHugeError = getView().findViewById(R.id.containerHugeError);
         }
-
-
     }
 
 
 
     @Override
     public void mFieldsInitialize() {
-        HugeErrorFragment.textViewErrorMessage.setText(errorMessage);
-        if (HugeErrorFragment.extraMessage.trim().isEmpty()) {
-            HugeErrorFragment.textViewExtraError.setVisibility(View.GONE);
+        this.textViewErrorMessage.setText(errorMessage);
+        if (this.extraMessage.trim().isEmpty()) {
+            this.textViewExtraError.setVisibility(View.GONE);
         }
-        HugeErrorFragment.textViewExtraError.setText(HugeErrorFragment.extraMessage);
+        this.textViewExtraError.setText(this.extraMessage);
     }
 
     @Override
@@ -88,7 +86,7 @@ public class HugeErrorFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private void mSetClickListener() {
-        HugeErrorFragment.containerHugeError.setOnClickListener(new View.OnClickListener() {
+        this.containerHugeError.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();

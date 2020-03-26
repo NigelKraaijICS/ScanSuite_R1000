@@ -25,11 +25,11 @@ import nl.icsvertex.scansuite.R;
 
 public class SupportNetworkFragment extends Fragment implements iICSDefaultFragment {
 
-    private static TextView textViewConnectionType;
-    private static TextView textViewSSID;
-    private static TextView textViewMyIp;
-    private static TextView textViewInternetConnection;
-    private static ImageButton buttonWifiSettings;
+    private  TextView textViewConnectionType;
+    private  TextView textViewSSID;
+    private  TextView textViewMyIp;
+    private  TextView textViewInternetConnection;
+    private  ImageButton buttonWifiSettings;
 
     public SupportNetworkFragment() {
         // Required empty public constructor
@@ -70,11 +70,11 @@ public class SupportNetworkFragment extends Fragment implements iICSDefaultFragm
     @Override
     public void mFindViews() {
         if (getView() != null) {
-            SupportNetworkFragment.textViewConnectionType = getView().findViewById(R.id.textViewConnectionType);
-            SupportNetworkFragment.textViewSSID = getView().findViewById(R.id.textViewSSID);
-            SupportNetworkFragment.textViewMyIp = getView().findViewById(R.id.textViewMyIp);
-            SupportNetworkFragment.textViewInternetConnection = getView().findViewById(R.id.textViewInternetConnection);
-            SupportNetworkFragment.buttonWifiSettings = getView().findViewById(R.id.buttonWifiSettings);
+            this.textViewConnectionType = getView().findViewById(R.id.textViewConnectionType);
+            this.textViewSSID = getView().findViewById(R.id.textViewSSID);
+            this.textViewMyIp = getView().findViewById(R.id.textViewMyIp);
+            this.textViewInternetConnection = getView().findViewById(R.id.textViewInternetConnection);
+            this.buttonWifiSettings = getView().findViewById(R.id.buttonWifiSettings);
         }
     }
 
@@ -83,37 +83,37 @@ public class SupportNetworkFragment extends Fragment implements iICSDefaultFragm
     public void mFieldsInitialize() {
         //connection?
         cConnection.connectionType connectionType = cConnection.getCurrentConnectionType();
-        SupportNetworkFragment.textViewConnectionType.setText(R.string.connectiontype_unknown);
+        this.textViewConnectionType.setText(R.string.connectiontype_unknown);
 
         if (connectionType == cConnection.connectionType.NONE) {
-            SupportNetworkFragment.textViewConnectionType.setText(R.string.connectiontype_none);
+            this.textViewConnectionType.setText(R.string.connectiontype_none);
         }
 
         if (connectionType == cConnection.connectionType.WIFI) {
-            SupportNetworkFragment.textViewConnectionType.setText(R.string.connectiontype_wifi);
-            SupportNetworkFragment.textViewSSID.setText(cDeviceInfo.getSSID());
+            this.textViewConnectionType.setText(R.string.connectiontype_wifi);
+            this.textViewSSID.setText(cDeviceInfo.getSSID());
         }
 
         if (connectionType == cConnection.connectionType.MOBILEDATA) {
-            SupportNetworkFragment.textViewConnectionType.setText(R.string.connectiontype_mobiledata);
+            this.textViewConnectionType.setText(R.string.connectiontype_mobiledata);
         }
 
         if (connectionType == cConnection.connectionType.ETHERNET) {
-            SupportNetworkFragment.textViewConnectionType.setText(R.string.connectiontype_ethernet);
+            this.textViewConnectionType.setText(R.string.connectiontype_ethernet);
         }
 
         if (connectionType == cConnection.connectionType.UNKNOWN) {
-            SupportNetworkFragment.textViewConnectionType.setText(R.string.connectiontype_unknown);
+            this.textViewConnectionType.setText(R.string.connectiontype_unknown);
         }
 
-        SupportNetworkFragment.textViewMyIp.setText(cDeviceInfo.getIpAddress());
+        this.textViewMyIp.setText(cDeviceInfo.getIpAddress());
 
         //internet?
         if (cConnection.isGooglePingableBln()) {
-            SupportNetworkFragment.textViewInternetConnection.setText(R.string.internet_connected);
+            this.textViewInternetConnection.setText(R.string.internet_connected);
         }
         else {
-            SupportNetworkFragment.textViewInternetConnection.setText(R.string.internet_not_connected);
+            this.textViewInternetConnection.setText(R.string.internet_not_connected);
         }
     }
 
@@ -123,7 +123,7 @@ public class SupportNetworkFragment extends Fragment implements iICSDefaultFragm
     }
 
     private void mSetWifiListener() {
-        SupportNetworkFragment.buttonWifiSettings.setOnClickListener(new View.OnClickListener() {
+        this.buttonWifiSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent  = new Intent(Settings.ACTION_WIFI_SETTINGS);

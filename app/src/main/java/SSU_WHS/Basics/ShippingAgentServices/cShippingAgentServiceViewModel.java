@@ -4,6 +4,8 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
+import java.util.concurrent.ExecutionException;
+
 import SSU_WHS.Webservice.cWebresult;
 
 public class cShippingAgentServiceViewModel extends AndroidViewModel {
@@ -21,7 +23,7 @@ public class cShippingAgentServiceViewModel extends AndroidViewModel {
     //End Region Constructor
 
     //Region Public Methods
-    public cWebresult pGetShippingAgentServicesFromWebserviceWrs() {return this.Repository.pGetShippingAgentServicesFromWebserviceWrs(); }
+    public cWebresult pGetShippingAgentServicesFromWebserviceWrs() throws ExecutionException {return this.Repository.pGetShippingAgentServicesFromWebserviceWrs(); }
     public void insert(cShippingAgentServiceEntity pvShippingAgentServiceEntity) {this.Repository.pInsert(pvShippingAgentServiceEntity);}
     public void deleteAll() {Repository.pDeleteAll();}
     //End Region Public Methods

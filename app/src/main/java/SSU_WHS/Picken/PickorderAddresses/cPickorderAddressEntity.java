@@ -21,11 +21,10 @@ import SSU_WHS.General.cDatabase;
 
         @NonNull
         @ColumnInfo(name = cDatabase.ADDRESSCODE_NAMESTR)
-        public String addrescode;
+        public String addrescode = "";
         public String getAddrescodeStr() {
             return addrescode;
         }
-
 
         @ColumnInfo(name = cDatabase.NAME_NAMESTR)
         public String name;

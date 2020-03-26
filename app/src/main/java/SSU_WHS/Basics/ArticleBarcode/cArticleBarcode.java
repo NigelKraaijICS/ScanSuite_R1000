@@ -27,31 +27,32 @@ public class cArticleBarcode {
         return barcodeStr;
     }
 
-    public String barcodeWithoutCheckDigitStr;
+
     public String getBarcodeWithoutCheckDigitStr() {
 
-        this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
+         String barcodeWithoutCheckDigitStr;
+        barcodeWithoutCheckDigitStr = this.getBarcodeStr();
 
         if (this.getBarcodeTypeInt() != cBarcodeScan.BarcodeType.EAN8 && this.getBarcodeTypeInt() != cBarcodeScan.BarcodeType.EAN13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return  barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() != 8 && this.getBarcodeStr().length() != 13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return  barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() == 8)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,7);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,7);
         }
 
         if (this.getBarcodeStr().length() == 13)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,12);
+            barcodeWithoutCheckDigitStr =barcodeWithoutCheckDigitStr.substring(0,12);
         }
 
         return barcodeWithoutCheckDigitStr;
     }
 
-    public int barcodeTypeInt;
+    private int barcodeTypeInt;
     public int getBarcodeTypeInt() { return barcodeTypeInt; }
 
     public Boolean isUniqueBarcodeBln;
@@ -63,10 +64,10 @@ public class cArticleBarcode {
     public String unitOfMeasureStr;
     public String getUnitOfMeasureStr() { return unitOfMeasureStr; }
 
-    public Date dataTimeStampDat;
+    private Date dataTimeStampDat;
     public Date getDataTimeStampDat() { return dataTimeStampDat; }
 
-    public cArticleBarcodeEntity articleBarcodeEntity;
+    private cArticleBarcodeEntity articleBarcodeEntity;
 
 
     //End Region Public Properties

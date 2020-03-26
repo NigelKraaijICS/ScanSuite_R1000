@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 public class cPickorderBarcodeViewModel extends AndroidViewModel {
 
     //Region Public Properties
-    public cPickorderBarcodeRepository pickorderBarcodeRepository;
+    private cPickorderBarcodeRepository pickorderBarcodeRepository;
     //End Region Public Properties
 
     //Region Constructor

@@ -37,14 +37,14 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     //End Region Public Properties
 
     //Region Private Properties
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubtext;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private TextView toolbarSubtext;
 
-    private static ConstraintLayout articleFullViewContainer;
-    private static TextView articleFullItemNoTextView;
-    private static TextView articleFullVariantTextView;
-    private static ImageView articleFullImageView;
+    private ConstraintLayout articleFullViewContainer;
+    private TextView articleFullItemNoTextView;
+    private TextView articleFullVariantTextView;
+    private ImageView articleFullImageView;
     //End Region Private Properties
 
 
@@ -77,7 +77,8 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
             cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
 
             if (cAppExtension.activity instanceof  PickorderPickActivity) {
-                PickorderPickActivity.pRegisterBarcodeReceiver();
+                PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+                pickorderPickActivity.pRegisterBarcodeReceiver();
             }
 
         } catch (Exception e) {
@@ -92,7 +93,8 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
             cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
 
             if (cAppExtension.activity instanceof  PickorderPickActivity) {
-                PickorderPickActivity.pRegisterBarcodeReceiver();
+                PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+                pickorderPickActivity.pRegisterBarcodeReceiver();
             }
 
         } catch (Exception e) {
@@ -127,14 +129,14 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     public void mFindViews() {
 
         if (getView() != null) {
-            ArticleFullViewFragment.toolbarImage = getView().findViewById(R.id.toolbarImage);
-            ArticleFullViewFragment.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
-            ArticleFullViewFragment.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
+            this.toolbarImage = getView().findViewById(R.id.toolbarImage);
+            this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
+            this.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
 
-            ArticleFullViewFragment.articleFullViewContainer = getView().findViewById(R.id.articleFuillViewContainer);
-            ArticleFullViewFragment.articleFullItemNoTextView = getView().findViewById(R.id.articleFullItemNoTextView);
-            ArticleFullViewFragment.articleFullVariantTextView = getView().findViewById(R.id.articleFullVariantTextView);
-            ArticleFullViewFragment.articleFullImageView = getView().findViewById(R.id.articleFullImageView);
+            this.articleFullViewContainer = getView().findViewById(R.id.articleFuillViewContainer);
+            this.articleFullItemNoTextView = getView().findViewById(R.id.articleFullItemNoTextView);
+            this.articleFullVariantTextView = getView().findViewById(R.id.articleFullVariantTextView);
+            this.articleFullImageView = getView().findViewById(R.id.articleFullImageView);
         }
 
     }
@@ -143,39 +145,38 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     public void mFieldsInitialize() {
 
         if (!cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
-            ArticleFullViewFragment.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-            ArticleFullViewFragment.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            ArticleFullViewFragment.toolbarSubtext.setSingleLine(true);
-            ArticleFullViewFragment.toolbarSubtext.setMarqueeRepeatLimit(5);
-            ArticleFullViewFragment.toolbarSubtext.postDelayed(new Runnable() {
+            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
+            this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.toolbarSubtext.setSingleLine(true);
+            this.toolbarSubtext.setMarqueeRepeatLimit(5);
+            this.toolbarSubtext.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ArticleFullViewFragment.toolbarSubtext.setSelected(true);
+                    toolbarSubtext.setSelected(true);
                 }
             },1500);
         }
 
-        //articleFullBrandTextView.setText(pickorderLineEntity2.getBrand());
-         ArticleFullViewFragment.articleFullItemNoTextView.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
-         ArticleFullViewFragment.articleFullVariantTextView.setText(cPickorderLine.currentPickOrderLine.getVariantCodeStr());
-         ArticleFullViewFragment.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-         ArticleFullViewFragment.articleFullVariantTextView.setSingleLine(true);
-         ArticleFullViewFragment.articleFullVariantTextView.setMarqueeRepeatLimit(5);
-         ArticleFullViewFragment.articleFullVariantTextView.setSelected(true);
+         this.articleFullItemNoTextView.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
+         this.articleFullVariantTextView.setText(cPickorderLine.currentPickOrderLine.getVariantCodeStr());
+         this.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+         this.articleFullVariantTextView.setSingleLine(true);
+         this.articleFullVariantTextView.setMarqueeRepeatLimit(5);
+         this.articleFullVariantTextView.setSelected(true);
 
         if (cPickorderLine.currentPickOrderLine.articleImage != null) {
             byte[] decodedString = Base64.decode(cPickorderLine.currentPickOrderLine.articleImage.getImageStr(), Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            ArticleFullViewFragment.articleFullImageView.setImageBitmap(decodedByte);
+            this.articleFullImageView.setImageBitmap(decodedByte);
         }
         else {
-            ArticleFullViewFragment.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_no_image_lightgrey_24dp));
+            this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_no_image_lightgrey_24dp));
         }
     }
 
     @Override
     public void mSetListeners() {
-        mDismissListener();
+        this.mDismissListener();
     }
 
     //End Region Default Methods
@@ -183,12 +184,12 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     //Region Public Methods
 
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan){
+    public  void pHandleScan(cBarcodeScan pvBarcodeScan){
 
 
         //No prefix
         if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
-            ArticleFullViewFragment.mArticleScanned(pvBarcodeScan);
+            this.mArticleScanned(pvBarcodeScan);
             return;
         }
 
@@ -200,11 +201,11 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
         //has prefix, is article
         if (foundBln) {
-            ArticleFullViewFragment.mArticleScanned(pvBarcodeScan);
+            this.mArticleScanned(pvBarcodeScan);
         }
         else {
             //has prefix, isn't branch
-            cUserInterface.pDoNope(ArticleFullViewFragment.articleFullViewContainer, true, true);
+            cUserInterface.pDoNope(this.articleFullViewContainer, true, true);
         }
     }
     //End Region Public Methods
@@ -213,18 +214,18 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
     private void mSetToolbar() {
 
-        ArticleFullViewFragment.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
-        ArticleFullViewFragment.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        ArticleFullViewFragment.toolbarTitle.setSingleLine(true);
-        ArticleFullViewFragment.toolbarTitle.setMarqueeRepeatLimit(5);
-        ArticleFullViewFragment.toolbarTitle.postDelayed(new Runnable() {
+        this.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+        this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        this.toolbarTitle.setSingleLine(true);
+        this.toolbarTitle.setMarqueeRepeatLimit(5);
+        this.toolbarTitle.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ArticleFullViewFragment.toolbarTitle.setSelected(true);
+                toolbarTitle.setSelected(true);
             }
         },1500);
 
-        ArticleFullViewFragment.toolbarImage.setImageResource(R.drawable.ic_info);
+        this.toolbarImage.setImageResource(R.drawable.ic_info);
     }
 
     private void mDismissListener() {
@@ -237,10 +238,11 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     }
 
 
-    private static void mArticleScanned(cBarcodeScan pvBarcodeScan) {
+    private void mArticleScanned(cBarcodeScan pvBarcodeScan) {
 
         if (cAppExtension.activity instanceof PickorderPickActivity) {
-            PickorderPickActivity.pHandleScan(pvBarcodeScan);
+            PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+            pickorderPickActivity.pHandleScan(pvBarcodeScan);
             cAppExtension.dialogFragment.dismiss();
         }
     }

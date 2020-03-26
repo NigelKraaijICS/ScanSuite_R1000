@@ -1,6 +1,6 @@
 package SSU_WHS.Basics.ShippingAgentsServiceShipMethods;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -15,66 +15,38 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cShippingAgentShipMethod {
 
     //Region Public Properties
-    public String ShippingAgentStr;
+    private String ShippingAgentStr;
     public String getShippingAgentStr() {
         return ShippingAgentStr;
     }
 
-    public String ShippingAgentServiceStr;
+    private String ShippingAgentServiceStr;
     public String getShippingAgentServiceStr() {
         return ShippingAgentServiceStr;
     }
 
-    public String ShippingMethodStr;
-    public String getShippingMethodStr() {
-        return ShippingMethodStr;
-    }
-
-    public String DescriptionStr;
+    private String DescriptionStr;
     public String getDescriptionStr() {
         return DescriptionStr;
     }
 
-    public String ValueTypeStr;
-    public String getValueTypeStr() {
-        return ValueTypeStr;
+    private cShippingAgentServiceShipMethodEntity shippingAgentServiceShipMethodEntity;
+
+    private cShippingAgentServiceShipMethodViewModel getShippingAgentServiceShipMethodViewModel () {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentServiceShipMethodViewModel.class);
     }
 
-    public String DefaultValueStr;
-    public String getDefaultValueStr() {
-        return DefaultValueStr;
-    }
-
-    public String EnumerationValuesStr;
-    public String getEnumerationValuesStr() {
-        return EnumerationValuesStr;
-    }
-
-    public cShippingAgentServiceShipMethodEntity shippingAgentServiceShipMethodEntity;
-    public boolean indatabaseBln;
-
-    public static cShippingAgentServiceShipMethodViewModel gShippingAgentServiceShipMethodViewModel;
-
-    public static cShippingAgentServiceShipMethodViewModel getShippingAgentServiceShipMethodViewModel() {
-        if (gShippingAgentServiceShipMethodViewModel == null) {
-            gShippingAgentServiceShipMethodViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cShippingAgentServiceShipMethodViewModel.class);
-        }
-        return gShippingAgentServiceShipMethodViewModel;
-    }
-
-    public static List<cShippingAgentShipMethod> allShippingAgentServiceShippingMethodsObl;
+    private static List<cShippingAgentShipMethod> allShippingAgentServiceShippingMethodsObl;
     public  static  Boolean ShippingAgentServiceShippingMethodsAvailableBln;
        //End Region Public Properties
 
 
     //Region Constructor
-    cShippingAgentShipMethod(JSONObject pvJsonObject) {
+    private cShippingAgentShipMethod(JSONObject pvJsonObject) {
         this.shippingAgentServiceShipMethodEntity = new cShippingAgentServiceShipMethodEntity(pvJsonObject);
         this.ShippingAgentStr = this.shippingAgentServiceShipMethodEntity.getShippingagentStr()  ;
         this.ShippingAgentServiceStr = this.shippingAgentServiceShipMethodEntity.getServiceStr();
         this.DescriptionStr = this.shippingAgentServiceShipMethodEntity.getDescriptionStr();
-        this.ValueTypeStr = this.shippingAgentServiceShipMethodEntity.getValuetypeStr();
-        this.EnumerationValuesStr = this.shippingAgentServiceShipMethodEntity.getEnumerationValuesStr();
     }
     //End Region Constructor
 
@@ -83,9 +55,7 @@ public class cShippingAgentShipMethod {
 
     public boolean pInsertInDatabaseBln() {
 
-
-        cShippingAgentShipMethod.getShippingAgentServiceShipMethodViewModel().insert(this.shippingAgentServiceShipMethodEntity);
-        this.indatabaseBln = true;
+        this.getShippingAgentServiceShipMethodViewModel().insert(this.shippingAgentServiceShipMethodEntity);
 
         if (cShippingAgentShipMethod.allShippingAgentServiceShippingMethodsObl == null){
             cShippingAgentShipMethod.allShippingAgentServiceShippingMethodsObl= new ArrayList<>();
@@ -95,60 +65,37 @@ public class cShippingAgentShipMethod {
     }
 
     public static boolean pTruncateTableBln(){
-        cShippingAgentShipMethod.getShippingAgentServiceShipMethodViewModel().deleteAll();
+
+        cShippingAgentServiceShipMethodViewModel shippingAgentServiceShipMethodViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentServiceShipMethodViewModel.class);
+        shippingAgentServiceShipMethodViewModel.deleteAll();
         return true;
     }
 
-    public static boolean pGetShippingAgentServicesShippingUnitsViaWebserviceBln(Boolean pvRefreshBln) {
+    public static void pGetShippingAgentServicesShippingUnitsViaWebservice(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cShippingAgentShipMethod.allShippingAgentServiceShippingMethodsObl = null;
             cShippingAgentShipMethod.pTruncateTableBln();
         }
 
         if (cShippingAgentShipMethod.allShippingAgentServiceShippingMethodsObl   != null) {
-            return  true;
+            return;
         }
 
         cWebresult WebResult;
-        WebResult =  cShippingAgentShipMethod.getShippingAgentServiceShipMethodViewModel().pGetShippingAgentServiceShipMethodsFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+        cShippingAgentServiceShipMethodViewModel shippingAgentServiceShipMethodViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentServiceShipMethodViewModel.class);
+        WebResult =  shippingAgentServiceShipMethodViewModel.pGetShippingAgentServiceShipMethodsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cShippingAgentShipMethod shippingAgentShipMethod = new cShippingAgentShipMethod(jsonObject);
                 shippingAgentShipMethod.pInsertInDatabaseBln();
             }
             cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln = true;
-            return  true;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETSHIPPINGAGENTSERVICESHIPMETHODS);
-            return  false;
         }
     }
-
-    public static cShippingAgentShipMethod pGetShippingAgentServiceShipMethodByStr(String pvShippingAgentStr, String pvShippingAgentServiceStr, String pvShippingMethodStr){
-        if(cShippingAgentShipMethod.allShippingAgentServiceShippingMethodsObl == null){
-            return null;
-        }
-
-        for (cShippingAgentShipMethod shippingAgentShipMethod : cShippingAgentShipMethod.allShippingAgentServiceShippingMethodsObl)
-        {
-            if(shippingAgentShipMethod.getShippingAgentStr() == pvShippingAgentStr &&
-                    shippingAgentShipMethod.getShippingAgentServiceStr() == pvShippingAgentServiceStr &&
-                    shippingAgentShipMethod.getShippingMethodStr() == pvShippingMethodStr) {
-
-                return  shippingAgentShipMethod;
-            }
-        }
-        return null;
-    }
-
 
     //End Region Public Methods
 }

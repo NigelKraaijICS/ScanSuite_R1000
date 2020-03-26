@@ -31,8 +31,8 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     //End Region Public Properties
 
     //Region Private Properties
-    private static ImageButton buttonRefreshOrders;
-    private static TextView textViewNothingHere;
+    private ImageButton buttonRefreshOrders;
+    private TextView textViewNothingHere;
     //End Region Private Properties
 
     //Region Constructor
@@ -70,8 +70,8 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     public void mFindViews() {
 
         if (getView() != null) {
-            NoOrdersFragment.buttonRefreshOrders = getView().findViewById(R.id.buttonRefreshOrders);
-            NoOrdersFragment.textViewNothingHere = getView().findViewById(R.id.textViewNothingHere);
+            this.buttonRefreshOrders = getView().findViewById(R.id.buttonRefreshOrders);
+            this.textViewNothingHere = getView().findViewById(R.id.textViewNothingHere);
         }
 
     }
@@ -80,12 +80,10 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
      @Override
     public void mFieldsInitialize() {
 
-         NoOrdersFragment.textViewNothingHere.setText(cAppExtension.activity.getString(R.string.no_orders));
+         this.textViewNothingHere.setText(cAppExtension.activity.getString(R.string.no_orders));
 
          if (cAppExtension.activity instanceof InventoryorderSelectActivity) {
-
-             NoOrdersFragment.textViewNothingHere.setText(cAppExtension.activity.getString(R.string.no_inventory_orders));
-
+             this.textViewNothingHere.setText(cAppExtension.activity.getString(R.string.no_inventory_orders));
          }
 
     }
@@ -93,34 +91,40 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mSetListeners() {
 
-        NoOrdersFragment.buttonRefreshOrders.setOnClickListener(new View.OnClickListener() {
+        this.buttonRefreshOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(buttonRefreshOrders, 2);
 
                 if (cAppExtension.activity instanceof PickorderSelectActivity) {
-                    PickorderSelectActivity.pFillOrders();
+                    PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
+                    pickorderSelectActivity.pFillOrders();
                 }
 
 
                 if (cAppExtension.activity instanceof SortorderSelectActivity) {
-                    SortorderSelectActivity.pFillOrders();
+                    SortorderSelectActivity sortorderSelectActivity = (SortorderSelectActivity)cAppExtension.activity;
+                    sortorderSelectActivity.pFillOrders();
                 }
 
                 if (cAppExtension.activity instanceof ShiporderSelectActivity) {
-                    ShiporderSelectActivity.pFillOrders();
+                    ShiporderSelectActivity shiporderSelectActivity = (ShiporderSelectActivity)cAppExtension.activity;
+                    shiporderSelectActivity.pFillOrders();
                 }
 
                 if (cAppExtension.activity instanceof IntakeAndReceiveSelectActivity) {
-                    IntakeAndReceiveSelectActivity.pFillOrders();
+                    IntakeAndReceiveSelectActivity intakeAndReceiveSelectActivity = (IntakeAndReceiveSelectActivity)cAppExtension.activity;
+                    intakeAndReceiveSelectActivity.pFillOrders();
                 }
 
                 if (cAppExtension.activity instanceof ReturnorderSelectActivity) {
-                    ReturnorderSelectActivity.pFillOrders();
+                    ReturnorderSelectActivity returnorderSelectActivity = (ReturnorderSelectActivity)cAppExtension.activity;
+                    returnorderSelectActivity.pFillOrders();
                 }
 
                 if (cAppExtension.activity instanceof InventoryorderSelectActivity) {
-                    InventoryorderSelectActivity.pFillOrders();
+                    InventoryorderSelectActivity inventoryorderSelectActivity = (InventoryorderSelectActivity)cAppExtension.activity;
+                    inventoryorderSelectActivity.pFillOrders();
                 }
 
             }

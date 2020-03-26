@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -27,7 +27,16 @@ public class PickorderLinesTotalFragment extends Fragment {
     //End Region Public Properties
 
     //Region Private Properties
-    private static  RecyclerView recyclerViewPickorderLinesTotal;
+    private  RecyclerView recyclerViewPickorderLinesTotal;
+
+    private cPickorderLineAdapter pickorderLineAdapter;
+    private cPickorderLineAdapter getPickorderLineAdapter(){
+        if (this.pickorderLineAdapter == null) {
+            this.pickorderLineAdapter = new cPickorderLineAdapter();
+        }
+
+        return  this.pickorderLineAdapter;
+    }
     //End Region Private Properties
 
     //Region Constructor
@@ -71,19 +80,21 @@ public class PickorderLinesTotalFragment extends Fragment {
 
     private void mFindViews() {
         if (getView() != null) {
-            PickorderLinesTotalFragment.recyclerViewPickorderLinesTotal = getView().findViewById(R.id.recyclerViewPickorderLinesTotal);
+            this.recyclerViewPickorderLinesTotal = getView().findViewById(R.id.recyclerViewPickorderLinesTotal);
         }
     }
 
     private void mFillRecycler() {
 
-        recyclerViewPickorderLinesTotal.setHasFixedSize(false);
-        recyclerViewPickorderLinesTotal.setAdapter(cPickorderLine.getPickorderLineTotalAdapter());
-        recyclerViewPickorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        recyclerViewPickorderLinesTotal.setVisibility(View.VISIBLE);
-        cPickorderLine.getPickorderLineTotalAdapter().pFillData(cPickorder.currentPickOrder.linesObl());
+        this.recyclerViewPickorderLinesTotal.setHasFixedSize(false);
+        this.recyclerViewPickorderLinesTotal.setAdapter(this.getPickorderLineAdapter());
+        this.recyclerViewPickorderLinesTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewPickorderLinesTotal.setVisibility(View.VISIBLE);
+        this.getPickorderLineAdapter().pFillData(cPickorder.currentPickOrder.linesObl());
 
-        PickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-
+        if (cAppExtension.activity instanceof PickorderLinesActivity) {
+            PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+            pickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+        }
     }
 }

@@ -1,6 +1,6 @@
 package SSU_WHS.Basics.BarcodeLayouts;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cRegex;
-import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
@@ -17,8 +16,8 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cBarcodeLayout {
 
     //region Public Properties
-    public String barcodeLayoutStr;
-    public String getBarcodeLayoutStr() {
+    private String barcodeLayoutStr;
+    private String getBarcodeLayoutStr() {
         return barcodeLayoutStr;
     }
     public barcodeLayoutEnu getBarcodeLayoutEnu(){
@@ -86,32 +85,17 @@ public class cBarcodeLayout {
         }
     }
 
-    public String layoutValueStr;
-    public String getLayoutValueStr() {
+    private String layoutValueStr;
+    private String getLayoutValueStr() {
         return layoutValueStr;
     }
 
-    public Integer sortorderInt;
-    public Integer getSortOrderInt() {
-        return sortorderInt;
+    private cBarcodeLayoutViewModel getBarcodeLayoutViewViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cBarcodeLayoutViewModel.class);
     }
 
-    public Integer importFileInt;
-    public Integer getimportFileInt() {
-        return importFileInt;
-    }
 
-    public boolean indatabaseBln;
-
-    public static cBarcodeLayoutViewModel gBarcodeLayoutViewModel;
-    public static cBarcodeLayoutViewModel getBarcodeLayoutViewViewModel() {
-        if (gBarcodeLayoutViewModel == null) {
-            gBarcodeLayoutViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cBarcodeLayoutViewModel.class);
-        }
-        return gBarcodeLayoutViewModel;
-    }
-
-    public cBarcodeLayoutEntity barcodeLayoutEntity;
+    private cBarcodeLayoutEntity barcodeLayoutEntity;
     public static List<cBarcodeLayout> allBarcodeLayoutsObl;
 
     public enum barcodeLayoutEnu {
@@ -141,22 +125,19 @@ public class cBarcodeLayout {
 
     //end region Public Properties
 
-    ;
+
     //Region Constructor
-    cBarcodeLayout(JSONObject pvJsonObject) {
+    private cBarcodeLayout(JSONObject pvJsonObject) {
         this.barcodeLayoutEntity = new cBarcodeLayoutEntity(pvJsonObject);
         this.barcodeLayoutStr =   this.barcodeLayoutEntity.getBarcodelayoutStr();
         this.layoutValueStr =   this.barcodeLayoutEntity.getLayoutValueStr();
-        this.sortorderInt =  cText.pStringToIntegerInt(this.barcodeLayoutEntity.getSortOrderStr());
-        this.importFileInt = cText.pStringToIntegerInt(this.barcodeLayoutEntity.getImportfileStr());
     }
     //End Region Constructor
 
     //Region Public Methods
 
     public boolean pInsertInDatabaseBln() {
-        cBarcodeLayout.getBarcodeLayoutViewViewModel().insert(this.barcodeLayoutEntity);
-        this.indatabaseBln = true;
+        this.getBarcodeLayoutViewViewModel().insert(this.barcodeLayoutEntity);
 
         if (cBarcodeLayout.allBarcodeLayoutsObl == null){
             cBarcodeLayout.allBarcodeLayoutsObl= new ArrayList<>();
@@ -167,7 +148,7 @@ public class cBarcodeLayout {
 
     public static boolean pCheckBarcodeWithLayoutBln(String pvBarcodeStr, barcodeLayoutEnu pvBarcodeLayoutEnu){
 
-        if(cBarcodeLayout.allBarcodeLayoutsObl == null){
+        if (cBarcodeLayout.allBarcodeLayoutsObl == null){
             return false;
         }
 
@@ -178,6 +159,7 @@ public class cBarcodeLayout {
 
         ArrayList<cBarcodeLayout> barcodeLayoutScannedObl;
         barcodeLayoutScannedObl = cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeStr);
+        assert barcodeLayoutScannedObl != null;
         if ( barcodeLayoutScannedObl.size() == 0){
             return  false;
         }
@@ -210,11 +192,7 @@ public class cBarcodeLayout {
         }
 
         //Check if prefix in barcode matches prefix in barcode layout
-        if (cRegex.pGetPrefix(pvBarcodeStr).equalsIgnoreCase(cRegex.pGetPrefixFromLayout(barcodeLayoutToCheck.getLayoutValueStr()))) {
-            return  true;
-        }
-
-        return  false;
+        return cRegex.pGetPrefix(pvBarcodeStr).equalsIgnoreCase(cRegex.pGetPrefixFromLayout(barcodeLayoutToCheck.getLayoutValueStr()));
 
     }
 
@@ -228,7 +206,7 @@ public class cBarcodeLayout {
 
         for (cBarcodeLayout barcodeLayout : cBarcodeLayout.allBarcodeLayoutsObl)
         {
-            if (cRegex.pCheckRegexBln(barcodeLayout.getLayoutValueStr(),pvBarcodeStr) == true) {
+            if (cRegex.pCheckRegexBln(barcodeLayout.getLayoutValueStr(), pvBarcodeStr)) {
                resultObl.add(barcodeLayout);
             }
         }
@@ -250,13 +228,15 @@ public class cBarcodeLayout {
     }
 
     public static boolean pTruncateTableBln(){
-        cBarcodeLayout.getBarcodeLayoutViewViewModel().deleteAll();
+
+        cBarcodeLayoutViewModel barcodeLayoutViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cBarcodeLayoutViewModel.class);
+        barcodeLayoutViewModel.deleteAll();
         return true;
     }
 
     public static boolean pGetBarcodeLayoutsViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cBarcodeLayout.allBarcodeLayoutsObl = null;
             cBarcodeLayout.pTruncateTableBln();
         }
@@ -266,8 +246,9 @@ public class cBarcodeLayout {
         }
 
         cWebresult WebResult;
-        WebResult =  cBarcodeLayout.getBarcodeLayoutViewViewModel().pGetBarcodeLayoutsFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
+        cBarcodeLayoutViewModel barcodeLayoutViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cBarcodeLayoutViewModel.class);
+        WebResult =  barcodeLayoutViewModel.pGetBarcodeLayoutsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             List<JSONObject> myList = WebResult.getResultDtt();
             for (int i = 0; i < myList.size(); i++) {

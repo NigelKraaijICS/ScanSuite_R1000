@@ -1,5 +1,6 @@
 package SSU_WHS.Picken.PickorderAddresses;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
@@ -11,51 +12,42 @@ import ICS.cAppExtension;
 
 public class cPickorderAddress {
 
-    public String addrescode;
+    private String addrescode;
     public String getAddrescodeStr() { return addrescode; }
 
-    public String name;
+    private String name;
     public String getNameStr() { return name; }
 
-    public String nameAddition;
+    private String nameAddition;
     public String getNameAdditionStr() { return nameAddition; }
 
-    public String address;
+    private String address;
     public String getAddressStr() { return address; }
 
-    public String addressAddition;
+    private String addressAddition;
     public String getAddressAdditionStr() { return addressAddition; }
 
-    public String street;
+    private String street;
     public String getStreetStr() { return street; }
 
-    public String addressNumber;
+    private String addressNumber;
     public String getAddressNumberStr() { return addressNumber; }
 
-    public String addressNumberAddition;
-    public String getAddressNumberAdditionStr() { return addressNumberAddition; }
-
-    public String zipcode;
+    private String zipcode;
     public String getZipcodeStr() { return zipcode; }
 
-    public String city;
+    private String city;
     public String getCityStr() { return city; }
 
-    public String country;
+    private String country;
     public String getCountryStr() { return country; }
 
-    public boolean inDatabaseBln;
-    public static Boolean pickOrderAdressAvailableBln;
 
-    public static cPickorderAddressViewModel pickorderAddressViewModel;
-    public static cPickorderAddressViewModel getPickorderAddressViewModel() {
-        if (pickorderAddressViewModel == null){
-            pickorderAddressViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cPickorderAddressViewModel.class);
-        }
-        return pickorderAddressViewModel;
+    private cPickorderAddressViewModel getPickorderAddressViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderAddressViewModel.class);
     }
 
-    public cPickorderAddressEntity pickorderAddressEntity;
+    private cPickorderAddressEntity pickorderAddressEntity;
     public static List<cPickorderAddress> allAdressesObl;
 
     //Region Constructor
@@ -77,9 +69,8 @@ public class cPickorderAddress {
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cPickorderAddress.getPickorderAddressViewModel().insert(this.pickorderAddressEntity);
-        this.inDatabaseBln = true;
 
+        this.getPickorderAddressViewModel().insert(this.pickorderAddressEntity);
 
         if (cPickorderAddress.allAdressesObl == null) {
             cPickorderAddress.allAdressesObl = new ArrayList<>();
@@ -90,7 +81,8 @@ public class cPickorderAddress {
     }
 
     public static boolean pTruncateTableBln(){
-        cPickorderAddress.getPickorderAddressViewModel().deleteAll();
+        cPickorderAddressViewModel pickorderAddressViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderAddressViewModel.class);
+        pickorderAddressViewModel.deleteAll();
         return true;
     }
 

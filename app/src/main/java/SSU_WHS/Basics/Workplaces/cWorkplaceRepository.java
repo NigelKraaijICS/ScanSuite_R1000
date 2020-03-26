@@ -17,17 +17,16 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cWorkplaceRepository {
     //Region Public Properties
-    public iWorkplaceDao workplaceDao;
+    private iWorkplaceDao workplaceDao;
     //End Region Public Properties
 
     //Region Private Properties
-    private cWebresult webResult;
-    private acScanSuiteDatabase db;
+
     //End Region Private Properties
 
     //Region Constructor
     cWorkplaceRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+       acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.workplaceDao = db.workplaceDao();
     }
     //End Region Constructor
@@ -41,13 +40,7 @@ public class cWorkplaceRepository {
 
         try {
             webResultWrs = new workplacesFromWebserviceGetAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -106,7 +99,7 @@ public class cWorkplaceRepository {
             l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWORKPLACES, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWORKPLACES, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);

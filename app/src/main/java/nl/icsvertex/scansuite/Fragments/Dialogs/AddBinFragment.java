@@ -36,11 +36,11 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     //End Region Public Properties
 
     //Region Private Properties
-    private static TextView textViewAddBinHeader;
-    private static TextView textViewAddBinText;
-    private static EditText editTextAddBin;
-    private static Button addBinButton;
-    private static Button cancelButton;
+    private TextView textViewAddBinHeader;
+    private TextView textViewAddBinText;
+    private EditText editTextAddBin;
+    private Button addBinButton;
+    private Button cancelButton;
     //End Region Private Properties
 
 
@@ -98,23 +98,23 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
 
     @Override
     public void mFindViews() {
-        AddBinFragment.textViewAddBinHeader = Objects.requireNonNull(getView()).findViewById(R.id.textViewAddBinHeader );
-        AddBinFragment.textViewAddBinText = getView().findViewById(R.id.textViewAddBinText);
-        AddBinFragment.editTextAddBin = getView().findViewById(R.id.editTextAddBin);
-        AddBinFragment.addBinButton = getView().findViewById(R.id.addBinButton);
-        AddBinFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+        this.textViewAddBinHeader = Objects.requireNonNull(getView()).findViewById(R.id.textViewAddBinHeader );
+        this.textViewAddBinText = getView().findViewById(R.id.textViewAddBinText);
+        this.editTextAddBin = getView().findViewById(R.id.editTextAddBin);
+        this.addBinButton = getView().findViewById(R.id.addBinButton);
+        this.cancelButton = getView().findViewById(R.id.cancelButton);
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        AddBinFragment.textViewAddBinHeader.setText(R.string.add_bin_header_default);
+        this.textViewAddBinHeader.setText(R.string.add_bin_header_default);
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
-        AddBinFragment.editTextAddBin.setFilters(filterArray);
+        this.editTextAddBin.setFilters(filterArray);
         cUserInterface.pShowKeyboard(editTextAddBin);
-        AddBinFragment.textViewAddBinText.setVisibility(View.GONE);
+        this.textViewAddBinText.setVisibility(View.GONE);
     }
 
     @Override
@@ -125,27 +125,31 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
     private void mSetCancelListener() {
-       AddBinFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
+
+                InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+                inventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
                 cAppExtension.dialogFragment.dismiss();
             }
         });
     }
     private void mSetAddBinListener() {
-        AddBinFragment.addBinButton.setOnClickListener(new View.OnClickListener() {
+        this.addBinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (AddBinFragment.editTextAddBin.getText().toString().trim().isEmpty()) {
-                    cUserInterface.pDoNope(AddBinFragment.editTextAddBin, true, true);
+                if (editTextAddBin.getText().toString().trim().isEmpty()) {
+                    cUserInterface.pDoNope(editTextAddBin, true, true);
                     return;
                 }
 
                 if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-                    InventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(AddBinFragment.editTextAddBin.getText().toString()));
-                    InventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
+
+                    InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
+                    inventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(editTextAddBin.getText().toString()));
+                    inventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
                     cAppExtension.dialogFragment.dismiss();
                 }
 
@@ -153,7 +157,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
         });
     }
     private void mSetEditorActionListener() {
-        AddBinFragment.editTextAddBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextAddBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
@@ -165,7 +169,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Has prefix, so check if this is a BIN
         if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
@@ -178,19 +182,19 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
 
             if (foundBin) {
                 //has prefix, is bin
-                AddBinFragment.editTextAddBin.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
-                AddBinFragment.addBinButton.callOnClick();
+                this.editTextAddBin.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+                this.addBinButton.callOnClick();
                 return;
             }
             else {
                 //has prefix, isn't bin
-                cUserInterface.pDoNope(AddBinFragment.editTextAddBin, true, true);
+                cUserInterface.pDoNope(this.editTextAddBin, true, true);
                 return;
             }
         }
 
         //no prefix, fine
-        AddBinFragment.editTextAddBin.setText(pvBarcodeScan.getBarcodeOriginalStr());
-        AddBinFragment.addBinButton.callOnClick();
+        this.editTextAddBin.setText(pvBarcodeScan.getBarcodeOriginalStr());
+        this.addBinButton.callOnClick();
     }
 }

@@ -29,7 +29,7 @@ import nl.icsvertex.scansuite.R;
 public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAdapter.PickorderLineViewHolder>  {
 
     //Region Public Properties
-    public class PickorderLineViewHolder extends RecyclerView.ViewHolder{
+    public static class PickorderLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewBIN;
         private TextView textViewDescription;
@@ -97,7 +97,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     @Override
     public cPickorderLineAdapter.PickorderLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_pickorderline, pvParent, false);
-        return new cPickorderLineAdapter.PickorderLineViewHolder(itemView);
+        return new PickorderLineViewHolder(itemView);
     }
 
     @Override
@@ -214,23 +214,27 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
                 //Kick off correct event at correct activity
                 if (cAppExtension.context instanceof PickorderLinesActivity) {
 
+                    PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+
                     if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
-                        PickorderLinesActivity.pPicklineSelected(currentPickorderLine);
+                        pickorderLinesActivity.pPicklineSelected(currentPickorderLine);
                     }
 
                     if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
-                        PickorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
+                        pickorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
                     }
                 }
 
 
                 if (cAppExtension.context  instanceof SortorderLinesActivity) {
 
+                    SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+
                     if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
-                        SortorderLinesActivity.pPicklineSelected(currentPickorderLine);
+                        sortorderLinesActivity.pPicklineSelected(currentPickorderLine);
                     }
                     if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
-                        SortorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
+                        sortorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
                         return;
                     }
 
@@ -252,7 +256,12 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         //Select the first one, or selected index
         if (pvPositionInt == cPickorder.currentPickOrder.getLastSelectedIndexInt() && cAppExtension.activity instanceof  PickorderLinesActivity &&  thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
             pvHolder.pickorderLineItemFrameLayout.performClick();
-            PickorderLinesToPickFragment.pSetSelectedIndexInt(pvPositionInt);
+
+            if (PickorderLinesActivity.currentLineFragment instanceof  PickorderLinesToPickFragment) {
+                PickorderLinesToPickFragment pickorderLinesToPickFragment = (PickorderLinesToPickFragment)PickorderLinesActivity.currentLineFragment;
+                pickorderLinesToPickFragment.pSetSelectedIndexInt(pvPositionInt);
+            }
+
         }
     }
 
@@ -281,15 +290,16 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         //if PickorderLinesPickedFragment is the current fragment
         if (PickorderLinesActivity.currentLineFragment instanceof PickorderLinesPickedFragment ) {
 
+            PickorderLinesPickedFragment pickorderLinesPickedFragment = (PickorderLinesPickedFragment)PickorderLinesActivity.currentLineFragment;
+
             //if there are no defects, then show no linesInt fragment
             if (this.localPickorderLinesObl.size() == 0 ) {
-                PickorderLinesPickedFragment.pNoLinesAvailable(true);
+                pickorderLinesPickedFragment.pNoLinesAvailable(true);
             }
             // There are linesInt to show, so refresh the fragent then all linesInt are shown again
             else {
-               PickorderLinesPickedFragment.pGetData( this.localPickorderLinesObl );
+                pickorderLinesPickedFragment.pGetData( this.localPickorderLinesObl );
             }
-
         }
 
         notifyDataSetChanged();

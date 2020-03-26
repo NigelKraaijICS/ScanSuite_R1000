@@ -40,9 +40,19 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
 
     //Region Private Properties
 
-    private static RecyclerView recyclerViewInventoryBinsTotal;
-    private static ImageView imageCloseOrder;
-    private static int positionSwiped;
+    private RecyclerView recyclerViewInventoryBinsTotal;
+    private ImageView imageCloseOrder;
+    private int positionSwiped;
+
+    private cInventoryorderBinAdapter inventoryorderBinAdapter;
+    private cInventoryorderBinAdapter getInventoryorderBinAdapter() {
+        if (inventoryorderBinAdapter != null) {
+            return  inventoryorderBinAdapter;
+        }
+
+        inventoryorderBinAdapter = new cInventoryorderBinAdapter();
+        return  inventoryorderBinAdapter;
+    }
 
     //End Region Private Properties
 
@@ -84,13 +94,13 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
             return;
         }
 
-        InventoryBinsTotalFragment.positionSwiped = pvPositionInt;
+        this.positionSwiped = pvPositionInt;
 
 
         cInventoryorderBin.currentInventoryOrderBin = cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().get(pvPositionInt);
         if ( cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()) <= 0 && cInventoryorder.currentInventoryOrder.isGeneratedBln()) {
             cUserInterface.pShowSnackbarMessage(pvViewHolder.itemView,cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset),null,true);
-            cInventoryorderBin.getInventoryorderBinDoneAdapter().notifyItemChanged(pvPositionInt);
+            this.getInventoryorderBinAdapter().notifyItemChanged(pvPositionInt);
             return;
         }
 
@@ -109,14 +119,14 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
 
     //Region iICSDefaultActivity defaults
 
-    public static void pPasswordSuccess() {
+    public  void pPasswordSuccess() {
         cBarcodeScan.pRegisterBarcodeReceiver();
-        mRemoveAdapterFromFragment();
+        this.mRemoveAdapterFromFragment();
     }
 
-    public static void pPasswordCancelled() {
+    public  void pPasswordCancelled() {
         cBarcodeScan.pRegisterBarcodeReceiver();
-        cInventoryorderBin.getInventoryorderBinTotalAdapter().notifyItemChanged(positionSwiped);
+        this.getInventoryorderBinAdapter().notifyItemChanged(this.positionSwiped);
     }
 
     @Override
@@ -132,8 +142,8 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
     public void mFindViews() {
 
         if (getView() != null) {
-            InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal = getView().findViewById(R.id.recyclerViewInventoryBinsTotal);
-            InventoryBinsTotalFragment.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
+            this.recyclerViewInventoryBinsTotal = getView().findViewById(R.id.recyclerViewInventoryBinsTotal);
+            this.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
         }
 
 
@@ -142,15 +152,15 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
     @Override
     public void mFieldsInitialize() {
 
-        InventoryBinsTotalFragment.imageCloseOrder.setVisibility(View.INVISIBLE);
+        this.imageCloseOrder.setVisibility(View.INVISIBLE);
 
 
         if (cInventoryorder.currentInventoryOrder.pGetBinsDoneFromDatabasObl().size() >0 && cInventoryorder.currentInventoryOrder.pGetBinsNotDoneFromDatabasObl().size() == 0 ) {
-            InventoryBinsTotalFragment.imageCloseOrder.setVisibility(View.VISIBLE);
+            this.imageCloseOrder.setVisibility(View.VISIBLE);
         }
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cInventoryorderBinRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewInventoryBinsTotal);
 
 
     }
@@ -168,39 +178,47 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
 
     //Region Private Methods
 
-    private static void mGetData() {
-        mFillRecycler(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl());
+    private  void mGetData() {
+        this.mFillRecycler(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl());
     }
 
-    private static void mFillRecycler(List<cInventoryorderBin> pvDataObl) {
+    private void mFillRecycler(List<cInventoryorderBin> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            InventoryBinsTotalFragment.mNoLinesAvailable(true);
+            this.mNoLinesAvailable(true);
             return;
         }
 
-        InventoryBinsTotalFragment.mNoLinesAvailable(false);
+        this.mNoLinesAvailable(false);
 
-        cInventoryorderBin.getInventoryorderBinTotalAdapter().pFillData(pvDataObl);
-        InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal.setHasFixedSize(false);
-        InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal.setAdapter(cInventoryorderBin.getInventoryorderBinTotalAdapter());
-        InventoryBinsTotalFragment.recyclerViewInventoryBinsTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        InventoryBinsTotalFragment. recyclerViewInventoryBinsTotal.setVisibility(View.VISIBLE);
+        this.getInventoryorderBinAdapter().pFillData(pvDataObl);
+        this.recyclerViewInventoryBinsTotal.setHasFixedSize(false);
+        this.recyclerViewInventoryBinsTotal.setAdapter(this.getInventoryorderBinAdapter());
+        this.recyclerViewInventoryBinsTotal.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this. recyclerViewInventoryBinsTotal.setVisibility(View.VISIBLE);
 
-        InventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
+        if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {
+            InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
+            inventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
 
+        }
     }
 
     private void mSetDoneListener() {
-        InventoryBinsTotalFragment.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
+        this.imageCloseOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InventoryorderBinsActivity.pHandleOrderCloseClick();
+
+                if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {
+                    InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
+                    inventoryorderBinsActivity.pHandleOrderCloseClick();
+
+                }
             }
         });
     }
 
-    private static void mRemoveAdapterFromFragment(){
+    private  void mRemoveAdapterFromFragment(){
 
         //remove the item from recyclerview
         cResult hulpRst = cInventoryorderBin.currentInventoryOrderBin.pResetRst();
@@ -210,14 +228,18 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
         }
 
         //Renew data, so only current lines are shown
-        mGetData();
+        this.mGetData();
 
         //Change counters
-        InventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
-        InventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalItemCountDbl()));
+        if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {
+            InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
+            inventoryorderBinsActivity.pChangeTabCounterText(cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
+            inventoryorderBinsActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' + cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalItemCountDbl()));
+        }
+
     }
 
-    private static void mNoLinesAvailable(Boolean pvEnabledBln) {
+    private  void mNoLinesAvailable(Boolean pvEnabledBln) {
 
         if (InventoryorderBinsActivity.currentBinFragment  instanceof InventoryBinsTotalFragment) {
             //Close no orders fragment if needed
@@ -234,7 +256,7 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
             }
 
             //Hide the recycler view
-            recyclerViewInventoryBinsTotal.setVisibility(View.INVISIBLE);
+            this.recyclerViewInventoryBinsTotal.setVisibility(View.INVISIBLE);
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
@@ -243,7 +265,10 @@ public class InventoryBinsTotalFragment extends Fragment implements iICSDefaultF
             fragmentTransaction.commit();
 
             //Change tabcounter text
-            InventoryorderBinsActivity.pChangeTabCounterText( cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
+            if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {
+                InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity) cAppExtension.activity;
+                inventoryorderBinsActivity.pChangeTabCounterText( cText.pIntToStringStr(cInventoryorder.currentInventoryOrder.pGetBinsTotalFromDatabasObl().size()));
+            }
         }
     }
 

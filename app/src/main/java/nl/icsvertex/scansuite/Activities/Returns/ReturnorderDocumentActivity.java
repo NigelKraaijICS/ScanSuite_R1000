@@ -34,6 +34,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
+import SSU_WHS.Return.ReturnOrder.cReturnorderAdapter;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
@@ -50,24 +51,36 @@ import nl.icsvertex.scansuite.R;
 public class ReturnorderDocumentActivity extends AppCompatActivity implements iICSDefaultActivity, cReturnorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     //Region Public Properties
-    static final String ACCEPTREJECTFRAGMENT_TAG = "ACCEPTREJECTFRAGMENT_TAG";
-    public static String VIEW_CHOSEN_DOCUMENT = "detail:header:text";
-    public static final String VIEW_CHOSEN_DOCUMENT_IMAGE = "detail:header:imageStr";
     public static Fragment currentLineFragment;
     public static Boolean busyBln =false;
-
 
     //End Region Public Properties
 
     //Region Private Properties
-    private static TextView documentText;
-    private static ImageView imageDocument;
-    private static ImageView toolbarImage;
-    private static ImageView imageDocumentDone;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubTitle;
-    private static RecyclerView recyclerViewReturnorderLines;
-    private static ImageView imageAddArticle;
+    private TextView documentText;
+    private ImageView imageDocument;
+    private ImageView toolbarImage;
+    private ImageView imageDocumentDone;
+    private TextView toolbarTitle;
+    private TextView toolbarSubTitle;
+    private RecyclerView recyclerViewReturnorderLines;
+    private ImageView imageAddArticle;
+
+    private cReturnorderLineAdapter returnorderLineAdapter;
+    private cReturnorderLineAdapter getReturnorderLineAdapter(){
+        if (this.returnorderLineAdapter == null) {
+            this.returnorderLineAdapter = new cReturnorderLineAdapter();
+        }
+        return  this.returnorderLineAdapter;
+    }
+
+    private cReturnorderAdapter returnorderAdapter;
+    private cReturnorderAdapter getReturnorderAdapter(){
+        if (this.returnorderAdapter == null) {
+            this.returnorderAdapter = new cReturnorderAdapter();
+        }
+        return  this.returnorderAdapter;
+    }
 
     //End Region Private Properties
 
@@ -153,20 +166,20 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     @Override
     public void mFindViews() {
-        ReturnorderDocumentActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        ReturnorderDocumentActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        ReturnorderDocumentActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        ReturnorderDocumentActivity.documentText = findViewById(R.id.documentText);
-        ReturnorderDocumentActivity.imageDocument = findViewById(R.id.imageDocument);
-        ReturnorderDocumentActivity.imageDocumentDone = findViewById(R.id.imageViewDocumentDone);
-        ReturnorderDocumentActivity.recyclerViewReturnorderLines = findViewById(R.id.recyclerViewReturnorderLines);
-        ReturnorderDocumentActivity.imageAddArticle = findViewById(R.id.imageAddArticle);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.documentText = findViewById(R.id.documentText);
+        this.imageDocument = findViewById(R.id.imageDocument);
+        this.imageDocumentDone = findViewById(R.id.imageViewDocumentDone);
+        this.recyclerViewReturnorderLines = findViewById(R.id.recyclerViewReturnorderLines);
+        this.imageAddArticle = findViewById(R.id.imageAddArticle);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        ReturnorderDocumentActivity.toolbarImage.setImageResource(R.drawable.ic_menu_return);
-        ReturnorderDocumentActivity.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_return);
+        this.toolbarTitle.setText(pvScreenTitleStr);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -177,13 +190,13 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     @Override
     public void mFieldsInitialize() {
-        ViewCompat.setTransitionName(ReturnorderDocumentActivity.imageDocument, ReturnorderDocumentActivity.VIEW_CHOSEN_DOCUMENT_IMAGE);
-        ViewCompat.setTransitionName(ReturnorderDocumentActivity.documentText, ReturnorderDocumentActivity.VIEW_CHOSEN_DOCUMENT);
-        ReturnorderDocumentActivity.documentText.setText(cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr());
+        ViewCompat.setTransitionName(this.imageDocument, cPublicDefinitions.VIEW_CHOSEN_DOCUMENT_IMAGE);
+        ViewCompat.setTransitionName(this.documentText, cPublicDefinitions.VIEW_CHOSEN_DOCUMENT);
+        this.documentText.setText(cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr());
 
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cReturnorderLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(ReturnorderDocumentActivity.recyclerViewReturnorderLines);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewReturnorderLines);
 
     }
 
@@ -196,14 +209,14 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     @Override
     public void mInitScreen() {
-        ReturnorderDocumentActivity.pFillLines();
+        this.pFillLines();
     }
 
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
 
-    public static void pHandleScan(final cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(final cBarcodeScan pvBarcodeScan) {
 
         if (ReturnorderDocumentActivity.busyBln) {
             return;
@@ -224,7 +237,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     }
 
-    public static void pHandleSelectedLine(){
+    public void pHandleSelectedLine(){
         //Close open Dialogs
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -232,23 +245,23 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         ReturnorderDocumentActivity.busyBln = true;
         cUserInterface.pShowGettingData();
 
-        mHandleSelectedLine();
+        this.mHandleSelectedLine();
     }
 
-    public static void pFillLines() {
+    public void pFillLines() {
 
         List<cReturnorderLine> hulpObl = cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl;
         if (hulpObl.size() == 0) {
-            ReturnorderDocumentActivity.mShowNoLinesIcon(true);
+            this.mShowNoLinesIcon(true);
             return;
         }
 
-        ReturnorderDocumentActivity.mFillRecyclerView(hulpObl);
-        ReturnorderDocumentActivity.mShowNoLinesIcon(false);
+        this.mFillRecyclerView(hulpObl);
+        this.mShowNoLinesIcon(false);
 
     }
 
-    public static void pLineHandled() {
+    public void pLineHandled() {
 
         //We returned here, so we are not busy anymore
         ReturnorderDocumentActivity.busyBln = false;
@@ -260,10 +273,10 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         cBranchReason.currentBranchReason = null;
 
         //Fill lines of Document
-        ReturnorderDocumentActivity.pFillLines();
+        this.pFillLines();
     }
 
-    public  static void pCloseDocument(){
+    public  void pCloseDocument(){
 
 
         boolean resultBln = cReturnorderDocument.currentReturnOrderDocument.pCloseBln();
@@ -278,47 +291,47 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         cReturnorderDocument.currentReturnOrderDocument = null;
 
         //Start Documents activity
-        ReturnorderDocumentActivity.mStartDocumentsActivity();
+        this.mStartDocumentsActivity();
 
     }
 
-    public static void pHandleFragmentDismissed(){
+    public void pHandleFragmentDismissed(){
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
-    public static void  pStartDocumentsActivity(){
+    public void  pStartDocumentsActivity(){
 
         //Clear cache
         cReturnorderDocument.currentReturnOrderDocument = null;
 
         //Start Documents activity
-        ReturnorderDocumentActivity.mStartDocumentsActivity();
+        this.mStartDocumentsActivity();
     }
 
     //End Region Public Methods
 
     //Region Private Methods
 
-    private static void mHandleScan(cBarcodeScan pvBarcodeScan){
+    private void mHandleScan(cBarcodeScan pvBarcodeScan){
 
 
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
 
             //We scanned a NEW Document so check of we are allowed to add a Document
             if (cReturnorder.currentReturnOrder.isGeneratedBln() && !cReturnorder.currentReturnOrder.getRetourMultiDocumentBln() ) {
-                ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_document_add_not_allowed));
+                this.mStepFailed(cAppExtension.activity.getString(R.string.message_document_add_not_allowed));
                 ReturnorderDocumentActivity.busyBln = false;
                 return;
             }
 
             //Close current Document
-            ReturnorderDocumentActivity.pCloseDocument();
+            this.pCloseDocument();
 
             //We are not busy anymore
             ReturnorderDocumentActivity.busyBln = false;
 
             //Pass this new Document scan on to the Documents activity
-            ReturnorderDocumentsActivity.pHandleScan(pvBarcodeScan);
+            this.pHandleScan(pvBarcodeScan);
             return;
         }
 
@@ -327,7 +340,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         for ( cBarcodeLayout barcodeLayout :  cBarcodeLayout.allBarcodeLayoutsObl) {
             if (barcodeLayout.getBarcodeLayoutEnu() != cBarcodeLayout.barcodeLayoutEnu.ARTICLE){
                 if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), barcodeLayout.getBarcodeLayoutEnu())) {
-                    mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_mandatory), pvBarcodeScan.getBarcodeOriginalStr());
+                    this.mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_mandatory), pvBarcodeScan.getBarcodeOriginalStr());
                     ReturnorderDocumentActivity.busyBln = false;
                     return;
                 }
@@ -341,18 +354,18 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
         //We scanned an unkown barcodeStr
         if (returnorderBarcode == null) {
-            ReturnorderDocumentActivity.mHandleUnknownBarcodeScan(pvBarcodeScan);
+            this.mHandleUnknownBarcodeScan(pvBarcodeScan);
             return;
         }
 
         cArticle.currentArticle  = cArticle.pGetArticleByBarcodeViaWebservice(pvBarcodeScan);
 
         //We scanned a barcodeStr we already know
-        ReturnorderDocumentActivity.mHandleKnownBarcodeScan(returnorderBarcode, pvBarcodeScan);
+        this.mHandleKnownBarcodeScan(returnorderBarcode, pvBarcodeScan);
 
     }
 
-    private static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
+    private  void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 
@@ -363,10 +376,10 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             return;
         }
 
-        ReturnorderDocumentActivity.pCloseDocument();
+        this.pCloseDocument();
     }
 
-    private static void mFillRecyclerView(List<cReturnorderLine> pvReturnorderLinesObl) {
+    private  void mFillRecyclerView(List<cReturnorderLine> pvReturnorderLinesObl) {
 
         if (pvReturnorderLinesObl == null || pvReturnorderLinesObl.size() == 0) {
             return;
@@ -378,21 +391,21 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             }
         }
 
-        ReturnorderDocumentActivity.recyclerViewReturnorderLines.setHasFixedSize(false);
-        ReturnorderDocumentActivity.recyclerViewReturnorderLines.setAdapter(cReturnorderLine.getReturnorderLineAdapter());
-        ReturnorderDocumentActivity.recyclerViewReturnorderLines.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewReturnorderLines.setHasFixedSize(false);
+        this.recyclerViewReturnorderLines.setAdapter(this.getReturnorderLineAdapter());
+        this.recyclerViewReturnorderLines.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        cReturnorderLine.getReturnorderLineAdapter().pFillData(pvReturnorderLinesObl);
+        this.getReturnorderLineAdapter().pFillData(pvReturnorderLinesObl);
     }
 
     private void mSetToolbarTitleListeners() {
-        ReturnorderDocumentActivity.toolbarTitle.setOnClickListener(new View.OnClickListener() {
+        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mScrollToTop();
             }
         });
-        ReturnorderDocumentActivity.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
+        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 mScrollToBottom();
@@ -403,7 +416,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     private void mSetDoneListeners() {
 
-        ReturnorderDocumentActivity.imageDocumentDone.setOnClickListener(new View.OnClickListener() {
+        this.imageDocumentDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTryToLeaveActivity();
@@ -417,20 +430,20 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     }
 
     private void mScrollToBottom() {
-        if (cReturnorder.getReturnorderAdapter() != null) {
-            if (cReturnorder.getReturnorderAdapter().getItemCount() > 0) {
-                recyclerViewReturnorderLines.smoothScrollToPosition(cReturnorderLine.getReturnorderLineAdapter().getItemCount() - 1);
+        if (this.getReturnorderAdapter() != null) {
+            if (this.getReturnorderAdapter().getItemCount() > 0) {
+                recyclerViewReturnorderLines.smoothScrollToPosition(this.getReturnorderLineAdapter().getItemCount() - 1);
             }
         }
     }
 
-    private static void mStartDocumentsActivity() {
+    private void mStartDocumentsActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentsActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }
 
-    private static void mAddUnkownArticle(cBarcodeScan pvBarcodeScan){
+    private void mAddUnkownArticle(cBarcodeScan pvBarcodeScan){
 
         //Add the barcodeStr via the webservice
         if (!cReturnorder.currentReturnOrder.pAddUnkownBarcodeBln(pvBarcodeScan)) {
@@ -440,7 +453,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         //Add line barcode to line
-        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandled());
+        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandledDbl());
 
         //Add quantityDbl of the current barcodeStr
         cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
@@ -452,68 +465,67 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         //Open the line, so we can edit it
-        ReturnorderDocumentActivity.mShowArticleDetailFragment();
+        this.mShowArticleDetailFragment();
 
     }
 
-    private static void mAddERPArticle(cBarcodeScan pvBarcodeScan){
+    private void mAddERPArticle(cBarcodeScan pvBarcodeScan){
 
         //Add the barcodeStr via the webservice
         if (!cReturnorder.currentReturnOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-            ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.getBarcodeOriginalStr()));
+            this.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.getBarcodeOriginalStr()));
             ReturnorderDocumentActivity.busyBln = false;
             return;
         }
 
-
-        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandled());
+        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandledDbl());
 
         cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
         cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
         //Open the line, so we can edit it
-        ReturnorderDocumentActivity.mShowArticleDetailFragment();
+        this.mShowArticleDetailFragment();
     }
 
-    private static void mHandleUnknownBarcodeScan(cBarcodeScan pvBarcodeScan) {
+    private void mHandleUnknownBarcodeScan(cBarcodeScan pvBarcodeScan) {
 
         // Check if we can add a line
         if (! cReturnorder.currentReturnOrder.isGeneratedBln()) {
-            ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_now_allowed));
+            this.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_now_allowed));
             ReturnorderDocumentActivity.busyBln = false;
             return;
         }
 
         //We can add a line, but we don't check with the ERP, so add line and open it
         if (! cSetting.RETOUR_BARCODE_CHECK()) {
-            ReturnorderDocumentActivity.mAddUnkownArticle(pvBarcodeScan);
+            this.mAddUnkownArticle(pvBarcodeScan);
             ReturnorderDocumentActivity.busyBln = false;
             return;
         }
 
         //We can add a line, and we need to check with the ERP, so check, add and open it
-        ReturnorderDocumentActivity.mAddERPArticle(pvBarcodeScan);
+        this.mAddERPArticle(pvBarcodeScan);
     }
 
-    public static void mHandleSelectedLine(){
+    public void mHandleSelectedLine(){
 
         //Set the current barcodeStr
         cReturnorderBarcode.currentReturnOrderBarcode = cReturnorder.currentReturnOrder.pGetBarcodeForSelectedLine();
 
         //Create new line barcodeStr
-        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandled());
+        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandledDbl());
 
         //Set current reason to reason of the line
-        cBranchReason branchReason = cUser.currentUser.currentBranch.pGetReasonByName(cReturnorderLine.currentReturnOrderLine.getRetourredenStr());
+        cBranchReason branchReason = cUser.currentUser.currentBranch.pGetReasonByName(cReturnorderLine.currentReturnOrderLine.getRetourRedenStr());
         if (branchReason != null) {
             cBranchReason.currentBranchReason = branchReason;
         }
 
         //Open the line (found or created), so we can edit it
-        ReturnorderDocumentActivity.mShowArticleDetailFragment();
+        this.mShowArticleDetailFragment();
     }
 
-    private static void mHandleKnownBarcodeScan(cReturnorderBarcode pvReturnorderBarcode, cBarcodeScan pvBarcodeScan) {
+    private void mHandleKnownBarcodeScan(cReturnorderBarcode pvReturnorderBarcode, cBarcodeScan pvBarcodeScan) {
 
         //Set the current barcodeStr
         cReturnorderBarcode.currentReturnOrderBarcode = pvReturnorderBarcode;
@@ -526,7 +538,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
             if (cSetting.RETOUR_BARCODE_CHECK()) {
             if (!cReturnorder.currentReturnOrder.isGeneratedBln()) {
-                ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_now_allowed));
+                this.mStepFailed(cAppExtension.activity.getString(R.string.message_add_article_now_allowed));
                 ReturnorderDocumentActivity.busyBln = false;
                 return;
             }
@@ -538,20 +550,20 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             cReturnorderLine.currentReturnOrderLine = returnorderLine;
 
                 if (!cReturnorder.currentReturnOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-                    ReturnorderDocumentActivity.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.getBarcodeOriginalStr()));
+                    this.mStepFailed(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.getBarcodeOriginalStr()));
                     ReturnorderDocumentActivity.busyBln = false;
                     return;
                 }
             }
             else {
-                mHandleUnknownBarcodeScan(pvBarcodeScan);
+                this.mHandleUnknownBarcodeScan(pvBarcodeScan);
                 return;
             }
 
         }
 
         //Create new line barcodeStr
-        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandled());
+        cReturnorderLine.currentReturnOrderLine.pAddLineBarcode(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr(), cReturnorderBarcode.currentReturnOrderBarcode.getQuantityHandledDbl());
 
         //Add quantityDbl of the current barcodeStr
         if (cReturnorderLine.currentReturnOrderLine.getQuantitytakeDbl() == 0.0){
@@ -566,10 +578,10 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         //Open the line (found or created), so we can edit it
-        ReturnorderDocumentActivity.mShowArticleDetailFragment();
+        this.mShowArticleDetailFragment();
     }
 
-    private static void mShowArticleDetailFragment() {
+    private  void mShowArticleDetailFragment() {
 
         ReturnArticleDetailFragment articleDetailFragment = new ReturnArticleDetailFragment();
         articleDetailFragment.setCancelable(false);
@@ -577,12 +589,12 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     }
 
-    private static void mStepFailed(String pvErrorMessageStr ){
+    private void mStepFailed(String pvErrorMessageStr ){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cReturnorder.currentReturnOrder.getOrderNumberStr(), true, true );
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
-    private static void mShowNoLinesIcon(final Boolean pvShowBln){
+    private void mShowNoLinesIcon(final Boolean pvShowBln){
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -590,12 +602,12 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
                 cUserInterface.pHideGettingData();
 
-                ReturnorderDocumentActivity.mSetToolBarTitleWithCounters();
-                ReturnorderDocumentActivity.imageDocumentDone.setVisibility(View.INVISIBLE);
+                mSetToolBarTitleWithCounters();
+                imageDocumentDone.setVisibility(View.INVISIBLE);
 
                 if (pvShowBln) {
 
-                    ReturnorderDocumentActivity.recyclerViewReturnorderLines.setVisibility(View.INVISIBLE);
+                    recyclerViewReturnorderLines.setVisibility(View.INVISIBLE);
 
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                     NothingHereFragment fragment = new NothingHereFragment();
@@ -604,8 +616,8 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
                     return;
                 }
 
-                ReturnorderDocumentActivity.recyclerViewReturnorderLines.setVisibility(View.VISIBLE);
-                ReturnorderDocumentActivity.imageDocumentDone.setVisibility(View.VISIBLE);
+                recyclerViewReturnorderLines.setVisibility(View.VISIBLE);
+                imageDocumentDone.setVisibility(View.VISIBLE);
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
@@ -619,8 +631,8 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         });
     }
 
-    private static void mSetToolBarTitleWithCounters(){
-        ReturnorderDocumentActivity.toolbarSubTitle.setText(cReturnorder.currentReturnOrder.getCountForCurrentSourceDocumentStr());
+    private void mSetToolBarTitleWithCounters(){
+        this.toolbarSubTitle.setText(cReturnorder.currentReturnOrder.getCountForCurrentSourceDocumentStr());
     }
 
     private void mShowCloseDocumentDialog() {
@@ -635,7 +647,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
                 @Override
                 public void run() {
                     // show my popup
-                    acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+                    acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
                 }
             });
         }
@@ -647,7 +659,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
                 @Override
                 public void run() {
                     // show my popup
-                    acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+                    acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
                 }
             });
         }
@@ -655,7 +667,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
 
     private void mSetAddArticleListener() {
-        ReturnorderDocumentActivity.imageAddArticle.setOnClickListener(new View.OnClickListener() {
+        this.imageAddArticle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowAddArticleFragment();
@@ -693,7 +705,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         //Renew data, so only current lines are shown
-        ReturnorderDocumentActivity.pLineHandled();
+        this.pLineHandled();
 
     }
 
@@ -708,14 +720,14 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
         if (!cReturnorderLine.currentReturnOrderLine.pSaveLineViaWebserviceBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_line_save_failed),"",true,true);
-            ReturnorderDocumentActivity.pHandleFragmentDismissed();
+            this.pHandleFragmentDismissed();
             cAppExtension.dialogFragment.dismiss();
             return;
         }
         //Change quantityDbl handled in database
         cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
         //Renew data, so only current lines are shown
-        ReturnorderDocumentActivity.pLineHandled();
+        this.pLineHandled();
     }
 
     private void mShowAddArticleFragment(){
@@ -725,8 +737,6 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         AddArticleFragment addArticleFragment = new AddArticleFragment();
         addArticleFragment.setCancelable(true);
         addArticleFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDARTICLE_TAG);
-
-
     }
 
     private void mTryToLeaveSingleDocumentActivity() {
@@ -755,7 +765,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         alertDialog.setCancelable(true);
         alertDialog.show();
     }
-    private static void mStartOrderSelectActivity() {
+    private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
     }

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +22,7 @@ import nl.icsvertex.scansuite.R;
 public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryorderLineAdapter.InventoryorderLineViewHolder> {
     //Region Public Properties
 
-    public class InventoryorderLineViewHolder extends RecyclerView.ViewHolder{
+    public static class InventoryorderLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewArticle;
         private TextView textViewDescription;
@@ -67,8 +68,7 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
 
     //Region Private Properties
     private final LayoutInflater LayoutInflaterObject;
-    private static List<cInventoryorderLine> localInventoryorderLineObl;
-    private RecyclerView thisRecyclerView;
+    private List<cInventoryorderLine> localInventoryorderLineObl;
 
     //End Region Private Properties
 
@@ -80,19 +80,19 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
 
 
     //Region Default Methods
+    @NonNull
     @Override
-    public cInventoryorderLineAdapter.InventoryorderLineViewHolder onCreateViewHolder(ViewGroup pvParent, int pbViewTypeInt) {
+    public cInventoryorderLineAdapter.InventoryorderLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_inventoryorderline, pvParent, false);
-        return new cInventoryorderLineAdapter.InventoryorderLineViewHolder(itemView);
+        return new InventoryorderLineViewHolder(itemView);
     }
     @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
-        this.thisRecyclerView = pvRecyclerView;
-        super.onAttachedToRecyclerView( this.thisRecyclerView);
+    public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
+        super.onAttachedToRecyclerView( pvRecyclerView);
     }
 
     @Override
-    public void onBindViewHolder(cInventoryorderLineAdapter.InventoryorderLineViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cInventoryorderLineAdapter.InventoryorderLineViewHolder pvHolder, int pvPositionInt) {
 
         if (localInventoryorderLineObl == null || localInventoryorderLineObl.size() == 0 ) {
             return;
@@ -100,7 +100,7 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
 
         final cInventoryorderLine inventoryorderLine = localInventoryorderLineObl.get(pvPositionInt);
 
-        pvHolder.textViewArticle.setText(inventoryorderLine.getItemNoStr() + " " + inventoryorderLine.getVariantCodeStr());
+        pvHolder.textViewArticle.setText(inventoryorderLine.getItemNoAndVariantCodeStr());
         pvHolder.textViewDescription.setText(inventoryorderLine.getDescriptionStr());
         pvHolder.textViewDescription.setVisibility(View.VISIBLE);
         pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(inventoryorderLine.getQuantityHandledDbl()));
@@ -136,7 +136,7 @@ public class cInventoryorderLineAdapter extends RecyclerView.Adapter<cInventoryo
 
     //Region Public Methods
     public void pFillData(List<cInventoryorderLine> pvDataObl) {
-        cInventoryorderLineAdapter.localInventoryorderLineObl = pvDataObl;
+        this.localInventoryorderLineObl = pvDataObl;
         notifyDataSetChanged();
     }
 

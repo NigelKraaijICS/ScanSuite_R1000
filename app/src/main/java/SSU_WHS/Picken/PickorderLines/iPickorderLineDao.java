@@ -71,7 +71,7 @@ public interface iPickorderLineDao {
     @Query("UPDATE Pickorderlines SET ProcessingSequence = :pvProcessingSequenceStr WHERE recordid = :pvRecordidInt")
     int updateOrderLineProcessingSequence(Integer pvRecordidInt, String pvProcessingSequenceStr);
 
-    @Query("UPDATE Pickorderlines SET QuantityHandled = :pvQuantityHandledDbl, LocalSortLocation = :pvLocationStr WHERE recordid = :pvRecordIDInt")
+    @Query("UPDATE Pickorderlines SET QuantityHandled = :pvQuantityHandledDbl, ProcessingSequence = :pvLocationStr WHERE recordid = :pvRecordIDInt")
     int updateSortOrderLine(Integer pvRecordIDInt, Integer pvQuantityHandledDbl, String pvLocationStr);
 
     @Query("UPDATE Pickorderlines SET Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT + " WHERE Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW + " OR Localstatus = " + cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY)

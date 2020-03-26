@@ -25,7 +25,7 @@ import nl.icsvertex.scansuite.R;
 public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cReceiverorderSummaryLineAdapter.ReceiverorderLineViewHolder>  {
 
     //Region Public Properties
-    public class ReceiverorderLineViewHolder extends RecyclerView.ViewHolder{
+    public static class ReceiverorderLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewItemNoAndVariantCode;
         private TextView textViewDescription;
@@ -81,7 +81,7 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
     @Override
     public cReceiverorderSummaryLineAdapter.ReceiverorderLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_receiveorderline_summary, pvParent, false);
-        return new cReceiverorderSummaryLineAdapter.ReceiverorderLineViewHolder(itemView);
+        return new ReceiverorderLineViewHolder(itemView);
     }
 
 
@@ -144,7 +144,8 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
 
                 //Kick off correct event at correct activity
                 if (cAppExtension.context instanceof ReceiveLinesActivity) {
-                    ReceiveLinesActivity.pReceivelineSelected(currentReceiveorderSummaryLine);
+                    ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+                    receiveLinesActivity.pReceivelineSelected(currentReceiveorderSummaryLine);
                 }
             }
         });
@@ -169,29 +170,41 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
     //Region Public Methods
     public void pFillData(List<cReceiveorderSummaryLine> pvDataObl) {
         this.localReceiveorderSummaryLinesObl = pvDataObl;
-        ReceiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+
+        if (cAppExtension.activity instanceof  ReceiveLinesActivity) {
+            ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+            receiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+        }
+
     }
 
     public void pShowDeviations() {
 
         this.localReceiveorderSummaryLinesObl = mGetDeviationsListObl();
-        ReceiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
 
-        if (cAppExtension.activity instanceof ReceiveLinesActivity ) {
-            ReceiveLinesActivity.pShowData(this.localReceiveorderSummaryLinesObl);
+        if (cAppExtension.activity instanceof  ReceiveLinesActivity) {
+            ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity) cAppExtension.activity;
+            receiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+            receiveLinesActivity.pShowData(this.localReceiveorderSummaryLinesObl);
         }
 
     }
 
     public void pSetFilter(String pvQueryTextStr, Boolean pvScannedBln) {
         this.localReceiveorderSummaryLinesObl = mGetFilteredListObl(pvQueryTextStr);
-        ReceiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+
+        if (cAppExtension.activity instanceof ReceiveLinesActivity ) {
+            ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity) cAppExtension.activity;
+            receiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+        }
+
 
         if (this.localReceiveorderSummaryLinesObl.size() == 1 && pvScannedBln) {
 
             if (cAppExtension.activity instanceof  ReceiveLinesActivity) {
-                ReceiveLinesActivity.pReceivelineSelected(this.localReceiveorderSummaryLinesObl.get(0));
-                ReceiveLinesActivity.pStartLine();
+                ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity) cAppExtension.activity;
+                receiveLinesActivity.pReceivelineSelected(this.localReceiveorderSummaryLinesObl.get(0));
+                receiveLinesActivity.pStartLine();
             }
 
         }

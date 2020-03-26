@@ -44,7 +44,9 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Intake.Intakeorders.cIntakeorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
@@ -58,32 +60,37 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     //Region Public Properties
 
-    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:imageStr";
-    public static final String VIEW_NAME_HEADER_TEXT = "detail:header:text";
-
     //End Region Public Properties
 
     //Region Private Properties
 
     // Region Views
-    private static RecyclerView recyclerViewIntakeorders;
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubTitle;
-    private static TextView toolbarSubTitle2;
-    private static SearchView recyclerSearchView;
+    private RecyclerView recyclerViewIntakeorders;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private TextView toolbarSubTitle;
+    private TextView toolbarSubTitle2;
+    private SearchView recyclerSearchView;
 
-    private static ImageView imageViewFilter;
-    private static ImageView imageViewNewOrder;
+    private ImageView imageViewFilter;
+    private ImageView imageViewNewOrder;
 
-    private  static ConstraintLayout constraintFilterOrders;
-    private static SwipeRefreshLayout swipeRefreshLayout;
+    private ConstraintLayout constraintFilterOrders;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    private static BottomSheetBehavior bottomSheetBehavior;
-
+    private BottomSheetBehavior bottomSheetBehavior;
     public static cWarehouseorder.ReceiveAndStoreMainTypeEnu currentMainTypeEnu;
-
     public static boolean startedViaMenuBln;
+
+    cIntakeorderAdapter intakeorderAdapter;
+    cIntakeorderAdapter getIntakeorderAdapter(){
+        if (this.intakeorderAdapter == null) {
+            this.intakeorderAdapter = new cIntakeorderAdapter();
+        }
+        return  this.intakeorderAdapter;
+
+    }
+
 
     // End Region Views
 
@@ -108,15 +115,21 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
         cBarcodeScan.pUnregisterBarcodeReceiver();
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         cUserInterface.pEnableScanner();
-        mActivityInitialize();
+        this.mActivityInitialize();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -136,7 +149,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     @Override
     public void onRefresh() {
-        IntakeAndReceiveSelectActivity.pFillOrders();
+        this.pFillOrders();
     }
 
 
@@ -172,27 +185,27 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     @Override
     public void mFindViews() {
-        IntakeAndReceiveSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        IntakeAndReceiveSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        IntakeAndReceiveSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        IntakeAndReceiveSelectActivity.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
-        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders = findViewById(R.id.recyclerViewMoveorders);
-        IntakeAndReceiveSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        IntakeAndReceiveSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
-        IntakeAndReceiveSelectActivity.imageViewNewOrder = findViewById(R.id.imageViewNewOrder);
-        IntakeAndReceiveSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
-        IntakeAndReceiveSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
+        this.recyclerViewIntakeorders = findViewById(R.id.recyclerViewMoveorders);
+        this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
+        this.imageViewFilter = findViewById(R.id.imageViewFilter);
+        this.imageViewNewOrder = findViewById(R.id.imageViewNewOrder);
+        this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
+        this.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
-        IntakeAndReceiveSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
-        IntakeAndReceiveSelectActivity.toolbarTitle.setText(pvScreenTitle);
-        IntakeAndReceiveSelectActivity.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
-        IntakeAndReceiveSelectActivity.toolbarTitle.setSelected(true);
-        IntakeAndReceiveSelectActivity.toolbarSubTitle.setSelected(true);
-        ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
-        ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
+    public void mSetToolbar(String pvScreenTitleStr) {
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
+        this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
+        this.toolbarTitle.setSelected(true);
+        this.toolbarSubTitle.setSelected(true);
+        ViewCompat.setTransitionName(toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName(toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -206,7 +219,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         this.mInitBottomSheet();
         this.mResetCurrents();
         this.mSetNewOrderButton();
-        IntakeAndReceiveSelectActivity.pFillOrders();
+        this.pFillOrders();
     }
 
     @Override
@@ -228,7 +241,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     //Region Public Methods
 
 
-    public static void pFillOrders() {
+    public  void pFillOrders() {
 
         // Show that we are getting data
         cUserInterface.pShowGettingData();
@@ -241,30 +254,30 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Set filter with scanned barcodeStr if there is no prefix
         if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
-            IntakeAndReceiveSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
-            IntakeAndReceiveSelectActivity.recyclerSearchView.callOnClick();
+            this.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
+            this.recyclerSearchView.callOnClick();
             return;
         }
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
             //has prefix, is salesorderStr
-            IntakeAndReceiveSelectActivity.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
-            IntakeAndReceiveSelectActivity.recyclerSearchView.callOnClick();
+            this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
+            this.recyclerSearchView.callOnClick();
             return;
         }
 
         //If there is a prefix but it's not a salesorder tgen do nope
-        cUserInterface.pDoNope(IntakeAndReceiveSelectActivity.recyclerSearchView, true, true);
+        cUserInterface.pDoNope(this.recyclerSearchView, true, true);
 
     }
 
-    public static void pIntakeorderSelected(cIntakeorder pvIntakeorder) {
+    public  void pIntakeorderSelected(cIntakeorder pvIntakeorder) {
 
         if (!mCheckOrderIsLockableBln(pvIntakeorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
@@ -290,7 +303,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     // Region Private Methods
 
-    private static void mHandleFillOrders(){
+    private  void mHandleFillOrders(){
 
 
         //all Intakeorders
@@ -300,7 +313,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         }
 
         if (cIntakeorder.allIntakeordersObl == null || cIntakeorder.allIntakeordersObl.size() == 0) {
-            IntakeAndReceiveSelectActivity.mShowNoOrdersIcon(true);
+            this.mShowNoOrdersIcon(true);
             return;
         }
 
@@ -308,8 +321,8 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 //Fill and show recycler
-                IntakeAndReceiveSelectActivity.mSetIntakeorderRecycler(cIntakeorder.allIntakeordersObl);
-                IntakeAndReceiveSelectActivity.mShowNoOrdersIcon(false);
+                mSetIntakeorderRecycler(cIntakeorder.allIntakeordersObl);
+                mShowNoOrdersIcon(false);
                 if (cSharedPreferences.userFilterBln()) {
                     mApplyFilter();
                 }
@@ -319,27 +332,27 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         });
     }
 
-    private static void mHandleIntakeorderSelected(){
+    private void mHandleIntakeorderSelected(){
 
         cResult hulpResult;
 
         //Try to lock the intakeorder
-        if (!IntakeAndReceiveSelectActivity.mTryToLockOrderBln()) {
-            IntakeAndReceiveSelectActivity.pFillOrders();
+        if (!this.mTryToLockOrderBln()) {
+            this.pFillOrders();
             return;
         }
 
         //Delete the detail, so we can get them from the webservice
         if (!cIntakeorder.currentIntakeOrder.pDeleteDetailsBln()) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
             return;
         }
 
         switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr()) {
             case "MAT":
-                hulpResult = IntakeAndReceiveSelectActivity.mGetMATOrderDetailsRst();
+                hulpResult = this.mGetMATOrderDetailsRst();
                 if (!hulpResult.resultBln) {
-                    IntakeAndReceiveSelectActivity.mStepFailed(hulpResult.messagesStr());
+                    this.mStepFailed(hulpResult.messagesStr());
                     return;
                 }
 
@@ -347,7 +360,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
                     @Override
                     public void run() {
                         // If everything went well, then start Lines Activity
-                        IntakeAndReceiveSelectActivity.mShowIntakeLinesActivity();
+                        mShowIntakeLinesActivity();
                     }
                 });
 
@@ -355,9 +368,9 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
 
             case "EOS":
-                hulpResult = IntakeAndReceiveSelectActivity.mGetReceiveOrderDetailsRst();
+                hulpResult = this.mGetReceiveOrderDetailsRst();
                 if (!hulpResult.resultBln) {
-                    IntakeAndReceiveSelectActivity.mStepFailed(hulpResult.messagesStr());
+                    this.mStepFailed(hulpResult.messagesStr());
                     return;
                 }
 
@@ -365,7 +378,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
                     @Override
                     public void run() {
                         // If everything went well, then start Lines Activity
-                        IntakeAndReceiveSelectActivity.mShowReceiveLinesActivity();
+                        mShowReceiveLinesActivity();
                     }
                 });
 
@@ -374,7 +387,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         }
     }
 
-    private static cResult mGetMATOrderDetailsRst(){
+    private cResult mGetMATOrderDetailsRst(){
 
         cResult result;
 
@@ -420,7 +433,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         return  result;
     }
 
-    private static cResult mGetReceiveOrderDetailsRst(){
+    private cResult mGetReceiveOrderDetailsRst(){
 
         cResult result;
 
@@ -458,19 +471,19 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         return  result;
     }
 
-    private static void mStepFailed(String pvErrorMessageStr){
+    private  void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cIntakeorder.currentIntakeOrder.getOrderNumberStr(), true, true );
         cIntakeorder.currentIntakeOrder.pLockReleaseViaWebserviceBln();
         cUserInterface.pCheckAndCloseOpenDialogs();
         cIntakeorder.currentIntakeOrder = null;
     }
 
-    private static void mShowIntakeLinesActivity() {
+    private  void mShowIntakeLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
-        View clickedOrder = null;
+        View clickedOrder;
 
         Intent intent = new Intent(cAppExtension.context, IntakeorderLinesActivity.class);
 
@@ -482,16 +495,16 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
              clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
         }
 
-        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, IntakeorderLinesActivity.VIEW_CHOSEN_ORDER));
+        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
         ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
     }
 
-    private static void mShowReceiveLinesActivity() {
+    private  void mShowReceiveLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
-        View clickedOrder = null;
+        View clickedOrder;
 
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
 
@@ -506,7 +519,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
                 clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
             }
 
-            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, ReceiveLinesActivity.VIEW_CHOSEN_ORDER));
+            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;
         }
@@ -515,7 +528,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     }
 
-    private static void mShowCreateReceiveActivity() {
+    private  void mShowCreateReceiveActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -531,10 +544,10 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     private void mInitBottomSheet() {
 
-        IntakeAndReceiveSelectActivity.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
-        IntakeAndReceiveSelectActivity.bottomSheetBehavior.setHideable(true);
-        IntakeAndReceiveSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        IntakeAndReceiveSelectActivity.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
+        this.bottomSheetBehavior.setHideable(true);
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        this.bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View pvBottomSheet, int pvNewStateInt) {
                 if (pvNewStateInt == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -561,11 +574,11 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     private void mShowHideBottomSheet(Boolean pvShowBln) {
 
         if (pvShowBln) {
-            IntakeAndReceiveSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return;
         }
 
-        IntakeAndReceiveSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     }
 
@@ -573,33 +586,33 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     //Filter
 
-    private  static void mApplyFilter() {
+    private   void mApplyFilter() {
 
-        IntakeAndReceiveSelectActivity.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
 
         List<cIntakeorder> filteredIntakesObl = cIntakeorder.pGetIntakesWithFilterFromDatabasObl();
 
-        IntakeAndReceiveSelectActivity.mSetIntakeorderRecycler(filteredIntakesObl);
+        this.mSetIntakeorderRecycler(filteredIntakesObl);
 
         if (filteredIntakesObl.size() == 0) {
-            mShowNoOrdersIcon(true);
+            this.mShowNoOrdersIcon(true);
         } else {
-            mShowNoOrdersIcon(false);
+            this.mShowNoOrdersIcon(false);
         }
 
     }
 
-    private static  void mShowThatFiltersInUse(Boolean pvFiltersInUseBln) {
+    private   void mShowThatFiltersInUse(Boolean pvFiltersInUseBln) {
         if (pvFiltersInUseBln) {
-            imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_filled_black_24dp));
+            this.imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_filled_black_24dp));
         }
         else {
-            imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_black_24dp));
+            this.imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_black_24dp));
         }
     }
 
     private void mSetFilterListener() {
-        IntakeAndReceiveSelectActivity.imageViewFilter.setOnClickListener(new View.OnClickListener() {
+        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -613,8 +626,8 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     }
 
     private void mSetSwipeRefreshListener() {
-        IntakeAndReceiveSelectActivity.swipeRefreshLayout.setOnRefreshListener(this);
-        IntakeAndReceiveSelectActivity.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
+        this.swipeRefreshLayout.setOnRefreshListener(this);
+        this.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
     }
 
 
@@ -622,15 +635,15 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     // Recycler View
 
-    private static void mSetIntakeorderRecycler(List<cIntakeorder> pvIntakeorderObl) {
+    private  void mSetIntakeorderRecycler(List<cIntakeorder> pvIntakeorderObl) {
 
-        IntakeAndReceiveSelectActivity.swipeRefreshLayout.setRefreshing(false);
+        this.swipeRefreshLayout.setRefreshing(false);
 
         if (pvIntakeorderObl == null) {
             return;
         }
 
-        IntakeAndReceiveSelectActivity.imageViewFilter.setVisibility(View.VISIBLE);
+        this.imageViewFilter.setVisibility(View.VISIBLE);
 
         for (Fragment fragment: cAppExtension.fragmentManager.getFragments()) {
             if (fragment instanceof NoOrdersFragment) {
@@ -638,15 +651,15 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             }
         }
 
-        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders.setHasFixedSize(false);
-        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders.setAdapter(cIntakeorder.getIntakeorderAdapter());
-        IntakeAndReceiveSelectActivity.recyclerViewIntakeorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewIntakeorders.setHasFixedSize(false);
+        this.recyclerViewIntakeorders.setAdapter(this.getIntakeorderAdapter());
+        this.recyclerViewIntakeorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        cIntakeorder.getIntakeorderAdapter().pFillData(pvIntakeorderObl);
+        this.getIntakeorderAdapter().pFillData(pvIntakeorderObl);
     }
 
     private void mSetRecyclerOnScrollListener() {
-        recyclerViewIntakeorders.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        this.recyclerViewIntakeorders.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView pvRecyclerView, int pvNewStateInt) {
                 super.onScrollStateChanged(pvRecyclerView, pvNewStateInt);
@@ -665,11 +678,11 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
                     if(itemPosition==0){
                         // Prepare the View for the animation
-                        IntakeAndReceiveSelectActivity.recyclerSearchView.setVisibility(View.VISIBLE);
-                        IntakeAndReceiveSelectActivity.recyclerSearchView.setAlpha(0.0f);
+                        recyclerSearchView.setVisibility(View.VISIBLE);
+                        recyclerSearchView.setAlpha(0.0f);
 
                         // Start the animation
-                        IntakeAndReceiveSelectActivity.recyclerSearchView.animate()
+                        recyclerSearchView.animate()
                                 .translationY(0)
                                 .alpha(1.0f)
                                 .setListener(null);
@@ -695,7 +708,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     private void mSetSearchListener() {
         //make whole view clickable
-        IntakeAndReceiveSelectActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 recyclerSearchView.setIconified(false);
@@ -703,7 +716,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         });
 
         //query entered
-        IntakeAndReceiveSelectActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String pvString) {
                 return false;
@@ -712,7 +725,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             @Override
             public boolean onQueryTextChange(String pvQueryTextStr) {
                 mApplyFilter();
-                cIntakeorder.getIntakeorderAdapter().pSetFilter(pvQueryTextStr);
+                getIntakeorderAdapter().pSetFilter(pvQueryTextStr);
                 return true;
             }
         });
@@ -723,17 +736,15 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     // No orders iconmS
 
-    private static void mShowNoOrdersIcon(final Boolean pvShowBln){
+    private  void mShowNoOrdersIcon(final Boolean pvShowBln){
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
                 cUserInterface.pHideGettingData();
-                IntakeAndReceiveSelectActivity.swipeRefreshLayout.setRefreshing(false);
-
-
-                IntakeAndReceiveSelectActivity.mSetToolBarTitleWithCounters();
+                swipeRefreshLayout.setRefreshing(false);
+                mSetToolBarTitleWithCounters();
 
 
                 if (pvShowBln) {
@@ -763,7 +774,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         });
     }
 
-    private static boolean mCheckOrderIsLockableBln(cIntakeorder pvIntakeorder){
+    private  boolean mCheckOrderIsLockableBln(cIntakeorder pvIntakeorder){
 
         //If there is no assigned user, then always oke
         if (pvIntakeorder.getAssignedUserIdStr().isEmpty()) {
@@ -786,7 +797,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         cIntakeorder.currentIntakeOrder = null;
     }
 
-    private static boolean mTryToLockOrderBln(){
+    private  boolean mTryToLockOrderBln(){
 
         cResult hulpResult = new cResult();
 
@@ -824,13 +835,14 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     }
 
-    private static void mSetToolBarTitleWithCounters(){
+    private  void mSetToolBarTitleWithCounters(){
 
 
         String subTitleStr;
 
         if (cIntakeorder.allIntakeordersObl == null ) {
-            IntakeAndReceiveSelectActivity.toolbarSubTitle.setText("0 " + cAppExtension.activity.getString(R.string.orders));
+            String subtextStr = "0 " + cAppExtension.activity.getString(R.string.orders);
+            this.toolbarSubTitle.setText(subtextStr);
             return;
         }
 
@@ -840,7 +852,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             subTitleStr = "(" + cText.pIntToStringStr(cIntakeorder.pGetIntakesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cIntakeorder.allIntakeordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }
 
-        IntakeAndReceiveSelectActivity.toolbarSubTitle.setText(subTitleStr);
+        this.toolbarSubTitle.setText(subTitleStr);
 
     }
 
@@ -856,11 +868,9 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     private void mLeaveActivity(){
         this.mReleaseLicense();
-
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
-
     }
 
     private void mSetNewOrderButton() {
@@ -880,7 +890,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     }
 
     private void mSetNewOrderListener() {
-        IntakeAndReceiveSelectActivity.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
+        this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 mShowCreateReceiveActivity();
@@ -888,7 +898,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         });
     }
 
-    private static void  mAutoOpenCreateActivity(){
+    private  void  mAutoOpenCreateActivity(){
 
         // We returned in this form, so don't start create activity
         if (!IntakeAndReceiveSelectActivity.startedViaMenuBln) {
@@ -913,7 +923,6 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             }
 
             mShowCreateReceiveActivity();
-            return;
         }
     }
 

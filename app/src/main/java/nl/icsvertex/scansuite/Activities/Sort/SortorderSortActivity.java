@@ -25,6 +25,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -44,8 +45,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.R;
 
-import static android.view.View.GONE;
-
 public class SortorderSortActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
@@ -54,43 +53,39 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     //Region Private Properties
 
-    static final String ACCEPTREJECTFRAGMENT_TAG = "ACCEPTREJECTFRAGMENT_TAG";
-    static final String BARCODEPICKERFRAGMENT_TAG = "BARCODEPICKERFRAGMENT_TAG";
-
     private static Boolean articleScannedLastBln;
-    private static List<String> sortingAdviceObl;
+    private List<String> sortingAdviceObl;
 
-    private static int pickCounterMinusHelperInt;
-    private static int pickCounterPlusHelperInt;
+    private int pickCounterMinusHelperInt;
+    private int pickCounterPlusHelperInt;
 
-    private static Handler minusHandler;
-    private static Handler plusHandler;
+    private Handler minusHandler;
+    private Handler plusHandler;
 
     //Region Views
 
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubtext;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private TextView toolbarSubtext;
 
-    private static TextView articleDescriptionText;
-    private static TextView articleDescription2Text;
-    private static TextView articleItemText;
-    private static TextView articleBarcodeText;
-    private static TextView articleVendorItemText;
-    private static TextView containerText;
-    private static TextView quantityText;
-    private static TextView quantityRequiredText;
-    private static  ImageView articleThumbImageView;
-    private static ImageView imageButtonBarcode;
-    private static TextView sourcenoText;
-    private static CardView sourcenoContainer;
-    private static TextView textViewPackingTable;
-    private static TextView textViewAction;
-    private static TextView textAdviceLocation;
+    private TextView articleDescriptionText;
+    private TextView articleDescription2Text;
+    private TextView articleItemText;
+    private TextView articleBarcodeText;
+    private TextView articleVendorItemText;
+    private TextView quantityText;
+    private TextView quantityRequiredText;
+    private ImageView articleThumbImageView;
+    private ImageView imageButtonBarcode;
+    private TextView sourcenoText;
+    private CardView sourcenoContainer;
+    private TextView textViewPackingTable;
+    private TextView textViewAction;
+    private TextView textAdviceLocation;
 
-    private static AppCompatImageButton imageButtonMinus;
-    private static AppCompatImageButton imageButtonPlus;
-    private static AppCompatImageButton imageButtonDone;
+    private AppCompatImageButton imageButtonMinus;
+    private AppCompatImageButton imageButtonPlus;
+    private AppCompatImageButton imageButtonDone;
 
     //End Region Views
 
@@ -147,7 +142,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public void onBackPressed() {
-        mShowAcceptFragment();
+        this.mShowAcceptFragment();
     }
 
 
@@ -184,31 +179,30 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void mFindViews() {
 
-        SortorderSortActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        SortorderSortActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        SortorderSortActivity.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-        SortorderSortActivity.articleDescriptionText = findViewById(R.id.articleDescriptionText);
-        SortorderSortActivity.articleDescription2Text = findViewById(R.id.articleDescription2Text);
-        SortorderSortActivity.articleItemText = findViewById(R.id.articleItemText);
-        SortorderSortActivity.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-        SortorderSortActivity.articleVendorItemText = findViewById(R.id.articleVendorItemText);
+        this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
+        this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
+        this.articleItemText = findViewById(R.id.articleItemText);
+        this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
+        this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
 
-        SortorderSortActivity.sourcenoText = findViewById(R.id.sourcenoText);
-        SortorderSortActivity.sourcenoContainer = findViewById(R.id.destinationContainer);
-        SortorderSortActivity.textViewPackingTable = findViewById(R.id.textViewPackingTable);
+        this.sourcenoText = findViewById(R.id.sourcenoText);
+        this.sourcenoContainer = findViewById(R.id.destinationContainer);
+        this.textViewPackingTable = findViewById(R.id.textViewPackingTable);
 
-        SortorderSortActivity.containerText = findViewById(R.id.containerText);
-        SortorderSortActivity.quantityText = findViewById(R.id.quantityText);
-        SortorderSortActivity.quantityRequiredText = findViewById(R.id.quantityRequiredText);
-        SortorderSortActivity.articleThumbImageView = findViewById(R.id.articleThumbImageView);
-        SortorderSortActivity.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
+        this.quantityText = findViewById(R.id.quantityText);
+        this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
+        this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
+        this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
 
-        SortorderSortActivity.imageButtonMinus = findViewById(R.id.imageButtonMinus);
-        SortorderSortActivity.imageButtonPlus = findViewById(R.id.imageButtonPlus);
-        SortorderSortActivity.imageButtonDone = findViewById(R.id.imageButtonDone);
-        SortorderSortActivity.textViewAction = findViewById(R.id.textViewAction);
-        SortorderSortActivity.textAdviceLocation = findViewById(R.id.textAdviceLocation);
+        this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
+        this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
+        this.imageButtonDone = findViewById(R.id.imageButtonDone);
+        this.textViewAction = findViewById(R.id.textViewAction);
+        this.textAdviceLocation = findViewById(R.id.textAdviceLocation);
 
     }
 
@@ -216,10 +210,10 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        SortorderSortActivity.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
-        SortorderSortActivity.toolbarTitle.setText(pvScreenTitleStr);
-        SortorderSortActivity.toolbarTitle.setSelected(true);
-        SortorderSortActivity.toolbarSubtext.setSelected(true);
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
+        this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarTitle.setSelected(true);
+        this.toolbarSubtext.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -231,40 +225,37 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void mFieldsInitialize() {
 
-        SortorderSortActivity.textAdviceLocation.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        SortorderSortActivity.textAdviceLocation.setSingleLine(true);
-        SortorderSortActivity.textAdviceLocation.setMarqueeRepeatLimit(5);
-        SortorderSortActivity.textAdviceLocation.setSelected(true);
-        SortorderSortActivity.textAdviceLocation.setText(cAppExtension.context.getString(R.string.message_scan_article));
+        this.textAdviceLocation.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        this.textAdviceLocation.setSingleLine(true);
+        this.textAdviceLocation.setMarqueeRepeatLimit(5);
+        this.textAdviceLocation.setSelected(true);
+        this.textAdviceLocation.setText(cAppExtension.context.getString(R.string.message_scan_article));
 
-        SortorderSortActivity.pickCounterPlusHelperInt = 0;
-        SortorderSortActivity.pickCounterMinusHelperInt = 0;
-        SortorderSortActivity.toolbarSubtext.setText(cPickorder.currentPickOrder.getOrderNumberStr());
-        SortorderSortActivity.containerText.setVisibility(GONE);
+        this.pickCounterPlusHelperInt = 0;
+        this.pickCounterMinusHelperInt = 0;
+        this.toolbarSubtext.setText(cPickorder.currentPickOrder.getOrderNumberStr());
 
-        SortorderSortActivity.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
-        SortorderSortActivity.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-        SortorderSortActivity.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
+        this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+        this.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
+        this.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
 
-        SortorderSortActivity.articleVendorItemText.setText(cPickorderLine.currentPickOrderLine.getVendorItemNoAndDescriptionStr());
-        SortorderSortActivity.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr());
+        this.articleVendorItemText.setText(cPickorderLine.currentPickOrderLine.getVendorItemNoAndDescriptionStr());
+        this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr());
         if (cPickorderLine.currentPickOrderLine.getSourceNoStr().trim().isEmpty()) {
-            SortorderSortActivity.sourcenoContainer.setVisibility(View.INVISIBLE);
+            this.sourcenoContainer.setVisibility(View.INVISIBLE);
         }
 
-        SortorderSortActivity.containerText.setText(cPickorderLine.currentPickOrderLine.getContainerStr());
-        SortorderSortActivity.containerText.setText("");
-        SortorderSortActivity.quantityText.setText("0");
+        this.quantityText.setText("0");
 
-        SortorderSortActivity.quantityRequiredText.setText(cText.pIntToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl().intValue()));
-        SortorderSortActivity.textViewPackingTable.setText("");
+        this.quantityRequiredText.setText(cText.pIntToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl().intValue()));
+        this.textViewPackingTable.setText("");
 
-        SortorderSortActivity.imageButtonDone.setVisibility(View.INVISIBLE);
+        this.imageButtonDone.setVisibility(View.INVISIBLE);
 
-        SortorderSortActivity.mEnablePlusMinusAndBarcodeSelectViews();
-        SortorderSortActivity.mShowArticleImage();
-        SortorderSortActivity.mSetAdviceLocation();
-        SortorderSortActivity.mShowBarcodeInfo();
+        this.mEnablePlusMinusAndBarcodeSelectViews();
+        this.mShowArticleImage();
+        this.mSetAdviceLocation();
+        this.mShowBarcodeInfo();
 
     }
 
@@ -291,48 +282,48 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         SortorderSortActivity.articleScannedLastBln = false;
 
         //Fake a scan
-        SortorderSortActivity.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
+        this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
     }
 
     //End Region iICSDefaultActivity Methods
 
     //Region Public Methods
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan){
+    public void pHandleScan(cBarcodeScan pvBarcodeScan){
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         boolean packingTableScannedBln = false;
 
-        if (cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr()).size() > 1) {
+        if (Objects.requireNonNull(cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr())).size() > 1) {
             if (cRegex.pHasPrefix(pvBarcodeScan.barcodeOriginalStr)) {
                 packingTableScannedBln = true;
             }
         }
 
         if (!packingTableScannedBln && cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
-            SortorderSortActivity.mHandleArticleScanned(pvBarcodeScan);
+            this.mHandleArticleScanned(pvBarcodeScan);
             return;
         }
 
-        SortorderSortActivity.mHandleSalesOrderOrPackingTableBinScanned(pvBarcodeScan);
+        this.mHandleSalesOrderOrPackingTableBinScanned(pvBarcodeScan);
     }
 
-    public static void pAcceptPick() {
-        cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
-        SortorderSortActivity.mSortDoneForNow();
+    public  void pAcceptPick() {
+        cPickorderLine.currentPickOrderLine.pHandledIndatabase();
+        this.mSortDoneForNow();
     }
 
-    public static void pCancelPick() {
+    public void pCancelPick() {
         cPickorderLine.currentPickOrderLine.quantityHandledDbl = (double) 0;
-        cPickorderLine.currentPickOrderLine.pCancelIndatabaseBln();
-        SortorderSortActivity.mGoBackToLinesActivity();
+        cPickorderLine.currentPickOrderLine.pCancelIndatabase();
+        this.mGoBackToLinesActivity();
     }
 
     //End Region Public Methods
 
     //Region Private Methods
 
-    private static void mHandleArticleScanned(cBarcodeScan pvBarcodeScan) {
+    private  void mHandleArticleScanned(cBarcodeScan pvBarcodeScan) {
 
 
         if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
@@ -344,24 +335,24 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         //We didn't scan an article yet, so handle it as a "normal" scan
         if (!articleScannedLastBln) {
 
-            if (!SortorderSortActivity.mFindBarcodeInLineBarcodes(pvBarcodeScan)) {
+            if (!this.mFindBarcodeInLineBarcodes(pvBarcodeScan)) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
                 return;
             }
 
-            SortorderSortActivity.imageButtonDone.setVisibility(View.INVISIBLE);
+            this.imageButtonDone.setVisibility(View.INVISIBLE);
 
             //Succesfull article scanned
             articleScannedLastBln = true;
 
             //If we found the barcodeStr, currentbarcode is alreay filled, so make this selected
-            SortorderSortActivity.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
+            this.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
             return;
         }
 
         //We last scanned an article, but thats oke
         if (!cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
-            SortorderSortActivity.pHandleScan(pvBarcodeScan);
+            this.pHandleScan(pvBarcodeScan);
             return;
         }
 
@@ -370,7 +361,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private static boolean mCheckPackingTableAndSourceNoBln(String pvBarcodeStr) {
+    private  boolean mCheckPackingTableAndSourceNoBln(String pvBarcodeStr) {
 
 
         if (cPickorder.currentPickOrder.salesOrderPackingTableObl() == null || cPickorder.currentPickOrder.salesOrderPackingTableObl().size() == 0) {
@@ -420,7 +411,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         return true;
     }
 
-    private static boolean mAddSalesOrderPackingTableBln() {
+    private  boolean mAddSalesOrderPackingTableBln() {
 
         cSalesOrderPackingTable salesOrderPackingTable = new cSalesOrderPackingTable(cPickorderLine.currentPickOrderLine.getSourceNoStr(), cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
 
@@ -440,7 +431,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private static void mHandleSalesOrderOrPackingTableBinScanned(cBarcodeScan pvBarcodeScan) {
+    private  void mHandleSalesOrderOrPackingTableBinScanned(cBarcodeScan pvBarcodeScan) {
 
         // Check if article is already scanned
         if (!SortorderSortActivity.articleScannedLastBln) {
@@ -449,16 +440,16 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        SortorderSortActivity.imageButtonDone.setVisibility(View.VISIBLE);
+        this.imageButtonDone.setVisibility(View.VISIBLE);
 
         //Strip barcodeStr from regex
         String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
         boolean adviceMatchedBln = false;
 
         //We have advice(s) and it is mandatory, so check if we have a correct scan
-        if (SortorderSortActivity.sortingAdviceObl.size() > 0 && cSetting.PICK_SORT_LOCATION_ADVICE_MANDATORY()) {
+        if (this.sortingAdviceObl.size() > 0 && cSetting.PICK_SORT_LOCATION_ADVICE_MANDATORY()) {
 
-            for (String adviceStr : SortorderSortActivity.sortingAdviceObl) {
+            for (String adviceStr : this.sortingAdviceObl) {
                 if (adviceStr.equalsIgnoreCase(barcodeWithoutPrefixStr)) {
                     //We have a match, so we are done
                     adviceMatchedBln = true;
@@ -492,7 +483,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             }
 
             // There are  previous salesorder/pickcaerbox scans, so check if input is correct
-            if (!SortorderSortActivity.mCheckPackingTableAndSourceNoBln(barcodeWithoutPrefixStr)) {
+            if (!this.mCheckPackingTableAndSourceNoBln(barcodeWithoutPrefixStr)) {
                 return;
             }
         }
@@ -501,7 +492,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         cPickorderLine.currentPickOrderLine.processingSequenceStr = barcodeWithoutPrefixStr;
 
         //try to add SalesOrderPackingtable to database
-        if (!SortorderSortActivity.mAddSalesOrderPackingTableBln()) {
+        if (!this.mAddSalesOrderPackingTableBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_inserting_salesorderpackingtable), barcodeWithoutPrefixStr, true, true);
             cPickorderLine.currentPickOrderLine.processingSequenceStr = "";
             return;
@@ -515,11 +506,11 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         //Set the ProcessingSequence
         cPickorderLine.currentPickOrderLine.processingSequenceStr = barcodeWithoutPrefixStr;
-        SortorderSortActivity.sourcenoText.setText(cPickorderLine.currentPickOrderLine.processingSequenceStr);
+        this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.processingSequenceStr);
 
         // If this is VKO after each piece, then show new instructions
         if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
-            SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
+            this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
             SortorderSortActivity.articleScannedLastBln = false;
         }
 
@@ -527,13 +518,13 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         //Check if we complete handled this line, if so then handled else only update it
         if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
             //Update orderline info (quantityDbl, timestamp, localStatusInt)
-            cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
+            cPickorderLine.currentPickOrderLine.pHandledIndatabase();
         } else {
             cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln();
         }
 
         //Check if line is done
-        SortorderSortActivity.mCheckLineDone();
+        this.mCheckLineDone();
 
     }
 
@@ -542,7 +533,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @SuppressLint("ClickableViewAccessibility")
     private void mSetPlusListener() {
 
-        SortorderSortActivity.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
+        this.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -561,7 +552,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             }
         });
 
-        SortorderSortActivity.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
+        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTryToChangeSortedQuantity(true, false,  cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
@@ -573,7 +564,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
-        SortorderSortActivity.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
+        this.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -593,7 +584,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         });
 
-        SortorderSortActivity.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
+        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
@@ -603,7 +594,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mSetArticleImageListener() {
-        SortorderSortActivity.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
+        this.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowFullArticleFragment();
@@ -612,7 +603,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mSetImageButtonBarcodeListener() {
-        SortorderSortActivity.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
+        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
 
@@ -635,21 +626,21 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mSetDoneListener() {
-        imageButtonDone.setOnClickListener(new View.OnClickListener() {
+        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
                 if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
-                    SortorderSortActivity.mSortDone();
+                    mSortDone();
                 } else {
-                    SortorderSortActivity.mSortDoneForNow();
+                    mSortDoneForNow();
                 }
             }
         });
     }
 
-    private static void mSetAdviceLocation() {
+    private  void mSetAdviceLocation() {
 
         String hulpStr;
 
@@ -657,34 +648,34 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         if (!hulpStr.isEmpty()) {
             cPickorderLine.currentPickOrderLine.processingSequenceStr = hulpStr;
-            SortorderSortActivity.textAdviceLocation.setText(hulpStr);
-            SortorderSortActivity.sortingAdviceObl = new ArrayList<>();
+            this.textAdviceLocation.setText(hulpStr);
+            this.sortingAdviceObl = new ArrayList<>();
             return;
         }
 
-        SortorderSortActivity.sortingAdviceObl = cPickorderLine.currentPickOrderLine.pGetAdvicedSortLocationsFromWebserviceObl();
+        this.sortingAdviceObl = cPickorderLine.currentPickOrderLine.pGetAdvicedSortLocationsFromWebserviceObl();
 
-        if ( SortorderSortActivity.sortingAdviceObl == null ||  SortorderSortActivity.sortingAdviceObl.size() == 0) {
-            SortorderSortActivity.textAdviceLocation.setText("");
+        if ( this.sortingAdviceObl == null ||  this.sortingAdviceObl.size() == 0) {
+            this.textAdviceLocation.setText("");
             return;
         }
 
         StringBuilder advicelocations = new StringBuilder();
 
-        for (String advicedLocationStr:SortorderSortActivity.sortingAdviceObl) {
+        for (String advicedLocationStr:this.sortingAdviceObl) {
             advicelocations.append(" ").append(advicedLocationStr);
         }
 
-        SortorderSortActivity.textAdviceLocation.setText(advicelocations.toString());
+        this.textAdviceLocation.setText(advicelocations.toString());
 
     }
 
-    private static void mSortDone() {
-        SortorderSortActivity.mSendPickorderLine();
-        mGoBackToLinesActivity();
+    private  void mSortDone() {
+        this.mSendPickorderLine();
+        this.mGoBackToLinesActivity();
     }
 
-    private static void mSortDoneForNow() {
+    private void mSortDoneForNow() {
 
         if (!cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln()) {
             //could not send line, let user know but answer succes so user can go to next line
@@ -693,10 +684,10 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         }
 
 
-        mGoBackToLinesActivity();
+        this.mGoBackToLinesActivity();
     }
 
-    private static void mGoBackToLinesActivity() {
+    private  void mGoBackToLinesActivity() {
         Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
@@ -705,13 +696,13 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     public void mHandleQuantityChosen(int pvQuantityDbl) {
 
         if (pvQuantityDbl == 0) {
-            SortorderSortActivity.mTryToChangeSortedQuantity(false, true,pvQuantityDbl);
+            this.mTryToChangeSortedQuantity(false, true,pvQuantityDbl);
         } else {
-            SortorderSortActivity.mTryToChangeSortedQuantity(true, true,pvQuantityDbl);
+            this.mTryToChangeSortedQuantity(true, true,pvQuantityDbl);
         }
     }
 
-    private static void mSendPickorderLine() {
+    private  void mSendPickorderLine() {
 
         if (!cPickorderLine.currentPickOrderLine.pHandledBln()) {
             //could not send line, let user know but answer succes so user can go to next line
@@ -721,7 +712,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private static void mTryToChangeSortedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
+    private  void mTryToChangeSortedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
 
         double newQuantityDbl;
 
@@ -736,27 +727,27 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
             //Check if we would exceed amount, then show message
             if (newQuantityDbl > cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
-                SortorderSortActivity.mShowOverpickNotAllowed();
+                this.mShowOverpickNotAllowed();
                 articleScannedLastBln = false;
                 return;
             }
 
             //Set the new quantityDbl and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
-            SortorderSortActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
+            this.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
 
             //Add or update line barcodeStr
-            cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcodeBln(pvAmountDbl);
+            cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(pvAmountDbl);
 
             //Update orderline info (quantityDbl, timestamp, localStatusInt)
             cPickorderLine.currentPickOrderLine.pUpdateSortLineIndatabaseBln();
 
             if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() ||
                 cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
-                SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_sort_location));
+                this.textViewAction.setText(cAppExtension.context.getString(R.string.scan_sort_location));
             }
             else {
-                SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article_or_sort_location));
+                this.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article_or_sort_location));
             }
 
             return;
@@ -783,48 +774,48 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
         }
 
-        SortorderSortActivity.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
-        SortorderSortActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+        this.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
+        this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
 
         if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
-            SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article_or_sort_location));
+            this.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article_or_sort_location));
         }
         else {
-            SortorderSortActivity.textViewAction.setText(cAppExtension.context.getString(R.string.scan_sort_location));
+            this.textViewAction.setText(cAppExtension.context.getString(R.string.scan_sort_location));
         }
 
         //Remove or update line barcodeStr
-        cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcodeBln();
+        cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcode();
 
     }
 
-    private static void mShowArticleImage() {
+    private void mShowArticleImage() {
 
         //If pick with picture is false, then hide image view
         if (!cPickorder.currentPickOrder.isPickWithPictureBln()) {
-            SortorderSortActivity.articleThumbImageView.setVisibility(View.INVISIBLE);
+            this.articleThumbImageView.setVisibility(View.INVISIBLE);
             return;
         }
 
         //If picture is not in cache (via webservice) then show no image
         if (!cPickorderLine.currentPickOrderLine.pGetArticleImageBln()) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
-            SortorderSortActivity.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+            this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
             return;
         }
 
         //If picture is in cache but can't be converted, then show no image
         if (cPickorderLine.currentPickOrderLine.articleImage == null || cPickorderLine.currentPickOrderLine.articleImage.imageBitmap() == null) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
-            SortorderSortActivity.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+            this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
             return;
         }
 
         //Show the image
-        SortorderSortActivity.articleThumbImageView.setImageBitmap(cPickorderLine.currentPickOrderLine.articleImage.imageBitmap());
+        this.articleThumbImageView.setImageBitmap(cPickorderLine.currentPickOrderLine.articleImage.imageBitmap());
     }
 
-    private static void mShowFullArticleFragment() {
+    private  void mShowFullArticleFragment() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -843,21 +834,21 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             @Override
             public void run() {
                 // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
             }
         });
     }
 
-    public static void mBarcodeSelected(cPickorderBarcode pvBarcode) {
+    public  void mBarcodeSelected(cPickorderBarcode pvBarcode) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         cPickorderBarcode.currentPickorderBarcode = pvBarcode;
-        SortorderSortActivity.mShowBarcodeInfo();
-        SortorderSortActivity.mTryToChangeSortedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
+        this.mShowBarcodeInfo();
+        this.mTryToChangeSortedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
     }
 
-    private static void mShowBarcodeInfo() {
+    private  void mShowBarcodeInfo() {
 
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
@@ -866,43 +857,43 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         }
 
         if (cPickorderBarcode.currentPickorderBarcode != null) {
-            SortorderSortActivity.articleBarcodeText.setText(cPickorderBarcode.currentPickorderBarcode.getBarcodeAndQuantityStr());
+            this.articleBarcodeText.setText(cPickorderBarcode.currentPickorderBarcode.getBarcodeAndQuantityStr());
         } else {
-            SortorderSortActivity.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
+            this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
         }
     }
 
     private void mShowBarcodeSelectFragment() {
         BarcodeFragment barcodeFragment = new BarcodeFragment();
-        barcodeFragment.show(cAppExtension.fragmentManager, BARCODEPICKERFRAGMENT_TAG);
+        barcodeFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BARCODEPICKERFRAGMENT_TAG);
     }
 
-    private static void mEnablePlusMinusAndBarcodeSelectViews() {
+    private  void mEnablePlusMinusAndBarcodeSelectViews() {
 
         if (!cSetting.PICK_PER_SCAN()) {
-            SortorderSortActivity.imageButtonMinus.setVisibility(View.INVISIBLE);
-            SortorderSortActivity.imageButtonPlus.setVisibility(View.INVISIBLE);
+            this.imageButtonMinus.setVisibility(View.INVISIBLE);
+            this.imageButtonPlus.setVisibility(View.INVISIBLE);
         } else {
-            SortorderSortActivity.imageButtonMinus.setVisibility(View.VISIBLE);
-            SortorderSortActivity.imageButtonPlus.setVisibility(View.VISIBLE);
+            this.imageButtonMinus.setVisibility(View.VISIBLE);
+            this.imageButtonPlus.setVisibility(View.VISIBLE);
         }
 
         if (!cSetting.PICK_SELECTEREN_BARCODE()) {
-            SortorderSortActivity.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
         } else {
-            SortorderSortActivity.imageButtonBarcode.setVisibility(View.VISIBLE);
+            this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
     }
 
-    private static void mCheckLineDone() {
+    private  void mCheckLineDone() {
 
         //We scanned a sortlocation
         SortorderSortActivity.articleScannedLastBln = false;
 
         //If we didn't complete this line, then show done for now
         if (cPickorderLine.currentPickOrderLine.quantityHandledDbl < cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
-            SortorderSortActivity.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-            SortorderSortActivity.imageButtonDone.setVisibility(View.VISIBLE);
+            this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+            this.imageButtonDone.setVisibility(View.VISIBLE);
 
             // If auto accept is false or  if we have to scan VKO after each piece , then return
             if (!cSetting.PICK_AUTO_ACCEPT() || cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() ) {
@@ -910,19 +901,19 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             }
 
             // We are done for now
-            SortorderSortActivity.mSortDoneForNow();
+            this.mSortDoneForNow();
             return;
         }
 
         //We didn complete this line, then show done
         if (!cSetting.PICK_AUTO_ACCEPT()) {
-            SortorderSortActivity.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
-            SortorderSortActivity.imageButtonDone.setVisibility(View.VISIBLE);
+            this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+            this.imageButtonDone.setVisibility(View.VISIBLE);
             return;
         }
 
         // We are completely done
-        SortorderSortActivity.mSortDone();
+        this.mSortDone();
     }
 
     private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
@@ -987,23 +978,23 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     };
 
     private void mDoDelayedMinus(Runnable pvRunnable, long milliSecsLng) {
-        SortorderSortActivity.minusHandler.postDelayed(pvRunnable, milliSecsLng);
-        SortorderSortActivity.pickCounterMinusHelperInt += 1;
+        this.minusHandler.postDelayed(pvRunnable, milliSecsLng);
+        this.pickCounterMinusHelperInt += 1;
     }
 
     private void mDoDelayedPlus(Runnable pvRunnable, long milliSecsLng) {
-        SortorderSortActivity.plusHandler.postDelayed(pvRunnable, milliSecsLng);
-        SortorderSortActivity.pickCounterPlusHelperInt += 1;
+        this.plusHandler.postDelayed(pvRunnable, milliSecsLng);
+        this.pickCounterPlusHelperInt += 1;
     }
 
-    private static void mShowOverpickNotAllowed(){
-        SortorderSortActivity.quantityText.setText(quantityRequiredText.getText());
-        cUserInterface.pShowSnackbarMessage(textViewAction , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
-        cUserInterface.pDoNope(quantityText, true, true);
-        cUserInterface.pDoNope(quantityRequiredText, false, false);
+    private  void mShowOverpickNotAllowed(){
+        this.quantityText.setText(this.quantityRequiredText.getText());
+        cUserInterface.pShowSnackbarMessage(this.textViewAction , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
+        cUserInterface.pDoNope(this.quantityText, true, true);
+        cUserInterface.pDoNope(this.quantityRequiredText, false, false);
     }
 
-    private static Boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
+    private  Boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
 
         if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
             return false;

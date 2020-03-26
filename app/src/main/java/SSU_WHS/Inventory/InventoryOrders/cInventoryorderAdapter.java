@@ -1,13 +1,14 @@
 package SSU_WHS.Inventory.InventoryOrders;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class cInventoryorderAdapter  extends RecyclerView.Adapter<cInventoryorde
 
     //Region Public Properties
 
-    public class InventoryorderViewHolder extends RecyclerView.ViewHolder{
+    public static class InventoryorderViewHolder extends RecyclerView.ViewHolder{
 
         private View viewOrderStatus;
         private TextView textViewOrdernumber;
@@ -31,7 +32,6 @@ public class cInventoryorderAdapter  extends RecyclerView.Adapter<cInventoryorde
         private TextView textViewOrdertype;
         private TextView  textViewDocument;
         private TextView textViewQuantityTotal;
-        private ImageView imageViewIsProcessedOrWait;
         public LinearLayout inventoryorderItemLinearLayout;
 
         public InventoryorderViewHolder(View pvItemView) {
@@ -54,7 +54,6 @@ public class cInventoryorderAdapter  extends RecyclerView.Adapter<cInventoryorde
             this.textViewDocument.setSelected(true);
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
             this.inventoryorderItemLinearLayout = pvItemView.findViewById(R.id.inventoryorderItemLinearLayout);
-            this.imageViewIsProcessedOrWait = pvItemView.findViewById(R.id.imageViewIsProcessedOrWait);
             this.textViewQuantityTotal = pvItemView.findViewById(R.id.textViewQuantityTotal);
 
         }
@@ -75,14 +74,16 @@ public class cInventoryorderAdapter  extends RecyclerView.Adapter<cInventoryorde
 
 
     //Region Default Methods
+    @NonNull
     @Override
-    public cInventoryorderAdapter.InventoryorderViewHolder onCreateViewHolder(ViewGroup pvParent, int pbViewTypeInt) {
+    public cInventoryorderAdapter.InventoryorderViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_inventoryorder, pvParent, false);
-        return new cInventoryorderAdapter.InventoryorderViewHolder(itemView);
+        return new InventoryorderViewHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(cInventoryorderAdapter.InventoryorderViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cInventoryorderAdapter.InventoryorderViewHolder pvHolder, int pvPositionInt) {
 
         if (localInventoryorderObl == null || localInventoryorderObl.size() == 0 ) {
             return;
@@ -121,8 +122,8 @@ public class cInventoryorderAdapter  extends RecyclerView.Adapter<cInventoryorde
 
 
                 if (cAppExtension.context instanceof InventoryorderSelectActivity) {
-                    InventoryorderSelectActivity.pInventoryorderSelected(selectedInventoryorder);
-                    return;
+                    InventoryorderSelectActivity inventoryorderSelectActivity = new InventoryorderSelectActivity();
+                    inventoryorderSelectActivity.pInventoryorderSelected(selectedInventoryorder);
                 }
            }
         });

@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.datalogic.softspot.ImageEnum;
+
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
@@ -199,8 +201,9 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
                 public void onClick(View v) {
                     if (cAppExtension.context instanceof MenuActivity) {
                         cUser.currentUser.currentAuthorisation = authorisation;
-                        MenuActivity.pAuthorisationSelected();
-                    }
+                        MenuActivity menuActivity = new MenuActivity();
+                        menuActivity.pAuthorisationSelected();
+                     }
                 }
             });
         }

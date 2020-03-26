@@ -17,8 +17,9 @@ import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cReturnorderBarcodeRepository {
+
     //Region Public Properties
-    public iReturnorderBarcodeDao returnorderBarcodeDao;
+    private iReturnorderBarcodeDao returnorderBarcodeDao;
     //End Region Public Properties
 
     //Region Private Properties

@@ -32,15 +32,14 @@ public class cConnection {
         try {
             Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 8.8.8.8");
             int returnVal = p1.waitFor();
-            boolean reachable = (returnVal==0);
-            return reachable;
+            return (returnVal==0);
         } catch (Exception e) {
             return false;
         }
     }
 
     public static Boolean isInternetConnectedBln() {
-        Boolean resultBln = false;
+        boolean resultBln = false;
         ConnectivityManager cm = (ConnectivityManager) cAppExtension.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null) {
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
@@ -52,29 +51,29 @@ public class cConnection {
     public static connectionType getCurrentConnectionType() {
         ConnectivityManager cm = (ConnectivityManager) cAppExtension.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null) {
-                Boolean isConnectedBln;
-                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                //are we connected at all?
-                isConnectedBln = activeNetwork != null && activeNetwork.isConnected();
-                if (!isConnectedBln) {
-                    return connectionType.NONE;
-                }
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                    return connectionType.WIFI;
-                }
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_ETHERNET) {
-                    return connectionType.ETHERNET;
-                }
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE || activeNetwork.getType() == ConnectivityManager.TYPE_WIMAX) {
-                    return connectionType.MOBILEDATA;
-                }
-                //none of the above
-                return connectionType.UNKNOWN;
+            boolean isConnectedBln;
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            //are we connected at all?
+            isConnectedBln = activeNetwork != null && activeNetwork.isConnected();
+            if (!isConnectedBln) {
+                return connectionType.NONE;
             }
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                return connectionType.WIFI;
+            }
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_ETHERNET) {
+                return connectionType.ETHERNET;
+            }
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE || activeNetwork.getType() == ConnectivityManager.TYPE_WIMAX) {
+                return connectionType.MOBILEDATA;
+            }
+            //none of the above
+            return connectionType.UNKNOWN;
+        }
         return connectionType.UNKNOWN;
     }
 
-    public static AlertDialog tryAgainDialog;
+    private static AlertDialog tryAgainDialog;
 
     public static void pReconnectWifi() {
         WifiManager wifiManager = (WifiManager)cAppExtension.context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -85,7 +84,7 @@ public class cConnection {
     }
 
     private static IntentFilter wifiChangedIntentFilter;
-    private static IntentFilter getWifiChangedIntentFilter() {
+    private static void getWifiChangedIntentFilter() {
 
         if (cConnection.wifiChangedIntentFilter == null) {
             cConnection.wifiChangedIntentFilter = new IntentFilter();
@@ -93,11 +92,10 @@ public class cConnection {
             cConnection.wifiChangedIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 
         }
-        return wifiChangedIntentFilter;
     }
 
     private static IntentFilter wifiChangedFragmentIntentFilter;
-    private static IntentFilter getWifiChangedFragmentIntentFilter() {
+    private static void getWifiChangedFragmentIntentFilter() {
 
         if (cConnection.wifiChangedFragmentIntentFilter == null) {
             cConnection.wifiChangedFragmentIntentFilter = new IntentFilter();
@@ -105,11 +103,10 @@ public class cConnection {
             cConnection.wifiChangedFragmentIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 
         }
-        return wifiChangedFragmentIntentFilter;
     }
 
     private static BroadcastReceiver wifiChangedReceiver;
-    private static BroadcastReceiver getWifiChangedReceiver() {
+    private static void getWifiChangedReceiver() {
         if (cConnection.wifiChangedReceiver == null) {
             cConnection.wifiChangedReceiver = new BroadcastReceiver(){
                 @Override
@@ -117,21 +114,17 @@ public class cConnection {
 
                     Bundle extras = intent.getExtras();
                     if (extras != null) {
-                        if (cConnection.isInternetConnectedBln()) {
-
-
-                        }
+                        cConnection.isInternetConnectedBln();
                     }
 
 
                 }
             };
         }
-        return cConnection.wifiChangedReceiver;
     }
 
     private static BroadcastReceiver wifiChangedFragmentReceiver;
-    private static BroadcastReceiver getWifiChangedFragmentReceiver() {
+    private static void getWifiChangedFragmentReceiver() {
         if (cConnection.wifiChangedFragmentReceiver == null) {
             cConnection.wifiChangedFragmentReceiver = new BroadcastReceiver(){
                 @Override
@@ -139,18 +132,13 @@ public class cConnection {
 
                     Bundle extras = intent.getExtras();
                     if (extras != null) {
-                        if (cConnection.isInternetConnectedBln()) {
-
-
-
-                        }
+                        cConnection.isInternetConnectedBln();
                     }
 
 
                 }
             };
         }
-        return cConnection.wifiChangedFragmentReceiver;
     }
 
     public static void pRegisterWifiChangedReceiver(){
@@ -197,7 +185,7 @@ public class cConnection {
         }
     }
 
-    public static void pShowConnectionWaiter() {
+    private static void mShowConnectionWaiter() {
         if (cConnection.tryAgainDialog != null) {
             cConnection.tryAgainDialog.dismiss();
         }
@@ -225,18 +213,23 @@ public class cConnection {
                 if (cAppExtension.activity instanceof PickorderLinesActivity) {
 
                     if (cAppExtension.dialogFragment instanceof OrderDoneFragment) {
-                        OrderDoneFragment.pSetConnectionState();
+                        OrderDoneFragment orderDoneFragment = (OrderDoneFragment)cAppExtension.dialogFragment;
+                        orderDoneFragment.pSetConnectionState();
                         return;
                     }
 
                     if (cAppExtension.dialogFragment instanceof CurrentLocationFragment) {
-                        CurrentLocationFragment.pSetConnectionState();
+                        CurrentLocationFragment currentLocationFragment = (CurrentLocationFragment)cAppExtension.dialogFragment;
+                        currentLocationFragment.pSetConnectionState();
                         return;
                     }
 
 
-                  PickorderLinesActivity.pCheckAllDone();
-                  return;
+
+                    PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+                    pickorderLinesActivity.pCheckAllDone();
+
+
                 }
 
             }
@@ -255,7 +248,7 @@ public class cConnection {
         tryAgainBuilder.setPositiveButton(R.string.button_try_again, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                cConnection.pShowConnectionWaiter();
+                cConnection.mShowConnectionWaiter();
             }
         });
         cConnection.tryAgainDialog = tryAgainBuilder.create();

@@ -1,7 +1,5 @@
 package SSU_WHS.General.Warehouseorder;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -70,50 +68,39 @@ public class cWarehouseorder {
         EOR
     }
 
-    public class ItemTypeEnu {
+    public static class ItemTypeEnu {
         public static final int Unknown = 0;
         public static final int Item = 1;
-        public static final int Box = 20;
         public static final int Container = 21;
-        public static final int Pallet = 22;
     }
 
-    public class WorkflowPickStepEnu {
+    public static class WorkflowPickStepEnu {
         public static final int PickPicking = 10;
         public static final int PickSorting = 20;
         public static final int PickPackAndShip = 40;
 
     }
 
-    public class WorkflowInventoryStepEnu {
+    public static class WorkflowInventoryStepEnu {
         public static final int Inventory = 10;
         public static final int InventoryBusy = 11;
-        public static final int InventoryPause = 12;
         public static final int InventoryHandled = 13;
     }
 
-    public class WorkflowExternalReceiveStepEnu {
+    public static class WorkflowExternalReceiveStepEnu {
         public static final int Receive_External = 10;
-        public static final int Receive_ExternalBezig = 11;
-        public static final int Receive_ExternalWacht = 12;
     }
 
-    public class WorkflowReceiveStoreStepEnu {
+    public static class WorkflowReceiveStoreStepEnu {
         public static final int Receive_Store = 40;
         public static final int Receive_StoreBezig = 41;
-        public static final int Receive_StoreWacht = 42;
     }
 
-    public class WorkflowMoveStepEnu {
-        public static final int Move_Take = 10;
-        public static final int Move_Take_Busy = 11;
-        public static final int Move_Place = 40;
-        public static final int Move_Place_Busy = 41;
-        public static final int MovePause = 12;
+    public static class WorkflowMoveStepEnu {
         public static final int MoveHandled = 13;
     }
 
-    public class MoveStatusEnu {
+    public static class MoveStatusEnu {
         public static final int Move_Take = 10;
         public static final int Move_Take_Busy = 11;
         public static final int Move_Take_Wait = 12;
@@ -122,17 +109,17 @@ public class cWarehouseorder {
         public static final int Move_Place_Wait = 42;
     }
 
-    public class PicklineStatusEnu {
+    public static class PicklineStatusEnu {
         public static final int Needed = 10;
         public static final int DONE = 11;
     }
 
-    public class PackingAndShippingStatusEnu {
+    public static class PackingAndShippingStatusEnu {
         public static final int Needed = 10;
         public static final int NotNeeded = 92;
     }
 
-    public class PicklineLocalStatusEnu {
+    public static class PicklineLocalStatusEnu {
         public final static int LOCALSTATUS_NEW = 10;
         public final static int LOCALSTATUS_BUSY = 20;
         public final static int LOCALSTATUS_DONE_NOTSENT = 30;
@@ -140,40 +127,34 @@ public class cWarehouseorder {
         public final static int LOCALSTATUS_DONE_SENT = 40;
     }
 
-    public class IntakeMATLineLocalStatusEnu {
+    public static class IntakeMATLineLocalStatusEnu {
         public final static int LOCALSTATUS_NEW = 10;
         public final static int LOCALSTATUS_BUSY = 20;
         public final static int LOCALSTATUS_DONE_NOTSENT = 30;
-        public final static int LOCALSTATUS_DONE_ERROR_SENDING = 32;
         public final static int LOCALSTATUS_DONE_SENT = 40;
     }
 
-    public class MovelineLocalStatusEnu {
+    public static class MovelineLocalStatusEnu {
         public final static int LOCALSTATUS_NEW = 10;
         public final static int LOCALSTATUS_BUSY = 20;
-        public final static int LOCALSTATUS_DONE_NOTSENT = 30;
         public final static int LOCALSTATUS_DONE_ERROR_SENDING = 32;
-        public final static int LOCALSTATUS_DONE_SENT = 40;
     }
 
-    public class InventoryBinStatusEnu {
-        public static final int Possible = 0;
+    public static class InventoryBinStatusEnu {
         public static final int New = 10;
         public static final int InventoryDoneOnServer = 20;
         public static final int InventoryDone = 30;
     }
 
-    public class ReturnDocumentStatusEnu {
+    public static class ReturnDocumentStatusEnu {
         public static final int New = 10;
         public static final int InventoryPause = 20;
         public static final int ReturnDone = 30;
     }
 
-    public class WorkflowReturnStepEnu {
+    public static class WorkflowReturnStepEnu {
         public static final int Return = 10;
-        public static final int ReturnBusy = 11;
         public static final int ReturnPause = 12;
-        public static final int ReturnHandled = 13;
     }
 
     public enum ActivityActionEnu{
@@ -185,35 +166,13 @@ public class cWarehouseorder {
         Next
     }
 
-    public class SoureDocumentTypeEnu {
-
-        public final static int GeneratedLine = 0;
+    public static class SoureDocumentTypeEnu {
 
         public final static int Salesorder = 1;
-        public final static int SalesReturnOrder = 4;
-
-        public final static int PurchaseOrder = 5;
-        public final static int PurchaseReturnOrder = 8;
-
-        public final static int InboundTransfer = 9;
-        public final static int OutboundTransfer = 10;
-
-        public final static int ProductionConsumption = 11;
-        public final static int ProductionOutput = 12;
-
-        public final static int PurchaseLine = 39;
-
-
+         public final static int PurchaseLine = 39;
         public final static int Generated = 99;
     }
 
-    private static cWarehouseorderViewModel gWarehouseorderViewModel;
-    public static cWarehouseorderViewModel getWarehouseorderViewModel() {
-        if (gWarehouseorderViewModel == null) {
-            gWarehouseorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cWarehouseorderViewModel.class);
-        }
-        return gWarehouseorderViewModel;
-    }
 
     public static ActivityActionEnu  pGetActivityActionEnu (int pvActionInt) {
 

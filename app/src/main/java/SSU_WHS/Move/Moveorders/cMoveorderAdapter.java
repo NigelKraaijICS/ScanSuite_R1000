@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
@@ -25,14 +23,13 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
 
     //Region Public Properties
 
-    public class MoveorderViewHolder extends RecyclerView.ViewHolder{
+    public static class MoveorderViewHolder extends RecyclerView.ViewHolder{
 
         private View viewOrderStatus;
         private TextView textViewOrdernumber;
         private TextView textViewOrderUser;
         private TextView textViewOrdertype;
         private TextView textViewDocument;
-        private ImageView imageViewIsProcessedOrWait;
         public LinearLayout moveorderItemLinearLayout;
 
         public MoveorderViewHolder(View pvItemView) {
@@ -55,7 +52,6 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
             this.textViewDocument.setSelected(true);
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
             this.moveorderItemLinearLayout = pvItemView.findViewById(R.id.moveorderItemLinearLayout);
-            this.imageViewIsProcessedOrWait = pvItemView.findViewById(R.id.imageViewIsProcessedOrWait);
 
         }
         //End Region Public Properties
@@ -77,9 +73,9 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
     //Region Default Methods
     @NonNull
     @Override
-    public cMoveorderAdapter.MoveorderViewHolder onCreateViewHolder(ViewGroup pvParent, int pbViewTypeInt) {
+    public cMoveorderAdapter.MoveorderViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_moveorder, pvParent, false);
-        return new cMoveorderAdapter.MoveorderViewHolder(itemView);
+        return new MoveorderViewHolder(itemView);
     }
 
     @Override
@@ -115,7 +111,8 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
             public void onClick(View v) {
 
                 if (cAppExtension.context instanceof MoveorderSelectActivity) {
-                    MoveorderSelectActivity.pMoveorderSelected(selectedMoveorder);
+                    MoveorderSelectActivity moveorderSelectActivity = (MoveorderSelectActivity)cAppExtension.activity;
+                    moveorderSelectActivity.pMoveorderSelected(selectedMoveorder);
                 }
            }
         });

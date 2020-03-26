@@ -1,13 +1,12 @@
 package SSU_WHS.Basics.ShippingAgents;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
@@ -17,38 +16,20 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cShippingAgent {
 
     //region Public Properties
-    public String shippingAgentStr;
+    private String shippingAgentStr;
     public String getShippintAgentStr() {
         return shippingAgentStr;
     }
 
-    public String descriptionStr;
+    private String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    public Integer importfileInt;
-    public Integer getImportfileInt() {
-        return importfileInt;
-    }
+    private cShippingAgentEntity shippingAgentEntity;
 
-    public List<String> errorMessagesObl;
-    public List<String> getErrorMessageObl() {
-        return errorMessagesObl;
-    }
-
-    public cShippingAgentEntity shippingAgentEntity;
-
-    public boolean loggedInBln;
-    public boolean indatabaseBln;
-
-    public static cShippingAgentViewModel gShippingAgentViewModel;
-
-    public static cShippingAgentViewModel getShippingAgentViewModel() {
-        if (gShippingAgentViewModel == null) {
-            gShippingAgentViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cShippingAgentViewModel.class);
-        }
-        return gShippingAgentViewModel;
+    private cShippingAgentViewModel getShippingAgentViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentViewModel.class);
     }
 
     public List<cShippingAgentService>  shippingAgentServicesObl() {
@@ -76,18 +57,16 @@ public class cShippingAgent {
     //End region Public Properties
 
      //Region Constructor
-    cShippingAgent(JSONObject pvJsonObject) {
+     private cShippingAgent(JSONObject pvJsonObject) {
         this.shippingAgentEntity = new cShippingAgentEntity(pvJsonObject);
         this.shippingAgentStr = this.shippingAgentEntity.getShippingagentStr();
         this.descriptionStr = this.shippingAgentEntity.getDescriptionStr();
-        this.importfileInt = cText.pStringToIntegerInt(this.shippingAgentEntity.getImportfileStr());
     }
        //End Region Constructor
 
     //Region Public Methods
     public boolean pInsertInDatabaseBln() {
-        cShippingAgent.getShippingAgentViewModel().insert(this.shippingAgentEntity);
-        this.indatabaseBln = true;
+        this.getShippingAgentViewModel().insert(this.shippingAgentEntity);
 
         if (cShippingAgent.allShippingAgentsObl == null){
             cShippingAgent.allShippingAgentsObl = new ArrayList<>();
@@ -97,57 +76,37 @@ public class cShippingAgent {
     }
 
     public static boolean pTruncateTableBln(){
-        cShippingAgent.getShippingAgentViewModel().deleteAll();
+
+        cShippingAgentViewModel shippingAgentViewModel =    new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentViewModel.class);
+        shippingAgentViewModel.deleteAll();
         return true;
     }
 
-    public static boolean pGetShippingAgentsViaWebserviceBln(Boolean pvRefreshBln) {
+    public static void pGetShippingAgentsViaWebservice(Boolean pvRefreshBln) {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cShippingAgent.allShippingAgentsObl = null;
             cShippingAgent.pTruncateTableBln();
         }
 
         if ( cShippingAgent.allShippingAgentsObl != null) {
-            return  true;
+            return;
         }
 
         cWebresult WebResult;
-        WebResult =  cShippingAgent.getShippingAgentViewModel().pGetShippingAgentsFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+        cShippingAgentViewModel shippingAgentViewModel =    new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentViewModel.class);
+        WebResult =  shippingAgentViewModel.pGetShippingAgentsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cShippingAgent shippingAgent = new cShippingAgent(jsonObject);
                 shippingAgent.pInsertInDatabaseBln();
             }
             cShippingAgent.shippingAgentsAvailableBln = true;
-            return  true;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETSHIPPINGAGENTS);
-            return  false;
         }
     }
-
-    public static cShippingAgent pGetShippingAgentByStr(String pvShippingAgentStr){
-        if(cShippingAgent.allShippingAgentsObl == null){
-            return null;
-        }
-
-        for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl)
-        {
-            if(shippingAgent.getShippintAgentStr().equalsIgnoreCase(pvShippingAgentStr) ){
-                return  shippingAgent;
-            }
-        }
-        return null;
-    }
-
 
 
     //End Region Public Methods

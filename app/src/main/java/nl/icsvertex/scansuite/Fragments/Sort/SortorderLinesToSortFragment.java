@@ -22,6 +22,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
@@ -37,9 +38,18 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
 
     //Region Private Properties
 
-    private static ConstraintLayout packingTableView;
-    private static ConstraintLayout orderDoneView;
-    private static RecyclerView recyclerViewSortorderLinesTosort;
+    private  ConstraintLayout packingTableView;
+    private  ConstraintLayout orderDoneView;
+    private  RecyclerView recyclerViewSortorderLinesTosort;
+
+    private cPickorderLineAdapter pickorderLineAdapter;
+    private cPickorderLineAdapter getPickorderLineAdapter(){
+        if (this.pickorderLineAdapter == null) {
+            this.pickorderLineAdapter = new cPickorderLineAdapter();
+        }
+
+        return  this.pickorderLineAdapter;
+    }
 
     //End Region Private Properties
 
@@ -98,9 +108,9 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
     public void mFindViews() {
 
         if (getView() != null) {
-            SortorderLinesToSortFragment.recyclerViewSortorderLinesTosort = getView().findViewById(R.id.recyclerViewSortorderLinesTosort);
-            SortorderLinesToSortFragment.packingTableView = getView().findViewById(R.id.packingTableView);
-            SortorderLinesToSortFragment.orderDoneView = getView().findViewById(R.id.orderDoneView);
+            this.recyclerViewSortorderLinesTosort = getView().findViewById(R.id.recyclerViewSortorderLinesTosort);
+            this.packingTableView = getView().findViewById(R.id.packingTableView);
+            this.orderDoneView = getView().findViewById(R.id.orderDoneView);
         }
 
     }
@@ -110,9 +120,9 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
     public void mFieldsInitialize() {
 
         if (cSetting.PICK_SELECTEREN_BARCODE()) {
-            SortorderLinesToSortFragment.packingTableView.setVisibility(View.VISIBLE);
+            this.packingTableView.setVisibility(View.VISIBLE);
         } else {
-            SortorderLinesToSortFragment.packingTableView.setVisibility(View.INVISIBLE);
+            this.packingTableView.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -130,12 +140,13 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
     //Region Private Methods
 
     private void mSetOrderDoneListener() {
-        SortorderLinesToSortFragment.orderDoneView.setOnClickListener(new View.OnClickListener() {
+        this.orderDoneView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
 
                 if (cAppExtension.activity instanceof SortorderLinesActivity) {
-                    SortorderLinesActivity.pSortingDone();
+                    SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+                    sortorderLinesActivity.pSortingDone();
                 }
             }
         });
@@ -143,10 +154,15 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
 
     private void mSetPackTableListener() {
 
-        SortorderLinesToSortFragment.packingTableView.setOnClickListener(new View.OnClickListener() {
+        this.packingTableView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SortorderLinesActivity.pHandleScan(null, true);
+
+                if (cAppExtension.activity instanceof  SortorderLinesActivity) {
+                    SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+                    sortorderLinesActivity.pHandleScan(null, true);
+                }
+
             }
         });
 
@@ -160,41 +176,28 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
     private void mFillRecycler(List<cPickorderLine> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            this.mNoLinesAvailable(true);
+            this.mNoLinesAvailable();
             return;
         }
 
-        cPickorderLine.getPickorderLinePickedAdapter().pFillData(pvDataObl);
-        SortorderLinesToSortFragment.recyclerViewSortorderLinesTosort.setHasFixedSize(false);
-        SortorderLinesToSortFragment.recyclerViewSortorderLinesTosort.setAdapter(cPickorderLine.getPickorderLinePickedAdapter());
-        SortorderLinesToSortFragment.recyclerViewSortorderLinesTosort.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.getPickorderLineAdapter().pFillData(pvDataObl);
+        this.recyclerViewSortorderLinesTosort.setHasFixedSize(false);
+        this.recyclerViewSortorderLinesTosort.setAdapter(this.getPickorderLineAdapter());
+        this.recyclerViewSortorderLinesTosort.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-
-        SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-
+        if (cAppExtension.activity instanceof  SortorderLinesActivity) {
+            SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+            sortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+        }
     }
 
-    //todo: check why this is always true
-    private void mNoLinesAvailable(Boolean pvEnabledBln) {
+    private void mNoLinesAvailable() {
 
         if (SortorderLinesActivity.currentLineFragment == this) {
             //Close no linesInt fragment if needed
-            if (!pvEnabledBln) {
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment ) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
-                }
-
-                return;
-
-            }
 
             //Hide the recycler view
-            SortorderLinesToSortFragment.recyclerViewSortorderLinesTosort.setVisibility(View.INVISIBLE);
+            this.recyclerViewSortorderLinesTosort.setVisibility(View.INVISIBLE);
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
@@ -203,7 +206,10 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
             fragmentTransaction.commit();
 
             //Change tabcounter text
-            SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+            if (cAppExtension.activity instanceof  SortorderLinesActivity) {
+                SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+                sortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+            }
         }
     }
 

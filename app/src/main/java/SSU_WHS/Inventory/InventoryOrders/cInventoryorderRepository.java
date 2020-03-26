@@ -42,11 +42,11 @@ public class cInventoryorderRepository {
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
 
     //Region Constructor
     cInventoryorderRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.inventoryorderDao = db.inventoryorderDao();
         this.inventoryorderBinDao = db.inventoryorderBinDao();
     }
@@ -306,17 +306,6 @@ public class cInventoryorderRepository {
             e.printStackTrace();
         }
         return ResultObl;
-    }
-
-    public cInventoryorderBinEntity pCheckBinInDatabase(String pvBincode, int pvStatus) {
-        cInventoryorderBinEntity inventoryorderBinEntity = null;
-        CheckBinInDatabaseParams checkBinInDatabaseParams = new CheckBinInDatabaseParams(pvBincode, pvStatus);
-        try {
-            inventoryorderBinEntity = new mCheckBinInDatabaseAsyncTask(inventoryorderBinDao).execute(checkBinInDatabaseParams).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return inventoryorderBinEntity;
     }
 
     public List<cInventoryorderBinEntity> pGetInventoryorderBinTotalFromDatabaseObl() {
@@ -825,27 +814,6 @@ public class cInventoryorderRepository {
         @Override
         protected List<cInventoryorderBinEntity> doInBackground(final Void... params) {
             return mAsyncTaskDao.getInventoryorderBinDone();
-        }
-    }
-
-    private static class CheckBinInDatabaseParams {
-        String bincode;
-        Integer status;
-
-        CheckBinInDatabaseParams(String pvBincodeStr, Integer pvStatusInt) {
-            this.bincode = pvBincodeStr;
-            this.status = pvStatusInt;
-        }
-    }
-
-    private static class mCheckBinInDatabaseAsyncTask extends AsyncTask<CheckBinInDatabaseParams, Void, cInventoryorderBinEntity> {
-        private iInventoryorderBinDao mAsyncTaskDao;
-        mCheckBinInDatabaseAsyncTask(iInventoryorderBinDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected cInventoryorderBinEntity doInBackground(final CheckBinInDatabaseParams... params) {
-            return mAsyncTaskDao.checkBin(params[0].bincode, params[0].status);
         }
     }
 

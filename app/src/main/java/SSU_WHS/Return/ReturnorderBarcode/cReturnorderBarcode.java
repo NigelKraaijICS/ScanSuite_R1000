@@ -1,6 +1,6 @@
 package SSU_WHS.Return.ReturnorderBarcode;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -9,103 +9,88 @@ import java.util.List;
 
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
+import SSU_WHS.Return.ReturnOrder.cReturnorderViewModel;
 
 public class cReturnorderBarcode {
 
     private cReturnorderBarcodeEntity returnorderBarcodeEntity;
-    public boolean indatabaseBln;
 
-    private static cReturnorderBarcodeViewModel gReturnorderBarcodeViewModel;
-
-    public static cReturnorderBarcodeViewModel getReturnorderBarcodeViewModel() {
-        if (gReturnorderBarcodeViewModel == null) {
-            gReturnorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cReturnorderBarcodeViewModel.class);
-        }
-        return gReturnorderBarcodeViewModel;
-    }
-
-    private static cReturnorderBarcodeAdapter gReturnorderBarcodeAdapter;
-    public static cReturnorderBarcodeAdapter getReturnorderBarcodeAdapter() {
-        if (gReturnorderBarcodeAdapter == null) {
-            gReturnorderBarcodeAdapter = new cReturnorderBarcodeAdapter();
-        }
-        return gReturnorderBarcodeAdapter;
-    }
-
-
-    public static List<SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode> allReturnorderBarcodesObl;
-    public static SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode currentReturnOrderBarcode;
+    public static List<cReturnorderBarcode> allReturnorderBarcodesObl;
+    public static cReturnorderBarcode currentReturnOrderBarcode;
 
     //Region Public Properties
 
-    public String barcode;
-
+    public String barcodeStr;
     public String getBarcodeStr() {
-        return this.barcode;
+        return this.barcodeStr;
     }
 
-    public String barcodetype;
+    public String barcodeTypeStr;
     public String getBarcodeTypesStr() {
-        return this.barcodetype;
+        return this.barcodeTypeStr;
     }
 
-    public Boolean isuniquebarcode;
+    public Boolean isUniqueBarcodeBln;
     public Boolean getIsUniqueBarcodeBln() {
-        return this.isuniquebarcode;
+        return this.isUniqueBarcodeBln;
     }
 
-    public String itemno;
+    public String itemNoStr;
     public String getItemNoStr() {
-        return this.itemno;
+        return this.itemNoStr;
     }
 
-    public String variantCode;
+    public String variantCodeStr;
     public String getVariantCodeStr() {
-        return this.variantCode;
+        return this.variantCodeStr;
     }
 
-    public Double quantityPerUnitOfMeasure;
+    public Double quantityPerUnitOfMeasureDbl;
     public Double getQuantityPerUnitOfMeasureDbl() {
-        return this.quantityPerUnitOfMeasure;
+        return this.quantityPerUnitOfMeasureDbl;
     }
 
-    public String unitOfMeasure;
+    public String unitOfMeasureStr;
     public String getUnitOfMeasureStr() {
-        return this.unitOfMeasure;
+        return this.unitOfMeasureStr;
     }
 
-    public Double quantityHandled;
-    public Double getQuantityHandled() {
-        return this.quantityHandled;
+    public Double quantityHandledDbl;
+    public Double getQuantityHandledDbl() {
+        return this.quantityHandledDbl;
     }
 
     public String getBarcodeAndQuantityStr(){
       return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
     }
 
+    private cReturnorderBarcodeViewModel getReturnorderBarcodeViewModel(){
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderBarcodeViewModel.class);
+    }
+
     //Region Constructor
     public cReturnorderBarcode(JSONObject pvJsonObject) {
         this.returnorderBarcodeEntity = new cReturnorderBarcodeEntity(pvJsonObject);
-        this.barcode = this.returnorderBarcodeEntity.getBarcodeStr();
-        this.barcodetype = this.returnorderBarcodeEntity.getBarcodeTypesStr();
-        this.isuniquebarcode = this.returnorderBarcodeEntity.getIsUniqueBarcodeBln();
-        this.itemno = this.returnorderBarcodeEntity.getItemNoStr();
-        this.variantCode = this.returnorderBarcodeEntity.getVariantCodeStr();
-        this.quantityPerUnitOfMeasure = this.returnorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
-        this.unitOfMeasure = this.returnorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.returnorderBarcodeEntity.getQuantityHandledDbl();
+        this.barcodeStr = this.returnorderBarcodeEntity.getBarcodeStr();
+        this.barcodeTypeStr = this.returnorderBarcodeEntity.getBarcodeTypesStr();
+        this.isUniqueBarcodeBln = this.returnorderBarcodeEntity.getIsUniqueBarcodeBln();
+        this.itemNoStr = this.returnorderBarcodeEntity.getItemNoStr();
+        this.variantCodeStr = this.returnorderBarcodeEntity.getVariantCodeStr();
+        this.quantityPerUnitOfMeasureDbl = this.returnorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
+        this.unitOfMeasureStr = this.returnorderBarcodeEntity.getUnitOfMeasureStr();
+        this.quantityHandledDbl = this.returnorderBarcodeEntity.getQuantityHandledDbl();
     }
 
     public cReturnorderBarcode(cArticleBarcode pvArticleBarcode) {
         this.returnorderBarcodeEntity = new cReturnorderBarcodeEntity(pvArticleBarcode);
-        this.barcode = this.returnorderBarcodeEntity.getBarcodeStr();
-        this.barcodetype = this.returnorderBarcodeEntity.getBarcodeTypesStr();
-        this.isuniquebarcode = this.returnorderBarcodeEntity.getIsUniqueBarcodeBln();
-        this.itemno = this.returnorderBarcodeEntity.getItemNoStr();
-        this.variantCode = this.returnorderBarcodeEntity.getVariantCodeStr();
-        this.quantityPerUnitOfMeasure = this.returnorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
-        this.unitOfMeasure = this.returnorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.returnorderBarcodeEntity.getQuantityHandledDbl();
+        this.barcodeStr = this.returnorderBarcodeEntity.getBarcodeStr();
+        this.barcodeTypeStr = this.returnorderBarcodeEntity.getBarcodeTypesStr();
+        this.isUniqueBarcodeBln = this.returnorderBarcodeEntity.getIsUniqueBarcodeBln();
+        this.itemNoStr = this.returnorderBarcodeEntity.getItemNoStr();
+        this.variantCodeStr = this.returnorderBarcodeEntity.getVariantCodeStr();
+        this.quantityPerUnitOfMeasureDbl = this.returnorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
+        this.unitOfMeasureStr = this.returnorderBarcodeEntity.getUnitOfMeasureStr();
+        this.quantityHandledDbl = this.returnorderBarcodeEntity.getQuantityHandledDbl();
     }
 
     //End Region Constructor
@@ -113,18 +98,18 @@ public class cReturnorderBarcode {
 
 
     public static boolean pTruncateTableBln(){
-       SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode.getReturnorderBarcodeViewModel().deleteAll();
+        cReturnorderViewModel returnorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
+        returnorderViewModel.deleteAll();
         return true;
     }
 
     public boolean pInsertInDatabaseBln() {
-        SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode.getReturnorderBarcodeViewModel().insert(this.returnorderBarcodeEntity);
-        this.indatabaseBln = true;
+        this.getReturnorderBarcodeViewModel().insert(this.returnorderBarcodeEntity);
 
-        if (SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode.allReturnorderBarcodesObl == null){
-            SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode.allReturnorderBarcodesObl = new ArrayList<>();
+        if (cReturnorderBarcode.allReturnorderBarcodesObl == null){
+            cReturnorderBarcode.allReturnorderBarcodesObl = new ArrayList<>();
         }
-        SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode.allReturnorderBarcodesObl.add(this);
+        cReturnorderBarcode.allReturnorderBarcodesObl.add(this);
         return  true;
     }
 

@@ -40,13 +40,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     //Region Private Properties
 
-    private static  Button cancelButton;
-    private static ImageView acceptImageView;
-    private static ImageView rejectImageView;
-    private static TextView acceptRejectHeader;
-    private static TextView acceptRejectText;
-    private static TextView textReject;
-    private static TextView textAccept;
+    private  Button cancelButton;
+    private  ImageView acceptImageView;
+    private  ImageView rejectImageView;
+    private  TextView acceptRejectHeader;
+    private  TextView acceptRejectText;
+    private  TextView textReject;
+    private  TextView textAccept;
 
     private String  titleStr;
     private String  messageStr;
@@ -96,13 +96,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     public void mFindViews() {
 
         if (getView() != null) {
-            AcceptRejectFragment.acceptImageView = getView().findViewById(R.id.acceptImageView);
-            AcceptRejectFragment.rejectImageView = getView().findViewById(R.id.rejectImageView);
-            AcceptRejectFragment.cancelButton = getView().findViewById(R.id.cancelButton);
-            AcceptRejectFragment.textReject = getView().findViewById(R.id.textReject);
-            AcceptRejectFragment.textAccept = getView().findViewById(R.id.textAccept);
-            AcceptRejectFragment.acceptRejectHeader = getView().findViewById(R.id.textViewAcceptRejectHeader);
-            AcceptRejectFragment.acceptRejectText = getView().findViewById(R.id.textViewAcceptRejectText);
+            this.acceptImageView = getView().findViewById(R.id.acceptImageView);
+            this.rejectImageView = getView().findViewById(R.id.rejectImageView);
+            this.cancelButton = getView().findViewById(R.id.cancelButton);
+            this.textReject = getView().findViewById(R.id.textReject);
+            this.textAccept = getView().findViewById(R.id.textAccept);
+            this.acceptRejectHeader = getView().findViewById(R.id.textViewAcceptRejectHeader);
+            this.acceptRejectText = getView().findViewById(R.id.textViewAcceptRejectText);
         }
     }
 
@@ -112,10 +112,10 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AcceptRejectFragment.acceptRejectHeader.setText(titleStr);
-                AcceptRejectFragment.acceptRejectText.setText(messageStr);
-                AcceptRejectFragment.textReject.setText(rejectStr);
-                AcceptRejectFragment.textAccept.setText(acceptStr);
+                acceptRejectHeader.setText(titleStr);
+                acceptRejectText.setText(messageStr);
+                textReject.setText(rejectStr);
+                textAccept.setText(acceptStr);
             }
         });
     }
@@ -130,20 +130,23 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
 
     private void mSetCancelListener() {
-        AcceptRejectFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
                 if (cAppExtension.activity instanceof  PickorderPickActivity) {
-                    PickorderPickActivity.pAcceptRejectDialogDismissed();
+                    PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+                    pickorderPickActivity.pAcceptRejectDialogDismissed();
                 }
 
                 if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
-                    ReturnorderDocumentActivity.pHandleFragmentDismissed();
+                    ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
+                    returnorderDocumentActivity.pHandleFragmentDismissed();
                 }
                 if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
-                    ReturnorderDocumentsActivity.pHandleFragmentDismissed();
+                    ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+                    returnorderDocumentsActivity.pHandleFragmentDismissed();
                 }
 
 
@@ -154,14 +157,14 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     private void mSetAcceptListener() {
 
-        AcceptRejectFragment.acceptImageView.setOnClickListener(new View.OnClickListener() {
+        this.acceptImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAccept();
             }
         });
 
-        AcceptRejectFragment.textAccept.setOnClickListener(new View.OnClickListener() {
+        this.textAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAccept();
@@ -170,13 +173,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     }
 
     private void mSetRejectListener() {
-        AcceptRejectFragment.rejectImageView.setOnClickListener(new View.OnClickListener() {
+        this.rejectImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mReject();
             }
         });
-        AcceptRejectFragment.textReject.setOnClickListener(new View.OnClickListener() {
+        this.textReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mReject();
@@ -187,69 +190,83 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     private void mAccept() {
 
         if (cAppExtension.activity instanceof PickorderLinesActivity) {
-            PickorderLinesActivity.pLeaveActivity();
+            PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+            pickorderLinesActivity.pLeaveActivity();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
-            PickorderPickActivity.pAcceptPick(ignoreAcceptBln);
+            PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+            pickorderPickActivity.pAcceptPick(ignoreAcceptBln);
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof SortorderSortActivity) {
-            SortorderSortActivity.pAcceptPick();
+            SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
+            sortorderSortActivity.pAcceptPick();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-            InventoryorderBinActivity.pCloseBin();
+            InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
+            inventoryorderBinActivity.pCloseBin();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-            InventoryorderBinsActivity.pCloseOrder();
+
+            InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+            inventoryorderBinsActivity.pCloseOrder();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-            IntakeorderLinesActivity.pDone();
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+            intakeorderLinesActivity.pDone();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
-            IntakeOrderIntakeActivity.pAcceptStore();
+            IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
+            intakeOrderIntakeActivity.pAcceptStore();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
-            if (!cReturnorder.currentReturnOrder.isRetourMultiDocument()){
-                ReturnorderDocumentsActivity.pCloseOrder();
-            }
-            else{
-                ReturnorderDocumentActivity.pCloseDocument();
-            }
+            ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
+            returnorderDocumentActivity.pCloseDocument();
+            this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof ReturnorderDocumentsActivity) {
+            ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+            returnorderDocumentsActivity.pCloseOrder();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof ReceiveLinesActivity) {
 
+            ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+
             if (ReceiveLinesActivity.closeOrderClickedBln) {
-                ReceiveLinesActivity.pDone();
+                receiveLinesActivity.pDone();
                 this.dismiss();
             }
             else {
-                ReceiveLinesActivity.pAddUnknownScan(ReceiveLinesActivity.barcodeScanToHandle);
+                receiveLinesActivity.pAddUnknownScan(ReceiveLinesActivity.barcodeScanToHandle);
                 this.dismiss();
             }
 
         }
 
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
-            ReceiveOrderReceiveActivity.pAcceptReceive();
+            ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
+            receiveOrderReceiveActivity.pAcceptReceive();
         }
 
         if (cAppExtension.activity instanceof ReturnorderDocumentsActivity) {
-            ReturnorderDocumentsActivity.pCloseOrder();
+            ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+            returnorderDocumentsActivity.pCloseOrder();
             this.dismiss();
         }
     }
@@ -261,37 +278,44 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
-            PickorderPickActivity.pCancelPick();
+            PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+            pickorderPickActivity.pCancelPick();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof SortorderSortActivity) {
-            SortorderSortActivity.pCancelPick();
+            SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
+            sortorderSortActivity.pCancelPick();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-            InventoryorderBinActivity.pAcceptRejectDialogDismissed();
+            InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
+            inventoryorderBinActivity.pAcceptRejectDialogDismissed();
         }
 
         if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {
-            InventoryorderBinsActivity.pAcceptRejectDialogDismissed();
+            InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+            inventoryorderBinsActivity.pAcceptRejectDialogDismissed();
         }
 
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
-            IntakeOrderIntakeActivity.pCancelStore();
+            IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
+            intakeOrderIntakeActivity.pCancelStore();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-            IntakeorderLinesActivity.pLeaveActivity();
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+            intakeorderLinesActivity.pLeaveActivity();
             this.dismiss();
         }
 
         if (cAppExtension.activity instanceof ReceiveLinesActivity) {
 
             if (ReceiveLinesActivity.closeOrderClickedBln) {
-                ReceiveLinesActivity.pLeaveActivity();
+                ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+                receiveLinesActivity.pLeaveActivity();
                 return;
             }
 
@@ -300,15 +324,18 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
-            ReceiveOrderReceiveActivity.pCancelReceive();
+            ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
+            receiveOrderReceiveActivity.pCancelReceive();
         }
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
-            ReturnorderDocumentActivity.pStartDocumentsActivity();
+            ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
+            returnorderDocumentActivity.pStartDocumentsActivity();
             this.dismiss();
         }
         if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
-            ReturnorderDocumentsActivity.pHandleFragmentDismissed();
+            ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+            returnorderDocumentsActivity.pHandleFragmentDismissed();
             this.dismiss();
         }
 

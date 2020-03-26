@@ -18,16 +18,15 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cItemPropertyRepository {
 
     //Region Public properties
-    public iItemPropertyDao itemPropertyDao;
+    private iItemPropertyDao itemPropertyDao;
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
-    //End Region Private Properties
+    public//End Region Private Properties
 
     //Region Constructor
     cItemPropertyRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.itemPropertyDao = db.itemPropertyDao();
     }
 
@@ -39,13 +38,7 @@ public class cItemPropertyRepository {
         cWebresult webResultWrs = new cWebresult();
         try {
             webResultWrs = new cItemPropertyRepository.itemPropertyFromWebserviceGetAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -100,7 +93,7 @@ public class cItemPropertyRepository {
             List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
 
             try {
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETITEMPROPERTY, l_PropertyInfoObl);
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETITEMPROPERTY, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setResultBln(false);
                 l_WebresultWrs.setSuccessBln(false);

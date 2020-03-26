@@ -5,7 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 
 public class cPickorderLineBarcodeViewModel extends AndroidViewModel {
-    public cPickorderLineBarcodeRepository pickorderLineBarcodeRepository;
+    private cPickorderLineBarcodeRepository pickorderLineBarcodeRepository;
 
     public cPickorderLineBarcodeViewModel(Application pvApplication) {
         super(pvApplication);

@@ -20,6 +20,7 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitAdapter;
 import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.R;
 
@@ -34,6 +35,16 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
     private static  RecyclerView shippingUnitRecyclerView;
     private static Button buttonClose;
     private static Button buttonDone;
+
+    private cShippingAgentServiceShippingUnitAdapter shippingAgentServiceShippingUnitAdapter;
+    private cShippingAgentServiceShippingUnitAdapter getShippingAgentServiceShippingUnitAdapter(){
+        if (this.shippingAgentServiceShippingUnitAdapter == null) {
+            this.shippingAgentServiceShippingUnitAdapter = new cShippingAgentServiceShippingUnitAdapter();
+        }
+
+        return  shippingAgentServiceShippingUnitAdapter;
+    }
+
     //End Region Private Properties
 
     //Region Constructor
@@ -133,8 +144,8 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
 
         ((SimpleItemAnimator) Objects.requireNonNull(shippingUnitRecyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
         ShippingUnitFragment.shippingUnitRecyclerView.setHasFixedSize(false);
-        ShippingUnitFragment.shippingUnitRecyclerView.setAdapter(cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitAdapter());
+        ShippingUnitFragment.shippingUnitRecyclerView.setAdapter(this.getShippingAgentServiceShippingUnitAdapter());
         ShippingUnitFragment.shippingUnitRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitAdapter().pFillData(pvDataObl);
+        this.getShippingAgentServiceShippingUnitAdapter().pFillData(pvDataObl);
     }
 }

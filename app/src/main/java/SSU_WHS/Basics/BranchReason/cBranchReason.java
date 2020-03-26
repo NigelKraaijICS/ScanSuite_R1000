@@ -12,20 +12,11 @@ public class cBranchReason {
     private String descriptionStr;
     public String getDescriptionStr() { return this.descriptionStr; }
 
-
     private Boolean returnBln;
     public Boolean isReturn() { return this.returnBln; }
 
     public static cBranchReason currentBranchReason;
 
-
-    private static cBranchReasonAdapter gBranchReasonAdapter;
-    public static cBranchReasonAdapter getBranchReasonAdapter() {
-        if (gBranchReasonAdapter == null) {
-            gBranchReasonAdapter = new cBranchReasonAdapter();
-        }
-        return gBranchReasonAdapter;
-    }
     //end region Public Propties
 
     //Region Constructor

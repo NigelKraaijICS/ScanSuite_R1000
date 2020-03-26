@@ -17,7 +17,7 @@ public class cBranchEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name=cDatabase.BRANCH_NAMESTR)
-    public String branch;
+    public String branch = "";
     public String getBranchStr() {return this.branch;}
 
     @ColumnInfo(name=cDatabase.BRANCHTYPE_NAMESTR)
@@ -32,14 +32,6 @@ public class cBranchEntity {
     public String binmandatory;
     public String getBinmandatoryStr() {return this.binmandatory;}
 
-    @ColumnInfo(name=cDatabase.PICKDEFAULTREJECTREASON)
-    public String pickdefaultrejectreason;
-    public String getPickdefaultrejectreasonStr() {return this.pickdefaultrejectreason;}
-
-    @ColumnInfo(name=cDatabase.PICKDEFAULTSTORAGEBIN)
-    public String pickdefaultstoragebin;
-    public String getPickdefaultstoragebinStr() {return this.pickdefaultstoragebin;}
-
     @ColumnInfo(name=cDatabase.RECEIVEDEFAULTBIN_NAMESTR)
     public String receivedefaultbin;
     public String getReceivedefaultbinStr() {return this.receivedefaultbin;}
@@ -52,9 +44,6 @@ public class cBranchEntity {
     public String movedefaultbin;
     public String getMovedefaultbinStr() {return this.movedefaultbin;}
 
-    @ColumnInfo(name=cDatabase.SHIPDEFAULTBIN_NAMESTR)
-    public String shipdefaultbin;
-    public String getShipdefaultbinStr() {return this.shipdefaultbin;}
     //End Region Public Properies
 
     //Region Constructor
@@ -68,12 +57,9 @@ public class cBranchEntity {
             this.branchtype = jsonObject.getString(cDatabase.BRANCHTYPE_NAMESTR);
             this.branchname = jsonObject.getString(cDatabase.BRANCHNAME_NAMESTR);
             this.binmandatory = jsonObject.getString(cDatabase.BINMANDATORY_NAMESTR);
-            this.pickdefaultrejectreason = jsonObject.getString(cDatabase.PICKDEFAULTREJECTREASON);
-            this.pickdefaultstoragebin = jsonObject.getString(cDatabase.PICKDEFAULTSTORAGEBIN);
             this.receivedefaultbin = jsonObject.getString(cDatabase.RECEIVEDEFAULTBIN_NAMESTR);
             this.returndefaultbin = jsonObject.getString(cDatabase.RETURNDEFAULTBIN_NAMESTR);
             this.movedefaultbin = jsonObject.getString(cDatabase.MOVEDEFAULTBIN_NAMESTR);
-            this.shipdefaultbin = jsonObject.getString(cDatabase.SHIPDEFAULTBIN_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

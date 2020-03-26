@@ -4,8 +4,6 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-import java.util.List;
-
 import SSU_WHS.Webservice.cWebresult;
 
 public class cReturnorderLineViewModel extends AndroidViewModel {
@@ -25,11 +23,14 @@ public class cReturnorderLineViewModel extends AndroidViewModel {
     public void delete(cReturnorderLineEntity pvReturnorderLineEntity) {this.Repository.delete(pvReturnorderLineEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
-    public List<cReturnorderLineEntity> pGetLinesFromDatabaseObl(String pvSourceDocumentStr){return  this.Repository.pGetReturnOrderLinesForSourceDocumentFromDatabaseObl(pvSourceDocumentStr);}
     public cWebresult pSaveLineViaWebserviceWrs (){return this.Repository.pSaveLineViaWebserviceWrs();}
-    public cWebresult pCreateItemVariantViaWebserviceWrs(){return this.Repository.pCreateItemVariantViaWebserviceWrs();}
+    public void pCreateItemVariantViaWebservice(){
+        this.Repository.pCreateItemVariantViaWebservice();
+    }
     public cWebresult pResetLineViaWebserviceWrs (Long pvLineNoLng){return this.Repository.pResetLineViaWebserviceWrs(pvLineNoLng);}
-    public Boolean pUpdateQuantityBln(){return  this.Repository.pUpdateQuantityBln();}
+    public void pUpdateQuantity(){
+        this.Repository.pUpdateQuantity();
+    }
 
 
 }

@@ -26,9 +26,9 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
 
     //Region Private Properties
 
-    private static ImageView imageHourglass;
-    private static CardView progressContainer;
-    private static TextView textDots;
+    private  ImageView imageHourglass;
+    private  CardView progressContainer;
+    private  TextView textDots;
 
 
     //End Region Private Properties
@@ -74,16 +74,16 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     public void mFindViews() {
 
         if (getView() != null) {
-            GettingDataFragment.imageHourglass = getView().findViewById(R.id.imageHourglass);
-            GettingDataFragment.progressContainer = getView().findViewById(R.id.progressContainer);
-            GettingDataFragment.textDots = getView().findViewById(R.id.textDots);
+            this.imageHourglass = getView().findViewById(R.id.imageHourglass);
+            this.progressContainer = getView().findViewById(R.id.progressContainer);
+            this.textDots = getView().findViewById(R.id.textDots);
         }
 
     }
 
     @Override
     public void mFieldsInitialize() {
-        GettingDataFragment.progressContainer.setVisibility(View.INVISIBLE);
+        this.progressContainer.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -114,11 +114,11 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
                 count++;
                 if (count == 1)
                 {
-                    GettingDataFragment.imageHourglass.animate().rotation(180).start();
+                    imageHourglass.animate().rotation(180).start();
                 }
                 else if (count == 2)
                 {
-                    GettingDataFragment.imageHourglass.animate().rotation(0).start();
+                    imageHourglass.animate().rotation(0).start();
                 }
                 if (count == 2) {
                     count = 0;
@@ -131,7 +131,7 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
     }
 
     private void mSetHourglassImageListener() {
-        GettingDataFragment.imageHourglass.setOnClickListener(new View.OnClickListener() {
+        this.imageHourglass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mToggleDetails();
@@ -141,18 +141,18 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
 
      private void mToggleDetails() {
         boolean isCurrentlyShown;
-         isCurrentlyShown = GettingDataFragment.progressContainer.getVisibility() == View.VISIBLE;
+         isCurrentlyShown = this.progressContainer.getVisibility() == View.VISIBLE;
         if (isCurrentlyShown) {
-            GettingDataFragment.progressContainer.animate().scaleY(0).withEndAction(new Runnable() {
+            this.progressContainer.animate().scaleY(0).withEndAction(new Runnable() {
                 @Override
                 public void run() {
-                    GettingDataFragment.progressContainer.setVisibility(View.INVISIBLE);
+                    progressContainer.setVisibility(View.INVISIBLE);
                 }
             }).start();
         }
         else {
-            GettingDataFragment.progressContainer.animate().scaleY(1).start();
-            GettingDataFragment.progressContainer.setVisibility(View.VISIBLE);
+            this.progressContainer.animate().scaleY(1).start();
+            this.progressContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -167,15 +167,15 @@ public class GettingDataFragment extends DialogFragment implements iICSDefaultFr
                 count++;
                 if (count == 1)
                 {
-                    GettingDataFragment.textDots.setText(".");
+                    textDots.setText(".");
                 }
                 else if (count == 2)
                 {
-                    GettingDataFragment.textDots.setText("..");
+                    textDots.setText("..");
                 }
                 else if (count == 3)
                 {
-                    GettingDataFragment.textDots.setText("...");
+                    textDots.setText("...");
 
                 }
                 if (count == 3) {

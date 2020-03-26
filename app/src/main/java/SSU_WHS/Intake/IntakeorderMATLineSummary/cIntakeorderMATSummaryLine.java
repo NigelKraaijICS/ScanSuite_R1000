@@ -1,5 +1,7 @@
 package SSU_WHS.Intake.IntakeorderMATLineSummary;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +10,12 @@ import ICS.Utils.cResult;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
+import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineViewModel;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -146,6 +150,10 @@ public class cIntakeorderMATSummaryLine {
     public static List<cIntakeorderMATSummaryLine> allIntakeorderMATSummaryLinesObl;
     private List<cIntakeorderMATLine> MATLinesObl;
 
+    private cIntakeorderMATLineViewModel getIntakeorderMATLineViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderMATLineViewModel.class);
+    }
+
     public List<cIntakeorderMATLine> MATLinesToShowObl() {
 
         List<cIntakeorderMATLine> resultObl = new ArrayList<>();
@@ -262,13 +270,6 @@ public class cIntakeorderMATSummaryLine {
 
     public static cIntakeorderMATSummaryLine currentIntakeorderMATSummaryLine;
 
-    private static cIntakeorderMATSummaryLineAdapter gSummaryLinesAdapter;
-    public static cIntakeorderMATSummaryLineAdapter getSummaryLinesAdapter() {
-        if (gSummaryLinesAdapter == null) {
-            gSummaryLinesAdapter = new cIntakeorderMATSummaryLineAdapter();
-        }
-        return gSummaryLinesAdapter;
-    }
 
     //End Region Public Properties
 
@@ -450,7 +451,10 @@ public class cIntakeorderMATSummaryLine {
             //We have no match, so this will result in a new line
             case 0:
 
-                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pMATCreateLineViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl);
+
+
+
+                WebResult =  this.getIntakeorderMATLineViewModel().pMATCreateLineViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl);
                 if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
                     if (this.getBinCodeStr().isEmpty()) {
@@ -494,7 +498,7 @@ public class cIntakeorderMATSummaryLine {
 
             //loop through barcodes to calculate scanned quantity
             for (cIntakeorderBarcode intakeorderBarcode : pvScannedBarcodesObl) {
-                cIntakeorderMATLine.currentIntakeorderMATLine.pAddOrUpdateLineBarcodeBln(intakeorderBarcode);
+                cIntakeorderMATLine.currentIntakeorderMATLine.pAddOrUpdateLineBarcode(intakeorderBarcode);
                 quantityScannedDbl += intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
             }
 
@@ -502,12 +506,12 @@ public class cIntakeorderMATSummaryLine {
             //Update the MAT line
             cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = pvBinCodeStr;
             cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl += quantityScannedDbl;
-            cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
+            cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabase();
 
             //If quantity is equal or bigger then asked, the line is finished
             if (cIntakeorderMATLine.currentIntakeorderMATLine.pQuantityReachedBln()) {
 
-                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pMATLineHandledViaWebserviceWrs();
+                WebResult =  this.getIntakeorderMATLineViewModel().pMATLineHandledViaWebserviceWrs();
                 if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
                     if (this.getBinCodeStr().isEmpty()) {
@@ -523,7 +527,7 @@ public class cIntakeorderMATSummaryLine {
                     //Undo updated MAT line + own quantity
                     cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = "";
                     cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl -= quantityScannedDbl;
-                    cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
+                    cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabase();
                     cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLED);
                     return  false;
                 }
@@ -531,14 +535,14 @@ public class cIntakeorderMATSummaryLine {
             }
             else {
                 //if quantity is lower, we have to split the line
-                WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pMATLineSplitViaWebserviceWrs();
+                WebResult =  this.getIntakeorderMATLineViewModel().pMATLineSplitViaWebserviceWrs();
                 if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
 
                     //Set the quantity to the quantity scanned
                     cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = pvBinCodeStr;
                     cIntakeorderMATLine.currentIntakeorderMATLine.quantityDbl = quantityScannedDbl;
                     cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl = quantityScannedDbl;
-                    cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabaseBln();
+                    cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabase();
 
                     //Add new line so the quantity gets raised again
                     cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(WebResult.getResultDtt().get(0));
@@ -557,7 +561,6 @@ public class cIntakeorderMATSummaryLine {
         return  true;
     }
 
-
     public boolean pGetArticleImageBln(){
 
         if (this.articleImage != null) {
@@ -571,7 +574,8 @@ public class cIntakeorderMATSummaryLine {
 
         cWebresult Webresult;
 
-        Webresult = cArticleImage.getArticleImageViewModel().pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
+        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+        Webresult = articleImageViewModel.pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
         if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
             return  false;
         }
@@ -599,7 +603,6 @@ public class cIntakeorderMATSummaryLine {
 
     }
 
-
     //End Region Public Methods
 
     //Region Private Methods
@@ -609,7 +612,5 @@ public class cIntakeorderMATSummaryLine {
 
 
     //End Region Constructor
-
-
 
 }

@@ -1,6 +1,6 @@
 package SSU_WHS.Intake.IntakeorderBarcodes;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -18,24 +18,9 @@ public class cIntakeorderBarcode {
 
     private cIntakeorderBarcodeEntity intakeorderBarcodeEntity;
 
-    private static cIntakeorderBarcodeViewModel gIntakeorderBarcodeViewModel;
-    private static cIntakeorderBarcodeViewModel getIntakeorderBarcodeViewModel() {
-        if (gIntakeorderBarcodeViewModel == null) {
-            gIntakeorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cIntakeorderBarcodeViewModel.class);
-        }
-        return gIntakeorderBarcodeViewModel;
-    }
-
-    private static cIntakeorderBarcodeAdapter gIntakeorderBarcodeAdapter;
-    public static cIntakeorderBarcodeAdapter getIntakeorderBarcodeAdapter() {
-        if (gIntakeorderBarcodeAdapter == null) {
-            gIntakeorderBarcodeAdapter = new cIntakeorderBarcodeAdapter();
-        }
-        return gIntakeorderBarcodeAdapter;
-    }
-
     public static List<cIntakeorderBarcode> allBarcodesObl;
     public static cIntakeorderBarcode currentIntakeOrderBarcode;
+
 
     //Region Public Properties
 
@@ -44,25 +29,24 @@ public class cIntakeorderBarcode {
         return this.barcodeStr;
     }
 
-    private String barcodeWithoutCheckDigitStr;
     public String getBarcodeWithoutCheckDigitStr() {
 
-        this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
+        String barcodeWithoutCheckDigitStr = this.getBarcodeStr();
 
         if (cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN8 && cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() != 8 && this.getBarcodeStr().length() != 13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() == 8)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,7);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,7);
         }
 
         if (this.getBarcodeStr().length() == 13)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,12);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,12);
         }
 
         return barcodeWithoutCheckDigitStr;
@@ -101,13 +85,12 @@ public class cIntakeorderBarcode {
         return this.quantityHandledDbl;
     }
 
-    private Boolean receiveAmountManualBln;
-    public Boolean getReceiveAmountManualBln() {
-        return this.receiveAmountManualBln;
-    }
-
     public  String getBarcodeAndQuantityStr(){
         return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
+    }
+
+    private cIntakeorderBarcodeViewModel getIntakeorderBarcodeViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderBarcodeViewModel.class);
     }
 
     //Region Constructor
@@ -121,7 +104,6 @@ public class cIntakeorderBarcode {
         this.quantityPerUnitOfMeasureDbl = this.intakeorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
         this.unitOfMeasureStr = this.intakeorderBarcodeEntity.getUnitOfMeasureStr();
         this.quantityHandledDbl = this.intakeorderBarcodeEntity.getQuantityHandled();
-        this.receiveAmountManualBln = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
     }
 
     public cIntakeorderBarcode(cIntakeorderBarcodeEntity pvIntakeorderBarcodeEntity) {
@@ -134,7 +116,6 @@ public class cIntakeorderBarcode {
         this.quantityPerUnitOfMeasureDbl = this.intakeorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
         this.unitOfMeasureStr = this.intakeorderBarcodeEntity.getUnitOfMeasureStr();
         this.quantityHandledDbl = this.intakeorderBarcodeEntity.getQuantityHandled();
-        this.receiveAmountManualBln = this.intakeorderBarcodeEntity.getReceiveAmountManualBln();
     }
 
     public cIntakeorderBarcode(cIntakeorderBarcode pvBarcodeToCopyObj) {
@@ -151,7 +132,9 @@ public class cIntakeorderBarcode {
     //End Region Constructor
 
     public static boolean pTruncateTableBln(){
-        cIntakeorderBarcode.getIntakeorderBarcodeViewModel().deleteAll();
+
+        cIntakeorderBarcodeViewModel intakeorderBarcodeViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderBarcodeViewModel.class);
+        intakeorderBarcodeViewModel.deleteAll();
         return true;
     }
 
@@ -173,7 +156,7 @@ public class cIntakeorderBarcode {
     }
 
     public boolean pInsertInDatabaseBln() {
-        cIntakeorderBarcode.getIntakeorderBarcodeViewModel().insert(this.intakeorderBarcodeEntity);
+        this.getIntakeorderBarcodeViewModel().insert(this.intakeorderBarcodeEntity);
 
         if (cIntakeorderBarcode.allBarcodesObl == null){
             cIntakeorderBarcode.allBarcodesObl = new ArrayList<>();

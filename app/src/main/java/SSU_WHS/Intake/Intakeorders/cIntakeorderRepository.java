@@ -21,8 +21,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.General.cDatabase;
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineEntity;
-import SSU_WHS.Intake.IntakeorderMATLines.iIntakeorderMATLineDao;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
@@ -32,16 +30,14 @@ import static ICS.Utils.cText.pAddSingleQuotesStr;
 public class cIntakeorderRepository {
 
     //Region Public Properties
-    public iIntakeorderDao intakeorderDao;
-    public iIntakeorderMATLineDao intakeorderMATLineDao;
+    private iIntakeorderDao intakeorderDao;
 
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
 
 
-    private class IntakeCreateParams {
+    private static class IntakeCreateParams {
         String documentStr;
         String packingSlipStr;
         String binCodeStr;
@@ -57,9 +53,8 @@ public class cIntakeorderRepository {
 
     //Region Constructor
     cIntakeorderRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+         acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.intakeorderDao = db.intakeorderDao();
-        this.intakeorderMATLineDao = db.intakeorderMATLineDao();
     }
     //End Region Constructor
 
@@ -302,7 +297,7 @@ public class cIntakeorderRepository {
 
         List<String> resultObl = new ArrayList<>();
         IntakeCreateParams intakeCreateParams;
-        intakeCreateParams = new IntakeCreateParams(pvDocumentStr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln);
+        intakeCreateParams = new IntakeCreateParams(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
 
         cWebresult webResultWrs = new cWebresult();
 

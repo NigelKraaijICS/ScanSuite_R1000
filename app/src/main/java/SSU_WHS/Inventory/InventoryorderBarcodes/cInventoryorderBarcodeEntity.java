@@ -19,7 +19,7 @@ public class cInventoryorderBarcodeEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODE_NAMESTR)
-    public String barcode;
+    public String barcode = "";
 
     public String getBarcodeStr() {
         return this.barcode;
@@ -80,13 +80,9 @@ public class cInventoryorderBarcodeEntity {
     @ColumnInfo(name = cDatabase.INV_AMOUNT_MANUAL_NAMESTR)
     public Boolean invAmountManual;
 
-    public Boolean getInvAmountManualBln() {
-        return this.invAmountManual;
-    }
     //End Region Public Properties
 
-    //Region Constructor
-    public cInventoryorderBarcodeEntity() {
+    public  cInventoryorderBarcodeEntity(){
 
     }
 

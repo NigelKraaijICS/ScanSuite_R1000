@@ -32,6 +32,7 @@ import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.BuildConfig;
@@ -41,21 +42,20 @@ import nl.icsvertex.scansuite.R;
 public class CreateReceiveActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
-    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:imageStr";
-    public static final String VIEW_NAME_HEADER_TEXT = "detail:header:text";
+
     //End Region Public Properties
 
     //Region Private Properties
 
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubTitle;
-    static private EditText editTextDocument;
-    static private EditText editTextPackingslip;
-    static private EditText editTextBin;
-    private static Switch switchCheckBarcodes;
-    static private Button createReceiveButton;
-    static private Button cancelButton;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private TextView toolbarSubTitle;
+    private EditText editTextDocument;
+    private EditText editTextPackingslip;
+    private EditText editTextBin;
+    private Switch switchCheckBarcodes;
+    private  Button createReceiveButton;
+    private  Button cancelButton;
     //End Region private Properties
 
     //Region Constructor
@@ -91,6 +91,13 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -140,26 +147,26 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public void mFindViews() {
-        CreateReceiveActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        CreateReceiveActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        CreateReceiveActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        CreateReceiveActivity.editTextDocument = findViewById(R.id.editTextDocument);
-        CreateReceiveActivity.editTextPackingslip = findViewById(R.id.editTextPackingslip);
-        CreateReceiveActivity.editTextBin = findViewById(R.id.editTextBin);
-        CreateReceiveActivity.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
-        CreateReceiveActivity.createReceiveButton = findViewById(R.id.createOrderButton);
-        CreateReceiveActivity.cancelButton = findViewById(R.id.cancelButton);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.editTextDocument = findViewById(R.id.editTextDocument);
+        this.editTextPackingslip = findViewById(R.id.editTextPackingslip);
+        this.editTextBin = findViewById(R.id.editTextBin);
+        this.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
+        this.createReceiveButton = findViewById(R.id.createOrderButton);
+        this.cancelButton = findViewById(R.id.cancelButton);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        CreateReceiveActivity.toolbarImage.setImageResource(R.drawable.ic_menu_intake_eo);
-        CreateReceiveActivity.toolbarTitle.setText(pvScreenTitle);
-        CreateReceiveActivity.toolbarTitle.setSelected(true);
-        CreateReceiveActivity.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_intake_eo);
+        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setSelected(true);
+        this.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
-        ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
-        ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
+        ViewCompat.setTransitionName(toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName(toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -172,30 +179,30 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     public void mFieldsInitialize() {
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(50);
-        CreateReceiveActivity.editTextDocument.setFilters(filterArray);
+        this.editTextDocument.setFilters(filterArray);
 
-       if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
-           CreateReceiveActivity.editTextBin.setVisibility(View.GONE);
-       }
-       else {
-           mSetBin();
-       }
+        if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
+            this.editTextBin.setVisibility(View.GONE);
+        }
+        else {
+            this.mSetBin();
+        }
 
         if (!cUser.currentUser.currentBranch.getReturnDefaultBinStr().isEmpty()) {
-            CreateReceiveActivity.editTextBin.setText(cUser.currentUser.currentBranch.getReceiveDefaultBinStr());
+            this.editTextBin.setText(cUser.currentUser.currentBranch.getReceiveDefaultBinStr());
         }
 
         if (!cSetting.RECEIVE_BARCODE_CHECK()) {
-            CreateReceiveActivity.switchCheckBarcodes.setVisibility(View.GONE);
+            this.switchCheckBarcodes.setVisibility(View.GONE);
         }
         else{
-            CreateReceiveActivity.switchCheckBarcodes.setChecked(true);
+            this.switchCheckBarcodes.setChecked(true);
         }
 
         if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            CreateReceiveActivity.editTextBin.setVisibility(View.GONE);
-            CreateReceiveActivity.editTextPackingslip.setVisibility(View.GONE);
-            CreateReceiveActivity.switchCheckBarcodes.setVisibility(View.GONE);
+            this.editTextBin.setVisibility(View.GONE);
+            this.editTextPackingslip.setVisibility(View.GONE);
+            this.switchCheckBarcodes.setVisibility(View.GONE);
         }
 
     }
@@ -216,7 +223,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     //Region Public Methods
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan, boolean pvIsDocumentBln, boolean pvIsPackingSlipBln, boolean pvBinBln) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan, boolean pvIsDocumentBln, boolean pvIsPackingSlipBln, boolean pvBinBln) {
 
         String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
@@ -224,20 +231,20 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         boolean binBln = false;
 
         if (pvIsDocumentBln) {
-            CreateReceiveActivity.editTextDocument.setText(barcodeWithoutPrefixStr);
-            CreateReceiveActivity.editTextPackingslip.requestFocus();
+            this.editTextDocument.setText(barcodeWithoutPrefixStr);
+            this.editTextPackingslip.requestFocus();
             return;
         }
 
         if (pvIsPackingSlipBln) {
-            CreateReceiveActivity.editTextPackingslip.setText(barcodeWithoutPrefixStr);
-            CreateReceiveActivity.editTextBin.requestFocus();
+            this.editTextPackingslip.setText(barcodeWithoutPrefixStr);
+            this.editTextBin.requestFocus();
             return;
         }
 
         if (pvBinBln) {
-            CreateReceiveActivity.editTextBin.setText(barcodeWithoutPrefixStr);
-            CreateReceiveActivity.editTextBin.requestFocus();
+            this.editTextBin.setText(barcodeWithoutPrefixStr);
+            this.editTextBin.requestFocus();
         }
 
         cUserInterface.pCheckAndCloseOpenDialogs();
@@ -259,20 +266,20 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         }
 
         //has prefix, is DOCUMENT
-        if (documentBln   ||CreateReceiveActivity.editTextDocument.getText().toString().isEmpty()) {
-            CreateReceiveActivity.editTextDocument.setText(barcodeWithoutPrefixStr);
+        if (documentBln   ||this.editTextDocument.getText().toString().isEmpty()) {
+            this.editTextDocument.setText(barcodeWithoutPrefixStr);
 
             if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
 
                 IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-                CreateReceiveActivity.mCreateOrder(editTextDocument.getText().toString().trim(),
-                        editTextPackingslip.getText().toString().trim(),
-                        editTextBin.getText().toString().trim(),
-                        switchCheckBarcodes.isChecked());
+                this.mCreateOrder(this.editTextDocument.getText().toString().trim(),
+                        this.editTextPackingslip.getText().toString().trim(),
+                        this.editTextBin.getText().toString().trim(),
+                        this.switchCheckBarcodes.isChecked());
                 return;
             }
 
-            CreateReceiveActivity.editTextPackingslip.requestFocus();
+            this.editTextPackingslip.requestFocus();
             return;
         }
 
@@ -293,23 +300,19 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
                 }
             }
 
-            CreateReceiveActivity.editTextBin.setText(barcodeWithoutPrefixStr);
+            this.editTextBin.setText(barcodeWithoutPrefixStr);
             return;
-
-
         }
 
-
-
-        CreateReceiveActivity.editTextPackingslip.setText(barcodeWithoutPrefixStr);
-        CreateReceiveActivity.editTextPackingslip.requestFocus();
+        this.editTextPackingslip.setText(barcodeWithoutPrefixStr);
+        this.editTextPackingslip.requestFocus();
     }
 
     //End Region Public Methods
 
     //Region Private Method
 
-    private static void mCreateOrder(final String pvDocumentStr, final String pvPackingSlipStr, final String pvBinCodeStr, final boolean pvCheckBarcodesBln){
+    private  void mCreateOrder(final String pvDocumentStr, final String pvPackingSlipStr, final String pvBinCodeStr, final boolean pvCheckBarcodesBln){
 
 
         // Show that we are getting data
@@ -324,53 +327,53 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mSetCancelListener() {
-        CreateReceiveActivity.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                CreateReceiveActivity.mStartOrderSelectActivity();
+                mStartOrderSelectActivity();
             }
         });
     }
 
-    private static void mStartOrderSelectActivity() {
+    private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
         IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
         cAppExtension.activity.startActivity(intent);
     }
 
     private void mSetCreateListener() {
-        CreateReceiveActivity.createReceiveButton.setOnClickListener(new View.OnClickListener() {
+        this.createReceiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
 
-                if (CreateReceiveActivity.editTextDocument.getText().toString().isEmpty()){
+                if (editTextDocument.getText().toString().isEmpty()){
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_document),null);
                     return;
                 }
 
-                if (!BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-                }  if (CreateReceiveActivity.editTextBin.getText().toString().isEmpty() && cUser.currentUser.currentBranch.isBinMandatoryBln()){
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_bin),null);
-                    return;
-                }
+                if (!BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString()))
+                    if (editTextBin.getText().toString().isEmpty() && cUser.currentUser.currentBranch.isBinMandatoryBln()){
+                        cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_bin),null);
+                        return;
+                    }
 
 
                 IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-                CreateReceiveActivity.mCreateOrder(editTextDocument.getText().toString().trim(),
-                                                            editTextPackingslip.getText().toString().trim(),
-                                                            editTextBin.getText().toString().trim(),
-                                                            switchCheckBarcodes.isChecked());
+                mCreateOrder(editTextDocument.getText().toString().trim(),
+                        editTextPackingslip.getText().toString().trim(),
+                        editTextBin.getText().toString().trim(),
+                        switchCheckBarcodes.isChecked());
             }
         });
     }
 
     private void mSetEditorActionListener() {
-        CreateReceiveActivity.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    CreateReceiveActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateReceiveActivity.editTextDocument.getText().toString()),true,false, false);
+                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false, false);
                     cUserInterface.pHideKeyboard();
 
                 }
@@ -378,12 +381,12 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
             }
         });
 
-        CreateReceiveActivity.editTextPackingslip.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextPackingslip.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    CreateReceiveActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateReceiveActivity.editTextPackingslip.getText().toString()),false,true,false);
+                    pHandleScan(cBarcodeScan.pFakeScan(editTextPackingslip.getText().toString()),false,true,false);
                     cUserInterface.pHideKeyboard();
 
                 }
@@ -391,12 +394,12 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
             }
         });
 
-        CreateReceiveActivity.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    CreateReceiveActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateReceiveActivity.editTextBin.getText().toString()),false,false,true);
+                    pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,false,true);
                     cUserInterface.pHideKeyboard();
 
                 }
@@ -409,9 +412,8 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     private void mSetBin(){
 
-
         if (!cUser.currentUser.currentBranch.getReceiveDefaultBinStr().isEmpty()) {
-            CreateReceiveActivity.editTextBin.setText(cUser.currentUser.currentBranch.getReceiveDefaultBinStr());
+            this.editTextBin.setText(cUser.currentUser.currentBranch.getReceiveDefaultBinStr());
         }
         else {
 
@@ -420,20 +422,16 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
             }
 
             if (cUser.currentUser.currentBranch.receiveBinsObl != null&& cUser.currentUser.currentBranch.receiveBinsObl.size() == 1) {
-                CreateReceiveActivity.editTextBin.setText(cUser.currentUser.currentBranch.receiveBinsObl.get(0).getBinCodeStr());
+                this.editTextBin.setText(cUser.currentUser.currentBranch.receiveBinsObl.get(0).getBinCodeStr());
             }
-
         }
-
-
-
     }
 
-    private static void mHandleCreateOrder(String pvDocumentstr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln ){
+    private  void mHandleCreateOrder(String pvDocumentstr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln ){
 
         cResult hulpResult;
 
-        hulpResult = CreateReceiveActivity.mTryToCreateOrderRst(pvDocumentstr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln);
+        hulpResult = this.mTryToCreateOrderRst(pvDocumentstr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln);
         //Try to create the order
         if (!hulpResult.resultBln) {
             return;
@@ -467,16 +465,10 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
                 return;
             }
 
-
-            if (cIntakeorder.currentIntakeOrder == null) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_next_activity_not_found),"",true,true);
-                return;
-            }
-
         }
 
         //Try to lock the order
-        if (!CreateReceiveActivity.mTryToLockOrderBln()) {
+        if (!this.mTryToLockOrderBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_locking_order_failed),"",true,true);
             return;
         }
@@ -484,9 +476,9 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         //Delete the detail, so we can get them from the webservice
         cIntakeorder.currentIntakeOrder.pDeleteDetailsBln();
 
-        hulpResult = CreateReceiveActivity.mGetReceiveOrderDetailsRst();
+        hulpResult = this.mGetReceiveOrderDetailsRst();
         if (!hulpResult.resultBln) {
-            CreateReceiveActivity.mStepFailed(hulpResult.messagesStr());
+            this.mStepFailed(hulpResult.messagesStr());
             return;
         }
 
@@ -494,17 +486,17 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
             @Override
             public void run() {
                 // If everything went well, then start Lines Activity
-                CreateReceiveActivity.mShowReceiveLinesActivity();
+                mShowReceiveLinesActivity();
             }
         });
 
     }
 
-    private static cResult mTryToCreateOrderRst(String pvDocumentstr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln){
+    private  cResult mTryToCreateOrderRst(String pvDocumentstr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln){
 
         cResult result =  cIntakeorder.pCreateReceiveOrderViaWebserviceRst(pvDocumentstr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
         if (!result.resultBln) {
-            CreateReceiveActivity.editTextDocument.setText("");
+            this.editTextDocument.setText("");
             mStepFailed(result.messagesStr());
             return  result;
         }
@@ -513,7 +505,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private static boolean mTryToLockOrderBln(){
+    private  boolean mTryToLockOrderBln(){
 
         cResult hulpResult  = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Receive_InTake, cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External);
 
@@ -532,7 +524,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private static cResult mGetReceiveOrderDetailsRst(){
+    private  cResult mGetReceiveOrderDetailsRst(){
 
         cResult result;
 
@@ -570,14 +562,14 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         return  result;
     }
 
-    private static void mStepFailed(String pvErrorMessageStr){
+    private  void mStepFailed(String pvErrorMessageStr){
 
         if (cIntakeorder.currentIntakeOrder != null) {
             cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cIntakeorder.currentIntakeOrder.getOrderNumberStr(), true, true );
         }
         else
         {
-            cUserInterface.pDoExplodingScreen(pvErrorMessageStr,cAppExtension.activity.getString(R.string.message_couldnt_create_order) + " " +  CreateReceiveActivity.editTextDocument.getText().toString(), true, true );
+            cUserInterface.pDoExplodingScreen(pvErrorMessageStr,cAppExtension.activity.getString(R.string.message_couldnt_create_order) + " " +  this.editTextDocument.getText().toString(), true, true );
         }
 
         if (cIntakeorder.currentIntakeOrder != null) {
@@ -588,7 +580,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
-    private static void mShowReceiveLinesActivity() {
+    private  void mShowReceiveLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);

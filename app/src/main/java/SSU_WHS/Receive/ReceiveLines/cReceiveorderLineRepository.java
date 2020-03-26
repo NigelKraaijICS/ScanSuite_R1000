@@ -32,7 +32,6 @@ public class cReceiveorderLineRepository {
 
     //Region Private Properties
     private iReceiveorderLineDao iReceiveorderLineDao;
-    private acScanSuiteDatabase db;
 
     private static class UpdateOrderlineLocalStatusParams {
         Integer lineNoInt;
@@ -53,19 +52,10 @@ public class cReceiveorderLineRepository {
             this.quantityDbl = pvQuantityDbl;
         }
     }
-    private static class CreateLineParams {
-        String binCodeStr;
-        List<cIntakeorderBarcode> barcodeObl;
-
-        CreateLineParams(String pvBinCodeStr,List<cIntakeorderBarcode> pvBarcodeObl ) {
-            this.binCodeStr = pvBinCodeStr;
-            this.barcodeObl = pvBarcodeObl;
-        }
-    }
 
     //Region Constructor
     cReceiveorderLineRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.iReceiveorderLineDao = db.receiveorderLineDao();
     }
     //End Region Constructor
@@ -75,16 +65,6 @@ public class cReceiveorderLineRepository {
 
     public void insert (cReceiveorderLineEntity intakeorderMATLineEntity) {
         new mInsertAsyncTask(iReceiveorderLineDao).execute(intakeorderMATLineEntity);
-    }
-
-    public List<cReceiveorderLineEntity> pGetReceiveorderLinesFromDatabaseObl() {
-        List<cReceiveorderLineEntity> ResultObl = null;
-        try {
-            ResultObl = new mGetReceiveorderLinesFromDatabaseAsyncTask(iReceiveorderLineDao).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
     }
 
     public void deleteAll () {
@@ -230,16 +210,6 @@ public class cReceiveorderLineRepository {
         }
     }
 
-    private static class mGetReceiveorderLinesFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cReceiveorderLineEntity>> {
-        private iReceiveorderLineDao mAsyncTaskDao;
-
-        mGetReceiveorderLinesFromDatabaseAsyncTask(iReceiveorderLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cReceiveorderLineEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getReceiveorderLinesFromDatabase();
-        }
-    }
-
     private static class updateOrderLineLocalStatusAsyncTask extends AsyncTask<UpdateOrderlineLocalStatusParams, Void, Integer> {
         private iReceiveorderLineDao mAsyncTaskDao;
         updateOrderLineLocalStatusAsyncTask(iReceiveorderLineDao dao) { mAsyncTaskDao = dao; }
@@ -255,15 +225,6 @@ public class cReceiveorderLineRepository {
         @Override
         protected Integer doInBackground(UpdateOrderlineQuantityParams... params) {
             return mAsyncTaskDao.updateOrderLineQuantityHandled(params[0].lineNoInt, params[0].quantityDbl);
-        }
-    }
-
-    private static class updateOrderLineQuantityAsyncTask extends AsyncTask<UpdateOrderlineQuantityParams, Void, Integer> {
-        private iReceiveorderLineDao mAsyncTaskDao;
-        updateOrderLineQuantityAsyncTask(iReceiveorderLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Integer doInBackground(UpdateOrderlineQuantityParams... params) {
-            return mAsyncTaskDao.updateOrderLineQuantity(params[0].lineNoInt, params[0].quantityDbl);
         }
     }
 
@@ -489,8 +450,9 @@ public class cReceiveorderLineRepository {
     }
 
     private static class mReceiveLineHandledViaWebserviceAsyncTask extends AsyncTask<List<cIntakeorderBarcode>, Void, cWebresult> {
+        @SafeVarargs
         @Override
-        protected cWebresult doInBackground(List<cIntakeorderBarcode>... params) {
+        protected final cWebresult doInBackground(List<cIntakeorderBarcode>... params) {
             cWebresult webresult = new cWebresult();
             try {
                 List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();

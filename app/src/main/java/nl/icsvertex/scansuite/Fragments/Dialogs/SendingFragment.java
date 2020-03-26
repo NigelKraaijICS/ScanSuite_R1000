@@ -32,13 +32,13 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
     //Region Private Properties
 
-    private static   ImageView imageRocket;
-    private static ImageView imageCloud;
-    private static TextView textSending;
-    private static TextView textError;
-    private static TextView textDots;
-    private static  TextView textTryAgain;
-    private static  ImageView imageViewTryAgain;
+    private ImageView imageRocket;
+    private ImageView imageCloud;
+    private TextView textSending;
+    private TextView textError;
+    private TextView textDots;
+    private TextView textTryAgain;
+    private ImageView imageViewTryAgain;
 
     //End Region Private Properties
 
@@ -80,13 +80,13 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     public void mFindViews() {
 
         if (getView() != null) {
-            SendingFragment.imageRocket = getView().findViewById(R.id.imageRocket);
-            SendingFragment.imageCloud = getView().findViewById(R.id.imageCloud);
-            SendingFragment.textSending = getView().findViewById(R.id.textSending);
-            SendingFragment.textError = getView().findViewById(R.id.textErrorDetail);
-            SendingFragment.textDots = getView().findViewById(R.id.textDots);
-            SendingFragment.textTryAgain = getView().findViewById(R.id.textTryAgain);
-            SendingFragment.imageViewTryAgain = getView().findViewById(R.id.imageViewTryAgain);
+            this.imageRocket = getView().findViewById(R.id.imageRocket);
+            this.imageCloud = getView().findViewById(R.id.imageCloud);
+            this.textSending = getView().findViewById(R.id.textSending);
+            this.textError = getView().findViewById(R.id.textErrorDetail);
+            this.textDots = getView().findViewById(R.id.textDots);
+            this.textTryAgain = getView().findViewById(R.id.textTryAgain);
+            this.imageViewTryAgain = getView().findViewById(R.id.imageViewTryAgain);
         }
 
     }
@@ -94,9 +94,9 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
     @Override
     public void mFieldsInitialize() {
-        SendingFragment.textSending.setText(R.string.dialog_sending);
-        SendingFragment.textDots.setVisibility(View.VISIBLE);
-        SendingFragment.textError.setVisibility(View.INVISIBLE);
+        this.textSending.setText(R.string.dialog_sending);
+        this.textDots.setVisibility(View.VISIBLE);
+        this.textError.setVisibility(View.INVISIBLE);
         this.mShowHideTryAgain(false);
     }
 
@@ -115,9 +115,9 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                SendingFragment.textSending.setText(R.string.dialog_sent);
-                SendingFragment.textDots.setVisibility(View.INVISIBLE);
-                SendingFragment.textError.setVisibility(View.INVISIBLE);
+                textSending.setText(R.string.dialog_sent);
+                textDots.setVisibility(View.INVISIBLE);
+                textError.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -128,7 +128,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
         AnimationSet animationSet = new AnimationSet(true);
             animationSet.addAnimation(anim1);
-            SendingFragment.imageRocket.startAnimation(animationSet);
+            imageRocket.startAnimation(animationSet);
             animationSet.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -138,10 +138,11 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
                 @Override
                 public void onAnimationEnd(Animation animation) {
 
-
                     if (cAppExtension.activity instanceof ShiporderShipActivity) {
-                        ShiporderShipActivity.pHandleBackToLines();
+                        ShiporderShipActivity shiporderShipActivity = (ShiporderShipActivity)cAppExtension.activity;
+                        shiporderShipActivity.pHandleBackToLines();
                     }
+
                     dismiss();
                 }
 
@@ -163,10 +164,10 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                SendingFragment.textSending.setText(R.string.dialog_notsent);
-                SendingFragment.textDots.setVisibility(View.INVISIBLE);
-                SendingFragment.textError.setVisibility(View.VISIBLE);
-                SendingFragment.textError.setText(pvErrorMessageStr);
+               textSending.setText(R.string.dialog_notsent);
+               textDots.setVisibility(View.INVISIBLE);
+               textError.setVisibility(View.VISIBLE);
+              textError.setText(pvErrorMessageStr);
             }
         });
 
@@ -179,7 +180,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
         AnimationSet animationSet = new AnimationSet(true);
             animationSet.addAnimation(anim1);
-            SendingFragment.imageRocket.startAnimation(animationSet);
+        this.imageRocket.startAnimation(animationSet);
             animationSet.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -188,7 +189,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    SendingFragment.imageRocket.setVisibility(View.INVISIBLE);
+                    imageRocket.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
@@ -204,13 +205,14 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     //Region Private Methods
 
     private void mSetTryAgainListener() {
-        SendingFragment.imageViewTryAgain.setOnClickListener(new View.OnClickListener() {
+        this.imageViewTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
 
                 if (cAppExtension.activity instanceof ShiporderShipActivity) {
-                        ShiporderShipActivity.pHandleSourceDocumentDone();
+                    ShiporderShipActivity shiporderShipActivity = (ShiporderShipActivity)cAppExtension.activity;
+                    shiporderShipActivity.pHandleSourceDocumentDone();
                 }
             }
         });
@@ -225,9 +227,9 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
         AnimationSet animationSet = new AnimationSet(true);
         animationSet.addAnimation(anim1);
-        SendingFragment.imageCloud.startAnimation(animationSet);
+        this.imageCloud.startAnimation(animationSet);
 
-        cUserInterface.pDoWobble(SendingFragment.imageRocket);
+        cUserInterface.pDoWobble(this.imageRocket);
 
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -239,15 +241,15 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
                 count++;
                 if (count == 1)
                 {
-                    SendingFragment.textDots.setText(".");
+                    textDots.setText(".");
                 }
                 else if (count == 2)
                 {
-                    SendingFragment.textDots.setText("..");
+                   textDots.setText("..");
                 }
                 else if (count == 3)
                 {
-                    SendingFragment.textDots.setText("...");
+                    textDots.setText("...");
 
                 }
                 if (count == 3) {
@@ -265,8 +267,8 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
             Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    SendingFragment.textTryAgain.setVisibility(View.VISIBLE);
-                    SendingFragment.imageViewTryAgain.setVisibility(View.VISIBLE);
+                    textTryAgain.setVisibility(View.VISIBLE);
+                    imageViewTryAgain.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -274,8 +276,8 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                SendingFragment.textTryAgain.setVisibility(View.INVISIBLE);
-                SendingFragment.imageViewTryAgain.setVisibility(View.INVISIBLE);
+                textTryAgain.setVisibility(View.INVISIBLE);
+               imageViewTryAgain.setVisibility(View.INVISIBLE);
             }
         });
 

@@ -1,9 +1,10 @@
 package ICS.Environments;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
@@ -36,24 +37,10 @@ public class cEnvironment {
     }
 
     private cEnvironmentEntity environmentEntity;
-    public boolean inDatabaseBln;
 
-    private static cEnvironmentViewModel EnviromentViewModel;
-    public static cEnvironmentViewModel getEnviromementViewModel() {
-        if (EnviromentViewModel == null) {
-            EnviromentViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cEnvironmentViewModel.class);
-        }
-        return EnviromentViewModel;
+    private cEnvironmentViewModel getEnvironmentViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cEnvironmentViewModel.class);
     }
-
-    private static cEnvironmentAdapter EnviromentAdapter;
-    public static cEnvironmentAdapter getEnviromementAdapter() {
-        if (EnviromentAdapter == null) {
-            EnviromentAdapter = new cEnvironmentAdapter();
-        }
-        return EnviromentAdapter;
-    }
-
     public static List<cEnvironment> allEnviroments;
     public static cEnvironment currentEnvironment;
     public static cEnvironment restorableEnviroment;
@@ -100,7 +87,7 @@ public class cEnvironment {
             if (defaultEnviroment == null && cEnvironment.allEnviroments.size() == 1) {
                 cEnvironment.pSetCurrentEnviroment(cEnvironment.allEnviroments.get(0));
             } else {
-                cEnvironment.pSetCurrentEnviroment(defaultEnviroment);
+                cEnvironment.pSetCurrentEnviroment(Objects.requireNonNull(defaultEnviroment));
             }
         }
     }
@@ -120,11 +107,11 @@ public class cEnvironment {
 
         cEnvironment.allEnviroments = new ArrayList<>();
 
-        List<cEnvironmentEntity> EnviromentsFromdatabaseObl = cEnvironment.getEnviromementViewModel().getAll();
+        cEnvironmentViewModel environmentViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cEnvironmentViewModel.class);
+        List<cEnvironmentEntity> EnviromentsFromdatabaseObl = environmentViewModel.getAll();
 
         for (cEnvironmentEntity environmentEntity : EnviromentsFromdatabaseObl) {
             cEnvironment environment = new cEnvironment(environmentEntity);
-            environment.inDatabaseBln = true;
             cEnvironment.allEnviroments.add(environment);
         }
     }
@@ -144,29 +131,26 @@ public class cEnvironment {
     }
 
     public boolean pDeleteFromDatabaseBln() {
-        cEnvironment.getEnviromementViewModel().delete(this.environmentEntity);
-        this.inDatabaseBln = false;
+        this.getEnvironmentViewModel().delete(this.environmentEntity);
         cEnvironment.allEnviroments.remove(this);
         return true;
     }
 
-    private boolean pSetAsDefaultBln() {
+    private void pSetAsDefaultBln() {
 
         this.setDefaultBln(true);
 
         for (cEnvironment environment : cEnvironment.allEnviroments) {
             if (environment.nameStr.equalsIgnoreCase(this.nameStr)) {
-                cEnvironment.getEnviromementViewModel().updateDefaultBln(this.getDefaultBln(), this.nameStr);
+                this.getEnvironmentViewModel().updateDefaultBln(this.getDefaultBln(), this.nameStr);
             } else {
-                cEnvironment.getEnviromementViewModel().updateDefaultBln(false, environment.nameStr);
+                this.getEnvironmentViewModel().updateDefaultBln(false, environment.nameStr);
             }
         }
-        return true;
     }
 
     public boolean pInsertInDatabaseBln() {
-        cEnvironment.getEnviromementViewModel().insert(this.environmentEntity);
-        this.inDatabaseBln = true;
+        this.getEnvironmentViewModel().insert(this.environmentEntity);
         this.setDefaultBln(false);
 
         if (cEnvironment.allEnviroments == null) {

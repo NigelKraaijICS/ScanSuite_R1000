@@ -18,22 +18,22 @@ public class cArticleStockEntity {
 
     @NonNull
     @ColumnInfo(name="Location")
-    public String location;
+    public String location = "";
     public String getLocationStr() {return this.location;}
 
     @NonNull
     @ColumnInfo(name="BinCode")
-    public String binCode;
+    public String binCode = "";
     public String getBinCodeStr() {return this.binCode;}
 
     @NonNull
     @ColumnInfo(name="Itemno")
-    public String itemno;
+    public String itemno = "'";
     public String getItemnoStr() {return this.itemno;}
 
     @NonNull
     @ColumnInfo(name="Variantcode")
-    public String variantcode;
+    public String variantcode = "";
     public String getVariantCodeStr() {return this.variantcode;}
 
     @ColumnInfo(name="Quantity")
@@ -43,17 +43,13 @@ public class cArticleStockEntity {
     }
 
     @ColumnInfo(name="DataTimestamp")
-    public String dataTimeStamp;
+    private String dataTimeStamp;
     public String getDataTimeStamp() {
         return dataTimeStamp;
     }
 
     //End Region Public Properies
 
-    //Region Constructor
-    public cArticleStockEntity() {
-
-    }
     public cArticleStockEntity(JSONObject pvJsonObject, cArticle pvArticle) {
         try {
             this.location = cUser.currentUser.currentBranch.getBranchStr();

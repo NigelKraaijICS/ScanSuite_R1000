@@ -28,7 +28,7 @@ public class cIntakeorderMATLineViewModel extends AndroidViewModel {
 
     public boolean pUpdateLocalStatusBln(Integer pvNewStatusInt) {return this.Repository.pUpdateLocalStatusBln(pvNewStatusInt);}
     public boolean pUpdateQuantityHandledBln(Double pvQuantityHandledDbl) {return this.Repository.pUpdateQuantityHandledBln(pvQuantityHandledDbl);}
-    public boolean pUpdateBinCodeHandledBln(String pvBinCodeHandledStr) {return this.Repository.pUpdateBinCodeHandledBln(pvBinCodeHandledStr);}
+
     public cWebresult pResetMATLineViaWebserviceWrs() {return this.Repository.pResetMATLineViaWebserviceWrs();}
     public cWebresult pMATLineHandledViaWebserviceWrs() {return this.Repository.pMATLineHandledViaWebserviceWrs();}
     public cWebresult pMATLineSplitViaWebserviceWrs() {return this.Repository.pMATLineSplitViaWebserviceWrs();}

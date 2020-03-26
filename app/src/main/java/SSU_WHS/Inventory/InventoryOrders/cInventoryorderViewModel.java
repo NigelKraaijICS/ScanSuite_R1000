@@ -46,7 +46,6 @@ public class cInventoryorderViewModel extends AndroidViewModel {
 
     public cWebresult pAddERPItemViaWebserviceWrs(cArticleBarcode pvArticleBarcode) {return this.Repository.pAddERPItemViaWebserviceWrs(pvArticleBarcode);}
 
-
     public cWebresult pAddLineViaWebserviceWrs() {return this.Repository.pAddLineViaWebserviceWrs();}
 
     public List<cInventoryorderBinEntity> pGetBinsNotDoneFromDatabaseObl(){return  this.Repository.pGetInventoryorderBinNotDoneFromDatabaseObl();}
@@ -68,7 +67,5 @@ public class cInventoryorderViewModel extends AndroidViewModel {
     public cWebresult pGetLineBarcodesFromWebserviceWrs() {return this.Repository.pGetLineBarcodesFromWebserviceWrs();}
 
     public cWebresult pHandledViaWebserviceWrs(){return this.Repository.pHandledViaWebserviceWrs();}
-
-    public cInventoryorderBinEntity pCheckBinInDatabase(String pvBincode, int pvStatus) {return this.Repository.pCheckBinInDatabase(pvBincode, pvStatus);}
 
 }

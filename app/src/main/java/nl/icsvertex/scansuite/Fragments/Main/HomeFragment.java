@@ -13,7 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.DialogFragment;
+
+import java.util.concurrent.ExecutionException;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cConnection;
@@ -25,13 +27,13 @@ import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
 import nl.icsvertex.scansuite.R;
 
-public class HomeFragment extends Fragment implements iICSDefaultFragment {
+public class HomeFragment extends DialogFragment implements iICSDefaultFragment {
 
     //region Private Properties
-    private static  ImageView imageLogo;
-    private static TextView textViewDevicedetails;
-    private static CardView cardViewDeviceDetails;
-    private static Button buttonLogin;
+    private ImageView imageLogo;
+    private TextView textViewDevicedetails;
+    private CardView cardViewDeviceDetails;
+    private Button buttonLogin;
     //end region Private Properties
 
     //region Constructor
@@ -50,8 +52,10 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        cAppExtension.dialogFragment  = this;
         this.mFragmentInitialize();
     }
+
 
     //End Region Default Methods
 
@@ -68,10 +72,10 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     public void mFindViews() {
 
         if (getView() != null) {
-            HomeFragment.imageLogo = getView().findViewById(R.id.imageLogo);
-            HomeFragment.cardViewDeviceDetails = getView().findViewById(R.id.cardViewDeviceDetails);
-            HomeFragment.textViewDevicedetails = getView().findViewById(R.id.textViewDeviceDetails);
-            HomeFragment.buttonLogin = getView().findViewById(R.id.buttonLogin);
+            this.imageLogo = getView().findViewById(R.id.imageLogo);
+            this.cardViewDeviceDetails = getView().findViewById(R.id.cardViewDeviceDetails);
+            this.textViewDevicedetails = getView().findViewById(R.id.textViewDeviceDetails);
+            this.buttonLogin = getView().findViewById(R.id.buttonLogin);
         }
 
 
@@ -80,7 +84,7 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     @Override
     public void mFieldsInitialize() {
         this.mSetDeviceInfo();
-        HomeFragment.buttonLogin.setVisibility(View.VISIBLE);
+        this.buttonLogin.setVisibility(View.VISIBLE);
         this.mBounceLogo();
     }
 
@@ -94,10 +98,6 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Public Methods
 
-    public static void pFragmentDone() {
-        HomeFragment.mStartLoginActivity();
-    }
-
     //End Region Public Methods
 
     //Region Private Methods
@@ -107,35 +107,29 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
     }
 
     private void mSetDeviceInfo() {
-        HomeFragment.textViewDevicedetails.setText(cDeviceInfo.getDeviceInfoStr());
+        this.textViewDevicedetails.setText(cDeviceInfo.getDeviceInfoStr());
     }
 
-    private static void mStartLoginActivity() {
 
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
-        cAppExtension.context.startActivity(intent);
-    }
 
     //Region Listeners
     private void mSetLogoListener() {
-        HomeFragment.imageLogo.setOnClickListener(new View.OnClickListener() {
+        this.imageLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                mBounceLogo();
-                if (HomeFragment.cardViewDeviceDetails.getVisibility() == View.VISIBLE) {
-                    HomeFragment.cardViewDeviceDetails.setVisibility(View.INVISIBLE);
+                if (cardViewDeviceDetails.getVisibility() == View.VISIBLE) {
+                    cardViewDeviceDetails.setVisibility(View.INVISIBLE);
                 }
                 else {
-                    HomeFragment.cardViewDeviceDetails.setVisibility(View.VISIBLE);
+                    cardViewDeviceDetails.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
     private void mSetLoginButtonListener() {
-        HomeFragment.buttonLogin.setOnClickListener(new View.OnClickListener() {
+        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -152,7 +146,11 @@ public class HomeFragment extends Fragment implements iICSDefaultFragment {
 
                     new Thread(new Runnable() {
                         public void run() {
-                            ((MainDefaultActivity)cAppExtension.context).pLetsGetThisPartyStartedOrNot();
+                            try {
+                                ((MainDefaultActivity)cAppExtension.context).pLetsGetThisPartyStartedOrNot();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }).start();
                 }

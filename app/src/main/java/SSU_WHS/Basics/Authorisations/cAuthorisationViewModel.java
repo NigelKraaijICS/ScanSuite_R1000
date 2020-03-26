@@ -18,11 +18,10 @@ public class cAuthorisationViewModel  extends AndroidViewModel {
     }
     //End Region Constructor
 
-    //Region Public Methods
-    public cWebresult pGetAutorisationsFromWebserviceWrs() {return this.Repository.pGetAutorisationsFromWebserviceWrs(); }
-    public void insert(cAuthorisationEntity pvAuthorisationEntity) {this.Repository.pInsert(pvAuthorisationEntity);}
     public void deleteAll() {Repository.pDeleteAll();}
-
-    //End Region Public Methods
+    public void insert(cAuthorisationEntity pvAuthorisationEntity) {this.Repository.pInsert(pvAuthorisationEntity);}
+    public cWebresult pGetAutorisationsFromWebserviceWrs() {return this.Repository.pGetAutorisationsFromWebserviceWrs(); }
+        //End Region Public Methods
 }
+
 

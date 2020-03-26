@@ -368,7 +368,6 @@ public class cReceiveorderLineEntity {
         }
     }
 
-    public int getRecordidInt() {return this.recordid;}
     public int getLineNoInt() {return this.lineNoInt;}
     public String getItemNoStr() {return this.itemNoStr;}
     public String getVariantCodeStr() {return this.variantCodeStr;}

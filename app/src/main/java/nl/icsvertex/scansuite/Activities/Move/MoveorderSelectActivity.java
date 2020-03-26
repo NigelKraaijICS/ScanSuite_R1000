@@ -43,9 +43,10 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.R;
@@ -54,30 +55,36 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     //Region Public Properties
 
-    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:imageStr";
-    public static final String VIEW_NAME_HEADER_TEXT = "detail:header:text";
-
     //End Region Public Properties
 
     //Region Private Properties
 
     // Region Views
-    private static RecyclerView recyclerViewMoveorders;
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubTitle;
-    private static TextView toolbarSubTitle2;
-    private static SearchView recyclerSearchView;
+    private RecyclerView recyclerViewMoveorders;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private TextView toolbarSubTitle;
+    private TextView toolbarSubTitle2;
+    private SearchView recyclerSearchView;
 
-    private static ImageView imageViewFilter;
-    private static ImageView imageViewNewOrder;
+    private ImageView imageViewFilter;
+    private ImageView imageViewNewOrder;
 
-    private  static ConstraintLayout constraintFilterOrders;
-    private static SwipeRefreshLayout swipeRefreshLayout;
+    private ConstraintLayout constraintFilterOrders;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    private static BottomSheetBehavior bottomSheetBehavior;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     public static boolean startedViaMenuBln;
+
+    private cMoveorderAdapter moveorderAdapter;
+    private cMoveorderAdapter getMoveorderAdapter(){
+        if (this.moveorderAdapter == null) {
+            this.moveorderAdapter = new cMoveorderAdapter();
+        }
+
+        return this.moveorderAdapter;
+    }
 
     // End Region Views
 
@@ -130,8 +137,15 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void onRefresh() {
-        MoveorderSelectActivity.pFillOrders();
+        this.pFillOrders();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
 
 
     //End Region Default Methods
@@ -166,27 +180,27 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void mFindViews() {
-        MoveorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        MoveorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        MoveorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        MoveorderSelectActivity.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
-        MoveorderSelectActivity.recyclerViewMoveorders = findViewById(R.id.recyclerViewMoveorders);
-        MoveorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        MoveorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
-        MoveorderSelectActivity.imageViewNewOrder = findViewById(R.id.imageViewNewOrder);
-        MoveorderSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
-        MoveorderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.toolbarSubTitle2 = findViewById(R.id.toolbarSubtext2);
+        this.recyclerViewMoveorders = findViewById(R.id.recyclerViewMoveorders);
+        this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
+        this.imageViewFilter = findViewById(R.id.imageViewFilter);
+        this.imageViewNewOrder = findViewById(R.id.imageViewNewOrder);
+        this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
+        this.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
-        MoveorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_move);
-        MoveorderSelectActivity.toolbarTitle.setText(pvScreenTitle);
-        MoveorderSelectActivity.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
-        MoveorderSelectActivity.toolbarTitle.setSelected(true);
-        MoveorderSelectActivity.toolbarSubTitle.setSelected(true);
-        ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
-        ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
+    public void mSetToolbar(String pvScreenTitleStr) {
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_move);
+        this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
+        this.toolbarTitle.setSelected(true);
+        this.toolbarSubTitle.setSelected(true);
+        ViewCompat.setTransitionName(this.toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName(toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -200,7 +214,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         this.mInitBottomSheet();
         this.mResetCurrents();
         this.mSetNewOrderButton();
-        MoveorderSelectActivity.pFillOrders();
+        this.pFillOrders();
     }
 
     @Override
@@ -222,7 +236,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     //Region Public Methods
 
 
-    public static void pFillOrders() {
+    public void pFillOrders() {
 
         // Show that we are getting data
         cUserInterface.pShowGettingData();
@@ -235,32 +249,32 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Set filter with scanned barcodeStr if there is no prefix
         if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
-            MoveorderSelectActivity.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
-            MoveorderSelectActivity.recyclerSearchView.callOnClick();
+            this.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
+            this.recyclerSearchView.callOnClick();
             return;
         }
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
             //has prefix, is salesorderStr
-            MoveorderSelectActivity.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
-            MoveorderSelectActivity.recyclerSearchView.callOnClick();
+            this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
+            this.recyclerSearchView.callOnClick();
             return;
         }
 
         //If there is a prefix but it's not a salesorder tgen do nope
-        cUserInterface.pDoNope(MoveorderSelectActivity.recyclerSearchView, true, true);
+        cUserInterface.pDoNope(this.recyclerSearchView, true, true);
 
     }
 
-    public static void pMoveorderSelected(cMoveorder pvMoveorder) {
+    public  void pMoveorderSelected(cMoveorder pvMoveorder) {
 
-        if (!mCheckOrderIsLockableBln(pvMoveorder)) {
+        if (!this.mCheckOrderIsLockableBln(pvMoveorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
             cUserInterface.pCheckAndCloseOpenDialogs();
             return;
@@ -284,8 +298,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     // Region Private Methods
 
-    private static void mHandleFillOrders(){
-
+    private void mHandleFillOrders(){
 
         //all Moveorders
         if (!cMoveorder.pGetMoveOrdersViaWebserviceBln(true, "", "")) {
@@ -294,7 +307,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         }
 
         if (cMoveorder.allMoveordersObl == null || cMoveorder.allMoveordersObl.size() == 0) {
-            MoveorderSelectActivity.mShowNoOrdersIcon(true);
+            this.mShowNoOrdersIcon(true);
             return;
         }
 
@@ -302,8 +315,8 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             @Override
             public void run() {
                 //Fill and show recycler
-                MoveorderSelectActivity.mSetMoveorderRecycler(cMoveorder.allMoveordersObl);
-                MoveorderSelectActivity.mShowNoOrdersIcon(false);
+                mSetMoveorderRecycler(cMoveorder.allMoveordersObl);
+                mShowNoOrdersIcon(false);
                 if (cSharedPreferences.userFilterBln()) {
                     mApplyFilter();
                 }
@@ -313,25 +326,25 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         });
     }
 
-    private static void mHandleMoveorderSelected(){
+    private void mHandleMoveorderSelected(){
 
         cResult hulpResult;
 
         //Try to lock the moveorder
-        if (!MoveorderSelectActivity.mTryToLockOrderBln()) {
-            MoveorderSelectActivity.pFillOrders();
+        if (!this.mTryToLockOrderBln()) {
+            this.pFillOrders();
             return;
         }
 
         //Delete the detail, so we can get them from the webservice
         if (!cMoveorder.currentMoveOrder.pDeleteDetailsBln()) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
             return;
         }
 
-        hulpResult = MoveorderSelectActivity.mGetOrderDetailsRst();
+        hulpResult = this.mGetOrderDetailsRst();
         if (!hulpResult.resultBln) {
-            MoveorderSelectActivity.mStepFailed(hulpResult.messagesStr());
+            this.mStepFailed(hulpResult.messagesStr());
             return;
         }
 
@@ -339,14 +352,14 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             @Override
             public void run() {
                 // If everything went well, then start Lines Activity
-                MoveorderSelectActivity.mShowMoveLinesActivity();
+                mShowMoveLinesActivity();
             }
         });
 
 
     }
 
-    private static cResult mGetOrderDetailsRst(){
+    private cResult mGetOrderDetailsRst(){
 
         cResult result;
 
@@ -384,14 +397,14 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         return  result;
     }
 
-    private static void mStepFailed(String pvErrorMessageStr){
+    private  void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cMoveorder.currentMoveOrder.getOrderNumberStr(), true, true );
         cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
         cUserInterface.pCheckAndCloseOpenDialogs();
         cMoveorder.currentMoveOrder = null;
     }
 
-    private static void mShowMoveLinesActivity() {
+    private void mShowMoveLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -401,7 +414,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         if (container != null) {
             View clickedOrder = container.findViewWithTag(cMoveorder.currentMoveOrder.getOrderNumberStr());
-            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, MoveLinesActivity.VIEW_CHOSEN_ORDER));
+            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;
         }
@@ -410,7 +423,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private static void mShowCreateMoveActivity() {
+    private  void mShowCreateMoveActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -426,10 +439,10 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mInitBottomSheet() {
 
-        MoveorderSelectActivity.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
-        MoveorderSelectActivity.bottomSheetBehavior.setHideable(true);
-        MoveorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        MoveorderSelectActivity.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
+        this.bottomSheetBehavior.setHideable(true);
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        this.bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View pvBottomSheet, int pvNewStateInt) {
                 if (pvNewStateInt == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -456,11 +469,11 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     private void mShowHideBottomSheet(Boolean pvShowBln) {
 
         if (pvShowBln) {
-            MoveorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return;
         }
 
-        MoveorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     }
 
@@ -468,33 +481,33 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     //Filter
 
-    private  static void mApplyFilter() {
+    private void mApplyFilter() {
 
-        MoveorderSelectActivity.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
 
         List<cMoveorder> filteredMovesObl = cMoveorder.pGetMovesWithFilterFromDatabasObl();
 
-        MoveorderSelectActivity.mSetMoveorderRecycler(filteredMovesObl);
+        this.mSetMoveorderRecycler(filteredMovesObl);
 
         if (filteredMovesObl.size() == 0) {
-            mShowNoOrdersIcon(true);
+            this.mShowNoOrdersIcon(true);
         } else {
-            mShowNoOrdersIcon(false);
+            this.mShowNoOrdersIcon(false);
         }
 
     }
 
-    private static  void mShowThatFiltersInUse(Boolean pvFiltersInUseBln) {
+    private void mShowThatFiltersInUse(Boolean pvFiltersInUseBln) {
         if (pvFiltersInUseBln) {
-            imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_filled_black_24dp));
+            this.imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_filled_black_24dp));
         }
         else {
-            imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_black_24dp));
+            this.imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_black_24dp));
         }
     }
 
     private void mSetFilterListener() {
-        MoveorderSelectActivity.imageViewFilter.setOnClickListener(new View.OnClickListener() {
+        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -508,8 +521,8 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetSwipeRefreshListener() {
-        MoveorderSelectActivity.swipeRefreshLayout.setOnRefreshListener(this);
-        MoveorderSelectActivity.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
+        this.swipeRefreshLayout.setOnRefreshListener(this);
+        this.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
     }
 
 
@@ -517,15 +530,15 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     // Recycler View
 
-    private static void mSetMoveorderRecycler(List<cMoveorder> pvMoveOrderObl) {
+    private  void mSetMoveorderRecycler(List<cMoveorder> pvMoveOrderObl) {
 
-        MoveorderSelectActivity.swipeRefreshLayout.setRefreshing(false);
+        this.swipeRefreshLayout.setRefreshing(false);
 
         if (pvMoveOrderObl == null) {
             return;
         }
 
-        MoveorderSelectActivity.imageViewFilter.setVisibility(View.VISIBLE);
+        this.imageViewFilter.setVisibility(View.VISIBLE);
 
         for (Fragment fragment: cAppExtension.fragmentManager.getFragments()) {
             if (fragment instanceof NoOrdersFragment) {
@@ -533,11 +546,11 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             }
         }
 
-        MoveorderSelectActivity.recyclerViewMoveorders.setHasFixedSize(false);
-        MoveorderSelectActivity.recyclerViewMoveorders.setAdapter(cMoveorder.getMoveorderAdapter());
-        MoveorderSelectActivity.recyclerViewMoveorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewMoveorders.setHasFixedSize(false);
+        this.recyclerViewMoveorders.setAdapter(this.getMoveorderAdapter());
+        this.recyclerViewMoveorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        cMoveorder.getMoveorderAdapter().pFillData(pvMoveOrderObl);
+        this.getMoveorderAdapter().pFillData(pvMoveOrderObl);
     }
 
     private void mSetRecyclerOnScrollListener() {
@@ -560,11 +573,11 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
                     if(itemPosition==0){
                         // Prepare the View for the animation
-                        MoveorderSelectActivity.recyclerSearchView.setVisibility(View.VISIBLE);
-                        MoveorderSelectActivity.recyclerSearchView.setAlpha(0.0f);
+                        recyclerSearchView.setVisibility(View.VISIBLE);
+                        recyclerSearchView.setAlpha(0.0f);
 
                         // Start the animation
-                        MoveorderSelectActivity.recyclerSearchView.animate()
+                        recyclerSearchView.animate()
                                 .translationY(0)
                                 .alpha(1.0f)
                                 .setListener(null);
@@ -590,7 +603,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mSetSearchListener() {
         //make whole view clickable
-        MoveorderSelectActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 recyclerSearchView.setIconified(false);
@@ -598,7 +611,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         });
 
         //query entered
-        MoveorderSelectActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String pvString) {
                 return false;
@@ -607,7 +620,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             @Override
             public boolean onQueryTextChange(String pvQueryTextStr) {
                 mApplyFilter();
-                cMoveorder.getMoveorderAdapter().pSetFilter(pvQueryTextStr);
+                getMoveorderAdapter().pSetFilter(pvQueryTextStr);
                 return true;
             }
         });
@@ -618,17 +631,17 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     // No orders iconmS
 
-    private static void mShowNoOrdersIcon(final Boolean pvShowBln){
+    private void mShowNoOrdersIcon(final Boolean pvShowBln){
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
                 cUserInterface.pHideGettingData();
-                MoveorderSelectActivity.swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setRefreshing(false);
 
 
-                MoveorderSelectActivity.mSetToolBarTitleWithCounters();
+                mSetToolBarTitleWithCounters();
 
 
                 if (pvShowBln) {
@@ -658,7 +671,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         });
     }
 
-    private static boolean mCheckOrderIsLockableBln(cMoveorder pvMoveorder){
+    private boolean mCheckOrderIsLockableBln(cMoveorder pvMoveorder){
 
         //If there is no assigned user, then always oke
         if (pvMoveorder.getAssignedUserIdStr().isEmpty()) {
@@ -681,7 +694,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         cMoveorder.currentMoveOrder = null;
     }
 
-    private static boolean mTryToLockOrderBln(){
+    private boolean mTryToLockOrderBln(){
 
         cResult hulpResult = cMoveorder.currentMoveOrder.pLockViaWebserviceRst();
 
@@ -708,13 +721,14 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private static void mSetToolBarTitleWithCounters(){
+    private void mSetToolBarTitleWithCounters(){
 
 
         String subTitleStr;
 
         if (cMoveorder.allMoveordersObl == null ) {
-            MoveorderSelectActivity.toolbarSubTitle.setText("0 " + cAppExtension.activity.getString(R.string.orders));
+            String toolbarStr = "0 " + cAppExtension.activity.getString(R.string.orders);
+            this.toolbarSubTitle.setText(toolbarStr);
             return;
         }
 
@@ -724,7 +738,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             subTitleStr = "(" + cText.pIntToStringStr(cMoveorder.pGetMovesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cMoveorder.allMoveordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
         }
 
-        MoveorderSelectActivity.toolbarSubTitle.setText(subTitleStr);
+        this.toolbarSubTitle.setText(subTitleStr);
 
     }
 
@@ -750,15 +764,15 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     private void mSetNewOrderButton() {
 
         if (cSetting.MOVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.MV.toString().toUpperCase())) {
-            imageViewNewOrder.setVisibility(View.VISIBLE);
+            this.imageViewNewOrder.setVisibility(View.VISIBLE);
         }
         else {
-            imageViewNewOrder.setVisibility(View.INVISIBLE);
+            this.imageViewNewOrder.setVisibility(View.INVISIBLE);
         }
     }
 
     private void mSetNewOrderListener() {
-        MoveorderSelectActivity.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
+        this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 mShowCreateMoveActivity();
@@ -766,7 +780,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         });
     }
 
-    private static void  mAutoOpenCreateActivity(){
+    private void mAutoOpenCreateActivity(){
 
         // We returned in this form, so don't start create activity
         if (!MoveorderSelectActivity.startedViaMenuBln) {
@@ -782,8 +796,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
                 return;
             }
 
-            mShowCreateMoveActivity();
-            return;
+            this.mShowCreateMoveActivity();
 
     }
 

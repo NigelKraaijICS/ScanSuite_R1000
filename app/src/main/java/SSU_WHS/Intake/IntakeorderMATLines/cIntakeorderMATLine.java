@@ -1,13 +1,12 @@
 package SSU_WHS.Intake.IntakeorderMATLines;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -71,16 +70,6 @@ public class cIntakeorderMATLine {
     private String destinationNoStr;
     public String getDestinationNoStr() {
         return destinationNoStr;
-    }
-
-    private Boolean isPartOfMultiLineOrderBln;
-    public Boolean getPartOfMultiLineOrderBln() {
-        return isPartOfMultiLineOrderBln;
-    }
-
-    private int sortingSequenceNoInt;
-    public int getSortingSequenceNoInt() {
-        return sortingSequenceNoInt;
     }
 
     private String vendorItemNo;
@@ -156,8 +145,6 @@ public class cIntakeorderMATLine {
     public static ArrayList<cIntakeorderMATLineBarcode> allLineBarcodesObl;
 
     public List<cIntakeorderMATLineBarcode> handledBarcodesObl(){
-
-
         List<cIntakeorderMATLineBarcode> resultObl;
         resultObl = new ArrayList<>();
 
@@ -177,26 +164,13 @@ public class cIntakeorderMATLine {
     }
 
     private cIntakeorderMATLineEntity intakeorderMATLineEntity;
-    public boolean indatabaseBln;
-
-    private static cIntakeorderMATLineViewModel gIntakeorderMATLineViewModel;
-    public static cIntakeorderMATLineViewModel getIntakeorderMATLineViewModel() {
-        if (gIntakeorderMATLineViewModel == null) {
-            gIntakeorderMATLineViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cIntakeorderMATLineViewModel.class);
-        }
-        return gIntakeorderMATLineViewModel;
-    }
-
-    private static cIntakeorderMATLineAdapter gIntakeorderMATLineAdapter;
-    public static cIntakeorderMATLineAdapter getIntakeorderMATLineAdapter() {
-        if (gIntakeorderMATLineAdapter == null) {
-            gIntakeorderMATLineAdapter = new cIntakeorderMATLineAdapter();
-        }
-        return gIntakeorderMATLineAdapter;
-    }
 
     public static List<cIntakeorderMATLine> allIntakeorderMATLinesObl;
     public static cIntakeorderMATLine currentIntakeorderMATLine;
+
+    private cIntakeorderMATLineViewModel getIntakeorderMATLineViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderMATLineViewModel.class);
+    }
 
     //Region Constructor
 
@@ -209,13 +183,11 @@ public class cIntakeorderMATLine {
         this.descriptionStr = this.intakeorderMATLineEntity.getDescriptionStr();
         this.description2Str = this.intakeorderMATLineEntity.getDescription2Str();
         this.binCodeStr= this.intakeorderMATLineEntity.getBincodeStr();
-        this.binCodeHandledStr = this.intakeorderMATLineEntity.getBincodehandledStr();
+        this.binCodeHandledStr = this.intakeorderMATLineEntity.getBincodeHandledStr();
         this.quantityDbl = this.intakeorderMATLineEntity.getQuantityDbl();
         this.quantityHandledDbl = this.intakeorderMATLineEntity.getQuantityHandledDbl();
         this.sourceNoStr = this.intakeorderMATLineEntity.getSourceNoStr();
         this.destinationNoStr = this.intakeorderMATLineEntity.getDestinationNoStr();
-        this.isPartOfMultiLineOrderBln = cText.pStringToBooleanBln(this.intakeorderMATLineEntity.getIspartOfMultilLneOrderStr(), false);
-        this.sortingSequenceNoInt = this.intakeorderMATLineEntity.getSortingSequenceStr();
         this.vendorItemNo = this.intakeorderMATLineEntity.getVendorItemNoStr();
         this.vendorItemDescriptionStr = this.intakeorderMATLineEntity.getVendorItemDescriptionStr();
         this.statusInt = this.intakeorderMATLineEntity.getStatusInt();
@@ -232,41 +204,10 @@ public class cIntakeorderMATLine {
         this.sourceTypeInt = this.intakeorderMATLineEntity.getSourceTypeInt();
     }
 
-    public cIntakeorderMATLine(cIntakeorderMATLineEntity pvIntakeorderMATLineEntity) {
-        this.intakeorderMATLineEntity = pvIntakeorderMATLineEntity;
-        this.lineNoInt = this.intakeorderMATLineEntity.getLineNoInt();
-        this.itemNoStr = this.intakeorderMATLineEntity.getItemNoStr();
-        this.variantCodeStr = this.intakeorderMATLineEntity.getVariantCodeStr();
-        this.descriptionStr = this.intakeorderMATLineEntity.getDescriptionStr();
-        this.description2Str = this.intakeorderMATLineEntity.getDescription2Str();
-        this.binCodeStr= this.intakeorderMATLineEntity.getBincodeStr();
-        this.binCodeHandledStr = this.intakeorderMATLineEntity.getBincodehandledStr();
-        this.quantityDbl = this.intakeorderMATLineEntity.getQuantityDbl();
-        this.quantityHandledDbl = this.intakeorderMATLineEntity.getQuantityHandledDbl();
-        this.sourceNoStr = this.intakeorderMATLineEntity.getSourceNoStr();
-        this.destinationNoStr = this.intakeorderMATLineEntity.getDestinationNoStr();
-        this.isPartOfMultiLineOrderBln = cText.pStringToBooleanBln(this.intakeorderMATLineEntity.getIspartOfMultilLneOrderStr(), false);
-        this.sortingSequenceNoInt = this.intakeorderMATLineEntity.getSortingSequenceStr();
-        this.vendorItemNo = this.intakeorderMATLineEntity.getVendorItemNoStr();
-        this.vendorItemDescriptionStr = this.intakeorderMATLineEntity.getVendorItemDescriptionStr();
-        this.statusInt = this.intakeorderMATLineEntity.getStatusInt();
-        this.actionTypeCodeStr = this.getActionTypeCodeStr();
-        this.localStatusInt =  this.intakeorderMATLineEntity.getLocalStatusInt();
-        this.extraField1Str =  this.intakeorderMATLineEntity.getExtraField1Str();
-        this.extraField2Str = this.intakeorderMATLineEntity.getExtraField2Str();
-        this.extraField3Str =  this.intakeorderMATLineEntity.getExtraField3Str();
-        this.extraField4Str =  this.intakeorderMATLineEntity.getExtraField4Str();
-        this.extraField5Str =  this.intakeorderMATLineEntity.getExtraField5Str();
-        this.extraField6Str =  this.intakeorderMATLineEntity.getExtraField6Str();
-        this.extraField7Str =  this.intakeorderMATLineEntity.getExtraField7Str();
-        this.extraField8Str =  this.intakeorderMATLineEntity.getExtraField8Str();
-        this.sourceTypeInt = this.intakeorderMATLineEntity.getSourceTypeInt();
-    }
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cIntakeorderMATLine.getIntakeorderMATLineViewModel().insert(this.intakeorderMATLineEntity);
-        this.indatabaseBln = true;
+        this.getIntakeorderMATLineViewModel().insert(this.intakeorderMATLineEntity);
 
         if (cIntakeorderMATLine.allIntakeorderMATLinesObl == null) {
             cIntakeorderMATLine.allIntakeorderMATLinesObl = new ArrayList<>();
@@ -275,22 +216,12 @@ public class cIntakeorderMATLine {
         return true;
     }
 
-    public boolean pHandledIndatabaseBln(){
-
-
-        if (!this.mUpdateQuanitityHandled(this.getQuantityHandledDbl())) {
-            return  false;
-        }
-
-        if (!this.mUpdateQuanitity(this.getQuantityDbl())) {
-            return  false;
-        }
-
-        return this.mUpdateBinCodeHandled(this.getBinCodeHandledStr());
-
+    public void pHandledIndatabase(){
+        this.mUpdateQuanitityHandled(this.getQuantityHandledDbl());
+        this.mUpdateQuanitity(this.getQuantityDbl());
     }
 
-    public boolean pAddOrUpdateLineBarcodeBln(cIntakeorderBarcode pvIntakeorderBarcode){
+    public void pAddOrUpdateLineBarcode(cIntakeorderBarcode pvIntakeorderBarcode){
 
 
 
@@ -301,7 +232,7 @@ public class cIntakeorderMATLine {
                                                                                                   pvIntakeorderBarcode.getBarcodeStr(),
                                                                                                   pvIntakeorderBarcode.getQuantityPerUnitOfMeasureDbl());
             intakeorderMATLineBarcode.pInsertInDatabaseBln();
-            return true;
+            return;
         }
 
         for (cIntakeorderMATLineBarcode intakeorderMATLineBarcode : this.handledBarcodesObl()) {
@@ -309,8 +240,8 @@ public class cIntakeorderMATLine {
             if (intakeorderMATLineBarcode.getBarcodeStr().equalsIgnoreCase(pvIntakeorderBarcode.getBarcodeStr())) {
 
                 intakeorderMATLineBarcode.quantityHandledDbl += pvIntakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
-                intakeorderMATLineBarcode.pUpdateAmountInDatabaseBln();
-                return  true;
+                intakeorderMATLineBarcode.pUpdateAmountInDatabase();
+                return;
             }
         }
 
@@ -319,10 +250,8 @@ public class cIntakeorderMATLine {
                                                                                                   pvIntakeorderBarcode.getBarcodeStr(),
                                                                                                   pvIntakeorderBarcode.getQuantityPerUnitOfMeasureDbl());
             intakeorderMATLineBarcode.pInsertInDatabaseBln();
-            return true;
 
     }
-
 
     public Boolean pQuantityReachedBln(){
 
@@ -335,10 +264,10 @@ public class cIntakeorderMATLine {
     public boolean pResetBln() {
 
         cWebresult WebResult;
-        WebResult =  cIntakeorderMATLine.getIntakeorderMATLineViewModel().pResetMATLineViaWebserviceWrs();
+        WebResult =  this.getIntakeorderMATLineViewModel().pResetMATLineViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-            this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
+            this.mUpdateLocalStatusToNew();
             this.mUpdateQuanitityHandled(0);
 
             //delete all line barcodes
@@ -356,7 +285,8 @@ public class cIntakeorderMATLine {
     }
 
     public static boolean pTruncateTableBln() {
-        cIntakeorderMATLine.getIntakeorderMATLineViewModel().deleteAll();
+        cIntakeorderMATLineViewModel intakeorderMATLineViewModel =    new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderMATLineViewModel.class);
+        intakeorderMATLineViewModel.deleteAll();
         return true;
     }
 
@@ -376,60 +306,45 @@ public class cIntakeorderMATLine {
         return  this.barcodesObl;
     }
 
-    private boolean mUpdateLocalStatusBln(Integer pvNewStatusInt) {
+    private void mUpdateLocalStatusToNew() {
 
         boolean resultBln;
-        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateLocalStatusBln(pvNewStatusInt);
+        resultBln =   this.getIntakeorderMATLineViewModel().pUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
 
         if (!resultBln) {
-            return  false;
+            return;
         }
 
-        this.localStatusInt = pvNewStatusInt;
-        return true;
+        this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
 
     }
 
-    private boolean mUpdateQuanitityHandled(double pvQuantityHandledDbl) {
+    private void mUpdateQuanitityHandled(double pvQuantityHandledDbl) {
 
         boolean resultBln;
-        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateQuantityHandledBln(pvQuantityHandledDbl);
+        resultBln =   this.getIntakeorderMATLineViewModel().pUpdateQuantityHandledBln(pvQuantityHandledDbl);
 
         if (!resultBln) {
-            return  false;
+            return;
         }
 
         this.quantityHandledDbl = pvQuantityHandledDbl;
-        return true;
 
     }
 
-    private boolean mUpdateQuanitity(double pvQuantityDbl) {
+    private void mUpdateQuanitity(double pvQuantityDbl) {
 
         boolean resultBln;
-        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateQuantityHandledBln(pvQuantityDbl);
+        resultBln =   this.getIntakeorderMATLineViewModel().pUpdateQuantityHandledBln(pvQuantityDbl);
 
         if (!resultBln) {
-            return  false;
+            return;
         }
 
         this.quantityDbl = pvQuantityDbl;
-        return true;
 
     }
 
-    private boolean mUpdateBinCodeHandled(String pvBinCodeHandledStr) {
 
-        boolean resultBln;
-        resultBln =   cIntakeorderMATLine.getIntakeorderMATLineViewModel().pUpdateBinCodeHandledBln(pvBinCodeHandledStr);
-
-        if (!resultBln) {
-            return  false;
-        }
-
-        this.binCodeHandledStr = pvBinCodeHandledStr;
-        return true;
-
-    }
 
 }

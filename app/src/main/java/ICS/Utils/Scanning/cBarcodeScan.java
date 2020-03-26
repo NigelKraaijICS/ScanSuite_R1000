@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import java.util.Objects;
+
 import ICS.Utils.cText;
-import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
-import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
@@ -57,18 +57,9 @@ public class cBarcodeScan {
         public static final int Unknown = 0;
         public static final int EAN8 = 1;
         public static final int EAN13 = 2;
-
-        public static final int UPCA = 3;
-        public static final int UPCE = 4;
-
-        public static final int INTERLEAVED2OF5 = 5;
-
-        public static final int CODE128 = 10;
-        public static final int CODE39 = 11;
-
     }
 
-    public String barcodeFormattedStr;
+    private String barcodeFormattedStr;
     public String getBarcodeFormattedStr() {
         return barcodeFormattedStr;
     }
@@ -127,120 +118,140 @@ public class cBarcodeScan {
                     }
 
                     //Fill a barcodeStr scan object
-                    cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.pGetBarcode(intent, true);
+                    cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.mGetBarcode(intent);
 
                     //Login
                     if (cAppExtension.activity instanceof LoginActivity) {
-                        LoginActivity.pHandleScan(barcodeScan);
-                    }
-
-                    //Login
-                    if (cAppExtension.activity instanceof MenuActivity) {
-                        MenuActivity.pHandleScan(barcodeScan);
-                    }
+                        LoginActivity loginActivity = (LoginActivity)cAppExtension.activity;
+                        loginActivity.pHandleScan(barcodeScan);
+                       }
 
                     //Pick
                     if (cAppExtension.activity instanceof PickorderSelectActivity){
-                        PickorderSelectActivity.pHandleScan(barcodeScan);
+                        PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
+                        pickorderSelectActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof PickorderLinesActivity) {
-                        PickorderLinesActivity.pHandleScan(barcodeScan, false);
+                        PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+                        pickorderLinesActivity.pHandleScan(barcodeScan, false);
                     }
 
                     if (cAppExtension.activity instanceof PickorderPickActivity) {
-                        PickorderPickActivity.pHandleScan(barcodeScan);
+                        PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+                        pickorderPickActivity.pHandleScan(barcodeScan);
                     }
 
                     //Sort
                     if (cAppExtension.activity instanceof SortorderSelectActivity){
-                        SortorderSelectActivity.pHandleScan(barcodeScan);
+                        SortorderSelectActivity sortorderSelectActivity = (SortorderSelectActivity)cAppExtension.activity;
+                        sortorderSelectActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof SortorderLinesActivity){
-                        SortorderLinesActivity.pHandleScan(barcodeScan, false);
+                        SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+                        sortorderLinesActivity.pHandleScan(barcodeScan, false);
                     }
 
                     if (cAppExtension.activity instanceof SortorderSortActivity){
-                        SortorderSortActivity.pHandleScan(barcodeScan);
+                        SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
+                        sortorderSortActivity.pHandleScan(barcodeScan);
                     }
 
                     //Ship
                     if (cAppExtension.activity instanceof ShiporderSelectActivity){
-                        ShiporderSelectActivity.pHandleScan(barcodeScan);
+                        ShiporderSelectActivity shiporderSelectActivity = (ShiporderSelectActivity)cAppExtension.activity;
+                        shiporderSelectActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof ShiporderLinesActivity){
-                        ShiporderLinesActivity.pHandleScan(barcodeScan, false);
+                        ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+                        shiporderLinesActivity.pHandleScan(barcodeScan, false);
                     }
 
                     if (cAppExtension.activity instanceof ShiporderShipActivity){
-                        ShiporderShipActivity.pHandleScan(barcodeScan);
+                        ShiporderShipActivity shiporderShipActivity = (ShiporderShipActivity)cAppExtension.activity;
+                        shiporderShipActivity.pHandleScan(barcodeScan);
                     }
 
                     //Inventory
                     if (cAppExtension.activity instanceof InventoryorderSelectActivity){
-                        InventoryorderSelectActivity.pHandleScan(barcodeScan);
+                        InventoryorderSelectActivity inventoryorderSelectActivity = (InventoryorderSelectActivity)cAppExtension.activity;
+                        inventoryorderSelectActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof InventoryorderBinsActivity){
-                        InventoryorderBinsActivity.pHandleScan(barcodeScan);
+                        InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
+                        inventoryorderBinsActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof InventoryorderBinActivity){
-                        InventoryorderBinActivity.pHandleScan(barcodeScan, false);
+                        InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
+                        inventoryorderBinActivity.pHandleScan(barcodeScan, false);
                     }
 
                     //Intake
                     if (cAppExtension.activity instanceof IntakeAndReceiveSelectActivity){
-                        IntakeAndReceiveSelectActivity.pHandleScan(barcodeScan);
+                        IntakeAndReceiveSelectActivity intakeAndReceiveSelectActivity = (IntakeAndReceiveSelectActivity)cAppExtension.activity;
+                        intakeAndReceiveSelectActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof CreateReceiveActivity){
-                        CreateReceiveActivity.pHandleScan(barcodeScan,false,false,false);
+                        CreateReceiveActivity createReceiveActivity = (CreateReceiveActivity)cAppExtension.activity;
+                        createReceiveActivity.pHandleScan(barcodeScan,false,false,false);
                     }
 
                     if (cAppExtension.activity instanceof ReceiveLinesActivity){
-                        ReceiveLinesActivity.pHandleScan(barcodeScan,false);
+                        ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+                        receiveLinesActivity.pHandleScan(barcodeScan,false);
                     }
 
                     if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity){
-                        ReceiveOrderReceiveActivity.pHandleScan(barcodeScan);
+                        ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
+                        receiveOrderReceiveActivity.pHandleScan(barcodeScan);
                     }
 
 
                     if (cAppExtension.activity instanceof IntakeorderLinesActivity){
-                        IntakeorderLinesActivity.pHandleScan(barcodeScan,false);
+                        IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+                        intakeorderLinesActivity.pHandleScan(barcodeScan,false);
                     }
 
                     if (cAppExtension.activity instanceof IntakeOrderIntakeActivity){
-                        IntakeOrderIntakeActivity.pHandleScan(barcodeScan);
+                        IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
+                        intakeOrderIntakeActivity.pHandleScan(barcodeScan);
                     }
 
                     //Return
                     if (cAppExtension.activity instanceof ReturnorderSelectActivity){
-                        ReturnorderSelectActivity.pHandleScan(barcodeScan);
+                        ReturnorderSelectActivity returnorderSelectActivity = (ReturnorderSelectActivity)cAppExtension.activity;
+                        returnorderSelectActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
-                        ReturnorderDocumentsActivity.pHandleScan(barcodeScan);
+                        ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+                        returnorderDocumentsActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
-                        ReturnorderDocumentActivity.pHandleScan(barcodeScan);
+                        ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
+                        returnorderDocumentActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof CreateReturnActivity) {
-                        CreateReturnActivity.pHandleScan(barcodeScan,false,false);
+                        CreateReturnActivity createReturnActivity = (CreateReturnActivity)cAppExtension.activity;
+                        createReturnActivity.pHandleScan(barcodeScan,false,false);
                     }
 
                     //Move
                     if (cAppExtension.activity instanceof MoveorderSelectActivity){
-                        MoveorderSelectActivity.pHandleScan(barcodeScan);
+                        MoveorderSelectActivity moveorderSelectActivity = (MoveorderSelectActivity)cAppExtension.activity;
+                        moveorderSelectActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof CreateMoveActivity){
-                        CreateMoveActivity.pHandleScan(barcodeScan, false,false);
+                        CreateMoveActivity createMoveActivity = (CreateMoveActivity)cAppExtension.activity;
+                        createMoveActivity.pHandleScan(barcodeScan, false,false);
                     }
 
                 }
@@ -262,75 +273,88 @@ public class cBarcodeScan {
                     }
 
                     //Fill a barcodeStr scan object
-                    cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.pGetBarcode(intent, true);
+                    cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.mGetBarcode(intent);
 
                     if (cAppExtension.dialogFragment instanceof BranchFragment) {
-                        BranchFragment.pHandleScan(barcodeScan);
+                        BranchFragment branchFragment = (BranchFragment)cAppExtension.dialogFragment;
+                        branchFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if(cAppExtension.dialogFragment instanceof OrderDoneFragment) {
-                        OrderDoneFragment.pHandleScan(barcodeScan);
+                        OrderDoneFragment orderDoneFragment = (OrderDoneFragment)cAppExtension.dialogFragment;
+                        orderDoneFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if(cAppExtension.dialogFragment instanceof WorkplaceFragment) {
-                        WorkplaceFragment.pHandleScan(barcodeScan);
+                        WorkplaceFragment workplaceFragment = (WorkplaceFragment)cAppExtension.dialogFragment;
+                        workplaceFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if(cAppExtension.dialogFragment instanceof CurrentLocationFragment) {
-                        CurrentLocationFragment.pHandleScan(barcodeScan);
+                        CurrentLocationFragment currentLocationFragment = (CurrentLocationFragment)cAppExtension.dialogFragment;
+                        currentLocationFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if(cAppExtension.dialogFragment instanceof ArticleFullViewFragment) {
-                        ArticleFullViewFragment.pHandleScan(barcodeScan);
+                        ArticleFullViewFragment articleFullViewFragment = (ArticleFullViewFragment)cAppExtension.dialogFragment;
+                        articleFullViewFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if (cAppExtension.dialogFragment instanceof EnvironmentFragment) {
-                        EnvironmentFragment.pHandleScan(barcodeScan);
+                        EnvironmentFragment environmentFragment = (EnvironmentFragment)cAppExtension.dialogFragment;
+                        environmentFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if (cAppExtension.dialogFragment instanceof AddEnvironmentFragment) {
-                        AddEnvironmentFragment.pHandleScan(barcodeScan);
+                        AddEnvironmentFragment addEnvironmentFragment = (AddEnvironmentFragment)cAppExtension.dialogFragment;
+                        addEnvironmentFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if (cAppExtension.dialogFragment instanceof CreateInventoryFragment) {
-                        CreateInventoryFragment.pHandleScan(barcodeScan);
+                        CreateInventoryFragment createInventoryFragment = (CreateInventoryFragment)cAppExtension.dialogFragment;
+                        createInventoryFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if (cAppExtension.dialogFragment instanceof AddBinFragment) {
-                        AddBinFragment.pHandleScan(barcodeScan);
+                        AddBinFragment addBinFragment = (AddBinFragment)cAppExtension.dialogFragment;
+                        addBinFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if (cAppExtension.dialogFragment instanceof AddArticleFragment) {
-                        AddArticleFragment.pHandleScan(barcodeScan);
+                        AddArticleFragment addArticleFragment = (AddArticleFragment)cAppExtension.dialogFragment;
+                        addArticleFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if (cAppExtension.dialogFragment instanceof InventoryArticleDetailFragment) {
-                        InventoryArticleDetailFragment.pHandleScan(barcodeScan);
+                        InventoryArticleDetailFragment inventoryArticleDetailFragment = (InventoryArticleDetailFragment)cAppExtension.dialogFragment;
+                        inventoryArticleDetailFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
                     if (cAppExtension.dialogFragment instanceof PasswordFragment) {
-                        PasswordFragment.pHandleScan(barcodeScan);
+                        PasswordFragment passwordFragment = (PasswordFragment)cAppExtension.dialogFragment;
+                        passwordFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
-
                     if (cAppExtension.dialogFragment instanceof ReturnArticleDetailFragment) {
-                        ReturnArticleDetailFragment.pHandleScan(barcodeScan);
+                        ReturnArticleDetailFragment returnArticleDetailFragment = (ReturnArticleDetailFragment)cAppExtension.dialogFragment;
+                        returnArticleDetailFragment.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.dialogFragment instanceof ReasonFragment) {
-                        ReasonFragment.pHandleScan(barcodeScan);
+                        ReasonFragment reasonFragment = (ReasonFragment)cAppExtension.dialogFragment;
+                        reasonFragment.pHandleScan(barcodeScan);
                     }
                 }
             };
@@ -382,19 +406,28 @@ public class cBarcodeScan {
         }
     }
 
-    public static cBarcodeScan pGetBarcode(Intent pvIntent, Boolean pvCleanBln) {
+
+    public static cBarcodeScan pFakeScan(String pvBarcodeStr) {
+        cBarcodeScan result = new cBarcodeScan();
+        result.barcodeOriginalStr = pvBarcodeStr;
+        result.barcodeFormattedStr = pvBarcodeStr;
+        result.barcodeTypeStr = cText.pIntToStringStr( BarcodeType.Unknown);
+        return  result;
+    }
+
+    private static cBarcodeScan mGetBarcode(Intent pvIntent) {
 
         cBarcodeScan resultBarcodeScan;
 
         Bundle extras = pvIntent.getExtras();
-        String returnBarcodeStr = "";
+        String returnBarcodeStr;
         String scannedBarcodeStr = "";
         String barcodeTypeStr = "";
 
 
         if (extras != null) {
             //so who is sending us this?
-            if (pvIntent.getAction().equalsIgnoreCase(cBarcodeScanDefinitions.BARCODEINTENT_DATALOGIC_ACTION)) {
+            if (Objects.requireNonNull(pvIntent.getAction()).equalsIgnoreCase(cBarcodeScanDefinitions.BARCODEINTENT_DATALOGIC_ACTION)) {
                 scannedBarcodeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_DATALOGIC_EXTRABARCODE);
                 barcodeTypeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_DATALOGIC_EXTRABARCODETYPE);
             }
@@ -408,15 +441,12 @@ public class cBarcodeScan {
             }
         }
 
-        if (pvCleanBln) {
-            scannedBarcodeStr = mCleanBarcodeStr(scannedBarcodeStr);
-            returnBarcodeStr =  mCleanBarcodeStr(scannedBarcodeStr) ;
-        }
-        if (!pvCleanBln) {
-            returnBarcodeStr = scannedBarcodeStr;
-        }
+        assert scannedBarcodeStr != null;
+        scannedBarcodeStr = mCleanBarcodeStr(scannedBarcodeStr);
+        returnBarcodeStr =  mCleanBarcodeStr(scannedBarcodeStr) ;
 
         //If it's an EAN barcodeStr cut off checkdigit
+        assert barcodeTypeStr != null;
         if (barcodeTypeStr.toUpperCase().contains("EAN") ) {
 
             if (returnBarcodeStr.length() == 13) {
@@ -436,16 +466,9 @@ public class cBarcodeScan {
         return resultBarcodeScan;
     }
 
-    public static cBarcodeScan pFakeScan(String pvBarcodeStr) {
-        cBarcodeScan result = new cBarcodeScan();
-        result.barcodeOriginalStr = pvBarcodeStr;
-        result.barcodeFormattedStr = pvBarcodeStr;
-        result.barcodeTypeStr = cText.pIntToStringStr( BarcodeType.Unknown);
-        return  result;
-    }
 
     private static String mCleanBarcodeStr(String pvDirtyBarcodeStr) {
-        return  pvDirtyBarcodeStr.replaceAll("(\\r|\\n|\\t)","");
+        return  pvDirtyBarcodeStr.replaceAll("([\\r\\n\\t])","");
     }
 
 }

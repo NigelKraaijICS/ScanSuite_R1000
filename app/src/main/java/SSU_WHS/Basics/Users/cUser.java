@@ -1,5 +1,6 @@
 package SSU_WHS.Basics.Users;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
@@ -10,7 +11,9 @@ import java.util.List;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Authorisations.cAuthorisation;
+import SSU_WHS.Basics.Authorisations.cAuthorisationViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.Branches.cBranchViewModel;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -66,24 +69,9 @@ public class cUser {
     public ArrayList<cAuthorisation> autorisationObl;
     public  cBranch currentBranch;
     public  cAuthorisation currentAuthorisation;
-    public boolean loggedInBln;
 
-    private static cUserViewModel gUserViewModel;
-
-    private static cUserViewModel getUserViewModel() {
-        if (gUserViewModel == null) {
-            gUserViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cUserViewModel.class);
-        }
-        return gUserViewModel;
-    }
-
-    private static cUserAdapter gUserAdapter;
-
-    public static cUserAdapter getUserAdapter() {
-        if (gUserAdapter == null) {
-            gUserAdapter = new cUserAdapter();
-        }
-        return gUserAdapter;
+    private cUserViewModel getUserViewModel () {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cUserViewModel.class);
     }
 
     public static List<cUser> allUsersObl;
@@ -102,7 +90,7 @@ public class cUser {
 
     //Region Public Methods
     public boolean pInsertInDatabaseBln() {
-        cUser.getUserViewModel().insert(this.userEntity);
+        this.getUserViewModel().insert(this.userEntity);
 
         if (cUser.allUsersObl == null){
             cUser.allUsersObl = new ArrayList<>();
@@ -113,21 +101,18 @@ public class cUser {
 
     public boolean pLoginBln(String pvPassword) {
         cWebresult WebResult;
-        WebResult =  cUser.getUserViewModel().pUserLoginViaWebserviceWrs(pvPassword);
+        WebResult =  this.getUserViewModel().pUserLoginViaWebserviceWrs(pvPassword);
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-            this.loggedInBln = true;
             return  true;
         }
         else {
             if  (!WebResult.getSuccessBln()){
-                this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_USERLOGIN);
                 return  false;
             }
 
             if  (!WebResult.getResultBln()){
-                this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_USERLOGIN);
                 return  false;
             }
@@ -145,15 +130,13 @@ public class cUser {
         this.branchesObl = null;
 
         cWebresult WebResult;
-        WebResult =  cBranch.getBranchViewModel().pGetUserBranchesFromWebserviceWrs();
+
+        cBranchViewModel branchViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cBranchViewModel.class);
+        WebResult =  branchViewModel.pGetUserBranchesFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cBranch branch = new cBranch(jsonObject);
                 if(this.branchesObl == null) {
                     this.branchesObl =  new ArrayList<>();
@@ -166,16 +149,12 @@ public class cUser {
 
         }
         else {
-
-
             if  (!WebResult.getSuccessBln()){
-                this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER);
                 return  false;
             }
 
             if  (!WebResult.getResultBln()){
-                this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER);
                 return  false;
             }
@@ -200,17 +179,13 @@ public class cUser {
         boolean sortingAddedBln = false;
 
         cWebresult WebResult;
-        WebResult =  cAuthorisation.getAutorisationViewModel().pGetAutorisationsFromWebserviceWrs();
+        cAuthorisationViewModel authorisationViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cAuthorisationViewModel.class);
+
+        WebResult =  authorisationViewModel.pGetAutorisationsFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cAuthorisation authorisation = new cAuthorisation(jsonObject);
-
                 authorisation.pInsertInDatabaseBln();
                 if(this.autorisationObl == null) {
                     this.autorisationObl =  new ArrayList<>();
@@ -251,13 +226,11 @@ public class cUser {
 
 
             if  (!WebResult.getSuccessBln()){
-                this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETAUTHORISATIONSFORUSERINLOCATION);
                 return  false;
             }
 
             if  (!WebResult.getResultBln()){
-                this.loggedInBln = false;
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETAUTHORISATIONSFORUSERINLOCATION);
                 return  false;
             }
@@ -296,7 +269,8 @@ public class cUser {
     }
 
     public static boolean pTruncateTableBln(){
-        cUser.getUserViewModel().deleteAll();
+         cUserViewModel userViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cUserViewModel.class);
+        userViewModel.deleteAll();
         return true;
             }
 
@@ -312,7 +286,8 @@ public class cUser {
         }
 
         cWebresult WebResult;
-        WebResult =  cUser.getUserViewModel().pGetUsersFromWebserviceWrs();
+        cUserViewModel userViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cUserViewModel.class);
+        WebResult =  userViewModel.pGetUsersFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 

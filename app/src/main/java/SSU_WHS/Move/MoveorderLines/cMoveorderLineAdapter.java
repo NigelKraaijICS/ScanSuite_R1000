@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +21,7 @@ import nl.icsvertex.scansuite.R;
 public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAdapter.MoveorderLineViewHolder> {
     //Region Public Properties
 
-    public class MoveorderLineViewHolder extends RecyclerView.ViewHolder{
+    public static class MoveorderLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewArticle;
         private TextView textViewDescription;
@@ -64,7 +65,6 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
     //Region Private Properties
     private final LayoutInflater LayoutInflaterObject;
     private static List<cMoveorderLine> localMoveorderLineObl;
-    private RecyclerView thisRecyclerView;
 
     //End Region Private Properties
 
@@ -76,19 +76,19 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
 
 
     //Region Default Methods
+    @NonNull
     @Override
-    public cMoveorderLineAdapter.MoveorderLineViewHolder onCreateViewHolder(ViewGroup pvParent, int pbViewTypeInt) {
+    public cMoveorderLineAdapter.MoveorderLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_moveorderline, pvParent, false);
-        return new cMoveorderLineAdapter.MoveorderLineViewHolder(itemView);
+        return new MoveorderLineViewHolder(itemView);
     }
     @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
-        this.thisRecyclerView = pvRecyclerView;
-        super.onAttachedToRecyclerView( this.thisRecyclerView);
+    public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
+        super.onAttachedToRecyclerView(pvRecyclerView);
     }
 
     @Override
-    public void onBindViewHolder(cMoveorderLineAdapter.MoveorderLineViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cMoveorderLineAdapter.MoveorderLineViewHolder pvHolder, int pvPositionInt) {
 
         if (localMoveorderLineObl == null || localMoveorderLineObl.size() == 0 ) {
             return;
@@ -96,7 +96,7 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
 
         final cMoveorderLine moveorderLine = localMoveorderLineObl.get(pvPositionInt);
 
-        pvHolder.textViewArticle.setText(moveorderLine.getItemNoStr() + " " + moveorderLine.getVariantCodeStr());
+        pvHolder.textViewArticle.setText(moveorderLine.getItemNoAndVariantCodeStr());
         pvHolder.textViewDescription.setText(moveorderLine.getDescriptionStr());
         pvHolder.textViewDescription.setVisibility(View.VISIBLE);
         pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl()));
@@ -118,7 +118,7 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
     }
 
     public void pSetFilter(String pvQueryTextStr) {
-        this.localMoveorderLineObl = this.mGetFilteredListObl(pvQueryTextStr);
+        cMoveorderLineAdapter.localMoveorderLineObl = this.mGetFilteredListObl(pvQueryTextStr);
         notifyDataSetChanged();
     }
 
@@ -143,7 +143,7 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
         pvQueryTextStr = pvQueryTextStr.toLowerCase();
         List<cMoveorderLine> resultObl = new ArrayList<>();
 
-        if (this.localMoveorderLineObl == null || this.localMoveorderLineObl.size() == 0) {
+        if (cMoveorderLineAdapter.localMoveorderLineObl == null || cMoveorderLineAdapter.localMoveorderLineObl.size() == 0) {
             return resultObl;
         }
 

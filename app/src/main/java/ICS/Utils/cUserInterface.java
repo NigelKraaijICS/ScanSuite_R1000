@@ -296,13 +296,13 @@ public class cUserInterface {
 
         gettingDataFragment = new GettingDataFragment();
         gettingDataFragment.setCancelable(true);
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    gettingDataFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.GETTING_DATA_TAG);
-                }
-            });
-        }
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                gettingDataFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.GETTING_DATA_TAG);
+            }
+        });
+    }
 
     public static void pHideGettingData() {
 

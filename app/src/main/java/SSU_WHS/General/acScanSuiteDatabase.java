@@ -67,19 +67,14 @@ import SSU_WHS.Picken.PickorderBarcodes.iPickorderBarcodeDao;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcodeEntity;
 import SSU_WHS.Picken.PickorderLineBarcodes.iPickorderLineBarcodeDao;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
-import SSU_WHS.Picken.PickorderLinePackAndShip.iPickorderLinePackAndShipDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
-import SSU_WHS.Picken.PickorderShipMethods.cPickorderShipMethodEntity;
-import SSU_WHS.Picken.PickorderShipMethods.iPickorderShipMethodDao;
 import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackageEntity;
 import SSU_WHS.Picken.PickorderShipPackages.iPickorderShipPackageDao;
 import SSU_WHS.Picken.Pickorders.cPickorderEntity;
 import SSU_WHS.Picken.Pickorders.iPickorderDao;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTableEntity;
 import SSU_WHS.Picken.SalesOrderPackingTable.iSalesOrderPackingTableDao;
-import SSU_WHS.Picken.WarehouseLocations.cWarehouseLocationEntity;
-import SSU_WHS.Picken.WarehouseLocations.iWarehouseLocationDao;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineEntity;
 import SSU_WHS.Receive.ReceiveLines.iReceiveorderLineDao;
 import SSU_WHS.Return.ReturnOrder.cReturnorderEntity;
@@ -105,7 +100,6 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cSettingsEntity.class,
         cPickorderEntity.class,
         cPickorderLineEntity.class,
-        cWarehouseLocationEntity.class,
         cPickorderLineBarcodeEntity.class,
         cArticleImageEntity.class,
         cPickorderBarcodeEntity.class,
@@ -116,7 +110,6 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cShippingAgentServiceEntity.class,
         cShippingAgentServiceShippingUnitEntity.class,
         cShippingAgentServiceShipMethodEntity.class,
-        cPickorderShipMethodEntity.class,
         cPickorderShipPackageEntity.class,
         cItemPropertyEntity.class,
         cPickorderLinePackAndShipEntity.class,
@@ -140,7 +133,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cMoveorderBarcodeEntity.class,
         cMoveorderLineBarcodeEntity.class,
         cPackagingEntity.class
-        },version = 89)
+        },version = 93)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -153,7 +146,6 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iUserDao userDao();
     public abstract iPickorderDao pickorderDao();
     public abstract iPickorderLineDao pickorderLineDao();
-    public abstract iWarehouseLocationDao warehouseLocationDao();
     public abstract iPickorderLineBarcodeDao pickorderLineBarcodeDao();
     public abstract iArticleImageDao articleImageDao();
     public abstract iPickorderBarcodeDao pickorderBarcodeDao();
@@ -164,10 +156,8 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iShippingAgentServiceDao shippingAgentServiceDao();
     public abstract iShippingAgentServiceShippingUnitDao shippingAgentServiceShippingUnitDao();
     public abstract iShippingAgentServiceShipMethodDao shippingAgentServiceShipMethodDao();
-    public abstract iPickorderShipMethodDao pickorderShipMethodDao();
     public abstract iPickorderShipPackageDao pickorderShipPackageDao();
     public abstract iItemPropertyDao itemPropertyDao();
-    public abstract iPickorderLinePackAndShipDao pickorderLinePackAndShipDao();
     public abstract iInventoryorderDao inventoryorderDao();
     public abstract iInventoryorderBinDao inventoryorderBinDao();
     public abstract iInventoryorderLineDao inventoryorderLineDao();

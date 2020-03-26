@@ -17,16 +17,16 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cShippingAgentRepository {
 
     //Region Public Properties
-    public iShippingAgentDao shippingAgentDao;
+    private iShippingAgentDao shippingAgentDao;
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
     //End Region Private Properties
 
     //Region Constructor
     cShippingAgentRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db= acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.shippingAgentDao = db.shippingAgentDao();
     }
     //End Region Constructor
@@ -41,13 +41,7 @@ public class cShippingAgentRepository {
 
         try {
             webResultWrs = new cShippingAgentRepository.shippingAgentsFromWebserviceGetAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -98,7 +92,7 @@ public class cShippingAgentRepository {
 
             List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
             try {
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETSHIPPINGAGENTS, l_PropertyInfoObl);
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETSHIPPINGAGENTS, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setResultBln(false);
                 l_WebresultWrs.setSuccessBln(false);

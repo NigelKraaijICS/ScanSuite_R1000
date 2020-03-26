@@ -18,15 +18,13 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cMoveorderBarcodeRepository {
     //Region Public Properties
-    public iMoveorderBarcodeDao moveorderBarcodeDao;
+    private iMoveorderBarcodeDao moveorderBarcodeDao;
     //End Region Public Properties
-
-    //Region Private Properties
-    private acScanSuiteDatabase db;
 
     //Region Constructor
     cMoveorderBarcodeRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        //Region Private Properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.moveorderBarcodeDao = db.moveorderBarcodeDao();
     }
     //End Region Constructor
@@ -76,13 +74,7 @@ public class cMoveorderBarcodeRepository {
 
         try {
             webResultWrs = new mCreateBarcodeViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -151,10 +143,10 @@ public class cMoveorderBarcodeRepository {
 
                 PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
                 l_PropertyInfo11Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMTYPE;
-                l_PropertyInfo11Pin.setValue(cMoveorderBarcode.currentMoveOrderBarcode.getItemTypeStr());
+                l_PropertyInfo11Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo11Pin);
 
-                webresult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_CREATEMOVEORDERBARCODES, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_CREATEMOVEORDERBARCODES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

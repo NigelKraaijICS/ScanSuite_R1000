@@ -18,8 +18,7 @@ public class cMoveorderBarcodeEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODE_NAMESTR)
-    public String barcode;
-
+    public String barcode = "";
     public String getBarcodeStr() {
         return this.barcode;
     }

@@ -36,25 +36,25 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
 
     //Region Private Properties
 
-    private static ConstraintLayout orderDoneContainer;
-    private static TextView textViewOrderDoneHeader;
-    private static TextView textViewOrderDoneText;
+    private ConstraintLayout orderDoneContainer;
+    private TextView textViewOrderDoneHeader;
+    private  TextView textViewOrderDoneText;
 
-    private static CardView cardViewConnection;
-    private static TextView textViewConnection;
-    private static ImageButton imageButtonWifiReconnect;
+    private  CardView cardViewConnection;
+    private  TextView textViewConnection;
+    private  ImageButton imageButtonWifiReconnect;
 
-    private static EditText editTextCurrentLocation;
-    private static Button closeOrderButton;
-    private static Button cancelButton;
-    private static Boolean showCurrentLocationBln;
+    private  EditText editTextCurrentLocation;
+    private  Button closeOrderButton;
+    private  Button cancelButton;
+    private  Boolean showCurrentLocationBln;
 
     //End Region private Properties
 
 
     //Region Constructor
     public OrderDoneFragment(Boolean pvShowCurrentLocationBln) {
-        OrderDoneFragment.showCurrentLocationBln = pvShowCurrentLocationBln;
+        this.showCurrentLocationBln = pvShowCurrentLocationBln;
     }
     //End Region Constructor
 
@@ -88,6 +88,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         }
         super.onDestroy();
     }
+
     @Override
     public void onPause() {
         try {
@@ -98,6 +99,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         }
         super.onPause();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -121,15 +123,15 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     public void mFindViews() {
 
         if (getView() != null) {
-            OrderDoneFragment.textViewOrderDoneHeader = getView().findViewById(R.id.textViewOrderDoneHeader);
-            OrderDoneFragment.textViewOrderDoneText = getView().findViewById(R.id.textViewOrderDoneText);
-            OrderDoneFragment.cardViewConnection = getView().findViewById(R.id.cardViewConnection);
-            OrderDoneFragment.textViewConnection = getView().findViewById(R.id.textViewConnection);
-            OrderDoneFragment.imageButtonWifiReconnect = getView().findViewById(R.id.imageButtonWifiReconnect);
-            OrderDoneFragment.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
-            OrderDoneFragment.orderDoneContainer = getView().findViewById(R.id.orderDoneContainer);
-            OrderDoneFragment.closeOrderButton = getView().findViewById(R.id.createOrderButton);
-            OrderDoneFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+            this.textViewOrderDoneHeader = getView().findViewById(R.id.textViewOrderDoneHeader);
+            this.textViewOrderDoneText = getView().findViewById(R.id.textViewOrderDoneText);
+            this.cardViewConnection = getView().findViewById(R.id.cardViewConnection);
+            this.textViewConnection = getView().findViewById(R.id.textViewConnection);
+            this.imageButtonWifiReconnect = getView().findViewById(R.id.imageButtonWifiReconnect);
+            this.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
+            this.orderDoneContainer = getView().findViewById(R.id.orderDoneContainer);
+            this.closeOrderButton = getView().findViewById(R.id.createOrderButton);
+            this.cancelButton = getView().findViewById(R.id.cancelButton);
         }
 
     }
@@ -137,23 +139,23 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void mFieldsInitialize() {
 
-        OrderDoneFragment.textViewOrderDoneHeader.setText(cAppExtension.context.getString(R.string.orderdone_header_default));
-        OrderDoneFragment.textViewOrderDoneText.setText(cAppExtension.context.getString(R.string.orderdone_text_default));
-        OrderDoneFragment.pSetConnectionState();
+        this.textViewOrderDoneHeader.setText(cAppExtension.context.getString(R.string.orderdone_header_default));
+        this.textViewOrderDoneText.setText(cAppExtension.context.getString(R.string.orderdone_text_default));
+        this.pSetConnectionState();
 
-       if (!OrderDoneFragment.showCurrentLocationBln) {
-           OrderDoneFragment.editTextCurrentLocation.setVisibility(View.GONE);
+       if (!this.showCurrentLocationBln) {
+           this.editTextCurrentLocation.setVisibility(View.GONE);
            return;
        }
 
 
         if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 && !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
-            OrderDoneFragment.editTextCurrentLocation.setVisibility(View.GONE);
+            this.editTextCurrentLocation.setVisibility(View.GONE);
         } else {
             InputFilter[] filterArray = new InputFilter[1];
             filterArray[0] = new InputFilter.LengthFilter(20);
-            OrderDoneFragment.editTextCurrentLocation.setFilters(filterArray);
-            cUserInterface.pShowKeyboard(OrderDoneFragment.editTextCurrentLocation);
+            this.editTextCurrentLocation.setFilters(filterArray);
+            cUserInterface.pShowKeyboard(this.editTextCurrentLocation);
         }
     }
 
@@ -164,7 +166,7 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private void mSetCancelListener() {
-        OrderDoneFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
                 dismiss();
@@ -173,33 +175,39 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private void mSetCloseListener() {
-        OrderDoneFragment.closeOrderButton.setOnClickListener(new View.OnClickListener() {
+        this.closeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
 
 
                 if (cAppExtension.activity instanceof PickorderLinesActivity) {
+
+                    PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+
                     if (cPickorder.currentPickOrder.pQuantityHandledDbl() > 0 && cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
                         //we need a location
-                        if (OrderDoneFragment.editTextCurrentLocation.getText().toString().trim().isEmpty() && OrderDoneFragment.showCurrentLocationBln ) {
-                            cUserInterface.pDoNope(OrderDoneFragment.editTextCurrentLocation, true, true);
+                        if (editTextCurrentLocation.getText().toString().trim().isEmpty() && showCurrentLocationBln ) {
+                            cUserInterface.pDoNope(editTextCurrentLocation, true, true);
                             return;
                         }
                     }
                     dismiss();
-                    PickorderLinesActivity.pPickingDone(OrderDoneFragment.editTextCurrentLocation.getText().toString().trim());
+                    pickorderLinesActivity.pPickingDone(editTextCurrentLocation.getText().toString().trim());
                 }
 
                 if (cAppExtension.activity  instanceof SortorderLinesActivity) {
-                    SortorderLinesActivity.pStartOrderSelectActivity();
+                    SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+                    sortorderLinesActivity.pStartOrderSelectActivity();
                 }
 
                 if (cAppExtension.activity  instanceof ShiporderLinesActivity) {
-                    ShiporderLinesActivity.pShippingDone();
+                    ShiporderLinesActivity  shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+                    shiporderLinesActivity.pShippingDone();
                 }
 
                 if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-                    IntakeorderLinesActivity.pDone();
+                    IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+                    intakeorderLinesActivity.pDone();
                 }
 
 
@@ -207,15 +215,15 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         });
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
 
         String barcodeWithoutPrefixStr;
 
         //No prefix
         if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
-            OrderDoneFragment.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
-            OrderDoneFragment.closeOrderButton.callOnClick();
+            this.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
+            this.closeOrderButton.callOnClick();
             return;
         }
 
@@ -228,32 +236,30 @@ public class OrderDoneFragment extends DialogFragment implements iICSDefaultFrag
         //has prefix, is BIN
         if (foundBln) {
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-            OrderDoneFragment.editTextCurrentLocation.setText(barcodeWithoutPrefixStr);
-            OrderDoneFragment.closeOrderButton.callOnClick();
+            this.editTextCurrentLocation.setText(barcodeWithoutPrefixStr);
+            this.closeOrderButton.callOnClick();
         }
         else {
             //has prefix, isn't branch
-            cUserInterface.pDoNope( OrderDoneFragment.orderDoneContainer, true, true);
+            cUserInterface.pDoNope(this.orderDoneContainer, true, true);
         }
     }
 
-    public static void pSetConnectionState() {
+    public void pSetConnectionState() {
         if (cConnection.isInternetConnectedBln()) {
-           OrderDoneFragment.textViewConnection.setText(R.string.connected);
-           OrderDoneFragment.imageButtonWifiReconnect.setVisibility(View.GONE);
-           OrderDoneFragment.cardViewConnection.setVisibility(View.GONE);
-           OrderDoneFragment.closeOrderButton.setVisibility(View.VISIBLE);
-           OrderDoneFragment.cancelButton.setVisibility(View.VISIBLE);
+           this.textViewConnection.setText(R.string.connected);
+           this.imageButtonWifiReconnect.setVisibility(View.GONE);
+           this.cardViewConnection.setVisibility(View.GONE);
+           this.closeOrderButton.setVisibility(View.VISIBLE);
+           this.cancelButton.setVisibility(View.VISIBLE);
         }
         else {
-            OrderDoneFragment.textViewConnection.setText(R.string.not_connected);
-            OrderDoneFragment.imageButtonWifiReconnect.setVisibility(View.VISIBLE);
-            OrderDoneFragment.cardViewConnection.setVisibility(View.VISIBLE);
-            OrderDoneFragment.closeOrderButton.setVisibility(View.GONE);
-            OrderDoneFragment.cancelButton.setVisibility(View.GONE);
+            this.textViewConnection.setText(R.string.not_connected);
+            this.imageButtonWifiReconnect.setVisibility(View.VISIBLE);
+            this.cardViewConnection.setVisibility(View.VISIBLE);
+            this.closeOrderButton.setVisibility(View.GONE);
+            this.cancelButton.setVisibility(View.GONE);
         }
     }
-
-
 
 }

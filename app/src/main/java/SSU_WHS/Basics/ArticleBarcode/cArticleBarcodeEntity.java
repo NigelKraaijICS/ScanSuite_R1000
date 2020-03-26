@@ -15,21 +15,21 @@ public class cArticleBarcodeEntity {
     //Region Public Properties
     @NonNull
     @ColumnInfo(name="Barcode")
-    public String barcode;
+    public String barcode = "";
     public String getBarcodeStr() {return this.barcode;}
 
     @ColumnInfo(name="BarCodeType")
-    public String barcodeType;
+    private String barcodeType;
     public String getBarcodeTypeStr() {return this.barcodeType;}
 
     @ColumnInfo(name="IsUniqueBarcode")
-    public String isUniqueBarcode;
+    private String isUniqueBarcode;
     public String getIsUniqueBarcodeStr() {
         return isUniqueBarcode;
     }
 
     @ColumnInfo(name="QtyPerUnitOfMeasure")
-    public String qtyPerUnitOfMeasure;
+    private String qtyPerUnitOfMeasure;
     public String getQtyPerUnitOfMeasureStr() {
         return qtyPerUnitOfMeasure;
     }
@@ -41,7 +41,7 @@ public class cArticleBarcodeEntity {
     }
 
     @ColumnInfo(name="DataTimestamp")
-    public String dateTimeStampStr;
+    private String dateTimeStampStr;
     public String getDateTimeStampStr() {
         return dateTimeStampStr;
     }
@@ -49,10 +49,6 @@ public class cArticleBarcodeEntity {
 
     //End Region Public Properies
 
-    //Region Constructor
-    public cArticleBarcodeEntity() {
-
-    }
     public cArticleBarcodeEntity(JSONObject pvJsonObject) {
         try {
             this.barcode = pvJsonObject.getString(cDatabase.BARCODE_NAMESTR);

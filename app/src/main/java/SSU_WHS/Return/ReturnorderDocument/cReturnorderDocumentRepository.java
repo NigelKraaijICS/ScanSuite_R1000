@@ -44,31 +44,14 @@ public class cReturnorderDocumentRepository {
         new mDeleteAllAsyncTask(returnorderDocumentDao).execute();
     }
 
-    public boolean pUpdateStatusBln() {
-
-        Integer integerValue;
-        UpdateReturnDocumentStatusParams updateReturnDocumentStatusParams = new UpdateReturnDocumentStatusParams(cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr(),
-                cReturnorderDocument.currentReturnOrderDocument.getStatusInt());
-
-
-        try {
-            integerValue = new updateStatusAsyncTask(returnorderDocumentDao).execute(updateReturnDocumentStatusParams).get();
-
-            return integerValue != 0;
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     public boolean pCloseBln() {
 
         boolean completeBln = true;
         Integer returnDocumentStatusEnu;
         for (cReturnorderLine returnorderLine: cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl){
-            if(returnorderLine.quantityHandledTakeDbl < returnorderLine.getQuantitytakeDbl() ){
+            if (returnorderLine.quantityHandledTakeDbl < returnorderLine.getQuantitytakeDbl()) {
                 completeBln = false;
-
+                break;
             }
         }
         if (cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.size() == 0 ){

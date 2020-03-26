@@ -41,11 +41,11 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
 
     //Region Private Properties
 
-    private static TextView textViewAddArticleHeader;
-    private static TextView textViewAddArticleText;
-    private static EditText editTextAddArticle;
-    private static Button addArticleButton;
-    private static Button cancelButton;
+    private TextView textViewAddArticleHeader;
+    private TextView textViewAddArticleText;
+    private EditText editTextAddArticle;
+    private Button addArticleButton;
+    private Button cancelButton;
 
     //End Region Private Properties
 
@@ -104,27 +104,27 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     @Override
     public void mFindViews() {
         if (getView() != null) {
-            AddArticleFragment.textViewAddArticleHeader = getView().findViewById(R.id.textViewAddArticleHeader );
-            AddArticleFragment.textViewAddArticleText = getView().findViewById(R.id.textViewAddArticleText);
-            AddArticleFragment.editTextAddArticle = getView().findViewById(R.id.editTextAddArticle);
-            AddArticleFragment.addArticleButton = getView().findViewById(R.id.addArticleButton);
-            AddArticleFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+            this.textViewAddArticleHeader = getView().findViewById(R.id.textViewAddArticleHeader );
+            this.textViewAddArticleText = getView().findViewById(R.id.textViewAddArticleText);
+            this.editTextAddArticle = getView().findViewById(R.id.editTextAddArticle);
+            this.addArticleButton = getView().findViewById(R.id.addArticleButton);
+            this.cancelButton = getView().findViewById(R.id.cancelButton);
         }
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        AddArticleFragment.textViewAddArticleHeader.setText(R.string.add_article_header_default);
+        this.textViewAddArticleHeader.setText(R.string.add_article_header_default);
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
-        AddArticleFragment.editTextAddArticle.setFilters(filterArray);
+        this.editTextAddArticle.setFilters(filterArray);
         if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            AddArticleFragment.editTextAddArticle.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            this.editTextAddArticle.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
-        cUserInterface.pShowKeyboard(AddArticleFragment.editTextAddArticle);
-        AddArticleFragment.textViewAddArticleText.setVisibility(View.GONE);
+        cUserInterface.pShowKeyboard(this.editTextAddArticle);
+        this.textViewAddArticleText.setVisibility(View.GONE);
     }
 
     @Override
@@ -135,13 +135,14 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     }
 
     private void mSetCancelListener() {
-        AddArticleFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if (cAppExtension.activity instanceof  InventoryorderBinActivity) {
                     cAppExtension.dialogFragment.dismiss();
-                    InventoryorderBinActivity.pHandleAddArticleFragmentDismissed();
+                    InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
+                    inventoryorderBinActivity.pHandleAddArticleFragmentDismissed();
                     return;
                 }
 
@@ -153,60 +154,64 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
     }
 
     private void mSetAddArticleListener() {
-        AddArticleFragment.addArticleButton.setOnClickListener(new View.OnClickListener() {
+        this.addArticleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-                if (AddArticleFragment.editTextAddArticle.getText().toString().trim().isEmpty()) {
-                    cUserInterface.pDoNope(AddArticleFragment.editTextAddArticle, true, true);
+                if (editTextAddArticle.getText().toString().trim().isEmpty()) {
+                    cUserInterface.pDoNope(editTextAddArticle, true, true);
                     return;
                 }
 
                 cAppExtension.dialogFragment.dismiss();
 
                 if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-
-                    InventoryorderBinActivity.pHandleAddArticleFragmentDismissed();
+                    InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
+                    inventoryorderBinActivity.pHandleAddArticleFragmentDismissed();
                     //Pass fake scan
-                    InventoryorderBinActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()), true);
+                    inventoryorderBinActivity.pHandleScan(cBarcodeScan.pFakeScan(editTextAddArticle.getText().toString().trim()), true);
+
                 }
 
                 if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
 
-                    ReturnorderDocumentActivity.pHandleFragmentDismissed();
+                    ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
+
+                    //Dismiss fragment
+                    returnorderDocumentActivity.pHandleFragmentDismissed();
                     //Pass fake scan
-                    ReturnorderDocumentActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()));
+                    returnorderDocumentActivity.pHandleScan(cBarcodeScan.pFakeScan(editTextAddArticle.getText().toString().trim()));
                 }
 
                 if (cAppExtension.activity instanceof ReceiveLinesActivity) {
-
                     //Pass fake scan
-                    ReceiveLinesActivity.pHandleScan(cBarcodeScan.pFakeScan( AddArticleFragment.editTextAddArticle.getText().toString().trim()), false);
+                    ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+                    receiveLinesActivity.pHandleScan(cBarcodeScan.pFakeScan(editTextAddArticle.getText().toString().trim()), false);
                 }
 
             }
         });
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Has prefix, so check if this is an
         if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
-            cUserInterface.pDoNope(AddArticleFragment.editTextAddArticle, true, true);
+            cUserInterface.pDoNope(this.editTextAddArticle, true, true);
             return;
         }
 
         //no prefix, fine
-        AddArticleFragment.editTextAddArticle.setText(pvBarcodeScan.getBarcodeOriginalStr());
-        AddArticleFragment.addArticleButton.callOnClick();
+        this.editTextAddArticle.setText(pvBarcodeScan.getBarcodeOriginalStr());
+        this.addArticleButton.callOnClick();
     }
     private void mSetEditorActionListener() {
-        AddArticleFragment.editTextAddArticle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextAddArticle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    AddArticleFragment.addArticleButton.callOnClick();
+                    addArticleButton.callOnClick();
                 }
                 return true;
             }

@@ -12,11 +12,13 @@ import SSU_WHS.General.cDatabase;
 
 @Entity(tableName=cDatabase.TABLENAME_WORKPLACE)
 public class cWorkplaceEntity {
+
     @PrimaryKey
     @NonNull
     @ColumnInfo(name=cDatabase.WORKPLACE_DUTCH_NAMESTR)
-    public String workplace;
+    public String workplace = "";
     public String getWorkplaceStr() {return this.workplace;}
+
     @ColumnInfo(name=cDatabase.DESCRIPTION_DUTCH_NAMESTR)
     public String description;
     public String getDescriptionStr() {return this.description;}
@@ -27,8 +29,8 @@ public class cWorkplaceEntity {
     }
     public cWorkplaceEntity(JSONObject jsonObject) {
         try {
-            workplace = jsonObject.getString(cDatabase.WORKPLACE_DUTCH_NAMESTR);
-            description = jsonObject.getString(cDatabase.DESCRIPTION_DUTCH_NAMESTR);
+            this.workplace = jsonObject.getString(cDatabase.WORKPLACE_DUTCH_NAMESTR);
+            this.description = jsonObject.getString(cDatabase.DESCRIPTION_DUTCH_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

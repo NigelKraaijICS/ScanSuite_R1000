@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +25,7 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
 
 
     //Region Public Properties
-    public class EnvironmentViewHolder extends RecyclerView.ViewHolder{
+    public static class EnvironmentViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewDescription;
         private TextView textViewName;
         private TextView textViewURL;
@@ -68,14 +69,15 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
 
     //Region Default Methods
 
+    @NonNull
     @Override
-    public cEnvironmentAdapter.EnvironmentViewHolder onCreateViewHolder(ViewGroup pvViewGroup, int pbViewTypeInt) {
+    public cEnvironmentAdapter.EnvironmentViewHolder onCreateViewHolder(@NonNull ViewGroup pvViewGroup, int pbViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_environment, pvViewGroup, false);
-        return new cEnvironmentAdapter.EnvironmentViewHolder(itemView);
+        return new EnvironmentViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final cEnvironmentAdapter.EnvironmentViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull final cEnvironmentAdapter.EnvironmentViewHolder pvHolder, int pvPositionInt) {
 
         if (cEnvironment.allEnviroments != null) {
 
@@ -98,7 +100,10 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
                     cEnvironment.pSetCurrentEnviroment(environment);
 
                     if (cAppExtension.context instanceof MainDefaultActivity) {
-                        MainDefaultActivity.pSetChosenEnvironment();
+
+
+                        MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+                        mainDefaultActivity.pSetChosenEnvironment();
                     }
 
                 }

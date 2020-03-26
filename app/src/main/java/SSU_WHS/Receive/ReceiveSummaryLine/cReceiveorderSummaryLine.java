@@ -1,5 +1,7 @@
 package SSU_WHS.Receive.ReceiveSummaryLine;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,14 +15,13 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
-import SSU_WHS.Basics.BranchBin.cBranchBin;
+import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.Settings.cSetting;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
+import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineViewModel;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -76,13 +77,12 @@ public class cReceiveorderSummaryLine {
         return resultDbl;
     }
 
-    private  Double allowedQuantityDbl;
     public  Double getAllowedQuantityDbl(){
         return this.getQuantityDbl() +  this.getQuantityDbl() * (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() / 100);
     }
 
     private Double quantityExportedDbl;
-    public Double getQuantityExportedDbl()
+    private Double getQuantityExportedDbl()
     {
         return this.quantityExportedDbl;
     }
@@ -231,13 +231,13 @@ public class cReceiveorderSummaryLine {
     public cArticleImage articleImage;
     public static cReceiveorderSummaryLine currentReceiveorderSummaryLine;
 
-    private static cReceiverorderSummaryLineAdapter gSummaryLinesAdapter;
-    public static cReceiverorderSummaryLineAdapter getSummaryLinesAdapter() {
-        if (gSummaryLinesAdapter == null) {
-            gSummaryLinesAdapter = new cReceiverorderSummaryLineAdapter();
-        }
-        return gSummaryLinesAdapter;
+
+    private cReceiveorderLineViewModel getReceiveorderLineViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReceiveorderLineViewModel.class);
     }
+
+
+
 
     //End Region Public Properties
 
@@ -423,7 +423,7 @@ public class cReceiveorderSummaryLine {
         }
 
         if (resultDbl <0) {
-            resultDbl = Double.valueOf(0);
+            resultDbl = (double) 0;
         }
 
         return  resultDbl;
@@ -439,7 +439,7 @@ public class cReceiveorderSummaryLine {
         }
 
         cWebresult WebResult;
-        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pLineHandledViaWebserviceWrs(pvScannedBarcodesObl);
+        WebResult =  this.getReceiveorderLineViewModel().pLineHandledViaWebserviceWrs(pvScannedBarcodesObl);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             this.quantityHandledDbl += quantityScannedDbl;
 
@@ -481,7 +481,8 @@ public class cReceiveorderSummaryLine {
 
         cWebresult Webresult;
 
-        Webresult = cArticleImage.getArticleImageViewModel().pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
+        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+        Webresult = articleImageViewModel.pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
         if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
             return  false;
         }
@@ -503,8 +504,7 @@ public class cReceiveorderSummaryLine {
         cResult result = new cResult();
         result.resultBln = true;
 
-        List<cReceiveorderLine> linesToResetObl = new ArrayList<>();
-        linesToResetObl.addAll(this.receiveLinesObl);
+        List<cReceiveorderLine> linesToResetObl = new ArrayList<>(this.receiveLinesObl);
 
             // Reset all lines and details via webservice
             for (cReceiveorderLine receiveorderLine : linesToResetObl) {

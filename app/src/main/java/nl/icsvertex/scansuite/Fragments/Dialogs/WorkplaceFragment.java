@@ -21,6 +21,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
+import SSU_WHS.Basics.Workplaces.cWorkplaceAdapter;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
@@ -34,7 +35,17 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     //End Region Public Properties
 
     //Region Private Properties
-    private static RecyclerView workplaceRecyclerView;
+    private RecyclerView workplaceRecyclerView;
+
+
+    private cWorkplaceAdapter workplaceAdapter;
+    private cWorkplaceAdapter getWorkplaceAdapter(){
+        if (this.workplaceAdapter == null) {
+            this.workplaceAdapter = new cWorkplaceAdapter();
+        }
+
+        return  workplaceAdapter;
+    }
     //End Region Private Properties
 
 
@@ -108,7 +119,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     public void mFindViews() {
 
         if (getView() != null) {
-            WorkplaceFragment.workplaceRecyclerView = getView().findViewById(R.id.workplaceRecyclerview);
+            this.workplaceRecyclerView = getView().findViewById(R.id.workplaceRecyclerview);
         }
 
     }
@@ -128,7 +139,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
 
     //Region Private Methods
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
         String barcodeWithoutPrefixStr ;
 
         if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
@@ -141,7 +152,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
             if (foundBin) {
                 //has prefix, is workPlaceStr
                 barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-                WorkplaceFragment.mWorkplaceScanned(barcodeWithoutPrefixStr);
+                this.mWorkplaceScanned(barcodeWithoutPrefixStr);
             }
             else {
                 //has prefix, isn't workPlaceStr
@@ -150,11 +161,11 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         }
         else {
             //no prefix, fine
-            WorkplaceFragment.mWorkplaceScanned(pvBarcodeScan.getBarcodeOriginalStr());
+            this.mWorkplaceScanned(pvBarcodeScan.getBarcodeOriginalStr());
         }
     }
 
-    private static void mWorkplaceScanned(String pvWorkplaceStr) {
+    private  void mWorkplaceScanned(String pvWorkplaceStr) {
 
         cWorkplace Workplace = cWorkplace.pGetWorkplaceByName(pvWorkplaceStr);
 
@@ -164,11 +175,13 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
 
             if (cAppExtension.activity instanceof PickorderLinesActivity) {
                 cAppExtension.dialogFragment.dismiss();
-                PickorderLinesActivity.pClosePickAndDecideNextStep();
+                PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+                pickorderLinesActivity.pClosePickAndDecideNextStep();
             }
 
             if (cAppExtension.activity instanceof SortorderLinesActivity) {
-                SortorderLinesActivity.pCloseSortAndDecideNextStep();
+                SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+                sortorderLinesActivity.pCloseSortAndDecideNextStep();
             }
 
             if (cAppExtension.activity instanceof ShiporderLinesActivity) {
@@ -192,9 +205,9 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private void mSetWorkplaceRecycler() {
-        WorkplaceFragment.workplaceRecyclerView.setHasFixedSize(false);
-        WorkplaceFragment.workplaceRecyclerView.setAdapter(cWorkplace.getWorkplaceAdapter());
-        WorkplaceFragment.workplaceRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.workplaceRecyclerView.setHasFixedSize(false);
+        this.workplaceRecyclerView.setAdapter(this.getWorkplaceAdapter());
+        this.workplaceRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
 
     //End Region Private Methods

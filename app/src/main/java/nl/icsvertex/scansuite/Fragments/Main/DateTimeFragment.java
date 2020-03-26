@@ -30,10 +30,10 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Private Properties
 
-    private static TextView textViewCurrentDate;
-    private static TextClock textClockCurrentTime;
-    private static TextView textViewTimeZone;
-    private static ImageButton buttonChangeDateTime;
+    private  TextView textViewCurrentDate;
+    private  TextClock textClockCurrentTime;
+    private  TextView textViewTimeZone;
+    private  ImageButton buttonChangeDateTime;
 
     //Region Private Properties
 
@@ -52,24 +52,24 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mFragmentInitialize();
+       this.mFragmentInitialize();
     }
 
     @Override
     public void mFragmentInitialize() {
-        mFindViews();
-        mFieldsInitialize();
-        mSetListeners();
+        this. mFindViews();
+        this.mFieldsInitialize();
+        this.mSetListeners();
     }
 
     @Override
     public void mFindViews() {
 
         if (getView() != null) {
-            DateTimeFragment.textViewCurrentDate = getView().findViewById(R.id.textViewCurrentDate);
-            DateTimeFragment.textClockCurrentTime = getView().findViewById(R.id.textClockCurrentTime);
-            DateTimeFragment.textViewTimeZone = getView().findViewById(R.id.textViewTimeZone);
-            DateTimeFragment.buttonChangeDateTime = getView().findViewById(R.id.buttonChangeDateTime);
+            this.textViewCurrentDate = getView().findViewById(R.id.textViewCurrentDate);
+            this.textClockCurrentTime = getView().findViewById(R.id.textClockCurrentTime);
+            this.textViewTimeZone = getView().findViewById(R.id.textViewTimeZone);
+            this.buttonChangeDateTime = getView().findViewById(R.id.buttonChangeDateTime);
         }
 
     }
@@ -77,17 +77,17 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
 
     @Override
     public void mFieldsInitialize() {
-        mSetDateAndTimeZone();
+        this.mSetDateAndTimeZone();
     }
 
     @Override
     public void mSetListeners() {
-        mChangeDateTimeListener();
-        mClockChangeListener();
+        this.mChangeDateTimeListener();
+        this.mClockChangeListener();
     }
 
     private void mClockChangeListener() {
-        textClockCurrentTime.addTextChangedListener(new TextWatcher() {
+        this.textClockCurrentTime.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -107,12 +107,12 @@ public class DateTimeFragment extends Fragment implements iICSDefaultFragment {
     }
 
     private void mSetDateAndTimeZone() {
-        textViewCurrentDate.setText(cDateAndTime.pGetCurrentLongDateStr());
-        textViewTimeZone.setText(cDateAndTime.pGetCurrentTimeZoneStr());
+        this.textViewCurrentDate.setText(cDateAndTime.pGetCurrentLongDateStr());
+        this.textViewTimeZone.setText(cDateAndTime.pGetCurrentTimeZoneStr());
     }
 
     private void mChangeDateTimeListener() {
-        buttonChangeDateTime.setOnClickListener(new View.OnClickListener() {
+        this.buttonChangeDateTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(Settings.ACTION_DATE_SETTINGS), cPublicDefinitions.CHANGEDATETIME_REQUESTCODE);

@@ -11,17 +11,16 @@ import SSU_WHS.General.acScanSuiteDatabase;
 public class cSalesOrderPackingTableRepository {
 
     //Region Public Properties
-    public iSalesOrderPackingTableDao salesOrderPackingTableDao;
+    private iSalesOrderPackingTableDao salesOrderPackingTableDao;
     //End Region Public Properties
 
-    //Region Private Properties
-    private acScanSuiteDatabase db;
-        //End Region Private Properties
+    //End Region Private Properties
 
     //Region Constructor
     cSalesOrderPackingTableRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
-        this.salesOrderPackingTableDao = this.db.salesOrderPackingTableDao();
+        //Region Private Properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        this.salesOrderPackingTableDao = db.salesOrderPackingTableDao();
     }
     //End Region Constructor
 
@@ -40,9 +39,7 @@ public class cSalesOrderPackingTableRepository {
         List<cSalesOrderPackingTableEntity> resultObl = null;
         try {
             resultObl = new mGetAllSalesOrderPackingTablesFromDatabaseAsyncTask(salesOrderPackingTableDao).execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return resultObl;
@@ -69,7 +66,7 @@ public class cSalesOrderPackingTableRepository {
         }
     }
 
-    private  class mGetAllSalesOrderPackingTablesFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cSalesOrderPackingTableEntity>> {
+    private static class mGetAllSalesOrderPackingTablesFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cSalesOrderPackingTableEntity>> {
         private iSalesOrderPackingTableDao mAsyncTaskDao;
 
         mGetAllSalesOrderPackingTablesFromDatabaseAsyncTask(iSalesOrderPackingTableDao dao) { mAsyncTaskDao = dao; }

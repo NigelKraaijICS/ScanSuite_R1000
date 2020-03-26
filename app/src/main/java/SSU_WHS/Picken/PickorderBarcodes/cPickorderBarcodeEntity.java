@@ -13,27 +13,27 @@ import SSU_WHS.General.cDatabase;
 public class cPickorderBarcodeEntity {
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODE_NAMESTR)
-    public String barcode;
+    public String barcode = "";
     public String getBarcodeStr() {return barcode;}
 
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODETYPE_NAMESTR)
-    public String barcodetype;
+    public String barcodetype = "";
     public String getBarcodeTypeStr() {return barcodetype;}
-
-    @ColumnInfo(name = cDatabase.ISUNIQUEBARCODE_NAMESTR)
-    public String isuniquebarcode;
-    public String getIsuniquebarcodeStr() {return isuniquebarcode;}
 
     @NonNull
     @ColumnInfo(name = cDatabase.ITEMNO_NAMESTR)
-    public String itemno;
+    public String itemno = "";
     public String getItemnoStr() {return itemno;}
 
     @NonNull
     @ColumnInfo(name = cDatabase.VARIANTCODE_NAMESTR)
-    public String variantcode;
+    public String variantcode = "";
     public String getVariantcodeStr() {return variantcode;}
+
+    @ColumnInfo(name = cDatabase.ISUNIQUEBARCODE_NAMESTR)
+    public String isuniquebarcode;
+    public String getIsuniquebarcodeStr() {return isuniquebarcode;}
 
     @ColumnInfo(name = cDatabase.QUANTITYPERUNITOFMEASURE_NAMESTR)
     public String quantityperunitofmeasure;

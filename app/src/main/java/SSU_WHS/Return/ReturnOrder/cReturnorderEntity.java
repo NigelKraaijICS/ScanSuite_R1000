@@ -45,10 +45,6 @@ public class cReturnorderEntity {
     public String externalReferenceStr;
     public String getExternalReferenceStr() {return this.externalReferenceStr;}
 
-    @ColumnInfo(name= cDatabase.STOCKOWNER_NAMESTR)
-    public String stockOwnerStr;
-    public String getStockOwnerStr() {return this.stockOwnerStr;}
-
     @ColumnInfo(name = cDatabase.RETOURAMAOUNTMANUAL_NAMESTR)
     public Boolean retourAmountManualBln;
     public Boolean getRetourAmountManualBln(){return this.retourAmountManualBln;}
@@ -77,18 +73,6 @@ public class cReturnorderEntity {
     public String reasonStr;
     public String getReasonStr() {return this.reasonStr;}
 
-    @ColumnInfo(name = cDatabase.RECEIVEDDATETIME_NAMESTR)
-    public String receivedDateTimeStr;
-    public String getReceivedDateTimeDat() {return this.receivedDateTimeStr;}
-
-    @ColumnInfo(name= cDatabase.WEBSERVICETIMEOUTERPINS_NAMESTR)
-    public String webserviceTimeOuteERPinSStr;
-    public String getWebserviceTimeOutERPInsStr() {return this.webserviceTimeOuteERPinSStr;}
-
-    @ColumnInfo(name= cDatabase.INTERFACERESULTMETHOD_NAMESTR)
-    public String interfaceResultMethodStr;
-    public String getInterfaceResultMethodStr() {return this.interfaceResultMethodStr;}
-
     @ColumnInfo(name=cDatabase.SORTING_NAMESTR)
     public String sorteringStr;
     public String getSorteringStr() {return this.sorteringStr;}
@@ -109,7 +93,6 @@ public class cReturnorderEntity {
             this.statusStr = pvJsonObject.getString(cDatabase.STATUS_NAMESTR);
             this.bincodeStr = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
             this.externalReferenceStr = pvJsonObject.getString(cDatabase.EXTERNALREFERENCE_NAMESTR);
-            this.stockOwnerStr = pvJsonObject.getString(cDatabase.STOCKOWNER_NAMESTR);
             this.retourAmountManualBln = cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.RETOURAMAOUNTMANUAL_NAMESTR),false);
             this.retourBarcodeCheckBln = cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.RETOURBARCODECHECK_NAMESTR),false);
             this.retourMultiDocumentBln = cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.RETOURMULTIDOCUMENT_NAMESTR),false);
@@ -117,9 +100,6 @@ public class cReturnorderEntity {
             this.documentStr = pvJsonObject.getString(cDatabase.DOCUMENT_NAMESTR);
             this.document2Str = pvJsonObject.getString(cDatabase.DOCUMENT2_NAMESTR);
             this.reasonStr = pvJsonObject.getString(cDatabase.REASON_NAMESTR);
-            this.receivedDateTimeStr = pvJsonObject.getString(cDatabase.RECEIVEDDATETIME_NAMESTR);
-            this.webserviceTimeOuteERPinSStr = pvJsonObject.getString(cDatabase.WEBSERVICETIMEOUTERPINS_NAMESTR);
-            this.interfaceResultMethodStr = pvJsonObject.getString(cDatabase.INTERFACERESULTMETHOD_NAMESTR);
             this.sorteringStr = pvJsonObject.getString(cDatabase.SORTING_NAMESTR);
 
         } catch (JSONException e) {

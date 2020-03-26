@@ -12,7 +12,7 @@ public class cArticleStock {
 
     //Region Public Properties
 
-    public String locationStr;
+    private String locationStr;
     public String getLocationStr() {
         return this.locationStr;
     }
@@ -37,12 +37,12 @@ public class cArticleStock {
         return this.quantityDbl;
     }
 
-    public Date dataTimeStampDat;
+    private Date dataTimeStampDat;
     public Date getDataTimeStampDat() {
         return this.dataTimeStampDat;
     }
 
-    public cArticleStockEntity articleStockEntity;
+    private cArticleStockEntity articleStockEntity;
 
 
     //End Region Public Properties

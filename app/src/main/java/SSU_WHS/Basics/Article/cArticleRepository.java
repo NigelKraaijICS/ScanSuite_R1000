@@ -40,13 +40,7 @@ public class cArticleRepository {
 
         try {
             webResultWrs = new mGetArticleViaScannedBarcodeFromWebserviceGetAsyncTask().execute(pvBarcodeScan).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -63,13 +57,7 @@ public class cArticleRepository {
 
         try {
             webResultWrs = new mGetBarcodesFromWebserviceGetAsyncTask().execute(pvArticle).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -86,13 +74,7 @@ public class cArticleRepository {
 
         try {
             webResultWrs = new mGetStockFromWebserviceGetAsyncTask().execute(pvArticle).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -136,7 +118,7 @@ public class cArticleRepository {
             l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEVIAOWNERBARCODE, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEVIAOWNERBARCODE, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -175,7 +157,7 @@ public class cArticleRepository {
             l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -219,7 +201,7 @@ public class cArticleRepository {
             l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLESTOCK, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLESTOCK, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);

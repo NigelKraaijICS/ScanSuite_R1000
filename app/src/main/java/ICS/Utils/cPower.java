@@ -13,32 +13,32 @@ import nl.icsvertex.scansuite.Fragments.Support.SupportDeviceFragment;
 public class cPower {
 
     private static IntentFilter PowerConnectIntentFilter;
-    private static IntentFilter getPowerConnectIntentFilter() {
+    private static void getPowerConnectIntentFilter() {
         if (PowerConnectIntentFilter == null) {
             PowerConnectIntentFilter = new IntentFilter();
             PowerConnectIntentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
             PowerConnectIntentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
         }
-        return PowerConnectIntentFilter;
     }
 
     private static BroadcastReceiver PowerConnectReceiver;
-    private static BroadcastReceiver getPowerConnectReceiver() {
+    private static void getPowerConnectReceiver() {
         if (PowerConnectReceiver == null) {
             PowerConnectReceiver = new BroadcastReceiver(){
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    SupportDeviceFragment.pPowerChanged();
+
+                    SupportDeviceFragment supportDeviceFragment = (SupportDeviceFragment)cAppExtension.dialogFragment;
+                    supportDeviceFragment.pPowerChanged();
                 }
             };
         }
-        return PowerConnectReceiver;
     }
 
     public static void pRegisterPowerConnectReceiver(){
 
         //Turn off other receiver
-        mUnregisterConnectPowerReceiver();
+        pUnregisterConnectPowerReceiver();
 
         //Initialise this receiver
         getPowerConnectReceiver();
@@ -51,7 +51,7 @@ public class cPower {
 
 
     private static BroadcastReceiver PowerLevelChangedReceiver;
-    private static BroadcastReceiver getPowerLevelChangedReceiver() {
+    private static void getPowerLevelChangedReceiver() {
         if (PowerLevelChangedReceiver == null) {
             PowerLevelChangedReceiver = new BroadcastReceiver(){
                 @Override
@@ -60,7 +60,8 @@ public class cPower {
 
                     if(Objects.equals(action, Intent.ACTION_BATTERY_CHANGED)) {
                         try {
-                            SupportDeviceFragment.pBatteryLevelChanged();
+                            SupportDeviceFragment supportDeviceFragment = (SupportDeviceFragment)cAppExtension.dialogFragment;
+                            supportDeviceFragment.pBatteryLevelChanged();
                         } catch (Exception ignored) {
 
                         }
@@ -70,12 +71,11 @@ public class cPower {
                 }
             };
         }
-        return PowerLevelChangedReceiver;
     }
     public static void pRegisterPowerLevelChangedReceiver(){
 
         //Turn off other receiver
-        mUnregisterPowerLevelChangedReceiver();
+        pUnregisterPowerLevelChangedReceiver();
 
         //Initialise this receiver
         getPowerLevelChangedReceiver();
@@ -87,7 +87,7 @@ public class cPower {
 
 
 
-    private static void mUnregisterConnectPowerReceiver(){
+    public static void pUnregisterConnectPowerReceiver(){
 
         try {
             cAppExtension.context.unregisterReceiver(PowerConnectReceiver);
@@ -96,7 +96,7 @@ public class cPower {
         }
     }
 
-    private static void mUnregisterPowerLevelChangedReceiver(){
+    public static void pUnregisterPowerLevelChangedReceiver(){
 
         try {
             cAppExtension.context.unregisterReceiver(PowerLevelChangedReceiver);
@@ -106,11 +106,10 @@ public class cPower {
     }
 
     private static IntentFilter PowerLevelChangedIntentFilter;
-    private static IntentFilter getPowerLevelChangedIntentFilter() {
+    private static void getPowerLevelChangedIntentFilter() {
         if (PowerLevelChangedIntentFilter == null) {
             PowerLevelChangedIntentFilter = new IntentFilter();
             PowerLevelChangedIntentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
         }
-        return PowerLevelChangedIntentFilter;
     }
 }

@@ -7,16 +7,15 @@ import SSU_WHS.General.acScanSuiteDatabase;
 
 public class cPickorderBarcodeRepository {
    // Public properties
-    public iPickorderBarcodeDao pickorderBarcodeDao;
+   private iPickorderBarcodeDao pickorderBarcodeDao;
     //End Public properties
 
-    //Private properties
-    private acScanSuiteDatabase db;
     //End Private properties
 
     //Region Constructor
     cPickorderBarcodeRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        //Private properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.pickorderBarcodeDao = db.pickorderBarcodeDao();
     }
     //End Region Constructor

@@ -713,6 +713,8 @@
     <string name="tab_moveorderline_place">Place</string>
     <string name="screentitle_moveline_take">Take article</string>
     <string name="message_article_required">Scan an article to close the line</string>
+    <string name="image_view_battery">image view battery</string>
+    <string name="imageview_is_charging">imageview is charging</string>
     <!--End Region return-->
 
     <!--Region plurals-->

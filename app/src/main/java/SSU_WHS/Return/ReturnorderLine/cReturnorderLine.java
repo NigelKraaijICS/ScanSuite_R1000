@@ -1,6 +1,6 @@
 package SSU_WHS.Return.ReturnorderLine;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +20,7 @@ import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
+import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcodeViewModel;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -32,8 +33,8 @@ public class cReturnorderLine {
 
     public static List<cReturnorderLine> allLinesObl;
     public static cReturnorderLine currentReturnOrderLine;
-    public List<Long> lineNumberObl;
 
+    public List<Long> lineNumberObl;
     public List<cReturnorderLineBarcode> lineBarcodesObl;
 
     public List<cReturnorderBarcode> barcodeObl() {
@@ -54,30 +55,11 @@ public class cReturnorderLine {
     }
 
 
-    private static cReturnorderLineViewModel gReturnorderLineViewModel;
-    public static cReturnorderLineViewModel getReturnorderLineViewModel() {
-        if (gReturnorderLineViewModel == null) {
-            gReturnorderLineViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cReturnorderLineViewModel.class);
-        }
-        return gReturnorderLineViewModel;
-    }
-
-    private static cReturnorderLineAdapter gReturnorderLineAdapter;
-    public static cReturnorderLineAdapter getReturnorderLineAdapter() {
-        if (gReturnorderLineAdapter == null) {
-            gReturnorderLineAdapter = new cReturnorderLineAdapter();
-        }
-        return gReturnorderLineAdapter;
-    }
-
 
     //Region Public Properties
 
     private int lineNoInt;
     public  int getLineNoInt(){return  lineNoInt;}
-    public void setLineNoInt(int lineNoInt) {
-        this.lineNoInt = lineNoInt;
-    }
 
     private String itemNoStr;
     public String getItemNoStr() {
@@ -96,8 +78,8 @@ public class cReturnorderLine {
     private String documentStr;
     public String getDocumentStr() {return this.documentStr;}
 
-    public String retourredenStr;
-    public String getRetourredenStr() {return this.retourredenStr;}
+    public String retourRedenStr;
+    public String getRetourRedenStr() {return this.retourRedenStr;}
 
     private String descriptionStr;
     public String getDescriptionStr() {
@@ -133,7 +115,7 @@ public class cReturnorderLine {
     }
 
     public String getReturnReasonDescriptoinStr(){
-        cBranchReason  branchReason = cUser.currentUser.currentBranch.pGetReasonByName(this.getRetourredenStr());
+        cBranchReason  branchReason = cUser.currentUser.currentBranch.pGetReasonByName(this.getRetourRedenStr());
         if (branchReason != null){
             return branchReason.getDescriptionStr();
         } else {
@@ -186,6 +168,14 @@ public class cReturnorderLine {
         return generatedBln;
     }
 
+    private cReturnorderLineViewModel getReturnorderLineViewModel(){
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderLineViewModel.class);
+    }
+
+    private cReturnorderLineBarcodeViewModel getReturnorderLineBarcodeViewModel(){
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderLineBarcodeViewModel.class);
+    }
+
     //End Region Public Properties
 
     //Region Constructor
@@ -194,7 +184,7 @@ public class cReturnorderLine {
         this.itemNoStr = this.returnorderLineEntity.getItemNoStr();
         this.variantCodeStr = this.returnorderLineEntity.getVariantCodeStr();
         this.documentStr = this.returnorderLineEntity.getDocumentStr();
-        this.retourredenStr = this.returnorderLineEntity.getRetourreden();
+        this.retourRedenStr = this.returnorderLineEntity.getRetourreden();
         this.descriptionStr = this.returnorderLineEntity.getDescriptionStr();
         this.description2Str = this.returnorderLineEntity.getDescription2Str();
         this.vendorItemNoStr = this.returnorderLineEntity.getVendorItemNoStr();
@@ -218,7 +208,7 @@ public class cReturnorderLine {
         this.itemNoStr = this.returnorderLineEntity.getItemNoStr();
         this.variantCodeStr = this.returnorderLineEntity.getVariantCodeStr();
         this.documentStr = this.returnorderLineEntity.getDocumentStr();
-        this.retourredenStr = this.returnorderLineEntity.getRetourreden();
+        this.retourRedenStr = this.returnorderLineEntity.getRetourreden();
         this.descriptionStr = this.returnorderLineEntity.getDescriptionStr();
         this.description2Str = this.returnorderLineEntity.getDescription2Str();
         this.vendorItemNoStr = this.returnorderLineEntity.getVendorItemNoStr();
@@ -242,7 +232,7 @@ public class cReturnorderLine {
         this.itemNoStr = this.returnorderLineEntity.getItemNoStr();
         this.variantCodeStr = this.returnorderLineEntity.getVariantCodeStr();
         this.documentStr = this.returnorderLineEntity.getDocumentStr();
-        this.retourredenStr = this.returnorderLineEntity.getRetourreden();
+        this.retourRedenStr = this.returnorderLineEntity.getRetourreden();
         this.descriptionStr = this.returnorderLineEntity.getDescriptionStr();
         this.description2Str = this.returnorderLineEntity.getDescription2Str();
         this.vendorItemNoStr = this.returnorderLineEntity.getVendorItemNoStr();
@@ -265,7 +255,7 @@ public class cReturnorderLine {
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cReturnorderLine.getReturnorderLineViewModel().insert(this.returnorderLineEntity);
+        this.getReturnorderLineViewModel().insert(this.returnorderLineEntity);
 
         if (cReturnorderLine.allLinesObl == null){
             cReturnorderLine.allLinesObl = new ArrayList<>();
@@ -275,7 +265,8 @@ public class cReturnorderLine {
     }
 
     public static boolean pTruncateTableBln(){
-        cReturnorderLine.getReturnorderLineViewModel().deleteAll();
+        cReturnorderLineViewModel returnorderLineViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderLineViewModel.class);
+        returnorderLineViewModel.deleteAll();
         return true;
     }
 
@@ -305,7 +296,7 @@ public class cReturnorderLine {
             cReturnorderLine.currentReturnOrderLine.lineNumberObl = new ArrayList<>();
         }
 
-        WebResult =  cReturnorderLine.getReturnorderLineViewModel().pSaveLineViaWebserviceWrs();
+        WebResult = this.getReturnorderLineViewModel().pSaveLineViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             cReturnorderLine.currentReturnOrderLine.lineNumberObl.add(WebResult.getResultLng());
             cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.clear();
@@ -329,7 +320,7 @@ public class cReturnorderLine {
     }
 
     public void pUpdateQuantityInDatabase(){
-       cReturnorderLine.getReturnorderLineViewModel().pUpdateQuantityBln();
+       this.getReturnorderLineViewModel().pUpdateQuantity();
     }
 
     public cResult pResetRst(){
@@ -341,16 +332,15 @@ public class cReturnorderLine {
         cWebresult WebResult = new cWebresult();
 
         for (Long loopLineNoLng : cReturnorderLine.currentReturnOrderLine.lineNumberObl) {
-            WebResult =  cReturnorderLine.getReturnorderLineViewModel().pResetLineViaWebserviceWrs(loopLineNoLng);
+            WebResult =  this.getReturnorderLineViewModel().pResetLineViaWebserviceWrs(loopLineNoLng);
         }
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-
             //Remove line barcodes from the database
 
             //todo: check if this lineNo is filled or is bullshit
-            cReturnorderLineBarcode.getReturnorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
+            this.getReturnorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
 
             //Reset this line
             cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
@@ -376,14 +366,14 @@ public class cReturnorderLine {
 
         cWebresult WebResult = new cWebresult();
         for (Long loopLineNoLng : cReturnorderLine.currentReturnOrderLine.lineNumberObl) {
-            WebResult =  cReturnorderLine.getReturnorderLineViewModel().pResetLineViaWebserviceWrs(loopLineNoLng);
+            WebResult =  this.getReturnorderLineViewModel().pResetLineViaWebserviceWrs(loopLineNoLng);
         }
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
             //Remove line barcodes from the database
-            cReturnorderLineBarcode.getReturnorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
+            this.getReturnorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
 
             //Reset this line
             cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
@@ -407,7 +397,7 @@ public class cReturnorderLine {
         lineBarcodeObl = new ArrayList<>();
 
         for (cReturnorderLine returnorderLine : cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl){
-            if (returnorderLine.getRetourredenStr().equals(cReturnorderLine.currentReturnOrderLine.getRetourredenStr())
+            if (returnorderLine.getRetourRedenStr().equals(cReturnorderLine.currentReturnOrderLine.getRetourRedenStr())
                     && returnorderLine.getItemNoStr().equals(cReturnorderLine.currentReturnOrderLine.getItemNoStr())
                     && returnorderLine.getVariantCodeStr().equals(cReturnorderLine.currentReturnOrderLine.getVariantCodeStr())){
 

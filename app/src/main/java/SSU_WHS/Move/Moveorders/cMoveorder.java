@@ -1,5 +1,6 @@
 package SSU_WHS.Move.MoveOrders;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcodes.cMoveorderLineBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
@@ -149,25 +151,20 @@ public class cMoveorder {
     public static List<cMoveorder> allMoveordersObl;
     public static cMoveorder currentMoveOrder;
 
-    public  cArticle currentArticle;
-    public  cMoveorderLineBarcode currentMoveorderLineBarcode;
+    public cArticle currentArticle;
+    public cMoveorderLineBarcode currentMoveorderLineBarcode;
     public cBranchBin currentBranchBin;
 
-    private static cMoveorderViewModel gMoveorderViewModel;
-    private static cMoveorderViewModel getMoveorderViewModel() {
-        if (gMoveorderViewModel == null) {
-            gMoveorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
-        }
-        return gMoveorderViewModel;
+    private cMoveorderViewModel getMoveorderViewModel () {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
     }
 
-    private static cMoveorderAdapter gMoveorderAdapter;
-    public static cMoveorderAdapter getMoveorderAdapter() {
-        if (gMoveorderAdapter == null) {
-            gMoveorderAdapter = new cMoveorderAdapter();
-        }
-        return gMoveorderAdapter;
+    private cWarehouseorderViewModel getWarehouseorderViewModel () {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cWarehouseorderViewModel.class);
     }
+
+
+
 
     //Region Public Properties
 
@@ -222,7 +219,7 @@ public class cMoveorder {
     //Region Public Methods
 
     public boolean pInsertInDatabaseBln() {
-        cMoveorder.getMoveorderViewModel().insert(this.moveorderEntity);
+        this.getMoveorderViewModel().insert(this.moveorderEntity);
         if (cMoveorder.allMoveordersObl == null) {
             cMoveorder.allMoveordersObl = new ArrayList<>();
         }
@@ -237,8 +234,9 @@ public class cMoveorder {
         result.resultBln = true;
 
         cWebresult WebResult;
-        WebResult = cMoveorder.getMoveorderViewModel().pCreateMoveOrderViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);
 
+        cMoveorderViewModel moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
+        WebResult = moveorderViewModel.pCreateMoveOrderViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);
 
         //No result, so something really went wrong
         if (WebResult == null) {
@@ -321,8 +319,8 @@ public class cMoveorder {
             cMoveorder.allMoveordersObl = null;
             cMoveorder.mTruncateTable();
         }
-
-        WebResult = cMoveorder.getMoveorderViewModel().pGetMoveordersFromWebserviceWrs(pvSearchTextStr, pvMainTypeStr);
+        cMoveorderViewModel moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
+        WebResult = moveorderViewModel.pGetMoveordersFromWebserviceWrs(pvSearchTextStr, pvMainTypeStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
            if(WebResult.getResultDtt() != null && WebResult.getResultDtt().size() > 0) {
@@ -360,14 +358,14 @@ public class cMoveorder {
             case cWarehouseorder.MoveStatusEnu.Move_Take:
             case cWarehouseorder.MoveStatusEnu.Move_Take_Busy:
             case cWarehouseorder.MoveStatusEnu.Move_Take_Wait:
-                Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.VERPLAATS.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Move_Take.toString(), cWarehouseorder.MoveStatusEnu.Move_Take, ignoreBusyBln);
+                Webresult = this.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.VERPLAATS.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Move_Take.toString(), cWarehouseorder.MoveStatusEnu.Move_Take, ignoreBusyBln);
                 this.statusInt = cWarehouseorder.MoveStatusEnu.Move_Take_Busy;
                 break;
 
             case cWarehouseorder.MoveStatusEnu.Move_Place:
             case cWarehouseorder.MoveStatusEnu.Move_Place_Busy:
             case cWarehouseorder.MoveStatusEnu.Move_Place_Wait:
-                Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.VERPLAATS.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Move_Place.toString(), cWarehouseorder.MoveStatusEnu.Move_Place, ignoreBusyBln);
+                Webresult = this.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.VERPLAATS.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Move_Place.toString(), cWarehouseorder.MoveStatusEnu.Move_Place, ignoreBusyBln);
                 this.statusInt = cWarehouseorder.MoveStatusEnu.Move_Place_Busy;
                 break;
         }
@@ -446,11 +444,11 @@ public class cMoveorder {
 
         switch (this.getStatusInt()) {
             case cWarehouseorder.MoveStatusEnu.Move_Take_Busy:
-                Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.VERPLAATS.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Move_Take.toString(), cWarehouseorder.MoveStatusEnu.Move_Take_Busy);
+                Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.VERPLAATS.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Move_Take.toString(), cWarehouseorder.MoveStatusEnu.Move_Take_Busy);
                 break;
 
             case cWarehouseorder.MoveStatusEnu.Move_Place_Busy:
-                Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.VERPLAATS.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Move_Place.toString(), cWarehouseorder.MoveStatusEnu.Move_Place_Busy);
+                Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.VERPLAATS.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Move_Place.toString(), cWarehouseorder.MoveStatusEnu.Move_Place_Busy);
                 break;
 
 
@@ -472,7 +470,7 @@ public class cMoveorder {
             cMoveorderLine.allLinesObl = null;
             cMoveorderLine.pTruncateTableBln();
         }
-        cWebresult WebResult = cMoveorder.getMoveorderViewModel().pGetLinesFromWebserviceWrs();
+        cWebresult WebResult = this.getMoveorderViewModel().pGetLinesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             if (cMoveorderLine.allLinesObl == null) {
@@ -500,7 +498,7 @@ public class cMoveorder {
             cComment.commentsShownBln = false;
         }
 
-         cWebresult webresult = cMoveorder.getMoveorderViewModel().pGetCommentsFromWebserviceWrs();
+         cWebresult webresult = this.getMoveorderViewModel().pGetCommentsFromWebserviceWrs();
         if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
             cComment.allCommentsObl = new ArrayList<>();
@@ -524,7 +522,7 @@ public class cMoveorder {
             cMoveorderBarcode.pTruncateTableBln();
         }
 
-        cWebresult WebResult =  cMoveorder.getMoveorderViewModel().pGetBarcodesFromWebserviceWrs();
+        cWebresult WebResult =  this.getMoveorderViewModel().pGetBarcodesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             if (cMoveorderBarcode.allMoveorderBarcodesObl == null) {
@@ -551,7 +549,7 @@ public class cMoveorder {
             cMoveorderLineBarcode.pTruncateTableBln();
         }
 
-        cWebresult WebResult =  cMoveorder.getMoveorderViewModel().pGetLineBarcodesFromWebserviceWrs();
+        cWebresult WebResult =  this.getMoveorderViewModel().pGetLineBarcodesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             for ( JSONObject jsonObject : WebResult.getResultDtt()) {
@@ -565,7 +563,8 @@ public class cMoveorder {
                 }
 
                 //Add barcode to line
-                moveorderLine.pAddLineBarcodeBln(moveorderLineBarcode.getBarcodeStr(),moveorderLineBarcode.getQuantityhandledDbl());
+                //todo make this work
+             //   moveorderLine.pAddLineBarcodeBln(moveorderLineBarcode.getBarcodeStr(),moveorderLineBarcode.getQuantityhandledDbl());
             }
         }
         else {
@@ -582,7 +581,7 @@ public class cMoveorder {
 
         cWebresult WebResult;
 
-        WebResult =  cMoveorder.getMoveorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
+        WebResult =  this.getMoveorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             for (  JSONObject jsonObject : WebResult.getResultDtt()) {
                 cMoveorderBarcode moveorderBarcode = new cMoveorderBarcode(jsonObject);
@@ -632,7 +631,7 @@ public class cMoveorder {
         }
 
 
-        cWebresult WebResult =  cMoveorder.getMoveorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
+        cWebresult WebResult =  this.getMoveorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             for ( JSONObject jsonObject : WebResult.getResultDtt()) {
@@ -656,7 +655,9 @@ public class cMoveorder {
         List<cMoveorder> resultObl = new ArrayList<>();
         List<cMoveorderEntity> hulpResultObl;
 
-        hulpResultObl =  cMoveorder.getMoveorderViewModel().pGetMovesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        cMoveorderViewModel    moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
+
+        hulpResultObl = moveorderViewModel.pGetMovesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -762,7 +763,7 @@ public class cMoveorder {
 
         cWebresult webresult;
 
-        webresult =  cMoveorder.getMoveorderViewModel().pHandledViaWebserviceWrs();
+        webresult =  this.getMoveorderViewModel().pHandledViaWebserviceWrs();
 
         //No result, so something really went wrong
         if (webresult == null) {
@@ -822,7 +823,8 @@ public class cMoveorder {
     //Region Private Methods
 
     private static void mTruncateTable() {
-        cMoveorder.getMoveorderViewModel().deleteAll();
+        cMoveorderViewModel    moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
+        moveorderViewModel.deleteAll();
     }
 
     private void mGetCommentsViaWebError(List<JSONObject> pvResultDtt) {

@@ -8,17 +8,16 @@ import SSU_WHS.General.acScanSuiteDatabase;
 public class cMoveorderLineBarcodeRepository {
     //Public Properties
 
-    public iMoveorderLineBarcodeDao moveorderLineBarcodeDao;
+    private iMoveorderLineBarcodeDao moveorderLineBarcodeDao;
 
     //End Public Properties
 
-    //Private properties
-    private acScanSuiteDatabase db;
     //End Private properties
 
     //Region Constructor
     cMoveorderLineBarcodeRepository(Application application) {
-        this.db = acScanSuiteDatabase.pGetDatabase(application);
+        //Private properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(application);
         this.moveorderLineBarcodeDao = db.moveorderLineBarcodeDao();
     }
 
@@ -103,16 +102,6 @@ public class cMoveorderLineBarcodeRepository {
         @Override
         protected Void doInBackground(UpdateBarcodeAmountParams... params) {
             mAsyncTaskDao.updateBarcodeAmount(params[0].barcodeStr, params[0].amountDbl);
-            return null;
-        }
-    }
-
-    private static class getMoveorderLineBarcodesForLineNoAsyncTask extends AsyncTask<Integer, Void, Void> {
-        private iMoveorderLineBarcodeDao mAsyncTaskDao;
-        getMoveorderLineBarcodesForLineNoAsyncTask(iMoveorderLineBarcodeDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected Void doInBackground(Integer... params) {
-            mAsyncTaskDao.getMoveorderLineBarcodesForLineNo(params[0]);
             return null;
         }
     }

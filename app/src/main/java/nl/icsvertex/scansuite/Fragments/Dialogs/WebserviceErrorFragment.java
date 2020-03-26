@@ -25,11 +25,11 @@ import nl.icsvertex.scansuite.R;
 
 public class WebserviceErrorFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private static  List<String> errorList;
-    private static ImageView imageNoEntry;
-    private static CardView errorContainer;
-    private static TextView textErrors;
-    private static Button buttonCancel;
+    private List<String> errorList;
+    private ImageView imageNoEntry;
+    private  CardView errorContainer;
+    private  TextView textErrors;
+    private  Button buttonCancel;
 
     public WebserviceErrorFragment() {
         // Required empty public constructor
@@ -45,7 +45,7 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            WebserviceErrorFragment.errorList = (List<String>)bundle.getSerializable(cPublicDefinitions.WEBSERVICEERROR_LIST_TAG);
+            this.errorList = (List<String>) bundle.getSerializable(cPublicDefinitions.WEBSERVICEERROR_LIST_TAG);
         }
         this.mFragmentInitialize();
     }
@@ -60,17 +60,17 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
     @Override
     public void mFindViews() {
         if (getView() != null) {
-            WebserviceErrorFragment.imageNoEntry = getView().findViewById(R.id.imageNoEntry);
-            WebserviceErrorFragment.errorContainer = getView().findViewById(R.id.errorContainer);
-            WebserviceErrorFragment.textErrors = getView().findViewById(R.id.textErrors);
-            WebserviceErrorFragment.buttonCancel = getView().findViewById(R.id.buttonCancel);
+            this.imageNoEntry = getView().findViewById(R.id.imageNoEntry);
+            this.errorContainer = getView().findViewById(R.id.errorContainer);
+            this.textErrors = getView().findViewById(R.id.textErrors);
+            this.buttonCancel = getView().findViewById(R.id.buttonCancel);
         }
 
     }
 
     @Override
     public void mFieldsInitialize() {
-       WebserviceErrorFragment.errorContainer.setVisibility(View.INVISIBLE);
+        this.errorContainer.setVisibility(View.INVISIBLE);
        this.mFillErrors();
     }
 
@@ -81,25 +81,25 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
     }
 
     private void mFillErrors() {
-        if (WebserviceErrorFragment.errorList != null) {
+        if (this.errorList != null) {
             StringBuilder listToShow = new StringBuilder();
-            for (String errorMessage : WebserviceErrorFragment.errorList) {
+            for (String errorMessage : this.errorList) {
                 listToShow.append(errorMessage).append(cText.NEWLINE);
             }
-            WebserviceErrorFragment.textErrors.setText(listToShow.toString());
+            this.textErrors.setText(listToShow.toString());
         }
     }
     private void mSetErrorImageListener() {
-        WebserviceErrorFragment.imageNoEntry.setOnClickListener(new View.OnClickListener() {
+        this.imageNoEntry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cUserInterface.pDoRotate(WebserviceErrorFragment.imageNoEntry, 0);
+                cUserInterface.pDoRotate(imageNoEntry, 0);
                 mShowOrHideDetails();
             }
         });
     }
     private void mSetCancelListener() {
-       WebserviceErrorFragment.buttonCancel.setOnClickListener(new View.OnClickListener() {
+        this.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
@@ -108,18 +108,18 @@ public class WebserviceErrorFragment extends DialogFragment implements iICSDefau
     }
     private void mShowOrHideDetails() {
         boolean isCurrentlyShown;
-        isCurrentlyShown = WebserviceErrorFragment.errorContainer.getVisibility() == View.VISIBLE;
+        isCurrentlyShown = this.errorContainer.getVisibility() == View.VISIBLE;
         if (isCurrentlyShown) {
-            WebserviceErrorFragment.errorContainer.animate().scaleY(0).withEndAction(new Runnable() {
+            this.errorContainer.animate().scaleY(0).withEndAction(new Runnable() {
                 @Override
                 public void run() {
-                    WebserviceErrorFragment.errorContainer.setVisibility(View.INVISIBLE);
+                    errorContainer.setVisibility(View.INVISIBLE);
                 }
             }).start();
         }
         else {
-            WebserviceErrorFragment.errorContainer.animate().scaleY(1).start();
-            WebserviceErrorFragment.errorContainer.setVisibility(View.VISIBLE);
+            this.errorContainer.animate().scaleY(1).start();
+            this.errorContainer.setVisibility(View.VISIBLE);
         }
     }
 }

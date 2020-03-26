@@ -1,11 +1,12 @@
 package SSU_WHS.Intake.Intakeorders;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cDeviceInfo;
@@ -18,12 +19,13 @@ import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
+import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineViewModel;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -56,32 +58,14 @@ public class cIntakeorder {
     public  String getDocumentStr(){ return this.documentStr;
     }
 
-    private String workplaceStr;
-    public String getWorkplaceStr() {return this.workplaceStr;}
-
     private int sourceDocumentInt;
-    public int getSourceDocumentInt(){return  this.sourceDocumentInt;}
-
-    private boolean receiveExportPartBln;
-    public boolean getReceiveExportPartBln() {return this.receiveExportPartBln;}
+    private int getSourceDocumentInt(){return  this.sourceDocumentInt;}
 
     private boolean receiveAmountManualEOBln;
     public boolean getReceiveAmountManualEOBln() {return this.receiveAmountManualEOBln;}
 
-    private boolean receiveAmountManualOMBln;
-    public boolean getReceiveAmountManualOMBln() {return this.receiveAmountManualOMBln;}
-
-    private boolean receiveAmountManualMABln;
-    public boolean getReceiveAmountManualMABln() {return this.receiveAmountManualMABln;}
-
-    private boolean receiveBarcodeCheckBln;
-    public boolean getReceiveBarcodeCheckBln() {return this.receiveBarcodeCheckBln;}
-
     private boolean receiveStoreAutoAcceptAtRequestedBln;
     public boolean getReceiveStoreAutoAcceptAtRequestedBln() {return this.receiveStoreAutoAcceptAtRequestedBln;}
-
-    private boolean receiveStoreAutoAcceptValidationMessageBln;
-    public boolean getReceiveStoreAutoAcceptValidationMessageBln() {return this.receiveStoreAutoAcceptValidationMessageBln;}
 
     private boolean receiveNoExtraBinsBln;
     public boolean getReceiveNoExtraBinsBln() {return this.receiveNoExtraBinsBln;}
@@ -91,12 +75,6 @@ public class cIntakeorder {
 
     private boolean receiveNoExtraPiecesBln;
     public boolean getReceiveNoExtraPiecesBln() {return this.receiveNoExtraPiecesBln;}
-
-    private boolean receiveMatAutoSplitIncompleteLineBln;
-    public boolean getReceiveMatAutoSplitIncompleteLineBln() {return this.receiveMatAutoSplitIncompleteLineBln;}
-
-    private boolean receiveMATEmptyBinsBln;
-    public boolean getReceiveMATEmptyBinsBln() {return this.receiveMATEmptyBinsBln;}
 
     private String receivedDateTime;
     public String getReceivedDateTime() {return this.receivedDateTime;}
@@ -117,42 +95,28 @@ public class cIntakeorder {
     }
 
     public  boolean isGenerated(){
-
-        if (this.sourceDocumentInt == cWarehouseorder.SoureDocumentTypeEnu.Generated) {
-            return true;
-        }
-
-        return  false;
-
-    }
-
-    private boolean receiveWithPicturePrefetchBln;
-    private boolean isReceiveWithPicturePrefetchBln() {
-        return receiveWithPicturePrefetchBln;
+        return this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated;
     }
 
     private cIntakeorderEntity intakeorderEntity;
 
-    private static cIntakeorderViewModel gIntakeorderViewModel;
-    private static cIntakeorderViewModel getIntakeorderViewModel() {
-        if (gIntakeorderViewModel == null) {
-            gIntakeorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
-        }
-        return gIntakeorderViewModel;
+    private cWarehouseorderViewModel getWarehouseorderViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cWarehouseorderViewModel.class);
     }
 
-    private static cIntakeorderAdapter gIntakeorderAdapter;
-    public static cIntakeorderAdapter getIntakeorderAdapter() {
-        if (gIntakeorderAdapter == null) {
-            gIntakeorderAdapter = new cIntakeorderAdapter();
-        }
-        return gIntakeorderAdapter;
+
+    private cIntakeorderViewModel getIntakeorderViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
+    }
+
+    private cReceiveorderLineViewModel getReceiveorderLineViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReceiveorderLineViewModel.class);
     }
 
     public static List<cIntakeorder> allIntakeordersObl;
     public static cIntakeorder currentIntakeOrder;
 
-    public int unknownVariantCounterInt = 0;
+    private int unknownVariantCounterInt = 0;
     public int getUnknownVariantCounterInt() {
         return unknownVariantCounterInt;
     }
@@ -167,10 +131,6 @@ public class cIntakeorder {
 
     public List<cReceiveorderSummaryLine> summaryReceiveLinesObl(){
         return  cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl;
-    }
-
-    public List<cIntakeorderMATLine> linesReceiveObl(){
-        return  cIntakeorderMATLine.allIntakeorderMATLinesObl;
     }
 
     private List<cComment> commentsObl(){
@@ -195,26 +155,20 @@ public class cIntakeorder {
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
         this.documentStr = this.intakeorderEntity.getDocumentStr();
-        this.workplaceStr = this.intakeorderEntity.getWorkplaceStr();
 
-        this.receiveExportPartBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveExportPartStr(), false);
         this.receiveAmountManualEOBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualEOStr(), false);
-        this.receiveAmountManualOMBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualOMStr(), false);
-        this.receiveAmountManualMABln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualMAStr(), false);
-        this.receiveBarcodeCheckBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveBarcodeCheckStr(), false);
+
         this.receiveStoreAutoAcceptAtRequestedBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptAtRequestedStr(), false);
-        this.receiveStoreAutoAcceptValidationMessageBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptValidationMessageStr(), false);
+
         this.receiveNoExtraBinsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraBinsStr(), false);
         this.receiveNoExtraItemsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraItemsStr(), false);
         this.receiveNoExtraPiecesBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraPiecesStr(), false);
-        this.receiveMatAutoSplitIncompleteLineBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveMatAutoSplitIncompleteLineStr(), false);
 
         this.receivedDateTime = this.intakeorderEntity.getReceivedDateTime();
         this.isProcessingOrParkedBln = this.intakeorderEntity.getIsProcessingOrParkedStr();
 
         this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
         this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
-        this.receiveWithPicturePrefetchBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPicturePrefetchStr(),false);
 
         this.sourceDocumentInt = this.intakeorderEntity.getSourceDocumentInt();
 
@@ -232,28 +186,20 @@ public class cIntakeorder {
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
         this.documentStr = this.intakeorderEntity.getDocumentStr();
-        this.workplaceStr = this.intakeorderEntity.getWorkplaceStr();
 
-        this.receiveExportPartBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveExportPartStr(), false);
         this.receiveAmountManualEOBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualEOStr(), false);
-        this.receiveAmountManualOMBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualOMStr(), false);
-        this.receiveAmountManualMABln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualMAStr(), false);
-        this.receiveBarcodeCheckBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveBarcodeCheckStr(), false);
+
         this.receiveStoreAutoAcceptAtRequestedBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptAtRequestedStr(), false);
-        this.receiveStoreAutoAcceptValidationMessageBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptValidationMessageStr(), false);
+
         this.receiveNoExtraBinsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraBinsStr(), false);
         this.receiveNoExtraItemsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraItemsStr(), false);
         this.receiveNoExtraPiecesBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraPiecesStr(), false);
-        this.receiveMatAutoSplitIncompleteLineBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveMatAutoSplitIncompleteLineStr(), false);
 
         this.receivedDateTime = this.intakeorderEntity.getReceivedDateTime();
         this.isProcessingOrParkedBln = this.intakeorderEntity.getIsProcessingOrParkedStr();
 
         this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
         this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
-        this.receiveWithPicturePrefetchBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPicturePrefetchStr(),false);
-
-
         this.sourceDocumentInt = this.intakeorderEntity.getSourceDocumentInt();
 
     }
@@ -261,7 +207,7 @@ public class cIntakeorder {
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cIntakeorder.getIntakeorderViewModel().insert(this.intakeorderEntity);
+        this.getIntakeorderViewModel().insert(this.intakeorderEntity);
 
         if (cIntakeorder.allIntakeordersObl == null) {
             cIntakeorder.allIntakeordersObl = new ArrayList<>();
@@ -278,7 +224,9 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeordersFromWebserviceWrs(pvSearchTextStr);
+
+        cIntakeorderViewModel intakeorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
+        WebResult = intakeorderViewModel.pGetIntakeordersFromWebserviceWrs(pvSearchTextStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
 
@@ -297,7 +245,8 @@ public class cIntakeorder {
         List<cIntakeorder> resultObl = new ArrayList<>();
         List<cIntakeorderEntity> hulpResultObl;
 
-        hulpResultObl =  cIntakeorder.getIntakeorderViewModel().pGetIntakeordersFromDatabaseWithFilterObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        cIntakeorderViewModel intakeorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
+        hulpResultObl =  intakeorderViewModel.pGetIntakeordersFromDatabaseWithFilterObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -319,7 +268,7 @@ public class cIntakeorder {
         cWebresult webresult;
 
 
-        webresult =  cIntakeorder.getIntakeorderViewModel().pInvalidateViaWebserviceWrs();
+        webresult =  this.getIntakeorderViewModel().pInvalidateViaWebserviceWrs();
         //Everything was fine, so we are done
         if (webresult.getSuccessBln() && webresult.getResultBln()) {
 
@@ -347,7 +296,7 @@ public class cIntakeorder {
         cWebresult webresult;
 
 
-        webresult =  cIntakeorder.getIntakeorderViewModel().pMATHandledViaWebserviceWrs();
+        webresult =  this.getIntakeorderViewModel().pMATHandledViaWebserviceWrs();
 
         //No result, so something really went wrong
         if (webresult == null) {
@@ -411,7 +360,7 @@ public class cIntakeorder {
         cWebresult webresult;
 
 
-        webresult =  cIntakeorder.getIntakeorderViewModel().pReceiveHandledViaWebserviceWrs();
+        webresult =  this.getIntakeorderViewModel().pReceiveHandledViaWebserviceWrs();
 
         //No result, so something really went wrong
         if (webresult == null) {
@@ -501,7 +450,7 @@ public class cIntakeorder {
         }
 
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt, ignoreBusyBln);
+        Webresult = this.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt, ignoreBusyBln);
 
         //No result, so something really went wrong
         if (Webresult == null) {
@@ -574,7 +523,7 @@ public class cIntakeorder {
         cWebresult Webresult = null;
 
         if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
-            Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_Store.toString(), cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_StoreBezig);
+            Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_Store.toString(), cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_StoreBezig);
         }
 
         //We try to release an order thats not created
@@ -583,11 +532,11 @@ public class cIntakeorder {
         }
 
         if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("EOS")){
-            Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_InTake.toString(), cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External);
+            Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_InTake.toString(), cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External);
         }
 
 
-        return Webresult.getSuccessBln() && Webresult.getResultBln();
+        return Objects.requireNonNull(Webresult).getSuccessBln() && Webresult.getResultBln();
     }
 
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
@@ -598,7 +547,7 @@ public class cIntakeorder {
         }
 
         cWebresult webresult;
-        webresult = cIntakeorder.getIntakeorderViewModel().pGetCommentsFromWebserviceWrs();
+        webresult = this.getIntakeorderViewModel().pGetCommentsFromWebserviceWrs();
         if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
             cComment.allCommentsObl = new ArrayList<>();
@@ -617,7 +566,7 @@ public class cIntakeorder {
 
     public double pQuantityHandledDbl() {
 
-        Double resultDbl =cIntakeorder.getIntakeorderViewModel().pQuantityHandledDbl();
+        Double resultDbl =this.getIntakeorderViewModel().pQuantityHandledDbl();
 
         if (resultDbl == null) {
             resultDbl  = 0.0;
@@ -643,7 +592,7 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLineBarcodesFromWebserviceWrs();
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderMATLineBarcodesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
@@ -667,17 +616,13 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderMATLinesFromWebserviceWrs();
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderMATLinesFromWebserviceWrs();
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
 
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(jsonObject);
                 intakeorderMATLine.pInsertInDatabaseBln();
-
-                if (intakeorderMATLine.getBinCodeStr().isEmpty() && intakeorderMATLine.getQuantityDbl() > 0) {
-                    this.receiveMATEmptyBinsBln = true;
-                }
 
                 cIntakeorderMATSummaryLine intakeorderMATSummaryLine = cIntakeorderMATSummaryLine.pGetSummaryLine(intakeorderMATLine.getItemNoStr(),
                         intakeorderMATLine.getVariantCodeStr(),
@@ -712,7 +657,7 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderReceiveLinesFromWebserviceWrs();
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderReceiveLinesFromWebserviceWrs();
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
 
 
@@ -748,7 +693,7 @@ public class cIntakeorder {
         cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl = new ArrayList<>();
 
         cWebresult WebResult;
-        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderReceiveItemsFromWebserviceWrs();
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderReceiveItemsFromWebserviceWrs();
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cReceiveorderSummaryLine receiveorderSummaryLine  = new cReceiveorderSummaryLine(jsonObject);
@@ -775,7 +720,7 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult = cIntakeorder.getIntakeorderViewModel().pGetIntakeorderBarcodesFromWebserviceWrs();
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderBarcodesFromWebserviceWrs();
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
@@ -797,7 +742,7 @@ public class cIntakeorder {
         cWebresult WebResult;
 
         //First create Item Varianr
-        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
+        WebResult =  this.getReceiveorderLineViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
         if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -814,7 +759,7 @@ public class cIntakeorder {
         }
 
         //Then add barcode
-        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan);
+        WebResult =  this.getReceiveorderLineViewModel().pAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan);
         if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -855,7 +800,7 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pAddERPItemViaWebserviceWrs(pvBarcodeScan);
+        WebResult =  this.getReceiveorderLineViewModel().pAddERPItemViaWebserviceWrs(pvBarcodeScan);
         if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -871,7 +816,7 @@ public class cIntakeorder {
         }
 
         //Then add barcode
-        WebResult =  cReceiveorderLine.getReceiveorderLineViewModel().pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan);
+        WebResult =  this.getReceiveorderLineViewModel().pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan);
         if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -920,8 +865,9 @@ public class cIntakeorder {
         result.resultBln = true;
 
         cWebresult WebResult;
-        WebResult = cIntakeorder.getIntakeorderViewModel().pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
 
+        cIntakeorderViewModel intakeorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
+        WebResult = intakeorderViewModel.pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
 
         //No result, so something really went wrong
         if (WebResult == null) {
@@ -1001,7 +947,8 @@ public class cIntakeorder {
      }
 
     private static void mTruncateTable() {
-        cIntakeorder.getIntakeorderViewModel().deleteAll();
+        cIntakeorderViewModel intakeorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
+        intakeorderViewModel.deleteAll();
     }
 
     private void mGetCommentsViaWebError(List<JSONObject> pvResultDtt) {

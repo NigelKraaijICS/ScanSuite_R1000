@@ -15,8 +15,7 @@ public class cShippingAgentEntity {
     //Region Public Properties
     @NonNull
     @ColumnInfo(name = cDatabase.SHIPPINGAGENT_NAMESTR)
-    public String shippingagent;
-    @NonNull
+    public String shippingagent = "";
     public String getShippingagentStr() {
         return shippingagent;
     }
@@ -25,12 +24,6 @@ public class cShippingAgentEntity {
     public String description;
     public String getDescriptionStr() {
         return description;
-    }
-
-    @ColumnInfo(name = cDatabase.IMPORTFILE_NAMESTR)
-    public String importfile;
-    public String getImportfileStr() {
-        return importfile;
     }
 
     //End Region Public Properties
@@ -44,7 +37,6 @@ public class cShippingAgentEntity {
         try {
             this.shippingagent = jsonObject.getString(cDatabase.SHIPPINGAGENT_NAMESTR);
             this.description = jsonObject.getString(cDatabase.DESCRIPTION_DUTCH_NAMESTR);
-            this.importfile = jsonObject.getString(cDatabase.IMPORTFILE_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

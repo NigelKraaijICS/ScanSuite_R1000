@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
     //Region Public Properties
 
-    public class PickorderLinePackAndShipViewHolder extends RecyclerView.ViewHolder{
+    public static class PickorderLinePackAndShipViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewPickorderLinePackAndShipDocument;
         private TextView textViewPickorderLinePackAndShipQuantity;
@@ -69,14 +70,15 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
     //Region Default Methods
 
+    @NonNull
     @Override
-    public cShipmentAdapter.PickorderLinePackAndShipViewHolder onCreateViewHolder(ViewGroup pvViewGroup, int pvViewTypeInt) {
+    public cShipmentAdapter.PickorderLinePackAndShipViewHolder onCreateViewHolder(@NonNull ViewGroup pvViewGroup, int pvViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_pickorderlinepackandship, pvViewGroup, false);
-        return new cShipmentAdapter.PickorderLinePackAndShipViewHolder(itemView);
+        return new PickorderLinePackAndShipViewHolder(itemView);
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
         super.onAttachedToRecyclerView(pvRecyclerView);
         this.thisRecyclerView = pvRecyclerView;
     }
@@ -89,7 +91,6 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
         if (this.localShipmentsObl == null || this.localShipmentsObl.size() == 0 ) {
             return;
         }
-
 
         final cShipment shipment = this.localShipmentsObl.get(pvPositionInt);
 
@@ -104,7 +105,11 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
         pvHolder.textViewPickorderLinePackAndShipPack.setText("");
 
         if (pvPositionInt ==0) {
-           ShiporderLinesActivity.pShipmentSelected(shipment);
+
+            if (cAppExtension.activity instanceof ShiporderLinesActivity) {
+                ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+                shiporderLinesActivity.pShipmentSelected(shipment);
+            }
         }
 
 
@@ -123,13 +128,13 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
                 if (id == R.id.recyclerViewShiporderLinesToship) {
                     if (cAppExtension.activity instanceof ShiporderLinesActivity) {
-
                         cShipment.currentShipment = shipment;
-                        ShiporderLinesActivity.pHandleScan(null,true);
+                            ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity) cAppExtension.activity;
+                            shiporderLinesActivity.pHandleScan(null,true);
+
                     }
                 }
             }
-
         });
 
     }

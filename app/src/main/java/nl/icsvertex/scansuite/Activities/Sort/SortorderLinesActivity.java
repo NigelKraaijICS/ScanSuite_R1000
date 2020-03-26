@@ -54,22 +54,20 @@ import nl.icsvertex.scansuite.R;
 public class SortorderLinesActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
-    public static final String VIEW_CHOSEN_ORDER = "detail:header:text";
     public static Fragment currentLineFragment;
     //End Region Public Properties
 
     //Region Private Properties
     //Region Views
 
-    private static TextView textViewChosenOrder;
-    private static TextView quantitySortordersText;
-    private static TabLayout sortorderLinesTabLayout;
-    private static ViewPager sortorderLinesViewPager;
-    private static SortorderLinesPagerAdapter sortorderLinesPagerAdapter;
-    private static ImageView imageButtonComments;
+    private TextView textViewChosenOrder;
+    private TextView quantitySortordersText;
+    private TabLayout sortorderLinesTabLayout;
+    private ViewPager sortorderLinesViewPager;
+    private ImageView imageButtonComments;
 
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
+    private  ImageView toolbarImage;
+    private  TextView toolbarTitle;
 
 
     //End Region Views
@@ -140,24 +138,24 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFindViews() {
 
-        SortorderLinesActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        SortorderLinesActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
 
-        SortorderLinesActivity.quantitySortordersText = findViewById(R.id.quantitySortordersText);
-        SortorderLinesActivity.sortorderLinesTabLayout = findViewById(R.id.sortorderLinesTabLayout);
-        SortorderLinesActivity.sortorderLinesViewPager = findViewById(R.id.sortorderLinesViewpager);
-        SortorderLinesActivity.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
-        SortorderLinesActivity.imageButtonComments = findViewById(R.id.imageButtonComments);
+        this.quantitySortordersText = findViewById(R.id.quantitySortordersText);
+        this.sortorderLinesTabLayout = findViewById(R.id.sortorderLinesTabLayout);
+        this.sortorderLinesViewPager = findViewById(R.id.sortorderLinesViewpager);
+        this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
+        this.imageButtonComments = findViewById(R.id.imageButtonComments);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
 
-        SortorderLinesActivity.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
-        SortorderLinesActivity.toolbarTitle.setText(pvScreenTitleStr);
-        SortorderLinesActivity.toolbarTitle.setSelected(true);
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
+        this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarTitle.setSelected(true);
 
-        ViewCompat.setTransitionName(textViewChosenOrder, VIEW_CHOSEN_ORDER);
+        ViewCompat.setTransitionName(textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -169,15 +167,15 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFieldsInitialize() {
 
-        SortorderLinesActivity.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
-        SortorderLinesActivity.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_sortorderline_tosort));
-        SortorderLinesActivity.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_sortorderline_sorted));
-        SortorderLinesActivity.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
+        this.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
+        this.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_sortorderline_tosort));
+        this.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_sortorderline_sorted));
+        this.sortorderLinesTabLayout.addTab(sortorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
 
-        SortorderLinesActivity.sortorderLinesPagerAdapter = new SortorderLinesPagerAdapter(SortorderLinesActivity.sortorderLinesTabLayout.getTabCount());
-        SortorderLinesActivity.sortorderLinesViewPager.setAdapter(SortorderLinesActivity.sortorderLinesPagerAdapter);
-        SortorderLinesActivity.sortorderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(SortorderLinesActivity.sortorderLinesTabLayout));
-        SortorderLinesActivity. sortorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        SortorderLinesPagerAdapter sortorderLinesPagerAdapter = new SortorderLinesPagerAdapter(this.sortorderLinesTabLayout.getTabCount());
+        this.sortorderLinesViewPager.setAdapter(sortorderLinesPagerAdapter);
+        this.sortorderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.sortorderLinesTabLayout));
+        this. sortorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
                 sortorderLinesViewPager.setCurrentItem(pvTab.getPosition());
@@ -206,7 +204,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     public void mInitScreen() {
 
         //Show comments first
-        SortorderLinesActivity.mShowComments();
+        this.mShowComments();
 
         //Call this here, because this is called everytime the activiy gets shown
         this.mCheckAllDone();
@@ -215,7 +213,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
         if (pvMenuItem.getItemId() == android.R.id.home) {
-            mTryToLeaveActivity();
+            this.mTryToLeaveActivity();
             return true;
         }
 
@@ -224,14 +222,14 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     public void onBackPressed() {
-        mTryToLeaveActivity();
+        this.mTryToLeaveActivity();
     }
 
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
 
-    public static void pPicklineSelected(cPickorderLine pvPickorderLine) {
+    public  void pPicklineSelected(cPickorderLine pvPickorderLine) {
         cPickorderLine.currentPickOrderLine = pvPickorderLine;
 
         if (cPickorderLine.currentPickOrderLine.barcodesObl != null && cPickorderLine.currentPickOrderLine.barcodesObl.size() > 0) {
@@ -242,34 +240,34 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
     }
 
-    public static void pPicklineToResetSelected(cPickorderLine pvPickorderLine) {
+    public  void pPicklineToResetSelected(cPickorderLine pvPickorderLine) {
         cPickorderLine.currentPickOrderLine = pvPickorderLine;
     }
 
-    public static void pChangeTabCounterText(String pvTextStr){
-        SortorderLinesActivity.quantitySortordersText.setText(pvTextStr);
+    public  void pChangeTabCounterText(String pvTextStr){
+        this.quantitySortordersText.setText(pvTextStr);
     }
 
-    public static void pCloseSortAndDecideNextStep(){
+    public  void pCloseSortAndDecideNextStep(){
 
         //Close this step
-        if (!SortorderLinesActivity.mTryToCloseOrderBln()) {
+        if (!this.mTryToCloseOrderBln()) {
             return;
         }
 
         //If there is nothing more to do, then we are done
         if (!cPickorder.currentPickOrder.PackAndShipNeededBln()) {
-            mShowOrderDoneFragment();
+            this.mShowOrderDoneFragment();
             return;
         }
 
         //If we have to ship, then start ship/ask if ship has to be started/go back or order select
         if (cPickorder.currentPickOrder.isBCBln() || cPickorder.currentPickOrder.isBPBln()) {
-            mPackAndShipNextStap();
+            this.mPackAndShipNextStap();
         }
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan,Boolean pvLineSelectedBln) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan,Boolean pvLineSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         cResult hulpResult;
@@ -279,13 +277,13 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
             hulpResult = cPickorderLine.currentPickOrderLine.pSortLineBusyRst();
             if (!hulpResult.resultBln) {
-                mStepFailed(hulpResult.messagesStr());
+                this.mStepFailed(hulpResult.messagesStr());
                 cPickorderLine.currentPickOrderLine = null;
                 return;
             }
 
             //we have a line to handle, so start Pick activity
-            SortorderLinesActivity.mStartSortActivity();
+            this.mStartSortActivity();
             return;
         }
 
@@ -301,29 +299,29 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         // Get line forthis barcodeStr
         cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetLineNotHandledByBarcode(barcodewithoutPrefix);
         if (cPickorderLine.currentPickOrderLine == null) {
-            mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
+            this.mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
             return;
         }
 
         cPickorderBarcode.currentPickorderBarcode = cPickorderBarcode.pGetPickbarcodeViaBarcode(pvBarcodeScan);
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             cPickorderLine.currentPickOrderLine = null;
-            mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
+            this.mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
             return;
         }
 
         hulpResult = cPickorderLine.currentPickOrderLine.pSortLineBusyRst();
         if (!hulpResult.resultBln) {
-            mStepFailed(hulpResult.messagesStr());
+            this.mStepFailed(hulpResult.messagesStr());
             cPickorderLine.currentPickOrderLine = null;
             return;
         }
 
         //we have a line to handle, so start Pick activity
-        SortorderLinesActivity.mStartSortActivity();
+        this.mStartSortActivity();
     }
 
-    public static void pHandleLineReset() {
+    public  void pHandleLineReset() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -333,23 +331,23 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Set the selected tab to 0, and after that change it back to this tab
-        SortorderLinesActivity.sortorderLinesViewPager.setCurrentItem(0);
+        this.sortorderLinesViewPager.setCurrentItem(0);
 
     }
 
-    public static void pSortingDone() {
+    public void pSortingDone() {
 
         //Check if we need to select a workplaceStr
         if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
-            mShowWorkplaceFragment();
+            this.mShowWorkplaceFragment();
             return;
         }
 
-        SortorderLinesActivity.pCloseSortAndDecideNextStep();
+        this.pCloseSortAndDecideNextStep();
 
     }
 
-    public static void pStartOrderSelectActivity() {
+    public  void pStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, SortorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
     }
@@ -360,14 +358,13 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     //Region Fragments and Activities
 
-    private static void mShowWorkplaceFragment() {
-
+    private  void mShowWorkplaceFragment() {
         WorkplaceFragment workplaceFragment = new WorkplaceFragment();
         workplaceFragment.setCancelable(false);
         workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
     }
 
-    private static void mShowOrderDoneFragment() {
+    private void mShowOrderDoneFragment() {
 
         cUserInterface.pPlaySound(R.raw.goodsound, null);
 
@@ -398,25 +395,25 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         cUserInterface.pShowToastMessage(getString(R.string.all_lines_sent), R.raw.goodsound);
     }
 
-    private static void mShowComments(){
+    private void mShowComments(){
 
         if (cPickorder.currentPickOrder.pSortCommentObl() == null || cPickorder.currentPickOrder.pSortCommentObl().size() == 0) {
-            SortorderLinesActivity.imageButtonComments.setVisibility(View.INVISIBLE);
+            this.imageButtonComments.setVisibility(View.INVISIBLE);
             return;
         }
 
-        SortorderLinesActivity.imageButtonComments.setVisibility(View.VISIBLE);
+        this.imageButtonComments.setVisibility(View.VISIBLE);
 
         //We already showed the comments
         if (cComment.commentsShownBln) {
             return;
         }
 
-        SortorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pSortCommentObl(),"");
+        this.mShowCommentsFragment(cPickorder.currentPickOrder.pSortCommentObl(),"");
         cComment.commentsShownBln = true;
     }
 
-    private static void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
+    private void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -431,7 +428,6 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private void mTryToLeaveActivity(){
-
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(cAppExtension.context);
         alertDialog.setTitle(R.string.message_sure_leave_screen_title);
@@ -503,51 +499,53 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private static void mStartSortActivity(){
+    private void mStartSortActivity(){
         //we have a line to handle, so start Sort activity
         Intent intent = new Intent(cAppExtension.context, SortorderSortActivity.class);
         cAppExtension.activity.startActivity(intent);
     }
 
-    private static void mStartShipActivity() {
+    private void mStartShipActivity() {
 
         cResult hulpResult;
 
         //Clear workplaceStr, so you have to select it in the next step
         cWorkplace.currentWorkplace = null;
 
-       if (! mTryToLockShipOrderBln()) {
+       if (! this.mTryToLockShipOrderBln()) {
            return;
        }
 
         //Delete the detail, so we can get them from the webservice
         if (!cPickorder.currentPickOrder.pDeleteDetailsBln()) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
             return;
         }
 
         //Get all new details
-        hulpResult = SortorderLinesActivity.mGetShipOrderDetailsRst();
+        hulpResult = this.mGetShipOrderDetailsRst();
         if (!hulpResult.resultBln) {
-            SortorderLinesActivity.mStepFailed(hulpResult.messagesStr());
+            this.mStepFailed(hulpResult.messagesStr());
             return;
         }
 
         //Show Ship activity
-        mStartShipActivity();
+        this.mStartShipActivity();
 
 
-    }    private void mSetTabselected(TabLayout.Tab pvTab) {
+    }
+
+    private void mSetTabselected(TabLayout.Tab pvTab) {
 
         switch (pvTab.getPosition()) {
             case 0:
-                SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                this.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
                 break;
             case 1:
-                SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                this.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
                 break;
             case 2:
-                SortorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                this.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
                 break;
             default:
 
@@ -607,7 +605,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
             //Set the current line
             cPickorderLine.currentPickOrderLine = pickorderLine;
-            cPickorderLine.currentPickOrderLine.pHandledIndatabaseBln();
+            cPickorderLine.currentPickOrderLine.pHandledIndatabase();
 
         }
 
@@ -615,35 +613,35 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private static void mPackAndShipNextStap(){
+    private  void mPackAndShipNextStap(){
 
         //If activity bin is not required, then don't show the fragment
         if ( cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 ) {
-            pStartOrderSelectActivity();
+            this.pStartOrderSelectActivity();
             return;
         }
 
         //We are done with this order, so show order done
         if (!cPickorder.currentPickOrder.PackAndShipNeededBln()) {
-            mShowOrderDoneFragment();
+            this.mShowOrderDoneFragment();
             return;
         }
 
         // If setting is not defined, then ask user
         if (cSetting.PICK_PACK_AND_SHIP_AUTO_START() == null) {
-            SortorderLinesActivity.mAskShip();
+            this.mAskShip();
             return;
         }
 
         // If settings is false, then go back to order select
         if (!cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
-            SortorderLinesActivity.pStartOrderSelectActivity();
+            this.pStartOrderSelectActivity();
             return;
         }
 
         // If settings is true, then go  to ship
         if (cSetting.PICK_PACK_AND_SHIP_AUTO_START()) {
-            mStartShipActivity();
+            this.mStartShipActivity();
         }
 
     }
@@ -661,7 +659,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         // Set sorting done
-        SortorderLinesActivity.pSortingDone();
+        this.pSortingDone();
 
     }
 
@@ -669,7 +667,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         return cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0;
     }
 
-    private static void mAskShip() {
+    private  void mAskShip() {
         AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
 
         builder.setMessage(cAppExtension.context.getString(R.string.question_open_ship));
@@ -691,7 +689,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private void mSetShowCommentListener() {
-        SortorderLinesActivity.imageButtonComments.setOnClickListener(new View.OnClickListener() {
+        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowCommentsFragment(cPickorder.currentPickOrder.pSortCommentObl(),"");
@@ -699,7 +697,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         });
     }
 
-    private static boolean mTryToCloseOrderBln(){
+    private boolean mTryToCloseOrderBln(){
 
         cResult hulpResult;
         hulpResult = new cResult();
@@ -724,7 +722,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             //If we got any comments, show them
             if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
                 //Process comments from webresult
-                SortorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+                this.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
             }
 
             return  false;
@@ -734,17 +732,17 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private static void mStepFailed(String pvErrorMessageStr){
+    private  void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
         cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting,cWarehouseorder.WorkflowPickStepEnu.PickSorting);
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
-    private static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
+    private  void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 
-    private static boolean mTryToLockShipOrderBln(){
+    private  boolean mTryToLockShipOrderBln(){
 
         cResult hulpResult;
         hulpResult = cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
@@ -756,7 +754,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
-            mStepFailed(hulpResult.messagesStr());
+            this.mStepFailed(hulpResult.messagesStr());
             return  false;
         }
 
@@ -768,7 +766,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             //If we got any comments, show them
             if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
                 //Process comments from webresult
-                SortorderLinesActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+                this.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
             }
 
             return  false;
@@ -779,7 +777,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private static cResult mGetShipOrderDetailsRst() {
+    private cResult mGetShipOrderDetailsRst() {
 
         cResult result;
 

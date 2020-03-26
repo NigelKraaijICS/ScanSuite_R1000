@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -26,40 +26,20 @@ public class cArticleImage {
         return variantCodeStr;
     }
 
-    public String imageStr;
+    private String imageStr;
     public String getImageStr() {
         return imageStr;
     }
 
-    public String dataTimeStampStr;
-    public String getDataTimeStampStr() {
-        return dataTimeStampStr;
-    }
-
-    public List<String> errorMessagesObl;
-    public List<String> getErrorMessagesObl() {
-        return errorMessagesObl;
-    }
-
     public Bitmap imageBitmap(){
         byte[] decodedString = Base64.decode(this.getImageStr(), Base64.DEFAULT);
-        Bitmap resultBmp = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-       return  resultBmp;
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
+    private cArticleImageEntity articleImageEntity;
 
-
-
-    public cArticleImageEntity articleImageEntity;
-    public boolean inDatabaseBln;
-
-    public static cArticleImageViewModel gArticleImageViewModel;
-
-    public static cArticleImageViewModel getArticleImageViewModel() {
-        if (gArticleImageViewModel == null) {
-            gArticleImageViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cArticleImageViewModel.class);
-        }
-        return gArticleImageViewModel;
+    private cArticleImageViewModel getArticleImageViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
     }
 
     public static List<cArticleImage> allImages;
@@ -72,7 +52,6 @@ public class cArticleImage {
         this.itemNoStr = this.articleImageEntity.getItemnoStr();
         this.variantCodeStr =  this.articleImageEntity.getVariantCodeStr();
         this.imageStr = this.articleImageEntity.getImageStr();
-        this.dataTimeStampStr = this.articleImageEntity.getDataTimeStampStr();
     }
 
     //End Region Constructor
@@ -80,13 +59,13 @@ public class cArticleImage {
     //Region Public Methods
 
     public boolean pInsertInDatabaseBln() {
-        cArticleImage.getArticleImageViewModel().insert(this.articleImageEntity);
-        this.inDatabaseBln = true;
+        this.getArticleImageViewModel().insert(this.articleImageEntity);
         return true;
     }
 
     public static boolean pTruncateTableBln(){
-        cArticleImage.getArticleImageViewModel().deleteAll();
+        cArticleImageViewModel articleImageViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+        articleImageViewModel.deleteAll();
         return true;
     }
     public static cArticleImage pGetArticleImageByItemNoAndVariantCode(String pvItemNoStr, String pvVariantCodeStr){

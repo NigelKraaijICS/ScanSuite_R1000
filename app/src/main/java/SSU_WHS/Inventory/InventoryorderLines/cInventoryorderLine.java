@@ -1,6 +1,6 @@
 package SSU_WHS.Inventory.InventoryorderLines;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -13,6 +13,7 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
+import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
@@ -20,10 +21,9 @@ import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
 
-
 public class cInventoryorderLine {
 
-    public   cInventoryorderLineEntity inventoryorderLineEntity;
+    public cInventoryorderLineEntity inventoryorderLineEntity;
 
     public static List<cInventoryorderLine> allLinesObl;
     public static cInventoryorderLine currentInventoryOrderLine;
@@ -63,26 +63,11 @@ public class cInventoryorderLine {
         }
 
         return  resultObl;
-
     }
 
-
-    private static cInventoryorderLineViewModel gInventoryorderLineViewModel;
-    public static cInventoryorderLineViewModel getInventoryorderLineViewModel() {
-        if (gInventoryorderLineViewModel == null) {
-            gInventoryorderLineViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cInventoryorderLineViewModel.class);
-        }
-        return gInventoryorderLineViewModel;
+    private cInventoryorderLineViewModel getInventoryorderLineViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderLineViewModel.class);
     }
-
-    private static cInventoryorderLineAdapter gInventoryorderLineAdapter;
-    public static cInventoryorderLineAdapter getInventoryorderLineAdapter() {
-        if (gInventoryorderLineAdapter == null) {
-            gInventoryorderLineAdapter = new cInventoryorderLineAdapter();
-        }
-        return gInventoryorderLineAdapter;
-    }
-
 
     //Region Public Properties
     private int lineNoInt;
@@ -98,11 +83,6 @@ public class cInventoryorderLine {
     private String variantCodeStr;
     public String getVariantCodeStr() {
         return variantCodeStr;
-    }
-
-    private String itemTypeStr;
-    public String getItemTypeStr() {
-        return itemTypeStr;
     }
 
     private String descriptionStr;
@@ -130,9 +110,6 @@ public class cInventoryorderLine {
 
     private String vendorItemDescriptionStr;
     public String getVendorItemDescriptionStr() { return vendorItemDescriptionStr; }
-
-    private int sortingSequenceNoInt;
-    public int getSortingSequenceNoInt() { return sortingSequenceNoInt; }
 
     private int statusInt;
     public int getStatusInt() { return statusInt; }
@@ -204,14 +181,12 @@ public class cInventoryorderLine {
         this.lineNoInt = this.inventoryorderLineEntity.getLineNoInt();
         this.itemNoStr = this.inventoryorderLineEntity.getItemNoStr();
         this.variantCodeStr = this.inventoryorderLineEntity.getVariantCodeStr();
-        this.itemTypeStr = this.inventoryorderLineEntity.getItemtypeStr();
         this.descriptionStr = this.inventoryorderLineEntity.getDescriptionStr();
         this.description2Str = this.inventoryorderLineEntity.getDescription2Str();
         this.binCodeStr = this.inventoryorderLineEntity.getBincodeStr();
         this.quantityDbl = this.inventoryorderLineEntity.getQuantityDbl();
         this.vendorItemNoStr = this.inventoryorderLineEntity.getVendorItemNoStr();
         this.vendorItemDescriptionStr = this.inventoryorderLineEntity.getVendorItemDescriptionStr();
-        this.sortingSequenceNoInt = this.inventoryorderLineEntity.getSortingsequencenoInt();
         this.statusInt = this.inventoryorderLineEntity.getStatusInt();
         this.handeledTimeStampStr = this.inventoryorderLineEntity.getHandledtimestampStr();
         this.quantityHandledDbl = this.inventoryorderLineEntity.getQuantityHandledDbl();
@@ -226,36 +201,10 @@ public class cInventoryorderLine {
         this.extraField8Str =  this.inventoryorderLineEntity.getExtraField8Str();
     }
 
-    public cInventoryorderLine(cInventoryorderLineEntity pvInventoryorderLineEntity){
-        this.inventoryorderLineEntity = pvInventoryorderLineEntity;
-        this.lineNoInt = this.inventoryorderLineEntity.getLineNoInt();
-        this.itemNoStr = this.inventoryorderLineEntity.getItemNoStr();
-        this.variantCodeStr = this.inventoryorderLineEntity.getVariantCodeStr();
-        this.itemTypeStr = this.inventoryorderLineEntity.getItemtypeStr();
-        this.descriptionStr = this.inventoryorderLineEntity.getDescriptionStr();
-        this.description2Str = this.inventoryorderLineEntity.getDescription2Str();
-        this.binCodeStr = this.inventoryorderLineEntity.getBincodeStr();
-        this.quantityDbl = this.inventoryorderLineEntity.getQuantityDbl();
-        this.vendorItemNoStr = this.inventoryorderLineEntity.getVendorItemNoStr();
-        this.vendorItemDescriptionStr = this.inventoryorderLineEntity.getVendorItemDescriptionStr();
-        this.sortingSequenceNoInt = this.inventoryorderLineEntity.getSortingsequencenoInt();
-        this.statusInt = this.inventoryorderLineEntity.getStatusInt();
-        this.handeledTimeStampStr = this.inventoryorderLineEntity.getHandledtimestampStr();
-        this.quantityHandledDbl = this.inventoryorderLineEntity.getQuantityHandledDbl();
-        this.quantityHandledAllScannersDbl = this.inventoryorderLineEntity.getQuantityHandledAllScannersDbl();
-        this.extraField1Str =  this.inventoryorderLineEntity.getExtraField1Str();
-        this.extraField2Str = this.inventoryorderLineEntity.getExtraField2Str();
-        this.extraField3Str =  this.inventoryorderLineEntity.getExtraField3Str();
-        this.extraField4Str =  this.inventoryorderLineEntity.getExtraField4Str();
-        this.extraField5Str =  this.inventoryorderLineEntity.getExtraField5Str();
-        this.extraField6Str =  this.inventoryorderLineEntity.getExtraField6Str();
-        this.extraField7Str =  this.inventoryorderLineEntity.getExtraField7Str();
-        this.extraField8Str =  this.inventoryorderLineEntity.getExtraField8Str();
-    }
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cInventoryorderLine.getInventoryorderLineViewModel().insert(this.inventoryorderLineEntity);
+        getInventoryorderLineViewModel().insert(this.inventoryorderLineEntity);
 
         if (cInventoryorderLine.allLinesObl == null){
             cInventoryorderLine.allLinesObl = new ArrayList<>();
@@ -264,21 +213,22 @@ public class cInventoryorderLine {
         return  true;
     }
 
-    public static  void pInsertAllInDatabase(List<cInventoryorderLine> pvInventoryOrderLinesObl, List<cInventoryorderLineEntity> pvInventoryOrderLineEntityObl ) {
+    public static void pInsertAllInDatabase(List<cInventoryorderLine> pvInventoryOrderLinesObl, List<cInventoryorderLineEntity> pvInventoryOrderLineEntityObl ) {
 
         cInventoryorderLine.allLinesObl.addAll(pvInventoryOrderLinesObl);
-        cInventoryorderLine.getInventoryorderLineViewModel().insertAll (pvInventoryOrderLineEntityObl);
+        cInventoryorderLineViewModel  inventoryorderLineViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderLineViewModel.class);
+        inventoryorderLineViewModel.insertAll (pvInventoryOrderLineEntityObl);
 
     }
 
     public static boolean pTruncateTableBln(){
-        cInventoryorderLine.getInventoryorderLineViewModel().deleteAll();
+
+        cInventoryorderLineViewModel  inventoryorderLineViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderLineViewModel.class);
+        inventoryorderLineViewModel.deleteAll();
         return true;
     }
 
     public cInventoryorderLineBarcode pAddLineBarcode(String pvBarcodeStr, Double pvQuantityDbl) {
-
-
 
         cInventoryorderLineBarcode inventoryorderLineBarcode = new cInventoryorderLineBarcode((long) this.getLineNoInt(),pvBarcodeStr,pvQuantityDbl);
 
@@ -304,7 +254,8 @@ public class cInventoryorderLine {
 
         cWebresult Webresult;
 
-        Webresult = cArticleImage.getArticleImageViewModel().pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
+        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+        Webresult = articleImageViewModel.pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
         if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
             return  false;
         }
@@ -325,7 +276,7 @@ public class cInventoryorderLine {
 
         cWebresult WebResult;
 
-        WebResult =  cInventoryorderLine.getInventoryorderLineViewModel().pSaveLineViaWebserviceWrs();
+        WebResult =  getInventoryorderLineViewModel().pSaveLineViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
                 return  true;
             }
@@ -336,12 +287,8 @@ public class cInventoryorderLine {
         }
     }
 
-    public boolean pUpdateQuantityInDatabaseBln(){
-
-        boolean resultBln;
-        resultBln =   cInventoryorderLine.getInventoryorderLineViewModel().pUpdateQuantityBln();
-        return resultBln;
-
+    public void pUpdateQuantityInDatabase(){
+        getInventoryorderLineViewModel().pUpdateQuantity();
     }
 
     public cInventoryorderLineBarcode pGetLineBarcodeByScannedBarcode(cBarcodeScan pvBarcodeScan) {
@@ -372,7 +319,7 @@ public class cInventoryorderLine {
 
         cWebresult WebResult;
 
-        WebResult =  cInventoryorderLine.getInventoryorderLineViewModel().pResetLineViaWebserviceWrs();
+        WebResult =  getInventoryorderLineViewModel().pResetLineViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
 
@@ -382,7 +329,7 @@ public class cInventoryorderLine {
 
             //Reset this line
             this.quantityHandledDbl = 0.0;
-            this.pUpdateQuantityInDatabaseBln();
+            this.pUpdateQuantityInDatabase();
 
             return  result;
         }

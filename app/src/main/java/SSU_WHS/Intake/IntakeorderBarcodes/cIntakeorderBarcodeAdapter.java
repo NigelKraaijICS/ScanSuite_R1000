@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -22,7 +23,7 @@ import nl.icsvertex.scansuite.R;
 public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorderBarcodeAdapter.intakeorderBarcodeViewHolder>  {
 
     //Region Public Properties
-    public class intakeorderBarcodeViewHolder extends RecyclerView.ViewHolder{
+    public static class intakeorderBarcodeViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewBarcode;
         private TextView textViewQuantity;
         public LinearLayout barcodeItemLinearLayout;
@@ -54,14 +55,15 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
 
     //Region Public Methods
 
+    @NonNull
     @Override
-    public intakeorderBarcodeViewHolder onCreateViewHolder(ViewGroup pvParent, int pvViewTypeInt) {
+    public intakeorderBarcodeViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.layoutInflaterObject.inflate(R.layout.recycler_barcode, pvParent, false);
         return new intakeorderBarcodeViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(intakeorderBarcodeViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull intakeorderBarcodeViewHolder pvHolder, int pvPositionInt) {
 
 
         if (cAppExtension.activity instanceof  IntakeOrderIntakeActivity) {
@@ -87,12 +89,14 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
             public void onClick(View v) {
 
                 if (cAppExtension.activity instanceof  IntakeOrderIntakeActivity) {
-                    IntakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcodeAdapter.intakeorderBarcode.getBarcodeStr()));
+                    IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
+                    intakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcodeAdapter.intakeorderBarcode.getBarcodeStr()));
                 }
 
                 if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
                     cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcodeAdapter.intakeorderBarcode;
-                    ReceiveOrderReceiveActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcodeAdapter.intakeorderBarcode.getBarcodeStr()));
+                    ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
+                    receiveOrderReceiveActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcodeAdapter.intakeorderBarcode.getBarcodeStr()));
                 }
 
             }

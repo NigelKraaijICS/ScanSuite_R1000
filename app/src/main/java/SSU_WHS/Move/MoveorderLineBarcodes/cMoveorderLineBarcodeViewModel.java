@@ -5,7 +5,8 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 
 public class cMoveorderLineBarcodeViewModel extends AndroidViewModel {
-    public cMoveorderLineBarcodeRepository moveorderLineBarcodeRepository;
+
+    private cMoveorderLineBarcodeRepository moveorderLineBarcodeRepository;
 
     public cMoveorderLineBarcodeViewModel(Application pvApplication) {
         super(pvApplication);

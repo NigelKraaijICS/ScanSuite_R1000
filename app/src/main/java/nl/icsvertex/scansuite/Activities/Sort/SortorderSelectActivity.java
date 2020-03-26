@@ -47,6 +47,7 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Picken.Pickorders.cPickorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
@@ -56,8 +57,7 @@ import nl.icsvertex.scansuite.R;
 public class SortorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
     //Region Public Properties
-    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:image";
-    public static final String VIEW_NAME_HEADER_TEXT = "detail:header:text";
+
 
     //End Region Public Properties
 
@@ -65,16 +65,26 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     // Region Views
 
-    private static  androidx.appcompat.widget.SearchView recyclerSearchView;
-    private static  ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubTitle;
-    private static RecyclerView recyclerViewSortorders;
+    private  SearchView recyclerSearchView;
+    private  ImageView toolbarImage;
+    private  TextView toolbarTitle;
+    private  TextView toolbarSubTitle;
+    private  RecyclerView recyclerViewSortorders;
 
-    private static ConstraintLayout constraintFilterOrders;
-    private static SwipeRefreshLayout swipeRefreshLayout;
-    private static BottomSheetBehavior bottomSheetBehavior;
-    private static ImageView imageViewFilter;
+    private  ConstraintLayout constraintFilterOrders;
+    private  SwipeRefreshLayout swipeRefreshLayout;
+    private  BottomSheetBehavior bottomSheetBehavior;
+    private  ImageView imageViewFilter;
+
+     private cPickorderAdapter pickorderAdapter;
+     private cPickorderAdapter getPickorderAdapter(){
+         if (this.pickorderAdapter ==  null){
+             this.pickorderAdapter = new cPickorderAdapter();
+         }
+
+         return  this.pickorderAdapter;
+
+     }
 
     // End Region Views
 
@@ -114,7 +124,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
         if (pvMenuItem.getItemId() == android.R.id.home) {
-            mTryToLeaveActivity();
+            this.mTryToLeaveActivity();
             return true;
         }
 
@@ -123,12 +133,12 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void onBackPressed() {
-        mTryToLeaveActivity();
+        this.mTryToLeaveActivity();
     }
 
     @Override
     public void onRefresh() {
-        SortorderSelectActivity.pFillOrders();
+        this.pFillOrders();
 
     }
 
@@ -166,26 +176,26 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void mFindViews() {
-        SortorderSelectActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        SortorderSelectActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        SortorderSelectActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        SortorderSelectActivity.recyclerViewSortorders = findViewById(R.id.recyclerViewSortorders);
-        SortorderSelectActivity.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        SortorderSelectActivity.imageViewFilter = findViewById(R.id.imageViewFilter);
-        SortorderSelectActivity.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
-        SortorderSelectActivity.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.recyclerViewSortorders = findViewById(R.id.recyclerViewSortorders);
+        this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
+        this.imageViewFilter = findViewById(R.id.imageViewFilter);
+        this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
+        this.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        SortorderSelectActivity.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
-        SortorderSelectActivity.toolbarTitle.setText(pvScreenTitleStr);
-        SortorderSelectActivity.toolbarTitle.setSelected(true);
-        SortorderSelectActivity.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
+        this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarTitle.setSelected(true);
+        this.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
-        ViewCompat.setTransitionName(SortorderSelectActivity.toolbarImage, VIEW_NAME_HEADER_IMAGE);
-        ViewCompat.setTransitionName(SortorderSelectActivity.toolbarTitle, VIEW_NAME_HEADER_TEXT);
+        ViewCompat.setTransitionName(this.toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName(this.toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -198,7 +208,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     public void mFieldsInitialize() {
         this.mInitBottomSheet();
         this.mResetCurrents();
-        SortorderSelectActivity.pFillOrders();
+        this.pFillOrders();
     }
 
     @Override
@@ -210,16 +220,13 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void mInitScreen() {
-
         cBarcodeScan.pRegisterBarcodeReceiver();
-
-
     }
 
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
-    public static void pFillOrders() {
+    public  void pFillOrders() {
 
         // Show that we are getting data
         cUserInterface.pShowGettingData();
@@ -233,7 +240,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    public static void pSortorderSelected(cPickorder pvPickorder) {
+    public void pSortorderSelected(cPickorder pvPickorder) {
 
         if (!mCheckOrderIsLockableBln(pvPickorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
@@ -255,33 +262,33 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodescan) {
+    public void pHandleScan(cBarcodeScan pvBarcodescan) {
 
         //Set filter with scanned barcodeStr if there is no prefix
         if (!cRegex.pHasPrefix(pvBarcodescan.getBarcodeOriginalStr())) {
             //no prefix, fine
-            SortorderSelectActivity.recyclerSearchView.setQuery(pvBarcodescan.getBarcodeOriginalStr(), true);
-            SortorderSelectActivity.recyclerSearchView.callOnClick();
+            this.recyclerSearchView.setQuery(pvBarcodescan.getBarcodeOriginalStr(), true);
+            this.recyclerSearchView.callOnClick();
             return;
         }
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodescan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
             //has prefix, is salesorderStr
-            SortorderSelectActivity.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodescan.getBarcodeOriginalStr()), true);
-            SortorderSelectActivity.recyclerSearchView.callOnClick();
+            this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodescan.getBarcodeOriginalStr()), true);
+            this.recyclerSearchView.callOnClick();
             return;
         }
 
         //If there is a prefix but it's not a salesorder tgen do nope
-        cUserInterface.pDoNope(SortorderSelectActivity.recyclerSearchView, true, true);
+        cUserInterface.pDoNope(this.recyclerSearchView, true, true);
     }
 
     //End Region Public Method
 
     //Region Private Method
 
-    private static void mHandleFillOrders(){
+    private void mHandleFillOrders(){
 
         //First get all sortorders
         if (!cPickorder.pGetSortOrdersViaWebserviceBln(true,"")) {
@@ -291,7 +298,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
 
         if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
-            SortorderSelectActivity.mShowNoOrdersIcon(true);
+            this.mShowNoOrdersIcon(true);
             return;
         }
 
@@ -299,35 +306,35 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
             @Override
             public void run() {
                 //Fill and show recycler
-                SortorderSelectActivity.mSetSortorderRecycler(cPickorder.allPickordersObl);
-                SortorderSelectActivity.mShowNoOrdersIcon(false);
+                mSetSortorderRecycler(cPickorder.allPickordersObl);
+                mShowNoOrdersIcon(false);
                 cUserInterface.pHideGettingData();
             }
         });
 
     }
 
-    private static void mHandleSortOrderSelected(){
+    private  void mHandleSortOrderSelected(){
 
         cResult hulpResult;
 
         //Try to lock the pickorder
 
-        if (!SortorderSelectActivity.mTryToLockOrderBln()) {
-            SortorderSelectActivity.pFillOrders();
+        if (!this.mTryToLockOrderBln()) {
+            this.pFillOrders();
             return;
         }
 
         //Delete the detail, so we can get them from the webservice
         if (!cPickorder.currentPickOrder.pDeleteDetailsBln()) {
-            mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
             return;
 
         }
 
-        hulpResult = SortorderSelectActivity.mGetOrderDetailsRst();
+        hulpResult = this.mGetOrderDetailsRst();
         if (!hulpResult.resultBln) {
-            SortorderSelectActivity.mStepFailed(hulpResult.messagesStr());
+            this.mStepFailed(hulpResult.messagesStr());
             return;
         }
 
@@ -335,7 +342,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
             @Override
             public void run() {
                 // If everything went well, then start Lines Activity
-                SortorderSelectActivity.mShowSortLinesActivity();
+                mShowSortLinesActivity();
             }
         });
 
@@ -344,15 +351,15 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mSetSearchListener() {
         //make whole view clickable
-        SortorderSelectActivity.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
+        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SortorderSelectActivity.recyclerSearchView.setIconified(false);
+                recyclerSearchView.setIconified(false);
             }
         });
 
         //query entered
-        SortorderSelectActivity.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 return false;
@@ -361,17 +368,17 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
             @Override
             public boolean onQueryTextChange(String pvQueryTextStr) {
                 mApplyFilter();
-                cPickorder.getPickorderAdapter().pSetFilter((pvQueryTextStr));
+                getPickorderAdapter().pSetFilter((pvQueryTextStr));
                 return true;
             }
         });
     }
 
     private void mSetFilterListener() {
-        SortorderSelectActivity.imageViewFilter.setOnClickListener(new View.OnClickListener() {
+        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (SortorderSelectActivity.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                     mShowHideBottomSheet(true);
                 }
                 else {
@@ -382,17 +389,17 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetSwipeRefreshListener() {
-        SortorderSelectActivity.swipeRefreshLayout.setOnRefreshListener(this);
-        SortorderSelectActivity.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
+        this.swipeRefreshLayout.setOnRefreshListener(this);
+        this.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
     }
 
 
     private void mInitBottomSheet() {
 
-        SortorderSelectActivity.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
-        SortorderSelectActivity.bottomSheetBehavior.setHideable(true);
-        SortorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        SortorderSelectActivity.bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
+        this.bottomSheetBehavior.setHideable(true);
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        this.bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View pvBottomSheet, int pvNewStateInt) {
                 if (pvNewStateInt == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -415,11 +422,11 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
     private void mShowHideBottomSheet(Boolean pvShowBln) {
 
         if (pvShowBln) {
-            SortorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             return;
         }
 
-        SortorderSelectActivity.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     }
 
@@ -430,19 +437,19 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
 
         filteredPicksObl = cPickorder.pGetPicksFromDatabasObl();
-        if (filteredPicksObl == null || filteredPicksObl.size() == 0) {
+        if (filteredPicksObl.size() == 0) {
             return;
         }
 
-        SortorderSelectActivity.mSetSortorderRecycler(filteredPicksObl);
+        this.mSetSortorderRecycler(filteredPicksObl);
     }
 
     private void mShowThatFiltersInUse(Boolean pvFiltersInUseBln) {
         if (pvFiltersInUseBln) {
-            SortorderSelectActivity.imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_filled_black_24dp));
+            this.imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_filled_black_24dp));
         }
         else {
-            SortorderSelectActivity.imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_black_24dp));
+            this.imageViewFilter.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_filter_black_24dp));
         }
     }
 
@@ -459,7 +466,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         cWorkplace.currentWorkplace = null;
     }
 
-    private static void mShowNoOrdersIcon(final Boolean pvShowBln){
+    private void mShowNoOrdersIcon(final Boolean pvShowBln){
 
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
@@ -493,9 +500,9 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         });
     }
 
-    private static void mSetSortorderRecycler(List<cPickorder> pvPickorderObl) {
+    private  void mSetSortorderRecycler(List<cPickorder> pvPickorderObl) {
 
-        SortorderSelectActivity.swipeRefreshLayout.setRefreshing(false);
+        this.swipeRefreshLayout.setRefreshing(false);
 
         if (pvPickorderObl == null || pvPickorderObl.size() == 0) {
             return;
@@ -507,14 +514,14 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
             }
         }
 
-        SortorderSelectActivity.recyclerViewSortorders.setHasFixedSize(false);
-        SortorderSelectActivity.recyclerViewSortorders.setAdapter(cPickorder.getPickorderAdapter());
-        SortorderSelectActivity.recyclerViewSortorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewSortorders.setHasFixedSize(false);
+        this.recyclerViewSortorders.setAdapter(this.getPickorderAdapter());
+        this.recyclerViewSortorders.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        cPickorder.getPickorderAdapter().pFillData(pvPickorderObl);
+        this.getPickorderAdapter().pFillData(pvPickorderObl);
     }
 
-    private static boolean mCheckOrderIsLockableBln(cPickorder pvPickorder){
+    private boolean mCheckOrderIsLockableBln(cPickorder pvPickorder){
 
         //If there is no assigned user, then always oke
         if (pvPickorder.getAssignedUserIdStr().isEmpty()) {
@@ -531,7 +538,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private static boolean mTryToLockOrderBln(){
+    private boolean mTryToLockOrderBln(){
 
         cResult hulpResult;
         hulpResult = cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickSorting);
@@ -555,7 +562,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
             //If we got any comments, show them
             if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
                 //Process comments from webresult
-                SortorderSelectActivity.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+                this.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
             }
 
             return  false;
@@ -566,14 +573,14 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private static void mStepFailed(String pvErrorMessageStr){
+    private void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
         cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickSorting);
         cUserInterface.pCheckAndCloseOpenDialogs();
         cPickorder.currentPickOrder = null;
     }
 
-    private static void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
+    private void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -587,7 +594,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
-    private static cResult mGetOrderDetailsRst(){
+    private cResult mGetOrderDetailsRst(){
 
         cResult result;
 
@@ -645,7 +652,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         return  result;
     }
 
-    private static void mShowSortLinesActivity() {
+    private void mShowSortLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -653,7 +660,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
         Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
         View clickedOrder = container.findViewWithTag(cPickorder.currentPickOrder.getOrderNumberStr());
-        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, SortorderLinesActivity.VIEW_CHOSEN_ORDER));
+        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
         ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
     }
 

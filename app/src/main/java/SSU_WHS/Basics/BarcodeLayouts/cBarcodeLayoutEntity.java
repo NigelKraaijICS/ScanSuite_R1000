@@ -16,26 +16,17 @@ public class cBarcodeLayoutEntity {
     //Region Public Properties
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODELAYOUT_NAMESTR)
-    public String barcodelayout;
+    public String barcodelayout = "'";
     public String getBarcodelayoutStr() {return barcodelayout;}
 
     @NonNull
     @ColumnInfo(name = cDatabase.LAYOUTVALUE_NAMESTR)
-    public String layoutvalue;
+    public String layoutvalue = "";
     public String getLayoutValueStr() {return layoutvalue;}
-
-    @ColumnInfo(name = cDatabase.SORTORDER_NAMESTR)
-    public String sortorder;
-    public String getSortOrderStr() {return sortorder;}
-
-    @ColumnInfo(name = cDatabase.IMPORTFILE_NAMESTR)
-    public String importfile;
-    public String getImportfileStr() {return importfile;}
 
     //End Region Public Properies
 
-    //Region Constructor
-    public cBarcodeLayoutEntity() {
+    public  cBarcodeLayoutEntity(){
 
     }
 
@@ -43,8 +34,6 @@ public class cBarcodeLayoutEntity {
         try {
             this.barcodelayout = jsonObject.getString(cDatabase.BARCODELAYOUT_NAMESTR);
             this.layoutvalue = jsonObject.getString(cDatabase.LAYOUTVALUE_NAMESTR);
-            this.sortorder = jsonObject.getString(cDatabase.SORTORDER_NAMESTR);
-            this.importfile = jsonObject.getString(cDatabase.IMPORTFILE_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

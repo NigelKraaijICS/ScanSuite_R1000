@@ -1,5 +1,6 @@
 package SSU_WHS.Move.MoveorderBarcodes;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
@@ -19,14 +20,6 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cMoveorderBarcode {
 
     private cMoveorderBarcodeEntity moveorderBarcodeEntity;
-
-    public static cMoveorderBarcodeViewModel gMoveorderBarcodeViewModel;
-    public static cMoveorderBarcodeViewModel getMoveorderBarcodeViewModel() {
-        if (gMoveorderBarcodeViewModel == null) {
-            gMoveorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cMoveorderBarcodeViewModel.class);
-        }
-        return gMoveorderBarcodeViewModel;
-    }
 
     public static List<cMoveorderBarcode> allMoveorderBarcodesObl;
     public static cMoveorderBarcode currentMoveOrderBarcode;
@@ -73,7 +66,11 @@ public class cMoveorderBarcode {
         return this.quantityHandled;
     }
 
-    public String getItemTypeStr() { return "";}
+    private cMoveorderBarcodeViewModel getMoveorderBarcodeViewModel () {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderBarcodeViewModel.class);
+    }
+
+
 
     //Region Constructor
     public cMoveorderBarcode(JSONObject pvJsonObject) {
@@ -88,31 +85,19 @@ public class cMoveorderBarcode {
         this.quantityHandled = this.moveorderBarcodeEntity.getQuantityHandled();
     }
 
-    public cMoveorderBarcode(cMoveorderBarcodeEntity moveorderBarcodeEntity) {
-        this.moveorderBarcodeEntity = moveorderBarcodeEntity;
-        this.barcode = this.moveorderBarcodeEntity.getBarcodeStr();
-        this.barcodetype = this.moveorderBarcodeEntity.getBarcodeTypesStr();
-        this.isuniquebarcode = this.moveorderBarcodeEntity.getIsUniqueBarcodeBln();
-        this.itemno = this.moveorderBarcodeEntity.getItemNoStr();
-        this.variantCode = this.moveorderBarcodeEntity.getVariantCodeStr();
-        this.quantityPerUnitOfMeasure = this.moveorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
-        this.unitOfMeasure = this.moveorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.moveorderBarcodeEntity.getQuantityHandled();
-    }
-    public cMoveorderBarcode() {
-
-    }
     //End Region Constructor
 
 
 
     public static boolean pTruncateTableBln(){
-        cMoveorderBarcode.getMoveorderBarcodeViewModel().deleteAll();
+
+        cMoveorderBarcodeViewModel moveorderBarcodeViewModel=   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderBarcodeViewModel.class);
+        moveorderBarcodeViewModel.deleteAll();
         return true;
     }
 
     public boolean pInsertInDatabaseBln() {
-        cMoveorderBarcode.getMoveorderBarcodeViewModel().insert(this.moveorderBarcodeEntity);
+        this.getMoveorderBarcodeViewModel().insert(this.moveorderBarcodeEntity);
 
         if (cMoveorderBarcode.allMoveorderBarcodesObl == null){
             cMoveorderBarcode.allMoveorderBarcodesObl = new ArrayList<>();
@@ -124,7 +109,7 @@ public class cMoveorderBarcode {
 
         cWebresult WebResult;
 
-        WebResult =  cMoveorderBarcode.getMoveorderBarcodeViewModel().pCreateBarcodeViaWebserviceWrs();
+        WebResult =  this.getMoveorderBarcodeViewModel().pCreateBarcodeViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
             return true;
         }
@@ -150,49 +135,28 @@ public class cMoveorderBarcode {
             }
         }return resultObl;
     }
-    private String barcodeWithoutCheckDigitStr;
+
     public String getBarcodeWithoutCheckDigitStr() {
 
-        this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
+        String barcodeWithoutCheckDigitStr = this.getBarcodeStr();
 
         if (cText.pStringToIntegerInt(this.getBarcodeTypesStr()) != cBarcodeScan.BarcodeType.EAN8 && cText.pStringToIntegerInt(this.getBarcodeTypesStr()) != cBarcodeScan.BarcodeType.EAN13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() != 8 && this.getBarcodeStr().length() != 13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() == 8)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,7);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,7);
         }
 
         if (this.getBarcodeStr().length() == 13)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,12);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,12);
         }
 
         return barcodeWithoutCheckDigitStr;
     }
 
-    public static List<cMoveorderBarcode> pSortedmoveorderBarcodeList(List<cMoveorderBarcode> unsortedMoveorderBarcode) {
-        List<cMoveorderBarcode> resultList = new ArrayList<>();
-        boolean barcodeFoundBln = false;
-        for (cMoveorderBarcode moveorderBarcode : unsortedMoveorderBarcode) {
-            for (cMoveorderBarcode resultBarcode : resultList) {
-                if (resultBarcode.getBarcodeStr().equalsIgnoreCase(moveorderBarcode.getBarcodeStr())) {
-                    resultBarcode.quantityHandled +=  moveorderBarcode.quantityPerUnitOfMeasure;
-                    barcodeFoundBln = true;
-                }
-            }
-            if (barcodeFoundBln) {
-                barcodeFoundBln = false;
-            }
-            else {
-                //new barcode, so add
-                moveorderBarcode.quantityHandled = moveorderBarcode.quantityPerUnitOfMeasure;
-                resultList.add(moveorderBarcode);
-            }
-        }
-        return resultList;
-    }
 }

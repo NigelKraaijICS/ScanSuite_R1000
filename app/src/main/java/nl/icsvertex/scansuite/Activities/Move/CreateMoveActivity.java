@@ -1,4 +1,5 @@
 package nl.icsvertex.scansuite.Activities.Move;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -30,8 +31,8 @@ import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
-import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
@@ -39,20 +40,19 @@ import nl.icsvertex.scansuite.R;
 public class CreateMoveActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
-    public static final String VIEW_NAME_HEADER_IMAGE = "detail:header:imageStr";
-    public static final String VIEW_NAME_HEADER_TEXT = "detail:header:text";
+
     //End Region Public Properties
 
     //Region Private Properties
 
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubTitle;
-    static private EditText editTextDocument;
-    static private EditText editTextBin;
-    private static Switch switchCheckBarcodes;
-    static private Button createMoveButton;
-    static private Button cancelButton;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private TextView toolbarSubTitle;
+    private EditText editTextDocument;
+    private EditText editTextBin;
+    private Switch switchCheckBarcodes;
+    private Button createMoveButton;
+    private Button cancelButton;
     //End Region private Properties
 
     //Region Constructor
@@ -88,6 +88,13 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -137,25 +144,25 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
     @Override
     public void mFindViews() {
-        CreateMoveActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        CreateMoveActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        CreateMoveActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        CreateMoveActivity.editTextDocument = findViewById(R.id.editTextDocument);
-        CreateMoveActivity.editTextBin = findViewById(R.id.editTextBin);
-        CreateMoveActivity.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
-        CreateMoveActivity.createMoveButton = findViewById(R.id.createOrderButton);
-        CreateMoveActivity.cancelButton = findViewById(R.id.cancelButton);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.editTextDocument = findViewById(R.id.editTextDocument);
+        this.editTextBin = findViewById(R.id.editTextBin);
+        this.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
+        this.createMoveButton = findViewById(R.id.createOrderButton);
+        this.cancelButton = findViewById(R.id.cancelButton);
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
-        CreateMoveActivity.toolbarImage.setImageResource(R.drawable.ic_menu_move);
-        CreateMoveActivity.toolbarTitle.setText(pvScreenTitle);
-        CreateMoveActivity.toolbarTitle.setSelected(true);
-        CreateMoveActivity.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
+    public void mSetToolbar(String pvScreenTitleStr) {
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_move);
+        this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarTitle.setSelected(true);
+        this.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
-        ViewCompat.setTransitionName(toolbarImage, VIEW_NAME_HEADER_IMAGE);
-        ViewCompat.setTransitionName(toolbarTitle, VIEW_NAME_HEADER_TEXT);
+        ViewCompat.setTransitionName(this.toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
+        ViewCompat.setTransitionName(this.toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -168,29 +175,29 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     public void mFieldsInitialize() {
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(50);
-        CreateMoveActivity.editTextDocument.setFilters(filterArray);
+        this.editTextDocument.setFilters(filterArray);
 
        if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
-           CreateMoveActivity.editTextBin.setVisibility(View.GONE);
+           this.editTextBin.setVisibility(View.GONE);
        }
        else {
-           mSetBin();
+           this.mSetBin();
        }
 
         if (!cUser.currentUser.currentBranch.getReturnDefaultBinStr().isEmpty()) {
-            CreateMoveActivity.editTextBin.setText(cUser.currentUser.currentBranch.getMoveDefaultBinStr());
+            this.editTextBin.setText(cUser.currentUser.currentBranch.getMoveDefaultBinStr());
         }
 
         if (!cSetting.RECEIVE_BARCODE_CHECK()) {
-            CreateMoveActivity.switchCheckBarcodes.setVisibility(View.GONE);
+            this.switchCheckBarcodes.setVisibility(View.GONE);
         }
         else{
-            CreateMoveActivity.switchCheckBarcodes.setChecked(true);
+            this.switchCheckBarcodes.setChecked(true);
         }
 
         if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            CreateMoveActivity.editTextBin.setVisibility(View.GONE);
-            CreateMoveActivity.switchCheckBarcodes.setVisibility(View.GONE);
+            this.editTextBin.setVisibility(View.GONE);
+            this.switchCheckBarcodes.setVisibility(View.GONE);
         }
 
     }
@@ -211,7 +218,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
     //Region Public Methods
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan, boolean pvIsDocumentBln, boolean pvBinBln) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan, boolean pvIsDocumentBln, boolean pvBinBln) {
 
         String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
@@ -219,13 +226,13 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         boolean binBln = false;
 
         if (pvIsDocumentBln) {
-            CreateMoveActivity.editTextDocument.setText(barcodeWithoutPrefixStr);
-            CreateMoveActivity.editTextBin.requestFocus();
+            this.editTextDocument.setText(barcodeWithoutPrefixStr);
+            this.editTextBin.requestFocus();
             return;
         }
         if (pvBinBln) {
-            CreateMoveActivity.editTextBin.setText(barcodeWithoutPrefixStr);
-            CreateMoveActivity.editTextBin.requestFocus();
+            this.editTextBin.setText(barcodeWithoutPrefixStr);
+            this.editTextBin.requestFocus();
         }
 
         cUserInterface.pCheckAndCloseOpenDialogs();
@@ -247,19 +254,19 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         }
 
         //has prefix, is DOCUMENT
-        if (documentBln   || CreateMoveActivity.editTextDocument.getText().toString().isEmpty()) {
-            CreateMoveActivity.editTextDocument.setText(barcodeWithoutPrefixStr);
+        if (documentBln   || this.editTextDocument.getText().toString().isEmpty()) {
+            this.editTextDocument.setText(barcodeWithoutPrefixStr);
 
             if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
 
                 MoveorderSelectActivity.startedViaMenuBln = false;
-                CreateMoveActivity.mCreateOrder(editTextDocument.getText().toString().trim(),
-                        editTextBin.getText().toString().trim(),
-                        switchCheckBarcodes.isChecked());
+                this.mCreateOrder(this.editTextDocument.getText().toString().trim(),
+                                  this.editTextBin.getText().toString().trim(),
+                                  this.switchCheckBarcodes.isChecked());
                 return;
             }
 
-            CreateMoveActivity.editTextBin.requestFocus();
+            this.editTextBin.requestFocus();
             return;
         }
 
@@ -273,10 +280,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
                 return;
             }
 
-            CreateMoveActivity.editTextBin.setText(barcodeWithoutPrefixStr);
-            return;
-
-
+            this.editTextBin.setText(barcodeWithoutPrefixStr);
         }
     }
 
@@ -284,7 +288,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
     //Region Private Method
 
-    private static void mCreateOrder(final String pvDocumentStr, final String pvBinCodeStr, final boolean pvCheckBarcodesBln){
+    private void mCreateOrder(final String pvDocumentStr, final String pvBinCodeStr, final boolean pvCheckBarcodesBln){
 
 
         // Show that we are getting data
@@ -299,32 +303,32 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     }
 
     private void mSetCancelListener() {
-        CreateMoveActivity.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                CreateMoveActivity.mStartOrderSelectActivity();
+                mStartOrderSelectActivity();
             }
         });
     }
 
-    private static void mStartOrderSelectActivity() {
+    private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
         MoveorderSelectActivity.startedViaMenuBln = false;
         cAppExtension.activity.startActivity(intent);
     }
 
     private void mSetCreateListener() {
-        CreateMoveActivity.createMoveButton.setOnClickListener(new View.OnClickListener() {
+        this.createMoveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
 
-                if (CreateMoveActivity.editTextDocument.getText().toString().isEmpty()){
+                if (editTextDocument.getText().toString().isEmpty()){
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_document),null);
                     return;
                 }
 
                  MoveorderSelectActivity.startedViaMenuBln = false;
-                CreateMoveActivity.mCreateOrder(editTextDocument.getText().toString().trim(),
+                 mCreateOrder(editTextDocument.getText().toString().trim(),
                                                 editTextBin.getText().toString().trim(),
                                                 switchCheckBarcodes.isChecked());
             }
@@ -332,23 +336,23 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     }
 
     private void mSetEditorActionListener() {
-        CreateMoveActivity.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    CreateMoveActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateMoveActivity.editTextDocument.getText().toString()),true,false);
+                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false);
                     cUserInterface.pHideKeyboard();
                 }
                 return true;
             }
         });
 
-        CreateMoveActivity.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    CreateMoveActivity.pHandleScan(cBarcodeScan.pFakeScan(CreateMoveActivity.editTextBin.getText().toString()),false,false);
+                    pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,false);
                     cUserInterface.pHideKeyboard();
 
                 }
@@ -362,15 +366,15 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     private void mSetBin(){
 
         if (!cUser.currentUser.currentBranch.getMoveDefaultBinStr().isEmpty()) {
-            CreateMoveActivity.editTextBin.setText(cUser.currentUser.currentBranch.getMoveDefaultBinStr());
+            this.editTextBin.setText(cUser.currentUser.currentBranch.getMoveDefaultBinStr());
         }
     }
 
-    private static void mHandleCreateOrder(String pvDocumentstr, String pvBinCodeStr, boolean pvCheckBarcodesBln ){
+    private void mHandleCreateOrder(String pvDocumentstr, String pvBinCodeStr, boolean pvCheckBarcodesBln ){
 
         cResult hulpResult;
 
-        hulpResult = CreateMoveActivity.mTryToCreateOrderRst(pvDocumentstr,pvBinCodeStr,pvCheckBarcodesBln);
+        hulpResult = this.mTryToCreateOrderRst(pvDocumentstr,pvBinCodeStr,pvCheckBarcodesBln);
         //Try to create the order
         if (!hulpResult.resultBln) {
             return;
@@ -404,16 +408,10 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
                 return;
             }
 
-
-            if ( cMoveorder.currentMoveOrder == null) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_next_activity_not_found),"",true,true);
-                return;
-            }
-
         }
 
         //Try to lock the order
-        if (!CreateMoveActivity.mTryToLockOrderBln()) {
+        if (!this.mTryToLockOrderBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_locking_order_failed),"",true,true);
             return;
         }
@@ -421,9 +419,9 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         //Delete the detail, so we can get them from the webservice
         cMoveorder.currentMoveOrder.pDeleteDetailsBln();
 
-        hulpResult = CreateMoveActivity.mGetOrderDetailsRst();
+        hulpResult = this.mGetOrderDetailsRst();
         if (!hulpResult.resultBln) {
-            CreateMoveActivity.mStepFailed(hulpResult.messagesStr());
+            this.mStepFailed(hulpResult.messagesStr());
             return;
         }
 
@@ -431,18 +429,18 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
             @Override
             public void run() {
                 // If everything went well, then start Lines Activity
-                CreateMoveActivity.mShowMoveLinesActivity();
+                mShowMoveLinesActivity();
             }
         });
 
     }
 
-    private static cResult mTryToCreateOrderRst(String pvDocumentstr,  String pvBinCodeStr, boolean pvCheckBarcodesBln){
+    private  cResult mTryToCreateOrderRst(String pvDocumentstr,  String pvBinCodeStr, boolean pvCheckBarcodesBln){
 
         cResult result =  cMoveorder.pCreateMoveOrderViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
         if (!result.resultBln) {
-            CreateMoveActivity.editTextDocument.setText("");
-            mStepFailed(result.messagesStr());
+            this.editTextDocument.setText("");
+            this.mStepFailed(result.messagesStr());
             return  result;
         }
 
@@ -450,7 +448,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
     }
 
-    private static boolean mTryToLockOrderBln(){
+    private boolean mTryToLockOrderBln(){
 
         cResult hulpResult  = cMoveorder.currentMoveOrder.pLockViaWebserviceRst();
 
@@ -461,7 +459,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
-            mStepFailed(hulpResult.messagesStr());
+            this.mStepFailed(hulpResult.messagesStr());
             return  false;
         }
         return (hulpResult.activityActionEnu != cWarehouseorder.ActivityActionEnu.Delete) &&
@@ -469,7 +467,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
     }
 
-    private static cResult mGetOrderDetailsRst(){
+    private cResult mGetOrderDetailsRst(){
 
         cResult result;
 
@@ -507,25 +505,24 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         return  result;
     }
 
-    private static void mStepFailed(String pvErrorMessageStr){
+    private void mStepFailed(String pvErrorMessageStr){
 
         if (cMoveorder.currentMoveOrder != null) {
             cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cMoveorder.currentMoveOrder.getOrderNumberStr(), true, true );
         }
         else
         {
-            cUserInterface.pDoExplodingScreen(pvErrorMessageStr,cAppExtension.activity.getString(R.string.message_couldnt_create_order) + " " +  CreateMoveActivity.editTextDocument.getText().toString(), true, true );
+            cUserInterface.pDoExplodingScreen(pvErrorMessageStr,cAppExtension.activity.getString(R.string.message_couldnt_create_order) + " " +  this.editTextDocument.getText().toString(), true, true );
         }
 
         if (cMoveorder.currentMoveOrder != null) {
             cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
         }
 
-
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
-    private static void mShowMoveLinesActivity() {
+    private void mShowMoveLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 

@@ -14,7 +14,7 @@ import SSU_WHS.General.cDatabase;
 
         @NonNull
         @ColumnInfo(name=cDatabase.SALESORDER_NAMESTR)
-        public String salesorder;
+        public String salesorder = "";
         @NonNull
         public String getSalesOrderStr() {
             return salesorder;
@@ -22,7 +22,7 @@ import SSU_WHS.General.cDatabase;
 
         @NonNull
         @ColumnInfo(name=cDatabase.PACKINGTABLE_NAMESTR)
-        public String packingtable;
+        public String packingtable = "";
         public String getPackingTableStr() {
             return packingtable;
         }
@@ -35,7 +35,7 @@ import SSU_WHS.General.cDatabase;
             // empty constructor
         }
 
-        public cSalesOrderPackingTableEntity(String pvSalesOrderStr, String pvPackingTableStr) {
+        public cSalesOrderPackingTableEntity(@NonNull String pvSalesOrderStr, @NonNull String pvPackingTableStr) {
             this.salesorder = pvSalesOrderStr;
             this.packingtable = pvPackingTableStr;
         }

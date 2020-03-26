@@ -14,20 +14,21 @@ import SSU_WHS.General.cDatabase;
 public class cInventoryorderLineBarcodeEntity {
     @NonNull
     @ColumnInfo(name = cDatabase.LINENO_NAMESTR)
-    public Long lineNoLng;
+    public Long lineNoLng = 0L;
+    @NonNull
     public Long getLineNoLng() {return lineNoLng;}
 
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODE_NAMESTR)
-    public String barcodeStr;
+    public String barcodeStr = "";
+    @NonNull
     public String getBarcodeStr() {return barcodeStr;}
 
     @ColumnInfo(name = cDatabase.QUANTITYHANDLED_NAMESTR)
     public String quantityHandledStr;
     public String getQuantityhandledStr() {return quantityHandledStr;}
 
-    //empty constructor
-    public cInventoryorderLineBarcodeEntity() {
+    public  cInventoryorderLineBarcodeEntity(){
 
     }
 
@@ -41,7 +42,7 @@ public class cInventoryorderLineBarcodeEntity {
         }
     }
 
-    public cInventoryorderLineBarcodeEntity(Long pvLineNoLng, String pvBarcodeStr) {
+    public cInventoryorderLineBarcodeEntity(@NonNull Long pvLineNoLng, @NonNull String pvBarcodeStr) {
         this.lineNoLng = pvLineNoLng;
         this.barcodeStr = pvBarcodeStr;
         this.quantityHandledStr = "0";

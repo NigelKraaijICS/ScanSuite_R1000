@@ -5,14 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cText;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.R;
 
@@ -22,9 +22,8 @@ public class cShippingAgentServiceShippingUnitUsedAdapter extends RecyclerView.A
 
     //End Region Public Properties
 
-    class ShippingAgentServiceShippingUnitUsedViewHolder extends RecyclerView.ViewHolder{
+    static class ShippingAgentServiceShippingUnitUsedViewHolder extends RecyclerView.ViewHolder{
 
-        private LinearLayout shippingUnitUsedItemLinearLayout;
         private TextView textViewDescription;
         private TextView textViewShippingUnit;
         private TextView textViewQuantityUsed;
@@ -32,7 +31,6 @@ public class cShippingAgentServiceShippingUnitUsedAdapter extends RecyclerView.A
 
         ShippingAgentServiceShippingUnitUsedViewHolder(View pvView) {
             super(pvView);
-            this.shippingUnitUsedItemLinearLayout = pvView.findViewById(R.id.shippingUnitUsedItemLinearLayout);
             this.usedUnitsImage = pvView.findViewById(R.id.usedUnitsImage);
             this.textViewDescription = pvView.findViewById(R.id.textViewDescription);
             this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -50,8 +48,6 @@ public class cShippingAgentServiceShippingUnitUsedAdapter extends RecyclerView.A
 
     //Region Private Properties
 
-    private List<LinearLayout> shippingUnitItemLinearLayouts = new ArrayList<>();
-    private RecyclerView thisRecyclerView;
     private LayoutInflater layoutInflater;
     private List<cShippingAgentServiceShippingUnit> localShippingUnits;
 
@@ -68,22 +64,20 @@ public class cShippingAgentServiceShippingUnitUsedAdapter extends RecyclerView.A
 
     // Region Default Methods
 
+    @NonNull
     @Override
-    public cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder onCreateViewHolder(ViewGroup pvViewgroup, int pvViewTypeInt) {
+    public cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder onCreateViewHolder(@NonNull ViewGroup pvViewgroup, int pvViewTypeInt) {
         View itemView = layoutInflater.inflate(R.layout.recycler_shippingunit_used, pvViewgroup, false);
-        return new cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder(itemView);
+        return new ShippingAgentServiceShippingUnitUsedViewHolder(itemView);
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView pvRecyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
         super.onAttachedToRecyclerView(pvRecyclerView);
-        this.thisRecyclerView = pvRecyclerView;
     }
 
     @Override
-    public void onBindViewHolder(cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder pvHolder, final int pvPositionInt) {
-
-        this.shippingUnitItemLinearLayouts.add(pvHolder.shippingUnitUsedItemLinearLayout);
+    public void onBindViewHolder(@NonNull cShippingAgentServiceShippingUnitUsedAdapter.ShippingAgentServiceShippingUnitUsedViewHolder pvHolder, final int pvPositionInt) {
 
         if (this.localShippingUnits == null || this.localShippingUnits.size() == 0) {
             return;
@@ -93,7 +87,7 @@ public class cShippingAgentServiceShippingUnitUsedAdapter extends RecyclerView.A
 
        pvHolder.textViewDescription.setText(shippingAgentServiceShippingUnit.getDescriptionStr());
        pvHolder.textViewShippingUnit.setText(shippingAgentServiceShippingUnit.getShippingUnitStr());
-       pvHolder.textViewQuantityUsed.setText(Integer.toString(shippingAgentServiceShippingUnit.getShippingUnitQuantityUsedInt()));
+       pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(shippingAgentServiceShippingUnit.getShippingUnitQuantityUsedInt()));
 
         if (shippingAgentServiceShippingUnit.getShippingUnitStr().equalsIgnoreCase(cShippingAgentServiceShippingUnit.SHIPPINGUNIT_BOX)) {
             pvHolder.usedUnitsImage.setImageResource(R.drawable.ic_box);

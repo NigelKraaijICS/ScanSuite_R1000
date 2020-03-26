@@ -31,7 +31,7 @@ public class cInventoryorderLineViewModel extends AndroidViewModel {
     public Double pGetCountForBinCodeDbl(String pvBincode){return  this.Repository.pGetCountForBinCodeDbl(pvBincode);}
     public cWebresult pSaveLineViaWebserviceWrs (){return this.Repository.pSaveLineViaWebserviceWrs();}
     public cWebresult pResetLineViaWebserviceWrs (){return this.Repository.pResetLineViaWebserviceWrs();}
-    public Boolean pUpdateQuantityBln(){return  this.Repository.pUpdateQuantityBln();}
+    public void pUpdateQuantity(){this.Repository.pUpdateQuantity();}
 
 
 }

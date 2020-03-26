@@ -34,11 +34,11 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     //End Region Public Properties
 
     //Region Private Properties
-    private static Button buttonCancel;
-    private static Button buttonSave;
-    private static EditText editTextEnvironmentName;
-    private static EditText editTextEnvironmentDescription;
-    private static EditText editTextEnvironmentUrl;
+    private Button buttonCancel;
+    private Button buttonSave;
+    private EditText editTextEnvironmentName;
+    private EditText editTextEnvironmentDescription;
+    private EditText editTextEnvironmentUrl;
         //End Region Private Properties
 
 
@@ -100,11 +100,11 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     public void mFindViews() {
 
         if (getView() != null) {
-            AddEnvironmentFragment.buttonCancel = getView().findViewById(R.id.buttonCancel);
-            AddEnvironmentFragment.buttonSave = getView().findViewById(R.id.buttonSave);
-            AddEnvironmentFragment.editTextEnvironmentName = getView().findViewById(R.id.editTextEnvironmentName);
-            AddEnvironmentFragment.editTextEnvironmentDescription = getView().findViewById(R.id.editTextEnvironmentDescription);
-            AddEnvironmentFragment.editTextEnvironmentUrl = getView().findViewById(R.id.editTextEnvironmentUrl);
+            this.buttonCancel = getView().findViewById(R.id.buttonCancel);
+            this.buttonSave = getView().findViewById(R.id.buttonSave);
+            this.editTextEnvironmentName = getView().findViewById(R.id.editTextEnvironmentName);
+            this.editTextEnvironmentDescription = getView().findViewById(R.id.editTextEnvironmentDescription);
+            this.editTextEnvironmentUrl = getView().findViewById(R.id.editTextEnvironmentUrl);
         }
     }
 
@@ -117,32 +117,32 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
 
     @Override
     public void mSetListeners() {
-        mSetCancelListener();
-        mSetSaveListener();
-        mSetEditorActionListener();
+        this.mSetCancelListener();
+        this.mSetSaveListener();
+        this.mSetEditorActionListener();
     }
 
     //End Region iICSDefaultFragment defaults
 
     //Region Public Methods
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         String[] scanSplit = pvBarcodeScan.getBarcodeOriginalStr().split("=");
         if (scanSplit.length != 2) {
-            cUserInterface.pDoNope(buttonSave, true, false);
+            cUserInterface.pDoNope(this.buttonSave, true, false);
 
             return;
         }
         switch (scanSplit[0].toUpperCase()) {
             case "NAME":
-                editTextEnvironmentName.setText(scanSplit[1]);
+                this.editTextEnvironmentName.setText(scanSplit[1]);
                 break;
             case "DESCRIPTION":
-                editTextEnvironmentDescription.setText(scanSplit[1]);
+                this.editTextEnvironmentDescription.setText(scanSplit[1]);
                 break;
             case "URL":
-                editTextEnvironmentUrl.setText(scanSplit[1]);
+                this.editTextEnvironmentUrl.setText(scanSplit[1]);
                 break;
             default:
                 cUserInterface.pDoNope(buttonSave, true, false);
@@ -154,32 +154,32 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     //Region Private Methods
 
     private void mSetCancelListener() {
-        AddEnvironmentFragment.buttonCancel.setOnClickListener(new View.OnClickListener() {
+        this.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cAppExtension.dialogFragment.dismiss();
+                dismiss();
             }
         });
     }
 
     private void mSetSaveListener() {
-        AddEnvironmentFragment.buttonSave.setOnClickListener(new View.OnClickListener() {
+        this.buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String name = AddEnvironmentFragment.editTextEnvironmentName.getText().toString().trim();
+                String name = editTextEnvironmentName.getText().toString().trim();
                 if (name.isEmpty()) {
-                    cUserInterface.pDoNope(AddEnvironmentFragment.editTextEnvironmentName, true, false);
+                    cUserInterface.pDoNope(editTextEnvironmentName, true, false);
                     return;
                 }
-                String description = AddEnvironmentFragment.editTextEnvironmentDescription.getText().toString().trim();
+                String description = editTextEnvironmentDescription.getText().toString().trim();
                 if (description.isEmpty()) {
-                    cUserInterface.pDoNope(AddEnvironmentFragment.editTextEnvironmentDescription, true, false);
+                    cUserInterface.pDoNope(editTextEnvironmentDescription, true, false);
                     return;
                 }
-                String url = AddEnvironmentFragment.editTextEnvironmentUrl.getText().toString().trim();
+                String url = editTextEnvironmentUrl.getText().toString().trim();
                 if (url.isEmpty()) {
-                    cUserInterface.pDoNope(AddEnvironmentFragment.editTextEnvironmentUrl, true, false);
+                    cUserInterface.pDoNope(editTextEnvironmentUrl, true, false);
                     return;
                 }
                 cEnvironmentEntity environmentEntity = new cEnvironmentEntity();
@@ -193,17 +193,18 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
 
                 cUserInterface.pShowToastMessage( getString(R.string.environment_parameter1_saved, description), null);
                 if (cAppExtension.context instanceof MainDefaultActivity) {
-                    MainDefaultActivity.pSetAddedEnvironment();
+                    MainDefaultActivity mainDefaultActivity =  (MainDefaultActivity)cAppExtension.activity;
+                    mainDefaultActivity.pSetAddedEnvironment();
                 }
             }
         });
     }
     private void mSetEditorActionListener() {
-        AddEnvironmentFragment.editTextEnvironmentUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editTextEnvironmentUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    AddEnvironmentFragment.buttonSave.callOnClick();
+                    buttonSave.callOnClick();
                 }
                 return true;
             }

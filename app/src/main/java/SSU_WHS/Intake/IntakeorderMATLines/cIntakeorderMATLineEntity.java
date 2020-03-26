@@ -20,84 +20,103 @@ public class cIntakeorderMATLineEntity {
 
     @ColumnInfo(name = cDatabase.LINENO_NAMESTR)
     public Integer lineNoInt;
+    public int getLineNoInt() {return this.lineNoInt;}
+
 
     @ColumnInfo(name = cDatabase.ITEMNO_NAMESTR)
     public String itemNoStr;
+    public String getItemNoStr() {return this.itemNoStr;}
 
     @ColumnInfo(name = cDatabase.VARIANTCODE_NAMESTR)
     public String variantCodeStr;
+    public String getVariantCodeStr() {return this.variantCodeStr;}
 
     @ColumnInfo(name = cDatabase.DESCRIPTION_NAMESTR)
     public String descriptionStr;
+    public String getDescriptionStr() {return this.descriptionStr;}
 
     @ColumnInfo(name = cDatabase.DESCRIPTION2_NAMESTR)
     public String description2Str;
+    public String getDescription2Str() {return this.description2Str;}
 
     @ColumnInfo(name = cDatabase.BINCODE_NAMESTR)
     public String binCodeStr;
+    public String getBincodeStr() {return this.binCodeStr;}
 
     @ColumnInfo(name = cDatabase.BINCODEHANDLED_NAMESTR)
     public String binCodehandledStr;
+    public String getBincodeHandledStr() {return this.binCodehandledStr;}
 
     @ColumnInfo(name = cDatabase.QUANTITY_NAMESTR)
     public Double quantityDbl;
+    public Double getQuantityDbl() {return this.quantityDbl;}
 
     @ColumnInfo(name = cDatabase.QUANTITYHANDLED_NAMESTR)
     public Double quantityHandledDbl;
+    public Double getQuantityHandledDbl() {return this.quantityHandledDbl;}
 
     @ColumnInfo(name = cDatabase.SOURCENO_NAMESTR)
     public String sourceNoStr;
+    public String getSourceNoStr() {return this.sourceNoStr;}
 
     @ColumnInfo(name = cDatabase.DESTINATIONNO_NAMESTR)
     public String destinationNoStr;
+    public String getDestinationNoStr() {return this.destinationNoStr;}
 
     @ColumnInfo(name = cDatabase.ISPARTOFMULTILINEORDER_NAMESTR)
     public String isPartOfMultilineOrderStr;
 
-    @ColumnInfo(name = cDatabase.SORTINGSEQUENCENO_NAMESTR)
-    public int sortingSequenceNoStr;
-
     @ColumnInfo(name = cDatabase.VENDORITEMNO_NAMESTR)
     public String vendorItemNoStr;
+    public String getVendorItemNoStr() {return this.vendorItemNoStr;}
 
     @ColumnInfo(name = cDatabase.VENDORITEMDESCRIPTION_NAMESTR)
     public String vendorItemDescriptionStr;
+    public String getVendorItemDescriptionStr() {return this.vendorItemDescriptionStr;}
 
     @ColumnInfo(name = cDatabase.STATUS_NAMESTR)
     public Integer statusInt;
-
-    @ColumnInfo(name = cDatabase.ACTIONTYPECODE_NAMESTR)
-    public String actionTypeCodeStr;
+    public int getStatusInt() {return this.statusInt;}
 
     @ColumnInfo(name = cDatabase.LOCALSTATUS_NAMESTR)
     public int localStatusInt;
+    public int getLocalStatusInt() {return this.localStatusInt;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD1_NAMESTR)
     public String extraField1Str;
+    public String getExtraField1Str() {return this.extraField1Str;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD2_NAMESTR)
     public String extraField2Str;
+    public String getExtraField2Str() {return this.extraField2Str;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD3_NAMESTR)
     public String extraField3Str;
+    public String getExtraField3Str() {return this.extraField3Str;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD4_NAMESTR)
     public String extraField4Str;
+    public String getExtraField4Str() {return this.extraField4Str;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD5_NAMESTR)
     public String extraField5Str;
+    public String getExtraField5Str() {return this.extraField5Str;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD6_NAMESTR)
     public String extraField6Str;
+    public String getExtraField6Str() {return this.extraField6Str;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD7_NAMESTR)
     public String extraField7Str;
+    public String getExtraField7Str() {return this.extraField7Str;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD8_NAMESTR)
     public String extraField8Str;
+    public String getExtraField8Str() {return this.extraField8Str;}
 
     @ColumnInfo(name = cDatabase.SOURCETYPE_NAMESTR)
     public Integer sourceTypeInt;
+    public int getSourceTypeInt() {return this.sourceTypeInt;}
 
 
     //empty constructor
@@ -119,11 +138,11 @@ public class cIntakeorderMATLineEntity {
             this.sourceNoStr = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
             this.destinationNoStr = pvJsonObject.getString(cDatabase.DESTINATIONNO_NAMESTR);
             this.isPartOfMultilineOrderStr = pvJsonObject.getString(cDatabase.ISPARTOFMULTILINEORDER_NAMESTR);
-            this.sortingSequenceNoStr = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.SORTINGSEQUENCENO_NAMESTR));
+
             this.vendorItemNoStr = pvJsonObject.getString(cDatabase.VENDORITEMNO_NAMESTR);
             this.vendorItemDescriptionStr = pvJsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
             this.statusInt = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.STATUS_NAMESTR));
-            this.actionTypeCodeStr = pvJsonObject.getString(cDatabase.ACTIONTYPECODE_NAMESTR);
+
             this.localStatusInt =  cWarehouseorder.IntakeMATLineLocalStatusEnu.LOCALSTATUS_NEW;
             this.sourceTypeInt = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.SOURCETYPE_NAMESTR));
 
@@ -249,35 +268,6 @@ public class cIntakeorderMATLineEntity {
         }
     }
 
-    public int getRecordidInt() {return this.recordid;}
-    public int getLineNoInt() {return this.lineNoInt;}
-    public String getItemNoStr() {return this.itemNoStr;}
-    public String getVariantCodeStr() {return this.variantCodeStr;}
-    public String getDescriptionStr() {return this.descriptionStr;}
-    public String getDescription2Str() {return this.description2Str;}
-    public String getBincodeStr() {return this.binCodeStr;}
-    public String getBincodehandledStr() {return this.binCodehandledStr;}
-    public Double getQuantityDbl() {return this.quantityDbl;}
-    public Double getQuantityHandledDbl() {return this.quantityHandledDbl;}
-    public String getSourceNoStr() {return this.sourceNoStr;}
-    public String getDestinationNoStr() {return this.destinationNoStr;}
-    public String getIspartOfMultilLneOrderStr() {return this.isPartOfMultilineOrderStr;}
-    public int getSortingSequenceStr() {return this.sortingSequenceNoStr;}
-    public String getVendorItemNoStr() {return this.vendorItemNoStr;}
-    public String getVendorItemDescriptionStr() {return this.vendorItemDescriptionStr;}
-    public int getStatusInt() {return this.statusInt;}
-    public int getLocalStatusInt() {return this.localStatusInt;}
-    public String getActionTypeStr() {return this.actionTypeCodeStr;}
 
-    public String getExtraField1Str() {return this.extraField1Str;}
-    public String getExtraField2Str() {return this.extraField2Str;}
-    public String getExtraField3Str() {return this.extraField3Str;}
-    public String getExtraField4Str() {return this.extraField4Str;}
-    public String getExtraField5Str() {return this.extraField5Str;}
-    public String getExtraField6Str() {return this.extraField6Str;}
-    public String getExtraField7Str() {return this.extraField7Str;}
-    public String getExtraField8Str() {return this.extraField8Str;}
-    public int getSourceTypeInt() {return this.sourceTypeInt;}
 
-    //public int getSourceTypeInt() {return this.sourceTypeInt;}
 }

@@ -1,13 +1,13 @@
 package SSU_WHS.Basics.ShippingAgentServiceShippingUnits;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
@@ -17,34 +17,24 @@ public class cShippingAgentServiceShippingUnit {
 
     //Region Public Properties
 
-    public String ShippingAgentStr;
+    private String ShippingAgentStr;
     public String getShippingAgentStr() {
         return ShippingAgentStr;
     }
 
-    public String ShippingAgentServiceStr;
+    private String ShippingAgentServiceStr;
     public String getShippingAgentServiceStr() {
         return ShippingAgentServiceStr;
     }
 
-    public String ShippingUnitStr;
+    private String ShippingUnitStr;
     public String getShippingUnitStr() {
         return ShippingUnitStr;
     }
 
-    public String DescriptionStr;
+    private String DescriptionStr;
     public String getDescriptionStr() {
         return DescriptionStr;
-    }
-
-    public double DefaultWeightInGramDbl;
-    public double getDefaultWeightInGramDbl() {
-        return DefaultWeightInGramDbl;
-    }
-
-    public String ContainerTypeStr;
-    public String getContainerTypeStr() {
-        return ContainerTypeStr;
     }
 
     public Integer ShippingUnitQuantityUsedInt;
@@ -52,36 +42,15 @@ public class cShippingAgentServiceShippingUnit {
         return ShippingUnitQuantityUsedInt;
     }
 
-    public cShippingAgentServiceShippingUnitEntity shippingAgentServiceShippingUnitEntity;
-    public boolean indatabaseBln;
+    private cShippingAgentServiceShippingUnitEntity shippingAgentServiceShippingUnitEntity;
 
     public static cShippingAgentServiceShippingUnit currentShippingAgentServiceShippingUnit;
 
-    public static cShippingAgentServiceShippingUnitViewModel gShippingAgentServiceShippingUnitViewModel;
-    public static cShippingAgentServiceShippingUnitViewModel getShippingAgentServiceShippingUnitViewModel() {
-        if (gShippingAgentServiceShippingUnitViewModel == null) {
-            gShippingAgentServiceShippingUnitViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cShippingAgentServiceShippingUnitViewModel.class);
-        }
-        return gShippingAgentServiceShippingUnitViewModel;
-    }
-
-    public static cShippingAgentServiceShippingUnitAdapter gShippingAgentServiceShippingUnitAdapter;
-    public static cShippingAgentServiceShippingUnitAdapter getShippingAgentServiceShippingUnitAdapter() {
-        if (gShippingAgentServiceShippingUnitAdapter == null) {
-            gShippingAgentServiceShippingUnitAdapter = new cShippingAgentServiceShippingUnitAdapter();
-        }
-        return gShippingAgentServiceShippingUnitAdapter;
+    private cShippingAgentServiceShippingUnitViewModel getShippingAgentServiceShippingUnitViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentServiceShippingUnitViewModel.class);
     }
 
     public static List<cShippingAgentServiceShippingUnit> allShippingAgentServiceShippingUnitsObl;
-
-    public enum shippingUnitsEnu {
-        DOOS,
-        PALLET,
-        CONTAINER,
-        HANGEND,
-        BP
-    }
 
     public static String SHIPPINGUNIT_BOX = "DOOS";
     public static String SHIPPINGUNIT_PALLET = "PALLET";
@@ -95,14 +64,12 @@ public class cShippingAgentServiceShippingUnit {
 
 
     //Region Constructor
-    cShippingAgentServiceShippingUnit(JSONObject pvJsonObject) {
+    private cShippingAgentServiceShippingUnit(JSONObject pvJsonObject) {
         this.shippingAgentServiceShippingUnitEntity = new cShippingAgentServiceShippingUnitEntity(pvJsonObject);
         this.ShippingAgentStr = this.shippingAgentServiceShippingUnitEntity.getShippingAgentStr()  ;
         this.ShippingAgentServiceStr = this.shippingAgentServiceShippingUnitEntity.getServiceStr();
         this.ShippingUnitStr = this.shippingAgentServiceShippingUnitEntity.getShippingunitStr();
         this.DescriptionStr = this.shippingAgentServiceShippingUnitEntity.getDescriptionStr();
-        this.DefaultWeightInGramDbl = cText.pStringToDoubleDbl(this.shippingAgentServiceShippingUnitEntity.getDefaultWeightInGramStr());
-        this.ContainerTypeStr = this.shippingAgentServiceShippingUnitEntity.getContainertype();
         this.ShippingUnitQuantityUsedInt = 0;
     }
     //End Region Constructor
@@ -113,8 +80,7 @@ public class cShippingAgentServiceShippingUnit {
     public boolean pInsertInDatabaseBln() {
 
 
-        cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitViewModel().insert(this.shippingAgentServiceShippingUnitEntity);
-        this.indatabaseBln = true;
+        this.getShippingAgentServiceShippingUnitViewModel().insert(this.shippingAgentServiceShippingUnitEntity);
 
         if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null){
             cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl= new ArrayList<>();
@@ -124,58 +90,36 @@ public class cShippingAgentServiceShippingUnit {
     }
 
     public static boolean pTruncateTableBln(){
-        cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitViewModel().deleteAll();
+
+        cShippingAgentServiceShippingUnitViewModel shippingAgentServiceShippingUnitViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentServiceShippingUnitViewModel.class);
+        shippingAgentServiceShippingUnitViewModel.deleteAll();
         return true;
     }
 
-    public static boolean pGetShippingAgentServicesShippingUnitsViaWebserviceBln(Boolean pvRefreshBln) {
+    public static void pGetShippingAgentServicesShippingUnitsViaWebservice(Boolean pvRefreshBln) throws ExecutionException {
 
-        if (pvRefreshBln == true) {
+        if (pvRefreshBln) {
             cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl = null;
             cShippingAgentServiceShippingUnit.pTruncateTableBln();
         }
 
         if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl  != null) {
-            return  true;
+            return;
         }
 
         cWebresult WebResult;
-        WebResult =  cShippingAgentServiceShippingUnit.getShippingAgentServiceShippingUnitViewModel().pGetShippingAgentServiceShippingUnitsFromWebserviceWrs();
-        if (WebResult.getResultBln() == true && WebResult.getSuccessBln() == true ){
-
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+        cShippingAgentServiceShippingUnitViewModel shippingAgentServiceShippingUnitViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cShippingAgentServiceShippingUnitViewModel.class);
+        WebResult =  shippingAgentServiceShippingUnitViewModel.pGetShippingAgentServiceShippingUnitsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit = new cShippingAgentServiceShippingUnit(jsonObject);
                 shippingAgentServiceShippingUnit.pInsertInDatabaseBln();
             }
             cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln = true;
-            return  true;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETSHIPPINGAGENTSERVICESHPPINGUNITS);
-            return  false;
         }
-    }
-
-    public static cShippingAgentServiceShippingUnit pGetShippingAgentServiceShippingUnitByStr(String pvShippingAgentStr, String pvShippingAgentServiceStr, String pvShippingUnitStr){
-        if(cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null){
-            return null;
-        }
-
-        for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit : cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl)
-        {
-            if(shippingAgentServiceShippingUnit.getShippingAgentStr() == pvShippingAgentStr &&
-               shippingAgentServiceShippingUnit.getShippingAgentServiceStr() == pvShippingAgentServiceStr &&
-               shippingAgentServiceShippingUnit.getShippingUnitStr() == pvShippingUnitStr) {
-
-                return  shippingAgentServiceShippingUnit;
-            }
-        }
-        return null;
     }
 
 

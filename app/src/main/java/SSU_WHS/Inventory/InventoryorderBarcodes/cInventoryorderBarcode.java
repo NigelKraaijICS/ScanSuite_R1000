@@ -1,6 +1,6 @@
 package SSU_WHS.Inventory.InventoryorderBarcodes;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -13,25 +13,12 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 
 public class cInventoryorderBarcode {
+
     public cInventoryorderBarcodeEntity inventoryorderBarcodeEntity;
-    public boolean indatabaseBln;
 
-    private static cInventoryorderBarcodeViewModel gInventoryorderBarcodeViewModel;
-    private static cInventoryorderBarcodeViewModel getInventoryorderBarcodeViewModel() {
-        if (gInventoryorderBarcodeViewModel == null) {
-            gInventoryorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cInventoryorderBarcodeViewModel.class);
-        }
-        return gInventoryorderBarcodeViewModel;
+    private cInventoryorderBarcodeViewModel getInventoryorderBarcodeViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderBarcodeViewModel.class);
     }
-
-    private static cInventoryorderBarcodeAdapter gInventoryorderBarcodeAdapter;
-    public static cInventoryorderBarcodeAdapter getInventoryorderBarcodeAdapter() {
-        if (gInventoryorderBarcodeAdapter == null) {
-            gInventoryorderBarcodeAdapter = new cInventoryorderBarcodeAdapter();
-        }
-        return gInventoryorderBarcodeAdapter;
-    }
-
     public static List<cInventoryorderBarcode> allInventoryorderBarcodesObl;
     public static cInventoryorderBarcode currentInventoryOrderBarcode;
 
@@ -42,25 +29,25 @@ public class cInventoryorderBarcode {
         return this.barcode;
     }
 
-    private String barcodeWithoutCheckDigitStr;
-    public String getBarcodeWithoutCheckDigitStr() {
 
-        this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
+    public String getBarcodeWithoutCheckDigitStr() {
+        String barcodeWithoutCheckDigitStr;
+        barcodeWithoutCheckDigitStr = this.getBarcodeStr();
 
         if (cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN8 && cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return  barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() != 8 && this.getBarcodeStr().length() != 13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return  barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() == 8)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,7);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,7);
         }
 
         if (this.getBarcodeStr().length() == 13)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,12);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,12);
         }
 
         return barcodeWithoutCheckDigitStr;
@@ -110,11 +97,6 @@ public class cInventoryorderBarcode {
         return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
     }
 
-    private Boolean invAmountManual;
-    public Boolean getInvAmountManualBln() {
-        return this.invAmountManual;
-    }
-
     //Region Constructor
     public cInventoryorderBarcode(JSONObject pvJsonObject) {
         this.inventoryorderBarcodeEntity = new cInventoryorderBarcodeEntity(pvJsonObject);
@@ -127,21 +109,6 @@ public class cInventoryorderBarcode {
         this.quantityPerUnitOfMeasure = this.inventoryorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
         this.unitOfMeasure = this.inventoryorderBarcodeEntity.getUnitOfMeasureStr();
         this.quantityHandled = this.inventoryorderBarcodeEntity.getQuantityHandled();
-        this.invAmountManual = this.inventoryorderBarcodeEntity.getInvAmountManualBln();
-    }
-
-    public cInventoryorderBarcode(cInventoryorderBarcodeEntity inventoryorderBarcodeEntity) {
-        this.inventoryorderBarcodeEntity = inventoryorderBarcodeEntity;
-        this.barcode = this.inventoryorderBarcodeEntity.getBarcodeStr();
-        this.barcodetype = this.inventoryorderBarcodeEntity.getBarcodeTypesStr();
-        this.isuniquebarcode = this.inventoryorderBarcodeEntity.getIsUniqueBarcodeBln();
-        this.itemno = this.inventoryorderBarcodeEntity.getItemNoStr();
-        this.variantCode = this.inventoryorderBarcodeEntity.getVariantCodeStr();
-        this.itemType = this.inventoryorderBarcodeEntity.getItemTypeStr();
-        this.quantityPerUnitOfMeasure = this.inventoryorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
-        this.unitOfMeasure = this.inventoryorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.inventoryorderBarcodeEntity.getQuantityHandled();
-        this.invAmountManual = this.inventoryorderBarcodeEntity.getInvAmountManualBln();
     }
 
     public cInventoryorderBarcode(cArticleBarcode pvArticleBarcode) {
@@ -155,24 +122,21 @@ public class cInventoryorderBarcode {
         this.quantityPerUnitOfMeasure = this.inventoryorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
         this.unitOfMeasure = this.inventoryorderBarcodeEntity.getUnitOfMeasureStr();
         this.quantityHandled = this.inventoryorderBarcodeEntity.getQuantityHandled();
-        this.invAmountManual = this.inventoryorderBarcodeEntity.getInvAmountManualBln();
-    }
-
-    public cInventoryorderBarcode() {
 
     }
+
     //End Region Constructor
 
 
 
     public static boolean pTruncateTableBln(){
-        cInventoryorderBarcode.getInventoryorderBarcodeViewModel().deleteAll();
+        cInventoryorderBarcodeViewModel inventoryorderBarcodeViewModel  = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderBarcodeViewModel.class);
+        inventoryorderBarcodeViewModel.deleteAll();
         return true;
     }
 
     public boolean pInsertInDatabaseBln() {
-        cInventoryorderBarcode.getInventoryorderBarcodeViewModel().insert(this.inventoryorderBarcodeEntity);
-        this.indatabaseBln = true;
+        getInventoryorderBarcodeViewModel().insert(this.inventoryorderBarcodeEntity);
 
         if (cInventoryorderBarcode.allInventoryorderBarcodesObl == null){
             cInventoryorderBarcode.allInventoryorderBarcodesObl = new ArrayList<>();
@@ -181,9 +145,9 @@ public class cInventoryorderBarcode {
         return  true;
     }
 
-    public static boolean pInsertAllInDatabaseBln(List<cInventoryorderBarcodeEntity> inventoryorderBarcodeEntities ) {
-        cInventoryorderBarcode.getInventoryorderBarcodeViewModel().insertAll (inventoryorderBarcodeEntities);
-        return  true;
+    public static void pInsertAllInDatabase(List<cInventoryorderBarcodeEntity> inventoryorderBarcodeEntities ) {
+        cInventoryorderBarcodeViewModel inventoryorderBarcodeViewModel  = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderBarcodeViewModel.class);
+        inventoryorderBarcodeViewModel.insertAll (inventoryorderBarcodeEntities);
     }
 
 }

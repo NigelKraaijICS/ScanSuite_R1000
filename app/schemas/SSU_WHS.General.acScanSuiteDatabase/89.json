@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 89,
-    "identityHash": "39612f19a03c8455d81fb5fe468ce047",
+    "identityHash": "3f4583486c088c013fe6b12113bf26b0",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -1631,7 +1631,7 @@
       },
       {
         "tableName": "InventoryOrder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `Aantal_bins` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `Inv_auto_close_bin` TEXT, `Inv_precount` TEXT, `Inv_Amount_manual` TEXT, `Inv_barcode_check` TEXT, `Inv_add_extra_bin` TEXT, `ExternalReference` TEXT, `Workplace` TEXT, `StockOwner` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Webservice_timeout_erp_in_s` TEXT, `Interface_result_method` TEXT, `IsProcessingOrParked` INTEGER, `Inventory_with_picture` TEXT, `Inventory_with_picture_auto_open` TEXT, `Inventory_with_picture_prefetch` TEXT, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `Aantal_bins` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `Inv_Amount_manual` TEXT, `Inv_barcode_check` TEXT, `Inv_add_extra_bin` TEXT, `ExternalReference` TEXT, `StockOwner` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Interface_result_method` TEXT, `IsProcessingOrParked` INTEGER, `Inventory_with_picture` TEXT, `Inventory_with_picture_auto_open` TEXT, `Inventory_with_picture_prefetch` TEXT, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
         "fields": [
           {
             "fieldPath": "ordernumber",
@@ -1670,18 +1670,6 @@
             "notNull": false
           },
           {
-            "fieldPath": "invAutoCloseBin",
-            "columnName": "Inv_auto_close_bin",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "invPrecount",
-            "columnName": "Inv_precount",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "invAmountManual",
             "columnName": "Inv_Amount_manual",
             "affinity": "TEXT",
@@ -1706,12 +1694,6 @@
             "notNull": false
           },
           {
-            "fieldPath": "workplace",
-            "columnName": "Workplace",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "stockOwner",
             "columnName": "StockOwner",
             "affinity": "TEXT",
@@ -1732,12 +1714,6 @@
           {
             "fieldPath": "document2",
             "columnName": "Document2",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "webservicetimeouterpins",
-            "columnName": "Webservice_timeout_erp_in_s",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -3686,7 +3662,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '39612f19a03c8455d81fb5fe468ce047')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3f4583486c088c013fe6b12113bf26b0')"
     ]
   }
 }

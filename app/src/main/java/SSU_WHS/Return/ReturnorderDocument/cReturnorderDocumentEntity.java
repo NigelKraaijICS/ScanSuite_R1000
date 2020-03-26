@@ -15,7 +15,7 @@ public class cReturnorderDocumentEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name= cDatabase.SOURCEDOCUMENT_NAMESTR)
-    public String sourceDocument;
+    public String sourceDocument = "";
     public String getSourceDocumentStr() {return this.sourceDocument;}
 
     @ColumnInfo(name= cDatabase.STATUS_NAMESTR)

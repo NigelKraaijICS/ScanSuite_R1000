@@ -11,11 +11,11 @@ public class cIntakeorderBarcodeRepository {
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
 
     //Region Constructor
     cIntakeorderBarcodeRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db =  acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.Repository = db.intakeorderBarcodeDao();
     }
     //End Region Constructor

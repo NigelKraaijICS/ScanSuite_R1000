@@ -16,7 +16,7 @@ import SSU_WHS.General.cDatabase;
     public class cAuthorisationEntity {
     @PrimaryKey @NonNull
     @ColumnInfo(name=cDatabase.AUTHORISATION_NAMESTR)
-    public String authorisation;
+    public String authorisation = "";
     public String getAuthorisationStr() {return this.authorisation;}
 
     @ColumnInfo(name=cDatabase.SEQUENCE_NAMESTR)

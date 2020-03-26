@@ -1,6 +1,6 @@
 package SSU_WHS.Basics.Settings;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -42,22 +42,9 @@ public class cSetting {
     }
 
     private cSettingsEntity settingsEntity;
-    public boolean indatabaseBln;
 
-    private static cSettingsViewModel gSettingViewModel;
-    private static cSettingsViewModel getSettingViewModel() {
-        if (gSettingViewModel == null) {
-            gSettingViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity ).get(cSettingsViewModel.class);
-        }
-        return gSettingViewModel;
-    }
-
-    private static cSettingsAdapter gSettingsAdapter;
-    public static cSettingsAdapter getSettingsAdapter() {
-        if (gSettingsAdapter == null) {
-            gSettingsAdapter = new cSettingsAdapter();
-        }
-        return gSettingsAdapter;
+    private cSettingsViewModel getSettingsViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cSettingsViewModel.class);
     }
 
     public static List<cSetting> allSettingsObl;
@@ -283,8 +270,7 @@ public class cSetting {
 
     //Region Public Methods
     public boolean pInsertInDatabaseBln() {
-        cSetting.getSettingViewModel().insert(this.settingsEntity);
-        this.indatabaseBln = true;
+        this.getSettingsViewModel().insert(this.settingsEntity);
 
         if (cSetting.allSettingsObl == null){
             cSetting.allSettingsObl = new ArrayList<>();
@@ -308,7 +294,9 @@ public class cSetting {
     }
 
     public static boolean pTruncateTableBln(){
-        cSetting.getSettingViewModel().deleteAll();
+
+        cSettingsViewModel settingsViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cSettingsViewModel.class);
+        settingsViewModel.deleteAll();
         return true;
             }
 
@@ -324,15 +312,10 @@ public class cSetting {
         }
 
         cWebresult WebResult;
-        WebResult =  cSetting.getSettingViewModel().pGetSettingsFromWebserviceWrs();
+        cSettingsViewModel settingsViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cSettingsViewModel.class);
+        WebResult =  settingsViewModel.pGetSettingsFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cSetting Setting = new cSetting(jsonObject);
                 Setting.pInsertInDatabaseBln();
             }
@@ -392,36 +375,6 @@ public class cSetting {
     public static boolean PICK_SALES_ASK_WORKPLACE(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SALES_ASK_WORKPLACE);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean PICK_WITH_PICTURE_PREFETCH(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_WITH_PICTURE_PREFETCH);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean PICK_WITH_PICTURE_AUTO_OPEN(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_WITH_PICTURE_AUTO_OPEN);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean PICK_WITH_PICTURE(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_WITH_PICTURE);
         if (Setting == null) {
             return  false;
         }
@@ -645,16 +598,6 @@ public class cSetting {
         return Setting.valueStr;
     }
 
-    public static boolean INV_ADD_EXTRA_BIN(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_ADD_EXTRA_BIN);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
     public static boolean INV_ADD_EXTRA_LINES(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.INV_ADD_EXTRA_LINES);
@@ -724,26 +667,6 @@ public class cSetting {
 
         return Setting.valueStr;
 
-    }
-
-    public static boolean RECEIVE_STORE_AUTO_ACCEPT_AT_NEW_BIN(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_STORE_AUTO_ACCEPT_AT_NEW_BIN);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_BARCODE_CHECK(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_BARCODE_CHECK);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static String MOVE_NEW_WORKFLOWS(){

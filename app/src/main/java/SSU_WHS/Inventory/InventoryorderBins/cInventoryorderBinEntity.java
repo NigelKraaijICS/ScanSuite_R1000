@@ -17,7 +17,7 @@ public class cInventoryorderBinEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name= cDatabase.BINCODE_NAMESTR)
-    public String bincode;
+    public String bincode = "";
     public String getBinCodeStr() {return this.bincode;}
 
     @ColumnInfo(name= cDatabase.LINES_NAMESTR)
@@ -33,8 +33,8 @@ public class cInventoryorderBinEntity {
     public int getStatusInt() {return this.status;}
 
     @ColumnInfo(name= cDatabase.SORTINGSEQUENCENO_NAMESTR)
-    public int sortingSequenceNo;
-    public int getSortingSequenceNoInt() {return this.sortingSequenceNo;}
+    public int sortingSequenceInt;
+    public int getSortingSequenceInt() {return this.sortingSequenceInt;}
 
     //End Region Public Properties
 
@@ -49,7 +49,8 @@ public class cInventoryorderBinEntity {
             this.lines = pvJsonObject.getInt(cDatabase.LINES_NAMESTR);
             this.handledTimeStamp = pvJsonObject.getString(cDatabase.HANDLEDTIMESTAMP_NAMESTR);
             this.status = pvJsonObject.getInt(cDatabase.STATUS_NAMESTR);
-            this.sortingSequenceNo = pvJsonObject.getInt(cDatabase.SORTINGSEQUENCENO_NAMESTR);
+            this.sortingSequenceInt = pvJsonObject.getInt(cDatabase.SORTINGSEQUENCENO_NAMESTR);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

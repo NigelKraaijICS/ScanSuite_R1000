@@ -26,6 +26,7 @@ import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.Basics.Users.cUserAdapter;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.ScannerLogon.cScannerLogon;
 import nl.icsvertex.scansuite.BuildConfig;
@@ -35,17 +36,28 @@ import nl.icsvertex.scansuite.R;
 public class LoginActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
-    static final String BRANCHPICKERFRAGMENT_TAG = "BRANCHPICKERFRAGMENT_TAG";
+
     //End Region Public Properties
 
     //Region Private Properties
-    private static RecyclerView recyclerViewUsers;
+    private RecyclerView recyclerViewUsers;
 
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+
+    private cUserAdapter userAdapter ;
+    private  cUserAdapter getUserAdapter(){
+        if (this.userAdapter == null) {
+            this.userAdapter = new cUserAdapter();
+        }
+
+        return  this.userAdapter;
+    }
+
     //End Region Private Properties
 
     //Region Default Methods
+
     @Override
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
@@ -71,6 +83,13 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
         super.onPause();
         cBarcodeScan.pUnregisterBarcodeReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        cBarcodeScan.pUnregisterBarcodeReceiver();
+        finish();
     }
 
     @Override
@@ -107,18 +126,18 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     public void mFindViews() {
 
         if (cAppExtension.activity != null) {
-            LoginActivity.toolbarImage = cAppExtension.activity.findViewById(R.id.toolbarImage);
-            LoginActivity.toolbarTitle = cAppExtension.activity.findViewById(R.id.toolbarTitle);
-            LoginActivity.recyclerViewUsers = cAppExtension.activity.findViewById(R.id.recyclerViewLines);
+            this.toolbarImage = cAppExtension.activity.findViewById(R.id.toolbarImage);
+            this.toolbarTitle = cAppExtension.activity.findViewById(R.id.toolbarTitle);
+            this.recyclerViewUsers = cAppExtension.activity.findViewById(R.id.recyclerViewLines);
         }
 
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitle) {
-        LoginActivity.toolbarImage.setImageResource(R.drawable.ic_login);
-        LoginActivity.toolbarTitle.setText(pvScreenTitle);
-        LoginActivity.toolbarTitle.setSelected(true);
+        this.toolbarImage.setImageResource(R.drawable.ic_login);
+        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -159,17 +178,17 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     //Region Public Methods
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan){
+    public  void pHandleScan(cBarcodeScan pvBarcodeScan){
 
         if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            LoginActivity.pUserSelected(pvBarcodeScan, false);
+            this.pUserSelected(pvBarcodeScan, false);
             return;
         }
 
-        LoginActivity.pUserSelected(pvBarcodeScan, true);
+        this.pUserSelected(pvBarcodeScan, true);
     }
 
-    public static void pUserSelected(cBarcodeScan pvBarcodeScan, Boolean pvScannedBln) {
+    public  void pUserSelected(cBarcodeScan pvBarcodeScan, Boolean pvScannedBln) {
 
         cUser User = cUser.pGetUserByName(pvBarcodeScan.getBarcodeOriginalStr());
         // Scanned/selected user doesn't exist, so show message and end void
@@ -183,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
         // If user is scanned, then we don't need a password, show branches fragment and return
         if (pvScannedBln) {
-            LoginActivity.mGetAndShowBranchesForLoggedInUser();
+            this.mGetAndShowBranchesForLoggedInUser();
             return;
         }
 
@@ -192,20 +211,19 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     }
 
-    public static void pBranchSelected(cBranch pvBranch) {
+    public  void pBranchSelected(cBranch pvBranch) {
 
         // Branch is known, so set current branch of current user
         cUser.currentUser.currentBranch = pvBranch;
-        LoginActivity.mStartMenuActivity();
+        this.mStartMenuActivity();
     }
 
-    public static void pLoginSuccess(){
-        cUser.currentUser.loggedInBln = true;
-        LoginActivity.mGetAndShowBranchesForLoggedInUser();
+    public  void pLoginSuccess(){
+        this.mGetAndShowBranchesForLoggedInUser();
 
     }
 
-    public static void pHandlePasswordFragmentDismissed(){
+    public  void pHandlePasswordFragmentDismissed(){
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
@@ -214,12 +232,12 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     //Region Private Methods
 
     private void mSetUserRecycler() {
-        LoginActivity.recyclerViewUsers.setHasFixedSize(false);
-        LoginActivity.recyclerViewUsers.setAdapter(cUser.getUserAdapter());
-        LoginActivity.recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerViewUsers.setHasFixedSize(false);
+        this.recyclerViewUsers.setAdapter(this.getUserAdapter());
+        this.recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private static void mGetAndShowBranchesForLoggedInUser() {
+    private  void mGetAndShowBranchesForLoggedInUser() {
 
         boolean result = cUser.currentUser.pGetBranchesBln();
         if (result) {
@@ -234,10 +252,10 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
             final BranchFragment branchFragment = new BranchFragment();
             branchFragment.setArguments(bundle);
-            branchFragment.show(cAppExtension.fragmentManager, BRANCHPICKERFRAGMENT_TAG); }
+            branchFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BRANCHPICKERFRAGMENT_TAG); }
     }
 
-    private static void mStartMenuActivity() {
+    private  void mStartMenuActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 

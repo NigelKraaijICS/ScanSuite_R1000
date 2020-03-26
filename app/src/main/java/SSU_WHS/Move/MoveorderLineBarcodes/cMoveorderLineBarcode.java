@@ -1,5 +1,6 @@
 package SSU_WHS.Move.MoveorderLineBarcodes;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLineViewModel;
 
 public class cMoveorderLineBarcode {
 
@@ -28,12 +30,11 @@ public class cMoveorderLineBarcode {
 
     public static cMoveorderLineBarcode currentMoveorderLineBarcode;
 
-    public static cMoveorderLineBarcodeViewModel getMoveorderLineBarcodeViewModel() {
-        if (moveorderLineBarcodeViewModel == null) {
-            moveorderLineBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cMoveorderLineBarcodeViewModel.class);
-        }
-        return moveorderLineBarcodeViewModel;
+
+    private cMoveorderLineBarcodeViewModel getMoveorderLineBarcodeViewModel () {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderLineBarcodeViewModel.class);
     }
+
 
     //End Public Properties
 
@@ -62,7 +63,7 @@ public class cMoveorderLineBarcode {
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cMoveorderLineBarcode.getMoveorderLineBarcodeViewModel().insert(this.moveorderLineBarcodeEntity);
+        this.getMoveorderLineBarcodeViewModel().insert(this.moveorderLineBarcodeEntity);
 
         if (cMoveorderLineBarcode.allLineBarcodesObl == null){
             cMoveorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
@@ -72,16 +73,18 @@ public class cMoveorderLineBarcode {
     }
 
    public static boolean pTruncateTableBln(){
-        cMoveorderLineBarcode.getMoveorderLineBarcodeViewModel().deleteAll();
+
+       cMoveorderLineBarcodeViewModel moveorderLineBarcodeViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderLineBarcodeViewModel.class);
+       moveorderLineBarcodeViewModel.deleteAll();
         return true;
     }
 
     public void pUpdateAmountInDatabase(){
-        cMoveorderLineBarcode.getMoveorderLineBarcodeViewModel().pUpdateAmountForLineNo(this.getBarcodeStr(), this.getQuantityhandledDbl());
+        this.getMoveorderLineBarcodeViewModel().pUpdateAmountForLineNo(this.getBarcodeStr(), this.getQuantityhandledDbl());
     }
 
     public boolean pDeleteFromDatabaseBln() {
-        cMoveorderLineBarcode.getMoveorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoLng().intValue());
+        this.getMoveorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoLng().intValue());
         if (cMoveorderLineBarcode.allLineBarcodesObl != null) {
             cMoveorderLineBarcode.allLineBarcodesObl.remove(this);
         }

@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cImages;
@@ -31,11 +32,11 @@ import nl.icsvertex.scansuite.R;
 
 public class NoConnectionFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private static ImageView imageViewSatellite;
-    private static ImageView imageViewEarth;
-    private static Button openSettingsButton;
-    private static Button tryAgainButton;
-    private static Boolean toggleGreyBln;
+    private  ImageView imageViewSatellite;
+    private  ImageView imageViewEarth;
+    private  Button openSettingsButton;
+    private  Button tryAgainButton;
+    private  Boolean toggleGreyBln;
 
    public NoConnectionFragment() {
         // Required empty public constructor
@@ -50,7 +51,7 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        NoConnectionFragment.toggleGreyBln = true;
+        this.toggleGreyBln = true;
 
         this.mFragmentInitialize();
         this.mSetAnimations();
@@ -68,10 +69,10 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
     public void mFindViews() {
 
        if (getView() != null) {
-           NoConnectionFragment.imageViewSatellite = getView().findViewById(R.id.imageViewSatellite);
-           NoConnectionFragment.imageViewEarth = getView().findViewById(R.id.imageViewEarth);
-           NoConnectionFragment.openSettingsButton = getView().findViewById(R.id.openSettingsButton);
-           NoConnectionFragment.tryAgainButton = getView().findViewById(R.id.tryAgainButton);
+           this.imageViewSatellite = getView().findViewById(R.id.imageViewSatellite);
+           this.imageViewEarth = getView().findViewById(R.id.imageViewEarth);
+           this.openSettingsButton = getView().findViewById(R.id.openSettingsButton);
+           this.tryAgainButton = getView().findViewById(R.id.tryAgainButton);
        }
 
     }
@@ -104,21 +105,28 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
         animationSet.addAnimation(anim);
         animationSet.addAnimation(anim2);
 
-        NoConnectionFragment.imageViewSatellite.startAnimation(animationSet);
+        this.imageViewSatellite.startAnimation(animationSet);
     }
     private void mTryAgainListener() {
-        NoConnectionFragment.tryAgainButton.setOnClickListener(new View.OnClickListener() {
+        this.tryAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (cAppExtension.activity instanceof MainDefaultActivity) {
-                    ((MainDefaultActivity)cAppExtension.activity).pLetsGetThisPartyStartedOrNot();
+
+                    try {
+                        MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+                        mainDefaultActivity.pLetsGetThisPartyStartedOrNot();
+
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                     dismiss();
                 }
             }
         });
     }
     private void mOpenSettingsListener() {
-        NoConnectionFragment.openSettingsButton.setOnClickListener(new View.OnClickListener() {
+        this.openSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent  = new Intent(Settings.ACTION_WIFI_SETTINGS);
@@ -131,18 +139,18 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
     }
 
     private void mEarthListener() {
-        NoConnectionFragment.imageViewEarth.setOnClickListener(new View.OnClickListener() {
+        this.imageViewEarth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!NoConnectionFragment.toggleGreyBln) {
-                    NoConnectionFragment.imageViewSatellite.setImageDrawable(getResources().getDrawable(R.drawable.ic_satellite));
-                    NoConnectionFragment.imageViewEarth.setImageDrawable(getResources().getDrawable(R.drawable.ic_earth));
-                    NoConnectionFragment.toggleGreyBln = true;
+                if (!toggleGreyBln) {
+                   imageViewSatellite.setImageDrawable(getResources().getDrawable(R.drawable.ic_satellite));
+                   imageViewEarth.setImageDrawable(getResources().getDrawable(R.drawable.ic_earth));
+                   toggleGreyBln = true;
                 }
                 else {
-                    NoConnectionFragment.imageViewSatellite.setImageDrawable(cImages.convertToGrayscale(imageViewSatellite.getDrawable()));
-                    NoConnectionFragment.imageViewEarth.setImageDrawable(cImages.convertToGrayscale(imageViewEarth.getDrawable()));
-                    NoConnectionFragment.toggleGreyBln = false;
+                 imageViewSatellite.setImageDrawable(cImages.convertToGrayscale(imageViewSatellite.getDrawable()));
+                 imageViewEarth.setImageDrawable(cImages.convertToGrayscale(imageViewEarth.getDrawable()));
+                 toggleGreyBln = false;
                 }
             }
         });

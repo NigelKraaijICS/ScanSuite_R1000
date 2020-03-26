@@ -22,7 +22,7 @@ public class cPickorderShipPackageEntity {
 
     @NonNull
     @ColumnInfo(name = cDatabase.SOURCENO_NAMESTR)
-    public String sourceno;
+    public String sourceno = "";
     @NonNull
     public String getSourcenoStr() {
         return sourceno;

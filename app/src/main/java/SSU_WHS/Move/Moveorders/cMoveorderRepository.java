@@ -58,12 +58,10 @@ public class cMoveorderRepository {
 
     //End Region Public Properties
 
-    //Region Private Properties
-    private acScanSuiteDatabase db;
-
     //Region Constructor
     cMoveorderRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        //Region Private Properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.moveorderDao = db.moveorderDao();
         this.moveorderLineDao = db.moveorderLineDao();
     }

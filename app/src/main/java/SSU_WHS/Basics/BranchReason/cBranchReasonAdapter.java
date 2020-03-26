@@ -21,7 +21,7 @@ import nl.icsvertex.scansuite.R;
 public class cBranchReasonAdapter extends RecyclerView.Adapter<cBranchReasonAdapter.ReasonViewHolder> {
 
     //Region Public Properties
-    public class ReasonViewHolder extends RecyclerView.ViewHolder{
+    public static class ReasonViewHolder extends RecyclerView.ViewHolder{
         private TextView textViewDescription;
         private TextView textViewReason;
         public LinearLayout reasonItemLinearLayout;
@@ -55,7 +55,7 @@ public class cBranchReasonAdapter extends RecyclerView.Adapter<cBranchReasonAdap
     @Override
     public cBranchReasonAdapter.ReasonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_reason, parent, false);
-        return new cBranchReasonAdapter.ReasonViewHolder(itemView);
+        return new ReasonViewHolder(itemView);
     }
 
     @Override
@@ -75,21 +75,28 @@ public class cBranchReasonAdapter extends RecyclerView.Adapter<cBranchReasonAdap
                     cBranchReason.currentBranchReason = branchReason;
 
                         if (cAppExtension.activity instanceof CreateReturnActivity) {
-                            CreateReturnActivity.pSetReason();
-                            CreateReturnActivity.pHandleFragmentDismissed();
+                            CreateReturnActivity createReturnActivity = (CreateReturnActivity)cAppExtension.activity;
+                            createReturnActivity.pSetReason();
+                            createReturnActivity.pHandleFragmentDismissed();
                             cAppExtension.dialogFragment.dismiss();
                         }
                         else {
-                            ReturnArticleDetailFragment.pSetReason();
-                            cAppExtension.dialogFragment.dismiss();
 
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-                                    ReturnArticleDetailFragment.pHandleFragmentDismissed();
-                                    // Actions to do after 0.3 seconds
-                                }
-                            }, 200);
+                            if (cAppExtension.dialogFragment instanceof  ReturnArticleDetailFragment) {
+                               final  ReturnArticleDetailFragment returnArticleDetailFragment = (ReturnArticleDetailFragment)cAppExtension.dialogFragment;
+                                returnArticleDetailFragment.pSetReason();
+                                cAppExtension.dialogFragment.dismiss();
+
+                                Handler handler = new Handler(Looper.getMainLooper());
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        returnArticleDetailFragment.pHandleFragmentDismissed();
+                                        // Actions to do after 0.3 seconds
+                                    }
+                                }, 200);
+                            }
+
+
                         }
 
                     }

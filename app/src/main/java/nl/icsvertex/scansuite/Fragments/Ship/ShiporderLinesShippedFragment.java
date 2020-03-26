@@ -20,6 +20,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
+import SSU_WHS.Picken.Shipment.cShipmentAdapter;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
@@ -32,7 +33,15 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
 
     //Region Private Properties
 
-    private static RecyclerView recyclerViewShiporderLinesShipped;
+    private RecyclerView recyclerViewShiporderLinesShipped;
+
+    private cShipmentAdapter shipmentAdapter;
+    private cShipmentAdapter getShipmentAdapter(){
+        if (this.shipmentAdapter == null) {
+            this.shipmentAdapter = new cShipmentAdapter();
+        }
+        return  this.shipmentAdapter;
+    }
 
     //End Region Private Properties
 
@@ -92,7 +101,7 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
     public void mFindViews() {
 
         if (getView() != null) {
-            ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped = getView().findViewById(R.id.recyclerViewShiporderLinesShipped);
+            this.recyclerViewShiporderLinesShipped = getView().findViewById(R.id.recyclerViewShiporderLinesShipped);
         }
     }
 
@@ -120,40 +129,30 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
     private void mFillRecycler( List<cShipment> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            this.mNoLinesAvailable(true);
+            this.mNoLinesAvailable();
             return;
         }
 
-        cShipment.gethipmentsShippedAdapter().pFillData(pvDataObl);
-        ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped.setHasFixedSize(false);
-        ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped.setAdapter( cShipment.gethipmentsShippedAdapter());
-        ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.getShipmentAdapter().pFillData(pvDataObl);
+        this.recyclerViewShiporderLinesShipped.setHasFixedSize(false);
+        this.recyclerViewShiporderLinesShipped.setAdapter( this.getShipmentAdapter());
+        this.recyclerViewShiporderLinesShipped.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
 
-        ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
-
+        if (cAppExtension.activity instanceof  ShiporderLinesActivity) {
+            ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+            shiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
+        }
     }
 
-    //todo: check why this is always true
-    private void mNoLinesAvailable(Boolean pvEnabledBln) {
+
+    private void mNoLinesAvailable() {
 
         if (ShiporderLinesActivity.currentLineFragment == this) {
             //Close no linesInt fragment if needed
-            if (!pvEnabledBln) {
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment ) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
-                }
 
-                return;
-
-            }
 
             //Hide the recycler view
-            ShiporderLinesShippedFragment.recyclerViewShiporderLinesShipped.setVisibility(View.INVISIBLE);
+            this.recyclerViewShiporderLinesShipped.setVisibility(View.INVISIBLE);
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
@@ -161,8 +160,11 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
             fragmentTransaction.replace(R.id.fragmentShiporderLinesShipped, fragment);
             fragmentTransaction.commit();
 
+            if (cAppExtension.activity instanceof  ShiporderLinesActivity) {
+                ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity) cAppExtension.activity;
+                shiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
+            }
             //Change tabcounter text
-            ShiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
 
         }
     }

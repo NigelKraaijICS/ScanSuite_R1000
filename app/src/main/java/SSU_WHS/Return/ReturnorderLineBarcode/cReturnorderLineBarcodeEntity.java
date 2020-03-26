@@ -13,6 +13,7 @@ import SSU_WHS.General.cDatabase;
 
 @Entity(tableName = cDatabase.TABLENAME_RETURNORDERLINEBARCODE)
 public class cReturnorderLineBarcodeEntity {
+
     @PrimaryKey(autoGenerate = true)
     public Integer recordid;
 

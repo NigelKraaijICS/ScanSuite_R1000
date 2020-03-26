@@ -25,6 +25,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
+import SSU_WHS.Basics.BranchReason.cBranchReasonAdapter;
 import SSU_WHS.Basics.Users.cUser;
 import nl.icsvertex.scansuite.Activities.Returns.CreateReturnActivity;
 import nl.icsvertex.scansuite.Fragments.Returns.ReturnArticleDetailFragment;
@@ -38,9 +39,19 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
     //End Region Public Properties
 
     //Region Private Properties
-    private static RecyclerView reasonRecyclerView;
-    private static Button buttonClose;
-    private static ShimmerFrameLayout shimmerViewContainer;
+    private  RecyclerView reasonRecyclerView;
+    private  Button buttonClose;
+    private  ShimmerFrameLayout shimmerViewContainer;
+
+    private cBranchReasonAdapter branchReasonAdapter;
+    private  cBranchReasonAdapter getBranchReasonAdapter(){
+        if (this.branchReasonAdapter == null) {
+            this.branchReasonAdapter = new cBranchReasonAdapter();
+        }
+
+        return  branchReasonAdapter;
+    }
+
     //End Region Private Properties
 
 
@@ -70,7 +81,7 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public void onPause() {
         try {
-            shimmerViewContainer.stopShimmerAnimation();
+            this.shimmerViewContainer.stopShimmerAnimation();
             cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,7 +105,7 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
 
-        ReasonFragment.shimmerViewContainer.startShimmerAnimation();
+        this.shimmerViewContainer.startShimmerAnimation();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
@@ -115,9 +126,9 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
     public void mFindViews() {
 
         if (getView() != null) {
-            ReasonFragment.reasonRecyclerView = getView().findViewById(R.id.reasonRecyclerview);
-            ReasonFragment.buttonClose = getView().findViewById(R.id.buttonClose);
-            ReasonFragment.shimmerViewContainer = getView().findViewById(R.id.shimmerViewContainer);
+            this.reasonRecyclerView = getView().findViewById(R.id.reasonRecyclerview);
+            this.buttonClose = getView().findViewById(R.id.buttonClose);
+            this.shimmerViewContainer = getView().findViewById(R.id.shimmerViewContainer);
         }
 
     }
@@ -136,7 +147,7 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
 
     //Region Private Methods
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
         String barcodeWithoutPrefixStr ;
         if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             boolean foundBin = false;
@@ -148,20 +159,20 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
             if (foundBin) {
                 //has prefix, is workPlaceStr
                 barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-                mReasonScanned(barcodeWithoutPrefixStr);
+                this.mReasonScanned(barcodeWithoutPrefixStr);
             }
             else {
                 //has prefix, isn't workPlaceStr
-                cUserInterface.pDoNope(reasonRecyclerView, true, true);
+                cUserInterface.pDoNope(this.reasonRecyclerView, true, true);
             }
         }
         else {
             //no prefix, fine
-            mReasonScanned(pvBarcodeScan.getBarcodeOriginalStr());
+            this.mReasonScanned(pvBarcodeScan.getBarcodeOriginalStr());
         }
     }
 
-    private static void mReasonScanned(String pvBarcodeStr) {
+    private void mReasonScanned(String pvBarcodeStr) {
 
         cBranchReason branchReason = cUser.currentUser.currentBranch.pGetReasonByName(pvBarcodeStr);
 
@@ -170,21 +181,28 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
             cBranchReason.currentBranchReason = branchReason;
 
             if (cAppExtension.activity instanceof CreateReturnActivity) {
-                CreateReturnActivity.pSetReason();
-                CreateReturnActivity.pHandleFragmentDismissed();
+                CreateReturnActivity createReturnActivity = (CreateReturnActivity)cAppExtension.activity;
+                createReturnActivity.pSetReason();
+                createReturnActivity.pHandleFragmentDismissed();
                 cAppExtension.dialogFragment.dismiss();
             }
             else {
-                ReturnArticleDetailFragment.pSetReason();
-                cAppExtension.dialogFragment.dismiss();
 
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        ReturnArticleDetailFragment.pHandleFragmentDismissed();
-                        // Actions to do after 0.2 seconds
-                    }
-                }, 200);
+                if (cAppExtension.dialogFragment instanceof ReturnArticleDetailFragment) {
+                    final ReturnArticleDetailFragment returnArticleDetailFragment = (ReturnArticleDetailFragment)cAppExtension.dialogFragment;
+                    returnArticleDetailFragment.pSetReason();
+                    cAppExtension.dialogFragment.dismiss();
+
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            returnArticleDetailFragment.pHandleFragmentDismissed();
+                            // Actions to do after 0.2 seconds
+                        }
+                    }, 200);
+
+                }
+
             }
         }
         else {
@@ -205,16 +223,16 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
     private void mSetReasonRecycler() {
-        ReasonFragment.reasonRecyclerView.setHasFixedSize(false);
-        ReasonFragment.reasonRecyclerView.setAdapter(cBranchReason.getBranchReasonAdapter());
-        ReasonFragment.reasonRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.reasonRecyclerView.setHasFixedSize(false);
+        this.reasonRecyclerView.setAdapter(this.getBranchReasonAdapter());
+        this.reasonRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         //Stopping Shimmer Effect's animation after data is loaded
-        ReasonFragment.shimmerViewContainer.stopShimmerAnimation();
-        ReasonFragment.shimmerViewContainer.setVisibility(View.GONE);
+        this.shimmerViewContainer.stopShimmerAnimation();
+        this.shimmerViewContainer.setVisibility(View.GONE);
     }
 
     private void mSetCloseListener() {
-        ReasonFragment.buttonClose.setOnClickListener(new View.OnClickListener() {
+        this.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cAppExtension.dialogFragment != null) {

@@ -1,11 +1,14 @@
 package SSU_WHS.Picken.Shipment;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -13,13 +16,14 @@ import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Picken.Pickorders.cPickorderViewModel;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cShipment {
 
     //Region Public Properties
 
-    public String sourceNoStr;
+    private String sourceNoStr;
     public String getSourceNoStr() {
         return this.sourceNoStr;
     }
@@ -29,7 +33,7 @@ public class cShipment {
         return this.quantityDbl;
     }
 
-    public String processingSequenceStr;
+    private String processingSequenceStr;
     public String getProcessingSequenceStr() {
         return this.processingSequenceStr;
     }
@@ -37,35 +41,11 @@ public class cShipment {
     public Boolean handledBln;
     public Boolean isHandledBln(){return  this.handledBln;}
 
-    public List<cPickorderLinePackAndShip> packAndShipLineObl;
+    private List<cPickorderLinePackAndShip> packAndShipLineObl;
 
     public static List<cShipment> allShipmentsObl;
 
     public static cShipment currentShipment;
-
-    public static cShipmentAdapter gShipmentsToshipAdapter;
-    public static cShipmentAdapter getShipmentsToshipAdapter() {
-        if (gShipmentsToshipAdapter == null) {
-            gShipmentsToshipAdapter = new cShipmentAdapter();
-        }
-        return gShipmentsToshipAdapter;
-    }
-
-    public static cShipmentAdapter gShipmentsShippedAdapter;
-    public static cShipmentAdapter gethipmentsShippedAdapter() {
-        if (gShipmentsShippedAdapter == null) {
-            gShipmentsShippedAdapter = new cShipmentAdapter();
-        }
-        return gShipmentsShippedAdapter;
-    }
-
-    public static cShipmentAdapter gShipmentsTotalAdapter;
-    public static cShipmentAdapter getShipmentsTotalAdapter() {
-        if (gShipmentsTotalAdapter == null) {
-            gShipmentsTotalAdapter = new cShipmentAdapter();
-        }
-        return gShipmentsTotalAdapter;
-    }
 
     public cPickorderAddress pickorderAddress () {
 
@@ -148,6 +128,10 @@ public class cShipment {
 
     }
 
+    private cPickorderViewModel getPickorderViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
+    }
+
 
     //End Region Public Properties
 
@@ -157,7 +141,7 @@ public class cShipment {
         this.sourceNoStr = pvSourceNoStr;
         this.packAndShipLineObl = new ArrayList<>();
         this.handledBln = false;
-        this.quantityDbl = Double.valueOf(0);
+        this.quantityDbl = (double) 0;
         this.processingSequenceStr = "";
 
     }
@@ -267,7 +251,7 @@ public class cShipment {
         cResult result = new cResult();
 
         //Call webservice
-        cWebresult webresult =  cPickorder.getPickorderViewModel().pPickorderSourceDocumentShippedViaWebserviceBln();
+        cWebresult webresult =  this.getPickorderViewModel().pPickorderSourceDocumentShippedViaWebserviceBln();
 
         //If something went wrong, show this and rest statusses
         if (! webresult.getResultBln()) {

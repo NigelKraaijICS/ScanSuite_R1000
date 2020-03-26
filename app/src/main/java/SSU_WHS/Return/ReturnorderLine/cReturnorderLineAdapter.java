@@ -23,7 +23,7 @@ import nl.icsvertex.scansuite.R;
 public class cReturnorderLineAdapter extends RecyclerView.Adapter<SSU_WHS.Return.ReturnorderLine.cReturnorderLineAdapter.ReturnorderLineViewHolder> {
     //Region Public Properties
 
-    public class ReturnorderLineViewHolder extends RecyclerView.ViewHolder{
+    public static class ReturnorderLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewArticle;
         private TextView textViewDescription;
@@ -83,7 +83,7 @@ public class cReturnorderLineAdapter extends RecyclerView.Adapter<SSU_WHS.Return
     @Override
     public SSU_WHS.Return.ReturnorderLine.cReturnorderLineAdapter.ReturnorderLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_returnorderline, pvParent, false);
-        return new SSU_WHS.Return.ReturnorderLine.cReturnorderLineAdapter.ReturnorderLineViewHolder(itemView);
+        return new ReturnorderLineViewHolder(itemView);
     }
 
 
@@ -125,7 +125,12 @@ public class cReturnorderLineAdapter extends RecyclerView.Adapter<SSU_WHS.Return
             @Override
             public void onClick(View v) {
                 cReturnorderLine.currentReturnOrderLine = returnorderLine;
-                ReturnorderDocumentActivity.pHandleSelectedLine();
+
+                if (cAppExtension.activity instanceof  ReturnorderDocumentActivity) {
+                    ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
+                    returnorderDocumentActivity.pHandleSelectedLine();
+                }
+
             }
         });
     }

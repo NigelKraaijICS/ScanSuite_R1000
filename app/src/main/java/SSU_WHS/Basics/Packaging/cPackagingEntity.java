@@ -16,12 +16,14 @@ public class cPackagingEntity {
     //Region Public Properties
     @NonNull
     @ColumnInfo(name = cDatabase.EMBALLAGE_NAMESTR)
-    public String codeStr;
+    public String codeStr = "";
+    @NonNull
     public String getCodeStr() {return codeStr;}
 
     @NonNull
     @ColumnInfo(name = cDatabase.DESCRIPTION_NAMESTR)
-    public String descriptionStr;
+    public String descriptionStr = "";
+    @NonNull
     public String getDescriptionStr() {return descriptionStr;}
 
     //End Region Public Properies

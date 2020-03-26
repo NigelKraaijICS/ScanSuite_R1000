@@ -26,23 +26,23 @@ import nl.icsvertex.scansuite.R;
 
 public class NumberpickerFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private static NumberPicker quantityNumberPicker;
-    private static int currentQuantity;
-    private static Double maxQuantityDbl;
-    private static int maxQuantityInt;
+    private  NumberPicker quantityNumberPicker;
+    private  int currentQuantity;
+    private  Double maxQuantityDbl;
+    private  int maxQuantityInt;
 
-    private static ImageButton imageButtonPlus;
-    private static ImageButton imageButtonMinus;
+    private  ImageButton imageButtonPlus;
+    private  ImageButton imageButtonMinus;
 
-    private static Button buttonPlus5;
-    private static Button buttonPlus10;
-    private static Button buttonMax;
-    private static Button buttonMinus5;
-    private static Button buttonMinus10;
-    private static Button buttonMin;
+    private  Button buttonPlus5;
+    private  Button buttonPlus10;
+    private  Button buttonMax;
+    private  Button buttonMinus5;
+    private  Button buttonMinus10;
+    private  Button buttonMin;
 
-    private static Button doneButton;
-    private static Button cancelButton;
+    private  Button doneButton;
+    private  Button cancelButton;
 
     public NumberpickerFragment() {
         // Required empty public constructor
@@ -61,13 +61,13 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
         Bundle args = getArguments();
 
         if (args != null) {
-            NumberpickerFragment.currentQuantity = args.getInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, 0);
-            NumberpickerFragment.maxQuantityDbl = args.getDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, 0);
+            this.currentQuantity = args.getInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, 0);
+            this.maxQuantityDbl = args.getDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, 0);
         }
 
-        NumberpickerFragment.maxQuantityInt = (int) Math.round(NumberpickerFragment.maxQuantityDbl);
-        if (NumberpickerFragment.maxQuantityInt > NumberpickerFragment.maxQuantityDbl) {
-            NumberpickerFragment.maxQuantityInt -= -1;
+        this.maxQuantityInt = (int) Math.round(this.maxQuantityDbl);
+        if (this.maxQuantityInt > this.maxQuantityDbl) {
+            this.maxQuantityInt -= -1;
         }
 
         this.mFragmentInitialize();
@@ -85,19 +85,19 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
     public void mFindViews() {
 
         if (getView() != null) {
-            NumberpickerFragment.quantityNumberPicker = getView().findViewById(R.id.quantityNumberPicker);
-            NumberpickerFragment.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
-            NumberpickerFragment.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
+            this.quantityNumberPicker = getView().findViewById(R.id.quantityNumberPicker);
+            this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
+            this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
 
-            NumberpickerFragment.buttonPlus5 = getView().findViewById(R.id.buttonPlus5);
-            NumberpickerFragment.buttonPlus10 = getView().findViewById(R.id.buttonPlus10);
-            NumberpickerFragment.buttonMax = getView().findViewById(R.id.buttonMax);
-            NumberpickerFragment.buttonMinus5 = getView().findViewById(R.id.buttonMinus5);
-            NumberpickerFragment.buttonMinus10 = getView().findViewById(R.id.buttonMinus10);
-            NumberpickerFragment.buttonMin = getView().findViewById(R.id.buttonMin);
+            this.buttonPlus5 = getView().findViewById(R.id.buttonPlus5);
+            this.buttonPlus10 = getView().findViewById(R.id.buttonPlus10);
+            this.buttonMax = getView().findViewById(R.id.buttonMax);
+            this.buttonMinus5 = getView().findViewById(R.id.buttonMinus5);
+            this.buttonMinus10 = getView().findViewById(R.id.buttonMinus10);
+            this.buttonMin = getView().findViewById(R.id.buttonMin);
 
-            NumberpickerFragment.doneButton = getView().findViewById(R.id.doneButton);
-            NumberpickerFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+            this.doneButton = getView().findViewById(R.id.doneButton);
+            this.cancelButton = getView().findViewById(R.id.cancelButton);
         }
 
 
@@ -105,8 +105,8 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
 
      @Override
     public void mFieldsInitialize() {
-         NumberpickerFragment.quantityNumberPicker.setMaxValue(maxQuantityInt);
-         NumberpickerFragment.quantityNumberPicker.setValue(currentQuantity);
+         this.quantityNumberPicker.setMaxValue(this.maxQuantityInt);
+         this.quantityNumberPicker.setValue(this.currentQuantity);
     }
 
     @Override
@@ -114,11 +114,11 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
         this.mSetNumberListeners();
         this.mSetNumpadListeners();
         this.mSetDoneListener();
-        this. mSetCancelListener();
+        this.mSetCancelListener();
     }
 
     private void mSetDoneListener() {
-        NumberpickerFragment.doneButton.setOnClickListener(new View.OnClickListener() {
+        this.doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(cPublicDefinitions.NUMBERINTENT_NUMBER);
@@ -130,7 +130,7 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
 
     }
     private void mSetCancelListener() {
-        NumberpickerFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -139,99 +139,94 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
     }
 
     private void mSetNumberListeners() {
-        NumberpickerFragment.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
+        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NumberpickerFragment.quantityNumberPicker.getValue() == quantityNumberPicker.getMaxValue()) {
-                    cUserInterface.pDoNope(NumberpickerFragment.quantityNumberPicker, true, true);
+                if (quantityNumberPicker.getValue() == quantityNumberPicker.getMaxValue()) {
+                    cUserInterface.pDoNope(quantityNumberPicker, true, true);
                 }
                 else {
-                    changeValueByOne(NumberpickerFragment.quantityNumberPicker, true);
+                    changeValueByOne(quantityNumberPicker, true);
                 }
             }
         });
-        NumberpickerFragment.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
+        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (NumberpickerFragment.quantityNumberPicker.getValue() < 1) {
-                    cUserInterface.pDoNope(NumberpickerFragment.quantityNumberPicker, true, true);
+                if (quantityNumberPicker.getValue() < 1) {
+                    cUserInterface.pDoNope(quantityNumberPicker, true, true);
                 }
                 else {
-                    changeValueByOne(NumberpickerFragment.quantityNumberPicker, false);
+                    changeValueByOne(quantityNumberPicker, false);
                 }
             }
         });
     }
 
     private void mSetNumpadListeners() {
-        NumberpickerFragment.buttonPlus5.setOnClickListener(new View.OnClickListener() {
+        this.buttonPlus5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mNumberPickerChange(5,true);
             }
         });
 
-        NumberpickerFragment.buttonPlus10.setOnClickListener(new View.OnClickListener() {
+        this.buttonPlus10.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mNumberPickerChange(10,true);
             }
         });
 
-        NumberpickerFragment.buttonMax.setOnClickListener(new View.OnClickListener() {
+        this.buttonMax.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NumberpickerFragment.quantityNumberPicker.setValue(quantityNumberPicker.getMaxValue());
+                quantityNumberPicker.setValue(quantityNumberPicker.getMaxValue());
             }
         });
 
-        NumberpickerFragment.buttonMinus5.setOnClickListener(new View.OnClickListener() {
+        this.buttonMinus5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mNumberPickerChange(5,false);
             }
         });
 
-        NumberpickerFragment.buttonMinus10.setOnClickListener(new View.OnClickListener() {
+        this.buttonMinus10.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mNumberPickerChange(10,false);
             }
         });
 
-        NumberpickerFragment.buttonMin.setOnClickListener(new View.OnClickListener() {
+        this.buttonMin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NumberpickerFragment.quantityNumberPicker.setValue(quantityNumberPicker.getMinValue());
+                quantityNumberPicker.setValue(quantityNumberPicker.getMinValue());
             }
         });
 
     }
 
     private void mNumberPickerChange(int changeValue, boolean isMore) {
-        int currentValue = NumberpickerFragment.quantityNumberPicker.getValue();
-        int maxValue = NumberpickerFragment.quantityNumberPicker.getMaxValue();
-        int minValue = NumberpickerFragment.quantityNumberPicker.getMinValue();
+        int currentValue = this.quantityNumberPicker.getValue();
+        int maxValue = this.quantityNumberPicker.getMaxValue();
+        int minValue = this.quantityNumberPicker.getMinValue();
         int newValue;
 
         if (isMore) {
             //plus
             newValue = currentValue + changeValue;
-            if (newValue > maxValue) {
-                NumberpickerFragment.quantityNumberPicker.setValue(maxValue);
-            }
-            else {
-                NumberpickerFragment.quantityNumberPicker.setValue(newValue);
-            }
+            this.quantityNumberPicker.setValue(Math.min(newValue, maxValue));
         }
         else {
             //minus
             if (changeValue > currentValue) {
-                NumberpickerFragment.quantityNumberPicker.setValue(minValue);
+                this.quantityNumberPicker.setValue(minValue);
             }
             else {
                 newValue = currentValue - changeValue;
-                NumberpickerFragment.quantityNumberPicker.setValue(newValue);
+                this.quantityNumberPicker.setValue(newValue);
             }
         }
     }

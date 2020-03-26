@@ -16,7 +16,7 @@ public class cSettingsEntity {
     //Region Public Properties
     @PrimaryKey @NonNull
     @ColumnInfo(name= cDatabase.SETTING_NAMESTR)
-    public String name;
+    public String name = "";
     public String getNameStr() {return this.name;}
 
     @ColumnInfo(name= cDatabase.VALUE_NAMESTR)
@@ -25,8 +25,7 @@ public class cSettingsEntity {
 
     //End Region Public Properties
 
-    //Region Constructor
-    public cSettingsEntity() {
+    public  cSettingsEntity(){
 
     }
 

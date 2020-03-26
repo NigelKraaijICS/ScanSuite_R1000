@@ -35,16 +35,16 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     //End Region Public Properties
 
     //Region Private Properties
-    private static TextView textViewCurrentLocationHeader;
-    private static TextView textViewCurrentLocationText;
+    private TextView textViewCurrentLocationHeader;
+    private TextView textViewCurrentLocationText;
 
-    private static CardView cardViewConnection;
-    private static TextView textViewConnection;
-    private static ImageButton imageButtonWifiReconnect;
+    private CardView cardViewConnection;
+    private TextView textViewConnection;
+    private ImageButton imageButtonWifiReconnect;
 
-    private static EditText editTextCurrentLocation;
-    private static Button setLocationButton;
-    private static Button cancelButton;
+    private EditText editTextCurrentLocation;
+    private Button setLocationButton;
+    private Button cancelButton;
     //End Region Private Properties
 
 
@@ -120,29 +120,29 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     public void mFindViews() {
 
         if (getView() != null) {
-            CurrentLocationFragment.textViewCurrentLocationHeader = getView().findViewById(R.id.textViewCurrentLocationHeader);
-            CurrentLocationFragment.textViewCurrentLocationText = getView().findViewById(R.id.textViewCurrentLocationText);
-            CurrentLocationFragment.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
-            CurrentLocationFragment.cardViewConnection = getView().findViewById(R.id.cardViewConnection);
-            CurrentLocationFragment.textViewConnection = getView().findViewById(R.id.textViewConnection);
-            CurrentLocationFragment.imageButtonWifiReconnect = getView().findViewById(R.id.imageButtonWifiReconnect);
-            CurrentLocationFragment.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
-            CurrentLocationFragment.setLocationButton = getView().findViewById(R.id.setLocationButton);
-            CurrentLocationFragment.cancelButton = getView().findViewById(R.id.cancelButton);
+            this.textViewCurrentLocationHeader = getView().findViewById(R.id.textViewCurrentLocationHeader);
+            this.textViewCurrentLocationText = getView().findViewById(R.id.textViewCurrentLocationText);
+            this.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
+            this.cardViewConnection = getView().findViewById(R.id.cardViewConnection);
+            this.textViewConnection = getView().findViewById(R.id.textViewConnection);
+            this.imageButtonWifiReconnect = getView().findViewById(R.id.imageButtonWifiReconnect);
+            this.editTextCurrentLocation = getView().findViewById(R.id.editTextCurrentLocation);
+            this.setLocationButton = getView().findViewById(R.id.setLocationButton);
+            this.cancelButton = getView().findViewById(R.id.cancelButton);
         }
     }
 
 
     @Override
     public void mFieldsInitialize() {
-        CurrentLocationFragment.textViewCurrentLocationHeader.setText(R.string.currentlocation_header_default);
-        CurrentLocationFragment.textViewCurrentLocationText.setText(R.string.currentlocation_text_default);
-        CurrentLocationFragment.pSetConnectionState();
+        this.textViewCurrentLocationHeader.setText(R.string.currentlocation_header_default);
+        this.textViewCurrentLocationText.setText(R.string.currentlocation_text_default);
+        this.pSetConnectionState();
 
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
-        CurrentLocationFragment.editTextCurrentLocation.setFilters(filterArray);
-        cUserInterface.pShowKeyboard(CurrentLocationFragment.editTextCurrentLocation);
+        this.editTextCurrentLocation.setFilters(filterArray);
+        cUserInterface.pShowKeyboard(this.editTextCurrentLocation);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     }
 
     private void mSetCancelListener() {
-        CurrentLocationFragment.cancelButton.setOnClickListener(new View.OnClickListener() {
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -160,19 +160,21 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         });
     }
     private void mSetSetLocationListener() {
-        CurrentLocationFragment.setLocationButton.setOnClickListener(new View.OnClickListener() {
+        this.setLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
                 if (cAppExtension.activity instanceof  PickorderLinesActivity) {
 
-                    if (CurrentLocationFragment.editTextCurrentLocation.getText().toString().trim().isEmpty()) {
-                        cUserInterface.pDoNope(CurrentLocationFragment.editTextCurrentLocation, true, true);
+                    PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+
+                    if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
+                        cUserInterface.pDoNope(editTextCurrentLocation, true, true);
                     }
                     else {
                         dismiss();
-                        PickorderLinesActivity.pSetCurrentLocation(CurrentLocationFragment.editTextCurrentLocation.getText().toString());
+                        pickorderLinesActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
                     }
                 }
             }
@@ -180,7 +182,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     }
 
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
 
         //Has prefix, so check if this is a BIN
@@ -194,37 +196,37 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
             if (foundBin) {
                 //has prefix, is bin
-                CurrentLocationFragment.editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
-                CurrentLocationFragment.setLocationButton.callOnClick();
+                this.editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+                this.setLocationButton.callOnClick();
                 return;
             }
             else {
                 //has prefix, isn't bin
-                cUserInterface.pDoNope(CurrentLocationFragment.editTextCurrentLocation, true, true);
+                cUserInterface.pDoNope(this.editTextCurrentLocation, true, true);
                 return;
             }
 
         }
 
             //no prefix, fine
-        CurrentLocationFragment.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
-        CurrentLocationFragment.setLocationButton.callOnClick();
+        this.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
+        this.setLocationButton.callOnClick();
     }
 
-    public static void pSetConnectionState() {
+    public void pSetConnectionState() {
         if (cConnection.isInternetConnectedBln()) {
-            CurrentLocationFragment.textViewConnection.setText(R.string.connected);
-            CurrentLocationFragment.imageButtonWifiReconnect.setVisibility(View.INVISIBLE);
-            CurrentLocationFragment.cardViewConnection.setVisibility(View.INVISIBLE);
-            CurrentLocationFragment.cancelButton.setVisibility(View.VISIBLE);
-            CurrentLocationFragment.setLocationButton.setVisibility(View.VISIBLE);
+            this.textViewConnection.setText(R.string.connected);
+            this.imageButtonWifiReconnect.setVisibility(View.INVISIBLE);
+            this.cardViewConnection.setVisibility(View.INVISIBLE);
+            this.cancelButton.setVisibility(View.VISIBLE);
+            this.setLocationButton.setVisibility(View.VISIBLE);
         }
         else {
-            CurrentLocationFragment.textViewConnection.setText(R.string.not_connected);
-            CurrentLocationFragment.imageButtonWifiReconnect.setVisibility(View.VISIBLE);
-            CurrentLocationFragment.cardViewConnection.setVisibility(View.VISIBLE);
-            CurrentLocationFragment.cancelButton.setVisibility(View.INVISIBLE);
-            CurrentLocationFragment.setLocationButton.setVisibility(View.INVISIBLE);
+            this.textViewConnection.setText(R.string.not_connected);
+            this.imageButtonWifiReconnect.setVisibility(View.VISIBLE);
+            this.cardViewConnection.setVisibility(View.VISIBLE);
+            this.cancelButton.setVisibility(View.INVISIBLE);
+            this.setLocationButton.setVisibility(View.INVISIBLE);
 
         }
     }

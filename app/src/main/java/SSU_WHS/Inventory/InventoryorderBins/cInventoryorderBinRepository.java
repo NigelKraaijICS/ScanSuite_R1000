@@ -23,7 +23,7 @@ public class cInventoryorderBinRepository {
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
 
     private static class UpdateInventoryBinStatusParams {
         String binCodeStr;
@@ -39,7 +39,7 @@ public class cInventoryorderBinRepository {
 
     //Region Constructor
     cInventoryorderBinRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.inventoryorderBinDao = db.inventoryorderBinDao();
     }
     //End Region Constructor
@@ -55,7 +55,7 @@ public class cInventoryorderBinRepository {
         new mInsertAllAsyncTask(inventoryorderBinDao).execute(pvInventoryorderLineBarcodeEntities);
     }
 
-    public boolean pUpdateStatusAndTimestampBln() {
+    public boolean pUpdateStatusAndTimestamp() {
 
         Integer integerValue;
         UpdateInventoryBinStatusParams updateInventorylineQuantityParams = new UpdateInventoryBinStatusParams(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr(),

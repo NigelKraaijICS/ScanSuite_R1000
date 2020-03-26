@@ -20,11 +20,11 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cArticleImageRepository {
     //Region Public Properties
 
-    public iArticleImageDao articleImageDao;
+    private iArticleImageDao articleImageDao;
     //End Region Public Properties
 
     //Region Private Properties
-    private acScanSuiteDatabase db;
+
 
     private static class GetByItemnoAndVariantCodeParams {
         String itemNoStr;
@@ -40,7 +40,7 @@ public class cArticleImageRepository {
 
     //Region Constructor
     cArticleImageRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+         acScanSuiteDatabase db =  acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.articleImageDao = db.articleImageDao();
     }
     //End Region Constructor
@@ -64,13 +64,7 @@ public class cArticleImageRepository {
 
         try {
             webResultWrs = new cArticleImageRepository.mGetArticleImageFromWebserviceGetAsyncTask().execute(getByItemnoAndVariantCodeParams).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -87,13 +81,7 @@ public class cArticleImageRepository {
 
         try {
             webResultWrs = new mGetImagesFromWebserviceTask().execute(pvItemAmdVariantsObl).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -181,8 +169,9 @@ public class cArticleImageRepository {
     }
 
     private static class mGetImagesFromWebserviceTask extends AsyncTask<List<String>, Void, cWebresult> {
+        @SafeVarargs
         @Override
-        protected cWebresult doInBackground(final List<String>... params) {
+        protected final cWebresult doInBackground(final List<String>... params) {
             cWebresult webResult = new cWebresult();
 
             List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
@@ -214,7 +203,7 @@ public class cArticleImageRepository {
             l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
             try {
-                webResult = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE, l_PropertyInfoObl);
+                webResult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webResult.setResultBln(false);

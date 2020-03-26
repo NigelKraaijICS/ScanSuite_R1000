@@ -1,6 +1,6 @@
 package SSU_WHS.Intake.IntakeorderMATLineBarcodes;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -21,19 +21,12 @@ public class cIntakeorderMATLineBarcode {
     public double quantityHandledDbl;
     public double getQuantityhandledDbl() {return quantityHandledDbl;}
 
-    public cIntakeorderMATLineBarcodeEntity intakeorderMATLineBarcodeEntity;
-    public boolean inDatabaseBln;
+    private cIntakeorderMATLineBarcodeEntity intakeorderMATLineBarcodeEntity;
 
     public static ArrayList<cIntakeorderMATLineBarcode> allMATLineBarcodesObl;
-    public static cIntakeorderMATLineBarcodeViewModel intakeorderMATLineBarcodeViewModel;
 
-    public static cIntakeorderMATLineBarcode currentIntakeorderMATLineBarcode;
-
-    public static cIntakeorderMATLineBarcodeViewModel getIntakeorderMATLineBarcodeViewModel() {
-        if (intakeorderMATLineBarcodeViewModel == null) {
-            intakeorderMATLineBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cIntakeorderMATLineBarcodeViewModel.class);
-        }
-        return intakeorderMATLineBarcodeViewModel;
+    private cIntakeorderMATLineBarcodeViewModel getIntakeorderMATLineBarcodeViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderMATLineBarcodeViewModel.class);
     }
 
     //End Public Properties
@@ -46,13 +39,6 @@ public class cIntakeorderMATLineBarcode {
         this.quantityHandledDbl = cText.pStringToDoubleDbl(this.intakeorderMATLineBarcodeEntity.getQuantityhandledStr());
         }
 
-    public cIntakeorderMATLineBarcode(cIntakeorderMATLineBarcodeEntity pvIntakeorderMATLineBarcodeEntity){
-        this.intakeorderMATLineBarcodeEntity = pvIntakeorderMATLineBarcodeEntity;
-        this.lineNoLng = this.intakeorderMATLineBarcodeEntity.getLineNoLng();
-        this.barcodeStr = this.intakeorderMATLineBarcodeEntity.getBarcodeStr();
-        this.quantityHandledDbl = cText.pStringToDoubleDbl(this.intakeorderMATLineBarcodeEntity.getQuantityhandledStr());
-    }
-
     public cIntakeorderMATLineBarcode(Long pvLineNoLng, String pvBarcodeStr, Double pvQuantityHandledDbl ){
         this.intakeorderMATLineBarcodeEntity = new cIntakeorderMATLineBarcodeEntity(pvLineNoLng,pvBarcodeStr);
         this.lineNoLng = pvLineNoLng;
@@ -62,8 +48,7 @@ public class cIntakeorderMATLineBarcode {
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        cIntakeorderMATLineBarcode.getIntakeorderMATLineBarcodeViewModel().insert(this.intakeorderMATLineBarcodeEntity);
-        this.inDatabaseBln = true;
+        this.getIntakeorderMATLineBarcodeViewModel().insert(this.intakeorderMATLineBarcodeEntity);
 
         if (cIntakeorderMATLineBarcode.allMATLineBarcodesObl == null){
             cIntakeorderMATLineBarcode.allMATLineBarcodesObl = new ArrayList<>();
@@ -73,21 +58,20 @@ public class cIntakeorderMATLineBarcode {
     }
 
     public boolean pDeleteFromDatabaseBln() {
-        cIntakeorderMATLineBarcode.getIntakeorderMATLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoLng().intValue());
-        this.inDatabaseBln = false;
+        this.getIntakeorderMATLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoLng().intValue());
         if (cIntakeorderMATLineBarcode.allMATLineBarcodesObl != null) {
             cIntakeorderMATLineBarcode.allMATLineBarcodesObl.remove(this);
         }
         return true;
     }
 
-    public boolean pUpdateAmountInDatabaseBln(){
-        cIntakeorderMATLineBarcode.getIntakeorderMATLineBarcodeViewModel().pUpdateAmountForLineNo(this.getBarcodeStr(), this.getQuantityhandledDbl());
-        return true;
+    public void pUpdateAmountInDatabase(){
+        this.getIntakeorderMATLineBarcodeViewModel().pUpdateAmountForLineNo(this.getBarcodeStr(), this.getQuantityhandledDbl());
     }
 
     public static boolean pTruncateTableBln(){
-        cIntakeorderMATLineBarcode.getIntakeorderMATLineBarcodeViewModel().deleteAll();
+        cIntakeorderMATLineBarcodeViewModel intakeorderMATLineBarcodeViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderMATLineBarcodeViewModel.class);
+        intakeorderMATLineBarcodeViewModel.deleteAll();
         return true;
     }
 

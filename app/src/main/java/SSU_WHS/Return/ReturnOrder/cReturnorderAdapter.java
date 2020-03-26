@@ -23,7 +23,7 @@ public class cReturnorderAdapter extends RecyclerView.Adapter<cReturnorderAdapte
 
     //Region Public Properties
 
-    public class ReturnorderViewHolder extends RecyclerView.ViewHolder{
+    public static class ReturnorderViewHolder extends RecyclerView.ViewHolder{
 
         private View viewOrderStatus;
         private TextView textViewOrdernumber;
@@ -112,7 +112,8 @@ public class cReturnorderAdapter extends RecyclerView.Adapter<cReturnorderAdapte
             public void onClick(View v) {
 
                 if (cAppExtension.context instanceof ReturnorderSelectActivity) {
-                    ReturnorderSelectActivity.pReturnorderSelected(selectedReturnorder);
+                    ReturnorderSelectActivity returnorderSelectActivity = (ReturnorderSelectActivity)cAppExtension.activity;
+                    returnorderSelectActivity.pReturnorderSelected(selectedReturnorder);
                 }
            }
         });

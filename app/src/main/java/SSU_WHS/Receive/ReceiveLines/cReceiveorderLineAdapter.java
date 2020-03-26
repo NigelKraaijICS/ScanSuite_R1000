@@ -17,14 +17,13 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorderLineAdapter.ReceiveorderLineViewHolder>  {
 
     //Region Public Properties
-    public class ReceiveorderLineViewHolder extends RecyclerView.ViewHolder{
+    public static class ReceiveorderLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewTime;
         private TextView textViewQuantity;
@@ -71,7 +70,7 @@ public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorder
     @Override
     public  cReceiveorderLineAdapter.ReceiveorderLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_receiveline, pvParent, false);
-        return new cReceiveorderLineAdapter.ReceiveorderLineViewHolder(itemView);
+        return new ReceiveorderLineViewHolder(itemView);
     }
 
     @Override
@@ -111,9 +110,6 @@ public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorder
                 for (FrameLayout frameLayout : receiverOrderLineItemFrameLayout) {
                     frameLayout.setSelected(false);
                 }
-
-                //select current
-                //pvView.setSelected(true);
 
             }
         });

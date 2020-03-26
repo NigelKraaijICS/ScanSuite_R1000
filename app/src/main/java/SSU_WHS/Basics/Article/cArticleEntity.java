@@ -15,12 +15,12 @@ public class cArticleEntity {
     //Region Public Properties
     @NonNull
     @ColumnInfo(name="Itemno")
-    public String itemno;
+    public String itemno = "";
     public String getItemnoStr() {return this.itemno;}
 
     @NonNull
     @ColumnInfo(name="Variantcode")
-    public String variantcode;
+    public String variantcode = "";
     public String getVariantCodeStr() {return this.variantcode;}
 
     @ColumnInfo(name="Description")
@@ -36,7 +36,7 @@ public class cArticleEntity {
     }
 
     @ColumnInfo(name="ItemInfoCode")
-    public String itemInfoCode;
+    private String itemInfoCode;
     public String getItemInfoCodeStr() {
         return itemInfoCode;
     }
@@ -54,13 +54,13 @@ public class cArticleEntity {
     }
 
     @ColumnInfo(name="Component10")
-    public String component10Str;
+    private String component10Str;
     public String getComponent10Str() {
         return component10Str;
     }
 
-    @ColumnInfo(name="Prince")
-    public Double priceDbl;
+    @ColumnInfo(name="Price")
+    private Double priceDbl;
     public Double getPriceDbl() {
         return priceDbl;
     }
@@ -68,10 +68,6 @@ public class cArticleEntity {
 
     //End Region Public Properies
 
-    //Region Constructor
-    public cArticleEntity() {
-
-    }
     public cArticleEntity(JSONObject pvJsonObject) {
         try {
             this.itemno = pvJsonObject.getString(cDatabase.ITEMNO_NAMESTR);

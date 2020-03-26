@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineAdapter;
-
 
 public class cReceiveorderSummaryLineRecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback{
 

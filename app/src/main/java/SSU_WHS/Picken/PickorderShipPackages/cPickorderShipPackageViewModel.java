@@ -3,23 +3,19 @@ package SSU_WHS.Picken.PickorderShipPackages;
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-
-import java.util.List;
 
 public class cPickorderShipPackageViewModel extends AndroidViewModel {
-    private cPickorderShipPackageRepository mRepository;
+    private cPickorderShipPackageRepository Repository;
 
     public cPickorderShipPackageViewModel(Application application) {
         super(application);
-
-        mRepository = new cPickorderShipPackageRepository(application);
+        Repository = new cPickorderShipPackageRepository(application);
     }
 
-    public void insert(cPickorderShipPackageEntity pickorderShipPackageEntity) {mRepository.insert(pickorderShipPackageEntity);}
+    public void insert(cPickorderShipPackageEntity pickorderShipPackageEntity) {
+        Repository.insert(pickorderShipPackageEntity);}
 
-    public LiveData<List<cPickorderShipPackageEntity>> getPickorderShipPackages(Boolean forcerefresh, String branch, String ordernumber) {return mRepository.getPickorderShipPackages(forcerefresh, branch, ordernumber);}
-
-    public void deleteAll() {mRepository.deleteAll();}
+    public void deleteAll() {
+        Repository.deleteAll();}
 
 }

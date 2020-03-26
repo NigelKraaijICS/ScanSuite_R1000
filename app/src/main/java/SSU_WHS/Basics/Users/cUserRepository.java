@@ -17,17 +17,16 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cUserRepository {
 
     //Region Public Properties
-    public iUserDao userDao;
+    private iUserDao userDao;
     //End Region Public Properties
 
     //Region Private Properties
-    private cWebresult webResult;
-    private acScanSuiteDatabase db;
+
     //End Region Private Properties
 
     //Region Constructor
      cUserRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        acScanSuiteDatabase db =acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.userDao = db.userDao();
     }
     //End Region Constructor
@@ -40,13 +39,7 @@ public class cUserRepository {
 
         try {
             webResultWrs = new usersFromWebserviceGetAsyncTask().execute().get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -73,13 +66,7 @@ public class cUserRepository {
 
         try {
             webResultWrs = new userLogonAsyncTask().execute(userLoginParams).get();
-        } catch (ExecutionException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
             resultObl.add(e.getLocalizedMessage());
@@ -140,7 +127,7 @@ public class cUserRepository {
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
             try {
-                WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_USERLOGIN, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_USERLOGIN, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);
@@ -165,7 +152,7 @@ public class cUserRepository {
 
 
             try {
-                l_WebresultWrs = new cWebresult().pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETUSERS, l_PropertyInfoObl);
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETUSERS, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setResultBln(false);
                 l_WebresultWrs.setSuccessBln(false);
@@ -176,7 +163,7 @@ public class cUserRepository {
         }
     }
 
-    private class cUserLoginParams{
+    private static class cUserLoginParams{
 
         //Region Public Properties
         String user;

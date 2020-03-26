@@ -36,19 +36,15 @@ import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryBinsTotalFragment;
 import nl.icsvertex.scansuite.R;
 
-import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HEADER;
-import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_HINT;
-import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_ISNUMERIC;
-import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TEXT;
 
 public class PasswordFragment extends DialogFragment implements iICSDefaultFragment {
 
-    private static TextView textPasswordHeader;
-    private static TextView textPasswordText;
-    private static EditText editPassword;
-    private static TextView textPasswordIncorrect;
-    private static Button buttonCancel;
-    private static Button buttonLogin;
+    private  TextView textPasswordHeader;
+    private  TextView textPasswordText;
+    private  EditText editPassword;
+    private  TextView textPasswordIncorrect;
+    private  Button buttonCancel;
+    private  Button buttonLogin;
 
     public PasswordFragment() {
         // Required empty public constructor
@@ -106,33 +102,33 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     @Override
     public void mFindViews() {
         if (getView() != null) {
-            PasswordFragment.textPasswordHeader = getView().findViewById(R.id.textPasswordHeader);
-            PasswordFragment.textPasswordText = getView().findViewById(R.id.textPasswordText);
-            PasswordFragment.editPassword = getView().findViewById(R.id.editPassword);
-            PasswordFragment.textPasswordIncorrect = getView().findViewById(R.id.textPasswordIncorrect);
-            PasswordFragment.buttonCancel = getView().findViewById(R.id.buttonCancel);
-            PasswordFragment.buttonLogin = getView().findViewById(R.id.buttonLogin);
+            this.textPasswordHeader = getView().findViewById(R.id.textPasswordHeader);
+            this.textPasswordText = getView().findViewById(R.id.textPasswordText);
+            this.editPassword = getView().findViewById(R.id.editPassword);
+            this.textPasswordIncorrect = getView().findViewById(R.id.textPasswordIncorrect);
+            this.buttonCancel = getView().findViewById(R.id.buttonCancel);
+            this.buttonLogin = getView().findViewById(R.id.buttonLogin);
         }
     }
 
     @Override
     public void mFieldsInitialize() {
-        PasswordFragment.editPassword.setSelectAllOnFocus(true);
-        PasswordFragment.editPassword.requestFocus();
-        PasswordFragment.textPasswordIncorrect.setVisibility(View.INVISIBLE);
+        this.editPassword.setSelectAllOnFocus(true);
+        this.editPassword.requestFocus();
+        this.textPasswordIncorrect.setVisibility(View.INVISIBLE);
         Bundle args = getArguments();
         if (args != null) {
-            String header = args.getString(PASSWORDFRAGMENT_HEADER, getString(R.string.password_header_default));
-            String text = args.getString(PASSWORDFRAGMENT_TEXT, getString(R.string.password_text_default));
-            String hint = args.getString(PASSWORDFRAGMENT_HINT, getString(R.string.password_hint_default));
-            boolean isNumeric = args.getBoolean(PASSWORDFRAGMENT_ISNUMERIC, false);
+            String header = args.getString(cPublicDefinitions.PASSWORDFRAGMENT_HEADER, getString(R.string.password_header_default));
+            String text = args.getString(cPublicDefinitions.PASSWORDFRAGMENT_TEXT, getString(R.string.password_text_default));
+            String hint = args.getString(cPublicDefinitions.PASSWORDFRAGMENT_HINT, getString(R.string.password_hint_default));
+            boolean isNumeric = args.getBoolean(cPublicDefinitions.PASSWORDFRAGMENT_ISNUMERIC, false);
 
-            PasswordFragment.textPasswordHeader.setText(header);
-            PasswordFragment.textPasswordText.setText(text);
-            PasswordFragment.editPassword.setHint(hint);
+            this.textPasswordHeader.setText(header);
+            this.textPasswordText.setText(text);
+            this.editPassword.setHint(hint);
             if (isNumeric) {
-                PasswordFragment.editPassword.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                PasswordFragment.editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                this.editPassword.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                this.editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
             }
         }
     }
@@ -145,13 +141,13 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         this.mSetEditorActionListener();
     }
 
-    public static void pHandleScan(cBarcodeScan pvBarcodeScan) {
-        PasswordFragment.editPassword.setText(pvBarcodeScan.barcodeOriginalStr);
-        PasswordFragment.buttonLogin.callOnClick();
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
+        this.editPassword.setText(pvBarcodeScan.barcodeOriginalStr);
+        this.buttonLogin.callOnClick();
     }
 
     private void mSetPasswordCheckListener() {
-        PasswordFragment.buttonLogin.setOnClickListener(new View.OnClickListener() {
+        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cAppExtension.activity instanceof LoginActivity) {
@@ -209,7 +205,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     }
 
     private void mSetCancelListener() {
-        PasswordFragment.buttonCancel.setOnClickListener(new View.OnClickListener() {
+        this.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cAppExtension.dialogFragment != null) {
@@ -218,31 +214,38 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                     if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
 
                         if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
-                            InventoryBinsDoneFragment.pPasswordCancelled();
+                            InventoryBinsDoneFragment inventoryBinsDoneFragment = (InventoryBinsDoneFragment)InventoryorderBinsActivity.currentBinFragment;
+                            inventoryBinsDoneFragment.pPasswordCancelled();
                         }
 
                         if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
-                            InventoryBinsTotalFragment.pPasswordCancelled();
+                            InventoryBinsTotalFragment inventoryBinsTotalFragment =  (InventoryBinsTotalFragment)InventoryorderBinsActivity.currentBinFragment;
+                            inventoryBinsTotalFragment.pPasswordCancelled();
                         }
                     }
 
                     if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-                        InventoryorderBinActivity.pPasswordCancelled();
+                        InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
+                        inventoryorderBinActivity.pPasswordCancelled();
                     }
 
                     if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-                        IntakeorderLinesActivity.pPasswordCancelled();
+                        IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+                        intakeorderLinesActivity.pPasswordCancelled();
                     }
 
                     if (cAppExtension.activity instanceof LoginActivity) {
-                        LoginActivity.pHandlePasswordFragmentDismissed();
+                        LoginActivity loginActivity = (LoginActivity)cAppExtension.activity;
+                        loginActivity.pHandlePasswordFragmentDismissed();
                     }
 
                     if (cAppExtension.activity instanceof  ReceiveLinesActivity) {
-                        ReceiveLinesActivity.pPasswordCancelled();
+                        ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+                        receiveLinesActivity.pPasswordCancelled();
                     }
                     if (cAppExtension.activity instanceof  ReceiveOrderReceiveActivity) {
-                        ReceiveOrderReceiveActivity.pPasswordCancelled();
+                        ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
+                        receiveOrderReceiveActivity.pPasswordCancelled();
                     }
 
                 }
@@ -251,11 +254,11 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     }
 
     private void mWrongPassword() {
-        PasswordFragment.textPasswordIncorrect.setVisibility(View.VISIBLE);
+        this.textPasswordIncorrect.setVisibility(View.VISIBLE);
         cUserInterface.pDoNope(editPassword, false, false);
         cUserInterface.pPlaySound(R.raw.headsupsound, null);
-        PasswordFragment.editPassword.requestFocus();
-        PasswordFragment.editPassword.setSelection(0,editPassword.getText().toString().length());
+        this.editPassword.requestFocus();
+        this.editPassword.setSelection(0,editPassword.getText().toString().length());
     }
 
     private void mRightPassword() {
@@ -265,63 +268,71 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
         }
 
         if (cAppExtension.activity instanceof LoginActivity) {
-            LoginActivity.pLoginSuccess();
+            LoginActivity loginActivity = (LoginActivity)cAppExtension.activity;
+            loginActivity.pLoginSuccess();
             dismiss();
             return;
         }
 
         if (cAppExtension.activity instanceof MainDefaultActivity) {
             dismiss();
-            MainDefaultActivity.pPasswordSuccess();
+            MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+            mainDefaultActivity.pPasswordSuccess();
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
 
             if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
-                InventoryBinsDoneFragment.pPasswordSuccess();
+                InventoryBinsDoneFragment inventoryBinsDoneFragment = (InventoryBinsDoneFragment)InventoryorderBinsActivity.currentBinFragment;
+                inventoryBinsDoneFragment.pPasswordSuccess();
                 dismiss();
             }
 
             if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
-                InventoryBinsTotalFragment.pPasswordSuccess();
+                InventoryBinsTotalFragment inventoryBinsTotalFragment = (InventoryBinsTotalFragment)InventoryorderBinsActivity.currentBinFragment;
+                inventoryBinsTotalFragment.pPasswordSuccess();
                 dismiss();
             }
 
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-            InventoryorderBinActivity.pPasswordSuccess();
+            InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
+            inventoryorderBinActivity.pPasswordSuccess();
             dismiss();
         }
 
         if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-            IntakeorderLinesActivity.pPasswordSuccess();
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+            intakeorderLinesActivity.pPasswordSuccess();
             dismiss();
         }
 
         if (cAppExtension.activity instanceof ReceiveLinesActivity) {
+            ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
 
             if (!ReceiveLinesActivity.closeOrderClickedBln) {
-                ReceiveLinesActivity.pPasswordSuccess();
+                receiveLinesActivity.pPasswordSuccess();
                 dismiss();
                 return;
             }
 
-            ReceiveLinesActivity.pDone();
+            receiveLinesActivity.pDone();
             dismiss();
 
 
         }
 
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
-            ReceiveOrderReceiveActivity.pPasswordSuccess();
+            ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
+            receiveOrderReceiveActivity.pPasswordSuccess();
             dismiss();
         }
 
     }
 
     private void mSetTextChangedListener() {
-        editPassword.addTextChangedListener(new TextWatcher() {
+       this.editPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -340,7 +351,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     }
 
     private void mSetEditorActionListener() {
-        PasswordFragment.editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {

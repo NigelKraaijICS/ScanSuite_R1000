@@ -19,13 +19,13 @@ public class cBranchBinEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name=cDatabase.BRANCH_NAMESTR)
-    public String branch;
+    public String branch = "";
     public String getBranchStr() {return this.branch;}
 
     @PrimaryKey
     @NonNull
     @ColumnInfo(name=cDatabase.BINCODE_NAMESTR)
-    public String binCode;
+    public String binCode = "";
     public String getbinCodeStr() {return this.binCode;}
 
     @ColumnInfo(name=cDatabase.ZONE_NAMESTR)
@@ -33,23 +33,18 @@ public class cBranchBinEntity {
     public String getZoneStr() {return this.zone;}
 
     @ColumnInfo(name=cDatabase.BINTYPE_NAMESTR)
-    public String binType;
-    public String getBinTypeStr() {return this.zone;}
+    private String binType;
+    public String getBinTypeStr() {return this.binType;}
 
     @ColumnInfo(name=cDatabase.USEFORSTORAGE_NAMESTR)
-    public Boolean useForStorageBln;
+    private Boolean useForStorageBln;
     public Boolean getUseForStorageBln() {return this.useForStorageBln;}
 
     @ColumnInfo(name=cDatabase.USEFORRETURNSALES_NAMESTR)
-    public Boolean useForReturnSalesBln;
+    private Boolean useForReturnSalesBln;
     public Boolean getUseForReturnSalesBln() {return this.useForReturnSalesBln;}
 
     //End Region Public Properies
-
-    //Region Constructor
-    public cBranchBinEntity() {
-
-    }
 
     public cBranchBinEntity(JSONObject jsonObject) {
         try {

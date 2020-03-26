@@ -1,11 +1,10 @@
 package SSU_WHS.Inventory.InventoryOrders;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,10 +18,12 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
+import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcodeEntity;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
@@ -31,6 +32,7 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEntity;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
+import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineViewModel;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -121,22 +123,13 @@ public class cInventoryorder {
     }
 
     private cInventoryorderEntity inventoryorderEntity;
-    public boolean indatabaseBln;
 
-    private static cInventoryorderViewModel gInventoryorderViewModel;
-    public static cInventoryorderViewModel getInventoryorderViewModel() {
-        if (gInventoryorderViewModel == null) {
-            gInventoryorderViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
-        }
-        return gInventoryorderViewModel;
+    private cInventoryorderViewModel getInventoryorderViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
     }
 
-    private static cInventoryorderAdapter gInventoryorderAdapter;
-    public static cInventoryorderAdapter getInventoryorderAdapter() {
-        if (gInventoryorderAdapter == null) {
-            gInventoryorderAdapter = new cInventoryorderAdapter();
-        }
-        return gInventoryorderAdapter;
+    private cWarehouseorderViewModel getWarehouseorderViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cWarehouseorderViewModel.class);
     }
 
     public List<cComment> commentsObl() {
@@ -160,7 +153,10 @@ public class cInventoryorder {
         }
 
         cInventoryorder.allCachedOrdersObl  = new ArrayList<>();
-        List<cInventoryorderEntity> hulpObl  =  cInventoryorder.getInventoryorderViewModel().pGetInventoryordersFromDatabaseObl();
+
+
+        cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
+        List<cInventoryorderEntity> hulpObl  =  inventoryorderViewModel.pGetInventoryordersFromDatabaseObl();
 
 
         for (cInventoryorderEntity inventoryorderEntity : hulpObl) {
@@ -237,16 +233,17 @@ public class cInventoryorder {
     //Region Orders
 
     public boolean pInsertInDatabaseBln() {
-        cInventoryorder.getInventoryorderViewModel().insert(this.inventoryorderEntity);
-        this.indatabaseBln = true;
-
+        getInventoryorderViewModel().insert(this.inventoryorderEntity);
         return true;
     }
 
     public static Boolean pCreateInventoryOrderViaWebserviceBln(String pvDocumentStr) {
 
         cWebresult WebResult;
-        WebResult = cInventoryorder.getInventoryorderViewModel().pCreateInventoryOrderViaWebserviceWrs(pvDocumentStr);
+
+        cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
+        WebResult = inventoryorderViewModel.pCreateInventoryOrderViaWebserviceWrs(pvDocumentStr);
+
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -271,7 +268,8 @@ public class cInventoryorder {
         }
 
         cWebresult WebResult;
-        WebResult = cInventoryorder.getInventoryorderViewModel().pGetInventoryordersFromWebserviceWrs(pvSearchTextStr);
+        cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
+        WebResult = inventoryorderViewModel.pGetInventoryordersFromWebserviceWrs(pvSearchTextStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             List<cInventoryorderEntity> insertObl = new ArrayList<>();
@@ -311,7 +309,7 @@ public class cInventoryorder {
             ignoreBusyBln = true;
         }
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString(),
+        Webresult = this.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString(),
                 this.getOrderNumberStr(),
                 cDeviceInfo.getSerialnumberStr(),
                 pvStepCodeEnu.toString(),
@@ -387,7 +385,7 @@ public class cInventoryorder {
 
         cWebresult Webresult;
 
-        Webresult = cWarehouseorder.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt);
+        Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt);
 
         return Webresult.getSuccessBln() && Webresult.getResultBln();
     }
@@ -407,8 +405,8 @@ public class cInventoryorder {
 
 
         cWebresult webresult;
-
-        webresult =  cInventoryorder.getInventoryorderViewModel().pHandledViaWebserviceWrs();
+        cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
+        webresult =  inventoryorderViewModel.pHandledViaWebserviceWrs();
 
         //No result, so something really went wrong
         if (webresult == null) {
@@ -469,7 +467,8 @@ public class cInventoryorder {
         List<cInventoryorder> resultObl = new ArrayList<>();
         List<cInventoryorderEntity> hulpResultObl;
 
-        hulpResultObl =  cInventoryorder.getInventoryorderViewModel().pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
+        hulpResultObl =  inventoryorderViewModel.pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -482,12 +481,15 @@ public class cInventoryorder {
         return  resultObl;
     }
 
-    private static void mTruncateTable() {
-        cInventoryorder.getInventoryorderViewModel().deleteAll();
+    private static  void mTruncateTable() {
+
+        cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
+        inventoryorderViewModel.deleteAll();
     }
 
     private static  void mInsertAllInDatabase(List<cInventoryorderEntity> pvInventoryOrderEntityObl ) {
-        cInventoryorder.getInventoryorderViewModel().insertAll (pvInventoryOrderEntityObl);
+        cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
+        inventoryorderViewModel.insertAll (pvInventoryOrderEntityObl);
     }
 
     //End Region Orders
@@ -503,7 +505,8 @@ public class cInventoryorder {
 
         cWebresult WebResult;
 
-        WebResult = cInventoryorder.getInventoryorderViewModel().pGetLinesFromWebserviceWrs();
+
+        WebResult = getInventoryorderViewModel().pGetLinesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             if (cInventoryorderLine.allLinesObl == null) {
@@ -537,7 +540,7 @@ public class cInventoryorder {
                         cInventoryorderBin.currentInventoryOrderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.InventoryDone;
                     }
 
-                    cInventoryorderBin.currentInventoryOrderBin.pUpdateStatusAndTimeStampInDatabaseBln();
+                    cInventoryorderBin.currentInventoryOrderBin.pUpdateStatusAndTimeStampInDatabase();
                     cInventoryorderBin.currentInventoryOrderBin = null;
                 }
 
@@ -556,7 +559,7 @@ public class cInventoryorder {
 
     public boolean pAddLineBln() {
 
-        cWebresult WebResult =  cInventoryorder.getInventoryorderViewModel().pAddLineViaWebserviceWrs();
+        cWebresult WebResult =  getInventoryorderViewModel().pAddLineViaWebserviceWrs();
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()){
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -595,7 +598,8 @@ public class cInventoryorder {
 
         Double resultDbl;
 
-        resultDbl = cInventoryorderLine.getInventoryorderLineViewModel().pGetTotalCountDbl();
+        cInventoryorderLineViewModel inventoryorderLineViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderLineViewModel.class);
+        resultDbl = inventoryorderLineViewModel.pGetTotalCountDbl();
         if (resultDbl == null ) {
             return (double) 0;
         }
@@ -607,7 +611,8 @@ public class cInventoryorder {
 
         Double resultDbl;
 
-        resultDbl = cInventoryorderLine.getInventoryorderLineViewModel().pGetCountForBinCodeDbl(pvBincodeStr);
+        cInventoryorderLineViewModel inventoryorderLineViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderLineViewModel.class);
+        resultDbl = inventoryorderLineViewModel.pGetCountForBinCodeDbl(pvBincodeStr);
         if (resultDbl == null ) {
             return (double) 0;
         }
@@ -671,7 +676,7 @@ public class cInventoryorder {
 
         cWebresult WebResult;
 
-        WebResult = cInventoryorder.getInventoryorderViewModel().pGetBinsFromWebserviceWrs();
+        WebResult = getInventoryorderViewModel().pGetBinsFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             if (cInventoryorderBin.allInventoryorderBinsObl == null) {
@@ -715,7 +720,7 @@ public class cInventoryorder {
 
         cWebresult WebResult;
 
-        WebResult = cInventoryorder.getInventoryorderViewModel().pGetPossibleBinsFromWebserviceWrs();
+        WebResult = getInventoryorderViewModel().pGetPossibleBinsFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             if (cInventoryorderBin.allInventoryorderBinsObl == null) {
@@ -734,7 +739,7 @@ public class cInventoryorder {
                 cInventoryorder.binsObl.add(inventoryorderBin.getBinCodeStr());
                 inventoryorderBin.pInsertInDatabaseBln();
                 inventoryorderBin.statusInt = cWarehouseorder.InventoryBinStatusEnu.New;
-                inventoryorderBin.pUpdateStatusAndTimeStampInDatabaseBln();
+                inventoryorderBin.pUpdateStatusAndTimeStampInDatabase();
 
             }
 
@@ -751,7 +756,7 @@ public class cInventoryorder {
         List<cInventoryorderBin> resultObl = new ArrayList<>();
         List<cInventoryorderBinEntity> hulpResultObl;
 
-        hulpResultObl =  cInventoryorder.getInventoryorderViewModel().pGetBinsDoneFromDatabaseObl();
+        hulpResultObl =  getInventoryorderViewModel().pGetBinsDoneFromDatabaseObl();
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -768,7 +773,7 @@ public class cInventoryorder {
         List<cInventoryorderBin> resultObl = new ArrayList<>();
         List<cInventoryorderBinEntity> hulpResultObl;
 
-        hulpResultObl =  cInventoryorder.getInventoryorderViewModel().pGetBinsNotDoneFromDatabaseObl();
+        hulpResultObl =  getInventoryorderViewModel().pGetBinsNotDoneFromDatabaseObl();
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -785,7 +790,7 @@ public class cInventoryorder {
         List<cInventoryorderBin> resultObl = new ArrayList<>();
         List<cInventoryorderBinEntity> hulpResultObl;
 
-        hulpResultObl =  cInventoryorder.getInventoryorderViewModel().pGetBinsTotalFromDatabaseObl();
+        hulpResultObl =  getInventoryorderViewModel().pGetBinsTotalFromDatabaseObl();
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }
@@ -819,7 +824,7 @@ public class cInventoryorder {
     public cInventoryorderBin pAddInventoryBin(cBranchBin pvBranchBin) {
 
         cWebresult WebResult;
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pAddBinViaWebserviceWrs(pvBranchBin.getBinCodeStr());
+        WebResult =  getInventoryorderViewModel().pAddBinViaWebserviceWrs(pvBranchBin.getBinCodeStr());
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -849,7 +854,7 @@ public class cInventoryorder {
 
         cWebresult WebResult;
 
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pGetBarcodesFromWebserviceWrs();
+        WebResult =  getInventoryorderViewModel().pGetBarcodesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
 
             if (cInventoryorderBarcode.allInventoryorderBarcodesObl == null) {
@@ -864,7 +869,7 @@ public class cInventoryorder {
                 inventoryorderEntities.add(inventoryorderBarcode.inventoryorderBarcodeEntity);
             }
 
-            cInventoryorderBarcode.pInsertAllInDatabaseBln(inventoryorderEntities);
+            cInventoryorderBarcode.pInsertAllInDatabase(inventoryorderEntities);
             return true;
         }
 
@@ -880,7 +885,7 @@ public class cInventoryorder {
 
         cWebresult WebResult;
 
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
+        WebResult =  getInventoryorderViewModel().pAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
         if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -931,7 +936,7 @@ public class cInventoryorder {
         }
 
         cWebresult WebResult;
-        WebResult =  cInventoryorder.getInventoryorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
+        WebResult =  getInventoryorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             for (cArticleBarcode articleBarcode :  cArticle.currentArticle.barcodesObl) {
                 cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(articleBarcode);
@@ -963,7 +968,7 @@ public class cInventoryorder {
             cInventoryorderLineBarcode.pTruncateTableBln();
         }
 
-        cWebresult WebResult =  cInventoryorder.getInventoryorderViewModel().pGetLineBarcodesFromWebserviceWrs();
+        cWebresult WebResult =  getInventoryorderViewModel().pGetLineBarcodesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             List<cInventoryorderLineBarcodeEntity> insertObl = new ArrayList<>();
@@ -1025,7 +1030,7 @@ public class cInventoryorder {
 
     public boolean pGetArticleImagesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        if (!cInventoryorder.currentInventoryOrder.isInventoryWithPictureBln()  || !cInventoryorder.currentInventoryOrder.inventoryWithPicturePrefetchBln) {
+        if (!cInventoryorder.currentInventoryOrder.isInventoryWithPictureBln()  || !cInventoryorder.currentInventoryOrder.isInventoryWithPicturePrefetchBln()) {
             return  true;
         }
 
@@ -1054,7 +1059,8 @@ public class cInventoryorder {
         }
 
         cWebresult WebResult;
-        WebResult =  cArticleImage.getArticleImageViewModel().pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
+        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+        WebResult =  articleImageViewModel.pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()){
 
             cArticleImage.allImages = new ArrayList<>();
@@ -1092,7 +1098,7 @@ public class cInventoryorder {
         }
 
         cWebresult webresult;
-        webresult = cInventoryorder.getInventoryorderViewModel().pGetCommentsFromWebserviceWrs();
+        webresult = getInventoryorderViewModel().pGetCommentsFromWebserviceWrs();
         if (webresult.getResultBln()&& webresult.getSuccessBln()) {
 
             cComment.allCommentsObl = new ArrayList<>();

@@ -27,7 +27,7 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
     //Region Public Properties
 
-    public class PickorderViewHolder extends RecyclerView.ViewHolder{
+    public static class PickorderViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewOrdernumber;
         private TextView textViewOrderUser;
@@ -90,7 +90,7 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
     @Override
     public cPickorderAdapter.PickorderViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pbViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_pickorder, pvParent, false);
-        return new cPickorderAdapter.PickorderViewHolder(itemView);
+        return new PickorderViewHolder(itemView);
     }
 
     @Override
@@ -243,15 +243,18 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             @Override
             public void onClick(View v) {
 
-                if (cAppExtension.context instanceof PickorderSelectActivity) {
-                    PickorderSelectActivity.pPickorderSelected(selectedPickorder);
+                if (cAppExtension.activity instanceof PickorderSelectActivity) {
+                    PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
+                    pickorderSelectActivity.pPickorderSelected(selectedPickorder);
                 }
-                if (cAppExtension.context instanceof SortorderSelectActivity) {
-                    SortorderSelectActivity.pSortorderSelected(selectedPickorder);
+                if (cAppExtension.activity instanceof SortorderSelectActivity) {
+                    SortorderSelectActivity sortorderSelectActivity = (SortorderSelectActivity)cAppExtension.activity;
+                    sortorderSelectActivity.pSortorderSelected(selectedPickorder);
                 }
 
-                if (cAppExtension.context instanceof ShiporderSelectActivity) {
-                    ShiporderSelectActivity.pShiporderSelected(selectedPickorder);
+                if (cAppExtension.activity instanceof ShiporderSelectActivity) {
+                    ShiporderSelectActivity shiporderSelectActivity = (ShiporderSelectActivity)cAppExtension.activity;
+                    shiporderSelectActivity.pShiporderSelected(selectedPickorder);
                 }
 
             }

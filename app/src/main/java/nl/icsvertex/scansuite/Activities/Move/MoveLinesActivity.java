@@ -41,26 +41,21 @@ import nl.icsvertex.scansuite.PagerAdapters.MoveLinesPagerAdapter;
 import nl.icsvertex.scansuite.R;
 
 public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultActivity {
-    public static String VIEW_CHOSEN_ORDER = "detail:header:text";
-    static final String ACCEPTREJECTFRAGMENT_TAG = "ACCEPTREJECTFRAGMENT_TAG";
 
     //Region Public Properties
     public static Fragment currentLineFragment;
     //End Region Public Properties
 
     //Region Private Properties
-    private static TextView textViewChosenOrder;
-    static private TabLayout moveLinesTabLayout;
-    static private cNoSwipeViewPager moveLinesViewpager;
+    private  TextView textViewChosenOrder;
+    private TabLayout moveLinesTabLayout;
+    private cNoSwipeViewPager moveLinesViewpager;
 
-    private static MoveLinesPagerAdapter moveLinesPagerAdapter;
-    static private ImageView imageButtonComments;
-
-    private static ImageView toolbarImage;
-    private static TextView toolbarTitle;
-    private static TextView toolbarSubTitle;
-
-    private static String SENDING_TAG = "SENDING_TAG";
+    private  MoveLinesPagerAdapter moveLinesPagerAdapter;
+    private ImageView imageButtonComments;
+    private  ImageView toolbarImage;
+    private  TextView toolbarTitle;
+    private  TextView toolbarSubTitle;
 
     //End Region Private Properties
 
@@ -92,6 +87,13 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
         if (pvMenuItem.getItemId() == android.R.id.home) {
@@ -104,7 +106,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 //                MoveLinesActivity.mStartOrderSelectActivity();
 //            }
 
-            MoveLinesActivity.mStartOrderSelectActivity();
+            this.mStartOrderSelectActivity();
 
             return true;
         }
@@ -114,7 +116,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     @Override
     public void onBackPressed() {
-        MoveLinesActivity.mShowAcceptFragment();
+        this.mShowAcceptFragment();
     }
 
     //End Region Default Methods
@@ -148,22 +150,22 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     @Override
     public void mFindViews() {
 
-        MoveLinesActivity.toolbarImage = findViewById(R.id.toolbarImage);
-        MoveLinesActivity.toolbarTitle = findViewById(R.id.toolbarTitle);
-        MoveLinesActivity.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        MoveLinesActivity.moveLinesTabLayout = findViewById(R.id.moveLinesTabLayout);
-        MoveLinesActivity.moveLinesViewpager = findViewById(R.id.moveLinesViewpager);
-        MoveLinesActivity.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
-        MoveLinesActivity.imageButtonComments = findViewById(R.id.imageButtonComments);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.moveLinesTabLayout = findViewById(R.id.moveLinesTabLayout);
+        this.moveLinesViewpager = findViewById(R.id.moveLinesViewpager);
+        this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
+        this.imageButtonComments = findViewById(R.id.imageButtonComments);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        MoveLinesActivity.toolbarImage.setImageResource(R.drawable.ic_menu_move);
-        MoveLinesActivity.toolbarTitle.setText(pvScreenTitleStr);
-        MoveLinesActivity.toolbarTitle.setSelected(true);
-        MoveLinesActivity.toolbarSubTitle.setSelected(true);
-        MoveLinesActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.lines) + ' ' +  cText.pIntToStringStr(cMoveorder.currentMoveOrder.linesObl().size()) );
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_move);
+        this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarTitle.setSelected(true);
+        this.toolbarSubTitle.setSelected(true);
+        this.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.lines) + ' ' +  cText.pIntToStringStr(cMoveorder.currentMoveOrder.linesObl().size()) );
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -174,19 +176,19 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     @Override
     public void mFieldsInitialize() {
-        ViewCompat.setTransitionName(MoveLinesActivity.textViewChosenOrder, MoveLinesActivity.VIEW_CHOSEN_ORDER);
-        MoveLinesActivity.textViewChosenOrder.setText(cMoveorder.currentMoveOrder.getOrderNumberStr());
-        MoveLinesActivity.moveLinesTabLayout.addTab(MoveLinesActivity.moveLinesTabLayout.newTab().setText(R.string.tab_moveorderline_take));
-        MoveLinesActivity.moveLinesTabLayout.addTab(MoveLinesActivity.moveLinesTabLayout.newTab().setText(R.string.tab_moveorderline_place));
+        ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
+        this.textViewChosenOrder.setText(cMoveorder.currentMoveOrder.getOrderNumberStr());
+        this.moveLinesTabLayout.addTab(this.moveLinesTabLayout.newTab().setText(R.string.tab_moveorderline_take));
+        this.moveLinesTabLayout.addTab(this.moveLinesTabLayout.newTab().setText(R.string.tab_moveorderline_place));
 
-        MoveLinesActivity.moveLinesPagerAdapter = new MoveLinesPagerAdapter(MoveLinesActivity.moveLinesTabLayout.getTabCount());
-        MoveLinesActivity.moveLinesViewpager.setAdapter(MoveLinesActivity.moveLinesPagerAdapter);
+        this.moveLinesPagerAdapter = new MoveLinesPagerAdapter(this.moveLinesTabLayout.getTabCount());
+        this.moveLinesViewpager.setAdapter(this.moveLinesPagerAdapter);
 
-        MoveLinesActivity.moveLinesViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(MoveLinesActivity.moveLinesTabLayout));
-        MoveLinesActivity.moveLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        this.moveLinesViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.moveLinesTabLayout));
+        this.moveLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
-                MoveLinesActivity.moveLinesViewpager.setCurrentItem(pvTab.getPosition());
+                moveLinesViewpager.setCurrentItem(pvTab.getPosition());
                 mChangeSelectedTab(pvTab);
             }
 
@@ -219,7 +221,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     //Region Public Methods
 
-    public static void pHandleScan(final cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(final cBarcodeScan pvBarcodeScan) {
 
         //Close open Dialogs
         cUserInterface.pCheckAndCloseOpenDialogs();
@@ -235,15 +237,15 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     }
 
-    public static void pHandleAddBinFragmentDismissed() {
+    public  void pHandleAddBinFragmentDismissed() {
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
-    public static void pHandleOrderCloseClick() {
-        MoveLinesActivity.mShowOrderCloseDialog();
+    public  void pHandleOrderCloseClick() {
+        this.mShowOrderCloseDialog();
     }
 
-    public static void pCloseOrder(){
+    public void pCloseOrder(){
 
 
         mShowSending();
@@ -257,24 +259,22 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     }
 
-    public static void pInventoryorderBinSelected() {
+    public  void pInventoryorderBinSelected() {
 
         if (MoveLinesActivity.currentLineFragment instanceof moveLinesTakeFragment || MoveLinesActivity.currentLineFragment instanceof moveLinesPlaceFragment) {
-            MoveLinesActivity.mOpenMoveLineActivity();
+            this.mOpenMoveLineActivity();
         }
 
     }
 
 
-    public static void pChangeToolBarSubText(String pvTextStr){
-
-        MoveLinesActivity.toolbarSubTitle.setText(pvTextStr);
-
+    public  void pChangeToolBarSubText(String pvTextStr){
+        this.toolbarSubTitle.setText(pvTextStr);
     }
 
-    public static void pAcceptRejectDialogDismissed() {
+    public  void pAcceptRejectDialogDismissed() {
         cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
-        mStartOrderSelectActivity();
+        this.mStartOrderSelectActivity();
 
     }
 
@@ -282,7 +282,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     //Region Private Methods
 
-    private static void mHandleCloseOrder(){
+    private void mHandleCloseOrder(){
 
         cResult hulpResult;
         hulpResult = new cResult();
@@ -333,7 +333,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     }
 
-    private  static void mHandleScan(cBarcodeScan pvBarcodeScan){
+    private  void mHandleScan(cBarcodeScan pvBarcodeScan){
 
         //Only BIN scans are allowed
         if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
@@ -373,11 +373,11 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         }
     }
 
-    private  static void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
+    private  void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 
-    private static void mOpenMoveLineActivity() {
+    private void mOpenMoveLineActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -403,18 +403,18 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 //        }
     }
 
-    private static void mStartOrderSelectActivity() {
+    private void mStartOrderSelectActivity() {
 
         cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
         Intent intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
     }
 
-    private static void mStepFailed(String pvErrorMessageStr ){
+    private  void mStepFailed(String pvErrorMessageStr ){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cMoveorder.currentMoveOrder.getOrderNumberStr(), true, true );
     }
 
-    private static void mShowOrderCloseDialog() {
+    private  void mShowOrderCloseDialog() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -425,12 +425,12 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
             @Override
             public void run() {
                 // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
             }
         });
     }
 
-    private static void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
+    private  void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -444,20 +444,20 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
-    private static void mShowSending() {
+    private void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, SENDING_TAG);
+                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
             }
         });
     }
 
-    private static void mShowSent() {
-        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(SENDING_TAG);
+    private  void mShowSent() {
+        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.SENDING_TAG);
         if (fragment != null) {
             if (fragment instanceof SendingFragment) {
                 ((SendingFragment) fragment).pShowFlyAwayAnimation();
@@ -465,8 +465,8 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         }
     }
 
-    private static void mShowNotSend(String pvErrorMessageStr) {
-        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(SENDING_TAG);
+    private  void mShowNotSend(String pvErrorMessageStr) {
+        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.SENDING_TAG);
         if (fragment != null) {
             if (fragment instanceof SendingFragment) {
                 ((SendingFragment) fragment).pShowCrashAnimation(pvErrorMessageStr);
@@ -474,7 +474,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         }
     }
 
-    private static void mShowAcceptFragment(){
+    private  void mShowAcceptFragment(){
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -487,13 +487,13 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
             @Override
             public void run() {
                 // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, ACCEPTREJECTFRAGMENT_TAG);
+                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
             }
         });
     }
 
     private void mSetShowCommentListener() {
-        MoveLinesActivity.imageButtonComments.setOnClickListener(new View.OnClickListener() {
+        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowCommentsFragment(cMoveorder.currentMoveOrder.commentsObl(),"");

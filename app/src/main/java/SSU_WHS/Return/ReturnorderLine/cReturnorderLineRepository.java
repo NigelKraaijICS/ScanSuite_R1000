@@ -104,7 +104,7 @@ public class cReturnorderLineRepository {
         }
     }
 
-    public cWebresult pCreateItemVariantViaWebserviceWrs() {
+    public void pCreateItemVariantViaWebservice() {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
@@ -117,7 +117,6 @@ public class cReturnorderLineRepository {
             webResultWrs.setResultObl(resultObl);
             e.printStackTrace();
         }
-        return webResultWrs;
     }
 
 
@@ -153,41 +152,18 @@ public class cReturnorderLineRepository {
         return webResultWrs;
     }
 
-    public boolean pUpdateQuantityBln() {
+    public void pUpdateQuantity() {
 
-        Integer integerValue;
+
         UpdateReturnlineQuantityParams updateInventorylineQuantityParams = new UpdateReturnlineQuantityParams((long) cReturnorderLine.currentReturnOrderLine.getLineNoInt(),
                                                                                                                      cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl());
 
 
         try {
-            integerValue = new mUpdateQuantityHandledAsyncTask(returnorderLineDao).execute(updateInventorylineQuantityParams).get();
+           new mUpdateQuantityHandledAsyncTask(returnorderLineDao).execute(updateInventorylineQuantityParams).get();
 
-            return integerValue != 0;
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            return  false;
-        }
-    }
-
-    public List<cReturnorderLineEntity> pGetReturnOrderLinesForSourceDocumentFromDatabaseObl(String pvDocumentcode) {
-        List<cReturnorderLineEntity> ResultObl = null;
-        try {
-            ResultObl = new pGetReturnorderLinesForSourceDocumentFromDatabaseAsyncTask(returnorderLineDao).execute(pvDocumentcode).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
-    }
-
-    private static class pGetReturnorderLinesForSourceDocumentFromDatabaseAsyncTask extends AsyncTask<String, Void, List<cReturnorderLineEntity>> {
-        private iReturnorderLineDao mAsyncTaskDao;
-        pGetReturnorderLinesForSourceDocumentFromDatabaseAsyncTask(iReturnorderLineDao dao) {
-            mAsyncTaskDao = dao;
-        }
-        @Override
-        protected List<cReturnorderLineEntity> doInBackground(final String... params) {
-            return mAsyncTaskDao.getReturnorderLinesForSourceDocument(params[0]);
         }
     }
 
@@ -241,7 +217,7 @@ public class cReturnorderLineRepository {
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
                 l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_RETURNREASONNL;
-                l_PropertyInfo9Pin.setValue(cReturnorderLine.currentReturnOrderLine.getRetourredenStr());
+                l_PropertyInfo9Pin.setValue(cReturnorderLine.currentReturnOrderLine.getRetourRedenStr());
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
                 SoapObject barcodesHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODESLIST);

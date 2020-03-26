@@ -2,7 +2,6 @@ package SSU_WHS.Basics.BranchBin;
 
 import org.json.JSONObject;
 
-
 public class cBranchBin {
 
     //Region Public Properties
@@ -39,9 +38,7 @@ public class cBranchBin {
         return useForReturnSalesBln;
     }
 
-    public cBranchBinEntity branchBinEntity;
-    public boolean inDatabaseBln;
-
+    private cBranchBinEntity branchBinEntity;
     //end region Public Propties
 
     //Region Constructor

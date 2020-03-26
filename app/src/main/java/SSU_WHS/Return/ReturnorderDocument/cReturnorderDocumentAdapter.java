@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
 import nl.icsvertex.scansuite.Fragments.Returns.ReturnDocumentsDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Returns.ReturnDocumentsToDoFragment;
@@ -25,7 +26,7 @@ import nl.icsvertex.scansuite.R;
 public class cReturnorderDocumentAdapter extends RecyclerView.Adapter<cReturnorderDocumentAdapter.ReturnorderDocumentViewHolder> {
     //Region Public Properties
 
-    public class ReturnorderDocumentViewHolder extends RecyclerView.ViewHolder{
+    public static class ReturnorderDocumentViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewDocument;
         private TextView textViewCounted;
@@ -115,7 +116,12 @@ public class cReturnorderDocumentAdapter extends RecyclerView.Adapter<cReturnord
             @Override
             public void onClick(View v) {
                 cReturnorderDocument.currentReturnOrderDocument = selectedReturnorderDocument;
-                ReturnorderDocumentsActivity.pReturnorderDocumentSelected();
+
+                if (cAppExtension.activity instanceof ReturnorderDocumentsActivity) {
+                    ReturnorderDocumentsActivity returnorderDocumentActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+                    returnorderDocumentActivity.pReturnorderDocumentSelected();
+                }
+
             }
         });
     }

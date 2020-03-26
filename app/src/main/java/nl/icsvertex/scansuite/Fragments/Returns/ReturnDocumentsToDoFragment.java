@@ -42,12 +42,22 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
 
     //Region Private Properties
 
-    private static ImageView imageAddDocument;
-    private static RecyclerView recyclerViewReturnDocumentsToDo;
+    private ImageView imageAddDocument;
+    private RecyclerView recyclerViewReturnDocumentsToDo;
 
-    private static TextView quickhelpText;
-    private static ImageView quickhelpIcon;
-    private static ConstraintLayout quickhelpContainer;
+    private TextView quickhelpText;
+    private ImageView quickhelpIcon;
+    private ConstraintLayout quickhelpContainer;
+
+    private  cReturnorderDocumentAdapter returnorderDocumentAdapter;
+    private  cReturnorderDocumentAdapter getReturnorderDocumentAdapter(){
+        if (this.returnorderDocumentAdapter == null) {
+            this.returnorderDocumentAdapter = new cReturnorderDocumentAdapter();
+        }
+
+        return  this.returnorderDocumentAdapter;
+    }
+
     //End Region Private Properties
 
 
@@ -81,10 +91,6 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
         ReturnorderDocumentsActivity.currentDocumentFragment = this;
     }
 
-
-
-
-
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -95,7 +101,7 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        ReturnDocumentsToDoFragment.mGetData();
+        this.mGetData();
 
     }
 
@@ -103,11 +109,11 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
     public void mFindViews() {
 
         if (getView() != null) {
-            ReturnDocumentsToDoFragment.imageAddDocument = getView().findViewById(R.id.imageAddDocument);
-            ReturnDocumentsToDoFragment.recyclerViewReturnDocumentsToDo = getView().findViewById(R.id.recyclerViewReturnDocumentsToDo);
-            ReturnDocumentsToDoFragment.quickhelpText = getView().findViewById(R.id.quickhelpText);
-            ReturnDocumentsToDoFragment.quickhelpContainer = getView().findViewById(R.id.quickhelpContainer);
-            ReturnDocumentsToDoFragment.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
+            this.imageAddDocument = getView().findViewById(R.id.imageAddDocument);
+            this.recyclerViewReturnDocumentsToDo = getView().findViewById(R.id.recyclerViewReturnDocumentsToDo);
+            this.quickhelpText = getView().findViewById(R.id.quickhelpText);
+            this.quickhelpContainer = getView().findViewById(R.id.quickhelpContainer);
+            this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
         }
 
     }
@@ -115,17 +121,17 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
     @Override
     public void mFieldsInitialize() {
 
-        ReturnDocumentsToDoFragment.quickhelpText.setText(R.string.scan_or_select_document);
+        this.quickhelpText.setText(R.string.scan_or_select_document);
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cReturnorderDocumentRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(ReturnDocumentsToDoFragment.recyclerViewReturnDocumentsToDo);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewReturnDocumentsToDo);
 
         if (!cReturnorder.currentReturnOrder.isGeneratedBln()) {
-            ReturnDocumentsToDoFragment.imageAddDocument.setVisibility(View.INVISIBLE);
+            this.imageAddDocument.setVisibility(View.INVISIBLE);
         }
         else {
             if (!cReturnorder.currentReturnOrder.getRetourMultiDocumentBln()) {
-                ReturnDocumentsToDoFragment.imageAddDocument.setVisibility(View.INVISIBLE);
+                this.imageAddDocument.setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -140,20 +146,16 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
 
     //Region Public Methods
 
-    public static void pGetData(){
-        mGetData();
-    }
-
     //End Region Public Methods
 
     //Region Private Methods
 
-    private static void mGetData() {
-        ReturnDocumentsToDoFragment.mFillRecycler(cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl());
+    private void mGetData() {
+        this.mFillRecycler(cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl());
     }
 
     private void mSetAddDocumentListener() {
-        ReturnDocumentsToDoFragment.imageAddDocument.setOnClickListener(new View.OnClickListener() {
+        this.imageAddDocument.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mShowAddDocumentFragment();
@@ -161,24 +163,29 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
         });
     }
 
-    private static void mFillRecycler(List<cReturnorderDocument> pvDataObl) {
+    private  void mFillRecycler(List<cReturnorderDocument> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            ReturnDocumentsToDoFragment.mNoLinesAvailable(true);
+            this.mNoLinesAvailable(true);
             return;
         }
-        ReturnDocumentsToDoFragment.mNoLinesAvailable(false);
 
-        cReturnorderDocument.getReturnorderDocumentNotDoneAdapter().pFillData(pvDataObl);
-        recyclerViewReturnDocumentsToDo.setHasFixedSize(false);
-        recyclerViewReturnDocumentsToDo.setAdapter(cReturnorderDocument.getReturnorderDocumentNotDoneAdapter());
-        recyclerViewReturnDocumentsToDo.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        recyclerViewReturnDocumentsToDo.setVisibility(View.VISIBLE);
+        this.mNoLinesAvailable(false);
 
-        ReturnorderDocumentsActivity.pChangeTabCounterText(cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().size()) + "/" + cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsTotalFromDatabasObl().size()));
+        this.getReturnorderDocumentAdapter().pFillData(pvDataObl);
+        this.recyclerViewReturnDocumentsToDo.setHasFixedSize(false);
+        this.recyclerViewReturnDocumentsToDo.setAdapter(this.getReturnorderDocumentAdapter());
+        this.recyclerViewReturnDocumentsToDo.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewReturnDocumentsToDo.setVisibility(View.VISIBLE);
+
+        if (cAppExtension.activity instanceof  ReturnorderDocumentsActivity) {
+            ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
+            returnorderDocumentsActivity.pChangeTabCounterText(cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().size()) + "/" + cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsTotalFromDatabasObl().size()));
+        }
+
     }
 
-    private static void mNoLinesAvailable(Boolean pvEnabledBln) {
+    private  void mNoLinesAvailable(Boolean pvEnabledBln) {
 
         if (ReturnorderDocumentsActivity.currentDocumentFragment instanceof ReturnDocumentsToDoFragment) {
             //Close no orders fragment if needed
@@ -195,7 +202,7 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
             }
 
             //Hide the recycler view
-            ReturnDocumentsToDoFragment.recyclerViewReturnDocumentsToDo.setVisibility(View.INVISIBLE);
+            this.recyclerViewReturnDocumentsToDo.setVisibility(View.INVISIBLE);
 
             //Hide location button and clear text
 
@@ -206,12 +213,14 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
             fragmentTransaction.commit();
 
             //Change tabcounter text
-            ReturnorderDocumentsActivity.pChangeTabCounterText(cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().size()) + "/" + cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsTotalFromDatabasObl().size()));
+            if (cAppExtension.activity instanceof  ReturnorderDocumentsActivity) {
+                ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity) cAppExtension.activity;
+                returnorderDocumentsActivity.pChangeTabCounterText(cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().size()) + "/" + cText.pIntToStringStr(cReturnorder.currentReturnOrder.pGetDocumentsTotalFromDatabasObl().size()));
+            }
         }
     }
 
     private void mShowAddDocumentFragment(){
-
         AddDocumentFragment addDocumentFragment = new AddDocumentFragment();
         addDocumentFragment.setCancelable(true);
         addDocumentFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ADDDOCUMENT_TAG);
@@ -232,9 +241,7 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
 
         //Remove the enviroment
         this.mRemoveAdapterFromFragment();
-        ReturnDocumentsToDoFragment.mGetData();
-        ReturnDocumentsDoneFragment.pGetData();
-        ReturnDocumentsTotalFragment.pGetData();
+        this.mGetData();
 
     }
 
@@ -259,7 +266,7 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
 
 
     private void mSetQuickHelpListener() {
-        ReturnDocumentsToDoFragment.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
+        this.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(quickhelpIcon, 0);

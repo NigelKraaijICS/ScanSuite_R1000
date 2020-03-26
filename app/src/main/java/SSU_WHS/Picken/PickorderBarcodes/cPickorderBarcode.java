@@ -1,6 +1,6 @@
 package SSU_WHS.Picken.PickorderBarcodes;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
@@ -10,32 +10,30 @@ import java.util.List;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 
 public class cPickorderBarcode {
 
     private String barcodeStr;
     public String getBarcodeStr() {return barcodeStr;}
 
-    private String barcodeWithoutCheckDigitStr;
     public String getBarcodeWithoutCheckDigitStr() {
 
-        this.barcodeWithoutCheckDigitStr = this.getBarcodeStr();
+        String barcodeWithoutCheckDigitStr = this.getBarcodeStr();
 
         if (cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN8 && cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() != 8 && this.getBarcodeStr().length() != 13 ) {
-            return  this.barcodeWithoutCheckDigitStr;
+            return barcodeWithoutCheckDigitStr;
         }
 
         if (this.getBarcodeStr().length() == 8)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,7);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,7);
         }
 
         if (this.getBarcodeStr().length() == 13)  {
-            this.barcodeWithoutCheckDigitStr = this.barcodeWithoutCheckDigitStr.substring(0,12);
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,12);
         }
 
         return barcodeWithoutCheckDigitStr;
@@ -63,31 +61,13 @@ public class cPickorderBarcode {
         return    this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
     }
 
-
-
     private cPickorderBarcodeEntity pickorderBarcodeEntity;
-    public boolean inDatabaseBln;
 
     public static ArrayList<cPickorderBarcode> allBarcodesObl;
     public static cPickorderBarcode currentPickorderBarcode;
 
-
-    public iPickorderBarcodeDao pickorderBarcodeDao;
-
-    private static cPickorderBarcodeViewModel pickorderBarcodeViewModel;
-    private static cPickorderBarcodeViewModel getPickorderBarcodeViewModel(){
-        if (pickorderBarcodeViewModel == null) {
-            pickorderBarcodeViewModel = ViewModelProviders.of(cAppExtension.fragmentActivity).get(cPickorderBarcodeViewModel.class);
-        }
-        return pickorderBarcodeViewModel;
-    }
-
-    private static cPickorderBarcodeAdapter gPickorderBarcodeAdapter;
-    public static cPickorderBarcodeAdapter getPickorderBarcodeAdapter() {
-        if (gPickorderBarcodeAdapter == null) {
-            gPickorderBarcodeAdapter = new cPickorderBarcodeAdapter();
-        }
-        return gPickorderBarcodeAdapter;
+    private cPickorderBarcodeViewModel getPickorderBarcodeViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderBarcodeViewModel.class);
     }
 
     public cPickorderBarcode(JSONObject pvJsonObject) {
@@ -103,8 +83,7 @@ public class cPickorderBarcode {
     //Region Public Methods
 
     public boolean pInsertInDatabaseBln() {
-        cPickorderBarcode.getPickorderBarcodeViewModel().insert(this.pickorderBarcodeEntity);
-        this.inDatabaseBln = true;
+        this.getPickorderBarcodeViewModel().insert(this.pickorderBarcodeEntity);
         if (cPickorderBarcode.allBarcodesObl == null ){
             cPickorderBarcode.allBarcodesObl = new ArrayList<>();
 
@@ -115,8 +94,7 @@ public class cPickorderBarcode {
     }
 
     public boolean pDeleteFromDatabaseBln() {
-        cPickorderBarcode.getPickorderBarcodeViewModel().delete(this.pickorderBarcodeEntity);
-        this.inDatabaseBln = true;
+        this.getPickorderBarcodeViewModel().delete(this.pickorderBarcodeEntity);
         if (cPickorderBarcode.allBarcodesObl == null ){
             cPickorderBarcode.allBarcodesObl = new ArrayList<>();
 
@@ -127,14 +105,17 @@ public class cPickorderBarcode {
     }
 
     public static boolean pTruncateTableBln(){
-        cPickorderBarcode.getPickorderBarcodeViewModel().deleteAll();
+        cPickorderBarcodeViewModel pickorderBarcodeViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderBarcodeViewModel.class);
+        pickorderBarcodeViewModel.deleteAll();
         return true;
     }
 
     public static cPickorderBarcode pGetPickbarcodeViaBarcode(cBarcodeScan pvBarcodeScan) {
+
         if (cPickorderBarcode.allBarcodesObl == null || cPickorderBarcode.allBarcodesObl.size() == 0){
             return null;
         }
+
         for (cPickorderBarcode pickorderBarcode : cPickorderBarcode.allBarcodesObl) {
             if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
                 pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())){
@@ -158,22 +139,6 @@ public class cPickorderBarcode {
                 resultObl.add(pickorderBarcode);
             }
         }return resultObl;
-    }
-
-    public static cPickorderBarcode pGetPickorderBarcodeByBarcodeStr(String pvBarcodeStr) {
-
-       if (cPickorder.currentPickOrder == null || cPickorder.currentPickOrder.barcodesObl() == null || cPickorder.currentPickOrder.barcodesObl().size() == 0 ) {
-           return  null;
-       }
-
-       for (cPickorderBarcode pickorderBarcode : cPickorder.currentPickOrder.barcodesObl()) {
-           if (pickorderBarcode.barcodeStr.equalsIgnoreCase(pvBarcodeStr)){
-               return  pickorderBarcode;
-           }
-       }
-
-       return  null;
-
     }
 
     //End Region Public Methods

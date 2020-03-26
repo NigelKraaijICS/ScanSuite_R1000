@@ -23,7 +23,7 @@ import nl.icsvertex.scansuite.R;
 public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder>  {
 
     //Region Public Properties
-    public class IntakeorderMATLineViewHolder extends RecyclerView.ViewHolder{
+    public static class IntakeorderMATLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewItemNoAndVariantCode;
         private TextView textViewDescription;
@@ -31,8 +31,6 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         private TextView textViewSourceNo;
         private FrameLayout intakeOrderMATItemLinearLayout;
         private ImageView imageSendStatus;
-
-
 
         public IntakeorderMATLineViewHolder(View pvItemView) {
             super(pvItemView);
@@ -85,7 +83,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
     @Override
     public cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_intakeorderline_summary, pvParent, false);
-        return new cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder(itemView);
+        return new IntakeorderMATLineViewHolder(itemView);
     }
 
     @Override
@@ -128,8 +126,9 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
                 pvView.setSelected(true);
 
                 //Kick off correct event at correct activity
-                if (cAppExtension.context instanceof IntakeorderLinesActivity) {
-                        IntakeorderLinesActivity.pIntakelineSelected(currentIntakeorderMATSummaryLine);
+                if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
+                    IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+                    intakeorderLinesActivity.pIntakelineSelected(currentIntakeorderMATSummaryLine);
                 }
             }
         });
@@ -154,31 +153,40 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
     //Region Public Methods
     public void pFillData(List<cIntakeorderMATSummaryLine> pvDataObl) {
         this.localIntakeorderMATSummaryLinesObl = pvDataObl;
-        IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+
+        if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+            intakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+        }
+
     }
 
     public void pShowDeviations() {
 
         this.localIntakeorderMATSummaryLinesObl = mGetDeviationsListObl();
-        IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
 
-        if (cAppExtension.activity instanceof IntakeorderLinesActivity ) {
-            IntakeorderLinesActivity.pShowData(this.localIntakeorderMATSummaryLinesObl);
+        if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+            intakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+            intakeorderLinesActivity.pShowData(this.localIntakeorderMATSummaryLinesObl);
         }
-
     }
 
     public void pSetFilter(String pvQueryTextStr, Boolean pvScannedBln) {
         this.localIntakeorderMATSummaryLinesObl = mGetFilteredListObl(pvQueryTextStr);
-        IntakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+
+        if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+            intakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+
+        }
 
         if (this.localIntakeorderMATSummaryLinesObl.size() == 1 && pvScannedBln) {
-
             if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
-                IntakeorderLinesActivity.pIntakelineSelected(this.localIntakeorderMATSummaryLinesObl.get(0));
-                IntakeorderLinesActivity.pStartLine();
+                IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+                intakeorderLinesActivity.pIntakelineSelected(this.localIntakeorderMATSummaryLinesObl.get(0));
+                intakeorderLinesActivity.pStartLine();
             }
-
         }
 
     }
