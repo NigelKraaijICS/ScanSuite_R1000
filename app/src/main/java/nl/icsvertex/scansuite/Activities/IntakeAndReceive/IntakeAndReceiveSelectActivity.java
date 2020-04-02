@@ -510,6 +510,11 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
+        ReceiveLinesActivity.closeOrderClickedBln = false;
+        ReceiveLinesActivity.packagingClickedBln = false;
+        ReceiveLinesActivity.packagingHandledBln = false;
+
+
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
         View clickedOrder;
 

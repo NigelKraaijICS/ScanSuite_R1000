@@ -828,8 +828,15 @@ public class cIntakeorder {
                 this.packagingObl.add(packaging);
             }
 
+
+
             //If there is no packaging defined, use the general list from the BASICS as a starting point
             if (this.packagingObl.size() == 0) {
+
+                for (cPackaging packaging : cPackaging.allPackaging ) {
+                    packaging.quantityUsedInt = 0;
+                }
+
                 this.packagingObl.addAll(cPackaging.allPackaging);
             }
 

@@ -552,6 +552,13 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
             return result;
         }
 
+        //Get packaging
+        if (!cIntakeorder.currentIntakeOrder.pGetPackagingViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_packaging_failed));
+            return result;
+        }
+
         // Get all comments
         if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -581,6 +588,10 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mShowReceiveLinesActivity() {
+
+        ReceiveLinesActivity.closeOrderClickedBln = false;
+        ReceiveLinesActivity.packagingClickedBln = false;
+        ReceiveLinesActivity.packagingHandledBln = false;
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
