@@ -87,6 +87,14 @@ public class AcceptPackagingFragment extends DialogFragment implements iICSDefau
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
+    }
+
+    @Override
     public void mFragmentInitialize() {
         this.mFindViews();
         this.mFieldsInitialize();

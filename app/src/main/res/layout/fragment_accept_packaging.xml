@@ -16,6 +16,7 @@
         android:id="@+id/recyclerPackaging"
         style="@style/defaultRecyclerView"
         app:layout_constraintTop_toBottomOf="@id/textViewAcceptPackagingHeader"
+        app:layout_constraintBottom_toTopOf="@id/acceptImageView"
         app:layout_constraintStart_toStartOf="parent"
         />
     <androidx.appcompat.widget.AppCompatImageView
@@ -24,7 +25,7 @@
         android:layout_marginTop="@dimen/default_double_margin"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recyclerPackaging"
+        app:layout_constraintBottom_toTopOf="@id/textReject"
         app:srcCompat="@drawable/ic_dislike" />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/acceptImageView"
@@ -32,7 +33,7 @@
         android:layout_marginTop="@dimen/default_double_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/recyclerPackaging"
+        app:layout_constraintBottom_toTopOf="@id/textAccept"
         app:srcCompat="@drawable/ic_like" />
     <TextView
         android:id="@+id/textReject"
@@ -42,13 +43,12 @@
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:padding="@dimen/default_padding"
-        android:text="Een wat langere tekst"
+        android:text=""
         android:textSize="@dimen/textsize_huge"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         android:textAlignment="center"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/acceptImageView"/>
         app:layout_constraintBottom_toBottomOf="parent"/>
     <TextView
         android:id="@+id/textAccept"
@@ -58,13 +58,12 @@
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:padding="@dimen/default_padding"
-        android:text="Een nog wat langere text"
+        android:text=""
         android:textSize="@dimen/textsize_huge"
         android:textAlignment="center"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/rejectImageView"/>
         app:layout_constraintBottom_toBottomOf="parent"/>
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
