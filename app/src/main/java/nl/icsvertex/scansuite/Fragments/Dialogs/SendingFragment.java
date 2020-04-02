@@ -21,6 +21,7 @@ import java.util.Objects;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -141,6 +142,11 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
                     if (cAppExtension.activity instanceof ShiporderShipActivity) {
                         ShiporderShipActivity shiporderShipActivity = (ShiporderShipActivity)cAppExtension.activity;
                         shiporderShipActivity.pHandleBackToLines();
+                    }
+
+                    if (cAppExtension.activity instanceof PackagingActivity) {
+                        PackagingActivity packagingActivity = (PackagingActivity)cAppExtension.activity;
+                        packagingActivity.pDone();
                     }
 
                     dismiss();

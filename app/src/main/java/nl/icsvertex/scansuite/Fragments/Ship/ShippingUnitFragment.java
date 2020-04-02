@@ -32,9 +32,9 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
     //End Region Public Properties
 
     //Region Private Properties
-    private static  RecyclerView shippingUnitRecyclerView;
-    private static Button buttonClose;
-    private static Button buttonDone;
+    private  RecyclerView shippingUnitRecyclerView;
+    private  Button buttonClose;
+    private  Button buttonDone;
 
     private cShippingAgentServiceShippingUnitAdapter shippingAgentServiceShippingUnitAdapter;
     private cShippingAgentServiceShippingUnitAdapter getShippingAgentServiceShippingUnitAdapter(){
@@ -95,10 +95,10 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
     @Override
     public void mFindViews() {
         if (getView() != null) {
-            ShippingUnitFragment.buttonClose = getView().findViewById(R.id.buttonClose);
-            ShippingUnitFragment.buttonDone = getView().findViewById(R.id.buttonDone);
-            ShippingUnitFragment.shippingUnitRecyclerView = getView().findViewById(R.id.shippingUnitRecyclerView);
-            ShippingUnitFragment.shippingUnitRecyclerView.setHapticFeedbackEnabled(true);
+            this.buttonClose = getView().findViewById(R.id.buttonClose);
+            this.buttonDone = getView().findViewById(R.id.buttonDone);
+            this.shippingUnitRecyclerView = getView().findViewById(R.id.shippingUnitRecyclerView);
+            this.shippingUnitRecyclerView.setHapticFeedbackEnabled(true);
         }
     }
 
@@ -123,7 +123,7 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
 
 
     private void mSetCloseListener() {
-        ShippingUnitFragment.buttonClose.setOnClickListener(new View.OnClickListener() {
+        this.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 0;
@@ -132,7 +132,7 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
         });
     }
     private void mSetOKListener() {
-        ShippingUnitFragment.buttonDone.setOnClickListener(new View.OnClickListener() {
+        this.buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -143,9 +143,9 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
     private void mFillRecycler(List<cShippingAgentServiceShippingUnit> pvDataObl) {
 
         ((SimpleItemAnimator) Objects.requireNonNull(shippingUnitRecyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
-        ShippingUnitFragment.shippingUnitRecyclerView.setHasFixedSize(false);
-        ShippingUnitFragment.shippingUnitRecyclerView.setAdapter(this.getShippingAgentServiceShippingUnitAdapter());
-        ShippingUnitFragment.shippingUnitRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.shippingUnitRecyclerView.setHasFixedSize(false);
+        this.shippingUnitRecyclerView.setAdapter(this.getShippingAgentServiceShippingUnitAdapter());
+        this.shippingUnitRecyclerView.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         this.getShippingAgentServiceShippingUnitAdapter().pFillData(pvDataObl);
     }
 }

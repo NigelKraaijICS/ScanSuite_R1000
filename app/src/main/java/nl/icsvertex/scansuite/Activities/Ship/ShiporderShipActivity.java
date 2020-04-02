@@ -112,6 +112,13 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
         if (pvMenuItem.getItemId() == android.R.id.home) {
             this.pHandleBackToLines();
@@ -447,7 +454,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     private void mShowShippingUnitFragment() {
         final ShippingUnitFragment shippingUnitFragment = new ShippingUnitFragment();
-        shippingUnitFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BRANCHFRAGMENT_LIST_TAG);
+        shippingUnitFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SHIPPINGFRAGMENT_LIST_TAG);
     }
 
     //endregion private voids

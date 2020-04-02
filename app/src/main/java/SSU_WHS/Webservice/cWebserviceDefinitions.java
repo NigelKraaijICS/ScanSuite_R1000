@@ -89,6 +89,11 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_RECEIVECREATE = "p_ReceiveOrderCreateJsonStr";
     public static String WEBMETHOD_RECEIVEINVALIDATE = "p_ReceiveVervallenJsonStr";
     public static String WEBMETHOD_RECEIVEHANDLED = "p_ReceiveInTakeOrderHandledJsonStr";
+    public static String WEBMETHOD_PACKAGINGHANDLED = "p_WarehouseopdrachtEmballageUpdateJsonStr";
+    public static String WEBMETHOD_PACKAGINGGET = "p_WarehouseopdrachtEmballageGetJsonStr";
+
+
+
     public static String WEBMETHOD_GETRECEIVEBINS = "p_MagazijnlocatieReceiveGetJsonStr";
 
 
@@ -166,6 +171,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_HANDLEDTIMESTAMP = "pv_HandledTimestampDat";
     public static String WEBPROPERTY_PICKFROMCONTAINER = "pv_PickenUitContainerStr";
     public static String WEBPROPERTY_BARCODESLIST = "pv_BarcodesObl";
+    public static String WEBPROPERTY_PACKAGINGLIST = "pv_EmballageObl";
     public static String WEBPROPERTY_CONTAINERSLIST = "pv_ContainersObl";
     public static String WEBPROPERTY_PROCESSINGSEQUENCE = "pv_ProcessingSequenceStr";
     public static String WEBPROPERTY_WORKPLACE = "pv_WorkplaceStr";
@@ -237,6 +243,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED = "g_ValueHandledStr";
 
     public static String WEBPROPERTY_BARCODEHANDLED_COMPLEX = "c_BarcodeHandledUwbh";
+    public static String WEBPROPERTY_PACKAGINGHANDLED_COMPLEX = "c_EmballageHandledUweh";
     public static String WEBPROPERTY_PROPERTYHANDLED_COMPLEX = "c_PropertyHandledUwph";
     public static String WEBPROPERTY_BARCODE_COMPLEX = "g_BarcodeStr";
     public static String WEBPROPERTY_QUANTITYHANDLED_COMPLEX = "g_QuantityHandledDbl";
@@ -245,7 +252,9 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_ITEMNO_COMPLEX = "g_ItemNoStr";
     public static String WEBPROPERTY_VARIANTCODE_COMPLEX = "g_VariantCodeStr";
 
-
+    public static String WEBPROPERTY_PACKAGING_COMPLEX = "g_EmballageStr";
+    public static String WEBPROPERTY_QUANTITY_IN_TAKE_COMPLEX = "g_QuantityInTakeDbl";
+    public static String WEBPROPERTY_QUANTITY_SHIPPED_COMPLEX = "g_QuantityShippedDbl";
 
     //endregion complex types
 

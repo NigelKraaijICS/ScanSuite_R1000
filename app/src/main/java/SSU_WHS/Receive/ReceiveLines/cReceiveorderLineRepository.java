@@ -464,7 +464,16 @@ public class cReceiveorderLineRepository {
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
                 l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNERID;
-                l_PropertyInfo2Pin.setValue(cDeviceInfo.getSerialnumberStr());
+
+                if (cUser.currentUser.currentBranch.isBinMandatoryBln()) {
+                    l_PropertyInfo2Pin.setValue("");
+                }
+                else
+                {
+                    l_PropertyInfo2Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                }
+
+
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
                 PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();

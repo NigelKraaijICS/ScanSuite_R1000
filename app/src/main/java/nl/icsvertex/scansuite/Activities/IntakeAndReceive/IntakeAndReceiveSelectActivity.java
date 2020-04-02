@@ -321,7 +321,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 //Fill and show recycler
-                mSetIntakeorderRecycler(cIntakeorder.allIntakeordersObl);
+                mFillRecycler(cIntakeorder.allIntakeordersObl);
                 mShowNoOrdersIcon(false);
                 if (cSharedPreferences.userFilterBln()) {
                     mApplyFilter();
@@ -461,6 +461,13 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             return result;
         }
 
+        //Get packaging
+        if (!cIntakeorder.currentIntakeOrder.pGetPackagingViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_packaging_failed));
+            return result;
+        }
+
         // Get all comments
         if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -592,7 +599,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         List<cIntakeorder> filteredIntakesObl = cIntakeorder.pGetIntakesWithFilterFromDatabasObl();
 
-        this.mSetIntakeorderRecycler(filteredIntakesObl);
+        this.mFillRecycler(filteredIntakesObl);
 
         if (filteredIntakesObl.size() == 0) {
             this.mShowNoOrdersIcon(true);
@@ -635,7 +642,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     // Recycler View
 
-    private  void mSetIntakeorderRecycler(List<cIntakeorder> pvIntakeorderObl) {
+    private  void mFillRecycler(List<cIntakeorder> pvIntakeorderObl) {
 
         this.swipeRefreshLayout.setRefreshing(false);
 

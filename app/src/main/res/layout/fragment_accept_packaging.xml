@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/acceptRejectContainer"
+    android:id="@+id/acceptPackagingContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:id="@+id/textViewAcceptRejectHeader"
+        android:id="@+id/textViewAcceptPackagingHeader"
         style="@style/acceptRejectHeader"
         android:text="@string/message_orderbusy_header"
         android:padding="@dimen/default_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/textViewAcceptRejectText"
-        android:padding="@dimen/default_padding"
-        style="@style/acceptRejectText"
-        android:text="@string/message_orderbusy_text"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerPackaging"
+        style="@style/defaultRecyclerView"
+        app:layout_constraintTop_toBottomOf="@id/textViewAcceptPackagingHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/rejectImageView"
+        style="@style/defaultBottomButtonNoTint"
+        android:layout_marginTop="@dimen/default_double_margin"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerPackaging"
+        app:srcCompat="@drawable/ic_dislike" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/acceptImageView"
+        style="@style/defaultBottomButtonNoTint"
+        android:layout_marginTop="@dimen/default_double_margin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectHeader" />
-    <Button
-        android:id="@+id/cancelButton"
-        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_double_margin"
-        android:text="@string/close_dialog"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textAccept" />
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/recyclerPackaging"
+        app:srcCompat="@drawable/ic_like" />
     <TextView
         android:id="@+id/textReject"
         android:layout_width="0dp"
@@ -43,7 +48,8 @@
         app:layout_constraintStart_toStartOf="parent"
         android:textAlignment="center"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/rejectImageView" />
+        app:layout_constraintTop_toBottomOf="@id/acceptImageView"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <TextView
         android:id="@+id/textAccept"
         android:layout_width="0dp"
@@ -58,25 +64,8 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/acceptImageView" />
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/rejectImageView"
-        style="@style/defaultBottomButtonNoTint"
-        android:layout_marginTop="@dimen/default_double_margin"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectText"
-        app:srcCompat="@drawable/ic_dislike" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/acceptImageView"
-        style="@style/defaultBottomButtonNoTint"
-        android:layout_marginTop="@dimen/default_double_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/textViewAcceptRejectText"
-        app:srcCompat="@drawable/ic_like" />
-
+        app:layout_constraintTop_toBottomOf="@id/rejectImageView"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"

@@ -600,5 +600,17 @@
     <string name="tab_moveorderline_place">Plaats</string>
     <string name="screentitle_moveline_take">Neem artikel</string>
     <string name="message_article_required">Scan artikel om regel te sluiten</string>
+    <string name="inventory_orders">opdrachten</string>
+    <string name="no_inventory_orders">Geen open inventarisatie opdrachten</string>
+    <string name="image_view_battery">image view battery</string>
+    <string name="imageview_is_charging">imageview is charging</string>
+    <string name="message_no">Nee</string>
+    <string name="message_yes">Ja</string>
+    <string name="screentitle_packaging">Emballage</string>
+    <string name="message_no_packaging_units_defined">Geen emballage eenheden gedefinieerd</string>
+    <string name="message_close_packaging">Emballage sluiten</string>
+    <string name="message_close_packaging_text">Wilt u emballage sluiten?\n\nU heeft de volgende eenheden ingegeven:\n\n%1$s</string>
+    <string name="close_dialog">Sluit venster</string>
+    <string name="message_close_packaging_question">Emballage sluiten?</string>
 
 </resources>

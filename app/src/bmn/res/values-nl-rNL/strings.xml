@@ -580,5 +580,8 @@
     <string name="message_less_items">MINDER ontvangen</string>
     <string name="message_next_activity_not_found">Volgende activeit kan niet worden gevonden</string>
     <string name="screentitle_inventorybincount">Tellijst locatie</string>
+    <string name="message_open_packaging_text">Wilt u emballage aan de opdracht toevoegen?</string>
+    <string name="error_unknown_packagingunit">Onbekende emballage eenheid</string>
+    <string name="error_get_packaging_failed">Ophalen emballage eenheden is mislukt</string>
 
 </resources>

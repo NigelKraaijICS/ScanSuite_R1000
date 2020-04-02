@@ -25,6 +25,8 @@ public class cPublicDefinitions {
     public static String SHAREDPREFERENCE_FILE = "SCANSUITE_PREFERENCES";
     public static String BARCODEFRAGMENT_LIST_TAG = "BARCODEFRAGMENT_LIST_TAG";
     public static String BRANCHFRAGMENT_LIST_TAG = "BRANCHFRAGMENT_LIST_TAG";
+    public static String PACKAGINGFRAGMENT_LIST_TAG = "PACKAGINGFRAGMENT_LIST_TAG";
+    public static String SHIPPINGFRAGMENT_LIST_TAG = "SHIPPINGFRAGMENT_LIST_TAG";
     public static String GETTING_DATA_TAG = "GETTING_DATA_TAG";
     public static String HUGEERROR_TAG = "HUGEERROR_TAG";
     public static String HUGEERROR_ERRORMESSAGE = "HUGEERROR_ERRORMESSAGE";
@@ -49,6 +51,7 @@ public class cPublicDefinitions {
     public static String VIEW_CHOSEN_ORDER = "detail:header:text";
     public static String SENDING_TAG = "SENDING_TAG";
     public static String ACCEPTREJECTFRAGMENT_TAG = "ACCEPTREJECTFRAGMENT_TAG";
+    public static String ACCEPTPACKAGINGFRAGMENT_TAG = "ACCEPTPACKAGINGFRAGMENT_TAG";
     public static String BARCODEPICKERFRAGMENT_TAG = "BARCODEPICKERFRAGMENT_TAG";
     public static String VIEW_CHOSEN_BIN = "detail:header:text";
     public static  String VIEW_CHOSEN_BIN_IMAGE = "detail:header:imageStr";

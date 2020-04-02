@@ -145,6 +145,13 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.mShowAcceptFragment();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+
 
     //End Region Default Methods
 

@@ -28,25 +28,24 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
     public static class IntakeorderViewHolder extends RecyclerView.ViewHolder{
 
-        private View viewOrderStatus;
+
         private TextView textViewOrdernumber;
         private TextView textViewOrderUser;
         private TextView textViewOrdertype;
         private TextView  textViewExternalreference;
-        private TextView textViewCurrentLocation;
         private ImageView imageViewIsProcessedOrWait;
         public LinearLayout intakeorderItemLinearLayout;
 
         public IntakeorderViewHolder(View pvItemView) {
             super(pvItemView);
-            this.viewOrderStatus = pvItemView.findViewById(R.id.viewOrderStatus);
+
             this.textViewOrderUser = pvItemView.findViewById(R.id.textViewOrderUser);
             this.textViewOrderUser.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewOrderUser.setSingleLine(true);
             this.textViewOrderUser.setMarqueeRepeatLimit(5);
             this.textViewOrderUser.setSelected(true);
             this.textViewOrdernumber = pvItemView.findViewById(R.id.textViewOrdernumber);
-            this.textViewCurrentLocation = pvItemView.findViewById(R.id.textViewCurrentLocation);
+
             this.textViewOrdernumber.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewOrdernumber.setSingleLine(true);
             this.textViewOrdernumber.setMarqueeRepeatLimit(5);
@@ -90,9 +89,6 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
         final cIntakeorder  selectedIntakeorder = localIntakeorderObl.get(pvPositionInt);
 
-        if (!selectedIntakeorder.getAssignedUserIdStr().isEmpty()) {
-            pvHolder.viewOrderStatus.setBackgroundResource(R.color.colorOrderStatusAssignedUser);
-        }
 
         if (selectedIntakeorder.getStatusInt() == 10 ) {
             pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedIntakeorder.getAssignedUserIdStr()));
@@ -118,8 +114,6 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
         pvHolder.textViewExternalreference.setText(selectedIntakeorder.getExternalReferenceStr());
 
-        pvHolder.textViewCurrentLocation.setText("");
-        pvHolder.textViewCurrentLocation.setVisibility(View.VISIBLE);
 
         pvHolder.textViewOrdertype.setText(cWarehouseorder.getWorkflowDescription(selectedIntakeorder.getOrderTypeStr()));
 

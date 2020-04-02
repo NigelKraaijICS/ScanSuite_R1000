@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/packagingUnitUsedItemLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/primaryContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            style="@style/usedUnitsQuantity"
+            android:id="@+id/textViewQuantityUsed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <TextView
+            style="@style/usedUnitsDescription"
+            android:id="@+id/textViewDescription"
+            app:layout_constraintStart_toEndOf="@id/textViewQuantityUsed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <TextView
+            style="@style/usedUnitsUnit"
+            android:id="@+id/textViewPackagingUnit"
+            app:layout_constraintStart_toEndOf="@id/textViewQuantityUsed"
+            app:layout_constraintTop_toBottomOf="@id/textViewDescription"
+            />
+        <View
+            android:id="@+id/menuSeparator"
+            style="@style/menuSeparator"
+            app:layout_constraintStart_toStartOf="@id/textViewPackagingUnit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

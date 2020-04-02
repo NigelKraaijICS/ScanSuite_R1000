@@ -16,6 +16,7 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Basics.Packaging.cPackaging;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -94,6 +95,16 @@ public class cIntakeorder {
         return receiveWithAutoOpenBln;
     }
 
+    private boolean receiveIntakeEOPackagingIntakeBln;
+    public boolean isReceiveIntakeEOPackagingIntakeBln() {
+        return receiveIntakeEOPackagingIntakeBln;
+    }
+
+    private boolean receiveIntakeEOPackagingshippedBln;
+    public boolean isReceiveIntakeEOPackagingShippedBln() {
+        return receiveIntakeEOPackagingshippedBln;
+    }
+
     public  boolean isGenerated(){
         return this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated;
     }
@@ -137,6 +148,7 @@ public class cIntakeorder {
         return  cComment.allCommentsObl;
     }
     public List<cIntakeorderBarcode> barcodesObl () {return  cIntakeorderBarcode.allBarcodesObl;}
+    public  List<cPackaging> packagingObl;
 
     public cIntakeorderBarcode intakeorderBarcodeScanned;
 
@@ -160,18 +172,19 @@ public class cIntakeorder {
 
         this.receiveStoreAutoAcceptAtRequestedBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptAtRequestedStr(), false);
 
-        this.receiveNoExtraBinsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraBinsStr(), false);
-        this.receiveNoExtraItemsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraItemsStr(), false);
-        this.receiveNoExtraPiecesBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraPiecesStr(), false);
 
         this.receivedDateTime = this.intakeorderEntity.getReceivedDateTime();
         this.isProcessingOrParkedBln = this.intakeorderEntity.getIsProcessingOrParkedStr();
 
-        this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
-        this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
-
         this.sourceDocumentInt = this.intakeorderEntity.getSourceDocumentInt();
 
+        this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
+        this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
+        this.receiveNoExtraBinsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraBinsStr(), false);
+        this.receiveNoExtraItemsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraItemsStr(), false);
+        this.receiveNoExtraPiecesBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraPiecesStr(), false);
+        this.receiveIntakeEOPackagingIntakeBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveIntakeEOPackagingIntake(), false);
+        this.receiveIntakeEOPackagingshippedBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveIntakeEOPackagingshipped(), false);
     }
 
     public cIntakeorder(cIntakeorderEntity pvIntakeorderEntity) {
@@ -189,17 +202,19 @@ public class cIntakeorder {
 
         this.receiveAmountManualEOBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualEOStr(), false);
 
+        this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
+        this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
         this.receiveStoreAutoAcceptAtRequestedBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptAtRequestedStr(), false);
-
         this.receiveNoExtraBinsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraBinsStr(), false);
         this.receiveNoExtraItemsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraItemsStr(), false);
         this.receiveNoExtraPiecesBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraPiecesStr(), false);
+        this.receiveIntakeEOPackagingIntakeBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveIntakeEOPackagingIntake(), false);
+        this.receiveIntakeEOPackagingshippedBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveIntakeEOPackagingshipped(), false);
 
         this.receivedDateTime = this.intakeorderEntity.getReceivedDateTime();
         this.isProcessingOrParkedBln = this.intakeorderEntity.getIsProcessingOrParkedStr();
 
-        this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
-        this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
+
         this.sourceDocumentInt = this.intakeorderEntity.getSourceDocumentInt();
 
     }
@@ -280,6 +295,69 @@ public class cIntakeorder {
         if (!webresult.getSuccessBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_could_not_invalidate_order));
+            return result;
+        }
+
+        return  result;
+
+    }
+
+    public cResult pPackagingHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult webresult;
+
+        webresult =  this.getIntakeorderViewModel().pPackagingHandledViaWebserviceWrs();
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (!webresult.getSuccessBln()) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
+
+            Long actionLng = 0L;
+
+            if (webresult.getResultLng() < 10 ) {
+                actionLng = webresult.getResultLng();
+            }
+
+            if (webresult.getResultLng() > 100) {
+                actionLng  = webresult.getResultLng()/100;
+            }
+
+            //Try to convert action long to action enumerate
+            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            result.resultBln = false;
+            result.activityActionEnu = activityActionEnu;
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+            }
+
+            cIntakeorder.currentIntakeOrder.mGetCommentsViaWebError(webresult.getResultDtt());
             return result;
         }
 
@@ -661,6 +739,7 @@ public class cIntakeorder {
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
 
 
+
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cReceiveorderLine receiveorderLine = new cReceiveorderLine(jsonObject);
                 receiveorderLine.pInsertInDatabaseBln();
@@ -729,6 +808,33 @@ public class cIntakeorder {
                 intakeorderBarcode.pInsertInDatabaseBln();
             }
             return true;
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
+            return false;
+        }
+    }
+
+    public boolean pGetPackagingViaWebserviceBln() {
+
+
+        this.packagingObl = new ArrayList<>();
+
+
+        cWebresult WebResult;
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderPackagingFromWebserviceWrs();
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackaging packaging  = new cPackaging(jsonObject);
+                this.packagingObl.add(packaging);
+            }
+
+            //If there is no packaging defined, use the general list from the BASICS as a starting point
+            if (this.packagingObl.size() == 0) {
+                this.packagingObl.addAll(cPackaging.allPackaging);
+            }
+
+            return true;
+
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
             return false;

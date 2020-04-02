@@ -1,6 +1,7 @@
 package ICS.Interfaces;
 
 public interface iICSDefaultActivity {
+
     void mActivityInitialize();
 
     void mSetAppExtensions();

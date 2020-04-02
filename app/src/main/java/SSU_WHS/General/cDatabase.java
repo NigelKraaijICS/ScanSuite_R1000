@@ -273,6 +273,9 @@ public class cDatabase {
     //region R
     public static final String RECEIVEDEFAULTBIN_NAMESTR = "Receive_default_bin";
     public static final String REJECTPICK_NAMESTR = "RejectPick";
+    public static final String RECEIVEINTAKEEOPACKAGINGINTAKE_NAMESTR = "Receive_intake_eo_packaging_intake";
+    public static final String RECEIVEINTAKEEOPACKAGINGSHIPPED_NAMESTR = "Receive_intake_eo_packaging_shipped";
+
     public static final String RECEIVEWITHPICTURE_NAMESTR = "Receive_with_picture";
     public static final String RECEIVEWITHPICTURE_AUTO_OPEN_NAMESTR = "Receive_with_picture_auto_open";
     public static final String RECEIVEWITHPICTURE_PREFETCH_NAMESTR = "Receive_with_picture_prefetch";

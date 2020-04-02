@@ -88,6 +88,13 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+
+    @Override
     public void onBackPressed() {
         this.mLeaveActivity();
     }

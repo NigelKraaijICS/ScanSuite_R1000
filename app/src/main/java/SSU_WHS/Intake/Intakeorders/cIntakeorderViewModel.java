@@ -30,6 +30,7 @@ public class cIntakeorderViewModel  extends AndroidViewModel {
     public cWebresult pGetIntakeorderMATLinesFromWebserviceWrs() {return this.Repository.pGetMATLinesFromWebserviceWrs();}
     public cWebresult pGetIntakeorderReceiveLinesFromWebserviceWrs() {return this.Repository.pGetReceiveLinesFromWebserviceWrs();}
     public cWebresult pGetIntakeorderReceiveItemsFromWebserviceWrs() {return this.Repository.pGetReceiveItemsFromWebserviceWrs();}
+    public cWebresult pGetIntakeorderPackagingFromWebserviceWrs() {return this.Repository.pGetPackagingFromWebserviceWrs();}
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
 
     public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);}
@@ -41,7 +42,7 @@ public class cIntakeorderViewModel  extends AndroidViewModel {
 
     public cWebresult pMATHandledViaWebserviceWrs() { return this.Repository.pMATHandledViaWebserviceBln();}
     public cWebresult pReceiveHandledViaWebserviceWrs() { return this.Repository.pReceiveHandledViaWebserviceBln();}
-
+    public cWebresult pPackagingHandledViaWebserviceWrs() { return this.Repository.pPackagingHandledViaWebserviceBln();}
     public cWebresult pInvalidateViaWebserviceWrs() { return this.Repository.pInvalidateViaWebserviceBln();}
 
 

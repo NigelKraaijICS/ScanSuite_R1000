@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 93,
-    "identityHash": "4c00290c8384f363ab8751cee33c5492",
+    "identityHash": "4e1ab6be1d9a2e78b380a5a1b37c6a05",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -1710,7 +1710,7 @@
       },
       {
         "tableName": "IntakeOrders",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` INTEGER NOT NULL, `BinCode` TEXT, `ExternalReference` TEXT, `StockOwner` TEXT, `Receive_Amount_manual_eo` TEXT, `Receive_store_auto_accept_at_requested` TEXT, `Receive_no_extra_bins` TEXT, `Receive_no_extra_items` TEXT, `Receive_no_extra_pieces` TEXT, `SourceDocument` INTEGER NOT NULL, `Document` TEXT, `Document2` TEXT, `ReceivedDateTime` TEXT, `Interface_result_method` TEXT, `IsProcessingOrParked` INTEGER, `Receive_with_picture` TEXT, `Receive_with_picture_auto_open` TEXT, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` INTEGER NOT NULL, `BinCode` TEXT, `ExternalReference` TEXT, `StockOwner` TEXT, `Receive_Amount_manual_eo` TEXT, `Receive_store_auto_accept_at_requested` TEXT, `Receive_no_extra_bins` TEXT, `Receive_no_extra_items` TEXT, `Receive_no_extra_pieces` TEXT, `SourceDocument` INTEGER NOT NULL, `Document` TEXT, `Document2` TEXT, `ReceivedDateTime` TEXT, `Interface_result_method` TEXT, `IsProcessingOrParked` INTEGER, `Receive_with_picture` TEXT, `Receive_with_picture_auto_open` TEXT, `Receive_intake_eo_packaging_intake` TEXT, `Receive_intake_eo_packaging_shipped` TEXT, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
         "fields": [
           {
             "fieldPath": "ordernumber",
@@ -1835,6 +1835,18 @@
           {
             "fieldPath": "receiveWithPictureAutoOpen",
             "columnName": "Receive_with_picture_auto_open",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "receiveIntakeEOPackagingIntake",
+            "columnName": "Receive_intake_eo_packaging_intake",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "receiveIntakeEOPackagingShipped",
+            "columnName": "Receive_intake_eo_packaging_shipped",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -3058,7 +3070,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4c00290c8384f363ab8751cee33c5492')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4e1ab6be1d9a2e78b380a5a1b37c6a05')"
     ]
   }
 }

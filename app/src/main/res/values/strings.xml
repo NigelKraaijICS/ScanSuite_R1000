@@ -715,6 +715,14 @@
     <string name="message_article_required">Scan an article to close the line</string>
     <string name="image_view_battery">image view battery</string>
     <string name="imageview_is_charging">imageview is charging</string>
+    <string name="message_no">No</string>
+    <string name="message_yes">Yes</string>
+    <string name="screentitle_packaging">Packaging</string>
+    <string name="message_no_packaging_units_defined">No packaging units defined</string>
+    <string name="message_close_packaging">Close packaging</string>
+    <string name="message_close_packaging_text">"Do you want to close packaging?\n\nYou entered the following units:\n\n%1$s</string>
+    <string name="close_dialog">Close dialog</string>
+    <string name="message_close_packaging_question">Close packaging?</string>
     <!--End Region return-->
 
     <!--Region plurals-->

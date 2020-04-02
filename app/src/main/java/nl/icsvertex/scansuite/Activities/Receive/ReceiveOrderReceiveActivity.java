@@ -738,17 +738,16 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
 
-
         if (pvQuantityDbl == 0) {
-            this.mTryToChangeQuantity(false, true,pvQuantityDbl);
+            this.mTryToChangeQuantityBln(false, true,pvQuantityDbl);
         }
         else {
-            this.mTryToChangeQuantity(true, true,pvQuantityDbl);
+            this.mTryToChangeQuantityBln(true, true,pvQuantityDbl);
         }
 
     }
 
-    private  void mTryToChangeQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
+    private  boolean mTryToChangeQuantityBln(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
 
       double newQuantityDbl;
       double restQuantityDbl;
@@ -793,7 +792,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
                 if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln() && !cIntakeorder.currentIntakeOrder.isGenerated() && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0 ) {
                     this.mShowExtraPiecesNotAllowed();
-                    return;
+                    return false;
                 }
 
                 if (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() > 0 && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0  && (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY())) {
@@ -803,7 +802,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
                         //We would exceed the allowed quantity so show that this is not allowed
                         this.mShowExtraPiecesNotAllowedByPercentage(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl());
-                        return;
+                        return false;
                     }
                 }
             }
@@ -819,7 +818,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
             //Check if this line is done
             this.mCheckLineDone();
-            return;
+            return true;
         }
 
         //negative
@@ -834,13 +833,13 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
             } else {
                 cUserInterface.pDoNope(this.quantityText, true, true);
-                return;
+                return false;
             }
         }
 
         if (pvAmountDbl < 0) {
             cUserInterface.pDoNope(this.quantityText, true, true);
-            return;
+            return false;
         }
 
         //Determine the new amount
@@ -859,7 +858,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             //Set the new quantityDbl and show in Activity
             this.quantityScannedDbl = newQuantityDbl;
             this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
-            return;
+            return true;
 
 
         }else {
@@ -877,6 +876,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
         this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
         this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+        return  true;
     }
 
     private  void mBarcodeSelected(cIntakeorderBarcode pvBarcode) {
@@ -886,7 +886,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         cIntakeorderBarcode.currentIntakeOrderBarcode = pvBarcode;
         this.mShowBarcodeInfo();
 
-        this.mTryToChangeQuantity(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+        this.mTryToChangeQuantityBln(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
     }
 
     // Lines, Barcodes
@@ -993,7 +993,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
                     return;
                 }
-                mTryToChangeQuantity(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+                mTryToChangeQuantityBln(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
             }
         });
     }
@@ -1035,7 +1035,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
                 }
 
 
-                mTryToChangeQuantity(false, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+                mTryToChangeQuantityBln(false, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
             }
         });
     }
@@ -1103,6 +1103,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     }
 
     private  void mShowExtraPiecesNotAllowed(){
+        cUserInterface.pHideKeyboard();
         this.quantityText.setText(cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl()));
         cUserInterface.pShowSnackbarMessage(toolbarImage , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
         cUserInterface.pDoNope(quantityText, true, true);
@@ -1355,11 +1356,11 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    mTryToChangeQuantity(true,
-                            true,
-                            cText.pStringToDoubleDbl(String.valueOf(quantityText.getText())));
-
+                if(mTryToChangeQuantityBln(true,
+                        true,
+                        cText.pStringToDoubleDbl(String.valueOf(quantityText.getText()))))  {
                     imageButtonDone.callOnClick();
+                }
                 }
                 return true;
             }

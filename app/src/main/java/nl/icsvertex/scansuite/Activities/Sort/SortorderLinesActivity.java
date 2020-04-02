@@ -104,6 +104,13 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         super.onPause();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults

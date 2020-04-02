@@ -18,7 +18,6 @@ import java.util.Objects;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
@@ -193,55 +192,63 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
             pickorderLinesActivity.pLeaveActivity();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
             PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
             pickorderPickActivity.pAcceptPick(ignoreAcceptBln);
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof SortorderSortActivity) {
             SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
             sortorderSortActivity.pAcceptPick();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
             InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
             inventoryorderBinActivity.pCloseBin();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-
             InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
             inventoryorderBinsActivity.pCloseOrder();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
             IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
             intakeorderLinesActivity.pDone();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
             IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
             intakeOrderIntakeActivity.pAcceptStore();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
             ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
             returnorderDocumentActivity.pCloseDocument();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof ReturnorderDocumentsActivity) {
             ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
             returnorderDocumentsActivity.pCloseOrder();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof ReceiveLinesActivity) {
@@ -251,10 +258,19 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             if (ReceiveLinesActivity.closeOrderClickedBln) {
                 receiveLinesActivity.pDone();
                 this.dismiss();
+                return;
             }
+
+            if (ReceiveLinesActivity.packagingClickedBln) {
+                receiveLinesActivity.pPackaging();
+                this.dismiss();
+                return;
+            }
+
             else {
                 receiveLinesActivity.pAddUnknownScan(ReceiveLinesActivity.barcodeScanToHandle);
                 this.dismiss();
+                return;
             }
 
         }
@@ -264,51 +280,54 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             receiveOrderReceiveActivity.pAcceptReceive();
         }
 
-        if (cAppExtension.activity instanceof ReturnorderDocumentsActivity) {
-            ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
-            returnorderDocumentsActivity.pCloseOrder();
-            this.dismiss();
-        }
+
     }
 
     private void mReject() {
 
         if (cAppExtension.activity instanceof PickorderLinesActivity) {
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
             PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
             pickorderPickActivity.pCancelPick();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof SortorderSortActivity) {
             SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
             sortorderSortActivity.pCancelPick();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
             InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
             inventoryorderBinActivity.pAcceptRejectDialogDismissed();
+            return;
         }
 
         if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {
             InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
             inventoryorderBinsActivity.pAcceptRejectDialogDismissed();
+            return;
         }
 
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
             IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
             intakeOrderIntakeActivity.pCancelStore();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
             IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
             intakeorderLinesActivity.pLeaveActivity();
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof ReceiveLinesActivity) {
@@ -319,20 +338,31 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
                 return;
             }
 
+            if (ReceiveLinesActivity.packagingClickedBln) {
+                ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+                ReceiveLinesActivity.packagingHandledBln = true;
+                receiveLinesActivity.pDone();
+                return;
+            }
+
             ReceiveLinesActivity.barcodeScanToHandle = null;
             this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
             ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
             receiveOrderReceiveActivity.pCancelReceive();
+            return;
         }
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
             ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
             returnorderDocumentActivity.pStartDocumentsActivity();
             this.dismiss();
+            return;
         }
+
         if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
             ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
             returnorderDocumentsActivity.pHandleFragmentDismissed();

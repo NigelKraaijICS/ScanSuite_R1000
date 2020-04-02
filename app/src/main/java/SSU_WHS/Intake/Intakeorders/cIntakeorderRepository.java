@@ -8,6 +8,7 @@ import androidx.sqlite.db.SupportSQLiteQuery;
 
 import org.json.JSONException;
 import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +17,14 @@ import java.util.concurrent.ExecutionException;
 import ICS.Utils.cDateAndTime;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
+import SSU_WHS.Basics.Packaging.cPackaging;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.Webservice.cWebresult;
+import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 
@@ -239,14 +242,49 @@ public class cIntakeorderRepository {
         return webResultWrs;
     }
 
+
+    public cWebresult pGetPackagingFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetPackagingWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+
+
     public cWebresult pMATHandledViaWebserviceBln() {
 
         cWebresult webResult;
-
-
         try {
 
             webResult = new mIntakeorderStepHandledAsyncTask() .execute().get();
+            return  webResult;
+        }
+
+        catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return  null;
+
+        }
+    }
+
+
+    public cWebresult pPackagingHandledViaWebserviceBln() {
+
+        cWebresult webResult;
+        try {
+
+            webResult = new mPackagingHandledAsyncTask() .execute().get();
             return  webResult;
         }
 
@@ -604,6 +642,42 @@ public class cIntakeorderRepository {
         }
     }
 
+    private static class mGetPackagingWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(final String... params) {
+            cWebresult WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+            l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString().toUpperCase());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+            l_PropertyInfo3Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+            l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+            try {
+                new cWebresult();
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PACKAGINGGET, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
+        }
+    }
+
+
     private static class mGetQuantityHandledAsyncTask extends AsyncTask<Void, Void, Double> {
         private iIntakeorderDao mAsyncTaskDao;
         mGetQuantityHandledAsyncTask(iIntakeorderDao dao) { mAsyncTaskDao = dao; }
@@ -670,6 +744,60 @@ public class cIntakeorderRepository {
         }
     }
 
+    private static class mPackagingHandledAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+                l_PropertyInfo2Pin.setValue(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString().toUpperCase());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo4Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                SoapObject packagingList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PACKAGINGLIST);
+
+                //Only loop through handled barcodes, of there are any
+                if (cIntakeorder.currentIntakeOrder.packagingObl  != null) {
+                    for (cPackaging packaging : cIntakeorder.currentIntakeOrder.packagingObl ) {
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PACKAGINGHANDLED_COMPLEX);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_PACKAGING_COMPLEX, packaging.getCodeStr());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITY_IN_TAKE_COMPLEX,0);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITY_SHIPPED_COMPLEX, packaging.getQuantityUsedInt());
+                        packagingList.addSoapObject(soapObject);
+                    }
+                }
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_PACKAGINGLIST;
+                l_PropertyInfo5Pin.setValue(packagingList);
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PACKAGINGHANDLED, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
 
     private static class mIntakeorderInvalidateAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override

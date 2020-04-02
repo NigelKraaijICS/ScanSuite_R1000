@@ -100,6 +100,13 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
         if (pvMenuItem.getItemId() == android.R.id.home) {
             mTryToLeaveActivity();

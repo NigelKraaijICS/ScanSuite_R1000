@@ -142,6 +142,13 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+
 
     //End Region Default Methods
 

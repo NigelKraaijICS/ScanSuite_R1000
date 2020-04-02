@@ -122,6 +122,13 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         super.onPause();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults

@@ -372,6 +372,11 @@ public class cReceiveorderSummaryLine {
         cResult result = new cResult();
         result.resultBln = false;
 
+        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl == null) {
+            result.resultBln = true;
+            return result;
+        }
+
         for (cReceiveorderLine receiveorderLine : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl) {
             if ( receiveorderLine.pGetBarcodesObl() == null ||
                     receiveorderLine.pGetBarcodesObl().size() == 0) {

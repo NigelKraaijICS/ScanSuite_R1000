@@ -219,6 +219,7 @@
     <string name="unknown_shippingagentservice">Unknown shipping service</string>
     <string name="unknown_shippingagent">Unknown shipping agent</string>
     <string name="error_unknown_shippingunit">Unknown shippingunit</string>
+    <string name="error_unknown_packagingunit">Unknown packagingunit</string>
     <string name="error_unknown_salesorder">Unknown salesorder</string>
     <string name="scan_salesorder">scan salesorder</string>
     <!--endregion Shiporder Lines-->
@@ -446,6 +447,7 @@
     <string name="error_getting_sort_lines_failed">Could not get sort lines</string>
     <string name="error_get_adresses_failed">Getting adresses failed</string>
     <string name="error_get_comments_failed">Getting comments failed</string>
+    <string name="error_get_packaging_failed">Getting packaging failed</string>
     <string name="error_couldnt_reset_line">Couldn\'t reset line</string>
     <string name="error_couldnt_abort_order">Could not abort order</string>
     <string name="error_article_scan_not_allowed">Article scan not allowed here</string>
@@ -621,6 +623,7 @@
     <string name="message_moveorderbusy_header">Orderline still busy</string>
     <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
     <string name="show_only_deviations">Show deviations</string>
+    <string name="message_open_packaging_text">Would you like to add packaging to the order?</string>
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
     <string name="message_close_receiveorder_generated_text">You received %1$s items\n\n\n\nWould you like to close the order?</string>
     <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>

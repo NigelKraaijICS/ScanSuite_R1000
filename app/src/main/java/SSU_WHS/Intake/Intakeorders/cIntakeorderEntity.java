@@ -103,6 +103,15 @@ public class cIntakeorderEntity {
     public String receiveWithPictureAutoOpen;
     public String getReceiveWithPictureAutoOpenStr() {return this.receiveWithPictureAutoOpen;}
 
+    @ColumnInfo(name=cDatabase.RECEIVEINTAKEEOPACKAGINGINTAKE_NAMESTR)
+    public String receiveIntakeEOPackagingIntake;
+    public String getReceiveIntakeEOPackagingIntake() {return this.receiveIntakeEOPackagingIntake;}
+
+    @ColumnInfo(name=cDatabase.RECEIVEINTAKEEOPACKAGINGSHIPPED_NAMESTR)
+    public String receiveIntakeEOPackagingShipped;
+    public String getReceiveIntakeEOPackagingshipped() {return this.receiveIntakeEOPackagingShipped;}
+
+
     @ColumnInfo(name="Priority")
     public int priorityInt;
     public int getPriorityInt() {return this.priorityInt;}
@@ -153,10 +162,14 @@ public class cIntakeorderEntity {
             switch (this.getOrderTypeStr()) {
                 case "EOS":
                     this.isprocessingorparked = !cText.pIntToStringStr(this.getStatusInt()).equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External));
+                    this.receiveIntakeEOPackagingIntake = pvJsonObject.getString(cDatabase.RECEIVEINTAKEEOPACKAGINGINTAKE_NAMESTR);
+                    this.receiveIntakeEOPackagingShipped = pvJsonObject.getString(cDatabase.RECEIVEINTAKEEOPACKAGINGSHIPPED_NAMESTR);
                     break;
 
                 case "MAT":
                     this.isprocessingorparked = !cText.pIntToStringStr(this.getStatusInt()).equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store));
+                    this.receiveIntakeEOPackagingIntake = "false";
+                    this.receiveIntakeEOPackagingShipped ="false";
                     break;
             }
 

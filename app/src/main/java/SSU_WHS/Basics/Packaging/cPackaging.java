@@ -26,21 +26,28 @@ public class cPackaging {
         return descriptionStr;
     }
 
+    public int quantityUsedInt;
+    public int getQuantityUsedInt() {
+        return quantityUsedInt;
+    }
+
     private cPackagingViewModel getPackagingViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPackagingViewModel.class);
     }
 
     private cPackagingEntity packagingEntity;
-    private static List<cPackaging> allPackaging;
+    public static List<cPackaging> allPackaging;
+    public static cPackaging currentPackaging;
     private static Boolean packagingAvailableBln;
 
     //end region Public Properties
 
     //Region Constructor
-    cPackaging(JSONObject pvJsonObject) {
+   public cPackaging(JSONObject pvJsonObject) {
         this.packagingEntity = new cPackagingEntity(pvJsonObject);
         this.codeStr =   this.packagingEntity.getCodeStr();
         this.descriptionStr =   this.packagingEntity.getDescriptionStr();
+        this.quantityUsedInt = 0;
     }
     //End Region Constructor
 
@@ -92,6 +99,25 @@ public class cPackaging {
             return  false;
         }
     }
+
+
+
+    public static cPackaging pGetPackagingUnitByStr(String pvScannedBarcodeStr){
+
+
+        if(cPackaging.allPackaging == null || cPackaging.allPackaging.size() == 0){
+            return null;
+        }
+
+        for (cPackaging  packaging : cPackaging.allPackaging)
+        {
+            if(packaging.getCodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || packaging.getDescriptionStr().equalsIgnoreCase(pvScannedBarcodeStr)){
+                return  packaging;
+            }
+        }
+        return null;
+    }
+
 
     //End Region Public Methods
 }

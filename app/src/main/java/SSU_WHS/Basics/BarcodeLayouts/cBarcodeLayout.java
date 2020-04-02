@@ -107,6 +107,7 @@ public class cBarcodeLayout {
         CONTAINER,
         DOCUMENT,
         LOCATION,
+        PACKAGING,
         PACKINGTABLEBIN,
         PICKCARTBOX,
         PINCODE,
