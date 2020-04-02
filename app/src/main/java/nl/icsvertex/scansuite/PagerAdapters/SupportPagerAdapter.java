@@ -2,19 +2,17 @@ package nl.icsvertex.scansuite.PagerAdapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Fragments.Support.SupportApplicationFragment;
 import nl.icsvertex.scansuite.Fragments.Support.SupportDeviceFragment;
 import nl.icsvertex.scansuite.Fragments.Support.SupportNetworkFragment;
 
-public class SupportPagerAdapter extends FragmentPagerAdapter {
-
+public class SupportPagerAdapter extends FragmentStatePagerAdapter {
     private int numberOfTabsInt;
-
     public SupportPagerAdapter(int pvNumberOfTabsInt) {
-        super(cAppExtension.fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        super(cAppExtension.fragmentManager, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.numberOfTabsInt = pvNumberOfTabsInt;
     }
 
