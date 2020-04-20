@@ -14,12 +14,20 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="@dimen/default_margin"
         >
+        <androidx.appcompat.widget.AppCompatImageView
+            style="@style/imageviewUserButton"
+            android:id="@+id/imageViewPackagingUnit"
+            app:srcCompat="@drawable/ic_bag"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
         <TextView
             style="@style/usedUnitsQuantity"
             android:id="@+id/textViewQuantityUsed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageViewPackagingUnit"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
@@ -39,6 +47,7 @@
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"
             app:layout_constraintStart_toStartOf="@id/textViewPackagingUnit"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

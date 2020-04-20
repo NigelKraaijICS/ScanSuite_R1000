@@ -26,6 +26,8 @@ public class cPackagingEntity {
     @NonNull
     public String getDescriptionStr() {return descriptionStr;}
 
+
+
     //End Region Public Properies
 
     //Region Constructor

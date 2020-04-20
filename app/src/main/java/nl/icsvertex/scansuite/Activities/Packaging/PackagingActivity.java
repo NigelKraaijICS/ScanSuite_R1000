@@ -11,32 +11,29 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import com.google.android.material.tabs.TabLayout;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cNoSwipeViewPager;
 import ICS.Utils.cProductFlavor;
-import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.Packaging.cPackaging;
-import SSU_WHS.Basics.Packaging.cPackagingAdapter;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.BuildConfig;
+import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
-import nl.icsvertex.scansuite.Fragments.Packaging.AcceptPackagingFragment;
+import nl.icsvertex.scansuite.PagerAdapters.PackagingPagerAdapter;
 import nl.icsvertex.scansuite.R;
 
 public class PackagingActivity extends AppCompatActivity implements iICSDefaultActivity {
 
+    public static Fragment currentPackagingFragment;
     //Region Public Properties
     //End Region Public Properties
 
@@ -46,17 +43,10 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     private TextView toolbarTitle;
 
     private TextView textViewChosenOrder;
-    private RecyclerView recyclerUnitsUsed;
-
     private ImageView imageButtonCloseOrder;
 
-    private cPackagingAdapter packagingAdapter;
-    private cPackagingAdapter getPackagingAdapter(){
-       if (this.packagingAdapter == null) {
-           this.packagingAdapter = new cPackagingAdapter();
-       }
-       return  this.packagingAdapter;
-   }
+    private TabLayout packagingTabLayout;
+    private cNoSwipeViewPager packagingViewPager;
 
     //End Region Private Properties
 
@@ -68,10 +58,6 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_packaging);
-
-        if (cIntakeorder.currentIntakeOrder.packagingObl == null || cIntakeorder.currentIntakeOrder.packagingObl .size() ==0) {
-            this.pDone();
-        }
 
         this.mActivityInitialize();
     }
@@ -157,11 +143,9 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
 
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
-
-        this.recyclerUnitsUsed = findViewById(R.id.recyclerUnitsUsed);
-
-
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
+        this.packagingTabLayout = findViewById(R.id.packagingTabLayout);
+        this.packagingViewPager = findViewById(R.id.packagingViewpager);
     }
 
     @Override
@@ -181,9 +165,45 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     @Override
     public void mFieldsInitialize() {
         this.mSetSourceNo();
-        this.mSetShippingUnits();
 
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
+
+        if (!cIntakeorder.currentIntakeOrder.isReceiveIntakeEOPackagingIntakeBln() && cIntakeorder.currentIntakeOrder.isReceiveIntakeEOPackagingShippedBln()) {
+            this.packagingTabLayout.addTab(this.packagingTabLayout.newTab().setText(R.string.tab_out));
+        }
+        else
+
+            {
+            if (cIntakeorder.currentIntakeOrder.isReceiveIntakeEOPackagingIntakeBln()) {
+                this.packagingTabLayout.addTab(this.packagingTabLayout.newTab().setText(R.string.tab_in));
+            }
+
+            if (cIntakeorder.currentIntakeOrder.isReceiveIntakeEOPackagingShippedBln()) {
+                this.packagingTabLayout.addTab(this.packagingTabLayout.newTab().setText(R.string.tab_out));
+            }
+        }
+
+        this.packagingTabLayout.addTab(this.packagingTabLayout.newTab().setText(R.string.tab_selected));
+
+        PackagingPagerAdapter packagingPagerAdapter = new PackagingPagerAdapter(this.packagingTabLayout.getTabCount());
+        this.packagingViewPager.setAdapter(packagingPagerAdapter);
+        this.packagingViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.packagingTabLayout));
+        this.packagingTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab pvTab) {
+                packagingViewPager.setCurrentItem(pvTab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab pvTab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab pvTab) {
+
+            }
+        });
     }
 
     @Override
@@ -201,44 +221,6 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
 
 
     //Region Public Methods
-
-    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-        String barcodeWithoutPrefixStr = "";
-
-        if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
-
-            boolean foundBln = false;
-
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.PACKAGING)) {
-                foundBln = true;
-            }
-            if (foundBln) {
-                //has prefix, is shippingpackage
-                barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-            }
-            else {
-                //has prefix, isn't shippingpackage
-                cUserInterface.pDoExplodingScreen( cAppExtension.activity.getString(R.string.error_unknown_packagingunit), barcodeWithoutPrefixStr, true,true);
-                return;
-            }
-        }
-
-        if (barcodeWithoutPrefixStr.isEmpty()) {
-            barcodeWithoutPrefixStr = pvBarcodeScan.getBarcodeOriginalStr();
-        }
-
-        cPackaging.currentPackaging = cPackaging.pGetPackagingUnitByStr(pvBarcodeScan.getBarcodeOriginalStr());
-
-        if (cPackaging.currentPackaging  == null) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.error_unknown_packagingunit), barcodeWithoutPrefixStr, true,true);
-            return;
-        }
-
-        cPackaging.currentPackaging.quantityUsedInt += 1;
-        this.mSetShippingUnits();
-    }
 
     public  void pHandlePackagingDone(){
 
@@ -267,16 +249,18 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        final AcceptPackagingFragment acceptPackagingFragment = new AcceptPackagingFragment(cAppExtension.activity.getString(R.string.message_close_packaging_question),
-                                                                                            pvRejectStr,
-                                                                                            pvAcceptStr);
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_packaging_question),
+                                                                                      "",
+                                                                                       pvRejectStr,
+                                                                                       pvAcceptStr,
+                                                                                        false);
 
-        acceptPackagingFragment.setCancelable(true);
+        acceptRejectFragment.setCancelable(true);
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 // show my popup
-                acceptPackagingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTPACKAGINGFRAGMENT_TAG);
+                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
             }
         });
 
@@ -300,24 +284,20 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
 
     }
 
-    private void mSetShippingUnits() {
-        this.mFillRecycler(cIntakeorder.currentIntakeOrder.packagingObl);
-    }
-
-    private void mFillRecycler(List<cPackaging> pvDataObl) {
-
-        this.getPackagingAdapter().pFillData(pvDataObl);
-        this.recyclerUnitsUsed.setHasFixedSize(false);
-        this.recyclerUnitsUsed.setAdapter(this.getPackagingAdapter());
-        this.recyclerUnitsUsed.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-    }
-
     private void mSetOrderDoneListener() {
 
         this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mShowClosePackagingDialog(cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_close));
+
+                String acceptStr =cAppExtension.activity.getString(R.string.message_close);
+                String rejectStr = cAppExtension.activity.getString(R.string.message_cancel);
+
+                if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
+                    acceptStr = cAppExtension.activity.getString(R.string.message_send);
+                }
+
+                mShowClosePackagingDialog(rejectStr,acceptStr);
             }
         });
     }

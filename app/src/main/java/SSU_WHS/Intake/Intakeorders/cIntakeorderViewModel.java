@@ -26,6 +26,7 @@ public class cIntakeorderViewModel  extends AndroidViewModel {
 
     public cWebresult pGetIntakeordersFromWebserviceWrs(String pvSearchTextStr) {return this.Repository.pGetIntakeordersFromWebserviceWrs(pvSearchTextStr);}
     public cWebresult pGetIntakeorderBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebserviceWrs();}
+
     public cWebresult pGetIntakeorderMATLineBarcodesFromWebserviceWrs() {return this.Repository.pGetMATLineBarcodesFromWebserviceWrs();}
     public cWebresult pGetIntakeorderMATLinesFromWebserviceWrs() {return this.Repository.pGetMATLinesFromWebserviceWrs();}
     public cWebresult pGetIntakeorderReceiveLinesFromWebserviceWrs() {return this.Repository.pGetReceiveLinesFromWebserviceWrs();}

@@ -165,8 +165,6 @@ public class cIntakeorderBarcode {
         return  true;
     }
 
-
-
     public List<cIntakeorderMATLine> linesObl(){
 
         List<cIntakeorderMATLine> resultObl = new ArrayList<>();

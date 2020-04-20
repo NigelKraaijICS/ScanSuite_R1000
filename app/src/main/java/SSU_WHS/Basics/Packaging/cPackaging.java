@@ -26,9 +26,14 @@ public class cPackaging {
         return descriptionStr;
     }
 
-    public int quantityUsedInt;
-    public int getQuantityUsedInt() {
-        return quantityUsedInt;
+    public int quantityInUsedInt;
+    public int getQuantityInUsedInt() {
+        return quantityInUsedInt;
+    }
+
+    public int quantityOutUsedInt;
+    public int getQuantityOutUsedInt() {
+        return quantityOutUsedInt;
     }
 
     private cPackagingViewModel getPackagingViewModel() {
@@ -47,8 +52,24 @@ public class cPackaging {
         this.packagingEntity = new cPackagingEntity(pvJsonObject);
         this.codeStr =   this.packagingEntity.getCodeStr();
         this.descriptionStr =   this.packagingEntity.getDescriptionStr();
-        this.quantityUsedInt = 0;
+        this.quantityInUsedInt = 0;
+        this.quantityOutUsedInt = 0;
     }
+
+    public cPackaging(cPackaging pvPackaging, String pvModusStr) {
+        this.packagingEntity = pvPackaging.packagingEntity;
+        this.codeStr =  pvPackaging.getCodeStr();
+        this.descriptionStr =   pvPackaging.getDescriptionStr();
+
+        if (pvModusStr.equalsIgnoreCase("IN")) {
+            this.quantityInUsedInt = pvPackaging.getQuantityInUsedInt();
+        }
+
+        if (pvModusStr.equalsIgnoreCase("OUT")) {
+            this.quantityOutUsedInt =  pvPackaging.getQuantityOutUsedInt();
+        }
+    }
+
     //End Region Constructor
 
     //Region Public Methods
@@ -98,24 +119,6 @@ public class cPackaging {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKAGING);
             return  false;
         }
-    }
-
-
-
-    public static cPackaging pGetPackagingUnitByStr(String pvScannedBarcodeStr){
-
-
-        if(cPackaging.allPackaging == null || cPackaging.allPackaging.size() == 0){
-            return null;
-        }
-
-        for (cPackaging  packaging : cPackaging.allPackaging)
-        {
-            if(packaging.getCodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || packaging.getDescriptionStr().equalsIgnoreCase(pvScannedBarcodeStr)){
-                return  packaging;
-            }
-        }
-        return null;
     }
 
 

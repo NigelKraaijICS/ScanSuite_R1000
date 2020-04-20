@@ -22,6 +22,7 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
@@ -280,6 +281,11 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             receiveOrderReceiveActivity.pAcceptReceive();
         }
 
+        if (cAppExtension.activity instanceof PackagingActivity) {
+            PackagingActivity packagingActivity = (PackagingActivity)cAppExtension.activity;
+            packagingActivity.pHandlePackagingDone();
+        }
+
 
     }
 
@@ -366,6 +372,10 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
             ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
             returnorderDocumentsActivity.pHandleFragmentDismissed();
+            this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof PackagingActivity){
             this.dismiss();
         }
 

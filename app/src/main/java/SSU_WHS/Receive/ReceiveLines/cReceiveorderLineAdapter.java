@@ -18,6 +18,8 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
+import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
 public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorderLineAdapter.ReceiveorderLineViewHolder>  {
@@ -94,7 +96,13 @@ public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorder
         String quantityToShowStr = cText.pDoubleToStringStr(currentReceiveorderLine.getQuantityHandledDbl());
 
         String[] splited = currentReceiveorderLine.getHandledTimeStampStr().split("T");
-        String timeStr = splited[1].substring(0,5);
+        String timeStr = "??";
+
+         if (splited != null &&  splited.length >= 1) {
+             if (splited[1].length() >= 5) {
+                 timeStr =  splited[1].substring(0,5);
+             }
+         }
 
         //Set description and quantity
         pvHolder.textViewQuantity.setText(quantityToShowStr);
@@ -113,6 +121,7 @@ public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorder
 
             }
         });
+
 
         //End On Click Listener
 

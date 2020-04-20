@@ -1068,9 +1068,18 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
         this.amountExceededDialogShowedBln = false;
 
+
+        String acceptStr = cAppExtension.activity.getString(R.string.message_accept_line);
+        String rejectStr = cAppExtension.activity.getString(R.string.message_cancel_line);
+
+        if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
+            acceptStr =  cAppExtension.activity.getString(R.string.message_yes);
+            rejectStr = cAppExtension.activity.getString(R.string.message_no);
+        }
+
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderlinebusy_header),
                                                                                    cAppExtension.activity.getString(R.string.message_orderlinebusy_text),
-                                                                                   cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
+                                                                                   rejectStr, acceptStr, false);
         acceptRejectFragment.setCancelable(true);
 
         runOnUiThread(new Runnable() {
@@ -1088,9 +1097,17 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
         this.amountExceededDialogShowedBln = true;
 
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderlinebusy_header),
+        String acceptStr = cAppExtension.activity.getString(R.string.message_accept_line);
+        String rejectStr = cAppExtension.activity.getString(R.string.message_cancel_line);
+
+        if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
+            acceptStr =  cAppExtension.activity.getString(R.string.message_yes);
+            rejectStr = cAppExtension.activity.getString(R.string.message_no);
+        }
+
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_extra_pieces_exceeded_header),
                 cAppExtension.context.getString(R.string.number_received_total_eminently_more, cText.pDoubleToStringStr(pvValueDbl), cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl())),
-                cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
+                rejectStr, acceptStr, false);
         acceptRejectFragment.setCancelable(true);
 
         cAppExtension.activity.runOnUiThread(new Runnable() {

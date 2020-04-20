@@ -36,11 +36,4 @@
         app:layout_constraintEnd_toStartOf="@id/imageViewStart"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-    <androidx.appcompat.widget.AppCompatImageView
-        style="@style/defaultBottomButton"
-        android:id="@+id/imageViewStart"
-        app:srcCompat="@drawable/ic_start_black_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
 </androidx.constraintlayout.widget.ConstraintLayout>

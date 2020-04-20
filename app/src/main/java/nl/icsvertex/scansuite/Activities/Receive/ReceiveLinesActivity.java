@@ -74,7 +74,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
 
-    private ImageView imageViewStart;
+
     private RecyclerView recyclerViewLines;
     private List<cReceiveorderSummaryLine> linesToShowObl;
 
@@ -216,8 +216,6 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
         this.recyclerViewLines = findViewById(R.id.recyclerViewLines);
 
-        this.imageViewStart = findViewById(R.id.imageViewStart);
-
         this.switchDeviations = findViewById(R.id.switchDeviations);
 
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
@@ -275,12 +273,12 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
 
+
     }
 
     @Override
     public void mSetListeners() {
         this.mSetShowCommentListener();
-        this.mSetStartLineListener();
         this.mSetDeviationsListener();
         this.mSetAddArticleListener();
         this.mCloseOrderListener();
@@ -419,17 +417,6 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    public void pStartLine() {
-
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                imageViewStart.performClick();
-            }
-        });
-
-
-    }
 
     public void pShowData(List<cReceiveorderSummaryLine> pvDataObl) {
         this.linesToShowObl = pvDataObl;
@@ -596,7 +583,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
     private void mHandleClose() {
 
-            if (cIntakeorder.currentIntakeOrder.packagingObl != null && cIntakeorder.currentIntakeOrder.packagingObl .size() > 0 && !ReceiveLinesActivity.packagingHandledBln) {
+            if (!ReceiveLinesActivity.packagingHandledBln) {
 
                 //Check if there is there could be packaging
                 if (cIntakeorder.currentIntakeOrder.isReceiveIntakeEOPackagingIntakeBln() ||
@@ -647,14 +634,6 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         });
     }
 
-    private void mSetStartLineListener() {
-        this.imageViewStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pHandleScan(null, true);
-            }
-        });
-    }
 
     private void mSetAddArticleListener() {
         this.imageAddArticle.setOnClickListener(new View.OnClickListener() {
@@ -671,8 +650,17 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
             @Override
             public void onClick(View view) {
 
+
+                String acceptStr = cAppExtension.activity.getString(R.string.message_close);
+                String rejectStr = cAppExtension.activity.getString(R.string.message_leave);
+
+                if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
+                    acceptStr = cAppExtension.activity.getString(R.string.message_approve);
+                    rejectStr = cAppExtension.activity.getString(R.string.message_cancel);
+                }
+
                 if (cIntakeorder.currentIntakeOrder.isGenerated()) {
-                    mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
+                    mShowCloseOrderDialog(rejectStr, acceptStr);
                     return;
                 }
 
@@ -898,14 +886,11 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     private  void mFillRecycler() {
 
         if (this.linesToShowObl .size() == 0) {
-            this.imageViewStart.setVisibility(View.INVISIBLE);
             mNoLinesAvailable(true);
             return;
         }
 
-        mNoLinesAvailable(false);
-
-        this.imageViewStart.setVisibility(View.VISIBLE);
+        this.mNoLinesAvailable(false);
         this.recyclerViewLines.setHasFixedSize(false);
         this.recyclerViewLines.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         this.recyclerViewLines.setVisibility(View.VISIBLE);
@@ -985,8 +970,14 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         cResult hulpResult = new cResult();
         hulpResult.resultBln = false;
 
+        boolean hulpBln = true;
+
+        if (!cIntakeorder.currentIntakeOrder.pAddUnkownBarcodeAndItemVariantBln(pvBarcodeScan)){
+            hulpBln = false ;
+        }
+
         //Add the barcodeStr via the webservice
-        if (!cIntakeorder.currentIntakeOrder.pAddUnkownBarcodeAndItemVariantBln(pvBarcodeScan)) {
+        if (!hulpBln) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_adding_unkown_article_failed),"",true,true);
             ReceiveLinesActivity.busyBln = true;
             return;

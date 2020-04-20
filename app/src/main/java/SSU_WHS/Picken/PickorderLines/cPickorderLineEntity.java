@@ -166,7 +166,7 @@ public class cPickorderLineEntity {
 
             this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
 
-            this.takenTimeStamp = pvJsonObject.getString(cDatabase.TAKENTIMESTAMP_NAMESTR);
+            this.takenTimeStamp = pvJsonObject.getString(cDatabase.HANDLEDTIMESTAMP_NAMESTR);
 
             if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
                 if (this.status > cWarehouseorder.PicklineStatusEnu.Needed) {

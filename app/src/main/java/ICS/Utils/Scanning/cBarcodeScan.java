@@ -52,7 +52,7 @@ import nl.icsvertex.scansuite.Fragments.Returns.ReturnArticleDetailFragment;
 
 public class cBarcodeScan {
 
-    public class BarcodeType {
+    public static class BarcodeType {
 
         public static final int Unknown = 0;
         public static final int EAN8 = 1;

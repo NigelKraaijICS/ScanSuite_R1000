@@ -117,7 +117,7 @@ public class cReceiveorderLine {
         return extraField8Str;
     }
 
-    private String handledTimeStampStr;
+    public String handledTimeStampStr;
     public  String getHandledTimeStampStr(){ return  this.handledTimeStampStr;}
 
     public  List<cIntakeorderBarcode> barcodesObl;

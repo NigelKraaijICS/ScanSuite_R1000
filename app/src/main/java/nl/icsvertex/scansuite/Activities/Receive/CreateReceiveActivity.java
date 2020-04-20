@@ -4,6 +4,7 @@ package nl.icsvertex.scansuite.Activities.Receive;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
+import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
@@ -77,7 +79,11 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void onDestroy() {
         super.onDestroy();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+
+        if (cAppExtension.activity instanceof CreateReceiveActivity) {
+            cBarcodeScan.pUnregisterBarcodeReceiver();
+        }
+
     }
 
     @Override
@@ -180,6 +186,9 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(50);
         this.editTextDocument.setFilters(filterArray);
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
+            this.editTextDocument.setInputType(InputType.TYPE_CLASS_NUMBER );
+        }
 
         if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
             this.editTextBin.setVisibility(View.GONE);
@@ -245,6 +254,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         if (pvBinBln) {
             this.editTextBin.setText(barcodeWithoutPrefixStr);
             this.editTextBin.requestFocus();
+            return;
         }
 
         cUserInterface.pCheckAndCloseOpenDialogs();

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cDateAndTime;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
@@ -61,7 +62,7 @@ public class cReceiveorderSummaryLine {
         return this.quantityDbl;
     }
 
-    private Double quantityHandledDbl;
+    public Double quantityHandledDbl;
     public Double getQuantityHandledDbl()
     {
         Double resultDbl =  0.0;
@@ -231,13 +232,9 @@ public class cReceiveorderSummaryLine {
     public cArticleImage articleImage;
     public static cReceiveorderSummaryLine currentReceiveorderSummaryLine;
 
-
     private cReceiveorderLineViewModel getReceiveorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReceiveorderLineViewModel.class);
     }
-
-
-
 
     //End Region Public Properties
 
@@ -258,7 +255,15 @@ public class cReceiveorderSummaryLine {
             this.quantityHandledDbl = 0.0;
             this.quantityExportedDbl = cText.pStringToDoubleDbl(jsonObject.getString(cDatabase.QUANTITYTAKEEXPORTED_NAMESTR));
 
-            this.binCodeStr = jsonObject.getString(cDatabase.BINCODE_NAMESTR);
+            this.binCodeStr = "";
+
+            try {
+                this.binCodeStr = jsonObject.getString(cDatabase.BINCODE_NAMESTR);
+            }
+            catch(Exception e) {
+                //  Block of code to handle errors
+            }
+
             this.extraField1Str = "";
             this.extraField2Str = "";
             this.extraField3Str = "";
@@ -451,6 +456,7 @@ public class cReceiveorderSummaryLine {
             //Add new line so the quanity gets raised again
             cReceiveorderLine receiveorderLine = new cReceiveorderLine(WebResult.getResultDtt().get(0), true, WebResult.getResultLng().intValue());
             receiveorderLine.quantityHandledDbl = quantityScannedDbl;
+            receiveorderLine.handledTimeStampStr =  cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
             receiveorderLine.pInsertInDatabaseBln();
             this.pAddLine(receiveorderLine);
             return  true;

@@ -612,5 +612,13 @@
     <string name="message_close_packaging_text">Wilt u emballage sluiten?\n\nU heeft de volgende eenheden ingegeven:\n\n%1$s</string>
     <string name="close_dialog">Sluit venster</string>
     <string name="message_close_packaging_question">Emballage sluiten?</string>
+    <string name="error_unknown_packagingunit">Onbekende emballage eenheid</string>
+    <string name="message_open_packaging_text">Is er sprake van emballage?</string>
+    <string name="error_get_packaging_failed">Verpakkingen ophalen mislukt</string>
+    <string name="message_extra_pieces_exceeded_header">Extra aantal toegestaan overschreden</string>
+    <string name="message_approve">Akkoord</string>
+    <string name="tab_in">In</string>
+    <string name="tab_out">Uit</string>
+    <string name="tab_selected">Geselecteerd</string>
 
 </resources>

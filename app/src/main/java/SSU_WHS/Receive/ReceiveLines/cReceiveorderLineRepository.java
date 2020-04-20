@@ -473,6 +473,10 @@ public class cReceiveorderLineRepository {
                     l_PropertyInfo2Pin.setValue(cDeviceInfo.getSerialnumberStr());
                 }
 
+                if (cIntakeorder.currentIntakeOrder.isGenerated()) {
+                    l_PropertyInfo2Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                }
+
 
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 

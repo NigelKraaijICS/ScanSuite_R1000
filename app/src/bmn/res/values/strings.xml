@@ -689,6 +689,7 @@
     <string name="message_next_activity_not_found">Next activity can\'t be found</string>
     <string name="message_less_items">LESS items</string>
     <string name="message_extra_items">EXTRA items</string>
+
     <!--End Region return-->
 
     <!--Region plurals-->

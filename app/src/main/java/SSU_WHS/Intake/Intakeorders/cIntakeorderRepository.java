@@ -198,7 +198,7 @@ public class cIntakeorderRepository {
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mGetMATBarcodesFromWebserviceAsyncTask().execute().get();
+            webResultWrs = new mGetBarcodesFromWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -209,13 +209,15 @@ public class cIntakeorderRepository {
         return webResultWrs;
     }
 
+
+
     public cWebresult pGetMATLineBarcodesFromWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mGetMATLineBarcodesFromWebserviceAsyncTask().execute().get();
+            webResultWrs = new mGetLineBarcodesFromWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -507,9 +509,15 @@ public class cIntakeorderRepository {
             l_PropertyInfo2Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
+            String scannerStr = "";
+
+            if (cIntakeorder.currentIntakeOrder.isGenerated()) {
+                scannerStr =   cDeviceInfo.getSerialnumberStr();
+            }
+
             PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
             l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNER;
-            l_PropertyInfo3Pin.setValue(cDeviceInfo.getSerialnumberStr());
+            l_PropertyInfo3Pin.setValue(scannerStr);
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
             try {
@@ -554,7 +562,7 @@ public class cIntakeorderRepository {
         }
     }
 
-    private static class mGetMATLineBarcodesFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+    private static class mGetLineBarcodesFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final String... params) {
             cWebresult WebresultWrs = new cWebresult();
@@ -583,7 +591,7 @@ public class cIntakeorderRepository {
         }
     }
 
-    private static class mGetMATBarcodesFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+    private static class mGetBarcodesFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final String... params) {
             cWebresult WebresultWrs = new cWebresult();
@@ -774,12 +782,22 @@ public class cIntakeorderRepository {
                 SoapObject packagingList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PACKAGINGLIST);
 
                 //Only loop through handled barcodes, of there are any
-                if (cIntakeorder.currentIntakeOrder.packagingObl  != null) {
-                    for (cPackaging packaging : cIntakeorder.currentIntakeOrder.packagingObl ) {
+                if (cIntakeorder.currentIntakeOrder.packagingInObl  != null) {
+                    for (cPackaging packaging : cIntakeorder.currentIntakeOrder.packagingInObl ) {
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PACKAGINGHANDLED_COMPLEX);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_PACKAGING_COMPLEX, packaging.getCodeStr());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITY_IN_TAKE_COMPLEX,packaging.getQuantityInUsedInt());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITY_SHIPPED_COMPLEX, 0);
+                        packagingList.addSoapObject(soapObject);
+                    }
+                }
+
+                if (cIntakeorder.currentIntakeOrder.packagingOutObl  != null) {
+                    for (cPackaging packaging : cIntakeorder.currentIntakeOrder.packagingOutObl ) {
                         SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PACKAGINGHANDLED_COMPLEX);
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_PACKAGING_COMPLEX, packaging.getCodeStr());
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITY_IN_TAKE_COMPLEX,0);
-                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITY_SHIPPED_COMPLEX, packaging.getQuantityUsedInt());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITY_SHIPPED_COMPLEX, packaging.getQuantityOutUsedInt());
                         packagingList.addSoapObject(soapObject);
                     }
                 }

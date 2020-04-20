@@ -146,16 +146,13 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
                 if (cAppExtension.context instanceof ReceiveLinesActivity) {
                     ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
                     receiveLinesActivity.pReceivelineSelected(currentReceiveorderSummaryLine);
+                    receiveLinesActivity.pHandleScan(null,true);
                 }
             }
         });
 
         //End On Click Listener
 
-        //Select the first one, or selected index
-        if (pvPositionInt == 0 && cAppExtension.activity instanceof ReceiveLinesActivity ) {
-            pvHolder.receiveorderItemLinearLayout.performClick();
-        }
     }
 
     @Override
@@ -190,79 +187,9 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
 
     }
 
-    public void pSetFilter(String pvQueryTextStr, Boolean pvScannedBln) {
-        this.localReceiveorderSummaryLinesObl = mGetFilteredListObl(pvQueryTextStr);
-
-        if (cAppExtension.activity instanceof ReceiveLinesActivity ) {
-            ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity) cAppExtension.activity;
-            receiveLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localReceiveorderSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
-        }
-
-
-        if (this.localReceiveorderSummaryLinesObl.size() == 1 && pvScannedBln) {
-
-            if (cAppExtension.activity instanceof  ReceiveLinesActivity) {
-                ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity) cAppExtension.activity;
-                receiveLinesActivity.pReceivelineSelected(this.localReceiveorderSummaryLinesObl.get(0));
-                receiveLinesActivity.pStartLine();
-            }
-
-        }
-
-    }
-
     //End Region Public Methods
 
     //Region Private Methods
-
-    private List<cReceiveorderSummaryLine> mGetFilteredListObl(String pvQueryTextStr) {
-        List<cReceiveorderSummaryLine> resultObl = new ArrayList<>();
-
-        StringBuilder variantCodeStr = new StringBuilder();
-        int loopInt = 0;
-
-        if (this.localReceiveorderSummaryLinesObl == null || this.localReceiveorderSummaryLinesObl.size() == 0) {
-            return resultObl;
-        }
-
-        if (pvQueryTextStr.isEmpty()) {
-            return cIntakeorder.currentIntakeOrder.summaryReceiveLinesObl();
-        }
-
-        String[] fieldsObl = pvQueryTextStr.split(" ");
-        if (fieldsObl.length <= 0) {
-            return resultObl;
-        }
-
-        for (String loopStr : fieldsObl) {
-
-            if (loopInt == 0) {
-                loopInt += 1;
-                continue;
-            }
-
-            variantCodeStr.append(loopStr);
-            loopInt += 1;
-        }
-
-        for (cReceiveorderSummaryLine receiveorderSummaryLine :this.localReceiveorderSummaryLinesObl){
-
-            if (!receiveorderSummaryLine.getItemNoStr().equalsIgnoreCase(fieldsObl[0])) {
-                continue;
-            }
-
-            if (variantCodeStr.length() > 0) {
-                if (!receiveorderSummaryLine.getVariantCodeStr().equalsIgnoreCase(variantCodeStr.toString())) {
-                    continue;
-                }
-            }
-
-            resultObl.add(receiveorderSummaryLine);
-
-        }
-
-        return resultObl;
-    }
 
     private List<cReceiveorderSummaryLine> mGetDeviationsListObl() {
 

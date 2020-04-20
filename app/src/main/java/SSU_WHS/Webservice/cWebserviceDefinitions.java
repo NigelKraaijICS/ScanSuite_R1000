@@ -73,6 +73,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETINTAKEORDERMATLINES = "p_ReceiveMATRegelsGetJsonStr";
     public static String WEBMETHOD_GETINTAKEORDERMATLINEBARCODES = "p_ReceiveMATRegelBarcodesGetJsonStr";
     public static String WEBMETHOD_GETINTAKEARCODES = "p_ReceiveOrderBarcodesGetJsonStr";
+    public static String WEBMETHOD_GETTAKEINTAKEARCODES = "p_ReceiveOrderRegelTakeBarcodesGetJsonStr";
     public static String WEBMETHOD_INTAKELINEMATRESET = "p_ReceiveMATRegelResetJsonStr";
     public static String WEBMETHOD_GETINTAKEORDERLINES = "p_ReceiveOrderScannerRegelsInTakeGetJsonStr";
     public static String WEBMETHOD_GETINTAKEORDERITEMS = "p_ReceiveOrderItemInTakeGetJsonStr";

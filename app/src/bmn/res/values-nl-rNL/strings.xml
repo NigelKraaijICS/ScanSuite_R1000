@@ -389,7 +389,7 @@
     <string name="dont_care">Negeer</string>
     <string name="tab_inventorybin_done">klaar</string>
     <string name="hint_document_inventory">Omschrijving/Reden van telling</string>
-    <string name="hint_document_receive">Document</string>
+    <string name="hint_document_receive">Ordernummer</string>
     <string name="message_add_article_now_allowed">Artikel toevoegen niet toegestaan</string>
     <string name="message_adding_erp_article_failed">Artikel met barcode %1$s niet herkend, geef artikelnummer handmatig in</string>
     <string name="message_adding_line_failed">Regel toevoegen mislukt</string>
@@ -496,7 +496,7 @@
     <string name="error_get_moveorders_failed">Verplaats opdrachten ophalen mislukt.</string>
     <string name="message_bin_empty_close">Wil je de BIN sluiten ondanks dat er niks gescanned is?</string>
     <string name="message_close_bin_with_progress">U heeft al progressie gemaakt. Wilt u de BIN echt sluiten?</string>
-    <string name="message_close_storeorder_text">U heeft %1$s items opgeslagen\nU moest %2$s items opslaan\n\n%3$s\n\nWilt u de order sluiten?</string>
+    <string name="message_close_storeorder_text">U heeft %1$s items ontvangen\nU moest %2$s items ontvangen\n\n%3$s\n\nWilt u de order sluiten?</string>
     <string name="message_moveorderbusy_header">Orderregel nog bezig.</string>
     <string name="message_unknown_bin">Onbekende locatie</string>
     <string name="screentitle_moveorderlines">Verplaats regels</string>
@@ -567,7 +567,7 @@
     <string name="message_reason_unknown">Retourreden onbekend</string>
     <string name="message_scan_reason_first">Geef reden in voordat u een nieuw artikel scanned</string>
     <string name="message_close_receiveorder_generated_text">U heeft %1$s items ontvangen\n\nWilt u de opdracht sluiten?</string>
-    <string name="create_external_receive">Creeer externe ontvangst</string>
+    <string name="create_external_receive">Inkooporder zoeken</string>
     <string name="error_could_not_invalidate_order">Opdracht vervallen mislukt</string>
     <string name="message_scan_receive_document">Scan/type document</string>
     <string name="screentitle_receive">Ontvangen</string>
@@ -580,8 +580,10 @@
     <string name="message_less_items">MINDER ontvangen</string>
     <string name="message_next_activity_not_found">Volgende activeit kan niet worden gevonden</string>
     <string name="screentitle_inventorybincount">Tellijst locatie</string>
-    <string name="message_open_packaging_text">Wilt u emballage aan de opdracht toevoegen?</string>
+    <string name="message_open_packaging_text">Heeft u pallets ontvangen of verzonden bij deze bestelling?</string>
     <string name="error_unknown_packagingunit">Onbekende emballage eenheid</string>
     <string name="error_get_packaging_failed">Ophalen emballage eenheden is mislukt</string>
-
+    <string name="message_extra_pieces_exceeded_header">Grote afwijking</string>
+    <string name="message_orderlinebusy_text">Regel nog in behandeling, weet u zeker dat u de huidige ingevoerde aantallen wilt laten vervallen?</string>
+    <string name="message_close_packaging_question">Emballage verzenden?</string>
 </resources>

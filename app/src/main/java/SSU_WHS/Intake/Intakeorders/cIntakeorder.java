@@ -2,6 +2,7 @@ package SSU_WHS.Intake.Intakeorders;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
+import SSU_WHS.General.cDatabase;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
@@ -148,7 +150,8 @@ public class cIntakeorder {
         return  cComment.allCommentsObl;
     }
     public List<cIntakeorderBarcode> barcodesObl () {return  cIntakeorderBarcode.allBarcodesObl;}
-    public  List<cPackaging> packagingObl;
+    public  List<cPackaging> packagingInObl;
+    public  List<cPackaging> packagingOutObl;
 
     public cIntakeorderBarcode intakeorderBarcodeScanned;
 
@@ -742,6 +745,11 @@ public class cIntakeorder {
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cReceiveorderLine receiveorderLine = new cReceiveorderLine(jsonObject);
+
+               if (receiveorderLine.getHandledTimeStampStr() == "null" && cIntakeorder.currentIntakeOrder.isGenerated()) {
+                       continue;
+               }
+
                 receiveorderLine.pInsertInDatabaseBln();
 
                 cReceiveorderSummaryLine receiveorderSummaryLine = cReceiveorderSummaryLine.pGetSummaryLine(receiveorderLine.getItemNoStr(),
@@ -814,10 +822,13 @@ public class cIntakeorder {
         }
     }
 
+
+
     public boolean pGetPackagingViaWebserviceBln() {
 
 
-        this.packagingObl = new ArrayList<>();
+        this.packagingInObl = new ArrayList<>();
+        this.packagingOutObl = new ArrayList<>();
 
 
         cWebresult WebResult;
@@ -825,19 +836,26 @@ public class cIntakeorder {
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cPackaging packaging  = new cPackaging(jsonObject);
-                this.packagingObl.add(packaging);
+                this.packagingInObl.add(packaging);
+                this.packagingOutObl.add(packaging);
             }
 
 
 
             //If there is no packaging defined, use the general list from the BASICS as a starting point
-            if (this.packagingObl.size() == 0) {
+            if (cPackaging.allPackaging == null)  {
+                return true;
+            }
+
+            if ( this.packagingInObl.size() == 0 || this.packagingOutObl.size() ==0 ) {
 
                 for (cPackaging packaging : cPackaging.allPackaging ) {
-                    packaging.quantityUsedInt = 0;
+                    packaging.quantityInUsedInt = 0;
+                    packaging.quantityOutUsedInt = 0;
                 }
 
-                this.packagingObl.addAll(cPackaging.allPackaging);
+                this.packagingInObl.addAll(cPackaging.allPackaging);
+                this.packagingOutObl.addAll(cPackaging.allPackaging);
             }
 
             return true;
@@ -891,8 +909,6 @@ public class cIntakeorder {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEBARCODECREATE);
             return  false;
         }
-
-
 
         return  true;
     }

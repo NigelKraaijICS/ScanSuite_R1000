@@ -108,7 +108,10 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+
+        if (cAppExtension.activity instanceof  IntakeAndReceiveSelectActivity){
+            cBarcodeScan.pUnregisterBarcodeReceiver();
+        }
     }
 
     @Override

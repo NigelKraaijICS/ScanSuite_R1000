@@ -4,15 +4,19 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+
 import nl.icsvertex.scansuite.R;
 
 public class cPackagingUnitUsedAdapter extends RecyclerView.Adapter<cPackagingUnitUsedAdapter.PackagingUnitUsedViewHolder> {
@@ -26,6 +30,7 @@ public class cPackagingUnitUsedAdapter extends RecyclerView.Adapter<cPackagingUn
         private TextView textViewDescription;
         private TextView textViewPackagingUnit;
         private TextView textViewQuantityUsed;
+        private ImageView imageViewPackagingUnit;
 
         PackagingUnitUsedViewHolder(View pvView) {
             super(pvView);
@@ -34,12 +39,17 @@ public class cPackagingUnitUsedAdapter extends RecyclerView.Adapter<cPackagingUn
             this.textViewDescription.setSingleLine(true);
             this.textViewDescription.setMarqueeRepeatLimit(5);
             this.textViewDescription.setSelected(true);
+
             this.textViewPackagingUnit = pvView.findViewById(R.id.textViewPackagingUnit);
             this.textViewPackagingUnit.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewPackagingUnit.setSingleLine(true);
             this.textViewPackagingUnit.setMarqueeRepeatLimit(5);
             this.textViewPackagingUnit.setSelected(true);
+
+
             this.textViewQuantityUsed = pvView.findViewById(R.id.textViewQuantityUsed);
+            this.imageViewPackagingUnit = pvView.findViewById(R.id.imageViewPackagingUnit);
+
         }
     }
 
@@ -84,7 +94,17 @@ public class cPackagingUnitUsedAdapter extends RecyclerView.Adapter<cPackagingUn
 
        pvHolder.textViewDescription.setText(packaging.getDescriptionStr());
        pvHolder.textViewPackagingUnit.setText(packaging.getCodeStr());
-       pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(packaging.getQuantityUsedInt()));
+
+       if (packaging.getQuantityInUsedInt() > 0) {
+           pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(packaging.getQuantityInUsedInt()));
+           pvHolder.imageViewPackagingUnit.setImageResource(R.drawable.ic_in);
+       }
+
+        if (packaging.getQuantityOutUsedInt() > 0) {
+            pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(packaging.getQuantityOutUsedInt()));
+            pvHolder.imageViewPackagingUnit.setImageResource(R.drawable.ic_out);
+        }
+
     }
 
 

@@ -723,6 +723,14 @@
     <string name="message_close_packaging_text">"Do you want to close packaging?\n\nYou entered the following units:\n\n%1$s</string>
     <string name="close_dialog">Close dialog</string>
     <string name="message_close_packaging_question">Close packaging?</string>
+    <string name="error_unknown_packagingunit">Unknown packagingunit</string>
+    <string name="message_open_packaging_text">Would you like to add packaging to the order?</string>
+    <string name="error_get_packaging_failed">Getting packaging failed</string>
+    <string name="message_extra_pieces_exceeded_header">Extra pieces exceeded</string>
+    <string name="message_approve">Approve</string>
+    <string name="tab_in">In</string>
+    <string name="tab_out">Out</string>
+    <string name="tab_selected">Selected</string>
     <!--End Region return-->
 
     <!--Region plurals-->
