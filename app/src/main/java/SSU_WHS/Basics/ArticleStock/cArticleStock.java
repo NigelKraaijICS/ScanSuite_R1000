@@ -7,8 +7,9 @@ import java.util.Date;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 
-public class cArticleStock {
+public class cArticleStock implements Comparable {
 
     //Region Public Properties
 
@@ -42,6 +43,8 @@ public class cArticleStock {
         return this.dataTimeStampDat;
     }
 
+    public  static  cArticleStock currentArticleStock;
+
     private cArticleStockEntity articleStockEntity;
 
 
@@ -62,6 +65,13 @@ public class cArticleStock {
 
     //Region Public Methods
 
+    @Override
+    public int compareTo(Object o) {
+
+        int compareint =  ((cArticleStock)o).getQuantityDbl().intValue();
+        return compareint -this.getQuantityDbl().intValue();
+
+    }
 
     //End Region Public Methods
 }

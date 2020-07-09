@@ -140,6 +140,11 @@ public class cWarehouseorder {
         public final static int LOCALSTATUS_DONE_ERROR_SENDING = 32;
     }
 
+    public static class MovelineStatusEnu {
+        public static final int Needed = 10;
+        public static final int DONE = 11;
+    }
+
     public static class InventoryBinStatusEnu {
         public static final int New = 10;
         public static final int InventoryDoneOnServer = 20;

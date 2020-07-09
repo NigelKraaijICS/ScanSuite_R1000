@@ -108,37 +108,37 @@ public class cMoveorderBarcodeRepository {
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
                 l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMNO;
-                l_PropertyInfo4Pin.setValue(cMoveorderBarcode.currentMoveOrderBarcode.getItemNoStr());
+                l_PropertyInfo4Pin.setValue(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getItemNoStr());
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
                 l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE;
-                l_PropertyInfo5Pin.setValue(cMoveorderBarcode.currentMoveOrderBarcode.getVariantCodeStr());
+                l_PropertyInfo5Pin.setValue(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getVariantCodeStr());
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
                 l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
-                l_PropertyInfo6Pin.setValue(cMoveorderBarcode.currentMoveOrderBarcode.getBarcodeStr());
+                l_PropertyInfo6Pin.setValue(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getBarcodeStr());
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
                 PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
                 l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODETYPE;
-                l_PropertyInfo7Pin.setValue(cMoveorderBarcode.currentMoveOrderBarcode.getBarcodeTypesStr());
+                l_PropertyInfo7Pin.setValue(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getBarcodeTypesStr());
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_ISUNIQUEBARCODE;
-                l_PropertyInfo8Pin.setValue(cMoveorderBarcode.currentMoveOrderBarcode.getIsUniqueBarcodeBln());
+                l_PropertyInfo8Pin.setValue(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getIsUniqueBarcodeBln());
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
                 l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_QUANTITYPERUNITOFMEASURE;
-                l_PropertyInfo9Pin.setValue(cMoveorderBarcode.currentMoveOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+                l_PropertyInfo9Pin.setValue(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityPerUnitOfMeasureDbl());
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
                 PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
                 l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_UNITOFMEASURE;
-                l_PropertyInfo10Pin.setValue(cMoveorderBarcode.currentMoveOrderBarcode.getUnitOfMeasureStr());
+                l_PropertyInfo10Pin.setValue(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getUnitOfMeasureStr());
                 l_PropertyInfoObl.add(l_PropertyInfo10Pin);
 
                 PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();

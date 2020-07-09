@@ -67,7 +67,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_arrow_forward_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material/icons/materialicons/assessment/baseline_assessment_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -77,7 +77,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_out" />
+                            <entry key="opacityPercent" value="59" />
+                            <entry key="outputName" value="ic_baseline_assessment_24" />
                             <entry key="sourceFile" value="C:\Users\b.vanderzon\Desktop\fragile.svg" />
                           </map>
                         </option>

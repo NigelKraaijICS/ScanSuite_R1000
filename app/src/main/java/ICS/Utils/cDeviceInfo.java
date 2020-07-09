@@ -1,5 +1,7 @@
 package ICS.Utils;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
@@ -11,6 +13,7 @@ import android.os.Build;
 import android.text.format.Formatter;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -41,10 +44,20 @@ public class cDeviceInfo {
         return Build.MODEL;
     }
 
-    public static String getSerialnumberStr( )
-    {
-        return SERIAL;
+    @SuppressLint("HardwareIds")
+    public static String getSerialnumberStr() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            if (ActivityCompat.checkSelfPermission(cAppExtension.context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            }
+            return Build.getSerial();
+        }
+        else
+        {
+            return Build.SERIAL;
+        }
     }
+
 
     public static String getAppVersion ( ) { return BuildConfig.VERSION_NAME; }
 

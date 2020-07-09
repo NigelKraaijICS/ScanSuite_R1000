@@ -24,6 +24,7 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
+import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesToSortFragment;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAdapter.PickorderLineViewHolder>  {
@@ -169,7 +170,6 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
             if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) {
                 pvHolder.imageSendStatus.setVisibility(View.VISIBLE);
                 pvHolder.imageSendStatus.setImageResource(R.drawable.ic_doublecheck_black_24dp);
-
             }
 
         }
@@ -232,6 +232,12 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
                     if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
                         sortorderLinesActivity.pPicklineSelected(currentPickorderLine);
+
+                        if (SortorderLinesActivity.currentLineFragment instanceof SortorderLinesToSortFragment) {
+                            SortorderLinesToSortFragment sortorderLinesToSortFragment = (SortorderLinesToSortFragment) SortorderLinesActivity.currentLineFragment;
+                            sortorderLinesToSortFragment.pShowHideDetailButton();
+                        }
+
                     }
                     if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
                         sortorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);

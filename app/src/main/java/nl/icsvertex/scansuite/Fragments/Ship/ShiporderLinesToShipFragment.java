@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +29,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
 
 
-public class ShiporderLinesToShipFragment extends DialogFragment implements iICSDefaultFragment {
+public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaultFragment {
 
     //Region Public Properties
 
@@ -93,7 +93,6 @@ public class ShiporderLinesToShipFragment extends DialogFragment implements iICS
         super.onResume();
         cUserInterface.pEnableScanner();
         ShiporderLinesActivity.currentLineFragment = this;
-        cAppExtension.dialogFragment = this;
         this.mFragmentInitialize();
 
     }
@@ -108,7 +107,7 @@ public class ShiporderLinesToShipFragment extends DialogFragment implements iICS
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.mGetData();
+        this.pGetData();
         cUserInterface.pEnableScanner();
     }
 
@@ -120,7 +119,7 @@ public class ShiporderLinesToShipFragment extends DialogFragment implements iICS
             this.textViewSelectedOrder = getView().findViewById(R.id.textViewSelectedOrder);
             this.shipThisView = getView().findViewById(R.id.shipThisView);
             this.quickhelpText = getView().findViewById(R.id.quickhelpText);
-            this.quickhelpContainer = getView().findViewById(R.id.actionsContainer);
+            this.quickhelpContainer = getView().findViewById(R.id.quickHelpContainer);
             this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
         }
 
@@ -130,6 +129,7 @@ public class ShiporderLinesToShipFragment extends DialogFragment implements iICS
 
     @Override
     public void mFieldsInitialize() {
+        this.recyclerViewShiporderLinesToship.setVisibility(View.VISIBLE);
         this.quickhelpText.setText(R.string.scan_salesorder);
     }
 
@@ -187,7 +187,7 @@ public class ShiporderLinesToShipFragment extends DialogFragment implements iICS
         });
     }
 
-    private void mGetData() {
+    public void pGetData() {
 
         List<cShipment> notHandledShipmentsObl = cPickorder.currentPickOrder.pGetNotHandledShipmentsObl();
         this.mFillRecycler(notHandledShipmentsObl);

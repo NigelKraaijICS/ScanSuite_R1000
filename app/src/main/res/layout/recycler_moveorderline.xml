@@ -2,6 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/inventoryorderLineItemLinearLayout"
     style="@style/recyclerorderRecyclerLinearLayout"
     >
@@ -38,25 +39,10 @@
         android:background="@drawable/menu_row"
         android:id="@+id/view_foreground">
         <androidx.appcompat.widget.AppCompatImageView
-            style="@style/imageviewMenuButton"
-            android:id="@+id/imageViewInventoryorder"
-            app:srcCompat="@drawable/ic_menu_demo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"
-            />
-        <View
-            style="@style/orderStatusIndicator"
-            android:id="@+id/viewOrderStatus"
-            app:layout_constraintStart_toEndOf="@id/imageViewInventoryorder"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageArticle"
             style="@style/recyclerItemImage"
             app:srcCompat="@drawable/ic_document_black_24dp"
-            app:layout_constraintStart_toEndOf="@id/viewOrderStatus"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
@@ -71,7 +57,7 @@
             app:srcCompat="@drawable/ic_variant_black_24dp"
             app:layout_constraintTop_toTopOf="@id/textViewDescription"
             app:layout_constraintBottom_toBottomOf="@id/textViewDescription"
-            app:layout_constraintStart_toEndOf="@id/viewOrderStatus"
+            app:layout_constraintStart_toStartOf="parent"
             />
         <TextView
             android:id="@+id/textViewDescription"
@@ -85,7 +71,7 @@
             app:srcCompat="@drawable/ic_counter_black_24dp"
             app:layout_constraintTop_toTopOf="@id/textViewCounted"
             app:layout_constraintBottom_toBottomOf="@id/textViewCounted"
-            app:layout_constraintStart_toEndOf="@id/viewOrderStatus"
+            app:layout_constraintStart_toStartOf="parent"
             />
         <TextView
             android:id="@+id/textViewCounted"
@@ -93,6 +79,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/textViewDescription"
+            app:layout_constraintStart_toEndOf="@id/imageViewCounted"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewBIN"
+            style="@style/recyclerItemImage"
+            app:srcCompat="@drawable/ic_location_black_24dp"
+            app:layout_constraintTop_toTopOf="@id/textViewBIN"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/textViewBIN"
+            style="@style/pickorderRecyclerQuantityTotalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textViewCounted"
             app:layout_constraintStart_toEndOf="@id/imageViewCounted"
             />
         <View

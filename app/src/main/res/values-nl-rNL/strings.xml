@@ -138,11 +138,11 @@
     <string name="tab_pickorderline_picked">Gepickt</string>
     <string name="tab_pickorderline_total">Totaal</string>
     <string name="im_at">Ik ben op</string>
-    <string name="scan_bincode">Scan locatie</string>
-    <string name="scan_article_or_bincode">Scan artikel of locatie</string>
+    <string name="scan_bincode">Scan BIN</string>
+    <string name="scan_article_or_bincode">Scan artikel of BIN</string>
     <string name="screentitle_pickorderpick">Picken</string>
     <string name="message_underpick_header">Manco bevestigen?</string>
-    <string name="message_underpick_text">Je hebt er %1$s van deze nodig, je hebt er %2$s gepickt. Weet je zeker dat er geen artikelen meer beschikbaar zijn en dat je deze regel wil afsluiten?</string>
+    <string name="message_underpick_text">Je hebt er %1$s van deze nodig, je hebt er %2$s gepickt.\n\nWeet je zeker dat er geen artikelen meer beschikbaar zijn en dat je deze regel wil afsluiten?</string>
     <string name="button_close_orderline">Bevestigen</string>
     <string name="choose_barcode">Kies barcode</string>
     <string name="quantity_per_scan">Aantal per scan</string>
@@ -165,7 +165,7 @@
     <string name="label_swipe_up_for_filters">Swipe omhoog voor filters</string>
     <string name="label_swipe_down_to_hide">Swipe naar beneden om te verbergen</string>
     <string name="error_unspecified">Fout</string>
-    <string name="error_unknown_barcode">Verkeerd artikel</string>
+    <string name="error_unknown_barcode">Onbekende barcode</string>
     <string name="orderdone_header_default">Opdracht is klaar!</string>
     <string name="orderdone_text_default">Je bent klaar met deze opdracht. Wil je hem sluiten?</string>
     <string name="choose_branch">Kies vestiging</string>
@@ -269,7 +269,7 @@
     <string name="getting_data">Data ophalen</string>
     <string name="getting_data_header">Data ophalen</string>
     <string name="getting_data_text">Momentje</string>
-    <string name="nothing_more_todo_for_bin">Er is niets meer te doen voor deze locatie</string>
+    <string name="nothing_more_todo_for_bin">Er is niets meer te doen voor deze BIN</string>
     <string name="succes_scannerlogon">Scanner is ingelogd</string>
     <string name="webservice_error_header">Oeps!</string>
     <string name="webservice_error_text">Er is iets mis gegaan</string>
@@ -283,6 +283,7 @@
     <string name="message_wrong_pickcartbox">Verkeerde pickcartbox</string>
     <string name="scan_article_or_salesorder_or_pickcartbox">Scan artikel, VKO of pickcartbox</string>
     <string name="number_cannot_be_higher">Aantal mag niet hoger zijn dan orderaantal</string>
+    <string name="number_cannot_be_higher_than_stock">Aantal mag niet hoger zijn dan beschikbare voorraad</string>
     <string name="select_shippingunit">Scan of selecteer verzendeenheid</string>
     <string name="add_environment">Voeg omgeving toe</string>
     <string name="add_manually">Voeg handmatig toe</string>
@@ -500,13 +501,13 @@
     <string name="screentitle_moveorderlines">Verplaats regels</string>
     <string name="screentitle_moveorderselect">Verplaats opdrachten</string>
     <string name="screentitle_moveordertake">Nemen</string>
-    <string name="show_only_deviations">Afwijkingen tonen</string>
+    <string name="show_only_deviations">Te doen/afwijkingen tonen</string>
     <string name="stored">Opgeslagen:</string>
     <string name="tab_moveorderline_done">Klaar</string>
     <string name="tab_moveorderline_notdone">Niet klaar</string>
     <string name="tab_moveorderline_total">Totaal</string>
     <string name="message_exactly_what_you_needed">De opdracht is conform</string>
-    <string name="message_bin_required">Scan locatie om regel te sluiten</string>
+    <string name="message_bin_required">Scan een BIN</string>
     <string name="connected">Verbonden</string>
     <string name="message_checking_connection">Connectie controleren.....</string>
     <string name="message_no_connection_header">Geen connectie</string>
@@ -599,7 +600,8 @@
     <string name="tab_moveorderline_take">Neem</string>
     <string name="tab_moveorderline_place">Plaats</string>
     <string name="screentitle_moveline_take">Neem artikel</string>
-    <string name="message_article_required">Scan artikel om regel te sluiten</string>
+    <string name="screentitle_moveline_place">Plaats artikel</string>
+    <string name="message_article_required">Artikel verplicht</string>
     <string name="inventory_orders">opdrachten</string>
     <string name="no_inventory_orders">Geen open inventarisatie opdrachten</string>
     <string name="image_view_battery">image view battery</string>
@@ -620,5 +622,28 @@
     <string name="tab_in">In</string>
     <string name="tab_out">Uit</string>
     <string name="tab_selected">Geselecteerd</string>
+    <string name="message_quantity_sourceno">Aantal in inkooporder:</string>
+    <string name="message_scan_bin_first">Scan eerst een locatie</string>
+    <string name="message_close_action_first_before_new_bin">Sluit deze regel, voordar je een nieuwe locatie scanned</string>
+    <string name="message_already_exists_reset_first">Er bestaat al een regel voor dit artikel en deze BIN, als je deze regel wilt muteren dien je de regel te resetten</string>
+    <string name="message_no_stock_available">Geen voorraad beschikbaar</string>
+    <string name="message_no_sorting_location_adviced">Geen advieslocatie</string>
+    <string name="message_scan_bin_or_article">Scan BIN of Artikel</string>
+    <string name="message_scan_article_or_close_line">Scan artikel of sluit regel</string>
+    <string name="message_scan_bin">Scan BIN</string>
+    <string name="message_unknown_article">Onbekend artikel</string>
+    <string name="message_no_place_lines_for_article">Er is niets te plaatsen voor dit artikel</string>
+    <string name="message_barcode_unknown_ERP">Gescande barcode  %1$s niet herkend door ERP</string>
+    <string name="message_previous_line_send">Vorige regel is verzonden</string>
+    <string name="message_unknown_itemvariant">Onbekend ItemVariant</string>
+    <string name="message_itemvariant_not_taken_so_cant_be_placed">ItemVariant niet gepakt, dus er is niks te plaatsen</string>
+    <string name="show_only_todo">Toon te doen</string>
+    <string name="message_itemvariant_unknown">ItemVariant onbekend</string>
+    <string name="message_already_placed_so_not_possible">U kunt deze regel niet resetten omdat er al geplaatste regels voor deze ItemVariant bestaan</string>
+    <string name="message_shipment_unkown_or_already_send">Zending onbekend of reeds verzonden</string>
+    <string name="screentitle_bin_stock">BIN voorraad</string>
+    <string name="screentitle_article_stock">Artikel voorraad</string>
+    <string name="actionsmenu_title">Acties</string>
+    <string name="message_place_line_already_exists">"Er bestaat al een plaats regel voor dit artikel op deze BIN, als u wilt muteren dient u deze regel te resetten "</string>
 
 </resources>

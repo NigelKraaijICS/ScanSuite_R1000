@@ -21,7 +21,6 @@ import androidx.core.view.ViewCompat;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
@@ -33,7 +32,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
-import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
 
@@ -74,7 +72,10 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     @Override
     public void onDestroy() {
         super.onDestroy();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+
+        if (cAppExtension.activity instanceof CreateMoveActivity) {
+            cBarcodeScan.pUnregisterBarcodeReceiver();
+        }
     }
 
     @Override
@@ -184,20 +185,15 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
            this.mSetBin();
        }
 
-        if (!cUser.currentUser.currentBranch.getReturnDefaultBinStr().isEmpty()) {
+        if (!cUser.currentUser.currentBranch.getMoveDefaultBinStr().isEmpty()) {
             this.editTextBin.setText(cUser.currentUser.currentBranch.getMoveDefaultBinStr());
         }
 
-        if (!cSetting.RECEIVE_BARCODE_CHECK()) {
+        if (!cSetting.MOVE_BARCODE_CHECK()) {
             this.switchCheckBarcodes.setVisibility(View.GONE);
         }
         else{
             this.switchCheckBarcodes.setChecked(true);
-        }
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.editTextBin.setVisibility(View.GONE);
-            this.switchCheckBarcodes.setVisibility(View.GONE);
         }
 
     }
@@ -237,14 +233,6 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_is_not_document),"",true,true);
-                return;
-            }
-        }
-
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
             binBln = true;
         }
@@ -256,16 +244,6 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         //has prefix, is DOCUMENT
         if (documentBln   || this.editTextDocument.getText().toString().isEmpty()) {
             this.editTextDocument.setText(barcodeWithoutPrefixStr);
-
-            if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-
-                MoveorderSelectActivity.startedViaMenuBln = false;
-                this.mCreateOrder(this.editTextDocument.getText().toString().trim(),
-                                  this.editTextBin.getText().toString().trim(),
-                                  this.switchCheckBarcodes.isChecked());
-                return;
-            }
-
             this.editTextBin.requestFocus();
             return;
         }
@@ -322,10 +300,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
             @Override
             public void onClick(View pvView) {
 
-                if (editTextDocument.getText().toString().isEmpty()){
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_document),null);
-                    return;
-                }
+
 
                  MoveorderSelectActivity.startedViaMenuBln = false;
                  mCreateOrder(editTextDocument.getText().toString().trim(),
@@ -488,10 +463,10 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
             return result;
         }
 
-        // Get all line barcodes, if webservice error then stop
+        // Get all barcodes, if webservice error then stop
         if (!cMoveorder.currentMoveOrder.pGetLineBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
             return result;
         }
 

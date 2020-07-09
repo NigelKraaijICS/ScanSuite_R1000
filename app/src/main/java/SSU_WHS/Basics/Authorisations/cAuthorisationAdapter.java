@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.datalogic.softspot.ImageEnum;
-
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
@@ -39,7 +37,7 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
                     textViewAuthorisation.setSelected(true);
                 }
             },1500);
-            imageViewAuthorisation = itemView.findViewById(R.id.imageViewMenuItem);
+            imageViewAuthorisation = itemView.findViewById(R.id.imageViewBinItem);
             authorisationItemLinearLayout = itemView.findViewById(R.id.authorisationItemLinearLayout);
         }
     }

@@ -18,6 +18,8 @@ import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
 import SSU_WHS.Basics.ItemProperty.iItemPropertyDao;
 import SSU_WHS.Basics.Packaging.cPackagingEntity;
 import SSU_WHS.Basics.Packaging.iPackagingDao;
+import SSU_WHS.Basics.Scanners.cScannerEntity;
+import SSU_WHS.Basics.Scanners.iScannerDao;
 import SSU_WHS.Basics.Settings.cSettingsEntity;
 import SSU_WHS.Basics.Settings.iSettingsDao;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitEntity;
@@ -56,8 +58,8 @@ import SSU_WHS.Move.MoveOrders.cMoveorderEntity;
 import SSU_WHS.Move.MoveOrders.iMoveorderDao;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeEntity;
 import SSU_WHS.Move.MoveorderBarcodes.iMoveorderBarcodeDao;
-import SSU_WHS.Move.MoveorderLineBarcodes.cMoveorderLineBarcodeEntity;
-import SSU_WHS.Move.MoveorderLineBarcodes.iMoveorderLineBarcodeDao;
+import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcodeEntity;
+import SSU_WHS.Move.MoveorderLineBarcode.iMoveorderLineBarcodeDao;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
 import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddressEntity;
@@ -132,8 +134,9 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cMoveorderLineEntity.class,
         cMoveorderBarcodeEntity.class,
         cMoveorderLineBarcodeEntity.class,
-        cPackagingEntity.class
-        },version = 93)
+        cPackagingEntity.class,
+        cScannerEntity.class
+        },version = 97)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -141,6 +144,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iSettingsDao settingsDao();
     public abstract iBarcodeLayoutDao barcodeLayoutDao();
     public abstract iAuthorisationDao authorisationDao();
+    public abstract iScannerDao scannerDao();
     public abstract iWorkplaceDao workplaceDao();
     public abstract iBranchDao branchDao();
     public abstract iUserDao userDao();
@@ -175,8 +179,8 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iReceiveorderLineDao receiveorderLineDao();
     public  abstract iMoveorderDao moveorderDao();
     public  abstract iMoveorderLineDao moveorderLineDao();
-    public  abstract iMoveorderBarcodeDao moveorderBarcodeDao();
     public  abstract iMoveorderLineBarcodeDao moveorderLineBarcodeDao();
+    public  abstract iMoveorderBarcodeDao moveorderBarcodeDao();
     public  abstract iPackagingDao packagingDao();
       //public abstract iEnvironmentDao environmentDao();
 

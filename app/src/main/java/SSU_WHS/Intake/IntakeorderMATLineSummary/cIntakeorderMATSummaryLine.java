@@ -49,9 +49,33 @@ public class cIntakeorderMATSummaryLine {
         return description2Str;
     }
 
-    private String binCodeStr;
+    public String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
+    }
+
+
+    public String getBinCodeHandledStr() {
+
+        String resulStr = "";
+
+        if (this.MATLinesObl == null || this.MATLinesObl.size() == 0) {
+            return  resulStr;
+        }
+
+        for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
+
+            if (resulStr.isEmpty()) {
+                resulStr = intakeorderMATLine.getBinCodeHandledStr();
+            }
+            else
+            {
+                resulStr += " | " + intakeorderMATLine.getBinCodeHandledStr();
+            }
+
+        }
+
+        return resulStr;
     }
 
     private Double quantityDbl;
@@ -245,9 +269,9 @@ public class cIntakeorderMATSummaryLine {
 
     }
 
-    public static Double  totalItemsDifference() {
+    public static double  totalItemsDifference() {
 
-        Double resultDbl = 0.0;
+        double resultDbl = 0.0;
 
         if (cIntakeorderMATSummaryLine.totalItems().equals(cIntakeorderMATSummaryLine.totalItemsHandled())) {
             resultDbl  = 0.0;

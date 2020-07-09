@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.Move.moveLinesTakeFragment"
+    tools:context=".Fragments.Move.MoveLinesTakeFragment"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
     >

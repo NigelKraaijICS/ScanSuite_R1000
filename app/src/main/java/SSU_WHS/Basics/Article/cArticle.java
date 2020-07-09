@@ -5,13 +5,17 @@ import androidx.lifecycle.ViewModelProvider;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
+import SSU_WHS.Basics.ArticleImages.cArticleImage;
+import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.ArticleStock.cArticleStock;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -27,6 +31,10 @@ public class cArticle {
     public String variantCodeStr;
     public String getVariantCodeStr() {
         return variantCodeStr;
+    }
+
+    public  String getItemNoAndVariantCodeStr(){
+        return   this.getItemNoStr() + " " + this.getVariantCodeStr();
     }
 
     public String descriptionStr;
@@ -58,6 +66,25 @@ public class cArticle {
     public  List<cArticleBarcode> barcodesObl;
     public  List<cArticleStock> stockObl;
 
+    public List<cArticleStock> sortedTStockObl() {
+
+        List<cArticleStock> sortedTakeLinesObl = new ArrayList<>();
+
+        if (this.stockObl == null || this.stockObl.size() == 0) {
+            return  sortedTakeLinesObl;
+        }
+
+        for (cArticleStock articleStock : this.stockObl) {
+            sortedTakeLinesObl.add(articleStock);
+        }
+
+        Collections.sort(sortedTakeLinesObl);
+
+        return  sortedTakeLinesObl;
+
+    }
+
+    public cArticleImage articleImage;
     private cArticleViewModel getArticleViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleViewModel.class);
     }
@@ -78,6 +105,19 @@ public class cArticle {
         this.vendorItemDescriptionStr = this.articleEntity.getVendorItemDescriptionStr();
         this.component10Str = this.articleEntity.getComponent10Str();
         this.priceDbl = this.articleEntity.getPriceDbl();
+    }
+
+    public cArticle(String pvitemNoStr, String pvVariantCodeStr) {
+        this.articleEntity = null;
+        this.itemNoStr = pvitemNoStr;
+        this.variantCodeStr =  pvVariantCodeStr;
+        this.descriptionStr = "???";
+        this.description2Str = "???";
+        this.itemInfoCodeStr =  "???";
+        this.vendorItemNoStr =  "???";
+        this.vendorItemDescriptionStr =  "???";
+        this.component10Str = "???";
+        this.priceDbl = (double) 0;
     }
 
     //End Region Constructor
@@ -135,10 +175,7 @@ public class cArticle {
             for (JSONObject jsonObject :  webresult.getResultDtt()) {
                 cArticleStock articleStock = new cArticleStock(jsonObject, this);
 
-                if (this.stockObl == null) {
-                    this.stockObl = new ArrayList<>();
-                }
-
+                this.stockObl = new ArrayList<>();
                 this.stockObl.add(articleStock);
 
             }
@@ -148,6 +185,61 @@ public class cArticle {
         }
     }
 
+    public cArticleStock pGetStockForBINViaWebservice(String pvBinCodeStr){
+        cWebresult webresult;
+
+        webresult = getArticleViewModel().pGetStockViaWebserviceWrs(this);
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
+
+            for (JSONObject jsonObject :  webresult.getResultDtt()) {
+                cArticleStock articleStock = new cArticleStock(jsonObject, this);
+
+
+                if (!articleStock.getBincodeStr().equalsIgnoreCase(pvBinCodeStr)) {
+                    continue;
+                }
+
+              return  articleStock;
+
+            }
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES);
+        }
+
+        return  null;
+
+    }
+
+    public boolean pGetArticleImageBln(){
+
+        if (this.articleImage != null) {
+            return  true;
+        }
+
+        this.articleImage = cArticleImage.pGetArticleImageByItemNoAndVariantCode(this.getItemNoStr(),this.getVariantCodeStr());
+        if (this.articleImage != null){
+            return  true;
+        }
+
+        cWebresult Webresult;
+
+        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+        Webresult = articleImageViewModel.pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
+        if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
+            return  false;
+        }
+
+        if (Webresult.getResultDtt().size() == 1) {
+            cArticleImage articleImage = new cArticleImage(Webresult.getResultDtt().get(0));
+            articleImage.pInsertInDatabaseBln();
+            this.articleImage = articleImage;
+            return true;
+        }
+
+        return  false;
+
+    }
 
     //End Region Public Methods
 }

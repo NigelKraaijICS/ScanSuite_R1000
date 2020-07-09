@@ -201,7 +201,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         this.binText = findViewById(R.id.binText);
-        this.imageBin = findViewById(R.id.imageTime);
+        this.imageBin = findViewById(R.id.imageBin);
         this.imageBinDone = findViewById(R.id.imageViewNewOrder);
         this.recyclerViewInventoryorderLines = findViewById(R.id.recyclerViewInventoryorderLines);
         this.imageAddArticle = findViewById(R.id.imageAddArticle);

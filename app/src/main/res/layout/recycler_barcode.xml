@@ -6,11 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:layout_margin="@dimen/default_margin"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin">
+        >
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/smallButton"
             android:id="@+id/imageButtonBarcode"
@@ -46,6 +47,7 @@
             style="@style/menuSeparator"
             app:layout_constraintStart_toStartOf="@id/textViewBarcode"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

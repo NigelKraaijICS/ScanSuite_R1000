@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -118,21 +118,6 @@ public class cMoveorderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pAddUnkownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mMoveorderUnknownItemAddViaWebserviceAsyncTask().execute(pvBarcodeScan).get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
 
     public cWebresult pAddERPItemViaWebserviceWrs(cArticleBarcode pvArticleBarcode) {
         List<String> resultObl = new ArrayList<>();
@@ -155,7 +140,7 @@ public class cMoveorderRepository {
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mMoveorderHandledViaWebserviceAsyncTask().execute().get();
+            webResultWrs = new mMoveorderTakeHandledViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -163,6 +148,7 @@ public class cMoveorderRepository {
             webResultWrs.setResultObl(resultObl);
             e.printStackTrace();
         }
+
         return webResultWrs;
     }
 
@@ -298,79 +284,6 @@ public class cMoveorderRepository {
 
     //Endregion Public Methods
 
-    private static class mMoveorderUnknownItemAddViaWebserviceAsyncTask extends AsyncTask<cBarcodeScan, Void, cWebresult> {
-        @Override
-        protected cWebresult doInBackground(cBarcodeScan... params) {
-            cWebresult webresult = new cWebresult();
-            try {
-
-                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
-
-                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
-                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
-
-                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
-                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
-                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
-                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
-
-                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
-                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
-                l_PropertyInfo3Pin.setValue(cMoveorder.currentMoveOrder.getOrderNumberStr());
-                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
-
-                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
-                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMNO;
-                l_PropertyInfo4Pin.setValue("UNKNOWN");
-                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
-
-                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
-                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_VARIANTCODETINY;
-                l_PropertyInfo5Pin.setValue(cMoveorder.currentMoveOrder.getUnknownVariantCounterInt());
-                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
-
-                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
-                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
-                l_PropertyInfo6Pin.setValue(params[0].getBarcodeOriginalStr());
-                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
-
-                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
-                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODETYPE;
-                l_PropertyInfo7Pin.setValue(cText.pStringToIntegerInt(params[0].getBarcodeTypeStr()));
-                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
-
-                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
-                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_ISUNIQUEBARCODE;
-                l_PropertyInfo8Pin.setValue(false);
-                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
-
-                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
-                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_QUANTITYPERUNITOFMEASURE;
-                l_PropertyInfo9Pin.setValue(1);
-                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
-
-                PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
-                l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_UNITOFMEASURE;
-                l_PropertyInfo10Pin.setValue("???");
-                l_PropertyInfoObl.add(l_PropertyInfo10Pin);
-
-                PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
-                l_PropertyInfo11Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMTYPE;
-                l_PropertyInfo11Pin.setValue(cText.pIntToStringStr(cWarehouseorder.ItemTypeEnu.Item));
-                l_PropertyInfoObl.add(l_PropertyInfo11Pin);
-
-                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_MOVEBARCODECREATE, l_PropertyInfoObl);
-
-            } catch (JSONException e) {
-                webresult.setSuccessBln(false);
-                webresult.setResultBln(false);
-            }
-            return webresult;
-        }
-    }
-
     private static class mMoveorderERPItemAddViaWebserviceAsyncTask extends AsyncTask<cArticleBarcode, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(cArticleBarcode... params) {
@@ -396,12 +309,12 @@ public class cMoveorderRepository {
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
                 l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMNO;
-                l_PropertyInfo4Pin.setValue("UNKNOWN");
+                l_PropertyInfo4Pin.setValue(cArticle.currentArticle.getItemNoStr());
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
                 l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE;
-                l_PropertyInfo5Pin.setValue(cMoveorder.currentMoveOrder.getUnknownVariantCounterInt());
+                l_PropertyInfo5Pin.setValue(cArticle.currentArticle.getVariantCodeStr());
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
@@ -416,17 +329,17 @@ public class cMoveorderRepository {
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_ISUNIQUEBARCODE;
-                l_PropertyInfo8Pin.setValue(false);
+                l_PropertyInfo8Pin.setValue(params[0].getUniqueBarcodeBln());
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
                 l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_QUANTITYPERUNITOFMEASURE;
-                l_PropertyInfo9Pin.setValue(1);
+                l_PropertyInfo9Pin.setValue(params[0].getQuantityPerUnitOfMeasureDbl());
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
                 PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
                 l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_UNITOFMEASURE;
-                l_PropertyInfo10Pin.setValue("???");
+                l_PropertyInfo10Pin.setValue(params[0].getUnitOfMeasureStr());
                 l_PropertyInfoObl.add(l_PropertyInfo10Pin);
 
                 PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
@@ -445,7 +358,7 @@ public class cMoveorderRepository {
         }
     }
 
-    private static class mMoveorderHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+    private static class mMoveorderTakeHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
             cWebresult webresult = new cWebresult();
@@ -473,14 +386,71 @@ public class cMoveorderRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
-                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOWSTEPCODESTR;
-                l_PropertyInfo5Pin.setValue(cWarehouseorder.WorkflowMoveStepEnu.MoveHandled);
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_BATCHBINCODE;
+                l_PropertyInfo5Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
-                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
-                l_PropertyInfo6Pin.setValue("");
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOWSTEPCODESTR;
+                l_PropertyInfo6Pin.setValue(cWarehouseorder.StepCodeEnu.Move_Place.toString().toUpperCase());
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
+                l_PropertyInfo7Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_MOVEHANDLED, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mMoveorderPlaceHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cMoveorder.currentMoveOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNER;
+                l_PropertyInfo4Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_BATCHBINCODE;
+                l_PropertyInfo5Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOWSTEPCODESTR;
+                l_PropertyInfo6Pin.setValue(cWarehouseorder.StepCodeEnu.Move_Place.toString().toUpperCase());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
+                l_PropertyInfo7Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_MOVEHANDLED, l_PropertyInfoObl);
 

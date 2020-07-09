@@ -29,6 +29,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         private TextView textViewDescription;
         private TextView textViewQuantity;
         private TextView textViewSourceNo;
+        private TextView textViewBinCode;
         private FrameLayout intakeOrderMATItemLinearLayout;
         private ImageView imageSendStatus;
 
@@ -54,6 +55,8 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
             this.textViewSourceNo.setSingleLine(true);
             this.textViewSourceNo.setMarqueeRepeatLimit(5);
             this.textViewSourceNo.setSelected(true);
+
+            this.textViewBinCode = pvItemView.findViewById(R.id.textViewBinCode);
 
             this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
             this.imageSendStatus = pvItemView.findViewById(R.id.imageSendStatus);
@@ -108,7 +111,23 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         pvHolder.textViewItemNoAndVariantCode.setText(itemNoAndVariantCodeStr);
         pvHolder.textViewDescription.setText(lineDescriptionStr);
         pvHolder.textViewQuantity.setText(quantityToShowStr);
-        pvHolder.textViewSourceNo.setText(sourceNoStr);
+
+        if (cIntakeorder.currentIntakeOrder.sourceNoObl.size() == 1) {
+            pvHolder.textViewSourceNo.setVisibility(View.GONE);
+        }
+        else
+        {
+            pvHolder.textViewSourceNo.setVisibility(View.VISIBLE);
+            pvHolder.textViewSourceNo.setText(sourceNoStr);
+        }
+
+        if (currentIntakeorderMATSummaryLine.getBinCodeHandledStr().isEmpty()) {
+            pvHolder.textViewBinCode.setText(currentIntakeorderMATSummaryLine.getBinCodeStr());
+        }
+        else {
+            pvHolder.textViewBinCode.setText(currentIntakeorderMATSummaryLine.getBinCodeHandledStr());
+        }
+
         pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
 
         //Start On Click Listener
@@ -156,7 +175,8 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
         if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
             IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-            intakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+            intakeorderLinesActivity.pSetToolBarTitleWithCounters( cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+            intakeorderLinesActivity.pShowData(this.localIntakeorderMATSummaryLinesObl);
         }
 
     }
@@ -167,7 +187,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
         if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
             IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-            intakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+            intakeorderLinesActivity.pSetToolBarTitleWithCounters(cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + " " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
             intakeorderLinesActivity.pShowData(this.localIntakeorderMATSummaryLinesObl);
         }
     }
@@ -181,13 +201,21 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
         }
 
+        if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
+
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+
+
         if (this.localIntakeorderMATSummaryLinesObl.size() == 1 && pvScannedBln) {
-            if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
-                IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+
                 intakeorderLinesActivity.pIntakelineSelected(this.localIntakeorderMATSummaryLinesObl.get(0));
                 intakeorderLinesActivity.pStartLine();
             }
+        else{
+            intakeorderLinesActivity.pShowData(this.localIntakeorderMATSummaryLinesObl);
         }
+        }
+
 
     }
 

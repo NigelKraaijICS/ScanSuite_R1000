@@ -102,7 +102,10 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+
+        if (cAppExtension.activity instanceof  MoveorderSelectActivity) {
+            cBarcodeScan.pUnregisterBarcodeReceiver();
+        }
     }
 
     @Override
@@ -145,8 +148,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         super.onStop();
         finish();
     }
-
-
 
     //End Region Default Methods
 
@@ -272,7 +273,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    public  void pMoveorderSelected(cMoveorder pvMoveorder) {
+    public void pMoveorderSelected(cMoveorder pvMoveorder) {
 
         if (!this.mCheckOrderIsLockableBln(pvMoveorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
@@ -380,7 +381,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return result;
         }
 
-        // Get all line barcodes, if webservice error then stop
+        // Get all barcodes, if webservice error then stop
         if (!cMoveorder.currentMoveOrder.pGetLineBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
@@ -792,9 +793,9 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-            if (!cSetting.MOVE_AUTO_CREATE_ORDER_MV()) {
-                return;
-            }
+        if (!cSetting.MOVE_AUTO_CREATE_ORDER_MV()) {
+            return;
+        }
 
             this.mShowCreateMoveActivity();
 

@@ -1,32 +1,34 @@
-package nl.icsvertex.scansuite.Fragments.Returns;
+package nl.icsvertex.scansuite.Activities.Returns;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Objects;
 
-import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cText;
@@ -36,6 +38,7 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
@@ -43,12 +46,12 @@ import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLineViewModel;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
-import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.R;
 
-public class ReturnArticleDetailFragment extends DialogFragment implements iICSDefaultFragment {
+public class ReturnArticleDetailActivity extends AppCompatActivity implements iICSDefaultActivity {
 
 
     //Region Private Properties
@@ -90,7 +93,6 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
     private ImageView imageButtonDone;
 
     private ImageButton imageButtonBarcode;
-    private static DialogFragment dialogFragment;
 
     private cReturnorderLineViewModel getReturnorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderLineViewModel.class);
@@ -99,7 +101,7 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
     //End Region Private Properties
 
     //Region Constructor
-    public ReturnArticleDetailFragment() {
+    public ReturnArticleDetailActivity() {
 
     }
 
@@ -108,97 +110,128 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
     //Region Default Methods
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_returnarticle_detail, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        cAppExtension.dialogFragment = this;
-        ReturnArticleDetailFragment.dialogFragment = this;
-        this.mFragmentInitialize();
+    protected void onCreate(Bundle pvSavedInstanceState) {
+        super.onCreate(pvSavedInstanceState);
+        setContentView(R.layout.activity_returnarticle_detail);
+        this.mActivityInitialize();
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        cBarcodeScan.pUnregisterBarcodeReceiver();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
-
-        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
-        cUserInterface.pEnableScanner();
+        cBarcodeScan.pRegisterBarcodeReceiver();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            this.mShowAcceptFragment();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        mShowAcceptFragment();
+    }
+
 
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
 
     @Override
-    public void mFragmentInitialize() {
+    public void mActivityInitialize() {
+        this.mSetAppExtensions();
         this.mFindViews();
+        this.mSetToolbar(getResources().getString(R.string.screentitle_return));
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.mSetToolbar();
+        this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver();
+    }
+
+    @Override
+    public void mSetAppExtensions() {
+        cAppExtension.context = this;
+        cAppExtension.fragmentActivity = this;
+        cAppExtension.activity = this;
+        cAppExtension.fragmentManager = getSupportFragmentManager();
     }
 
     @Override
     public void mFindViews() {
 
-        if (getView() != null) {
-            this.toolbarImage = getView().findViewById(R.id.toolbarImage);
-            this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
-            this.toolbarSubtext = getView().findViewById(R.id.toolbarSubtext);
 
-            this.articleThumbImageView = getView().findViewById(R.id.articleThumbImageView);
-            this.binText = getView().findViewById(R.id.binText);
-            this.quantityText = getView().findViewById(R.id.quantityText);
-            this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
-            this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
-            this.imageButtonBarcode = getView().findViewById(R.id.imageButtonBarcode);
+            this.toolbarImage = findViewById(R.id.toolbarImage);
+            this.toolbarTitle = findViewById(R.id.toolbarTitle);
+            this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-            this.reasonText = getView().findViewById(R.id.reasonText);
+            this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
+            this.binText = findViewById(R.id.binText);
+            this.quantityText = findViewById(R.id.quantityText);
+            this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
+            this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
+            this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
+
+            this.reasonText = findViewById(R.id.reasonText);
             this.reasonText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.reasonText.setSingleLine(true);
             this.reasonText.setMarqueeRepeatLimit(5);
             this.reasonText.setSelected(true);
-            this.imageButtonReason = getView().findViewById(R.id.imageButtonReason);
+            this.imageButtonReason = findViewById(R.id.imageButtonReason);
 
-            this.articleDescriptionText = getView().findViewById(R.id.articleDescriptionText);
-            this.articleDescription2Text = getView().findViewById(R.id.articleDescription2Text);
-            this.articleItemText = getView().findViewById(R.id.articleItemText);
-            this.articleBarcodeText = getView().findViewById(R.id.articleBarcodeText);
-            this.articleUnitOfMeasureText = getView().findViewById(R.id.articleUnitOfMeasureText);
-            this.articleVendorItemText = getView().findViewById(R.id.articleVendorItemText);
+            this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
+            this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
+            this.articleItemText = findViewById(R.id.articleItemText);
+            this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
+            this.articleUnitOfMeasureText = findViewById(R.id.articleUnitOfMeasureText);
+            this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
 
-            this.genericItemExtraField1Text = getView().findViewById(R.id.genericItemExtraField1Text);
-            this.genericItemExtraField2Text = getView().findViewById(R.id.genericItemExtraField2Text);
-            this.genericItemExtraField3Text = getView().findViewById(R.id.genericItemExtraField3Text);
-            this.genericItemExtraField4Text = getView().findViewById(R.id.genericItemExtraField4Text);
-            this.genericItemExtraField5Text = getView().findViewById(R.id.genericItemExtraField5Text);
-            this.genericItemExtraField6Text = getView().findViewById(R.id.genericItemExtraField6Text);
-            this.genericItemExtraField7Text = getView().findViewById(R.id.genericItemExtraField7Text);
-            this.genericItemExtraField8Text = getView().findViewById(R.id.genericItemExtraField8Text);
+            this.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
+            this.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
+            this.genericItemExtraField3Text = findViewById(R.id.genericItemExtraField3Text);
+            this.genericItemExtraField4Text = findViewById(R.id.genericItemExtraField4Text);
+            this.genericItemExtraField5Text = findViewById(R.id.genericItemExtraField5Text);
+            this.genericItemExtraField6Text = findViewById(R.id.genericItemExtraField6Text);
+            this.genericItemExtraField7Text = findViewById(R.id.genericItemExtraField7Text);
+            this.genericItemExtraField8Text = findViewById(R.id.genericItemExtraField8Text);
 
-            this.imageButtonDone = getView().findViewById(R.id.imageButtonDone);
+            this.imageButtonDone = findViewById(R.id.imageButtonDone);
+
+
+    }
+
+    @Override
+    public void mSetToolbar(String pvScreenTitle) {
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_return);
+        this.toolbarTitle.setText(pvScreenTitle);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        this.toolbarSubtext.setText(cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr());
 
     }
 
@@ -213,7 +246,6 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
         this.returnCounterPlusHelperInt = 0;
         this.returnCounterMinusHelperInt = 0;
-        this.toolbarSubtext.setText(cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr());
 
         this.articleDescriptionText.setText(cReturnorderLine.currentReturnOrderLine.getDescriptionStr());
         this.articleDescription2Text.setText(cReturnorderLine.currentReturnOrderLine.getDescription2Str());
@@ -271,6 +303,11 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             this.mSetEditorActionListener();
             this.mSetImageButtonBarcodeListener();
         }
+    }
+
+    @Override
+    public void mInitScreen() {
+
     }
 
     //End Region iICSDefaultActivity defaults
@@ -370,11 +407,11 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
                     return;
                 }
 
-                //Close this fragment, we are done here
-                this.mHandleDone();
+                //Save scan in current document,
+                cReturnorderDocument.currentReturnOrderDocument.barcodeScanToHandle = pvBarcodeScan;
 
-                //Handle scan in BIN activity,
-                this.pHandleScan(pvBarcodeScan);
+                //Close this activity, we are done here
+                this.mHandleDone();
                 return;
             }
 
@@ -408,14 +445,17 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
     }
 
-    public void pHandleFragmentDismissed(){
-        cAppExtension.dialogFragment = dialogFragment;
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
-    }
-
     public void pSetReason(){
         this.reasonText.setText(cBranchReason.currentBranchReason.getDescriptionStr());
         cReturnorderLine.currentReturnOrderLine.retourRedenStr = cBranchReason.currentBranchReason.getReasonStr();
+    }
+
+    public void pHandleFragmentDismissed(){
+        cBarcodeScan.pRegisterBarcodeReceiver();
+    }
+
+    public  void pDone(){
+        mHandleDone();
     }
 
     //End Region Public Methods
@@ -457,23 +497,6 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             }
         }
         return  false;
-    }
-
-
-    private void mSetToolbar() {
-
-        this.toolbarTitle.setText(cAppExtension.activity.getString(R.string.message_scan_article));
-        this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        this.toolbarTitle.setSingleLine(true);
-        this.toolbarTitle.setMarqueeRepeatLimit(5);
-        this.toolbarTitle.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                toolbarTitle.setSelected(true);
-            }
-        },1500);
-
-        this.toolbarImage.setImageResource(R.drawable.ic_info);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -734,8 +757,6 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
 
     private void mHandleDone() {
 
-        cAppExtension.dialogFragment = dialogFragment;
-
         if (cBranchReason.currentBranchReason == null){
             cUserInterface.pDoNope(imageButtonReason, true, true);
             cUserInterface.pShowToastMessage(cAppExtension.activity.getString(R.string.choose_reason), null);
@@ -767,15 +788,24 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
             return;
         }
 
-        if (cAppExtension.activity instanceof  ReturnorderDocumentActivity) {
-            ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity) cAppExtension.activity;
             //Change quantityDbl handled in database
             cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
-            returnorderDocumentActivity.pLineHandled();
-            returnorderDocumentActivity.pHandleFragmentDismissed();
+            this.mLineHandled();
             cUserInterface.pHideGettingData();
-            cAppExtension.dialogFragment.dismiss();
-        }
+            this.mGoBackToDocumentActivity();
+    }
+
+    private void mLineHandled() {
+
+        //We returned here, so we are not busy anymore
+        ReturnorderDocumentActivity.busyBln = false;
+
+        //Reset currents
+        cReturnorderLine.currentReturnOrderLine = null;
+        cReturnorderBarcode.currentReturnOrderBarcode = null;
+        cReturnorderLineBarcode.currentreturnorderLineBarcode = null;
+        cBranchReason.currentBranchReason = null;
+
     }
 
     private Runnable mMinusAction = new Runnable() {
@@ -851,5 +881,37 @@ public class ReturnArticleDetailFragment extends DialogFragment implements iICSD
         barcodeFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BARCODEFRAGMENT_TAG);
     }
 
-     //End Region Private Methods
+    private  void mGoBackToDocumentActivity() {
+
+        //Reset current branch
+
+        Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentActivity.class);
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
+    }
+
+    private void mShowAcceptFragment(){
+        boolean ignoreAccept = false;
+
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderbusy_header),
+                cAppExtension.activity.getString(R.string.message_orderbusy_text),
+                cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line),ignoreAccept);
+        acceptRejectFragment.setCancelable(true);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // show my popup
+                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
+            }
+        });
+    }
+
+
+
+
+    //End Region Private Methods
 }

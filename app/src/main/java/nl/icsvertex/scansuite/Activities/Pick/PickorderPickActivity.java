@@ -26,6 +26,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -54,7 +55,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     //Region Private Properties
 
 
-    private static Boolean articleScannedLastBln;
+    private static boolean articleScannedLastBln;
     private static boolean destionationScannedBln;
 
     private int pickCounterMinusHelperInt;
@@ -631,9 +632,19 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mHandlePVScan(cBarcodeScan pvBarcodeScan) {
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
-            this.mHandlePVArticleScanned(pvBarcodeScan);
-            return;
+        boolean isSalesorderOrPickcartboxBln = false;
+
+        //This barcode matches multiple lay-outs so this can be a BIN or an article
+        if (Objects.requireNonNull(cBarcodeLayout.pGetBarcodeLayoutByBarcodeObl(pvBarcodeScan.getBarcodeOriginalStr())).size() > 1)
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER) || cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.PICKCARTBOX)) {
+                isSalesorderOrPickcartboxBln = true;
+            }
+
+        if (!isSalesorderOrPickcartboxBln) {
+            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+                this.mHandlePVArticleScanned(pvBarcodeScan);
+                return;
+            }
         }
 
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER) || cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.PICKCARTBOX) ) {
@@ -641,7 +652,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode),"",true,true);
+        cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode),"",true,true);
+
 
     }
 
@@ -929,7 +941,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
             //todo: check this
 //            if (incompleteBln) {
-//                PickorderPickActivity.imageButtonDone.setVisibility(View.INVISIBLE);
+//                PickorderPickActivity.imageButtonDone.setVisibility(View.INVISIBLE);+
 //            }
 
             //todo: check if this code is still correct

@@ -26,8 +26,8 @@ public interface iMoveorderLineDao {
     @Query("SELECT * FROM " + cDatabase.TABLENAME_MOVEORDERLINE)
     List<cMoveorderLineEntity> getAll();
 
-    @Query("SELECT * FROM " + cDatabase.TABLENAME_MOVEORDERLINE + " WHERE " + cDatabase.BINCODE_NAMESTR + " =:pvBincode " )
-    List<cMoveorderLineEntity> getMoveorderLineForBincode(String pvBincode);
+    @Query("SELECT * FROM " + cDatabase.TABLENAME_MOVEORDERLINE + " WHERE " + cDatabase.ACTIONTYPECODE_NAMESTR + " =:pvActionTypeCodeStr " +  " ORDER BY SortingSequenceNo DESC")
+    List<cMoveorderLineEntity> getLines(String pvActionTypeCodeStr);
 
       @Query("SELECT SUM (QuantityHandled) FROM " + cDatabase.TABLENAME_MOVEORDERLINE + " WHERE " + cDatabase.BINCODE_NAMESTR + " =:pvBincode " )
     Double getCountForBincodeDbl(String pvBincode);

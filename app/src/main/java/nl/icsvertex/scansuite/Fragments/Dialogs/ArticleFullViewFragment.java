@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cICSImageZoomView;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -44,7 +45,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     private ConstraintLayout articleFullViewContainer;
     private TextView articleFullItemNoTextView;
     private TextView articleFullVariantTextView;
-    private ImageView articleFullImageView;
+    private cICSImageZoomView articleFullImageView;
     //End Region Private Properties
 
 
@@ -170,7 +171,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
             this.articleFullImageView.setImageBitmap(decodedByte);
         }
         else {
-            this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_no_image_lightgrey_24dp));
+            this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_no_image_lightgrey_24dp));
         }
     }
 
@@ -229,7 +230,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     }
 
     private void mDismissListener() {
-         Objects.requireNonNull(getView()).setOnClickListener(new View.OnClickListener() {
+         requireView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();

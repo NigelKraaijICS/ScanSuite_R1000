@@ -119,6 +119,22 @@ public class cPickorderLineRepository {
         return webResultWrs;
     }
 
+    public cWebresult pPickLineSortedViaWebserviceWrs() {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mPickorderLineSortedViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     public cWebresult pResetViaWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
@@ -316,6 +332,73 @@ public class cPickorderLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mPickorderLineSortedViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENOPLACE;
+                l_PropertyInfo4Pin.setValue(cPickorderLine.currentPickOrderLine.getLineNoInt());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_HANDLEDTIMESTAMP;
+                l_PropertyInfo5Pin.setValue(cPickorderLine.currentPickOrderLine.getTakenTimeStampStr());
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_NUMBER;
+                l_PropertyInfo6Pin.setValue(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
+                l_PropertyInfo7Pin.setValue(cPickorderLine.currentPickOrderLine.handledBarcodesObl().get(0).getBarcodeStr());
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+
+                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
+                l_PropertyInfo8Pin.setValue(null);
+                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
+                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
+                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_CONTAINERSLIST;
+                l_PropertyInfo9Pin.setValue(null);
+                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
+
+                PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
+                l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION;
+                l_PropertyInfo10Pin.setValue(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
+                l_PropertyInfoObl.add(l_PropertyInfo10Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_SORTORDERLINE_HANDLED, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

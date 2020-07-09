@@ -36,6 +36,20 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/colorLogoRed</item>
     </style>
+    <style name="header_actionview">
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/colorLogoRed</item>
+    </style>
+    <style name="header_actionview_title">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:color">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
     <style name="header_navigationview_logo">
         <item name="android:layout_height">@dimen/bottombutton_height</item>
         <item name="android:layout_width">@dimen/bottombutton_width</item>
@@ -387,7 +401,6 @@
     <style name="imageviewToolbar">
         <item name="android:layout_height">@dimen/imageview_toolbar_height</item>
         <item name="android:layout_width">@dimen/imageview_toolbar_width</item>
-<!--        <item name="android:layout_margin">@dimen/default_margin</item>-->
         <item name="android:padding">@dimen/default_padding</item>
     </style>
 
@@ -661,7 +674,7 @@
         <item name="android:background">@drawable/button_pill</item>
         <item name="android:padding">@dimen/default_padding</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:backgroundTint">@color/colorNeutral</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorNeutral</item>
     </style>
     <style name="languageText">
         <item name="android:layout_height">wrap_content</item>

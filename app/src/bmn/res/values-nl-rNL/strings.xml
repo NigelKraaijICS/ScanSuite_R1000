@@ -382,7 +382,7 @@
     <string name="dialog_error">Fout informatie</string>
     <string name="add_bin_header_default">Locatie toevoegen</string>
     <string name="button_add_bin">Toevoegen</string>
-    <string name="button_create_inventory">Aanmaken</string>
+    <string name="button_create_inventory">Ophalen</string>
     <string name="button_new_inventoryorder">Nieuw</string>
     <string name="createinventory_header_default">Nieuwe telling aanmaken</string>
     <string name="createinventory_text_default">Wilt u een nieuwe telling aanmaken?</string>
@@ -586,4 +586,5 @@
     <string name="message_extra_pieces_exceeded_header">Grote afwijking</string>
     <string name="message_orderlinebusy_text">Regel nog in behandeling, weet u zeker dat u de huidige ingevoerde aantallen wilt laten vervallen?</string>
     <string name="message_close_packaging_question">Emballage verzenden?</string>
+
 </resources>

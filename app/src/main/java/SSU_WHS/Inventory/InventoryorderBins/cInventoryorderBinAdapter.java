@@ -49,7 +49,7 @@ public class cInventoryorderBinAdapter extends RecyclerView.Adapter<cInventoryor
             this.textViewBin.setSelected(true);
             this.textViewCounted = pvItemView.findViewById(R.id.textViewCounted);
             this.textViewLines = pvItemView.findViewById(R.id.textViewLines);
-            this.imageBin = pvItemView.findViewById(R.id.imageTime);
+            this.imageBin = pvItemView.findViewById(R.id.imageBin);
             this.imageChevronDown  = pvItemView.findViewById(R.id.imageChevronDown);
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
             this.viewForeground = pvItemView.findViewById(R.id.view_foreground);

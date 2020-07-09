@@ -15,7 +15,9 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_RELEASELICENSE = "p_LicentieReleaseJsonStr";
 
     public static String WEBMETHOD_GETUSERS = "p_GebruikersGetJsonStr";
+    public static String WEBMETHOD_GETSCANNERS = "p_ScannersGetJsonStr";
     public static String WEBMETHOD_GETWORKPLACES = "p_MagazijnWerkplekkenGetJsonStr";
+    public static String WEBMETHOD_GETBINARTICLES = "p_MagazijnlocatieArtikelenGetJsonStr";
     public static String WEBMETHOD_GETBRANCHES = "p_VestigingGetJsonStr";
     public static String WEBMETHOD_GETBRANCHESFORUSER = "p_GebruikerVestigingenGetJsonStr";
     public static String WEBMETHOD_GETPROCESSINGORPARKEDORDERS = "p_PickordersInBehandlingOfInWachtJsonStr";
@@ -131,6 +133,7 @@ public class cWebserviceDefinitions {
 
 
 
+
        //endregion Methods
 
     //region Properties
@@ -149,6 +152,7 @@ public class cWebserviceDefinitions {
 
     public static String WEBPROPERTY_ACTIONTYPECODE = "pv_ActiontypecodeStr";
     public static String WEBPROPERTY_SCANNER = "pv_ScannerStr";
+    public static String WEBPROPERTY_BATCHBINCODE = "pv_BatchBinCodeStr";
     public static String WEBPROPERTY_SCANNERID = "pv_ScannerIdStr";
     public static String WEBPROPERTY_DEVICEBRAND = "pv_DeviceBrandStr";
     public static String WEBPROPERTY_DEVICETYPE = "pv_DeviceTypeStr";
@@ -189,6 +193,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_ITEMSLIST = "pv_ItemsObl";
     public static String WEBPROPERTY_PASSWORD = "pv_PasswordStr";
     public static String WEBPROPERTY_BINCODE = "pv_BinCodeStr";
+    public static String WEBPROPERTY_BINCODENL = "pv_MagazijnlocatieStr";
     public static String WEBPROPERTY_BINCODETINY = "pv_BincodeStr";
     public static String WEBPROPERTY_BINCODEHANDLED = "pv_BincodeHandledStr";
     public static String WEBPROPERTY_STOCKOWNER = "pv_StockOwnerStr";

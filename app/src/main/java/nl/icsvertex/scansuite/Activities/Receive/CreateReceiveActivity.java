@@ -30,13 +30,13 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
+import SSU_WHS.Basics.Scanners.cScanner;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
-import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
@@ -548,11 +548,25 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
             return result;
         }
 
-        //Get all linesInt for current order, if size = 0 or webservice error then stop
-        if (!cIntakeorder.currentIntakeOrder.pGetReceiveLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
-            return result;
+        int indexInt = 0;
+
+        for (cScanner scanner : cScanner.allScannerObl ) {
+
+            boolean refreshBln = false;
+
+            if (indexInt == 0) {
+                refreshBln = true;
+            }
+
+            //Get all linesInt for current order, if size = 0 or webservice error then stop
+            if (!cIntakeorder.currentIntakeOrder.pGetReceiveLinesViaWebserviceBln(refreshBln, scanner.getScannerStr()) ) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
+                return result;
+            }
+
+            indexInt += 1;
+
         }
 
         // Get all barcodes, if size =0 or webservice error then stop

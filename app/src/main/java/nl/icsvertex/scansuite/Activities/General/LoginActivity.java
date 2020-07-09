@@ -107,10 +107,9 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         this.mSetAppExtensions();
         this.mFindViews();
         this.mSetToolbar(getResources().getString(R.string.screentitle_login));
-        this.mFieldsInitialize();
         this.mSetListeners();
+        this.mFieldsInitialize();
         this.mInitScreen();
-
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 

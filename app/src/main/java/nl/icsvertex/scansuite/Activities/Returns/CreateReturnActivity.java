@@ -19,16 +19,23 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 
+import java.util.List;
+
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
+import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.Comments.cComment;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Return.ReturnOrder.cReturnorder;
+import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -341,6 +348,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         this.createReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
+
                 if (editTextDocument.getText().toString().isEmpty()){
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_document),null);
                     return;
@@ -350,10 +358,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
                     return;
                 }
 
-                if (cAppExtension.activity instanceof  ReturnorderSelectActivity) {
-                    ReturnorderSelectActivity returnorderSelectActivity = (ReturnorderSelectActivity)cAppExtension.activity;
-                    returnorderSelectActivity.pCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
-                }
+                pCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
 
             }
         });
@@ -423,6 +428,180 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
 
     }
+
+    public  void pCreateOrder(final String pvDocumentStr, final Boolean pvMultipleDocumentsBln, final String pvBincodeStr){
+
+        // Show that we are getting data
+        cUserInterface.pShowGettingData();
+
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleCreateOrder(pvDocumentStr, pvMultipleDocumentsBln, pvBincodeStr);
+            }
+        }).start();
+
+    }
+
+
+    //End Region Public Methods
+
+    // Region Private Methods
+
+    private  void mHandleCreateOrder(String pvDocumentstr, Boolean pvMultipleDocumentsBln, String pvBincodeStr){
+
+        cResult hulpResult;
+
+        //Try to create the order
+        if (!this.mTryToCreateOrderBln(pvDocumentstr, pvMultipleDocumentsBln, pvBincodeStr)) {
+            this.mStepFailed(cAppExtension.activity.getString(R.string.message_couldnt_create_order));
+            return;
+        }
+
+        //Try to lock the order
+        if (!this.mTryToLockOrderBln()) {
+            return;
+        }
+
+        //Delete the detail, so we can get them from the webservice
+        if (!cReturnorder.currentReturnOrder.pDeleteDetailsBln()) {
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            return;
+        }
+
+        hulpResult = this.mGetOrderDetailsRst();
+        if (!hulpResult.resultBln) {
+            this.mStepFailed(hulpResult.messagesStr());
+            return;
+        }
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // If everything went well, then start Lines Activity
+                mShowReturnorderDocumentsActivity();
+            }
+        });
+
+    }
+
+    private  boolean mTryToCreateOrderBln(String pvDocumentstr, Boolean pvMultipleDocumentsBln, String pvBincodeStr){
+        return  cReturnorder.pCreateReturnOrderViaWebserviceBln(pvDocumentstr, pvMultipleDocumentsBln, pvBincodeStr);
+    }
+
+    private  void mStepFailed(String pvErrorMessageStr){
+        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cReturnorder.currentReturnOrder.getOrderNumberStr(), true, true );
+        cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return);
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        cReturnorder.currentReturnOrder = null;
+    }
+
+    private boolean mTryToLockOrderBln(){
+
+        cResult hulpResult;
+        hulpResult = cReturnorder.currentReturnOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return);
+
+        //Everything was fine, so we are done
+        if (hulpResult.resultBln) {
+            return true;
+        }
+
+        //Something went wrong, but no further actions are needed, so ony show reason of failure
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
+            this.mStepFailed(hulpResult.messagesStr());
+            return  false;
+        }
+
+        //Something went wrong, the order has been deleted, so show comments and refresh
+        if ( hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
+                hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
+
+
+            //If we got any comments, show them
+            if (cReturnorder.currentReturnOrder.pFeedbackCommentObl() != null && cReturnorder.currentReturnOrder.pFeedbackCommentObl().size() > 0 ) {
+                //Process comments from webresult
+                this.mShowCommentsFragment(cReturnorder.currentReturnOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+            }
+
+            return  false;
+        }
+
+
+        return true;
+
+    }
+
+    private cResult mGetOrderDetailsRst(){
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all linesInt for current order, if size = 0 or webservice error then stop
+        if (!cReturnorder.currentReturnOrder.pGetLinesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!cReturnorder.currentReturnOrder.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+        //Get all barcodes
+        if (!cReturnorder.currentReturnOrder.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+        //Get all ReturnHandledlines
+        if (!cReturnorder.currentReturnOrder.pGetHandledLinesViaWebserviceBln(true)){
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
+            return result;
+        }
+
+        //Get all Returnlinebarcodes
+        if (!cReturnorder.currentReturnOrder.pGetLineBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
+            return result;
+        }
+        if(!cReturnorder.currentReturnOrder.pDocumentsViaWebserviceBln(true)){
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnordersdocuments_failed));
+            return result;
+        }
+
+        return  result;
+    }
+
+    private void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(cPublicDefinitions.KEY_COMMENTHEADER, pvTitleStr);
+
+        CommentFragment commentFragment = new CommentFragment(pvDataObl);
+        commentFragment.setArguments(bundle);
+
+        commentFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.COMMENTFRAGMENT_TAG);
+        cUserInterface.pPlaySound(R.raw.message, 0);
+    }
+
+    private void mShowReturnorderDocumentsActivity() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentsActivity.class);
+
+            cAppExtension.activity.startActivity(intent);
+            cAppExtension.activity.finish();
+    }
+
     //End Region Private Methods
 
 

@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Fragments.Move.moveLinesPlaceFragment;
-import nl.icsvertex.scansuite.Fragments.Move.moveLinesTakeFragment;
+import nl.icsvertex.scansuite.Fragments.Move.MoveLinesPlaceFragment;
+import nl.icsvertex.scansuite.Fragments.Move.MoveLinesTakeFragment;
 
 
 public class MoveLinesPagerAdapter extends FragmentPagerAdapter {
@@ -25,9 +25,9 @@ public class MoveLinesPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int pvPositionInt) {
         switch(pvPositionInt) {
             case 0:
-                return new moveLinesTakeFragment();
+                return new MoveLinesTakeFragment();
             case 1:
-                return new moveLinesPlaceFragment();
+                return new MoveLinesPlaceFragment();
             default:
                 return cAppExtension.dialogFragment;
         }

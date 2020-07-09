@@ -162,8 +162,12 @@ public class cReceiveorderSummaryLine {
         if (this.receiveLinesObl == null || this.receiveLinesObl.size() == 0) {
             return resultObl;
         }
+        for (cReceiveorderLine receiveorderLine : this.receiveLinesObl) {
+            if (receiveorderLine.quantityHandledDbl > 0 ) {
+                resultObl.add((receiveorderLine));
+            }
+        }
 
-        resultObl.addAll(this.receiveLinesObl);
         Collections.reverse(resultObl);
         return  resultObl;
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Webservice.cWebresult;
 
@@ -26,25 +27,13 @@ public class cMoveorderLineViewModel extends AndroidViewModel {
     public void delete(cMoveorderLineEntity pvMoveorderLineEntity) {this.Repository.delete(pvMoveorderLineEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
-    public boolean pUpdateQuantityHandledBln(Double pvQuantityHandledDbl) {return this.Repository.pUpdateQuantityHandledBln(pvQuantityHandledDbl);}
-    public boolean pUpdateLocalStatusBln(Integer pvNewStatusInt) {return this.Repository.pUpdateLocalStatusBln(pvNewStatusInt);}
-    public boolean pUpdateHandledTimeStampBln(String pvHandledTimeStampStr) {return this.Repository.pUpdateLocalHandledTimeStampBln(pvHandledTimeStampStr);}
+    public cWebresult pAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
+    public cWebresult pAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan);}
+    public cWebresult pMoveItemTakeHandledViaWebserviceWrs(List<cMoveorderBarcode> pvScannedBarcodesObl) {return this.Repository.pMoveItemTakeHandledViaWebserviceWrs(pvScannedBarcodesObl);}
+    public cWebresult pMoveItemPlaceHandledViaWebserviceWrs(List<cMoveorderBarcode> pvScannedBarcodesObl) {return this.Repository.pMoveItemPlaceHandledViaWebserviceWrs(pvScannedBarcodesObl);}
 
-    public cWebresult pMoveLineHandledTakeMTViaWebserviceWrs() {return this.Repository.pMoveLineHandledTakeMTViaWebserviceWrs();}
-    public cWebresult pMoveLineHandledPlaceMTViaWebserviceWrs() {return this.Repository.pMoveLineHandledPlaceMTViaWebserviceWrs();}
+    public cWebresult pResetLineViaWebserviceWrs() {return  this.Repository.pResetLineViaWebserviceWrs();}
 
-    public cWebresult pMoveNewItemHandledViaWebserviceWrs(String pvBinCodeStr, List<cMoveorderBarcode> pvScannedBarcodesObl, String actionType) {return this.Repository.pMoveNewItemHandledViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl, actionType );}
-    public cWebresult pMoveItemHandledViaWebserviceWrs() {return this.Repository.pMoveItemHandledViaWebserviceWrs();}
-
-    public cWebresult pMoveItemPlaceHandledViaWebserviceWrs() {return this.Repository.pMoveItemPlaceHandledViaWebserviceWrs();}
-
-    public List<cMoveorderLineEntity> pGetLinesFromDatabaseObl(String pvBincode){return  this.Repository.pGetMoveorderLinesForBincodeFromDatabaseObl(pvBincode);}
-    public Double pGetTotalCountDbl(){return  this.Repository.pGetTotalCountDbl();}
-    public Double pGetCountForBinCodeDbl(String pvBincode){return  this.Repository.pGetCountForBinCodeDbl(pvBincode);}
-    public cWebresult pResetLineViaWebserviceWrs (){return this.Repository.pResetLineViaWebserviceWrs();}
-    public Boolean pUpdateQuantityBln(){return  this.Repository.pUpdateQuantityBln();}
-
-    public List<cMoveorderLineEntity> pGetLinesForBinItemNoVariantCodeFromDatabaseObl() {return this.Repository.pGetLinesForBinItemNoVariantCodeFromDatabaseObl();}
 
 }
 

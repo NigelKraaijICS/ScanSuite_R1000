@@ -7,6 +7,7 @@ import java.util.Date;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 
 public class cArticleBarcode {
 
@@ -83,6 +84,17 @@ public class cArticleBarcode {
         this.quantityPerUnitOfMeasureDbl =  cText.pStringToDoubleDbl(this.articleBarcodeEntity.getQtyPerUnitOfMeasureStr());
         this.unitOfMeasureStr = this.articleBarcodeEntity.getUnitOfMeasureStr();
         this.dataTimeStampDat = cText.pStringToDateStr(this.articleBarcodeEntity.getDateTimeStampStr(),"YYYY-MM-dd");
+    }
+
+    public cArticleBarcode(cMoveorderBarcode pvMoveorderBarcode) {
+        this.itemNoStr = pvMoveorderBarcode.getItemNoStr();
+        this.variantCodeStr = pvMoveorderBarcode.getVariantCodeStr();
+        this.barcodeStr = pvMoveorderBarcode.getBarcodeStr();
+        this.barcodeTypeInt =  cText.pStringToIntegerInt(pvMoveorderBarcode.getBarcodeTypesStr());
+        this.isUniqueBarcodeBln =  pvMoveorderBarcode.getIsUniqueBarcodeBln();
+        this.quantityPerUnitOfMeasureDbl =  pvMoveorderBarcode.getQuantityPerUnitOfMeasureDbl();
+        this.unitOfMeasureStr = pvMoveorderBarcode.getUnitOfMeasureStr();
+        this.dataTimeStampDat = null;
     }
 
     //End Region Constructor

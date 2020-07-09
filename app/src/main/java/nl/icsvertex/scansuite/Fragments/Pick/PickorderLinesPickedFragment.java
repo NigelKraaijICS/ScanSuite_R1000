@@ -246,8 +246,6 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         });
     }
 
-
-
     private void mSetRecyclerOnScrollListener() {
         this.recyclerViewPickorderLinesPicked.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

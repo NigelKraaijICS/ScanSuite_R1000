@@ -416,26 +416,28 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             }
         }
 
-         //Pick Transfer
-        if (cPickorder.currentPickOrder.isTransferBln()) {
-            if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
-               cPickorder.currentPickOrder.isPickTransferAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
-                this.mShowWorkplaceFragment();
-                return;
-            }
-        }
-
-        else {
-
-            //Pick Sales
-
-            //Check if we need to select a workplaceStr
-            if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
-                cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
-                this.mShowWorkplaceFragment();
-                return;
+        if (cPickorder.currentPickOrder.pQuantityHandledDbl() > 0 ) {
+            //Pick Transfer
+            if (cPickorder.currentPickOrder.isTransferBln()) {
+                if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
+                        cPickorder.currentPickOrder.isPickTransferAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
+                    this.mShowWorkplaceFragment();
+                    return;
+                }
             }
 
+            else {
+
+                //Pick Sales
+
+                //Check if we need to select a workplaceStr
+                if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
+                        cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
+                    this.mShowWorkplaceFragment();
+                    return;
+                }
+
+            }
         }
 
         this.pClosePickAndDecideNextStep();
@@ -585,6 +587,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
+
+        if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0) {
+            // Show order done fragment
+            this.mShowOrderDoneFragment(false);
+            return;
+        }
+
         // If there is no next step, then we are done
         if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isBPBln() && !cPickorder.currentPickOrder.isBCBln()) {
             if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
@@ -600,7 +609,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //Show Current Location fragment
         if (cPickorder.currentPickOrder.isPickActivityBinRequiredBln() &&
-                cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+            cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
             // Show order done fragment
             this.mShowCurrentLocationFragment();
             return;

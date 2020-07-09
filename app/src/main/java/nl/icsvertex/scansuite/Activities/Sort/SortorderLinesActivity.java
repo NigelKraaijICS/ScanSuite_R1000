@@ -581,7 +581,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             cPickorderLine.currentPickOrderLine = pickorderLine;
 
             //Try to send the line
-            hulpBln = cPickorderLine.currentPickOrderLine .pHandledBln();
+            hulpBln = cPickorderLine.currentPickOrderLine .pSortedBln();
             if ( !hulpBln) {
                 break;
             }

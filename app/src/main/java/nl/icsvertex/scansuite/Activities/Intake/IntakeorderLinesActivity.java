@@ -65,7 +65,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     private RecyclerView recyclerViewLines;
 
     private Switch switchDeviations;
-    public Boolean showDefectsBln = false;
 
     private ImageView imageButtonCloseOrder;
 
@@ -97,6 +96,9 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         //Set listeners here, so click listeners only work after activity is shown
         this.mSetListeners();
+
+        this.switchDeviations.setChecked(cIntakeorder.currentIntakeOrder.showDeviationsBln);
+
 
     }
 
@@ -146,8 +148,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         this.mInitScreen();
 
-        this.pShowData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
-
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
@@ -195,13 +195,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
-
-        if (!this.showDefectsBln) {
-            this.getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
-        } else {
-            this.getIntakeorderMATSummaryLineAdapter().pShowDeviations();
-        }
-
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
 
     }
@@ -257,7 +250,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
             //Clear current barcodeStr
             cIntakeorderBarcode.currentIntakeOrderBarcode = null;
-
             hulpResult = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pSummaryLineBusyRst();
             if (!hulpResult.resultBln) {
                 this.mStepFailed(hulpResult.messagesStr());
@@ -464,11 +456,11 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
 
                 if (switchDeviations.isChecked()) {
-                    showDefectsBln = true;
+                    cIntakeorder.currentIntakeOrder.showDeviationsBln = true;
                     getIntakeorderMATSummaryLineAdapter().pShowDeviations();
                 }
                 else {
-                    showDefectsBln = false;
+                    cIntakeorder.currentIntakeOrder.showDeviationsBln = false;
                     getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
                 }
             }
@@ -608,7 +600,6 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         this.imageViewStart.setVisibility(View.VISIBLE);
 
         //Show the recycler view
-        this.getIntakeorderMATSummaryLineAdapter().pFillData(pvDataObl);
         this.recyclerViewLines.setHasFixedSize(false);
         this.recyclerViewLines.setAdapter( this.getIntakeorderMATSummaryLineAdapter());
         this.recyclerViewLines.setLayoutManager(new LinearLayoutManager(cAppExtension.context));

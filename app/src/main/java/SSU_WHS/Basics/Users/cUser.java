@@ -1,13 +1,13 @@
 package SSU_WHS.Basics.Users;
 
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cProductFlavor;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Authorisations.cAuthorisation;
@@ -17,6 +17,7 @@ import SSU_WHS.Basics.Branches.cBranchViewModel;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.BuildConfig;
 
 public class cUser {
 
@@ -186,10 +187,20 @@ public class cUser {
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cAuthorisation authorisation = new cAuthorisation(jsonObject);
-                authorisation.pInsertInDatabaseBln();
+
                 if(this.autorisationObl == null) {
                     this.autorisationObl =  new ArrayList<>();
                 }
+
+                if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.TCOG.toString())) {
+                        if ((authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK &&
+                             authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK_PV)) {
+                            continue;
+                    }
+                }
+
+                authorisation.pInsertInDatabaseBln();
+
 
                 this.autorisationObl.add((authorisation));
 

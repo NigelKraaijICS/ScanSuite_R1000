@@ -38,7 +38,7 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
 
     //Region Private Properties
 
-    private  ConstraintLayout packingTableView;
+    private  ConstraintLayout showDetailsView;
     private  ConstraintLayout orderDoneView;
     private  RecyclerView recyclerViewSortorderLinesTosort;
 
@@ -109,7 +109,7 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
 
         if (getView() != null) {
             this.recyclerViewSortorderLinesTosort = getView().findViewById(R.id.recyclerViewSortorderLinesTosort);
-            this.packingTableView = getView().findViewById(R.id.packingTableView);
+            this.showDetailsView = getView().findViewById(R.id.showDetailsView);
             this.orderDoneView = getView().findViewById(R.id.orderDoneView);
         }
 
@@ -118,13 +118,7 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
 
     @Override
     public void mFieldsInitialize() {
-
-        if (cSetting.PICK_SELECTEREN_BARCODE()) {
-            this.packingTableView.setVisibility(View.VISIBLE);
-        } else {
-            this.packingTableView.setVisibility(View.INVISIBLE);
-        }
-
+        this.showDetailsView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -133,9 +127,23 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
         this.mSetOrderDoneListener();
     }
 
-
     //End Region iICSDefaultFragment defaults
 
+    //Region Public Methods
+
+    public  void pShowHideDetailButton(){
+
+        if (!cSetting.PICK_SELECTEREN_BARCODE()) {
+            this.showDetailsView.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        this.showDetailsView.setVisibility(View.VISIBLE);
+
+
+    }
+
+    //End Region Public Methods
 
     //Region Private Methods
 
@@ -154,7 +162,7 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
 
     private void mSetPackTableListener() {
 
-        this.packingTableView.setOnClickListener(new View.OnClickListener() {
+        this.showDetailsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

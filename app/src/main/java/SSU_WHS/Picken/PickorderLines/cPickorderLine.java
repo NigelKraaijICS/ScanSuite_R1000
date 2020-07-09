@@ -424,34 +424,36 @@ public class cPickorderLine {
     public boolean pResetBln() {
 
         cWebresult WebResult;
-        WebResult =  this.getPickorderLineViewModel().pResetViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-            this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
-            this.mUpdateQuanitityHandled(0);
+        if (this.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) {
+            WebResult =  this.getPickorderLineViewModel().pResetViaWebserviceWrs();
+            if (!WebResult.getResultBln() || !WebResult.getSuccessBln()) {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINERESET);
+                return  false;
+            }
+        }
 
-            //delete all line barcodes
-            for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
-                    pickorderLineBarcode.pDeleteFromDatabaseBln();
+        this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
+        this.mUpdateQuanitityHandled(0);
+
+        //delete all line barcodes
+        for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
+            pickorderLineBarcode.pDeleteFromDatabaseBln();
+        }
+
+        //If we already have a processingSequence, then empty it
+        if (!this.processingSequenceStr.isEmpty()) {
+
+            //Check if we need to remove the SalesorderPackingTableLines
+            if (this.pGetLinesForProcessingSequenceObl().size() <= 1)  {
+                cSalesOrderPackingTable.pDeleteFromDatabaseBln(this.processingSequenceStr);
             }
 
-            //If we already have a processingSequence, then empty it
-            if (!this.processingSequenceStr.isEmpty()) {
-
-                //Check if we need to remove the SalesorderPackingTableLines
-               if (this.pGetLinesForProcessingSequenceObl().size() <= 1)  {
-                   cSalesOrderPackingTable.pDeleteFromDatabaseBln(this.processingSequenceStr);
-                }
-
-                this.pUpdateProcessingSequenceBln("");
-            }
-
-            return  true;
+            this.pUpdateProcessingSequenceBln("");
         }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINERESET);
-            return  false;
-        }
+
+        return  true;
+
 
     }
 
@@ -516,22 +518,28 @@ public class cPickorderLine {
 
     public void pAddOrUpdateLineBarcode(Double pvAmountDbl){
 
+        boolean addBarcodeBln = false;
+
         //If there are no line barcodes, then simply add this one
         if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
-            cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(cPickorderLine.currentPickOrderLine.getLineNoInt().longValue(), cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
-            pickorderLineBarcode.quantityHandledDbl = pvAmountDbl;
-            pickorderLineBarcode.pInsertInDatabaseBln();
-            return;
+            addBarcodeBln = true;
         }
 
-        for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
+        if (!addBarcodeBln) {
+            for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
 
-            if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
-                pickorderLineBarcode.quantityHandledDbl += pvAmountDbl;
-                pickorderLineBarcode.pUpdateAmountInDatabase();
-                return;
+                if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
+                    pickorderLineBarcode.quantityHandledDbl += pvAmountDbl;
+                    pickorderLineBarcode.pUpdateAmountInDatabase();
+                    return;
+                }
             }
         }
+
+        cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(cPickorderLine.currentPickOrderLine.getLineNoInt().longValue(), cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
+        pickorderLineBarcode.quantityHandledDbl = pvAmountDbl;
+        pickorderLineBarcode.pInsertInDatabaseBln();
+
     }
 
     public void pRemoveOrUpdateLineBarcode(){
@@ -562,6 +570,20 @@ public class cPickorderLine {
 
         cWebresult WebResult;
         WebResult =  this.getPickorderLineViewModel().pPickLineHandledViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
+            return  false;
+        }
+    }
+
+    public boolean pSortedBln() {
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderLineViewModel().pPickLineSortedViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);

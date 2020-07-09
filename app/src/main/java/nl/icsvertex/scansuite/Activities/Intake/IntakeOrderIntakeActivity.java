@@ -315,11 +315,14 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     @Override
     public void mInitScreen() {
         cBarcodeScan.pRegisterBarcodeReceiver();
+
         //Raise quantity with scanned barcodeStr, if we started this activity with a scan
         if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned != null) {
             this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
             cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned =null;
+            return;
         }
+
     }
 
     @Override

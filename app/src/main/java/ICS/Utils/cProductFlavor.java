@@ -4,6 +4,7 @@ public class cProductFlavor {
 
     public enum FlavorEnu {
         NORMAL,
-        BMN
+        BMN,
+        TCOG
     }
 }

@@ -14,6 +14,9 @@ import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
@@ -48,7 +51,9 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
-import nl.icsvertex.scansuite.Fragments.Returns.ReturnArticleDetailFragment;
+import nl.icsvertex.scansuite.Fragments.Move.MoveLinesPlaceFragment;
+import nl.icsvertex.scansuite.Fragments.Move.MoveLinesTakeFragment;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 
 public class cBarcodeScan {
 
@@ -58,6 +63,7 @@ public class cBarcodeScan {
         public static final int EAN8 = 1;
         public static final int EAN13 = 2;
     }
+
 
     private String barcodeFormattedStr;
     public String getBarcodeFormattedStr() {
@@ -111,14 +117,14 @@ public class cBarcodeScan {
         if (BarcodeReceiver == null) {
             BarcodeReceiver = new BroadcastReceiver(){
                 @Override
-                public void onReceive(Context context, Intent intent) {
+                public void onReceive(Context pvContext, Intent pvIntent) {
 
-                    if (context != cAppExtension.context) {
+                    if (pvContext != cAppExtension.context) {
                         return;
                     }
 
                     //Fill a barcodeStr scan object
-                    cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.mGetBarcode(intent);
+                    cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.mGetBarcode(pvIntent);
 
                     //Login
                     if (cAppExtension.activity instanceof LoginActivity) {
@@ -230,7 +236,7 @@ public class cBarcodeScan {
 
                     if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
                         ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
-                        returnorderDocumentsActivity.pHandleScan(barcodeScan);
+                        returnorderDocumentsActivity.pHandleScan(barcodeScan, false);
                     }
 
                     if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
@@ -243,6 +249,11 @@ public class cBarcodeScan {
                         createReturnActivity.pHandleScan(barcodeScan,false,false);
                     }
 
+                    if (cAppExtension.activity instanceof ReturnArticleDetailActivity) {
+                        ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
+                        returnArticleDetailActivity.pHandleScan(barcodeScan);
+                    }
+
                     //Move
                     if (cAppExtension.activity instanceof MoveorderSelectActivity){
                         MoveorderSelectActivity moveorderSelectActivity = (MoveorderSelectActivity)cAppExtension.activity;
@@ -252,6 +263,21 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof CreateMoveActivity){
                         CreateMoveActivity createMoveActivity = (CreateMoveActivity)cAppExtension.activity;
                         createMoveActivity.pHandleScan(barcodeScan, false,false);
+                    }
+
+                    if (cAppExtension.activity instanceof MoveLinesActivity) {
+                        MoveLinesActivity moveLinesActivity = (MoveLinesActivity)cAppExtension.activity;
+                        moveLinesActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof MoveLineTakeActivity){
+                        MoveLineTakeActivity moveLineTakeActivity = (MoveLineTakeActivity)cAppExtension.activity;
+                        moveLineTakeActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof MoveLinePlaceActivity){
+                        MoveLinePlaceActivity moveLinePlaceActivity = (MoveLinePlaceActivity)cAppExtension.activity;
+                        moveLinePlaceActivity.pHandleScan(barcodeScan);
                     }
 
                 }
@@ -347,15 +373,11 @@ public class cBarcodeScan {
                         return;
                     }
 
-                    if (cAppExtension.dialogFragment instanceof ReturnArticleDetailFragment) {
-                        ReturnArticleDetailFragment returnArticleDetailFragment = (ReturnArticleDetailFragment)cAppExtension.dialogFragment;
-                        returnArticleDetailFragment.pHandleScan(barcodeScan);
-                    }
-
                     if (cAppExtension.dialogFragment instanceof ReasonFragment) {
                         ReasonFragment reasonFragment = (ReasonFragment)cAppExtension.dialogFragment;
                         reasonFragment.pHandleScan(barcodeScan);
                     }
+
                 }
             };
         }
@@ -406,7 +428,6 @@ public class cBarcodeScan {
         }
     }
 
-
     public static cBarcodeScan pFakeScan(String pvBarcodeStr) {
         cBarcodeScan result = new cBarcodeScan();
         result.barcodeOriginalStr = pvBarcodeStr;
@@ -426,19 +447,29 @@ public class cBarcodeScan {
 
 
         if (extras != null) {
+
             //so who is sending us this?
             if (Objects.requireNonNull(pvIntent.getAction()).equalsIgnoreCase(cBarcodeScanDefinitions.BARCODEINTENT_DATALOGIC_ACTION)) {
                 scannedBarcodeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_DATALOGIC_EXTRABARCODE);
                 barcodeTypeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_DATALOGIC_EXTRABARCODETYPE);
             }
+
             if (pvIntent.getAction().equalsIgnoreCase(cBarcodeScanDefinitions.BARCODEINTENT_ZEBRA_ACTION)) {
                 scannedBarcodeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_ZEBRA_EXTRABARCODE);
                 barcodeTypeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_ZEBRA_EXTRABARCODETYPE);
             }
+
             if (pvIntent.getAction().equalsIgnoreCase(cBarcodeScanDefinitions.BARCODEINTENT_TC55_ACTION)) {
                 scannedBarcodeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_TC55_EXTRABARCODE);
                 barcodeTypeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_TC55_EXTRABARCODETYPE);
             }
+
+            if (pvIntent.getAction().equalsIgnoreCase(cBarcodeScanDefinitions.BARCODEINTENT_PROGLOVE_ACTION)) {
+                scannedBarcodeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_PROGLOVE_EXTRABARCODE);
+                barcodeTypeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_PROGLOVE_EXTRABARCODETYPE);
+            }
+
+
         }
 
         assert scannedBarcodeStr != null;
@@ -465,7 +496,6 @@ public class cBarcodeScan {
 
         return resultBarcodeScan;
     }
-
 
     private static String mCleanBarcodeStr(String pvDirtyBarcodeStr) {
         return  pvDirtyBarcodeStr.replaceAll("([\\r\\n\\t])","");

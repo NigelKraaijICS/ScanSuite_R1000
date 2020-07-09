@@ -15,7 +15,7 @@
         android:id="@+id/intakeStorerInfoContainer"
         >
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageTime"
+            android:id="@+id/imageBin"
             android:layout_width="@dimen/textsize_enormous"
             android:layout_height="@dimen/textsize_enormous"
             app:srcCompat="@drawable/ic_location_black_24dp"
@@ -26,8 +26,8 @@
         <TextView
             android:id="@+id/timeText"
             style="@style/addressText"
-            app:layout_constraintTop_toTopOf="@id/imageTime"
-            app:layout_constraintStart_toEndOf="@id/imageTime"
+            app:layout_constraintTop_toTopOf="@id/imageBin"
+            app:layout_constraintStart_toEndOf="@id/imageBin"
             app:layout_constraintEnd_toEndOf="parent"
             />
         <androidx.appcompat.widget.AppCompatImageView

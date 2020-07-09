@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
 import nl.icsvertex.scansuite.Activities.Returns.CreateReturnActivity;
-import nl.icsvertex.scansuite.Fragments.Returns.ReturnArticleDetailFragment;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cBranchReasonAdapter extends RecyclerView.Adapter<cBranchReasonAdapter.ReasonViewHolder> {
@@ -80,24 +80,14 @@ public class cBranchReasonAdapter extends RecyclerView.Adapter<cBranchReasonAdap
                             createReturnActivity.pHandleFragmentDismissed();
                             cAppExtension.dialogFragment.dismiss();
                         }
-                        else {
 
-                            if (cAppExtension.dialogFragment instanceof  ReturnArticleDetailFragment) {
-                               final  ReturnArticleDetailFragment returnArticleDetailFragment = (ReturnArticleDetailFragment)cAppExtension.dialogFragment;
-                                returnArticleDetailFragment.pSetReason();
-                                cAppExtension.dialogFragment.dismiss();
-
-                                Handler handler = new Handler(Looper.getMainLooper());
-                                handler.postDelayed(new Runnable() {
-                                    public void run() {
-                                        returnArticleDetailFragment.pHandleFragmentDismissed();
-                                        // Actions to do after 0.3 seconds
-                                    }
-                                }, 200);
-                            }
-
-
-                        }
+                    if (cAppExtension.activity instanceof ReturnArticleDetailActivity) {
+                        ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
+                        returnArticleDetailActivity.pSetReason();
+                        returnArticleDetailActivity.pHandleFragmentDismissed();
+                        cAppExtension.dialogFragment.dismiss();
+                        return;
+                    }
 
                     }
 

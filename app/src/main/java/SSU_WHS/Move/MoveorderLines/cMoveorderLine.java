@@ -7,28 +7,25 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cDateAndTime;
+
 import ICS.Utils.cResult;
-import ICS.Utils.cUserInterface;
+import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorderViewModel;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
-import SSU_WHS.Move.MoveorderLineBarcodes.cMoveorderLineBarcode;
-import SSU_WHS.Move.MoveorderLineBarcodes.cMoveorderLineBarcodeViewModel;
+import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
+import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
+import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
 
-public class cMoveorderLine {
-
-    private Integer recordIDInt;
-    public Integer getRecordIDInt() {
-        return recordIDInt;
-    }
+public class cMoveorderLine implements Comparable {
 
     public String actionTypeCodeStr;
     public String getActionTypeCodeStr() { return actionTypeCodeStr; }
@@ -99,6 +96,11 @@ public class cMoveorderLine {
     public int localStatusInt;
     public int getLocalStatusInt() { return localStatusInt; }
 
+    public  int sortingSequenceInt;
+    public  int getSortingSequenceInt(){
+        return  this.sortingSequenceInt;
+    }
+
     public String extraField1Str;
     public String getExtraField1Str() {
         return extraField1Str;
@@ -139,19 +141,38 @@ public class cMoveorderLine {
         return extraField8Str;
     }
 
+    public  String getKeyStr() {
+        return  this.getItemNoStr() + "þ" + this.getVariantCodeStr();
+    }
+
     private cMoveorderLineEntity moveorderLineEntity;
 
     public static List<cMoveorderLine> allLinesObl;
     public static cMoveorderLine currentMoveOrderLine;
-    public List<cMoveorderLineBarcode> lineBarcodesObl;
 
-    private cMoveorderLineViewModel getMoveorderLineViewModel () {
+    private cMoveorderLineViewModel getMoveorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderLineViewModel.class);
     }
 
-    private cMoveorderLineBarcodeViewModel getMoveorderLineBarcodeViewModel () {
-        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderLineBarcodeViewModel.class);
+    public List<cMoveorderLineBarcode> lineBarcodeObl(){
+
+        List<cMoveorderLineBarcode> resultObl = new ArrayList<>();
+
+        if (cMoveorderLineBarcode.allMoveorderLineBarcodesObl == null || cMoveorderLineBarcode.allMoveorderLineBarcodesObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cMoveorderLineBarcode moveorderLineBarcode : cMoveorderLineBarcode.allMoveorderLineBarcodesObl ) {
+
+            if (moveorderLineBarcode.getLineNoInt() == this.getLineNoInt()) {
+                resultObl.add(moveorderLineBarcode);
+            }
+        }
+
+        return  resultObl;
+
     }
+
     //Region Public Properties
 
     public cArticleImage articleImage;
@@ -180,6 +201,7 @@ public class cMoveorderLine {
         this.handledTimeStampStr = this.moveorderLineEntity.getHandledtimestampStr();
         this.sourceNoStr = this.moveorderLineEntity.getSourcenoStr();
         this.statusInt = this.moveorderLineEntity.getStatusInt();
+        this.sortingSequenceInt = this.moveorderLineEntity.getSortingSequenceNoInt();
 
         this.extraField1Str =  this.moveorderLineEntity.getExtraField1Str();
         this.extraField2Str = this.moveorderLineEntity.getExtraField2Str();
@@ -191,10 +213,42 @@ public class cMoveorderLine {
         this.extraField8Str =  this.moveorderLineEntity.getExtraField8Str();
     }
 
+    public cMoveorderLine(String pvItemNoStr, String pvVariantCodeStr) {
+        this.moveorderLineEntity = null;
+
+        this.lineNoInt = 0;
+        this.actionTypeCodeStr = cWarehouseorder.ActionTypeEnu.PLACE.toString();
+
+        this.itemNoStr = pvItemNoStr;
+        this.variantCodeStr = pvVariantCodeStr;
+        this.descriptionStr = "";
+        this.description2Str = "";
+        this.binCodeStr = "";
+
+        this.quantityDbl = 0;
+        this.quantityHandledDbl = 0;
+        this.quantityTakenDbl = 0;
+        this.quantityPlacedDbl = 0;
+
+        this.handledTimeStampStr = "";
+        this.sourceNoStr = "";
+        this.statusInt = cWarehouseorder.MovelineLocalStatusEnu.LOCALSTATUS_NEW;
+        this.sortingSequenceInt = 0;
+
+        this.extraField1Str =  "";
+        this.extraField2Str = "";
+        this.extraField3Str =  "";
+        this.extraField4Str =  "";
+        this.extraField5Str =  "";
+        this.extraField6Str =  "";
+        this.extraField7Str =  "";
+        this.extraField8Str =  "";
+    }
+
+
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {
-        this.getMoveorderLineViewModel().insert(this.moveorderLineEntity);
 
         if (cMoveorderLine.allLinesObl == null){
             cMoveorderLine.allLinesObl = new ArrayList<>();
@@ -208,259 +262,6 @@ public class cMoveorderLine {
         cMoveorderLineViewModel moveorderLineViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderLineViewModel.class);
         moveorderLineViewModel.deleteAll();
         return true;
-    }
-
-    public boolean pHandledIndatabaseBln(){
-
-
-        if (!this.mUpdateQuanitityHandled(this.quantityHandledDbl)) {
-            return  false;
-        }
-
-        if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)) {
-            return  false;
-        }
-
-        this.handledTimeStampStr = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
-
-        return this.mUpdateHandledTimeStampBln(this.handledTimeStampStr);
-
-    }
-
-
-    public boolean pHandledTakeBln() {
-
-        cWebresult WebResult;
-        WebResult =  this.getMoveorderLineViewModel().pMoveLineHandledTakeMTViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
-            return  false;
-        }
-    }
-
-    public boolean pCancelIndatabaseBln(){
-
-
-        if (!this.mUpdateQuanitityHandled(this.quantityHandledDbl)) {
-            return  false;
-        }
-
-        if (!this.mUpdateLocalStatusBln(cWarehouseorder.MovelineLocalStatusEnu.LOCALSTATUS_NEW)) {
-            return  false;
-        }
-
-        this.handledTimeStampStr = "";
-
-        return this.mUpdateHandledTimeStampBln(this.handledTimeStampStr);
-
-    }
-
-    public static boolean pMoveNewItemHandledBln(String pvBincodeStr, List<cMoveorderBarcode> pvScannedBarcodesObl, String pvActionTypeStr) {
-       cWebresult WebResult;
-
-        cMoveorderLineViewModel moveorderLineViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderLineViewModel.class);
-        WebResult = moveorderLineViewModel.pMoveNewItemHandledViaWebserviceWrs(pvBincodeStr, pvScannedBarcodesObl, pvActionTypeStr);
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            for (   JSONObject jsonObject : WebResult.getResultDtt()) {
-                cMoveorderLine moveorderLine = new cMoveorderLine(jsonObject);
-                moveorderLine.pInsertInDatabaseBln();
-                currentMoveOrderLine = moveorderLine;
-                return true;
-            }
-            return  true;
-        }
-        else {
-
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
-            return  false;
-        }
-    }
-
-    public static boolean pMoveItemHandledBln() {
-        cWebresult WebResult;
-        cMoveorderLineViewModel moveorderLineViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderLineViewModel.class);
-        WebResult =  moveorderLineViewModel.pMoveItemHandledViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-            cUserInterface.pShowToastMessage("Succes!!", null);
-//            if(this.mUpdateLocalStatusBln(cWarehouseorder.MovelineLocalStatusEnu.LOCALSTATUS_DONE_SENT) == false) {
-//                return  false;
-//            }
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
-            return  false;
-        }
-    }
-
-    public boolean pMoveItemPlaceHandledBln() {
-        cWebresult WebResult;
-        WebResult =  this.getMoveorderLineViewModel().pMoveItemPlaceHandledViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-            cUserInterface.pShowToastMessage("Succes!!", null);
-//            if(this.mUpdateLocalStatusBln(cWarehouseorder.MovelineLocalStatusEnu.LOCALSTATUS_DONE_SENT) == false) {
-//                return  false;
-//            }
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
-            return  false;
-        }
-    }
-
-    public cMoveorderLineBarcode pAddLineBarcode(String pvBarcodeStr, Double pvQuantityDbl) {
-
-        cMoveorderLineBarcode moveorderLineBarcode = new cMoveorderLineBarcode((long) this.getLineNoInt(),pvBarcodeStr,pvQuantityDbl);
-
-        if (cMoveorderLineBarcode.allLineBarcodesObl == null){
-            cMoveorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
-        }
-
-        cMoveorderLineBarcode.allLineBarcodesObl.add(moveorderLineBarcode);
-
-        return moveorderLineBarcode;
-    }
-
-    public boolean pHandledPlaceBln() {
-
-        cWebresult WebResult;
-        WebResult =  this.getMoveorderLineViewModel().pMoveLineHandledPlaceMTViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
-            return  false;
-        }
-    }
-
-    public boolean pRemoveOrUpdateLineBarcodeBln(){
-
-        //If there are no line barcodes, this should not be possible
-        if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
-            return false;
-        }
-
-        for (cMoveorderLineBarcode moveorderLineBarcode : this.handledBarcodesObl()  ) {
-
-            if (moveorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cMoveorderBarcode.currentMoveOrderBarcode.getBarcodeStr())) {
-
-                moveorderLineBarcode.quantityHandledDbl -= cMoveorderBarcode.currentMoveOrderBarcode.quantityPerUnitOfMeasure;
-
-                if (moveorderLineBarcode.getQuantityhandledDbl() > 0) {
-                    moveorderLineBarcode.pUpdateAmountInDatabase();
-                    return  true;
-                }
-
-                moveorderLineBarcode.pDeleteFromDatabaseBln();
-                return  true;
-            }
-        }
-        return  false;
-    }
-
-    private boolean mUpdateQuanitityHandled(double pvQuantityHandledBln) {
-
-        boolean resultBln;
-        resultBln =   this.getMoveorderLineViewModel().pUpdateQuantityHandledBln(pvQuantityHandledBln);
-
-        if (!resultBln) {
-            return  false;
-        }
-
-        this.quantityHandledDbl = pvQuantityHandledBln;
-        return true;
-
-    }
-    private boolean mUpdateLocalStatusBln(Integer pvNewStatusInt) {
-
-        boolean resultBln;
-        resultBln =   this.getMoveorderLineViewModel().pUpdateLocalStatusBln(pvNewStatusInt);
-
-        if (!resultBln) {
-            return  false;
-        }
-
-        this.localStatusInt = pvNewStatusInt;
-        return true;
-
-    }
-
-    private boolean mUpdateHandledTimeStampBln(String pvHandledTimeStampStr) {
-
-        boolean resultBln;
-        resultBln =   this.getMoveorderLineViewModel().pUpdateHandledTimeStampBln(pvHandledTimeStampStr);
-
-        return resultBln;
-
-    }
-
-    public static void getTakeLineForBincodeFromDatabase(String binCodeStr) {
-        cMoveorderLine moveorderLine = cMoveorder.currentMoveOrder.pGetLineForBin(binCodeStr);
-        if (moveorderLine != null) {
-            cMoveorderLine.currentMoveOrderLine = moveorderLine;
-            return;
-        }
-        cMoveorderLine.currentMoveOrderLine = null;
-    }
-
-    public static void getTakeLineForArticleFromDatabase() {
-        cMoveorderLine moveorderLine = cMoveorder.currentMoveOrder.pGetLineForArticle();
-        if (moveorderLine != null) {
-            cMoveorderLine.currentMoveOrderLine = moveorderLine;
-            return;
-        }
-        cMoveorderLine.currentMoveOrderLine = null;
-    }
-
-    public List<cMoveorderLineBarcode> handledBarcodesObl(){
-
-
-        List<cMoveorderLineBarcode> resultObl;
-        resultObl = new ArrayList<>();
-
-        if (cMoveorderLineBarcode.allLineBarcodesObl == null) {
-            return  resultObl;
-        }
-
-        for (cMoveorderLineBarcode moveorderLineBarcode :cMoveorderLineBarcode.allLineBarcodesObl ) {
-
-            int result = Long.compare(moveorderLineBarcode.getLineNoLng(), this.getLineNoInt());
-            if (result == 0) {
-                resultObl.add(moveorderLineBarcode);
-            }
-        }
-
-
-        return  resultObl;
-    }
-
-      public boolean pAddOrUpdateLineBarcodeBln(Double pvAmountDbl){
-
-        //If there are no line barcodes, then simply add this one
-        if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
-            cMoveorderLineBarcode moveorderLineBarcode = new cMoveorderLineBarcode((long) cMoveorderLine.currentMoveOrderLine.getLineNoInt(), cMoveorderBarcode.currentMoveOrderBarcode.getBarcodeStr());
-            moveorderLineBarcode.quantityHandledDbl = pvAmountDbl;
-            moveorderLineBarcode.pInsertInDatabaseBln();
-            return true;
-        }
-
-        for (cMoveorderLineBarcode moveorderLineBarcode : this.handledBarcodesObl()  ) {
-
-            if (moveorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cMoveorderBarcode.currentMoveOrderBarcode.getBarcodeStr())) {
-                moveorderLineBarcode.quantityHandledDbl += pvAmountDbl;
-                moveorderLineBarcode.pUpdateAmountInDatabase();
-                return  true;
-            }
-        }
-        return  false;
     }
 
     public boolean pGetArticleImageBln(){
@@ -493,69 +294,39 @@ public class cMoveorderLine {
 
     }
 
+    public cResult pResetRst() {
 
-    private void mUpdateQuantityInDatabase(){
-        this.getMoveorderLineViewModel().pUpdateQuantityBln();
-    }
-
-    public cMoveorderLineBarcode pGetLineBarcodeByScannedBarcode(String pvBarcodeStr) {
-
-        //We scanned a barcode that belongs to the current article, so check if we already have a line barcode
-        for (cMoveorderLineBarcode moveorderLineBarcode : this.lineBarcodesObl) {
-
-            //We have a match, so set the current line
-            if (moveorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr)) {
-                return moveorderLineBarcode;
-            }
-        }
-
-        return  null;
-    }
-
-    public cResult pResetRst(){
-
-        //nit the result
-        cResult result = new cResult();
-        result.resultBln = true;
+        cResult resultRst = new cResult();
+        resultRst.resultBln = true;
 
         cWebresult WebResult;
-
         WebResult =  this.getMoveorderLineViewModel().pResetLineViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
+            if (!cMoveorder.currentMoveOrder.pGetLinesViaWebserviceBln(true)) {
+                resultRst.resultBln = false;
+                resultRst.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_movelines_failed));
+                return resultRst;
+            }
 
-            //Remove line barcodes from the database
-            this.getMoveorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
-
-            //Reset this line
-            this.quantityHandledDbl = 0.0;
-            this.mUpdateQuantityInDatabase();
-            this.lineBarcodesObl.clear();
-
-            return  result;
         }
+
         else {
+            resultRst.resultBln = false;
+            resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed));
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_MOVELINERESET);
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed));
-            return  result;
+            return resultRst;
         }
+
+        return resultRst;
+
     }
 
-    private  List<cMoveorderBarcode> mGetBarcodesObl(){
+    @Override
+    public int compareTo(Object o) {
 
-        //If barcodes already filled, then we are done
-        if (this.barcodesObl != null) {
-            return this.barcodesObl;
-        }
+        int compareint =((cMoveorderLine)o).getSortingSequenceInt();
+        return compareint-this.getSortingSequenceInt();
 
-        // Get barcodes via PickorderBarcode class
-        barcodesObl = cMoveorderBarcode.pGetMovebarcodeViaVariantAndItemNoObl(this.getItemNoStr(),this.getVariantCodeStr());
-        if (this.barcodesObl == null || this.barcodesObl.size() == 0) {
-            return  null;
-        }
-
-        return  this.barcodesObl;
     }
-
 }

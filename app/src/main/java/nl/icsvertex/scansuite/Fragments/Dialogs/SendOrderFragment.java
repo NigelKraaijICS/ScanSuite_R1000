@@ -85,7 +85,7 @@ public class SendOrderFragment extends Fragment implements iICSDefaultFragment {
                 cUserInterface.pDoRotate(buttonSendOrder, 2);
                 if (cAppExtension.activity instanceof PickorderLinesActivity) {
                     PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
-                    pickorderLinesActivity.pPickingDone("");
+                    pickorderLinesActivity.pCheckAllDone();
                 }
                 if (cAppExtension.activity instanceof SortorderLinesActivity) {
                     SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;

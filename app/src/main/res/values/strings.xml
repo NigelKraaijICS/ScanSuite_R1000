@@ -79,6 +79,7 @@
 
     <!--region Main Menu-->
     <string name="mainmenu_title">Scansuite menu</string>
+    <string name="actionsmenu_title">Actions</string>
     <string name="mainmenu_home">Home</string>
     <string name="mainmenu_menu">Menu</string>
     <string name="mainmenu_settings">Settings</string>
@@ -393,6 +394,7 @@
     <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>
     <string name="message_wrong_pickcartbox">Wrong pickcartbox</string>
     <string name="number_cannot_be_higher">Number can not be higher than required number</string>
+    <string name="number_cannot_be_higher_than_stock">Number can not be higher than available stock</string>
     <string name="select_shippingunit">Scan or select shippingunit</string>
     <string name="choose_environment">Choose environment</string>
     <string name="environment_set_to_parameter1">The environment has been set to: %1$s</string>
@@ -529,6 +531,7 @@
     <string name="message_adding_unkown_article_failed">Adding unknown article failed</string>
     <string name="message_adding_line_failed">Adding line failed</string>
     <string name="message_adding_erp_article_failed">Adding ERP article with barcode %1$s failed</string>
+    <string name="message_barcode_unknown_ERP">ERP doesn\'t recognise scanned barcode\n %1$s</string>
     <string name="message_add_article_for_this_bin_now_allowed">Article belongs to another BIN, adding lines is not allowed</string>
     <string name="error_barcode_doesnt_belong_to_line">This barcode doesn\'t belong to this line</string>
     <string name="message_line_save_failed">Saving line failed, please try again</string>
@@ -623,13 +626,13 @@
     <string name="screentitle_moveordertake">Move take</string>
     <string name="message_moveorderbusy_header">Orderline still busy</string>
     <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
-    <string name="show_only_deviations">Show deviations</string>
+    <string name="show_only_deviations">Show todo/deviations</string>
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
     <string name="message_close_receiveorder_generated_text">You received %1$s items\n\n\n\nWould you like to close the order?</string>
     <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
     <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
     <string name="message_exactly_what_you_needed">Exactly what you needed</string>
-    <string name="message_bin_required">"Scan a bin to close the line"</string>
+    <string name="message_bin_required">You need to scan a BIN</string>
     <string name="message_no_connection_try_again">No connection, try again</string>
     <string name="message_no_connection_header">No connection</string>
     <string name="message_checking_connection">Checking connection....</string>
@@ -704,7 +707,7 @@
     <string name="message_orderlinebusy_text">Line is still busy, what do you want to do with your current scans</string>
     <string name="message_add_item">Add item</string>
     <string name="message_add_item_are_you_sure">You are about to add an unexpected item:\n\n%1$s\n\nAre you sure?</string>
-    <string name="message_more_then_expected">Quantity higher then expected</string>
+    <string name="message_more_then_expected">Quantity higher than expected</string>
     <string name="number_received_total_cant_be_higher_then">You are not allowed to receive more then %1$s items of this variant</string>
     <string name="number_received_total_eminently_more">You are about to receive %1$s pieces\n\nThis is eminently more then the %2$s expected pieces.\n\nAre you sure?</string>
     <string name="message_reset_variant_via_webservice_failed">Resetting variant via webservice failed</string>
@@ -712,7 +715,8 @@
     <string name="tab_moveorderline_take">Take</string>
     <string name="tab_moveorderline_place">Place</string>
     <string name="screentitle_moveline_take">Take article</string>
-    <string name="message_article_required">Scan an article to close the line</string>
+    <string name="screentitle_moveline_place">Place article</string>
+    <string name="message_article_required">Article required</string>
     <string name="image_view_battery">image view battery</string>
     <string name="imageview_is_charging">imageview is charging</string>
     <string name="message_no">No</string>
@@ -731,6 +735,27 @@
     <string name="tab_in">In</string>
     <string name="tab_out">Out</string>
     <string name="tab_selected">Selected</string>
+    <string name="message_quantity_sourceno">Quantity in sourceno:</string>
+    <string name="message_scan_bin_first">Scan bin first</string>
+    <string name="message_close_action_first_before_new_bin">Close this action first, before scanning new BIN</string>
+    <string name="message_already_exists_reset_first">Line already exists for this article and BIN, of you want to edit it reset the line first</string>
+    <string name="message_no_stock_available">No stock available</string>
+    <string name="message_no_sorting_location_adviced">No advised location</string>
+    <string name="message_scan_bin_or_article">Scan BIN or Article</string>
+    <string name="message_scan_article_or_close_line">Scan article or close line</string>
+    <string name="message_scan_bin">Scan BIN</string>
+    <string name="message_unknown_article">Unknown article</string>
+    <string name="message_no_place_lines_for_article">There\'s nothing to place for this article</string>
+    <string name="message_previous_line_send">Previous line has been send</string>
+    <string name="message_unknown_itemvariant">Unknown ItemVariant</string>
+    <string name="message_itemvariant_not_taken_so_cant_be_placed">ItemVariant not taken, so no items to place</string>
+    <string name="show_only_todo">Show todo</string>
+    <string name="message_itemvariant_unknown">ItemVariant unknown</string>
+    <string name="message_already_placed_so_not_possible">You can\'t reset this line, because there are already handled place lines for this ItemVariant</string>
+    <string name="message_shipment_unkown_or_already_send">Shipment unknown or already send</string>
+    <string name="screentitle_bin_stock">BIN Stock</string>
+    <string name="screentitle_article_stock">Article Stock</string>
+    <string name="message_place_line_already_exists">Place line already exists, if you want to mutate first rest the line</string>
     <!--End Region return-->
 
     <!--Region plurals-->

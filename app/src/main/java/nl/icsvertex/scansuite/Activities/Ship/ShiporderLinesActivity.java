@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -105,11 +106,10 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         finish();
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
         if (pvMenuItem.getItemId() == android.R.id.home) {
-            mTryToLeaveActivity();
+            this.mTryToLeaveActivity();
             return true;
         }
 
@@ -118,7 +118,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     public void onBackPressed() {
-        mTryToLeaveActivity();
+       this.mTryToLeaveActivity();
     }
 
     //End Region Default Methods
@@ -190,7 +190,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         this.shiporderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
-                shiporderLinesViewPager.setCurrentItem(pvTab.getPosition());
+               shiporderLinesViewPager.setCurrentItem(pvTab.getPosition());
                 mChangeSelectedTab(pvTab);
             }
 
@@ -219,18 +219,16 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         //Check if we need to register a workplaceStr
         if (cWorkplace.currentWorkplace == null ) {
 
-
             if (cWorkplace.allWorkplacesObl.size() > 1) {
                 //Show the workplaceStr fragment
                 this.mShowWorkplaceFragment();
-                return;
             }
             else {
                 //Pop-up is not needed, we just select the only workplace there is
                 cWorkplace.currentWorkplace = cWorkplace.allWorkplacesObl.get(0);
                 this.pWorkplaceSelected();
-                return;
             }
+            return;
 
         }
 
@@ -258,7 +256,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
             hulpRst = mCheckShipmentRst();
             if (!hulpRst.resultBln ){
-                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
+                cUserInterface.pShowSnackbarMessage(this.container,hulpRst.messagesStr(),null,true);
                 return;
             }
 
@@ -281,7 +279,11 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
             // We did not find a match, so stop
             if (cShipment.currentShipment == null) {
-                this.mStepFailed(cAppExtension.context.getString(R.string.message_unknown_barcode));
+                this.mStepFailed(cAppExtension.context.getString(R.string.message_shipment_unkown_or_already_send));
+                if (ShiporderLinesActivity.currentLineFragment instanceof  ShiporderLinesToShipFragment) {
+                    ShiporderLinesToShipFragment shiporderLinesToShipFragment = (ShiporderLinesToShipFragment)ShiporderLinesActivity.currentLineFragment;
+                    shiporderLinesToShipFragment.pGetData();
+                }
                 return;
             }
 
@@ -290,12 +292,13 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
                     cShipment.currentShipment.shippingAgentService() == null ||
                     cShipment.currentShipment.shippingAgentService().shippingUnitsObl() == null ||
                     cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 0 ) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_shipping_basics_invalid),"",true,true);
+
+                cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipping_basics_invalid),null,true);
                 return;
             }
 
             if (cShipment.currentShipment.isHandledBln()) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_shipment_already_handled),"",true,true);
+                cUserInterface.pShowSnackbarMessage(this.container,(cAppExtension.activity.getString(R.string.message_shipment_already_handled)), null,true);
                 return;
             }
 
@@ -316,12 +319,12 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         hulpRst = mCheckShipmentRst();
         if (!hulpRst.resultBln ){
-            cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
+            cUserInterface.pShowSnackbarMessage(this.container,hulpRst.messagesStr(),null,true);
             return;
         }
 
         if (cShipment.currentShipment.isHandledBln()) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_shipment_already_handled),"",true,true);
+            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
             return;
         }
 
@@ -332,8 +335,8 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     public  void pShipmentSelected(cShipment pvShipment) {
         cShipment.currentShipment = pvShipment;
 
-        if (cAppExtension.dialogFragment instanceof ShiporderLinesToShipFragment) {
-            ShiporderLinesToShipFragment shiporderLinesToShipFragment = (ShiporderLinesToShipFragment)cAppExtension.dialogFragment;
+        if (this.currentLineFragment instanceof ShiporderLinesToShipFragment) {
+            ShiporderLinesToShipFragment shiporderLinesToShipFragment = (ShiporderLinesToShipFragment)this.currentLineFragment;
             shiporderLinesToShipFragment.pSetChosenShipment();
         }
     }
@@ -362,8 +365,17 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     public  void pWorkplaceSelected(){
 
 
+        List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+        for (Fragment fragment : fragments) {
+            if (fragment instanceof WorkplaceFragment) {
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                fragmentTransaction.remove(fragment);
+                fragmentTransaction.commit();
+            }
+        }
+
         if (!cPickorder.currentPickOrder.pUpdateWorkplaceViaWebserviceBln(cWorkplace.currentWorkplace.getWorkplaceStr())) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_workplace_not_updated),"",true,true);
+            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_workplace_not_updated),null, true);
             return;
         }
 
@@ -443,9 +455,8 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private  void mStepFailed(String pvErrorMessageStr){
-        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
+        cUserInterface.pShowSnackbarMessage(this.container,pvErrorMessageStr,null,true);
         cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
-        cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
     private  void mShowWorkplaceFragment() {
@@ -500,7 +511,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
-            cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
+            cUserInterface.pShowSnackbarMessage(this.container,hulpResult.messagesStr(),null,true);
             return  false;
         }
 

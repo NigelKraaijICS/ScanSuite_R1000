@@ -103,7 +103,11 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+
+        if (cAppExtension.activity instanceof  PickorderSelectActivity) {
+            cBarcodeScan.pUnregisterBarcodeReceiver();
+        }
+
     }
 
     @Override
@@ -255,7 +259,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         }
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
             //has prefix, is salesorderStr
             this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
             this.recyclerSearchView.callOnClick();

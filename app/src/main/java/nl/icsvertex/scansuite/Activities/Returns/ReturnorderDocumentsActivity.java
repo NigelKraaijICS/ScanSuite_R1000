@@ -219,6 +219,10 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     @Override
     public void mInitScreen() {
 
+        if (cReturnorder.currentReturnOrder.isRetourMultiDocument() && cReturnorder.currentReturnOrder.isGeneratedBln() && cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().size() == 1) {
+            this.pHandleScan(cBarcodeScan.pFakeScan(cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().get(0).getSourceDocumentStr()), true);
+        }
+
     }
 
     public void pCheckForSingleDocument(){
@@ -238,7 +242,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
     //Region Public Methods
 
-    public void pHandleScan(final cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(final cBarcodeScan pvBarcodeScan, final boolean pvIsDocumentBln) {
 
         //Close open Dialogs
         cUserInterface.pCheckAndCloseOpenDialogs();
@@ -248,7 +252,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
         new Thread(new Runnable() {
             public void run() {
-                mHandleScan(pvBarcodeScan.getBarcodeOriginalStr());
+                mHandleScan(pvBarcodeScan.getBarcodeOriginalStr(),pvIsDocumentBln);
             }
         }).start();
     }
@@ -355,12 +359,14 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
     }
 
-    private void mHandleScan(String pvScannedBarcodeStr){
+    private void mHandleScan(String pvScannedBarcodeStr, boolean pvIsDocumentBln){
 
         //Only Document scans are allowed
-        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
-            this.mDoUnknownScan(cAppExtension.context.getString(R.string.message_scan_return_document), pvScannedBarcodeStr);
-            return;
+        if (!pvIsDocumentBln){
+            if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvScannedBarcodeStr,cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
+                this.mDoUnknownScan(cAppExtension.context.getString(R.string.message_scan_return_document), pvScannedBarcodeStr);
+                return;
+            }
         }
 
         //Strip the prefix if thats neccesary

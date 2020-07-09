@@ -2,7 +2,6 @@ package SSU_WHS.Intake.Intakeorders;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -17,12 +16,12 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Packaging.cPackaging;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
-import SSU_WHS.General.cDatabase;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
@@ -117,7 +116,6 @@ public class cIntakeorder {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cWarehouseorderViewModel.class);
     }
 
-
     private cIntakeorderViewModel getIntakeorderViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
     }
@@ -150,10 +148,13 @@ public class cIntakeorder {
         return  cComment.allCommentsObl;
     }
     public List<cIntakeorderBarcode> barcodesObl () {return  cIntakeorderBarcode.allBarcodesObl;}
-    public  List<cPackaging> packagingInObl;
-    public  List<cPackaging> packagingOutObl;
+    public List<cPackaging> packagingInObl;
+    public List<cPackaging> packagingOutObl;
 
     public cIntakeorderBarcode intakeorderBarcodeScanned;
+
+    public List<String> sourceNoObl;
+    public boolean showDeviationsBln = true;
 
     //Region Constructor
 
@@ -604,7 +605,7 @@ public class cIntakeorder {
         cWebresult Webresult = null;
 
         if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
-            Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_Store.toString(), cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_StoreBezig);
+            Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.Receive_Store.toString(), cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store);
         }
 
         //We try to release an order thats not created
@@ -700,10 +701,15 @@ public class cIntakeorder {
         WebResult = this.getIntakeorderViewModel().pGetIntakeorderMATLinesFromWebserviceWrs();
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
 
+            this.sourceNoObl = new ArrayList<>();
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(jsonObject);
                 intakeorderMATLine.pInsertInDatabaseBln();
+
+                if (!this.sourceNoObl.contains(intakeorderMATLine.getSourceNoStr())) {
+                    this.sourceNoObl.add(intakeorderMATLine.getSourceNoStr());
+                }
 
                 cIntakeorderMATSummaryLine intakeorderMATSummaryLine = cIntakeorderMATSummaryLine.pGetSummaryLine(intakeorderMATLine.getItemNoStr(),
                         intakeorderMATLine.getVariantCodeStr(),
@@ -716,6 +722,11 @@ public class cIntakeorder {
 
 
                     cIntakeorderMATSummaryLine.pAddSummaryLine(summaryLineToAdd);
+
+                    if (!intakeorderMATLine.getBinCodeStr().isEmpty()){
+                        summaryLineToAdd.binCodeStr = intakeorderMATLine.getBinCodeStr();
+                    }
+
                     summaryLineToAdd.pAddMATLine(intakeorderMATLine);
                     continue;
                 }
@@ -730,7 +741,7 @@ public class cIntakeorder {
         }
     }
 
-    public boolean pGetReceiveLinesViaWebserviceBln(Boolean pvRefreshBln) {
+    public boolean pGetReceiveLinesViaWebserviceBln(Boolean pvRefreshBln, String pvScannerStr) {
 
         if (pvRefreshBln) {
             cReceiveorderLine.allReceiveorderLines = null;
@@ -738,7 +749,7 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult = this.getIntakeorderViewModel().pGetIntakeorderReceiveLinesFromWebserviceWrs();
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderReceiveLinesFromWebserviceWrs(pvScannerStr);
         if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
 
 
@@ -821,8 +832,6 @@ public class cIntakeorder {
             return false;
         }
     }
-
-
 
     public boolean pGetPackagingViaWebserviceBln() {
 

@@ -29,6 +29,7 @@ public class cPickorderLineViewModel extends AndroidViewModel {
     public boolean pUpdateHandledTimeStampBln(String pvHandledTimeStampStr) {return this.Repository.pUpdateLocalHandledTimeStampBln(pvHandledTimeStampStr);}
 
     public cWebresult pPickLineHandledViaWebserviceWrs() {return this.Repository.pPickLineHandledViaWebserviceWrs();}
+    public cWebresult pPickLineSortedViaWebserviceWrs() {return this.Repository.pPickLineSortedViaWebserviceWrs();}
     public cWebresult pResetViaWebserviceWrs() {return this.Repository.pResetViaWebserviceWrs();}
     public cWebresult pGetSortLocationAdviceViaWebserviceWrs(String pvSourceNoStr) {return this.Repository.pGetSortLocationAdviceViaWebserviceWrs(pvSourceNoStr);}
 

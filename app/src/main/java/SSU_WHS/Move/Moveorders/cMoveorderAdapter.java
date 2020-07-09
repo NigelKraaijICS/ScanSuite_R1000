@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
         private TextView textViewOrderUser;
         private TextView textViewOrdertype;
         private TextView textViewDocument;
+        private ImageView imageViewIsProcessedOrWait;
         public LinearLayout moveorderItemLinearLayout;
 
         public MoveorderViewHolder(View pvItemView) {
@@ -51,6 +53,7 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
             this.textViewDocument.setMarqueeRepeatLimit(5);
             this.textViewDocument.setSelected(true);
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
+            this.imageViewIsProcessedOrWait = pvItemView.findViewById(R.id.imageViewIsProcessedOrWait);
             this.moveorderItemLinearLayout = pvItemView.findViewById(R.id.moveorderItemLinearLayout);
 
         }
@@ -104,6 +107,13 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
 
         if(selectedMoveorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MV.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_mv);
+        }
+
+        if (selectedMoveorder.getProcessingOrParkedBln()) {
+            pvHolder.imageViewIsProcessedOrWait.setVisibility(View.VISIBLE);
+        }
+        else {
+            pvHolder.imageViewIsProcessedOrWait.setVisibility(View.INVISIBLE);
         }
 
         pvHolder.moveorderItemLinearLayout.setOnClickListener(new View.OnClickListener() {

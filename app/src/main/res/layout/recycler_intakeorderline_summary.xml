@@ -29,7 +29,7 @@
             android:layout_toLeftOf="@id/reset_icon"
             android:text="@string/reset"
             android:textColor="@color/colorWhite"
-            android:textSize="13dp" />
+            android:textSize="13sp" />
     </RelativeLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -60,9 +60,23 @@
         <TextView
             style="@style/defaultRecyclerSourcenoText"
             android:id="@+id/textViewSourceNo"
-            app:layout_constraintStart_toStartOf="@id/textViewDescription"
+            app:layout_constraintStart_toStartOf="@id/imageBin"
             app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
             app:layout_constraintTop_toBottomOf="@id/textViewDescription"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageBin"
+            style="@style/recyclerItemImage"
+            app:srcCompat="@drawable/ic_location_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewSourceNo"
+            />
+        <TextView
+            style="@style/defaultRecyclerSourcenoText"
+            android:id="@+id/textViewBinCode"
+            app:layout_constraintStart_toEndOf="@id/imageBin"
+            app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
+            app:layout_constraintTop_toBottomOf="@id/textViewSourceNo"
             />
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageSendStatus"

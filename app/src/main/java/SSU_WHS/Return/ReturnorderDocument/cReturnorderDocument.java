@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
@@ -16,12 +17,13 @@ public class cReturnorderDocument {
     private cReturnorderDocumentEntity returnorderDocumentEntity;
 
     public List<cReturnorderLine> returnorderLineObl;
+    public cBarcodeScan barcodeScanToHandle;
+
     public static List<cReturnorderDocument> allReturnorderDocumentObl;
     public static cReturnorderDocument currentReturnOrderDocument;
     public static List<cReturnorderDocument> returnorderDocumentsTodoObl;
     public static List<cReturnorderDocument> returnorderDocumentsDoneObl;
     public static List<cReturnorderDocument> returnorderDocumentsTotalObl;
-
 
     private cReturnorderDocumentViewModel getReturnorderDocumentViewModel(){
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderDocumentViewModel.class);

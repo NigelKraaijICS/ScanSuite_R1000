@@ -74,7 +74,6 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
 
-
     private RecyclerView recyclerViewLines;
     private List<cReceiveorderSummaryLine> linesToShowObl;
 
@@ -551,14 +550,14 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
-            this.mShowSent();
+            this.mShowSend();
             this.mStartOrderSelectActivity();
             return;
         }
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown) {
-            this.mShowNotSent(hulpResult.messagesStr());
+            this.mShowSendFailed(hulpResult.messagesStr());
             return;
         }
 
@@ -576,7 +575,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
             return;
         }
 
-        this.mShowSent();
+        this.mShowSend();
         this.mStartOrderSelectActivity();
 
     }
@@ -1057,7 +1056,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         });
     }
 
-    private  void mShowSent() {
+    private  void mShowSend() {
         Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.SENDING_TAG);
         if (fragment != null) {
             if (fragment instanceof SendingFragment) {
@@ -1066,7 +1065,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         }
     }
 
-    private  void mShowNotSent(String pvErrorMessageStr) {
+    private  void mShowSendFailed(String pvErrorMessageStr) {
         Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.SENDING_TAG);
         if (fragment != null) {
             if (fragment instanceof SendingFragment) {

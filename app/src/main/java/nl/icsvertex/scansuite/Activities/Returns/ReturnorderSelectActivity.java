@@ -291,67 +291,10 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         this.mShowReturnorderDocumentsActivity();
     }
 
-    public  void pCreateOrder(final String pvDocumentStr, final Boolean pvMultipleDocumentsBln, final String pvBincodeStr){
-
-        // Show that we are getting data
-        cUserInterface.pShowGettingData();
-
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCreateOrder(pvDocumentStr, pvMultipleDocumentsBln, pvBincodeStr);
-            }
-        }).start();
-
-    }
-
     //End Region Public Methods
 
     // Region Private Methods
 
-    private  void mHandleCreateOrder(String pvDocumentstr, Boolean pvMultipleDocumentsBln, String pvBincodeStr){
-
-        cResult hulpResult;
-
-        //Try to create the order
-        if (!this.mTryToCreateOrderBln(pvDocumentstr, pvMultipleDocumentsBln, pvBincodeStr)) {
-            this.mStepFailed(cAppExtension.activity.getString(R.string.message_couldnt_create_order));
-            this.pFillOrders();
-            return;
-        }
-
-        //Try to lock the order
-        if (!this.mTryToLockOrderBln()) {
-            this.pFillOrders();
-            return;
-        }
-
-        //Delete the detail, so we can get them from the webservice
-        if (!cReturnorder.currentReturnOrder.pDeleteDetailsBln()) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-            this.pFillOrders();
-            return;
-        }
-
-        hulpResult = this.mGetOrderDetailsRst();
-        if (!hulpResult.resultBln) {
-            this.mStepFailed(hulpResult.messagesStr());
-            this.pFillOrders();
-            return;
-        }
-
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowReturnorderDocumentsActivity();
-            }
-        });
-
-    }
-
-    private  boolean mTryToCreateOrderBln(String pvDocumentstr, Boolean pvMultipleDocumentsBln, String pvBincodeStr){
-        return  cReturnorder.pCreateReturnOrderViaWebserviceBln(pvDocumentstr, pvMultipleDocumentsBln, pvBincodeStr);
-    }
 
     private boolean mTryToLockOrderBln(){
 

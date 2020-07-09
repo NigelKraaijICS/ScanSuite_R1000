@@ -27,7 +27,7 @@ public class cBranchAdapter  extends RecyclerView.Adapter<cBranchAdapter.BranchV
 
         public BranchViewHolder(View itemView) {
             super(itemView);
-            this.imageViewMenuItem = itemView.findViewById(R.id.imageViewMenuItem);
+            this.imageViewMenuItem = itemView.findViewById(R.id.imageViewBinItem);
             this.textViewDescription = itemView.findViewById(R.id.textViewDescription);
             this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewDescription.setSingleLine(true);

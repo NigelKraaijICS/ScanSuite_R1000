@@ -494,6 +494,10 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     private  void mShowOrHideGenericExtraFields() {
 
+        if (BuildConfig.FLAVOR.equalsIgnoreCase("BMN")) {
+            this.genericItemExtraField1Text.setVisibility(View.VISIBLE);
+            this.genericItemExtraField1Text.setText(cAppExtension.activity.getString(R.string.message_quantity_sourceno) + " "  +  cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl()));
+        }
 
         if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine == null) {
             this.genericItemExtraField1Text.setVisibility(View.INVISIBLE);
@@ -667,7 +671,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
             //Check if we scanned the same barcode
             if (pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr())) {
-                this.mBarcodeSelected(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned );
+                this.mBarcodeSelected(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned);
                 return result;
             }
 

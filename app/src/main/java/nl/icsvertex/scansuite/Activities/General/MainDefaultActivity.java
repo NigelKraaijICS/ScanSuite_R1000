@@ -2,6 +2,8 @@ package nl.icsvertex.scansuite.Activities.General;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -34,7 +36,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
-import SSU_WHS.Basics.Packaging.cPackaging;
+import SSU_WHS.Basics.Scanners.cScanner;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
@@ -52,6 +54,7 @@ import nl.icsvertex.scansuite.Fragments.Main.HomeFragment;
 import nl.icsvertex.scansuite.Fragments.Main.LanguageFragment;
 import nl.icsvertex.scansuite.Fragments.Support.SupportFragment;
 import nl.icsvertex.scansuite.R;
+
 
 public class MainDefaultActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -72,6 +75,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     private  FrameLayout mainFramelayout;
     private  DrawerLayout menuMainDrawer;
     private  NavigationView mainmenuNavigation;
+
+
     //End region views
 
     //End Region Private Properties
@@ -119,7 +124,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         super.onStop();
         finish();
     }
-
 
     @Override
     public void onActivityResult(int pvRequestCodeInt, int pvResultCodeInt, Intent data) {
@@ -182,6 +186,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         cAppExtension.fragmentActivity  = this;
         cAppExtension.activity = this;
         cAppExtension.fragmentManager  = getSupportFragmentManager();
+
     }
 
     @Override
@@ -190,13 +195,13 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         this.Toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
         this.imageHome = findViewById(R.id.imageHome);
 
         this.mainFramelayout = findViewById(R.id.mainFramelayout);
         this.menuMainDrawer = findViewById(R.id.menuMainDrawer);
-        this.mainmenuNavigation = findViewById(R.id.mainmenuNavigation);
+        this.mainmenuNavigation = findViewById(R.id.mainMenuNavigation);
     }
 
 
@@ -206,7 +211,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         this.toolbarTitle.setText(pvScreenTitle);
         this.toolbarImage.setImageResource(R.drawable.ic_welcome);
         this.toolbarTitle.setSelected(true);
-        toolbarSubtext.setSelected(true);
+        this.toolbarSubtext.setSelected(true);
+
+        this.Toolbar.showOverflowMenu();
+
         setSupportActionBar(this.Toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -217,6 +225,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     @Override
     public void mFieldsInitialize() {
+
     }
 
     @Override
@@ -282,7 +291,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cShippingAgentService.shippingAgentServicesAvailableBln &&
                 cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln &&
                 cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln &&
-                cItemProperty.itemPropertiesAvaliableBln;
+                cItemProperty.itemPropertiesAvaliableBln &&
+                cScanner.scannersAvailableBln;
     }
 
     private boolean mGetBasicDataBln() throws ExecutionException {
@@ -318,10 +328,14 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         if (!mGetshippingInfoViawebserviceBln()) {
             return false;
         }
-
-        if (!cPackaging.pGetPackagingViaWebserviceBln(true)) {
+        if (!cScanner.pGetScannersViaWebserviceBln()) {
             return false;
         }
+
+
+//        if (!cPackaging.pGetPackagingViaWebserviceBln(true)) {
+//            return false;
+//        }
 
         return  mAllBasicsAvailableBln();
 
@@ -483,6 +497,5 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
         cAppExtension.context.startActivity(intent);
     }
-
 
 }

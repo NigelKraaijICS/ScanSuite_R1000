@@ -134,6 +134,9 @@ public class cSetting {
         MOVE_VALIDATE_STOCK_ENFORCE,
         MOVEITEM_AMOUNT_MANUAL,
         MOVEITEM_WITH_AMOUNT,
+        MOVE_WITH_PICTURE,
+        MOVE_WITH_PICTURE_AUTO_OPEN,
+        MOVE_WITH_PICTURE_PREFETCH,
         OVERPICK_PERCENTAGE,
         OVERPICKEN,
         PICK_AUTO_ACCEPT,
@@ -679,6 +682,17 @@ public class cSetting {
         return Setting.valueStr;
     }
 
+    public static boolean MOVE_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+
     public static boolean MOVE_AUTO_CREATE_ORDER_MV(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_CREATE_ORDER_MV);
@@ -689,6 +703,65 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean MOVE_NO_EXTRA_BINS(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_NO_EXTRA_BINS);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_NO_EXTRA_ITEMS(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_NO_EXTRA_ITEMS);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_WITH_PICTURE(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_WITH_PICTURE_AUTO_OPEN(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE_AUTO_OPEN);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_WITH_PICTURE_PREFETCH(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE_PREFETCH);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_AMOUNT_MANUAL(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AMOUNT_MANUAL);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
 
     public static boolean RETOUR_BARCODE_CHECK(){
 

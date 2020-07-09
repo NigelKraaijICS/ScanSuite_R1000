@@ -158,13 +158,13 @@ public class cIntakeorderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pGetReceiveLinesFromWebserviceWrs() {
+    public cWebresult pGetReceiveLinesFromWebserviceWrs(String pvScannerStr) {
 
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mGetReceiveLinesFromWebserviceAsyncTask().execute().get();
+            webResultWrs = new mGetReceiveLinesFromWebserviceAsyncTask().execute(pvScannerStr).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -509,15 +509,9 @@ public class cIntakeorderRepository {
             l_PropertyInfo2Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
-            String scannerStr = "";
-
-            if (cIntakeorder.currentIntakeOrder.isGenerated()) {
-                scannerStr =   cDeviceInfo.getSerialnumberStr();
-            }
-
             PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
             l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNER;
-            l_PropertyInfo3Pin.setValue(scannerStr);
+            l_PropertyInfo3Pin.setValue(params[0]);
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
             try {

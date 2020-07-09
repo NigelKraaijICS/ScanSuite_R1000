@@ -45,7 +45,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Returns.ReturnArticleDetailFragment;
 import nl.icsvertex.scansuite.R;
 
 public class ReturnorderDocumentActivity extends AppCompatActivity implements iICSDefaultActivity, cReturnorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -217,6 +216,12 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     @Override
     public void mInitScreen() {
         this.pFillLines();
+
+        if (cReturnorderDocument.currentReturnOrderDocument.barcodeScanToHandle != null) {
+            this.pHandleScan(cReturnorderDocument.currentReturnOrderDocument.barcodeScanToHandle);
+            cReturnorderDocument.currentReturnOrderDocument.barcodeScanToHandle = null;
+        }
+
     }
 
     //End Region iICSDefaultActivity defaults
@@ -293,6 +298,22 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_document_close_fail),cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr(),true,true);
             return;
         }
+
+        if (!cReturnorder.currentReturnOrder.isRetourMultiDocument()) {
+            cResult hulpResult = cReturnorder.currentReturnOrder.pOrderHandledViaWebserviceRst();
+            if (!hulpResult.resultBln) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_document_close_fail),cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr(),true,true);
+                return;
+            }
+
+            //Clear cache
+            cReturnorderDocument.currentReturnOrderDocument = null;
+
+            this.mStartOrderSelectActivity();
+            return;
+
+        }
+
 
         //Clear cache
         cReturnorderDocument.currentReturnOrderDocument = null;
@@ -472,7 +493,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         //Open the line, so we can edit it
-        this.mShowArticleDetailFragment();
+        this.mShowArticleDetailActivity();
 
     }
 
@@ -491,7 +512,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl += cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
         //Open the line, so we can edit it
-        this.mShowArticleDetailFragment();
+        this.mShowArticleDetailActivity();
     }
 
     private void mHandleUnknownBarcodeScan(cBarcodeScan pvBarcodeScan) {
@@ -529,7 +550,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         //Open the line (found or created), so we can edit it
-        this.mShowArticleDetailFragment();
+        this.mShowArticleDetailActivity();
     }
 
     private void mHandleKnownBarcodeScan(cReturnorderBarcode pvReturnorderBarcode, cBarcodeScan pvBarcodeScan) {
@@ -585,14 +606,19 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         //Open the line (found or created), so we can edit it
-        this.mShowArticleDetailFragment();
+        this.mShowArticleDetailActivity();
     }
 
-    private  void mShowArticleDetailFragment() {
+    private  void mShowArticleDetailActivity() {
 
-        ReturnArticleDetailFragment articleDetailFragment = new ReturnArticleDetailFragment();
-        articleDetailFragment.setCancelable(false);
-        articleDetailFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLEDETAILFRAGMENT_TAG);
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        Intent intent = new Intent(cAppExtension.context, ReturnArticleDetailActivity.class);
+
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
+
 
     }
 
@@ -772,6 +798,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         alertDialog.setCancelable(true);
         alertDialog.show();
     }
+
     private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);

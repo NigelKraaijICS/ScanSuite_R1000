@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/header_navigationview">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/header_navigationview"
+    tools:ignore="MissingDefaultResource">
     <!--<android.support.v7.widget.AppCompatImageView-->
         <!--style="@style/header_navigationview_logo"-->
         <!--android:id="@+id/navigationViewLogo"-->
@@ -16,9 +18,7 @@
         android:layout_marginTop="@dimen/default_margin"
         app:srcCompat="@drawable/ic_scansuite_logo2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textMenu"
-        app:layout_constraintBottom_toBottomOf="@id/textMenu"
-        />
+        tools:ignore="MissingConstraints" />
     <TextView
         style="@style/header_navigationview_title"
         android:text="@string/mainmenu_title"

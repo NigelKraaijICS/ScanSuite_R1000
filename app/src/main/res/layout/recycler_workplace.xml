@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
-            android:id="@+id/imageViewMenuItem"
+            android:id="@+id/imageViewBinItem"
             app:srcCompat="@drawable/ic_workplace"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -19,7 +19,7 @@
         <TextView
             style="@style/userNameText"
             android:id="@+id/textViewDescription"
-            app:layout_constraintStart_toEndOf="@id/imageViewMenuItem"
+            app:layout_constraintStart_toEndOf="@id/imageViewBinItem"
             app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
             app:layout_constraintTop_toTopOf="parent"
             />

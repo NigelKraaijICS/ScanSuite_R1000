@@ -20,7 +20,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Returns.ReturnArticleDetailFragment;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cReturnorderBarcodeAdapter extends RecyclerView.Adapter<cReturnorderBarcodeAdapter.returnorderBarcodeViewHolder>  {
@@ -88,9 +88,9 @@ public class cReturnorderBarcodeAdapter extends RecyclerView.Adapter<cReturnorde
                     }
                 }
 
-                if (cAppExtension.dialogFragment instanceof ReturnArticleDetailFragment ) {
-                    ReturnArticleDetailFragment returnArticleDetailFragment = (ReturnArticleDetailFragment)cAppExtension.dialogFragment;
-                    returnArticleDetailFragment.pHandleScan(cBarcodeScan.pFakeScan(cReturnorderLine.currentReturnOrderLine.barcodeObl().get(0).getBarcodeStr()));
+                if (cAppExtension.activity instanceof ReturnArticleDetailActivity) {
+                    ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
+                    returnArticleDetailActivity.pHandleScan(cBarcodeScan.pFakeScan(cReturnorderLine.currentReturnOrderLine.barcodeObl().get(0).getBarcodeStr()));
                 }
 
             }

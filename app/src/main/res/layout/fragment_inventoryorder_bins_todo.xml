@@ -27,7 +27,7 @@
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/quickhelp"
-        android:id="@+id/actionsContainer"
+        android:id="@+id/quickHelpContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

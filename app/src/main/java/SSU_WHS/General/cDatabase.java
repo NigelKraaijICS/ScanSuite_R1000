@@ -7,7 +7,9 @@ public class cDatabase {
     public static final String TABLENAME_SETTINGS = "Settings";
     public static final String TABLENAME_SCANNERLOGON = "ScannerLogon";
     public static final String TABLENAME_BARCODELAYOUTS = "BarcodeLayouts";
+    public static final String TABLENAME_BINITEM = "BinItem";
     public static final String TABLENAME_WORKPLACE = "Workplaces";
+    public static final String TABLENAME_SCANNERS = "Scanners";
     public static final String TABLENAME_BRANCH = "Branches";
     public static final String TABLENAME_BRANCHBIN = "BranchBin";
     public static final String TABLENAME_WAREHOUSELOCATIONS = "WarehouseLocations";
@@ -312,6 +314,7 @@ public class cDatabase {
 
     //region S
     public static final String SALESORDER_NAMESTR = "Salesorder";
+    public static final String SCANNER_NAMESTR = "Scanner";
     public static final String SHIPDEFAULTBIN_NAMESTR = "Ship_default_bin";
     public static final String SHIPPINGADVICE_NAMESTR = "ShippingAdvice";
     public static final String SETTING_NAMESTR = "Instelling";

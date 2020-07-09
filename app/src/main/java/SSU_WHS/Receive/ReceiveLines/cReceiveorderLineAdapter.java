@@ -98,9 +98,12 @@ public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorder
         String[] splited = currentReceiveorderLine.getHandledTimeStampStr().split("T");
         String timeStr = "??";
 
-         if (splited != null &&  splited.length >= 1) {
+
+         if (splited != null &&   splited.length == 2) {
              if (splited[1].length() >= 5) {
-                 timeStr =  splited[1].substring(0,5);
+                 if (splited[1] != "null") {
+                     timeStr =  splited[1].substring(0,5);
+                 }
              }
          }
 

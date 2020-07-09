@@ -363,6 +363,8 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             }
 
             intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
+            MoveorderSelectActivity.startedViaMenuBln = true;
+
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_MOVE);
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_MOVE);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
@@ -405,11 +407,5 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     }
 
     //End Region Private Methods
-
-
-
-
-
-
 
 }

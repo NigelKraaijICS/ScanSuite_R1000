@@ -13,8 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.Objects;
-
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -22,11 +20,14 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSortActivity;
@@ -109,7 +110,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
     @Override
     public void mFieldsInitialize() {
-        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+        requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 acceptRejectHeader.setText(titleStr);
@@ -149,6 +150,10 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
                     returnorderDocumentsActivity.pHandleFragmentDismissed();
                 }
 
+                if (cAppExtension.activity instanceof ReturnArticleDetailActivity) {
+                    ReturnArticleDetailActivity pickorderPickActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
+                    pickorderPickActivity.pHandleFragmentDismissed();
+                }
 
                 dismiss();
             }
@@ -252,6 +257,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             return;
         }
 
+        if (cAppExtension.activity instanceof  ReturnArticleDetailActivity) {
+            ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
+            returnArticleDetailActivity.pDone();
+            this.dismiss();
+            return;
+        }
+
         if (cAppExtension.activity instanceof ReceiveLinesActivity) {
 
             ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
@@ -286,6 +298,21 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             packagingActivity.pHandlePackagingDone();
         }
 
+        if (cAppExtension.activity instanceof MoveLinesActivity) {
+            MoveLinesActivity moveLinesActivity = (MoveLinesActivity)cAppExtension.activity;
+
+            if (!moveLinesActivity.closeOrderClickedBln) {
+                moveLinesActivity.pLeaveActivity();
+                return;
+            }
+
+            moveLinesActivity.pDone();
+        }
+
+        if (cAppExtension.activity instanceof MoveLineTakeActivity) {
+            MoveLineTakeActivity moveLineTakeActivity = (MoveLineTakeActivity)cAppExtension.activity;
+            moveLineTakeActivity.pAcceptMove(true);
+        }
 
     }
 
@@ -364,7 +391,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
             ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
-            returnorderDocumentActivity.pStartDocumentsActivity();
+            returnorderDocumentActivity.pHandleFragmentDismissed();
             this.dismiss();
             return;
         }
@@ -377,6 +404,16 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof PackagingActivity){
             this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof MoveLinesActivity){
+            this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof MoveLineTakeActivity) {
+            MoveLineTakeActivity moveLineTakeActivity = (MoveLineTakeActivity)cAppExtension.activity;
+            moveLineTakeActivity.pCancelMove();
+            return;
         }
 
     }

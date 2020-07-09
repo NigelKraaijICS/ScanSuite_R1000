@@ -14,7 +14,6 @@ import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
-import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
 
 public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.WorkplaceViewHolder>{
@@ -85,13 +84,7 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
                     }
 
                     if (cAppExtension.context instanceof ShiporderLinesActivity) {
-
                         ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
-
-                        if (cAppExtension.dialogFragment instanceof WorkplaceFragment) {
-                            cAppExtension.dialogFragment.dismiss();
-                        }
-
                         shiporderLinesActivity.pWorkplaceSelected();
 
                     }

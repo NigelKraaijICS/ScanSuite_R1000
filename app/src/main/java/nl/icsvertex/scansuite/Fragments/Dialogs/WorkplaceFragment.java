@@ -61,7 +61,6 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer, Bundle pvSavedInstanceState) {
         View rootview = pvInflater.inflate(R.layout.fragment_workplaces, pvContainer);
-        cAppExtension.dialogFragment = this;
         return rootview;
     }
 
@@ -96,6 +95,8 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         super.onResume();
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cUserInterface.pEnableScanner();
+        cAppExtension.dialogFragment = this;
+
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
@@ -184,8 +185,9 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
                 sortorderLinesActivity.pCloseSortAndDecideNextStep();
             }
 
-            if (cAppExtension.activity instanceof ShiporderLinesActivity) {
-                cAppExtension.dialogFragment.dismiss();
+            if (cAppExtension.context instanceof ShiporderLinesActivity) {
+                ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+                shiporderLinesActivity.pWorkplaceSelected();
             }
 
         }

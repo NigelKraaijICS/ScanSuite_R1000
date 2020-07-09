@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
-            android:id="@+id/imageViewMenuItem"
+            android:id="@+id/imageViewBinItem"
             android:backgroundTint="@color/colorCommentBubble"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -19,10 +19,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/imageViewMenuItem"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewMenuItem"
-            app:layout_constraintStart_toStartOf="@id/imageViewMenuItem"
-            app:layout_constraintEnd_toEndOf="@id/imageViewMenuItem"
+            app:layout_constraintTop_toTopOf="@id/imageViewBinItem"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBinItem"
+            app:layout_constraintStart_toStartOf="@id/imageViewBinItem"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBinItem"
             android:textSize="@dimen/textsize_huge"
             android:textColor="@color/colorCommentText"
             android:id="@+id/textViewInitials"
@@ -31,7 +31,7 @@
         <TextView
             style="@style/userNameText"
             android:id="@+id/textViewName"
-            app:layout_constraintStart_toEndOf="@id/imageViewMenuItem"
+            app:layout_constraintStart_toEndOf="@id/imageViewBinItem"
             app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
             app:layout_constraintTop_toTopOf="parent"
             />

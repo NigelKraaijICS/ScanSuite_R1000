@@ -53,7 +53,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     //Region Private Properties
 
-    private static Boolean articleScannedLastBln;
+    private static boolean articleScannedLastBln;
+    private boolean defaultBarcodeSelectedBln;
     private List<String> sortingAdviceObl;
 
     private int pickCounterMinusHelperInt;
@@ -213,8 +214,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-
-
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_sort);
@@ -280,16 +279,18 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         cBarcodeScan.pRegisterBarcodeReceiver();
 
+        //Register scan here, so we start things off
+        SortorderSortActivity.articleScannedLastBln = false;
+
         //No barcodeStr selected, so don't simulate scan
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             return;
         }
 
-        //Register scan here, so we start things off
-        SortorderSortActivity.articleScannedLastBln = false;
-
         //Fake a scan
-        this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
+        if (! this.defaultBarcodeSelectedBln){
+            this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
+        }
     }
 
     //End Region iICSDefaultActivity Methods
@@ -622,7 +623,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
                 //If we only have one barcodeStr, then automatticaly select that barcodeStr
                 if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
-                    mBarcodeSelected(cPickorderLine.currentPickOrderLine.barcodesObl.get(0));
+                   pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
                     return;
                 }
 
@@ -636,7 +637,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
                     mSortDone();
@@ -663,7 +663,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.sortingAdviceObl = cPickorderLine.currentPickOrderLine.pGetAdvicedSortLocationsFromWebserviceObl();
 
         if ( this.sortingAdviceObl == null ||  this.sortingAdviceObl.size() == 0) {
-            this.textAdviceLocation.setText("");
+            this.textAdviceLocation.setText(cAppExtension.activity.getString(R.string.message_no_sorting_location_adviced));
             return;
         }
 
@@ -678,7 +678,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mSortDone() {
-        this.mSendPickorderLine();
+        this.mSendLine();
         this.mGoBackToLinesActivity();
     }
 
@@ -689,7 +689,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_update_line), null);
             return;
         }
-
 
         this.mGoBackToLinesActivity();
     }
@@ -709,9 +708,9 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         }
     }
 
-    private  void mSendPickorderLine() {
+    private  void mSendLine() {
 
-        if (!cPickorderLine.currentPickOrderLine.pHandledBln()) {
+        if (!cPickorderLine.currentPickOrderLine.pSortedBln()) {
             //could not send line, let user know but answer succes so user can go to next line
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), null);
             cPickorderLine.currentPickOrderLine.pErrorSending();
@@ -860,6 +859,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
                 cPickorderBarcode.currentPickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(0);
+                this.defaultBarcodeSelectedBln = true;
             }
         }
 

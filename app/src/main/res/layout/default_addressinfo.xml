@@ -1,7 +1,7 @@
 <androidx.cardview.widget.CardView
     android:id="@+id/addressContainer"
     style="@style/addressContainer"
-    app:layout_constraintTop_toBottomOf="@id/destinationContainer"
+    app:layout_constraintTop_toBottomOf="@id/sourceNoContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >

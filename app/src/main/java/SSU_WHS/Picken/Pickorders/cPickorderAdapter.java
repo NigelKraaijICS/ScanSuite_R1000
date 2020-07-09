@@ -35,8 +35,10 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
         private TextView  textViewExternalreference;
         private TextView textViewCurrentLocation;
         private TextView textViewQuantityTotal;
+        private ImageView imageCurrentLocation;
         private ImageView imageViewIsSingleArticle;
         private ImageView imageViewIsProcessedOrWait;
+        private ImageView imageViewUser;
         public LinearLayout pickorderItemLinearLayout;
 
         public PickorderViewHolder(View pvItemView) {
@@ -47,6 +49,8 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             this.textViewOrderUser.setSingleLine(true);
             this.textViewOrderUser.setMarqueeRepeatLimit(5);
             this.textViewOrderUser.setSelected(true);
+
+            this.imageViewUser = pvItemView.findViewById(R.id.imageViewUser);
 
             this.textViewOrdernumber = pvItemView.findViewById(R.id.textViewOrdernumber);
             this.textViewOrdernumber.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -60,6 +64,7 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             this.textViewExternalreference.setMarqueeRepeatLimit(5);
             this.textViewExternalreference.setSelected(true);
 
+            this.imageCurrentLocation = pvItemView.findViewById(R.id.imageCurrentLocation);
             this.textViewCurrentLocation = pvItemView.findViewById(R.id.textViewCurrentLocation);
 
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
@@ -102,12 +107,22 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
         final cPickorder  selectedPickorder = localPickorderObl.get(pvPositionInt);
 
+        String userStr;
 
         if (selectedPickorder.getStatusInt() == 10 ) {
-            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedPickorder.getAssignedUserIdStr()));
+            userStr = cUser.pUserToShowStr(selectedPickorder.getAssignedUserIdStr());
+
         }
         else {
-            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedPickorder.getCurrentUserIdStr()));
+            userStr = cUser.pUserToShowStr(selectedPickorder.getCurrentUserIdStr());
+        }
+
+        if (userStr.isEmpty()) {
+            pvHolder.imageViewUser.setVisibility(View.GONE);
+        }
+        else {
+            pvHolder.textViewOrderUser.setText(userStr);
+            pvHolder.imageViewUser.setVisibility(View.VISIBLE);
         }
 
         if (!selectedPickorder.isSingleArticleOrdersBln()) {
@@ -135,8 +150,15 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             pvHolder.textViewExternalreference.setText(selectedPickorder.getExternalReferenceStr());
         }
 
-        pvHolder.textViewCurrentLocation.setText(selectedPickorder.getCurrentLocationStr());
-        pvHolder.textViewCurrentLocation.setVisibility(View.VISIBLE);
+        if (selectedPickorder.getCurrentLocationStr().isEmpty()) {
+            pvHolder.textViewCurrentLocation.setVisibility(View.GONE);
+            pvHolder.imageCurrentLocation.setVisibility(View.GONE);
+        }
+        else
+        {
+            pvHolder.textViewCurrentLocation.setText(selectedPickorder.getCurrentLocationStr());
+            pvHolder.textViewCurrentLocation.setVisibility(View.VISIBLE);
+        }
 
         if(selectedPickorder.getQuantityTotalInt() == 0) {
             pvHolder.textViewQuantityTotal.setText("");

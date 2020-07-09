@@ -1,29 +1,24 @@
 package SSU_WHS.Move.MoveorderBarcodes;
 
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
-import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
+import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
+import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 
 public class cMoveorderBarcode {
 
     private cMoveorderBarcodeEntity moveorderBarcodeEntity;
 
     public static List<cMoveorderBarcode> allMoveorderBarcodesObl;
-    public static cMoveorderBarcode currentMoveOrderBarcode;
-
     //Region Public Properties
 
     public String barcode;
@@ -51,6 +46,10 @@ public class cMoveorderBarcode {
         return this.variantCode;
     }
 
+    public  String getItemNoAndVariantCodeStr(){
+        return   this.getItemNoStr() + " " + this.getVariantCodeStr();
+    }
+
     public Double quantityPerUnitOfMeasure;
     public Double getQuantityPerUnitOfMeasureDbl() {
         return this.quantityPerUnitOfMeasure;
@@ -65,6 +64,16 @@ public class cMoveorderBarcode {
     public Double getQuantityHandled() {
         return this.quantityHandled;
     }
+
+    public  String getBarcodeAndQuantityStr(){
+        return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
+    }
+
+
+    public  String getKeyStr() {
+        return  this.getItemNoStr() + "þ" + this.getVariantCodeStr();
+    }
+
 
     private cMoveorderBarcodeViewModel getMoveorderBarcodeViewModel () {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderBarcodeViewModel.class);
@@ -85,6 +94,31 @@ public class cMoveorderBarcode {
         this.quantityHandled = this.moveorderBarcodeEntity.getQuantityHandled();
     }
 
+    public cMoveorderBarcode(cArticleBarcode pvArticleBarcode) {
+        this.moveorderBarcodeEntity = null;
+        this.barcode = pvArticleBarcode.getBarcodeStr();
+        this.barcodetype = cText.pIntToStringStr(pvArticleBarcode.getBarcodeTypeInt());
+        this.isuniquebarcode = pvArticleBarcode.isUniqueBarcodeBln;
+        this.itemno = pvArticleBarcode.getItemNoStr();
+        this.variantCode = pvArticleBarcode.getVariantCodeStr();
+        this.quantityPerUnitOfMeasure = pvArticleBarcode.getQuantityPerUnitOfMeasureDbl();
+        this.unitOfMeasure = pvArticleBarcode.getUnitOfMeasureStr();
+        this.quantityHandled = (double) 0;
+    }
+
+    public cMoveorderBarcode(cMoveorderLine pvMoveorderLine, cMoveorderLineBarcode pvMoveorderLineBarcode) {
+        this.moveorderBarcodeEntity = null;
+        this.barcode = pvMoveorderLineBarcode.getBarcodeStr();
+        this.barcodetype = cText.pIntToStringStr(3);
+        this.isuniquebarcode =false;
+        this.itemno = pvMoveorderLine.getItemNoStr();
+        this.variantCode = pvMoveorderLine.getVariantCodeStr();
+        this.quantityPerUnitOfMeasure = Double.valueOf(1);
+        this.unitOfMeasure = "STUK";
+        this.quantityHandled = Double.valueOf(1);
+    }
+
+
     //End Region Constructor
 
 
@@ -104,36 +138,6 @@ public class cMoveorderBarcode {
         }
         cMoveorderBarcode.allMoveorderBarcodesObl.add(this);
         return  true;
-    }
-    public boolean pCreateBarcodesViaWebserviceBln() {
-
-        cWebresult WebResult;
-
-        WebResult =  this.getMoveorderBarcodeViewModel().pCreateBarcodeViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
-            return true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_CREATEMOVEORDERBARCODES);
-            return  false;
-        }
-    }
-
-    public static List <cMoveorderBarcode> pGetMovebarcodeViaVariantAndItemNoObl(String pvItemNo, String pvVariantcode) {
-        if (cMoveorderBarcode.allMoveorderBarcodesObl == null || cMoveorderBarcode.allMoveorderBarcodesObl.size() == 0){
-            return null;
-        }
-        List <cMoveorderBarcode> resultObl = null;
-
-        for (cMoveorderBarcode moveorderBarcode : cMoveorderBarcode.allMoveorderBarcodesObl) {
-            if (moveorderBarcode.getVariantCodeStr().equalsIgnoreCase(pvVariantcode) && moveorderBarcode.getItemNoStr().equalsIgnoreCase(pvItemNo)){
-                if (resultObl == null ){
-                    resultObl = new ArrayList<>();
-                }
-
-                resultObl.add(moveorderBarcode);
-            }
-        }return resultObl;
     }
 
     public String getBarcodeWithoutCheckDigitStr() {

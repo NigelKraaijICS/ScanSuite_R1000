@@ -1,6 +1,7 @@
 package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +14,16 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcodeAdapter;
-import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeAdapter;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeAdapter;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.R;
@@ -53,6 +57,14 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
         return  this.pickorderBarcodeAdapter;
     }
 
+    private cMoveorderBarcodeAdapter moveorderBarcodeAdapter;
+    private cMoveorderBarcodeAdapter getMoveorderBarcodeAdapter(){
+        if (this.moveorderBarcodeAdapter == null) {
+            this.moveorderBarcodeAdapter = new cMoveorderBarcodeAdapter();
+        }
+        return  this.moveorderBarcodeAdapter;
+    }
+
     //End Region Private Properties
 
 
@@ -72,6 +84,16 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     @Override
     public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
         this.mFragmentInitialize();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            Objects.requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     @Override
@@ -124,6 +146,10 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
 
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
             this.barcodeRecyclerview.setAdapter(this.getIntakeorderBarcodeAdapter());
+        }
+
+        if (cAppExtension.activity instanceof MoveLineTakeActivity) {
+            this.barcodeRecyclerview.setAdapter(this.getMoveorderBarcodeAdapter());
         }
 
         this.barcodeRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));

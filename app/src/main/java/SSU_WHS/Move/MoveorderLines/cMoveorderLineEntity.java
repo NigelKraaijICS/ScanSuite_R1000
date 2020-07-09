@@ -65,6 +65,10 @@ public class cMoveorderLineEntity {
     public int status;
     public int getStatusInt() {return this.status;}
 
+    @ColumnInfo(name = cDatabase.SORTINGSEQUENCENO_NAMESTR)
+    public int sortingSequenceNo;
+    public int getSortingSequenceNoInt() {return this.sortingSequenceNo;}
+
     @ColumnInfo(name = cDatabase.LOCALSTATUS_NAMESTR)
     public int localstatus;
     public int getLocalStatusInt() {return this.localstatus;}
@@ -130,6 +134,7 @@ public class cMoveorderLineEntity {
             this.handledtimestamp = pvJsonObject.getString(cDatabase.HANDLEDTIMESTAMP_NAMESTR);
             this.sourceno = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
             this.status = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.STATUS_NAMESTR));
+            this.sortingSequenceNo = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.SORTINGSEQUENCENO_NAMESTR));
             this.actiontypecode = pvJsonObject.getString(cDatabase.ACTIONTYPECODE_NAMESTR);
             this.localstatus = cWarehouseorder.MovelineLocalStatusEnu.LOCALSTATUS_NEW;
             this.quantityTaken =  cText.pStringToDoubleDbl(pvJsonObject.getString(cDatabase.QUANTITYTAKEN_NAMESTR));

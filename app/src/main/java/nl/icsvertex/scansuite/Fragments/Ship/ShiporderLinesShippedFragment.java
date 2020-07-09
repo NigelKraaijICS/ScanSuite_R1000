@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -110,6 +111,12 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
     @Override
     public void mFieldsInitialize() {
 
+        for (Fragment fragment: cAppExtension.fragmentManager.getFragments()) {
+            if (fragment instanceof NothingHereFragment) {
+                cAppExtension.fragmentManager.beginTransaction().remove(fragment).commit();
+            }
+        }
+
     }
 
     @Override
@@ -137,13 +144,13 @@ public class ShiporderLinesShippedFragment extends Fragment implements iICSDefau
         this.recyclerViewShiporderLinesShipped.setHasFixedSize(false);
         this.recyclerViewShiporderLinesShipped.setAdapter( this.getShipmentAdapter());
         this.recyclerViewShiporderLinesShipped.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.recyclerViewShiporderLinesShipped.setVisibility(View.VISIBLE);
 
         if (cAppExtension.activity instanceof  ShiporderLinesActivity) {
             ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
             shiporderLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cPickorder.currentPickOrder.pGetHandledShipmentsObl().size()) + "/" + cText.pIntToStringStr(cPickorder.currentPickOrder.shipmentObl().size()));
         }
     }
-
 
     private void mNoLinesAvailable() {
 
