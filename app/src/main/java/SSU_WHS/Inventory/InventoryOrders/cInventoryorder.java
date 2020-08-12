@@ -114,7 +114,7 @@ public class cInventoryorder {
     }
 
     public Boolean isGeneratedBln() {
-        return this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated;
+        return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.Generated;
     }
 
     public int unknownVariantCounterInt = 0;
@@ -141,7 +141,7 @@ public class cInventoryorder {
         return  cArticleImage.allImages;
     }
 
-    private static List<cInventoryorder> allCachedOrdersObl;
+    public static List<cInventoryorder> allCachedOrdersObl;
     public static List<cInventoryorder> allInventoryOrdersObl(Boolean pvRefreshBln ){
 
         if (pvRefreshBln) {
@@ -156,7 +156,7 @@ public class cInventoryorder {
 
 
         cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
-        List<cInventoryorderEntity> hulpObl  =  inventoryorderViewModel.pGetInventoryordersFromDatabaseObl();
+        List<cInventoryorderEntity> hulpObl  =  inventoryorderViewModel.pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), false);
 
 
         for (cInventoryorderEntity inventoryorderEntity : hulpObl) {
@@ -867,6 +867,7 @@ public class cInventoryorder {
             for (JSONObject jsonObject :WebResult.getResultDtt() ) {
                 cInventoryorderBarcode inventoryorderBarcode = new cInventoryorderBarcode(jsonObject);
                 inventoryorderEntities.add(inventoryorderBarcode.inventoryorderBarcodeEntity);
+                cInventoryorderBarcode.allInventoryorderBarcodesObl.add(inventoryorderBarcode);
             }
 
             cInventoryorderBarcode.pInsertAllInDatabase(inventoryorderEntities);

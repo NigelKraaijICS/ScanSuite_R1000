@@ -2,119 +2,153 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pickorderItemLinearLayout"
     style="@style/pickorderRecyclerLinearLayout"
+    android:animateLayoutChanges="true"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/checkboxRelativelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="@dimen/default_padding"
+            tools:ignore="MissingConstraints">
+            <ImageView
+                android:id="@+id/imageCircle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/shape_circle"
+                android:tint="@color/colorPrimary"
+                />
+            <ImageView
+                android:id="@+id/imageCheck"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                app:srcCompat="@drawable/ic_done" />
+        </RelativeLayout>
+
+        <!--First line-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageOrdernumber"
             style="@style/recyclerItemImage"
             app:srcCompat="@drawable/ic_document_black_24dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkboxRelativelayout"
             app:layout_constraintTop_toTopOf="parent"
-            />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageExternalReference"
-            style="@style/recyclerItemImage"
-            app:srcCompat="@drawable/ic_external_black_24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewOrdernumber"
-            />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageOrderType"
-            style="@style/recyclerItemImage"
-            app:srcCompat="@drawable/ic_ordertype_black_24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewCurrentLocation"
-            />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageCurrentLocation"
-            style="@style/recyclerItemImage"
-            app:srcCompat="@drawable/ic_location_black_24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewExternalreference"
             />
         <TextView
             android:id="@+id/textViewOrdernumber"
             style="@style/pickorderRecyclerOrdernumberText"
             app:layout_constraintStart_toEndOf="@id/imageOrdernumber"
-            app:layout_constraintEnd_toStartOf="@id/textViewOrderUser"
+            app:layout_constraintEnd_toStartOf="@id/quantityRelativelayout"
             app:layout_constraintTop_toTopOf="parent"
             />
 
-        <TextView
-            android:id="@+id/textViewOrderUser"
-            style="@style/pickorderRecyclerUser"
-            app:layout_constraintTop_toTopOf="@id/textViewOrdernumber"
-            app:layout_constraintEnd_toStartOf="@id/imageViewUser"
+        <!--Seconde line-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageExternalReference"
+            style="@style/recyclerItemImage"
+            app:srcCompat="@drawable/ic_external_black_24dp"
+            app:layout_constraintStart_toEndOf="@id/checkboxRelativelayout"
+            app:layout_constraintTop_toBottomOf="@id/textViewOrdernumber"
             />
-        <TextView
-            android:id="@+id/textViewQuantityTotal"
-            style="@style/pickorderRecyclerQuantityTotalText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/imageViewIsProcessedOrWait"
-            app:layout_constraintEnd_toStartOf="@id/imageViewQuantityTotal"
-            />
-
         <TextView
             android:id="@+id/textViewExternalreference"
             style="@style/pickorderRecyclerExternalreferenceText"
             app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
-            app:layout_constraintEnd_toStartOf="@id/imageViewQuantityTotal"
+            app:layout_constraintEnd_toStartOf="@id/quantityRelativelayout"
             app:layout_constraintTop_toBottomOf="@id/textViewOrdernumber"
-            />
-
-        <TextView
-            android:id="@+id/textViewCurrentLocation"
-            style="@style/pickorderRecyclerCurrentLocationText"
-            app:layout_constraintTop_toBottomOf="@id/textViewExternalreference"
-            app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
-            app:layout_constraintEnd_toEndOf="@id/textViewExternalreference"
-            />
-
-        <TextView
-            android:id="@+id/textViewOrdertype"
-            style="@style/pickorderRecyclerOrdertypeText"
-            app:layout_constraintTop_toBottomOf="@id/textViewCurrentLocation"
-            app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
-            app:layout_constraintEnd_toEndOf="@id/textViewExternalreference"
-            />
-        <View
-            android:id="@+id/menuSeparator"
-            style="@style/menuSeparator"
-            app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewQuantityTotal"
-            style="@style/pickorderRecyclerQuantityTotal"
-            app:layout_constraintTop_toTopOf="@id/textViewQuantityTotal"
-            app:layout_constraintBottom_toBottomOf="@id/textViewQuantityTotal"
-            app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
             />
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewIsSingleArticle"
             style="@style/pickorderRecyclerSingleArticles"
             app:layout_constraintTop_toBottomOf="@id/textViewOrderUser"
             app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
-            android:visibility="gone"
             />
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewIsProcessedOrWait"
             style="@style/pickorderRecyclerProcessedWait"
-            app:layout_constraintTop_toBottomOf="@id/imageViewIsSingleArticle"
-            app:layout_constraintStart_toStartOf="@id/imageViewIsSingleArticle"
-            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="@id/textViewOrdertype"
+            app:layout_constraintStart_toEndOf="@id/imageViewIsSingleArticle"
             />
+
+        <!--Third line-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageCurrentLocation"
+            style="@style/recyclerItemImage"
+            app:srcCompat="@drawable/ic_location_black_24dp"
+            app:layout_constraintStart_toEndOf="@id/checkboxRelativelayout"
+            app:layout_constraintTop_toBottomOf="@id/textViewExternalreference"
+            />
+        <TextView
+            android:id="@+id/textViewCurrentLocation"
+            style="@style/pickorderRecyclerCurrentLocationText"
+            app:layout_constraintTop_toBottomOf="@id/textViewExternalreference"
+            app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
+            app:layout_constraintEnd_toStartOf="@id/quantityRelativelayout"
+            />
+        <RelativeLayout
+            android:id="@+id/quantityRelativelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/textViewOrdernumber"
+            android:padding="@dimen/default_padding"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:id="@+id/textViewQuantityTotal"
+                style="@style/pickorderRecyclerQuantityTotalWhiteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/item_count"
+                />
+        </RelativeLayout>
+
+        <!--Fourth line-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewUser"
             style="@style/pickorderRecyclerUserImage"
-            app:layout_constraintTop_toTopOf="@id/textViewOrderUser"
-            app:layout_constraintBottom_toBottomOf="@id/textViewOrderUser"
-            app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
+            app:layout_constraintStart_toEndOf="@id/checkboxRelativelayout"
+            app:layout_constraintTop_toBottomOf="@id/textViewCurrentLocation"
+            />
+        <TextView
+            android:id="@+id/textViewOrderUser"
+            style="@style/pickorderRecyclerExternalreferenceText"
+            app:layout_constraintTop_toTopOf="@id/imageViewUser"
+            app:layout_constraintEnd_toStartOf="@id/quantityRelativelayout"
+            app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
+
+            />
+
+        <!--Fifth line-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageOrderType"
+            style="@style/recyclerItemImage"
+            app:srcCompat="@drawable/ic_ordertype_black_24dp"
+            app:layout_constraintStart_toEndOf="@id/checkboxRelativelayout"
+            app:layout_constraintTop_toBottomOf="@id/textViewOrderUser"
+            />
+        <TextView
+            android:id="@+id/textViewOrdertype"
+            style="@style/pickorderRecyclerOrdertypeText"
+            app:layout_constraintTop_toBottomOf="@id/textViewOrderUser"
+            app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
+            app:layout_constraintEnd_toStartOf="@id/imageViewIsSingleArticle"
+            />
+
+        <!--General-->
+        <View
+            android:id="@+id/menuSeparator"
+            style="@style/menuSeparator"
+            app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
+            app:layout_constraintBottom_toBottomOf="parent"
             />
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"

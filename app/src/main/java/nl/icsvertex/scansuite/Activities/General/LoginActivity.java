@@ -19,6 +19,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisation;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
@@ -232,6 +233,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     private void mSetUserRecycler() {
         this.recyclerViewUsers.setHasFixedSize(false);
+        this.recyclerViewUsers.getRecycledViewPool().clear();
         this.recyclerViewUsers.setAdapter(this.getUserAdapter());
         this.recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -286,7 +288,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln = false;
         cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln = false;
         cItemProperty.itemPropertiesAvaliableBln = false;
-
+        cCustomAuthorisation.customAutorisationsAvailableBln = false;
 
     }
 

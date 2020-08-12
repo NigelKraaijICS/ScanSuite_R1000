@@ -262,6 +262,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         this.pickCounterPlusHelperInt = 0;
         this.pickCounterMinusHelperInt = 0;
+
+        if (cPickorderLine.currentPickOrderLine == null) {
+            return;
+        }
+
         this.toolbarSubtext.setText(cPickorder.currentPickOrder.getOrderNumberStr());
 
         this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
@@ -271,7 +276,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         this.binText.setText(cPickorderLine.currentPickOrderLine.getBinCodeStr());
 
-        this.quantityText.setText("0");
+
+
         this.quantityRequiredText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
 
         this.mEnablePlusMinusAndBarcodeSelectViews();
@@ -279,6 +285,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.mShowOrHideGenericExtraFields();
 
         this.mShowBarcodeInfo();
+        this.mShowQuantityInfo();
         this.mShowSortingInstruction();
         this.mShowDestination();
 
@@ -301,7 +308,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
          // We scanned an ARTICLE, so handle barcide
 
-        if (cSetting.PICK_BIN_IS_ITEM()) {
+        if (cSetting.PICK_BIN_IS_ITEM() || cPickorder.currentPickOrder.isSingleBinBln()) {
             PickorderPickActivity.articleScannedLastBln = false;
             this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
         }
@@ -492,6 +499,21 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         } else {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
         }
+    }
+
+    private void mShowQuantityInfo(){
+
+        double quantityDbl = 0;
+
+        if (cPickorderLine.currentPickOrderLine.handledBarcodesObl().size() > 0) {
+            for (cPickorderLineBarcode pickorderLineBarcode : cPickorderLine.currentPickOrderLine.handledBarcodesObl())
+
+                quantityDbl += pickorderLineBarcode.getQuantityhandledDbl();
+        }
+
+        this.quantityText.setText(cText.pDoubleToStringStr(quantityDbl));
+
+
     }
 
     private  void mShowArticleImage() {
@@ -711,7 +733,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
         //negative
-        if (cPickorderLine.currentPickOrderLine.quantityHandledDbl == 0 ) {
+        if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() == 0 ) {
             cUserInterface.pDoNope(quantityText, true, true);
             return;
         }
@@ -999,7 +1021,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        if (!cSetting.PICK_AUTO_ACCEPT()) {
+        if (!cSetting.PICK_AUTO_ACCEPT() || !cSetting.PICK_AUTO_NEXT() ) {
             this.imageButtonDone.setVisibility(View.VISIBLE);
             this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
             return;
@@ -1014,10 +1036,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cResult hulpResult;
 
         //check if there is a next line for this BIN
-        cPickorderLine nextLine = cPickorder.currentPickOrder.pGetNetxLineToHandleForBin(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+        cPickorderLine nextLine = cPickorder.currentPickOrder.pGetNextLineToHandleForBin(cPickorderLine.currentPickOrderLine.getBinCodeStr());
 
        //There is no next line, so close this activity
-        if (nextLine == null) {
+        if (nextLine == null || ! cSetting.PICK_AUTO_NEXT()) {
             //Clear current barcodeStr and reset defaults
             cPickorderLine.currentPickOrderLine = null;
             PickorderPickActivity.articleScannedLastBln = false;

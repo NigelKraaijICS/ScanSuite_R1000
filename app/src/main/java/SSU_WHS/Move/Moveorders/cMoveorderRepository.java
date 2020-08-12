@@ -118,7 +118,6 @@ public class cMoveorderRepository {
         return webResultWrs;
     }
 
-
     public cWebresult pAddERPItemViaWebserviceWrs(cArticleBarcode pvArticleBarcode) {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
@@ -155,48 +154,70 @@ public class cMoveorderRepository {
     public List<cMoveorderEntity> pGetMovesFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
 
         List<cMoveorderEntity> ResultObl = null;
-        String SQLStatementStr;
+        StringBuilder SQLStatementStr;
+        int i;
 
-        SQLStatementStr = "SELECT * FROM " + cDatabase.TABLENAME_MOVEORDER ;
+        SQLStatementStr = new StringBuilder("SELECT * FROM " + cDatabase.TABLENAME_MOVEORDER);
         if (pvUseFiltersBln) {
 //            TTT
             if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE 1=1 ";
+                SQLStatementStr.append(" WHERE 1=1 ");
             }
 //            TTF
             else if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != '' ";
+                SQLStatementStr.append(" WHERE AssignedUserId != '' ");
             }
 //            TFT
             else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  AssignedUserId = '' " ;
-                SQLStatementStr += " OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  CurrentUserId = '' " ;
+                SQLStatementStr.append(" WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  AssignedUserId = '' ");
+                SQLStatementStr.append(" OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  CurrentUserId = '' ");
             }
 //            FTT
             else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
+                SQLStatementStr.append(" WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
             }
 //            TFF
             else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
-                SQLStatementStr += " OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " " ;
+                SQLStatementStr.append(" WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
+                SQLStatementStr.append(" OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
             }
 //            FTF
             else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " AND  AssignedUserId != '' ";
+                SQLStatementStr.append(" WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" AND  AssignedUserId != '' ");
             }
 //            FFT
             else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = '' AND CurrentUserId = ''";
+                SQLStatementStr.append(" WHERE AssignedUserId = '' AND CurrentUserId = ''");
             }
 //            FFF
             else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = 'HELEMAALNIEMAND' ";
+                SQLStatementStr.append(" WHERE AssignedUserId = 'HELEMAALNIEMAND' ");
             }
         }
 
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+
+            String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
+            String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
+
+            if (splitFields.length == splitValues.length) {
+
+
+                for (i = 0; i < splitFields.length; i++) {
+                    if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
+                        SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    }
+                    else {
+                        SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    }
+                }
+            }
+        }
+
+             SQLStatementStr.append(" ORDER BY Priority, Opdrachtnummer ASC");
+
         try {
-            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
+            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr.toString());
             ResultObl = new cMoveorderRepository.mGetMovesFromDatabaseWithFilterAsyncTask(moveorderDao).execute(query).get();
 
         } catch (InterruptedException | ExecutionException e) {
@@ -410,59 +431,7 @@ public class cMoveorderRepository {
         }
     }
 
-    private static class mMoveorderPlaceHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
-        @Override
-        protected cWebresult doInBackground(Void... params) {
-            cWebresult webresult = new cWebresult();
-            try {
-                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
-
-                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
-                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
-
-                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
-                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
-                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
-                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
-
-                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
-                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
-                l_PropertyInfo3Pin.setValue(cMoveorder.currentMoveOrder.getOrderNumberStr());
-                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
-
-                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
-                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNER;
-                l_PropertyInfo4Pin.setValue(cDeviceInfo.getSerialnumberStr());
-                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
-
-                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
-                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_BATCHBINCODE;
-                l_PropertyInfo5Pin.setValue("");
-                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
-
-                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
-                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOWSTEPCODESTR;
-                l_PropertyInfo6Pin.setValue(cWarehouseorder.StepCodeEnu.Move_Place.toString().toUpperCase());
-                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
-
-                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
-                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
-                l_PropertyInfo7Pin.setValue("");
-                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
-
-                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_MOVEHANDLED, l_PropertyInfoObl);
-
-            } catch (JSONException e) {
-                webresult.setSuccessBln(false);
-                webresult.setResultBln(false);
-            }
-            return webresult;
-        }
-    }
-
-    private static class mInsertAsyncTask extends AsyncTask<cMoveorderEntity, Void, Void> {
+      private static class mInsertAsyncTask extends AsyncTask<cMoveorderEntity, Void, Void> {
         private iMoveorderDao mAsyncTaskDao;
 
         mInsertAsyncTask(iMoveorderDao dao) {

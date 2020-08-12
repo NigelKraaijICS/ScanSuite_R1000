@@ -30,17 +30,18 @@ public class cPickorderViewModel extends AndroidViewModel {
     public void pAbortOrder() {this.PickorderRepository.pAbortOrder();}
 
     public cWebresult pGetPickordersFromWebserviceWrs(Boolean pvProcessingOrParkedBln, String pvSearchTextStr) {return this.PickorderRepository.pGetPickordersFromWebserviceWrs(pvProcessingOrParkedBln,pvSearchTextStr);}
-    public List<cPickorderEntity> pGetPickordersFromDatabaseObl() {return this.PickorderRepository.pGetPickordersFromDatabaseObl();}
-    public cWebresult pGetSortOrShipordersFromWebserviceWrs(String pvUserStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {return this.PickorderRepository.pGetPickordersToShipFromWebserviceWrs(pvUserStr,pvStepCodeEnu,pvSearchTextStr);}
+    public cWebresult pGetPickordersNextStepFromWebserviceWrs(String pvUserStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {return this.PickorderRepository.pGetPickorderstPickordersNextStepFromWebserviceWrs(pvUserStr,pvStepCodeEnu,pvSearchTextStr);}
     public List<cPickorderEntity> pGetPickordersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.PickorderRepository.pGetPickordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 
     public cWebresult pPickenHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pPickHandledViaWebserviceBln(pvWorkplaceStr);}
     public cWebresult pSortHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pSortHandledViaWebserviceBln(pvWorkplaceStr);}
+    public cWebresult pQCHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pQCHandledViaWebserviceBln(pvWorkplaceStr);}
     public cWebresult pShipHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pShipHandledViaWebserviceWrs(pvWorkplaceStr);}
     public cWebresult pPickorderSourceDocumentShippedViaWebserviceBln() { return this.PickorderRepository.pPickorderSourceDocumentShippedViaWebserviceWrs();}
 
     public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {return this.PickorderRepository.pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);}
     public Boolean pUpdatePickorderCurrentLocationInDatabaseBln(String pvCurrentLocationStr) {return this.PickorderRepository.pPickorderUpdatCurrentLocationInDatabaseBln(pvCurrentLocationStr);}
+    public boolean pUpdateIsSelectedBln() {return this.PickorderRepository.pPickorderUpdatIsSelectedInDatabaseBln();}
     public Boolean pPickorderUpdateWorkplaceViaWebserviceBln(String pvWorkplaceStr) {return this.PickorderRepository.pPickorderUpdateWorkplaceViaWebserviceBln(pvWorkplaceStr);}
 
     public Double pQuantityNotHandledDbl() {return this.PickorderRepository.pQuantityNotHandledDbl();}
@@ -48,6 +49,7 @@ public class cPickorderViewModel extends AndroidViewModel {
     public Double pGetQuantityTotalDbl() {return this.PickorderRepository.pGetTotalQuantityDbl();}
 
     public cWebresult pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu ) {return this.PickorderRepository.pGetLinesFromWebserviceWrs(pvActionTypeEnu);}
+    public cWebresult pGetQCLinesFromWebserviceWrs() {return this.PickorderRepository.pGetQCLinesFromWebserviceWrs();}
     public List<cPickorderLineEntity> pGetAllLinesFromDatabaseObl(){return  this.PickorderRepository.pGetAllLinesFromDatabaseObl();}
     public List<cPickorderLineEntity> pGetPickorderLinesToSendFromDatabaseObl(){return  this.PickorderRepository.pGetPickorderLinesToSendFromDatabaseObl();}
     public List<cPickorderLineEntity> pGetLinesNotHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesNotHandledFromDatabaseObl();}
@@ -56,6 +58,7 @@ public class cPickorderViewModel extends AndroidViewModel {
     public List<cPickorderLineEntity> pGetLinesHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesHandledFromDatabaseObl();}
 
     public cWebresult pGetPackAndShipLinesFromWebserviceWrs( ) {return this.PickorderRepository.pGetPackAndShipLinesFromWebserviceWrs();}
+
     public cWebresult pGetAdressesFromWebserviceWrs() {return this.PickorderRepository.pGetAddressesFromWebserviceWrs();}
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {return this.PickorderRepository.pGetBarcodesFromWebservice(); }
@@ -65,6 +68,14 @@ public class cPickorderViewModel extends AndroidViewModel {
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.PickorderRepository.pGetCommentsFromWebservice(); }
 
     public cWebresult pGetPackagesFromWebserviceWrs() {return this.PickorderRepository.pGetPackagesFromWebserviceWrs(); }
+
+    public cWebresult pCreateCombinedPickViaWebserviceWrs( ) {return this.PickorderRepository.pCreateCombinedPickViaWebserviceWrs();}
+
+    public cWebresult pAddOrderToCombinedPickViaWebserviceWrs( ) {return this.PickorderRepository.pAddOrderToCombinedPickViaWebserviceWrs();}
+
+    public cWebresult pRemoveOrderFromCombinedPickViaWebserviceWrs( ) {return this.PickorderRepository.pRemoveOrderFromCombinedPickViaWebserviceWrs();}
+
+    public cWebresult pRemoveCombinedPickViaWebserviceWrs( ) {return this.PickorderRepository.pRemoveCombinedPickViaWebserviceWrs();}
 
     //End Region Public Methods
 }

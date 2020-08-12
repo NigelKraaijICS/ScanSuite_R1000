@@ -24,6 +24,7 @@ public class cWarehouseorder {
         Pick_Picking,
         Pick_Sorting,
         Pick_PackAndShip,
+        Pick_QualityContol,
         Inventory,
         Receive_Store,
         Receive_InTake,
@@ -34,7 +35,8 @@ public class cWarehouseorder {
 
     public enum PickOrderTypeEnu {
         PICK,
-        SORT
+        SORT,
+        QC
     }
 
     public  enum ReceiveAndStoreMainTypeEnu {
@@ -77,6 +79,7 @@ public class cWarehouseorder {
     public static class WorkflowPickStepEnu {
         public static final int PickPicking = 10;
         public static final int PickSorting = 20;
+        public static final int PickQualityControl = 30;
         public static final int PickPackAndShip = 40;
 
     }
@@ -96,9 +99,6 @@ public class cWarehouseorder {
         public static final int Receive_StoreBezig = 41;
     }
 
-    public static class WorkflowMoveStepEnu {
-        public static final int MoveHandled = 13;
-    }
 
     public static class MoveStatusEnu {
         public static final int Move_Take = 10;
@@ -112,6 +112,7 @@ public class cWarehouseorder {
     public static class PicklineStatusEnu {
         public static final int Needed = 10;
         public static final int DONE = 11;
+        public static final int QCDONE = 20;
     }
 
     public static class PackingAndShippingStatusEnu {
@@ -159,6 +160,7 @@ public class cWarehouseorder {
 
     public static class WorkflowReturnStepEnu {
         public static final int Return = 10;
+        public static final int ReturnBusy = 1;
         public static final int ReturnPause = 12;
     }
 
@@ -171,10 +173,11 @@ public class cWarehouseorder {
         Next
     }
 
-    public static class SoureDocumentTypeEnu {
+    public static class SourceDocumentTypeEnu {
 
         public final static int Salesorder = 1;
-         public final static int PurchaseLine = 39;
+        public final static int PurchaseLine = 39;
+        public final static int CombinedPick = 95;
         public final static int Generated = 99;
     }
 

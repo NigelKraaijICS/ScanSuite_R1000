@@ -42,7 +42,7 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WebserviceErrorFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.PagerAdapters.SortorderLinesPagerAdapter;
@@ -148,9 +148,9 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
 
-        this.quantitySortordersText = findViewById(R.id.quantitySortordersText);
-        this.sortorderLinesTabLayout = findViewById(R.id.sortorderLinesTabLayout);
-        this.sortorderLinesViewPager = findViewById(R.id.sortorderLinesViewpager);
+        this.quantitySortordersText = findViewById(R.id.QCordersText);
+        this.sortorderLinesTabLayout = findViewById(R.id.QCLinesTabLayout);
+        this.sortorderLinesViewPager = findViewById(R.id.QCLinesViewpager);
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
     }
@@ -263,7 +263,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //If there is nothing more to do, then we are done
-        if (!cPickorder.currentPickOrder.PackAndShipNeededBln()) {
+        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
             this.mShowOrderDoneFragment();
             return;
         }
@@ -345,7 +345,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     public void pSortingDone() {
 
         //Check if we need to select a workplaceStr
-        if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
+        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln() && cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
             this.mShowWorkplaceFragment();
             return;
         }
@@ -375,9 +375,9 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pPlaySound(R.raw.goodsound, null);
 
-        final OrderDoneFragment orderDoneFragment = new OrderDoneFragment(false);
-        orderDoneFragment.setCancelable(false);
-        orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
+        final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_sort_done), cAppExtension.activity.getString(R.string.message_close_sort_fase),false);
+        stepDoneFragment.setCancelable(false);
+        stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
     private void mShowSending() {
@@ -456,7 +456,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             public void onClick(DialogInterface pvDialogInterface, int i) {
 
                 //Check if there is progress, and ask if user wants to send now
-                if (cPickorder.currentPickOrder.pGetLinesToSendFromDatabasObl().size() > 0 || cPickorder.currentPickOrder.pGetLinesBusyFromDatabasObl().size() >0 ) {
+                if (cPickorder.currentPickOrder.pGetLinesToSendFromDatabaseObl().size() > 0 || cPickorder.currentPickOrder.pGetLinesBusyFromDatabaseObl().size() >0 ) {
                     AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(cAppExtension.context);
                     alertDialog2.setTitle(R.string.message_progress_to_send);
                     alertDialog2.setMessage(getString(R.string.message_send_now));
@@ -563,7 +563,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private Boolean mCheckAndSentLinesToBeSendBln() {
 
-        List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabasObl();
+        List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabaseObl();
         boolean hulpBln = false;
 
         // If there is nothing to send, then we are done
@@ -600,7 +600,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private Boolean mHandleBusyLinesBln() {
 
-        List<cPickorderLine> busyLinesObl = cPickorder.currentPickOrder.pGetLinesBusyFromDatabasObl();
+        List<cPickorderLine> busyLinesObl = cPickorder.currentPickOrder.pGetLinesBusyFromDatabaseObl();
 
         // If there is nothing to send, then we are done
         if (busyLinesObl.size() == 0 ) {
@@ -629,7 +629,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //We are done with this order, so show order done
-        if (!cPickorder.currentPickOrder.PackAndShipNeededBln()) {
+        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
             this.mShowOrderDoneFragment();
             return;
         }
@@ -671,7 +671,7 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private Boolean mAllLinesDoneBln() {
-        return cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0;
+        return cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabaseObl().size() <= 0;
     }
 
     private  void mAskShip() {

@@ -135,6 +135,22 @@ public class cPickorderLineRepository {
         return webResultWrs;
     }
 
+    public cWebresult pPickLineCheckedViaWebserviceWrs() {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mPickorderLineCheckedViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     public cWebresult pResetViaWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
@@ -177,7 +193,7 @@ public class cPickorderLineRepository {
         UpdateOrderlineQuantityParams updateOrderlineQuantityParams = new UpdateOrderlineQuantityParams(cPickorderLine.currentPickOrderLine.getRecordIDInt(), pvQuantityDbl);
 
         try {
-            integerValue = new updateOrderLineQuantityAsyncTask(pickorderLineDao).execute(updateOrderlineQuantityParams).get();
+            integerValue = new updateOrderLineQuantityHandledAsyncTask(pickorderLineDao).execute(updateOrderlineQuantityParams).get();
 
             return integerValue != 0;
         } catch (InterruptedException | ExecutionException e) {
@@ -185,6 +201,22 @@ public class cPickorderLineRepository {
             return  false;
         }
     }
+
+    public boolean pUpdateQuantityCheckedBln(Double pvQuantityDbl) {
+
+        Integer integerValue;
+        UpdateOrderlineQuantityParams updateOrderlineQuantityParams = new UpdateOrderlineQuantityParams(cPickorderLine.currentPickOrderLine.getRecordIDInt(), pvQuantityDbl);
+
+        try {
+            integerValue = new updateOrderLineQuantityCheckedAsyncTask(pickorderLineDao).execute(updateOrderlineQuantityParams).get();
+
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return  false;
+        }
+    }
+
 
     public boolean pUpdateProcessingSequenceBln(String pvProcessingSequenceStr) {
         Integer integerValue;
@@ -341,6 +373,54 @@ public class cPickorderLineRepository {
         }
     }
 
+    private static class mPickorderLineCheckedViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+                l_PropertyInfo2Pin.setValue(cWarehouseorder.OrderTypeEnu.PICKEN.toString());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo4Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENO;
+                l_PropertyInfo5Pin.setValue(cPickorderLine.currentPickOrderLine.getLineNoInt());
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_QUANTITYCHECKED;
+                l_PropertyInfo6Pin.setValue(cPickorderLine.currentPickOrderLine.getQuantityCheckedDbl());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINECHECKED, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
     private static class mPickorderLineSortedViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
@@ -383,9 +463,11 @@ public class cPickorderLineRepository {
                 l_PropertyInfo7Pin.setValue(cPickorderLine.currentPickOrderLine.handledBarcodesObl().get(0).getBarcodeStr());
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
+                SoapObject propertieHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
+
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
-                l_PropertyInfo8Pin.setValue(null);
+                l_PropertyInfo8Pin.setValue(propertieHandledList);
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
@@ -408,12 +490,21 @@ public class cPickorderLineRepository {
         }
     }
 
-    private static class updateOrderLineQuantityAsyncTask extends AsyncTask<UpdateOrderlineQuantityParams, Void, Integer> {
+    private static class updateOrderLineQuantityHandledAsyncTask extends AsyncTask<UpdateOrderlineQuantityParams, Void, Integer> {
         private iPickorderLineDao mAsyncTaskDao;
-        updateOrderLineQuantityAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
+        updateOrderLineQuantityHandledAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
         @Override
         protected Integer doInBackground(UpdateOrderlineQuantityParams... params) {
-            return mAsyncTaskDao.updateOrderLineQuantity(params[0].recordIdint, params[0].quantityDbl);
+            return mAsyncTaskDao.updateOrderLineQuantityHandled(params[0].recordIdint, params[0].quantityDbl);
+        }
+    }
+
+    private static class updateOrderLineQuantityCheckedAsyncTask extends AsyncTask<UpdateOrderlineQuantityParams, Void, Integer> {
+        private iPickorderLineDao mAsyncTaskDao;
+        updateOrderLineQuantityCheckedAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Integer doInBackground(UpdateOrderlineQuantityParams... params) {
+            return mAsyncTaskDao.updateOrderLineQuantityChecked(params[0].recordIdint, params[0].quantityDbl);
         }
     }
 

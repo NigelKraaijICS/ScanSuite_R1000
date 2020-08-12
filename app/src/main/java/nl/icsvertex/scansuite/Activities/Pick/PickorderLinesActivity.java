@@ -51,7 +51,7 @@ import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
@@ -126,7 +126,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         finish();
     }
 
-
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -187,30 +186,8 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
 
         this.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_topick));
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_picked));
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
+        this.mSetTabLayout();
 
-        PickorderLinesPagerAdapter pickorderLinesPagerAdapter = new PickorderLinesPagerAdapter(this.pickorderLinesTabLayout.getTabCount());
-        this.pickorderLinesViewPager.setAdapter(pickorderLinesPagerAdapter);
-        this.pickorderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.pickorderLinesTabLayout));
-        this.pickorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab pvTab) {
-                pickorderLinesViewPager.setCurrentItem(pvTab.getPosition());
-                mChangeSelectedTab(pvTab);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab pvTab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab pvTab) {
-
-            }
-        });
 
     }
 
@@ -275,7 +252,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         //Check if we are done
-        if (cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() > 0 ) {
+        if (cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabaseObl().size() > 0 ) {
             this.mStartOrderSelectActivity();
             return;
         }
@@ -339,7 +316,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             //Clear current barcodeStr
             cPickorderBarcode.currentPickorderBarcode = null;
 
-            cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetNetxLineToHandleForBin(barcodewithoutPrefix);
+            cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetNextLineToHandleForBin(barcodewithoutPrefix);
             if (cPickorderLine.currentPickOrderLine == null) {
                 this.mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_bin), barcodewithoutPrefix);
                 return;
@@ -363,7 +340,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
-            if (!cSetting.PICK_BIN_IS_ITEM()) {
+            if (!cSetting.PICK_BIN_IS_ITEM() && !cPickorder.currentPickOrder.isSingleBinBln() ) {
                 //unknown scan
                 this.mDoUnknownScan(cAppExtension.context.getString(R.string.error_article_scan_not_allowed), pvBarcodeScan.getBarcodeOriginalStr());
                 return;
@@ -419,7 +396,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         if (cPickorder.currentPickOrder.pQuantityHandledDbl() > 0 ) {
             //Pick Transfer
             if (cPickorder.currentPickOrder.isTransferBln()) {
-                if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
+                if (!cPickorder.currentPickOrder.isPackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
                         cPickorder.currentPickOrder.isPickTransferAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
                     this.mShowWorkplaceFragment();
                     return;
@@ -431,8 +408,8 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
                 //Pick Sales
 
                 //Check if we need to select a workplaceStr
-                if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
-                        cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
+                if (!cPickorder.currentPickOrder.isPackAndShipNeededBln() && !cPickorder.currentPickOrder.isSortableBln()&&
+                   cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
                     this.mShowWorkplaceFragment();
                     return;
                 }
@@ -451,7 +428,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         new Thread(new Runnable() {
             public void run() {
-                mHandleClosePickAndDecideNextStep();
+                mHandlePickFaseHandledAndDecideNextStep();
             }
         }).start();
 
@@ -498,33 +475,17 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         builder.show();
     }
 
-    private void mAbortOrder() {
-
-        cUserInterface.pShowGettingData();
-
-        if (!cPickorder.currentPickOrder.pAbortBln()) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_couldnt_abort_order), cPickorderLine.currentPickOrderLine.getLineNoInt().toString(), true, true );
-            return;
-        }
-
-        cUserInterface.pHideGettingData();
-
-        //Check if we are done
-        this.pCheckAllDone();
-
-    }
-
     //End Region Public Methods
 
     //Region Private Methods
 
-    private  boolean mTryToCloseOrderBln(){
+    private  boolean mPickFaseHandledBln(){
 
         cResult hulpResult;
         hulpResult = new cResult();
         hulpResult.resultBln = false;
 
-        hulpResult = cPickorder.currentPickOrder.pPickHandledViaWebserviceRst();
+        hulpResult = cPickorder.currentPickOrder.pPickFaseHandledViaWebserviceRst();
 
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
@@ -553,18 +514,29 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private  void mHandleClosePickAndDecideNextStep(){
+    private  void mHandlePickFaseHandledAndDecideNextStep(){
 
-        if (!this.mTryToCloseOrderBln()) {
+        if (!this.mPickFaseHandledBln()) {
             return;
         }
 
         if (cPickorder.currentPickOrder.isSortableBln()) {
             this.mSortNextStep();
+            return;
         }
-        else {
+
+        if (cPickorder.currentPickOrder.isQCNeededBln()) {
+            this.mQCNextStep();
+            return;
+        }
+
+        //If Pack or Ship is not required, then we are dibe
+        if (cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
             this.mPackAndShipNextStap();
+            return;
         }
+
+        this.mStartOrderSelectActivity();
 
     }
 
@@ -590,21 +562,22 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0) {
             // Show order done fragment
-            this.mShowOrderDoneFragment(false);
+            this.mShowPickDoneFragment(false);
             return;
         }
 
         // If there is no next step, then we are done
-        if (!cPickorder.currentPickOrder.PackAndShipNeededBln() && !cPickorder.currentPickOrder.isBPBln() && !cPickorder.currentPickOrder.isBCBln()) {
+        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln() && !cPickorder.currentPickOrder.isBPBln() && !cPickorder.currentPickOrder.isBCBln()  && cPickorder.currentPickOrder.isQCNeededBln() ) {
             if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
-                    !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
-                // Show order done fragment
-                this.mShowOrderDoneFragment(false);
+                !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+
+                // Show pick done fragment
+                this.mShowPickDoneFragment(false);
                 return;
             }
 
             // Show order done fragment
-            this.mShowOrderDoneFragment(true);
+            this.mShowPickDoneFragment(true);
         }
 
         //Show Current Location fragment
@@ -681,18 +654,18 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
     }
 
-    private  void mShowOrderDoneFragment(Boolean pvShowCurrentLocationBln) {
+    private  void mShowPickDoneFragment(Boolean pvShowCurrentLocationBln) {
 
         cUserInterface.pPlaySound(R.raw.goodsound, null);
 
-        final OrderDoneFragment orderDoneFragment = new OrderDoneFragment(pvShowCurrentLocationBln);
-        orderDoneFragment.setCancelable(false);
-        orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
+        final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_pick_done), cAppExtension.activity.getString(R.string.message_close_pick_fase) , pvShowCurrentLocationBln);
+        stepDoneFragment.setCancelable(false);
+        stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
     private  Boolean mCheckAndSentLinesBln() {
 
-        final List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabasObl();
+        final List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabaseObl();
 
         // If there is nothing to send, then we are done
         if (linesToSendObl.size() == 0 ) {
@@ -741,7 +714,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private  Boolean mAllLinesDoneBln() {
-        return cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl().size() <= 0;
+        return cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabaseObl().size() <= 0;
     }
 
     private  void mShowSending() {
@@ -862,6 +835,15 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
+    private  void mQCNextStep(){
+
+        this.mStartOrderSelectActivity();
+        return;
+
+
+
+    }
+
     private void mPackAndShipNextStap(){
 
         //If activity bin is not required, then don't show the fragment
@@ -870,11 +852,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        //If Pack or Ship is not required, then we are dibe
-        if (!cPickorder.currentPickOrder.PackAndShipNeededBln()) {
-            this.mStartOrderSelectActivity();
-            return;
-        }
+
 
         // If setting is not defined, then ask user
         if (cSetting.PICK_PACK_AND_SHIP_AUTO_START() == null) {
@@ -1170,6 +1148,51 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         resultRst.resultBln = false;
         resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_location_incorrect));
         return  resultRst;
+
+    }
+
+    private void mSetTabLayout(){
+
+        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_topick));
+        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_picked));
+        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
+
+        PickorderLinesPagerAdapter pickorderLinesPagerAdapter = new PickorderLinesPagerAdapter(this.pickorderLinesTabLayout.getTabCount());
+        this.pickorderLinesViewPager.setAdapter(pickorderLinesPagerAdapter);
+        this.pickorderLinesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(this.pickorderLinesTabLayout));
+        this.pickorderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab pvTab) {
+                pickorderLinesViewPager.setCurrentItem(pvTab.getPosition());
+                mChangeSelectedTab(pvTab);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab pvTab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab pvTab) {
+
+            }
+        });
+
+    }
+
+    private void mAbortOrder() {
+
+        cUserInterface.pShowGettingData();
+
+        if (!cPickorder.currentPickOrder.pAbortBln()) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_couldnt_abort_order), cPickorderLine.currentPickOrderLine.getLineNoInt().toString(), true, true );
+            return;
+        }
+
+        cUserInterface.pHideGettingData();
+
+        //Check if we are done
+        this.pCheckAllDone();
 
     }
 

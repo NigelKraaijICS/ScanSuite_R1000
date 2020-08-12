@@ -1,25 +1,33 @@
 package SSU_WHS.Basics.Authorisations;
 
+import android.graphics.Bitmap;
+
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
 
-import java.util.List;
-
+import ICS.Utils.cImages;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisation;
+
 public class cAuthorisation {
 
     //region Public Properties
 
     private String authorisationStr;
-    private String getAuthorisationStr() {
+    public String getAuthorisationStr() {
         return authorisationStr;
     }
 
     public AutorisationEnu getAutorisationEnu(){
 
-        switch(getAuthorisationStr().toUpperCase()) {
+        String autorisationStr = this.getAuthorisationStr();
+
+        if (this.getCustomAuthorisation() != null) {
+            autorisationStr = this.getCustomAuthorisation().getAuthorisationBaseStr();
+        }
+
+        switch(autorisationStr.toUpperCase()) {
             case "EXTERNAL_RETURN":
                 return  AutorisationEnu.EXTERNAL_RETURN;
 
@@ -68,6 +76,9 @@ public class cAuthorisation {
             case "PICK_PV":
                 return  AutorisationEnu.PICK_PV;
 
+            case "PICK_MERGE":
+                return  AutorisationEnu.PICK_MERGE;
+
             case "RETURN":
                 return  AutorisationEnu.RETURN;
 
@@ -80,10 +91,50 @@ public class cAuthorisation {
             case "SHIPPING":
                 return  AutorisationEnu.SHIPPING;
 
+            case "QC":
+                return  AutorisationEnu.QC;
+
+
             default:
                 return AutorisationEnu.DEMO;
         }
     }
+
+    private cCustomAuthorisation customAuthorisation;
+    public cCustomAuthorisation getCustomAuthorisation() {
+
+        if (this.customAuthorisation != null) {
+            return  this.customAuthorisation;
+        }
+
+        if (cCustomAuthorisation.allCustomAutorisations == null || cCustomAuthorisation.allCustomAutorisations.size() == 0 ) {
+            return  null;
+        }
+
+        for (cCustomAuthorisation loopCustomAuthorisation : cCustomAuthorisation.allCustomAutorisations) {
+
+            if (loopCustomAuthorisation.getAuthorisationStr().equalsIgnoreCase(this.getAuthorisationStr())) {
+                customAuthorisation = loopCustomAuthorisation;
+                return  customAuthorisation;
+            }
+
+        }
+
+        return null;
+    }
+
+    public  Bitmap customImageBmp() {
+
+        if (customAuthorisation == null) {
+            return  null;
+        }
+
+        return  cImages.pBase64ToImage(customAuthorisation.getImagebase64Str());
+
+    }
+
+
+
 
     private Integer orderInt;
     public Integer getOrderInt() {
@@ -119,11 +170,13 @@ public class cAuthorisation {
         PICK,
         PICK_PF,
         PICK_PV,
+        PICK_MERGE,
         RETURN,
         SELFPICK,
         // Generated
         SORTING,
-        SHIPPING
+        SHIPPING,
+        QC
     }
 
     public static String TAG_IMAGE_INTAKE = "TAG_IMAGE_INTAKE";
@@ -140,6 +193,9 @@ public class cAuthorisation {
 
     public static String TAG_IMAGE_SHIP = "TAG_IMAGE_SHIP";
     public static String TAG_TEXT_SHIP = "TAG_TEXT_SHIP";
+
+    public static String TAG_IMAGE_QC = "TAG_IMAGE_QC";
+    public static String TAG_TEXT_QC = "TAG_TEXT_QC";
 
     public static String TAG_IMAGE_RETURN = "TAG_IMAGE_RETURN";
     public static String TAG_TEXT_RETURN = "TAG_TEXT_RETURN";

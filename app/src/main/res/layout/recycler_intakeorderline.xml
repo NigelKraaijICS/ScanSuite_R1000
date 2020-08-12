@@ -9,16 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/view_background"
-        android:background="@color/colorCommentBubble"
+        android:background="@color/colorPrimary"
         >
         <ImageView
             android:id="@+id/reset_icon"
             android:layout_width="@dimen/ic_delete"
             android:layout_height="@dimen/ic_delete"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
             app:srcCompat="@drawable/ic_restore_white_24dp"
             android:contentDescription="@string/reset" />
@@ -26,8 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/default_margin"
-            android:layout_toLeftOf="@id/reset_icon"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_toStartOf="@id/reset_icon"
             android:text="@string/reset"
             android:textColor="@color/colorWhite"
             android:textSize="13sp" />

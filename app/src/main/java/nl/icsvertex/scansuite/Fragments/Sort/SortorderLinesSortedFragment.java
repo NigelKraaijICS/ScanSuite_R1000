@@ -133,7 +133,7 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
 
     private void mGetData() {
 
-        List<cPickorderLine> HandledLinesObl = cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl();
+        List<cPickorderLine> HandledLinesObl = cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl();
         this.mFillRecycler(HandledLinesObl);
     }
 

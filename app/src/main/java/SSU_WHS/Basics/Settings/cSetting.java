@@ -335,6 +335,16 @@ public class cSetting {
 
     //Region Settings
 
+    public  static  boolean PICK_AUTO_NEXT(){
+
+        cSetting Setting =  mGetSettingByEnu(settingEnu.PICK_AUTO_NEXT);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
     public static boolean PICK_SORT_FASE_AVAILABLE(){
 
             cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SORT_FASE_AVAILABLE);
@@ -358,6 +368,16 @@ public class cSetting {
     public static boolean PICK_PACK_AND_SHIP_FASE_AVAILABLE(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_PACK_AND_SHIP_FASE_AVAILABLE);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean PICK_QC_FASE_AVAILABLE(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_QC_FASE_AVAILABLE);
         if (Setting == null) {
             return  false;
         }

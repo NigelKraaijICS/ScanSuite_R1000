@@ -30,6 +30,10 @@ public interface iPickorderDao {
     @Query("UPDATE Pickorders SET Currentlocation =:CurrentLocationStr WHERE Ordernumber=:pvOrderNumberStr")
     int updatePickorderCurrentLocation(String pvOrderNumberStr, String CurrentLocationStr);
 
+    @Query("UPDATE Pickorders SET IsSelected =:pvIsSelectedBln WHERE Ordernumber=:pvOrderNumberStr")
+    int updatePickorderIsSelected(String pvOrderNumberStr, Boolean pvIsSelectedBln);
+
+
 }
 
 

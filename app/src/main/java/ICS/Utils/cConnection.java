@@ -15,7 +15,7 @@ import android.os.Handler;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.R;
 
 public class cConnection {
@@ -212,9 +212,9 @@ public class cConnection {
 
                 if (cAppExtension.activity instanceof PickorderLinesActivity) {
 
-                    if (cAppExtension.dialogFragment instanceof OrderDoneFragment) {
-                        OrderDoneFragment orderDoneFragment = (OrderDoneFragment)cAppExtension.dialogFragment;
-                        orderDoneFragment.pSetConnectionState();
+                    if (cAppExtension.dialogFragment instanceof StepDoneFragment) {
+                        StepDoneFragment stepDoneFragment = (StepDoneFragment)cAppExtension.dialogFragment;
+                        stepDoneFragment.pSetConnectionState();
                         return;
                     }
 

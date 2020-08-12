@@ -13,24 +13,24 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             />
         <TextView
-            android:id="@+id/quantitySortordersText"
+            android:id="@+id/QCordersText"
             style="@style/quantityPickordersText"
             app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
             app:layout_constraintEnd_toEndOf="parent"
             />
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/sortorderLinesTabLayout"
+            android:id="@+id/QCLinesTabLayout"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/quantitySortordersText"
+            app:layout_constraintEnd_toStartOf="@id/QCordersText"
         />
         <androidx.viewpager.widget.ViewPager
-            android:id="@+id/sortorderLinesViewpager"
+            android:id="@+id/QCLinesViewpager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/sortorderLinesTabLayout"
+            app:layout_constraintTop_toBottomOf="@id/QCLinesTabLayout"
             app:layout_constraintBottom_toBottomOf="parent"
             />
 

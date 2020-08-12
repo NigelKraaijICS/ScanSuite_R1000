@@ -14,6 +14,7 @@ import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.Authorisations.cAuthorisationViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Branches.cBranchViewModel;
+import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisation;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -67,7 +68,49 @@ public class cUser {
 
     private cUserEntity userEntity;
     public ArrayList<cBranch> branchesObl;
+
     public ArrayList<cAuthorisation> autorisationObl;
+
+    private ArrayList<cAuthorisation> autorisationWithoutMergeCachedObl;
+    public ArrayList<cAuthorisation> autorisationWithoutMergeObl() {
+
+      if (this.autorisationWithoutMergeCachedObl != null) {
+          return  this.autorisationWithoutMergeCachedObl;
+      }
+
+        this.autorisationWithoutMergeCachedObl = new ArrayList<>();
+
+      if (autorisationObl == null || autorisationObl.size() == 0) {
+          return  this.autorisationWithoutMergeCachedObl;
+      }
+
+      for (cAuthorisation authorisation : this.autorisationObl) {
+
+          if (authorisation.getAuthorisationStr().toUpperCase().contains("MERGE")) {
+              continue;
+          }
+
+         this.autorisationWithoutMergeCachedObl.add(authorisation);
+
+      }
+
+      return   this.autorisationWithoutMergeCachedObl;
+
+
+    }
+
+    public boolean canMergePicks() {
+
+        for (cAuthorisation authorisation : this.autorisationObl) {
+
+            if (authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_MERGE) {
+                return  true;
+            }
+        }
+
+        return false;
+    }
+
     public  cBranch currentBranch;
     public  cAuthorisation currentAuthorisation;
 
@@ -77,7 +120,7 @@ public class cUser {
 
     public static List<cUser> allUsersObl;
     public static cUser currentUser;
-    public  static Boolean usersAvailableBln;
+    public static Boolean usersAvailableBln;
 
     //end region Public Properties
 
@@ -178,6 +221,7 @@ public class cUser {
 
         boolean shippingAddedBln = false;
         boolean sortingAddedBln = false;
+        boolean qcAddedBln = false;
 
         cWebresult WebResult;
         cAuthorisationViewModel authorisationViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cAuthorisationViewModel.class);
@@ -192,7 +236,7 @@ public class cUser {
                     this.autorisationObl =  new ArrayList<>();
                 }
 
-                if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.TCOG.toString())) {
+                        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.TCOG.toString())) {
                         if ((authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK &&
                              authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK_PV)) {
                             continue;
@@ -225,6 +269,16 @@ public class cUser {
                           shippingAddedBln = true;
                       }
                     }
+
+                    if (cSetting.PICK_QC_FASE_AVAILABLE()) {
+                        cAuthorisation authorisationShipping = new cAuthorisation(cAuthorisation.AutorisationEnu.QC.toString(), this.autorisationObl.size() *10 + 10 );
+
+                        if (!qcAddedBln) {
+                            this.autorisationObl.add(authorisationShipping);
+                            qcAddedBln = true;
+                        }
+                    }
+
                 }
 
             }

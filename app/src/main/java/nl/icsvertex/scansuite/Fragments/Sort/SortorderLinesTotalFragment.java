@@ -124,7 +124,7 @@ public class SortorderLinesTotalFragment extends Fragment implements iICSDefault
 
     private void mGetData() {
 
-        List<cPickorderLine> HandledLinesObl = cPickorder.currentPickOrder.pGetLinesFromDatabasObl();
+        List<cPickorderLine> HandledLinesObl = cPickorder.currentPickOrder.pGetLinesFromDatabaseObl();
         this.mFillRecycler(HandledLinesObl);
 
     }

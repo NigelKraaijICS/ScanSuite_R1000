@@ -130,7 +130,7 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
             @Override
             public void onClick(View v) {
                 Intent intent  = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                if (intent.resolveActivity(Objects.requireNonNull(getView()).getContext().getPackageManager()) != null) {
+                if (intent.resolveActivity(requireView().getContext().getPackageManager()) != null) {
                     startActivityForResult(intent, cPublicDefinitions.CHANGEWIFI_REQUESTCODE);
                 }
                 dismiss();
@@ -148,8 +148,8 @@ public class NoConnectionFragment extends DialogFragment implements iICSDefaultF
                    toggleGreyBln = true;
                 }
                 else {
-                 imageViewSatellite.setImageDrawable(cImages.convertToGrayscale(imageViewSatellite.getDrawable()));
-                 imageViewEarth.setImageDrawable(cImages.convertToGrayscale(imageViewEarth.getDrawable()));
+                 imageViewSatellite.setImageDrawable(cImages.pConvertToGrayscale(imageViewSatellite.getDrawable()));
+                 imageViewEarth.setImageDrawable(cImages.pConvertToGrayscale(imageViewEarth.getDrawable()));
                  toggleGreyBln = false;
                 }
             }

@@ -42,6 +42,7 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
@@ -189,8 +190,16 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
-        this.toolbarTitle.setText(pvScreenTitleStr);
+
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+            this.toolbarImage.setImageBitmap(cUser.currentUser.currentAuthorisation.customImageBmp());
+            this.toolbarTitle.setText(cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getDescriptionStr());
+        }
+        else {
+            this.toolbarImage.setImageResource(R.drawable.ic_menu_return);
+            this.toolbarTitle.setText(pvScreenTitleStr);
+        }
+
         this.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
         ViewCompat.setTransitionName(this.toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(this.toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
@@ -346,6 +355,15 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                cReturnorder.allReturnordersObl  = cReturnorder.pGetReturnOrdersWithFilterFromDatabasObl();
+                if ( cReturnorder.allReturnordersObl == null ||  cReturnorder.allReturnordersObl.size() == 0) {
+                    mShowNoOrdersIcon( true);
+                    cUserInterface.pHideGettingData();
+                    return;
+                }
+
+
                 //Fill and show recycler
                 mSetReturnorderRecycler(cReturnorder.allReturnordersObl);
                 mShowNoOrdersIcon(false);

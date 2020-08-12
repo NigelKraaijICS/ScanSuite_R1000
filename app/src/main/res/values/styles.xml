@@ -65,6 +65,14 @@
         <item name="android:textSize">@dimen/textsize_huge</item>
         <item name="android:layout_marginTop">@dimen/default_double_margin</item>
     </style>
+    <style name="header_combine_picks_title">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:color">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
     <style name="header_navigationview_logo_bup">
         <item name="android:layout_height">@dimen/bottombutton_height</item>
         <item name="android:layout_width">@dimen/bottombutton_width</item>
@@ -105,7 +113,7 @@
         <item name="android:layout_height">@dimen/imageview_menu_height</item>
         <item name="android:layout_width">@dimen/imageview_menu_width</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
-        <item name="android:scaleType">fitStart</item>
+        <item name="android:scaleType">fitCenter</item>
         <item name="android:background">@drawable/button_round_white</item>
         <item name="android:padding">@dimen/default_padding</item>
         <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
@@ -316,9 +324,20 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textsize_big</item>
     </style>
+    <style name="combinePicksText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:padding">@dimen/default_margin</item>
+    </style>
     <style name="pickorderRecyclerQuantityTotalText">
         <item name="android:textSize">@dimen/textsize_big</item>
         <item name="android:textColor">@color/colorTextDarker</item>
+    </style>
+    <style name="pickorderRecyclerQuantityTotalWhiteText">
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
     <style name="pickorderRecyclerCurrentLocationText">
         <item name="android:layout_width">0dp</item>
@@ -779,14 +798,14 @@
         <item name="android:padding">@dimen/default_padding</item>
     </style>
 
-    <style name="orderDoneText">
+    <style name="stepDoneText">
         <item name="android:textSize">@dimen/textsize_big</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
     </style>
-    <style name="orderDoneImageView">
+    <style name="stepDoneImageView">
         <item name="android:layout_width">@dimen/maintopbutton_width</item>
         <item name="android:layout_height">@dimen/maintopbutton_height</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
@@ -1037,5 +1056,30 @@
     </style>
     <style name="createReceiveDocument">
         <item name="android:layout_margin">@dimen/default_double_margin</item>
+    </style>
+
+    //test
+    <!-- Base application theme. -->
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="Dialog.Theme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="RippleStyleWhite">
+        <item name="mrl_rippleOverlay">true</item>
+        <item name="mrl_rippleColor">#80FFFFFF</item>
+        <item name="mrl_rippleHover">true</item>
+        <item name="mrl_rippleAlpha">0.2</item>
+    </style>
+
+    <style name="RippleStyleBlack" parent="RippleStyleWhite">
+        <item name="mrl_rippleColor">#8096989A</item>
     </style>
 </resources>

@@ -77,9 +77,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="opacityPercent" value="59" />
-                            <entry key="outputName" value="ic_baseline_assessment_24" />
-                            <entry key="sourceFile" value="C:\Users\b.vanderzon\Desktop\fragile.svg" />
+                            <entry key="outputName" value="ic_qualitycontrol" />
+                            <entry key="sourceFile" value="C:\Users\Nigel Kraaij\Desktop\guarantee.svg" />
                           </map>
                         </option>
                       </PersistentState>

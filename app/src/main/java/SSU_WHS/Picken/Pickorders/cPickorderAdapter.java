@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,12 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.R;
@@ -28,6 +32,11 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
     //Region Public Properties
 
     public static class PickorderViewHolder extends RecyclerView.ViewHolder{
+
+
+        private RelativeLayout checkboxRelativelayout;
+        private ImageView imageCircle;
+        private ImageView imageCheck;
 
         private TextView textViewOrdernumber;
         private TextView textViewOrderUser;
@@ -39,10 +48,23 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
         private ImageView imageViewIsSingleArticle;
         private ImageView imageViewIsProcessedOrWait;
         private ImageView imageViewUser;
+        private ImageView imageChevronDown;
+
         public LinearLayout pickorderItemLinearLayout;
 
         public PickorderViewHolder(View pvItemView) {
             super(pvItemView);
+
+            this.pickorderItemLinearLayout = pvItemView.findViewById(R.id.pickorderItemLinearLayout);
+
+            this.checkboxRelativelayout = pvItemView.findViewById(R.id.checkboxRelativelayout);
+            this.checkboxRelativelayout.setVisibility(View.GONE);
+
+            this.imageCircle = pvItemView.findViewById(R.id.imageCircle);
+            this.imageCircle.setVisibility(View.INVISIBLE);
+
+            this.imageCheck = pvItemView.findViewById(R.id.imageCheck);
+            this.imageCheck.setVisibility(View.INVISIBLE);
 
             this.textViewOrderUser = pvItemView.findViewById(R.id.textViewOrderUser);
             this.textViewOrderUser.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -69,9 +91,10 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
             this.textViewQuantityTotal = pvItemView.findViewById(R.id.textViewQuantityTotal);
-            this.pickorderItemLinearLayout = pvItemView.findViewById(R.id.pickorderItemLinearLayout);
             this.imageViewIsSingleArticle = pvItemView.findViewById(R.id.imageViewIsSingleArticle);
             this.imageViewIsProcessedOrWait = pvItemView.findViewById(R.id.imageViewIsProcessedOrWait);
+
+            this.imageChevronDown = pvItemView.findViewById(R.id.imageChevronDown);
 
         }
         //End Region Public Properties
@@ -99,7 +122,7 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
     }
 
     @Override
-    public void onBindViewHolder(@NonNull cPickorderAdapter.PickorderViewHolder pvHolder, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull final cPickorderAdapter.PickorderViewHolder pvHolder, int pvPositionInt) {
 
         if (localPickorderObl == null || localPickorderObl.size() == 0 ) {
             return;
@@ -107,9 +130,30 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
         final cPickorder  selectedPickorder = localPickorderObl.get(pvPositionInt);
 
+
+        if (PickorderSelectActivity.currentModusEnu == PickorderSelectActivity.ModusEnu.COMBINE) {
+            pvHolder.checkboxRelativelayout.setVisibility(View.VISIBLE);
+            pvHolder.imageCircle.setVisibility(View.VISIBLE);
+            pvHolder.imageChevronDown.setVisibility(View.GONE);
+        }
+        else {
+            pvHolder.checkboxRelativelayout.setVisibility(View.GONE);
+            pvHolder.imageCircle.setVisibility(View.INVISIBLE);
+            pvHolder.imageChevronDown.setVisibility(View.VISIBLE);
+        }
+
+        if (!selectedPickorder.getIsSelectedBln()) {
+            pvHolder.imageCheck.setVisibility(View.INVISIBLE);
+        }
+        else
+            {
+                pvHolder.imageCheck.setVisibility(View.VISIBLE);
+        }
+
+
         String userStr;
 
-        if (selectedPickorder.getStatusInt() == 10 ) {
+        if (selectedPickorder.getStatusInt() == cWarehouseorder.WorkflowPickStepEnu.PickPicking ) {
             userStr = cUser.pUserToShowStr(selectedPickorder.getAssignedUserIdStr());
 
         }
@@ -117,16 +161,18 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             userStr = cUser.pUserToShowStr(selectedPickorder.getCurrentUserIdStr());
         }
 
-        if (userStr.isEmpty()) {
+        if (Objects.requireNonNull(userStr).isEmpty()) {
             pvHolder.imageViewUser.setVisibility(View.GONE);
+            pvHolder.textViewOrderUser.setVisibility(View.GONE);
         }
         else {
+            pvHolder.textViewOrderUser.setVisibility(View.VISIBLE);
             pvHolder.textViewOrderUser.setText(userStr);
             pvHolder.imageViewUser.setVisibility(View.VISIBLE);
         }
 
         if (!selectedPickorder.isSingleArticleOrdersBln()) {
-            pvHolder.imageViewIsSingleArticle.setVisibility(View.INVISIBLE);
+            pvHolder.imageViewIsSingleArticle.setVisibility(View.GONE);
         }
         else {
             pvHolder.imageViewIsSingleArticle.setVisibility(View.VISIBLE);
@@ -136,9 +182,8 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             pvHolder.imageViewIsProcessedOrWait.setVisibility(View.VISIBLE);
         }
         else {
-            pvHolder.imageViewIsProcessedOrWait.setVisibility(View.INVISIBLE);
+            pvHolder.imageViewIsProcessedOrWait.setVisibility(View.GONE);
         }
-
 
         pvHolder.textViewOrdernumber.setText(selectedPickorder.getOrderNumberStr());
         pvHolder.textViewOrdernumber.setTag(selectedPickorder.getOrderNumberStr());
@@ -170,95 +215,33 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BC.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_bc);
         }
+
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BM.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_bm);
         }
+
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BP.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_bp);
         }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.EOM.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_eom);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.EOOM.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_eoom);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.EOOS.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_eoos);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.EOR.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_eor);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.EOS.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_eos);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.ER.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_er);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.IVM.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_ivm);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.IVS.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_ivs);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MAM.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_mam);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MAS.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_mas);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MAT.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_mat);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MI.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_mi);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MO.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_mo);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MT.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_mt);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MV.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_mv);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MVI.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_mvi);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.OMM.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_omm);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.OMOM.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_omom);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.OMOS.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_omos);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.OMR.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_omr);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.OMS.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_oms);
-        }
+
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PA.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_pa);
         }
+
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PF.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_pf);
         }
+
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PV.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_pv);
         }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.RVR.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_rvr);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.RVS.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_rvs);
-        }
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.SPV.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_spv);
-        }
+
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.UNKNOWN.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_unknown);
+        }
+
+        if (selectedPickorder.isCombinedOrderBln()) {
+            pvHolder.textViewOrdertype.setText(R.string.ordertype_combined);
         }
 
         pvHolder.pickorderItemLinearLayout.setOnClickListener(new View.OnClickListener() {
@@ -267,8 +250,29 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
                 if (cAppExtension.activity instanceof PickorderSelectActivity) {
                     PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
-                    pickorderSelectActivity.pPickorderSelected(selectedPickorder);
+
+
+                    switch (PickorderSelectActivity.currentModusEnu) {
+                        case NORMAL:
+                            pickorderSelectActivity.pPickorderSelected(selectedPickorder);
+                            break;
+
+                        case COMBINE:
+
+                            if (!selectedPickorder.getIsSelectedBln()) {
+                                pvHolder.imageCheck.setVisibility(View.VISIBLE);
+                            }
+                            else
+                            {
+                                pvHolder.imageCheck.setVisibility(View.INVISIBLE);
+                            }
+
+                            pickorderSelectActivity.pPickorderSelectedForCombi(selectedPickorder);
+                            break;
+                    }
+
                 }
+
                 if (cAppExtension.activity instanceof SortorderSelectActivity) {
                     SortorderSelectActivity sortorderSelectActivity = (SortorderSelectActivity)cAppExtension.activity;
                     sortorderSelectActivity.pSortorderSelected(selectedPickorder);
@@ -277,6 +281,11 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
                 if (cAppExtension.activity instanceof ShiporderSelectActivity) {
                     ShiporderSelectActivity shiporderSelectActivity = (ShiporderSelectActivity)cAppExtension.activity;
                     shiporderSelectActivity.pShiporderSelected(selectedPickorder);
+                }
+
+                if (cAppExtension.activity instanceof QualityControlSelectActivity) {
+                    QualityControlSelectActivity qualityControlSelectActivity = (QualityControlSelectActivity)cAppExtension.activity;
+                    qualityControlSelectActivity.pQCOrderSelected(selectedPickorder);
                 }
 
             }
@@ -304,7 +313,6 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
     }
 
     //End Region Public Methods
-
 
     //Region Private Methods
     private List<cPickorder> mGetFilteredListObl(String pvQueryTextStr) {

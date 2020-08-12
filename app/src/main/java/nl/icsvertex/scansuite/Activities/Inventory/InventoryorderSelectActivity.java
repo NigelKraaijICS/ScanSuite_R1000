@@ -45,6 +45,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorderAdapter;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
@@ -192,9 +193,18 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
-        this.toolbarTitle.setText(pvScreenTitle);
+    public void mSetToolbar(String pvScreenTitleStr) {
+
+
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+            this.toolbarImage.setImageBitmap(cUser.currentUser.currentAuthorisation.customImageBmp());
+            this.toolbarTitle.setText(cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getDescriptionStr());
+        }
+        else {
+            this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
+            this.toolbarTitle.setText(pvScreenTitleStr);
+        }
+
         this.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
         this.toolbarTitle.setSelected(true);
         this.toolbarSubTitle.setSelected(true);
@@ -421,8 +431,16 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                List<cInventoryorder> filteredInventoryOrdersObl = cInventoryorder.pGetInventoriesWithFilterFromDatabasObl();
+                if (filteredInventoryOrdersObl == null || filteredInventoryOrdersObl.size() == 0) {
+                    mShowNoOrdersIcon( true);
+                    cUserInterface.pHideGettingData();
+                    return;
+                }
+
                 //Fill and show recycler
-                mSetInventoryorderRecycler(cInventoryorder.allInventoryOrdersObl(false));
+                mSetInventoryorderRecycler(filteredInventoryOrdersObl);
                 mShowNoOrdersIcon(false);
                 if (cSharedPreferences.userFilterBln()) {
                     mApplyFilter();
@@ -433,7 +451,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         });
     }
 
-    private  cResult mGetOrderDetailsRst(){
+    private cResult mGetOrderDetailsRst(){
 
         cResult result;
 
@@ -547,11 +565,11 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
 
-        List<cInventoryorder> filteredPicksObl = cInventoryorder.pGetInventoriesWithFilterFromDatabasObl();
+        List<cInventoryorder> filteredInventoryOrdersObl = cInventoryorder.pGetInventoriesWithFilterFromDatabasObl();
 
-        this.mSetInventoryorderRecycler(filteredPicksObl);
+        this.mSetInventoryorderRecycler(filteredInventoryOrdersObl);
 
-        if (filteredPicksObl.size() == 0) {
+        if (filteredInventoryOrdersObl.size() == 0) {
             mShowNoOrdersIcon(true);
         } else {
             mShowNoOrdersIcon(false);

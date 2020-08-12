@@ -3,6 +3,7 @@ package nl.icsvertex.scansuite.Activities.Pick;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
@@ -65,18 +68,26 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     //Region Private Properties
 
     // Region Views
-    private  RecyclerView recyclerViewPickorders;
-    private  ImageView toolbarImage;
-    private  TextView toolbarTitle;
-    private  TextView toolbarSubTitle;
-    private  TextView toolbarSubTitle2;
-    private  androidx.appcompat.widget.SearchView recyclerSearchView;
+    private ConstraintLayout combinePicksConstraintLayout;
+    private RecyclerView recyclerViewPickorders;
+    private ImageView toolbarImage;
+    private TextView toolbarTitle;
+    private TextView toolbarSubTitle;
+    private TextView toolbarSubTitle2;
+    private androidx.appcompat.widget.SearchView recyclerSearchView;
 
-    private  ImageView imageViewFilter;
-    private  ConstraintLayout constraintFilterOrders;
-    private  SwipeRefreshLayout swipeRefreshLayout;
+    private MenuItem item_combine_picks;
+    private MenuItem item_select_single_pick;
 
-    private  BottomSheetBehavior bottomSheetBehavior;
+    private ImageView imageViewFilter;
+    private  ImageView imageStartCombinedOrder;
+    private ConstraintLayout constraintFilterOrders;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView pickMenuNavigation;
+
+    private BottomSheetBehavior bottomSheetBehavior;
 
     private cPickorderAdapter pickorderAdapter;
     private cPickorderAdapter getPickorderAdapter(){
@@ -86,6 +97,13 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         return  this.pickorderAdapter;
     }
+
+    public  enum  ModusEnu {
+        NORMAL,
+        COMBINE
+    }
+
+    public static ModusEnu currentModusEnu = ModusEnu.NORMAL;
 
     // End Region Views
 
@@ -131,14 +149,78 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_pick,pvMenu);
+        return true;
+    }
 
-        if (item.getItemId() == android.R.id.home) {
-            this.mLeaveActivity();
-            return true;
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+
+        if (this.item_combine_picks == null && this.item_select_single_pick == null) {
+            this.item_combine_picks =  pvMenu.findItem(R.id.item_combine_picks);
+            this.item_select_single_pick = pvMenu.findItem(R.id.item_select_single_pick);
         }
 
-        return super.onOptionsItemSelected(item);
+        if (cUser.currentUser.canMergePicks()) {
+
+            switch (PickorderSelectActivity.currentModusEnu) {
+                case NORMAL:
+                    this.item_combine_picks.setVisible(true);
+                    this.item_select_single_pick.setVisible(false);
+                    break;
+                case COMBINE:
+                    this.item_combine_picks.setVisible(false);
+                    this.item_select_single_pick.setVisible(true);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        return super.onPrepareOptionsMenu(pvMenu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
+
+
+
+        switch (pvMenuItem.getItemId()) {
+
+            case android.R.id.home:
+                this.mLeaveActivity();
+                return  true;
+
+            case R.id.item_combine_picks:
+                PickorderSelectActivity.currentModusEnu = ModusEnu.COMBINE;
+                mInitCombinePickViews();
+                pFillOrders();
+                break;
+
+            case R.id.item_select_single_pick:
+                PickorderSelectActivity.currentModusEnu = ModusEnu.NORMAL;
+                cPickorder.pUnselectAllOrders();
+                mInitCombinePickViews();
+                pFillOrders();
+                break;
+
+            default:
+                break;
+        }
+
+        // deselect everything
+        int size = pickMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            pickMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+        return true;
     }
 
     @Override
@@ -190,8 +272,12 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         this.recyclerViewPickorders = findViewById(R.id.recyclerViewPickorders);
         this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         this.imageViewFilter = findViewById(R.id.imageViewFilter);
+        this.imageStartCombinedOrder = findViewById(R.id.imageStartCombinedOrder);
         this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
         this.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.pickMenuNavigation = findViewById(R.id.pickMenuNavigation);
+        this.combinePicksConstraintLayout = findViewById(R.id.combinePicksConstraintLayout);
     }
 
     @Override
@@ -214,6 +300,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     public void mFieldsInitialize() {
         this.mInitBottomSheet();
+        this.mInitCombinePickViews();
         this.mResetCurrents();
         this.pFillOrders();
     }
@@ -224,6 +311,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         this.mSetSearchListener();
         this.mSetFilterListener();
         this.mSetSwipeRefreshListener();
+        this.mSetOpenCombinedOrderListener();
     }
 
     @Override
@@ -252,18 +340,53 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         //Set filter with scanned barcodeStr if there is no prefix
         if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
-            //no prefix, fine
-            this.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
-            this.recyclerSearchView.callOnClick();
-            return;
+
+            if (PickorderSelectActivity.currentModusEnu == ModusEnu.NORMAL) {
+                //no prefix, fine
+                this.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
+                this.recyclerSearchView.callOnClick();
+                return;
+            }
+
+            if (PickorderSelectActivity.currentModusEnu == ModusEnu.COMBINE) {
+
+                cPickorder pickorder = cPickorder.pGetPickorder(pvBarcodeScan.getBarcodeOriginalStr());
+                if (pickorder == null) {
+                    this.mStepFailed(cAppExtension.activity.getString(R.string.message_unknown_order));
+                    return;
+                }
+
+                this.recyclerViewPickorders.findViewHolderForAdapterPosition(cPickorder.pickordersToSelectObl().indexOf(pickorder)).itemView.performClick();
+                return;
+            }
+
         }
+
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
-            //has prefix, is salesorderStr
-            this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
-            this.recyclerSearchView.callOnClick();
-            return;
+
+            if (PickorderSelectActivity.currentModusEnu == ModusEnu.NORMAL) {
+                //has prefix, is salesorderStr
+                this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
+                this.recyclerSearchView.callOnClick();
+                return;
+            }
+
+
+            if (PickorderSelectActivity.currentModusEnu == ModusEnu.COMBINE) {
+
+                cPickorder pickorder = cPickorder.pGetPickorder(pvBarcodeScan.getBarcodeOriginalStr());
+                if (pickorder == null) {
+                    this.mStepFailed(cAppExtension.activity.getString(R.string.message_unknown_order));
+                    return;
+                }
+
+                this.recyclerViewPickorders.findViewHolderForAdapterPosition(cPickorder.pickordersToSelectObl().indexOf(pickorder)).itemView.performClick();
+                return;
+            }
+
+
         }
 
         //If there is a prefix but it's not a salesorder tgen do nope
@@ -289,6 +412,24 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                 mHandlePickorderSelected();
             }
         }).start();
+
+    }
+
+    public void pPickorderSelectedForCombi(cPickorder pvPickorder) {
+        cPickorder.currentPickOrder = pvPickorder;
+
+        cResult result = cPickorder.currentPickOrder.pUpdateSelectedRst(!cPickorder.currentPickOrder.getIsSelectedBln());
+        if (!result.resultBln) {
+            this.mStepFailed(result.messagesStr());
+            return;
+        }
+
+        mInitCombinePickViews();
+        if (PickorderSelectActivity.currentModusEnu == ModusEnu.COMBINE) {
+            cPickorder.allPickordersObl = cPickorder.pickordersToSelectObl();
+        }
+
+        mRefreshRecycler();
 
     }
 
@@ -318,16 +459,39 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //Fill and show recycler
-                mSetPickorderRecycler(cPickorder.pGetPicksFromDatabasObl());
-                mShowNoOrdersIcon(false);
-                if (cSharedPreferences.userFilterBln()) {
-                    mApplyFilter();
+
+
+                if (PickorderSelectActivity.currentModusEnu == ModusEnu.NORMAL) {
+                    cPickorder.allPickordersObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
                 }
 
-                cUserInterface.pHideGettingData();
+                if (PickorderSelectActivity.currentModusEnu == ModusEnu.COMBINE) {
+                    cPickorder.allPickordersObl = cPickorder.pickordersToSelectObl();
+                }
+
+                mRefreshRecycler();
+
             }
         });
+    }
+
+    private void mRefreshRecycler(){
+
+        if (cPickorder.allPickordersObl.size() == 0) {
+            mShowNoOrdersIcon( true);
+            cUserInterface.pHideGettingData();
+            return;
+        }
+
+        //Fill and show recycler
+        mSetPickorderRecycler(cPickorder.allPickordersObl);
+        mShowNoOrdersIcon(false);
+        if (cSharedPreferences.userFilterBln()) {
+            mApplyFilter();
+        }
+
+        cUserInterface.pHideGettingData();
+
     }
 
     private  void mHandlePickorderSelected(){
@@ -435,8 +599,15 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         Intent intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
         View clickedOrder = container.findViewWithTag(cPickorder.currentPickOrder.getOrderNumberStr());
-        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
-        ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+
+        if (clickedOrder != null) {
+            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
+        ActivityCompat.startActivity(cAppExtension.context,intent,null);
+
     }
 
     // End Region Private Methods
@@ -468,6 +639,26 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         });
 
         this.mFillBottomSheet();
+    }
+
+    private void mInitCombinePickViews(){
+
+        if (PickorderSelectActivity.currentModusEnu == ModusEnu.NORMAL) {
+            this.combinePicksConstraintLayout.setVisibility(View.GONE);
+            this.imageStartCombinedOrder.setVisibility(View.GONE);
+        }
+        else {
+            this.combinePicksConstraintLayout.setVisibility(View.VISIBLE);
+
+            if (cPickorder.pickorderSelectedObl().size() > 1) {
+                this.imageStartCombinedOrder.setVisibility(View.VISIBLE);
+            }
+            else {
+                this.imageStartCombinedOrder.setVisibility(View.GONE);
+            }
+
+        }
+
     }
 
     private void mFillBottomSheet() {
@@ -524,6 +715,16 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                 else {
                     mShowHideBottomSheet(false);
                 }
+            }
+        });
+    }
+
+    private void mSetOpenCombinedOrderListener() {
+        this.imageStartCombinedOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pPickorderSelected(cPickorder.currentCombinedPickOrder);
+
             }
         });
     }
@@ -673,7 +874,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                     }
                 }
             }
-            });
+        });
     }
 
     private boolean mCheckOrderIsLockableBln(cPickorder pvPickorder){
@@ -721,7 +922,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         //Something went wrong, the order has been deleted, so show comments and refresh
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Delete ||
-            hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
+                hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart ) {
 
 
             //If we got any comments, show them
@@ -778,18 +979,16 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mLeaveActivity(){
-      this.mReleaseLicense();
-
-
+        cPickorder.pUnselectAllOrders();
+        this.mReleaseLicense();
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
 
     }
 
-     // End No orders icon
+    // End No orders icon
 
     // End Region View Method
 
 }
-

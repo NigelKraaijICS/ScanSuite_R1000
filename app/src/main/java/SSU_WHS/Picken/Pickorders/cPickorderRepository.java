@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
+import ICS.Utils.cText;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -26,6 +27,7 @@ import SSU_WHS.Picken.Shipment.cShipment;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 
 import static ICS.Utils.cText.pAddSingleQuotesStr;
 
@@ -35,8 +37,6 @@ public class cPickorderRepository {
 
     //End Region Public Properties
 
-    //Region Private Properties
-    private acScanSuiteDatabase db;
     private iPickorderDao pickorderDao;
     private iPickorderLineDao pickorderLineDao;
 
@@ -64,7 +64,7 @@ public class cPickorderRepository {
         }
     }
 
-    private class PickorderUpdateWorkplaceParams {
+    private static class PickorderUpdateWorkplaceParams {
         String user;
         String branch;
         String ordernumber;
@@ -78,7 +78,7 @@ public class cPickorderRepository {
         }
     }
 
-    private class UpdatePickorderCurrentLocationLocalParams {
+    private static class UpdatePickorderCurrentLocationLocalParams {
         String orderNumberStr;
         String currentLocationStr;
 
@@ -88,7 +88,17 @@ public class cPickorderRepository {
         }
     }
 
-    private class PickorderLocalParams {
+    private static class UpdateSelectedLocalParams {
+        String orderNumberStr;
+        Boolean selectedBln;
+
+        UpdateSelectedLocalParams(String pvOrderNumberStr, Boolean pvSelectedBln) {
+            this.orderNumberStr = pvOrderNumberStr;
+            this.selectedBln = pvSelectedBln;
+        }
+    }
+
+    private static class PickorderLocalParams {
         String userNameStr;
         String branchStr;
         Boolean inProgressBln;
@@ -111,7 +121,8 @@ public class cPickorderRepository {
 
     //Region Constructor
     cPickorderRepository(Application pvApplication) {
-        this.db = acScanSuiteDatabase.pGetDatabase(pvApplication);
+        //Region Private Properties
+        acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
         this.pickorderDao = db.pickorderDao();
         this.pickorderLineDao = db.pickorderLineDao();
     }
@@ -160,7 +171,7 @@ public class cPickorderRepository {
                 break;
         }
 
-        pickorderLocalParams = new PickorderLocalParams(cUser.currentUser.getUsernameStr(),cUser.currentUser.currentBranch.getBranchStr(),pvInprogressBln,0, pvSearchTextStr,mainTypeStr);
+        pickorderLocalParams = new PickorderLocalParams(cUser.currentUser.getUsernameStr(), cUser.currentUser.currentBranch.getBranchStr(), pvInprogressBln, 0, pvSearchTextStr, mainTypeStr);
 
         try {
             webResultWrs = new mGetPickordersFromWebserviceAsyncTask().execute(pickorderLocalParams).get();
@@ -174,24 +185,24 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pGetPickordersToShipFromWebserviceWrs(String pvUsernameStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {
+    public cWebresult pGetPickorderstPickordersNextStepFromWebserviceWrs(String pvUsernameStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
          int stepCodeInt= 0 ;
 
-        if (pvStepCodeEnu == cWarehouseorder.StepCodeEnu.Pick_Picking) {
-            stepCodeInt = 10;
-        }
         if (pvStepCodeEnu == cWarehouseorder.StepCodeEnu.Pick_Sorting) {
             stepCodeInt = 20;
+        }
+        if (pvStepCodeEnu == cWarehouseorder.StepCodeEnu.Pick_QualityContol) {
+            stepCodeInt = 30;
         }
         if (pvStepCodeEnu == cWarehouseorder.StepCodeEnu.Pick_PackAndShip) {
             stepCodeInt = 40;
         }
 
         PickorderLocalParams pickorderLocalParams;
-        pickorderLocalParams = new PickorderLocalParams(pvUsernameStr,cUser.currentUser.currentBranch.getBranchStr(), false, stepCodeInt, pvSearchTextStr,"");
+        pickorderLocalParams = new PickorderLocalParams(pvUsernameStr, cUser.currentUser.currentBranch.getBranchStr(), false, stepCodeInt, pvSearchTextStr, "");
 
         try {
             webResultWrs = new mPickordersToSortFromWebserviceGetAsyncTask().execute(pickorderLocalParams).get();
@@ -205,70 +216,88 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
-    public List<cPickorderEntity> pGetPickordersFromDatabaseObl() {
-        List<cPickorderEntity> ResultObl = null;
-        try {
-            ResultObl = new mGetPickordersFromDatabaseAsyncTask(pickorderDao).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
-    }
-
     public List<cPickorderEntity> pGetPickordersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
 
         List<cPickorderEntity> ResultObl = null;
-        String SQLStatementStr;
+        StringBuilder SQLStatementStr;
+        int i;
 
-        SQLStatementStr = "SELECT * FROM Pickorders ";
+        SQLStatementStr = new StringBuilder("SELECT * FROM Pickorders ");
         if (pvUseFiltersBln) {
 //            TTT
             if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += "WHERE 1=1 ";
+                SQLStatementStr.append("WHERE 1=1 ");
             }
 //            TTF
             else if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += "WHERE AssignedUserId != '' ";
+                SQLStatementStr.append("WHERE AssignedUserId != '' ");
             }
 //            TFT
             else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += "WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  AssignedUserId = '' " ;
-                SQLStatementStr += "OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  CurrentUserId = '' " ;
+                SQLStatementStr.append("WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  AssignedUserId = '' ");
+                SQLStatementStr.append("OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  CurrentUserId = '' ");
             }
 //            FTT
             else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += "WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
+                SQLStatementStr.append("WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
             }
 //            TFF
             else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += "WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
-                SQLStatementStr += "OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " " ;
+                SQLStatementStr.append("WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
+                SQLStatementStr.append("OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
             }
 //            FTF
             else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += "WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " AND  AssignedUserId != '' ";
+                SQLStatementStr.append("WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" AND  AssignedUserId != '' ");
             }
 //            FFT
             else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += "WHERE AssignedUserId = '' AND CurrentUserId = ''";
+                SQLStatementStr.append("WHERE AssignedUserId = '' AND CurrentUserId = ''");
             }
 //            FFF
             else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += "WHERE AssignedUserId = 'HELEMAALNIEMAND' ";
+                SQLStatementStr.append("WHERE AssignedUserId = 'HELEMAALNIEMAND' ");
             }
             if (cSharedPreferences.showSingleArticlesBln()) {
-                SQLStatementStr += " AND SingleArticleOrders = 1 ";
+                SQLStatementStr.append(" AND SingleArticleOrders = 1 ");
             }
 
             if (cSharedPreferences.showProcessedWaitBln()) {
-                SQLStatementStr += " AND (IsProcessingOrParked) ";
+                SQLStatementStr.append(" AND (IsProcessingOrParked) ");
             }
         }
 
-        SQLStatementStr += " ORDER BY Priority, Ordernumber ASC";
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+
+            String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
+            String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
+
+            if (splitFields.length == splitValues.length) {
+
+                for (i = 0; i < splitFields.length; i++) {
+                        if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
+                            SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                        }
+                        else {
+                            SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                        }
+                }
+            }
+        }
+
+        if (PickorderSelectActivity.currentModusEnu == PickorderSelectActivity.ModusEnu.COMBINE) {
+            if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
+                SQLStatementStr.append("WHERE SourceDocument <> '95' ");
+            }
+            else {
+                SQLStatementStr.append(" AND SourceDocument <> '95' ");
+            }
+        }
+
+        SQLStatementStr.append(" ORDER BY Priority, Ordernumber ASC");
 
         try {
-            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
+            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr.toString());
             ResultObl = new mGetPickordersFromDatabaseWithFilterAsyncTask(pickorderDao).execute(query).get();
 
         } catch (InterruptedException | ExecutionException e) {
@@ -303,6 +332,26 @@ public class cPickorderRepository {
 
         PickorderStepHandledParams pickorderStepHandledParams;
         pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvWorkplaceStr, cWarehouseorder.StepCodeEnu.Pick_Sorting.toString(), cWarehouseorder.WorkflowPickStepEnu.PickSorting, "");
+
+        try {
+
+            webResult = new mPickorderStepHandledAsyncTask().execute(pickorderStepHandledParams).get();
+            return  webResult;
+        }
+
+        catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return  null;
+
+        }
+    }
+
+    public cWebresult pQCHandledViaWebserviceBln(String pvWorkplaceStr) {
+
+        cWebresult webResult;
+
+        PickorderStepHandledParams pickorderStepHandledParams;
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvWorkplaceStr, cWarehouseorder.StepCodeEnu.Pick_QualityContol.toString(), cWarehouseorder.WorkflowPickStepEnu.PickQualityControl, "");
 
         try {
 
@@ -414,6 +463,20 @@ public class cPickorderRepository {
         }
     }
 
+    public Boolean pPickorderUpdatIsSelectedInDatabaseBln() {
+
+        Integer integerValue;
+        UpdateSelectedLocalParams updateSelectedLocalParams = new UpdateSelectedLocalParams(cPickorder.currentPickOrder.getOrderNumberStr(), cPickorder.currentPickOrder.getIsSelectedBln());
+        try {
+            integerValue = new mUpdateIsSelectedInDatabaseAsyncTask(pickorderDao).execute(updateSelectedLocalParams).get();
+            return integerValue != 0;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return  false;
+        }
+    }
+
+
     //Pick Lines
     public cWebresult pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {
 
@@ -422,6 +485,23 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mGetLinesViaWebserviceAsyncTask().execute(pvActionTypeEnu.toString()).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetQCLinesFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetQCLinesViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -628,6 +708,76 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
+    public cWebresult pCreateCombinedPickViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mCreateCombinedPickViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pAddOrderToCombinedPickViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mAddOrderToCombinedPickViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pRemoveOrderFromCombinedPickViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mRemoveOrderFromCombinedPickViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pRemoveCombinedPickViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mRemoveCombinedPickViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+
+
     //End Region Public Methods
 
     //Region Private Methods
@@ -743,16 +893,6 @@ public class cPickorderRepository {
             }
 
             return WebresultWrs;
-        }
-    }
-
-    private static class mGetPickordersFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cPickorderEntity>> {
-        private iPickorderDao mAsyncTaskDao;
-
-        mGetPickordersFromDatabaseAsyncTask(iPickorderDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cPickorderEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getPickordersFromDatabase();
         }
     }
 
@@ -969,6 +1109,15 @@ public class cPickorderRepository {
         }
     }
 
+    private static class mUpdateIsSelectedInDatabaseAsyncTask extends AsyncTask<UpdateSelectedLocalParams, Void, Integer> {
+        private iPickorderDao mAsyncTaskDao;
+        mUpdateIsSelectedInDatabaseAsyncTask(iPickorderDao dao) { mAsyncTaskDao = dao; }
+        @Override
+        protected Integer doInBackground(UpdateSelectedLocalParams... params) {
+            return mAsyncTaskDao.updatePickorderIsSelected(params[0].orderNumberStr, params[0].selectedBln);
+        }
+    }
+
     private static class mAbortOrderAsyncTask extends AsyncTask<Void, Void, Void> {
         private iPickorderLineDao mAsyncTaskDao;
         mAbortOrderAsyncTask(iPickorderLineDao dao) { mAsyncTaskDao = dao; }
@@ -1011,6 +1160,38 @@ public class cPickorderRepository {
         }
     }
 
+    private static class mGetQCLinesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+                l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.PICKEN.toString());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETQCPICKORDERLINES, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
     private static class mGetPackAndShipLinesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
@@ -1029,6 +1210,145 @@ public class cPickorderRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mCreateCombinedPickViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_CREATEMERGEDPICKORDER, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mAddOrderToCombinedPickViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBERMERGED;
+                l_PropertyInfo3Pin.setValue(cPickorder.currentCombinedPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBERTOADD;
+                l_PropertyInfo4Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_ADDORDERTOMERGEDPICKORDER, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mRemoveOrderFromCombinedPickViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBERMERGED;
+                l_PropertyInfo3Pin.setValue(cPickorder.currentCombinedPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBERTOREMOVE;
+                l_PropertyInfo4Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_REMOVEORDERFROMMERGEDPICKORDER, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mRemoveCombinedPickViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cPickorder.currentCombinedPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_REMOVEMERGEDPICKORDER, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

@@ -48,6 +48,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Intake.Intakeorders.cIntakeorderAdapter;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
@@ -203,11 +204,20 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
-        this.toolbarTitle.setText(pvScreenTitleStr);
+
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+            this.toolbarImage.setImageBitmap(cUser.currentUser.currentAuthorisation.customImageBmp());
+            this.toolbarTitle.setText(cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getDescriptionStr());
+        }
+        else {
+            this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
+            this.toolbarTitle.setText(pvScreenTitleStr);
+        }
+
         this.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
         this.toolbarTitle.setSelected(true);
         this.toolbarSubTitle.setSelected(true);
+
         ViewCompat.setTransitionName(toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -324,6 +334,14 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                cIntakeorder.allIntakeordersObl  = cIntakeorder.pGetIntakesWithFilterFromDatabasObl();
+                if (cIntakeorder.allIntakeordersObl == null || cIntakeorder.allIntakeordersObl.size() == 0) {
+                    mShowNoOrdersIcon( true);
+                    cUserInterface.pHideGettingData();
+                    return;
+                }
+
                 //Fill and show recycler
                 mFillRecycler(cIntakeorder.allIntakeordersObl);
                 mShowNoOrdersIcon(false);

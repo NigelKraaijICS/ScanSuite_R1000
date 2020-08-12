@@ -176,7 +176,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public boolean onCreateOptionsMenu(Menu pvMenu) {
-        getMenuInflater().inflate(R.menu.menu_actions,pvMenu);
+        getMenuInflater().inflate(R.menu.menu_stockactions,pvMenu);
         return true;
     }
 
@@ -190,9 +190,6 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
 
         this.item_article_stock = pvMenu.findItem(R.id.item_article_stock);
         this.item_article_stock .setVisible(false);
-
-        pvMenu.findItem(R.id.item_barcodecheck).setVisible(false);
-        pvMenu.findItem(R.id.item_pair_pro_glove).setVisible(false);
 
         if (!cMoveorder.currentMoveOrder.isMoveValidateStockBln())  {
             return true;
@@ -210,9 +207,6 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         else {
             this.item_article_stock.setVisible(false);
         }
-
-        pvMenu.findItem(R.id.item_barcodecheck).setVisible(false);
-        pvMenu.findItem(R.id.item_pair_pro_glove).setVisible(false);
 
         return super.onPrepareOptionsMenu(pvMenu);
     }

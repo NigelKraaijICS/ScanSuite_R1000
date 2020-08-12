@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<group >
+    <item
+        android:id="@+id/item_combine_picks"
+        android:title="@string/combine_picks"
+        android:icon="@drawable/ic_location_black_24dp"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/item_select_single_pick"
+        android:title="@string/select_single_pick"
+        android:icon="@drawable/ic_location_black_24dp"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+</group>
+</menu>

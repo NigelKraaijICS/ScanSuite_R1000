@@ -105,7 +105,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
             this.textViewBranch = getView().findViewById(R.id.textViewBranch);
             this.editTextDocument = getView().findViewById(R.id.editTextDocument);
             this.createInventoryContainer = getView().findViewById(R.id.createInventoryContainer);
-            this.createInventoryButton = getView().findViewById(R.id.createOrderButton);
+            this.createInventoryButton = getView().findViewById(R.id.closeButton);
             this.cancelButton = getView().findViewById(R.id.cancelButton);
 
         }

@@ -127,6 +127,7 @@
     <string name="menuitem_selfpick">Picking done by client</string>
     <string name="menuitem_sort">Sorting</string>
     <string name="menuitem_ship">Shipping</string>
+    <string name="menuitem_qc">Quality Control</string>
     <!--endregion Menu Items-->
 
     <!--region Order types-->
@@ -161,6 +162,7 @@
     <string name="ordertype_rvs">Return sales</string>
     <string name="ordertype_spv">Selfpicking</string>
     <string name="ordertype_unknown">Unknown</string>
+    <string name="ordertype_combined">Combined</string>
     <!--endregion Order types-->
 
     <!--region Login screen-->
@@ -197,6 +199,9 @@
     <string name="tab_pickorderline_topick">To pick</string>
     <string name="tab_pickorderline_picked">Picked</string>
     <string name="tab_pickorderline_total">Total</string>
+
+    <string name="tab_to_select">To select</string>
+
     <string name="im_at">I\'m at</string>
     <string name="scan_bincode">Scan BIN</string>
     <string name="scan_article_or_bincode">Scan article or BIN</string>
@@ -215,6 +220,11 @@
     <string name="error_no_more_articles_to_sort">There are no more articles to sort</string>
     <!--endregion Sortorder Lines-->
 
+    <!--region Sortorder Lines-->
+    <string name="screentitle_qclines">QC lines</string>
+    <string name="error_no_more_articles_to_check">There are no more articles to check</string>
+    <!--endregion Sortorder Lines-->
+
     <!--region Shiporder Lines-->
     <string name="error_no_more_articles_to_ship">There are no more articles to ship</string>
     <string name="unknown_shippingagentservice">Unknown shipping service</string>
@@ -227,7 +237,9 @@
     <!--region Pickorder Pick-->
     <string name="screentitle_pickorderpick">Picking</string>
     <string name="message_underpick_header">Finish order line?</string>
+    <string name="message_undercheck_header">Stop checking line?</string>
     <string name="message_underpick_text">You need %1$s of these, you\'ve only picked %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
+    <string name="message_undercheck_text">You need %1$s of these, you\'ve only checked %2$s. Are you sure that there you want to stop checking?</string>
     <string name="button_close_orderline">Finish</string>
     <string name="choose_barcode">Choose barcode</string>
     <string name="quantity_per_scan">Quantity per scan: </string>
@@ -272,6 +284,11 @@
     <!--region shiporder select-->
     <string name="screentitle_shiporderselect">Shiporder select</string>
     <!--endregion shiporder select-->
+
+    <!--region qcporder select-->
+    <string name="screentitle_qcorderselect">Quality Control order select</string>
+    <string name="screentitle_qc">Quality Control</string>
+    <!--endregion qcporder select-->
 
     <!--region errors-->
     <string name="error_unspecified">Error</string>
@@ -326,6 +343,8 @@
     <string name="packing_table">Packing table</string>
     <string name="tab_sortorderline_tosort">To sort</string>
     <string name="tab_sortorderline_sorted">Sorted</string>
+    <string name="tab_qcorderline_tocheck">To check</string>
+    <string name="tab_qcorderline_checked">Checked</string>
     <string name="sortorder_nothing_selected">Select a line first</string>
     <string name="message_sortorderbusy_text">What do you want to do with the current order?</string>
     <string name="message_sortorderbusy_accept">Accept</string>
@@ -391,6 +410,7 @@
     <string name="message_wrong_sourceno">Wrong source number</string>
     <string name="message_unknown_pickcartbox">Unknown pickcartbox</string>
     <string name="message_unknown_salesorder">Unknown salesorder</string>
+    <string name="message_unknown_order">Unknown order</string>
     <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>
     <string name="message_wrong_pickcartbox">Wrong pickcartbox</string>
     <string name="number_cannot_be_higher">Number can not be higher than required number</string>
@@ -482,6 +502,7 @@
     <string name="message_scan_packinglocation_or_salesorder">Scan packinglocation or salesorder</string>
     <string name="scan_article_or_sort_location">Scan article or sort location</string>
     <string name="couldnt_update_line">Could not update line</string>
+    <string name="couldnt_update_order">Could not update order</string>
     <string name="message_progress_to_send">There is still progress that needs to be send</string>
     <string name="message_send_now">Do you want to send the progress now?</string>
     <string name="message_send">Send now</string>
@@ -628,6 +649,7 @@
     <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
     <string name="show_only_deviations">Show todo/deviations</string>
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
+    <string name="message_close_qcorder_text">You checked %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close quality control?</string>
     <string name="message_close_receiveorder_generated_text">You received %1$s items\n\n\n\nWould you like to close the order?</string>
     <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
     <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
@@ -756,6 +778,28 @@
     <string name="screentitle_bin_stock">BIN Stock</string>
     <string name="screentitle_article_stock">Article Stock</string>
     <string name="message_place_line_already_exists">Place line already exists, if you want to mutate first rest the line</string>
+    <string name="bin_stock">BIN stock</string>
+    <string name="article_stock">Article stock</string>
+    <string name="check_barcode">Check Barcode</string>
+    <string name="pair_pro_glove">Pair Pro Glove</string>
+    <string name="combine_picks">Combine Picks</string>
+    <string name="select_single_pick">Select single pick</string>
+    <string name="couldnt_create_combined_order">Couldn\'t create combined order</string>
+    <string name="couldnt_remove_order_from_combined_order">Couldn\'t remove order from combined order</string>
+    <string name="couldnt_remove_combined_order">Couldn\'t remove combined order</string>
+
+    <string name="message_pick_done">Picking done?</string>
+    <string name="message_close_pick_fase">Would you like to finish picking?</string>
+
+    <string name="message_sort_done">Sorting done?</string>
+    <string name="message_close_sort_fase">Would you like to finish sorting?</string>
+
+    <string name="message_qcdone">Quality Control  done?</string>
+    <string name="message_close_qc_fase">Would you like to finish quality control?</string>
+
+    <string name="message_packandshipdone">Pack and ship fase done?</string>
+    <string name="message_close_packandship_fase">Would you like to finish the pack and ship control fase?</string>
+
     <!--End Region return-->
 
     <!--Region plurals-->

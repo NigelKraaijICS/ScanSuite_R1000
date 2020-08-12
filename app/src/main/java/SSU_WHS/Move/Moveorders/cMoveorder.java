@@ -104,7 +104,7 @@ public class cMoveorder {
     }
 
     public boolean isGeneratedBln() {
-       return this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated;
+       return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.Generated;
    }
     public  boolean showTodoBln = true;
 
@@ -223,7 +223,7 @@ public class cMoveorder {
         this.moveAmountManualBln = cText.pStringToBooleanBln(this.moveorderEntity.getMoveAmountManualStr(), false);
         this.moveBarcodeCheckBln = cText.pStringToBooleanBln(this.moveorderEntity.getMoveBarcodeCheckStr(), false);
         this.moveValidateStockBln = cText.pStringToBooleanBln(this.moveorderEntity.getMoveValidateStockStr(), false);
-          this.sourceDocumentInt = cText.pStringToIntegerInt(this.moveorderEntity.getSourceDocumentStr()) ;
+        this.sourceDocumentInt = cText.pStringToIntegerInt(this.moveorderEntity.getSourceDocumentStr()) ;
     }
 
     public cMoveorder(cMoveorderEntity pvMoveorderEntity) {
@@ -354,18 +354,20 @@ public class cMoveorder {
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
            if(WebResult.getResultDtt() != null && WebResult.getResultDtt().size() > 0) {
-               JSONObject jsonObject = WebResult.getResultDtt().get(0);
-               cMoveorder moveorder = new cMoveorder(jsonObject);
-               moveorder.pInsertInDatabaseBln();
-               return  true;
+               for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                   cMoveorder moveorder = new cMoveorder(jsonObject);
+                   moveorder.pInsertInDatabaseBln();
+               }
            }
+
+            return  true;
+
 
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETMOVEORDERS);
             return false;
         }
 
-        return  true;
     }
 
     public cResult pLockViaWebserviceRst() {
@@ -683,7 +685,7 @@ public class cMoveorder {
         List<cMoveorder> resultObl = new ArrayList<>();
         List<cMoveorderEntity> hulpResultObl;
 
-        cMoveorderViewModel    moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
+        cMoveorderViewModel  moveorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
 
         hulpResultObl = moveorderViewModel.pGetMovesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {

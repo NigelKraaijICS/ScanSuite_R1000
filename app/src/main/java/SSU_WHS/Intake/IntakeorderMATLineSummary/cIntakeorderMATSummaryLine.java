@@ -210,7 +210,7 @@ public class cIntakeorderMATSummaryLine {
         for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
 
 
-            if (intakeorderMATLine.getBinCodeHandledStr().isEmpty() && intakeorderMATLine.getSourceTypeInt() != cWarehouseorder.SoureDocumentTypeEnu.PurchaseLine) {
+            if (intakeorderMATLine.getBinCodeHandledStr().isEmpty() && intakeorderMATLine.getSourceTypeInt() != cWarehouseorder.SourceDocumentTypeEnu.PurchaseLine) {
                 continue;
             }
 

@@ -132,7 +132,21 @@ public class cArticle {
         webresult = articleViewModel.pGetArticleByBarcodeViaWebserviceWrs(pvBarcodescan);
         if (webresult.getResultBln() && webresult.getSuccessBln()) {
             for (JSONObject jsonObject :  webresult.getResultDtt()) {
-                return new cArticle(jsonObject);
+
+
+                cArticle article = new cArticle(jsonObject);
+
+                cArticleBarcode articleBarcode = new cArticleBarcode(article.getItemNoStr(),article.getVariantCodeStr(),pvBarcodescan.getBarcodeOriginalStr());
+
+                if (article.barcodesObl == null) {
+                    article.barcodesObl = new ArrayList<>();
+                }
+
+                article.barcodesObl.add(articleBarcode);
+
+
+
+                return article;
             }
             return null;
         }
@@ -148,12 +162,12 @@ public class cArticle {
         webresult = getArticleViewModel().pGetBarcodesViaWebserviceWrs(this);
         if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
+            if (webresult.getResultDtt().size() > 0 ) {
+                this.barcodesObl = new ArrayList<>();
+            }
+
             for (JSONObject jsonObject :  webresult.getResultDtt()) {
                 cArticleBarcode articleBarcode = new cArticleBarcode(jsonObject, this);
-
-                if (this.barcodesObl == null) {
-                    this.barcodesObl = new ArrayList<>();
-                }
 
                 this.barcodesObl.add(articleBarcode);
 

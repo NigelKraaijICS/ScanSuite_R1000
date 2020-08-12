@@ -195,10 +195,19 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_move);
-        this.toolbarTitle.setText(pvScreenTitleStr);
-        this.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
+
+
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+            this.toolbarImage.setImageBitmap(cUser.currentUser.currentAuthorisation.customImageBmp());
+            this.toolbarTitle.setText(cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getDescriptionStr());
+        }
+        else {
+            this.toolbarImage.setImageResource(R.drawable.ic_menu_move);
+            this.toolbarTitle.setText(pvScreenTitleStr);
+        }
+
         this.toolbarTitle.setSelected(true);
+        this.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
         this.toolbarSubTitle.setSelected(true);
         ViewCompat.setTransitionName(this.toolbarImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE);
         ViewCompat.setTransitionName(toolbarTitle, cPublicDefinitions.VIEW_NAME_HEADER_TEXT);
@@ -316,6 +325,14 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             @Override
             public void run() {
                 //Fill and show recycler
+
+                cMoveorder.allMoveordersObl = cMoveorder.pGetMovesWithFilterFromDatabasObl();
+                if (cMoveorder.allMoveordersObl == null || cMoveorder.allMoveordersObl.size() == 0) {
+                    mShowNoOrdersIcon( true);
+                    cUserInterface.pHideGettingData();
+                    return;
+                }
+
                 mSetMoveorderRecycler(cMoveorder.allMoveordersObl);
                 mShowNoOrdersIcon(false);
                 if (cSharedPreferences.userFilterBln()) {

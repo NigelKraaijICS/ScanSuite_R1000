@@ -97,6 +97,18 @@ public class cArticleBarcode {
         this.dataTimeStampDat = null;
     }
 
+    public cArticleBarcode(String pvItemNoStr, String pvVariantCodeStr, String pvBarcodeStr) {
+        this.itemNoStr = pvItemNoStr;
+        this.variantCodeStr = pvVariantCodeStr;
+        this.barcodeStr = pvBarcodeStr;
+        this.barcodeTypeInt =  2;
+        this.isUniqueBarcodeBln =  false;
+        this.quantityPerUnitOfMeasureDbl =  1.0;
+        this.unitOfMeasureStr = "STUK";
+        this.dataTimeStampDat = null;
+    }
+
+
     //End Region Constructor
 
     //Region Public Methods

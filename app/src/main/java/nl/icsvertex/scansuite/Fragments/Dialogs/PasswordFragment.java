@@ -234,6 +234,13 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                         intakeorderLinesActivity.pPasswordCancelled();
                     }
 
+                    if (cAppExtension.dialogFragment instanceof EnvironmentFragment) {
+                        EnvironmentFragment environmentFragment = (EnvironmentFragment)cAppExtension.dialogFragment;
+                        environmentFragment.pHandlePasswordFragmentDismissed();
+                    }
+
+
+
                     if (cAppExtension.activity instanceof LoginActivity) {
                         LoginActivity loginActivity = (LoginActivity)cAppExtension.activity;
                         loginActivity.pHandlePasswordFragmentDismissed();

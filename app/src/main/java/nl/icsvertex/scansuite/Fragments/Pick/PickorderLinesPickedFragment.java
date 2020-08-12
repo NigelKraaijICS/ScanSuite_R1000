@@ -116,7 +116,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
+        this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl());
         cUserInterface.pEnableScanner();
     }
 
@@ -327,7 +327,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         }
 
         //Renew data, so only current lines are shown
-        this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl());
+        this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl());
 
     }
 

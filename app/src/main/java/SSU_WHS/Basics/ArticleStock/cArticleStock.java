@@ -1,5 +1,7 @@
 package SSU_WHS.Basics.ArticleStock;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -66,7 +68,7 @@ public class cArticleStock implements Comparable {
     //Region Public Methods
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(@NonNull Object o) {
 
         int compareint =  ((cArticleStock)o).getQuantityDbl().intValue();
         return compareint -this.getQuantityDbl().intValue();

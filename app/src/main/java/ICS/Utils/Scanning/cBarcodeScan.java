@@ -18,6 +18,9 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlSelectActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
@@ -45,14 +48,12 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
-import nl.icsvertex.scansuite.Fragments.Move.MoveLinesPlaceFragment;
-import nl.icsvertex.scansuite.Fragments.Move.MoveLinesTakeFragment;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 
 public class cBarcodeScan {
@@ -63,7 +64,6 @@ public class cBarcodeScan {
         public static final int EAN8 = 1;
         public static final int EAN13 = 2;
     }
-
 
     private String barcodeFormattedStr;
     public String getBarcodeFormattedStr() {
@@ -178,6 +178,22 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof ShiporderShipActivity){
                         ShiporderShipActivity shiporderShipActivity = (ShiporderShipActivity)cAppExtension.activity;
                         shiporderShipActivity.pHandleScan(barcodeScan);
+                    }
+
+                    //QC
+                    if (cAppExtension.activity instanceof QualityControlSelectActivity){
+                        QualityControlSelectActivity qualityControlSelectActivity = (QualityControlSelectActivity)cAppExtension.activity;
+                        qualityControlSelectActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof QualityControlLinesActivity){
+                        QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
+                        qualityControlLinesActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof PickorderQCActivity){
+                        PickorderQCActivity pickorderQCActivity = (PickorderQCActivity)cAppExtension.activity;
+                        pickorderQCActivity.pHandleScan(barcodeScan);
                     }
 
                     //Inventory
@@ -307,9 +323,9 @@ public class cBarcodeScan {
                         return;
                     }
 
-                    if(cAppExtension.dialogFragment instanceof OrderDoneFragment) {
-                        OrderDoneFragment orderDoneFragment = (OrderDoneFragment)cAppExtension.dialogFragment;
-                        orderDoneFragment.pHandleScan(barcodeScan);
+                    if(cAppExtension.dialogFragment instanceof StepDoneFragment) {
+                        StepDoneFragment stepDoneFragment = (StepDoneFragment)cAppExtension.dialogFragment;
+                        stepDoneFragment.pHandleScan(barcodeScan);
                         return;
                     }
 

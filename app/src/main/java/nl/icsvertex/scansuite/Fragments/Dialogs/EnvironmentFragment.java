@@ -119,7 +119,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     @Override
     public void mFindViews() {
 
-        this.environmentRecyclerView = Objects.requireNonNull(getView()).findViewById(R.id.environmentRecyclerview);
+        this.environmentRecyclerView = requireView().findViewById(R.id.environmentRecyclerview);
         this.buttonClose = getView().findViewById(R.id.buttonClose);
         this.buttonAddManually = getView().findViewById(R.id.buttonAddManually);
         this.textViewCurrentEnvironment = getView().findViewById(R.id.textViewCurrentEnvironment);
@@ -173,6 +173,10 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
 
         this.mGetData();
 
+    }
+
+    public  void pHandlePasswordFragmentDismissed(){
+        cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
     private void mGetData() {

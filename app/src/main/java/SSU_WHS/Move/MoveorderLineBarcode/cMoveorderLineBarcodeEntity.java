@@ -14,7 +14,6 @@ import SSU_WHS.General.cDatabase;
 public class cMoveorderLineBarcodeEntity {
 
     //Region Public Properties
-    @NonNull
     @ColumnInfo(name = cDatabase.LINENO_NAMESTR)
     public int lineNoInt = 0;
     public int getLineNoInt() {
@@ -24,6 +23,7 @@ public class cMoveorderLineBarcodeEntity {
     @NonNull
     @ColumnInfo(name = cDatabase.BARCODE_NAMESTR)
     public String barcodeStr = "";
+    @NonNull
     public String getBarcodeStr() {
         return this.barcodeStr;
     }

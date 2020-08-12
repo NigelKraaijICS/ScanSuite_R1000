@@ -306,7 +306,6 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-
         if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
             this.mShowNoOrdersIcon(true);
             return;
@@ -443,7 +442,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
         this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
 
-        filteredPicksObl = cPickorder.pGetPicksFromDatabasObl();
+        filteredPicksObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
         if (filteredPicksObl.size() == 0) {
             return;
         }

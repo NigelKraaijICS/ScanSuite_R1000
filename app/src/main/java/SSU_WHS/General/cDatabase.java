@@ -12,7 +12,6 @@ public class cDatabase {
     public static final String TABLENAME_SCANNERS = "Scanners";
     public static final String TABLENAME_BRANCH = "Branches";
     public static final String TABLENAME_BRANCHBIN = "BranchBin";
-    public static final String TABLENAME_WAREHOUSELOCATIONS = "WarehouseLocations";
     public static final String TABLENAME_ITEMPROPERTY = "ItemProperties";
     public static final String TABLENAME_PICKORDERBARCODE = "PickorderBarcode";
     public static final String TABLENAME_PICKORDERLINEBARCODE = "PickorderLineBarcode";
@@ -28,7 +27,6 @@ public class cDatabase {
     public static final String TABLENAME_SHIPPINGAGENTSERVICES = "ShippingAgentServices";
     public static final String TABLENAME_SHIPPINGAGENTSERVICESHIPPINGUNITS = "ShippingAgentServiceShippingUnits";
     public static final String TABLENAME_SHIPPINGAGENTSERVICESHIPMETHODS = "ShippingAgentServiceShipMethods";
-    public static final String TABLENAME_PICKORDERSHIPMETHODS = "PickorderShipMethods";
     public static final String TABLENAME_PICKORDERSHIPPACKAGES = "PickorderShipPackages";
     public static final String TABLENAME_PICKORDERLINEPACKANDSHIP = "PickorderLinePackAndShip";
     public static final String TABLENAME_INVENTORYORDER = "InventoryOrder";
@@ -52,6 +50,7 @@ public class cDatabase {
     public static final String TABLENAME_BRANCHREASON = "BranchReason";
     public static final String TABLENAME_RECEIVELINES  = "ReceiveLines";
     public static final String TABLENAME_PACKAGING = "Packaging";
+    public static final String TABLENAME_CUSTOMAUTHORISATIONS = "CustomAuthorisations";
 
     //endregion Tables
 
@@ -69,8 +68,7 @@ public class cDatabase {
     public static final String ADDRESSADDITION_NAMESTR = "Adrestoevoeging";
     public static final String ADDRESSNUMBER_NAMESTR = "Huisnummer";
     public static final String ADDRESSNUMBERADDITION_NAMESTR = "Huisnummertoevoeging";
-    public static final String ACTUALSHIPPINGAGENTCODE_NAMESTR = "ActualShippingAgentCode";
-    public static final String ACTUALSHIPPINGAGENTSERVICECODE_NAMESTR = "ActualShippingAgentServiceCode";
+    public static final String AUTHORISATIONBASE_NAMESTR = "Autorisatie_basis";
     //endregion A
 
     //region B
@@ -94,10 +92,6 @@ public class cDatabase {
     public static final String COMMENTCODE_NAMESTR = "CommentCode";
     public static final String COMMENTTEXT_NAMESTR = "CommentText";
     public static final String COMPONENT10_NAMESTR = "Component10";
-    public static final String CONTAINER_NAMESTR = "Container";
-    public static final String CONTAINERHANDLED_NAMESTR = "ContainerHandled";
-    public static final String CONTAINERINPUT_NAMESTR = "ContainerInput";
-    public static final String CONTAINERTYPE_NAMESTR = "ContainerType";
     public static final String CURRENTUSERID_NAMESTR = "CurrentUserId";
     public static final String CITY_NAMESTR = "Plaats";
     public static final String COUNTRY_NAMESTR = "Land";
@@ -141,6 +135,11 @@ public class cDatabase {
     public static final String EMBALLAGE_NAMESTR = "Emballage";
     //endregion E
 
+    //region F
+    public static final String FILTERFIELD_NAMESTR = "Filter_veld";
+    public static final String FILTERVALUE_NAMESTR = "Filter_waarde";
+    //endregion F
+
     //Region G
     public static final String GENERATED_NAMESTR = "Generated";
     //End Region G
@@ -153,7 +152,6 @@ public class cDatabase {
 
     //Region I
     public static final String IMAGE_NAMESTR = "Image";
-    public static final String IMPORTFILE_NAMESTR = "Importbestand";
     public static final String INTERFACERESULTMETHOD_NAMESTR = "Interface_result_method";
     public static final String ISPARTOFMULTILINEORDER_NAMESTR = "IsPartOfMultiLineOrder";
     public static final String ISUNIQUEBARCODE_NAMESTR = "IsUniqueBarcode";
@@ -162,6 +160,7 @@ public class cDatabase {
     public static final String ITEMNO_NAMESTR = "ItemNo";
     public static final String ITEMTYPE_NAMESTR = "Itemsoort";
 
+    public static final String IMAGEBASE64_NAMESTR = "Image_base64";
     public static final String INV_AUTOCLOSE_BIN_NAMESTR = "Inv_auto_close_bin";
     public static final String INV_PRECOUNT_NAMESTR = "Inv_precount";
     public static final String INV_AMOUNT_MANUAL_NAMESTR = "Inv_Amount_manual";
@@ -194,8 +193,6 @@ public class cDatabase {
     public static final String MOVEBARCODECHECK_NAMESTR = "Move_Barcode_check";
     public static final String MOVEVALIDATESTOCK_NAMESTR = "Move_validate_stock";
     public static final String MOVEVALIDATESTOCKENFORCE_NAMESTR = "Move_validate_stock_enforce";
-    public static final String MOVE_MI_BATCHTAKEREQUIRED_NAMESTR = "Move_MI_batch_take_required";
-    public static final String MOVE_MO_BATCHPLACEREQUIRED_NAMESTR = "Move_MO_batch_place_required";
     public static final String MOVE_MT_TAKEAMOUNTMANUAL_NAMESTR = "Move_MT_take_amount_manual";
     public static final String MOVE_MT_TAKEAUTOITEM_NAMESTR = "Move_MT_take_auto_item";
     public static final String MOVE_MT_TAKEAUTOITEMCONTAINERONCE_NAMESTR = "Move_MT_take_auto_item_container_once";
@@ -219,7 +216,6 @@ public class cDatabase {
 
     //region O
     public static final String ORDER_NAMESTR = "Volgorde";
-    public static final String ORIGINNO_NAMESTR = "OriginNo";
     public static final String OMSCHRIJVING_NAMESTR = "Omschrijving";
     public static final String ORDERNUMBER_NAMESTR = "Opdrachtnummer";
     public static final String ORDERTYPE_NAMESTR = "Opdrachttype";
@@ -229,10 +225,6 @@ public class cDatabase {
     public static final String PACKAGETYPE_NAMESTR = "PackageType";
     public static final String PACKAGESEQUENCENUMBER_NAMESTR = "PackageSequenceNumber";
     public static final String PACKINGTABLE_NAMESTR = "Packingtable";
-    public static final String PICKDEFAULTREJECTREASON = "Pick_default_reject_reden";
-    public static final String PICKDEFAULTSTORAGEBIN = "Pick_default_storage_bin";
-    public static final String PICKREJECTDURINGPICK_NAMESTR = "Pick_Reject_during_pick";
-    public static final String PICKREJECTDURINGSORT_NAMESTR = "Pick_Reject_during_sort";
     public static final String PICKSALESASKWORKPLACE_NAMESTR = "Pick_Sales_ask_workplace";
     public static final String PICKTRANSFERASKWORKPLACE_NAMESTR = "Pick_Transfer_ask_workplace";
     public static final String PICKBARCODECHECK_NAMESTR = "Pick_Barcode_check";
@@ -264,6 +256,7 @@ public class cDatabase {
     public static final String QUANTITYHANDLEDSUM_NAMESTR = "QuantityHandledSum";
     public static final String QUANTITYPERUNITOFMEASURE_NAMESTR = "QtyPerUnitOfMeasure";
     public static final String QUANTITYREJECTED_NAMESTR = "QuantityRejected";
+    public static final String QUANTITYCHECKED_NAMESTR = "QuantityChecked";
     public static final String QUANTITYTOTAL_NAMESTR = "QuantityTotal";
     public static final String QUANTITYTAKEN_NAMESTR = "QuantityTaken";
     public static final String QUANTITYHANDLEDTAKE_NAMESTR = "QuantityHandled_take";
@@ -291,8 +284,6 @@ public class cDatabase {
     public static final String RECEIVEEXPORTPART_NAMESTR = "Receive_export_part";
     public static final String RECEIVE_AMOUNT_MANUAL_NAMESTR = "Receive_Amount_manual";
     public static final String RECEIVEAMOUNTMANUAL_EO_NAMESTR = "Receive_Amount_manual_eo";
-    public static final String RECEIVEAMOUNTMANUAL_OM_NAMESTR = "Receive_Amount_manual_om";
-    public static final String RECEIVEAMOUNTMANUAL_MA_NAMESTR = "Receive_Amount_manual_ma";
     public static final String RECEIVEBARCODECHECK_NAMESTR = "Receive_Barcode_check";
     public static final String RECEIVESTOREAUTOACCEPTATREQUESTED_NAMESTR = "Receive_store_auto_accept_at_requested";
     public static final String RECEIVESTOREAUTOACCEPTATNEWITEM_NAMESTR = "Receive_store_auto_accept_at_new_item";
@@ -315,8 +306,6 @@ public class cDatabase {
     //region S
     public static final String SALESORDER_NAMESTR = "Salesorder";
     public static final String SCANNER_NAMESTR = "Scanner";
-    public static final String SHIPDEFAULTBIN_NAMESTR = "Ship_default_bin";
-    public static final String SHIPPINGADVICE_NAMESTR = "ShippingAdvice";
     public static final String SETTING_NAMESTR = "Instelling";
     public static final String SINGLEARTICLEORDERS_NAMESTR = "SingleArticleOrders";
     public static final String STATUS_NAMESTR = "Status";
@@ -336,7 +325,6 @@ public class cDatabase {
     public static final String SEQUENCE_NAMESTR = "Order";
     public static final String SHIPPINGAGENT_NAMESTR = "Expediteur";
     public static final String SERVICE_NAMESTR = "Service";
-    public static final String SERVICECOUNTRIES_NAMESTR = "ServiceCountries";
     public static final String SHIPPINGUNIT_NAMESTR = "Verzendeenheid";
     public static final String SHIPPINGMETHOD_NAMESTR = "Verzendmethode";
     public static final String SHIPPINGMETHODCODE_NAMESTR = "ShippingMethodCode";

@@ -95,7 +95,7 @@ public class cReturnorder {
     private cReturnorderEntity returnorderEntity;
 
     public Boolean isGeneratedBln() {
-        return this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated;
+        return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.Generated;
     }
 
     private List<cComment> commentsObl() {

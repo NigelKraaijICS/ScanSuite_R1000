@@ -23,6 +23,8 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPROCESSINGORPARKEDORDERS = "p_PickordersInBehandlingOfInWachtJsonStr";
     public static String WEBMETHOD_GETPICKORDERS = "p_PickordersGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINES = "p_PickorderRegelsGetJsonStr";
+    public static String WEBMETHOD_GETQCPICKORDERLINES = "p_WarehouseopdrachtLinesQcCheckGetJsonStr";
+
     public static String WEBMETHOD_WAREHOUSEORDERLOCK = "p_WarehouseopdrachtLockJsonStr";
     public static String WEBMETHOD_WAREHOUSEORDERUNLOCK = "p_WarehouseopdrachtUnlockJsonStr";
     public static String WEBMETHOD_WAREHOUSEORDERLOCKRELEASE = "p_WarehouseopdrachtLockReleaseJsonStr";
@@ -31,6 +33,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPICKORDERLINEBARCODES = "p_PickorderRegelBarcodesGetJsonStr";
     public static String WEBMETHOD_GETARTICLEIMAGE = "p_ArtikelImageGetJsonStr";
     public static String WEBMETHOD_PICKORDERLINE_HANDLED = "p_PickorderRegelTakeHandledJsonStr";
+    public static String WEBMETHOD_PICKORDERLINECHECKED= "p_WarehouseopdrachtLineQcCheckCheckedJsonStr";
     public static String WEBMETHOD_GETPICKORDERCOMMENTS = "p_PickorderCommentsGetJsonStr";
     public static String WEBMETHOD_PICKORDERSTEPHANDLED = "p_PickorderStapHandledJsonStr";
     public static String WEBMETHOD_PICKORDERLINERESET = "p_PickorderRegelResetPickenJsonStr";
@@ -47,6 +50,11 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETSHIPPINGAGENTSERVICESHIPMETHODS = "p_ExpediteurServiceVerzendmethodsGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERSHIPMETHODS = "p_PickorderShippingmethodGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINESPACKANDSHIP = "p_PickorderRegelsPackAndShipGetJsonStr";
+    public static String WEBMETHOD_CREATEMERGEDPICKORDER = "p_PickorderCreateMergedJsonStr";
+    public static String WEBMETHOD_ADDORDERTOMERGEDPICKORDER = "p_PickorderAddToMergedJsonStr";
+    public static String WEBMETHOD_REMOVEORDERFROMMERGEDPICKORDER = "p_PickorderRemoveFromMergedJsonStr";
+    public static String WEBMETHOD_REMOVEMERGEDPICKORDER = "p_PickorderVerwijderenJsonStr";
+
     public static String WEBMETHOD_GETPICKORDERSHIPPACKAGES = "p_PickorderShippingPackageGetJsonStr";
     public static String WEBMETHOD_PICKORDERSOURCEDOCUMENTSHIPPED = "p_PickorderSourceDocumentShippedJsonStr";
     public static String WEBMETHOD_PICKORDERUPDATEWORKPLACE = "p_PickorderUpdateWorkplaceJsonStr";
@@ -83,7 +91,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_RECEIVEBARCODECREATE =  "p_ReceiveBarcodeCreateJsonStr";
     public static String WEBMETHOD_RECEIVEINTAKEITEM =  "p_ReceiveInTakeItemJsonStr";
     public static String WEBMETHOD_RECEIVELINRESET = "p_ReceiveInTakeRegelResetJsonStr";
-
+    public static String WEBMETHOD_CUSTOMAUTHORISATION = "p_CustomAutorisatieGetJsonStr";
 
     public static String WEBMETHOD_INTAKELINEMATHANDLED = "p_ReceiveMATLineHandledJsonStr";
     public static String WEBMETHOD_INTAKELINEMATHANDLEDPART = "p_ReceiveRegelHandledPartPlaceMATJsonStr";
@@ -132,8 +140,6 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_MOVEITEM_HANDLED = "p_MoveItemHandledJsonStr";
 
 
-
-
        //endregion Methods
 
     //region Properties
@@ -147,7 +153,11 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_SEARCHTEXT = "pv_ZoekTekstStr";
     public static String WEBPROPERTY_MAINTYPE = "pv_MainTypeStr";
     public static String WEBPROPERTY_ORDERNUMBER = "pv_OpdrachtnummerStr";
+    public static String WEBPROPERTY_ORDERNUMBERMERGED = "pv_OpdrachtnummerMergedStr";
+    public static String WEBPROPERTY_ORDERNUMBERTOADD = "pv_OpdrachtnummerToAddStr";
+    public static String WEBPROPERTY_ORDERNUMBERTOREMOVE = "pv_OpdrachtnummerToRemoveStr";
     public static String WEBPROPERTY_SOURCENO = "pv_SourceNoStr";
+    public static String WEBPROPERTY_INCLUDEIMAGE = "pv_IncludeImageBln";
 
 
     public static String WEBPROPERTY_ACTIONTYPECODE = "pv_ActiontypecodeStr";
@@ -233,6 +243,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_BARCODEORIGINAL = "pv_BarcodeOrigineelStr";
     public static String WEBPROPERTY_BARCODELIST = "pv_BarcodesObl";
     public static String WEBPROPERTY_QUANTITYHANDLED = "pv_QuantityHandledDbl";
+    public static String WEBPROPERTY_QUANTITYCHECKED = "pv_QuantityCheckedDbl";
     //endregion temporary Properties
 
     //region complex types

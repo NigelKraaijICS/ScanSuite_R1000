@@ -177,7 +177,7 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
     }
 
     private void mGetData() {
-        List<cPickorderLine> notHandledLinesObl = cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl();
+        List<cPickorderLine> notHandledLinesObl = cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabaseObl();
         this.mFillRecycler(notHandledLinesObl);
     }
 

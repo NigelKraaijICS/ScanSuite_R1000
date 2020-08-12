@@ -35,6 +35,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisation;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Basics.Scanners.cScanner;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -292,7 +293,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln &&
                 cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln &&
                 cItemProperty.itemPropertiesAvaliableBln &&
-                cScanner.scannersAvailableBln;
+                cScanner.scannersAvailableBln &&
+                cCustomAuthorisation.customAutorisationsAvailableBln;
     }
 
     private boolean mGetBasicDataBln() throws ExecutionException {
@@ -328,7 +330,12 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         if (!mGetshippingInfoViawebserviceBln()) {
             return false;
         }
+
         if (!cScanner.pGetScannersViaWebserviceBln()) {
+            return false;
+        }
+
+        if (!cCustomAuthorisation.pGetCustomAutorisationsViaWebserviceBln(true)) {
             return false;
         }
 

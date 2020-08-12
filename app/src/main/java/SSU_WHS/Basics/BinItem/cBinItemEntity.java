@@ -17,6 +17,7 @@ public class cBinItemEntity {
     @NonNull
     @ColumnInfo(name=cDatabase.ITEMNO_NAMESTR)
     public String itemNoStr = "";
+    @NonNull
     public String getItemNoStr() {return this.itemNoStr;}
 
     @ColumnInfo(name=cDatabase.VARIANTCODE_NAMESTR)

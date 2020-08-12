@@ -33,9 +33,11 @@ import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelect
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
 
 public class MenuActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -136,7 +138,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
         this.mInitScreen();
 
-
     }
 
     @Override
@@ -232,8 +233,8 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         final ActivityOptionsCompat activityOptions;
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK  ||
-                cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PF ||
-                cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PV){
+            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PF ||
+            cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PV){
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
             if (!  cLicense.pGetLicenseViaWebserviceBln()) {
@@ -284,6 +285,23 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             return;
         }
 
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.QC) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
+
+            if (!  cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+            intent = new Intent(cAppExtension.context, QualityControlSelectActivity.class);
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_QC);
+            clickedText = container.findViewWithTag(cAuthorisation.TAG_TEXT_QC);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INVENTORY) {
 
@@ -300,8 +318,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;
         }
-
-
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE||
                 cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INTAKE_EO ||

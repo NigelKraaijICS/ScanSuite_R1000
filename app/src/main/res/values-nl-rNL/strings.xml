@@ -645,5 +645,36 @@
     <string name="screentitle_article_stock">Artikel voorraad</string>
     <string name="actionsmenu_title">Acties</string>
     <string name="message_place_line_already_exists">"Er bestaat al een plaats regel voor dit artikel op deze BIN, als u wilt muteren dient u deze regel te resetten "</string>
+    <string name="ordertype_combined">Samengevoegde order</string>
+    <string name="bin_stock">BIN voorraad</string>
+    <string name="article_stock">Artikel voorraad</string>
+    <string name="check_barcode">Controleer barcode</string>
+    <string name="pair_pro_glove">Koppel Pro Glove</string>
+    <string name="tab_to_select">Te selecteren</string>
+    <string name="combine_picks">Picks samenvoegen</string>
+    <string name="select_single_pick">Selecteer enkele pick</string>
+    <string name="couldnt_update_order">Order kan niet bijgewerkt worden</string>
+    <string name="message_unknown_order">Onbekende opdracht</string>
+    <string name="couldnt_create_combined_order">Gecombineerde opdracht aanmaken mislukt</string>
+    <string name="couldnt_remove_order_from_combined_order">Opdracht uit gecombineerde order verwijderen mislukt</string>
+    <string name="couldnt_remove_combined_order">Gecombineerde opdracht verwijderen mislukt</string>
+    <string name="screentitle_qcorderselect">Kwaliteitscontrole opdrachten</string>
+    <string name="menuitem_qc">Kwaliteitscontrole</string>
+    <string name="screentitle_qclines">Kwaliteitscontrole regels</string>
+    <string name="error_no_more_articles_to_check">Er is niks meer om te controleren</string>
+    <string name="tab_qcorderline_tocheck">Te checken</string>
+    <string name="tab_qcorderline_checked">Gecheckt</string>
+    <string name="screentitle_qc">Kwaliteitscontrole</string>
+    <string name="message_undercheck_header">Stop met regel checken?</string>
+    <string name="message_undercheck_text">Je hebt er %1$s van deze nodig, je hebt er %2$s gecheckt.\\n\\nWeet je zeker dat u wilt stoppen met checken?</string>
+    <string name="message_close_qcorder_text">U heeft %1$s items gecontroleerd\\nU moest %2$s items controleren\\n\\n%3$s\\n\\nWilt u de klwaiteitscontrole sluiten?</string>
+    <string name="message_pick_done">Pick fase afronden</string>
+    <string name="message_close_pick_fase">U bent klaar met picken, wilt u de pick fase afronden?</string>
+    <string name="message_sort_done">Sorteren afronden?</string>
+    <string name="message_close_sort_fase">Wilt u het sorteren afronden?</string>
+    <string name="message_qcdone">Kwaliteitscontrole afronden?</string>
+    <string name="message_close_qc_fase">Wilt u de kwaliteitscontrole afronden?</string>
+    <string name="message_packandshipdone">Inpakken en verzenden afronden?</string>
+    <string name="message_close_packandship_fase">Wilt u het inpakken en verzenden afronden?</string>
 
 </resources>

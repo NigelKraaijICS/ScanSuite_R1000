@@ -21,9 +21,12 @@ import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
+import nl.icsvertex.scansuite.Fragments.QualityControl.QCLinesCheckedFragment;
+import nl.icsvertex.scansuite.Fragments.QualityControl.QCLinesToCheckFragment;
 import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesToSortFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -193,6 +196,19 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
             pvHolder.textViewBIN.setVisibility(View.GONE);
         }
 
+        //QC Recyclers
+        if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesToCheck) {
+            quantityToShowStr  = currentPickorderLine.getQuantityCheckedDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            pvHolder.textViewBIN.setText(currentPickorderLine.getProcessingSequenceStr());
+            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+        }
+
+        if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesChecked) {
+            quantityToShowStr  = currentPickorderLine.getQuantityCheckedDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            pvHolder.textViewBIN.setText(currentPickorderLine.getProcessingSequenceStr());
+            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+        }
+
         pvHolder.textViewDescription.setText(lineDescriptionStr);
         pvHolder.textViewQuantity.setText(quantityToShowStr);
         pvHolder.textViewSourceNo.setText(currentPickorderLine.getSourceNoStr());
@@ -250,10 +266,24 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
                 }
 
+                if (cAppExtension.context  instanceof QualityControlLinesActivity) {
+
+                    QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
+
+                    if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesToCheck) {
+                        qualityControlLinesActivity.pQCLineSelected(currentPickorderLine);
+
+                    }
+                    if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesChecked) {
+                        qualityControlLinesActivity.pQCLineToResetSelected(currentPickorderLine);
+                        return;
+                    }
+
+                }
+
             }
         });
         //End On Click Listener
-
 
         if (cPickorder.currentPickOrder.getLastSelectedIndexInt() > this.localPickorderLinesObl.size() -1 ) {
             cPickorder.currentPickOrder.lastSelectedIndexInt = 0;
@@ -336,7 +366,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     private List<cPickorderLine> mGetDefectsListObl(Boolean pvShowBln) {
 
         if (!pvShowBln) {
-            this.localPickorderLinesObl = cPickorder.currentPickOrder.pGetLinesHandledFromDatabasObl();
+            this.localPickorderLinesObl = cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl();
             return  this.localPickorderLinesObl;
         }
 

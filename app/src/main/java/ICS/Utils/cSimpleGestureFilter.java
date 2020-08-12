@@ -7,14 +7,14 @@ import android.view.MotionEvent;
 
 public class cSimpleGestureFilter extends SimpleOnGestureListener{
 
-    public final static int SWIPE_UP    = 1;
-    public final static int SWIPE_DOWN  = 2;
-    public final static int SWIPE_LEFT  = 3;
-    public final static int SWIPE_RIGHT = 4;
+    private final static int SWIPE_UP    = 1;
+    private final static int SWIPE_DOWN  = 2;
+    private final static int SWIPE_LEFT  = 3;
+    private final static int SWIPE_RIGHT = 4;
 
     public final static int MODE_TRANSPARENT = 0;
-    public final static int MODE_SOLID       = 1;
-    public final static int MODE_DYNAMIC     = 2;
+    private final static int MODE_SOLID       = 1;
+    private final static int MODE_DYNAMIC     = 2;
 
     private final static int ACTION_FAKE = -13; //just an unlikely number
     private int swipe_Min_Distance = 100;
@@ -138,7 +138,7 @@ public class cSimpleGestureFilter extends SimpleOnGestureListener{
 
     @Override
     public boolean onDoubleTap(MotionEvent arg) {
-        this.listener.onDoubleTap();;
+        this.listener.onDoubleTap();
         return true;
     }
 

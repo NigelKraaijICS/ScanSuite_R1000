@@ -9,8 +9,6 @@
     android:fitsSystemWindows="true"
     >
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/moveLinePlaceContainer"
     android:layout_width="match_parent"
     android:translationZ="2dp"
@@ -100,7 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         app:headerLayout="@layout/header_actions_menu"
-        app:menu="@menu/menu_actions"
+        app:menu="@menu/menu_stockactions"
         android:hapticFeedbackEnabled="true"
         />
 </androidx.drawerlayout.widget.DrawerLayout>

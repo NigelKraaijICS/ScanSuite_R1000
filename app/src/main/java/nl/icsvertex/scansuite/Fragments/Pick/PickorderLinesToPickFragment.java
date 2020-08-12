@@ -116,8 +116,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         this.pBranchScanned();
     }
 
-
-
     //End Region Default Methods
 
     //Region iICSDefaultFragment defaults
@@ -146,7 +144,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     }
 
-
     @Override
     public void mFieldsInitialize() {
 
@@ -168,12 +165,14 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
             this.currentLocationView.setVisibility(View.INVISIBLE);
             this.currentLocationView.setClickable(false);
         }
-
         if (cSetting.PICK_BIN_IS_ITEM()) {
             this.quickhelpText.setText(R.string.scan_article_or_bincode);
         }
         else {
             this.quickhelpText.setText(R.string.scan_bincode);
+            if (cPickorder.currentPickOrder.isSingleBinBln()) {
+                this.quickhelpText.setText(R.string.message_scan_article);
+            }
         }
     }
 
@@ -250,7 +249,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
     private void mGetData() {
 
-        List<cPickorderLine> notHandledLinesObl = cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabasObl();
+        List<cPickorderLine> notHandledLinesObl = cPickorder.currentPickOrder.pGetLinesNotHandledFromDatabaseObl();
 
         if (notHandledLinesObl.size()>0) {
             this.currentLocationView.setVisibility(View.VISIBLE);
@@ -323,11 +322,11 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
             fragmentTransaction.replace(R.id.fragmentPickorderLinesToPick, fragment);
             fragmentTransaction.commit();
 
-
             if (cAppExtension.activity instanceof  PickorderLinesActivity) {
-                PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity) cAppExtension.activity;
-                pickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-
+                if (cPickorder.currentPickOrder != null) {
+                    PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity) cAppExtension.activity;
+                    pickorderLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                }
             }
             //Change tabcounter text
         }

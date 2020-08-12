@@ -14,6 +14,7 @@ import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelect
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
@@ -27,7 +28,15 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
 
 
         if (cAppExtension.context instanceof PickorderSelectActivity) {
-            setPreferencesFromResource(R.xml.pick_filter, rootKey);
+
+            if (PickorderSelectActivity.currentModusEnu == PickorderSelectActivity.ModusEnu.NORMAL) {
+                setPreferencesFromResource(R.xml.pick_filter, rootKey);
+            }
+            else
+            {
+                setPreferencesFromResource(R.xml.combine_pick_filter, rootKey);
+            }
+
         }
 
         if (cAppExtension.context instanceof SortorderSelectActivity) {
@@ -35,6 +44,10 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
         }
 
         if (cAppExtension.context instanceof ShiporderSelectActivity) {
+            setPreferencesFromResource(R.xml.pick_filter, rootKey);
+        }
+
+        if (cAppExtension.context instanceof QualityControlSelectActivity) {
             setPreferencesFromResource(R.xml.pick_filter, rootKey);
         }
 

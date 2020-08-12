@@ -160,7 +160,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         this.editTextPackingslip = findViewById(R.id.editTextPackingslip);
         this.editTextBin = findViewById(R.id.editTextBin);
         this.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
-        this.createReceiveButton = findViewById(R.id.createOrderButton);
+        this.createReceiveButton = findViewById(R.id.closeButton);
         this.cancelButton = findViewById(R.id.cancelButton);
     }
 

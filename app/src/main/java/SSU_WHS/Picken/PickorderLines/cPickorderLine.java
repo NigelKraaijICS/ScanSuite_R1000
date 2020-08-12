@@ -78,9 +78,19 @@ public class cPickorderLine {
         return quantityHandledDbl;
     }
 
-    private double quantityTakenDbl;
-    public double getQuantityTakenDbl() {
+    private Double quantityTakenDbl;
+    public Double getQuantityTakenDbl() {
         return quantityTakenDbl;
+    }
+
+    private Double quantityRejectedDbl;
+    public Double getQuantityRejectedDbl() {
+        return quantityRejectedDbl;
+    }
+
+    public Double quantityCheckedDbl;
+    public Double getQuantityCheckedDbl() {
+        return quantityCheckedDbl;
     }
 
     private String sourceNoStr;
@@ -243,17 +253,19 @@ public class cPickorderLine {
         this.binCodeStr= this.PickorderLineEntity.getBincodeStr();
 
 
-        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK) {
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK ||pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.QC ) {
             this.quantityDbl = this.PickorderLineEntity.getQuantityDbl();
         }
 
-        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT) {
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT ) {
             this.quantityDbl = this.PickorderLineEntity.getQuantityTakenDbl();
         }
 
         this.quantityHandledDbl = this.PickorderLineEntity.getQuantityHandledDbl();
-
         this.quantityTakenDbl =  this.PickorderLineEntity.getQuantityTakenDbl();
+        this.quantityRejectedDbl = this.PickorderLineEntity.getQuantityRejected();
+        this.quantityCheckedDbl = this.PickorderLineEntity.getQuantityChecked();
+
         this.sourceNoStr = this.PickorderLineEntity.getSourceNoStr();
         this.destinationNoStr = this.PickorderLineEntity.getDestinationNoStr();
 
@@ -282,6 +294,11 @@ public class cPickorderLine {
             }
         }
 
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.QC) {
+                if (Double.compare(this.getQuantityCheckedDbl(),this.getQuantityDbl()) == 0) {
+                    this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+                }
+        }
 
         this.takenTimeStampStr =  this.PickorderLineEntity.getTakenTimeStampStr();
         this.extraField1Str =  this.PickorderLineEntity.getExtraField1Str();
@@ -306,6 +323,8 @@ public class cPickorderLine {
 
         this.quantityDbl = this.PickorderLineEntity.getQuantityDbl();
         this.quantityHandledDbl = this.PickorderLineEntity.getQuantityHandledDbl();
+        this.quantityRejectedDbl = this.PickorderLineEntity.getQuantityRejected();
+        this.quantityCheckedDbl = this.PickorderLineEntity.getQuantityChecked();
 
         this.sourceNoStr = this.PickorderLineEntity.getSourceNoStr();
         this.destinationNoStr = this.PickorderLineEntity.getDestinationNoStr();
@@ -473,6 +492,22 @@ public class cPickorderLine {
 
     }
 
+    public void pQCHandledIndatabase(){
+
+        if (!this.mUpdateQuanitityChecked(this.quantityCheckedDbl)) {
+            return;
+        }
+
+        if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)) {
+            return;
+        }
+
+        this.takenTimeStampStr = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
+
+        this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
+
+    }
+
     public boolean pUpdateSortLineIndatabaseBln(){
 
 
@@ -487,6 +522,32 @@ public class cPickorderLine {
         this.takenTimeStampStr = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
 
         return this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
+
+    }
+
+    public void pCancelQCIndatabase(){
+
+
+        cPickorderLine.currentPickOrderLine.quantityCheckedDbl = 0.0;
+
+        if (!this.mUpdateQuanitityChecked(this.getQuantityCheckedDbl())) {
+            return;
+        }
+
+        //Remove or update line barcodeStr
+        cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcode();
+        if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)) {
+            return;
+        }
+
+        for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()) {
+            pickorderLineBarcode.pDeleteFromDatabaseBln();
+        }
+
+        this.takenTimeStampStr = "";
+
+        this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
+
 
     }
 
@@ -570,6 +631,20 @@ public class cPickorderLine {
 
         cWebresult WebResult;
         WebResult =  this.getPickorderLineViewModel().pPickLineHandledViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
+            return  false;
+        }
+    }
+
+    public boolean pCheckedBln() {
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderLineViewModel().pPickLineCheckedViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
@@ -711,6 +786,20 @@ public class cPickorderLine {
         }
 
         this.quantityHandledDbl = pvQuantityHandledBln;
+        return true;
+
+    }
+
+    private boolean mUpdateQuanitityChecked(double pvQuantityCheckedDbl) {
+
+        boolean resultBln;
+        resultBln =   this.getPickorderLineViewModel().pUpdateQuantityCheckedBln(pvQuantityCheckedDbl);
+
+        if (!resultBln) {
+            return  false;
+        }
+
+        this.quantityCheckedDbl = pvQuantityCheckedDbl;
         return true;
 
     }

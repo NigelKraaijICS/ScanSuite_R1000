@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#0096ff</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#d2232a</color>
     <color name="colorNeutral">#cccccc</color>
@@ -15,8 +15,6 @@
     <color name="colorLogoRed">#d2232a</color>
     <color name="colorGreen">#228B22</color>
     <color name="colorError">#d2232a</color>
-
-    <!--<color name="colorSelected">#89daff</color>-->
     <color name="colorSelected">#d9edff</color>
 
     <color name="colorTextDarkest">#000000</color>
@@ -38,13 +36,7 @@
     <!--region order statusInt indicators-->
     <color name="colorOrderStatusAssignedUser">#fb36d4</color>
     <!--endregion order statusInt indicators-->
-
-    <color name="colorSpeechBubble">#0096ff</color>
-
-    <color name="colorCommentBubble">#0096ff</color>
     <color name="colorCommentText">#ffffff</color>
-
-    <color name="colorQuickhelpBackground">#0096ff</color>
     <color name="colorQuickhelpText">#ffffff</color>
     <color name="colorQuickhelpRipple">#3F51B5</color>
 </resources>

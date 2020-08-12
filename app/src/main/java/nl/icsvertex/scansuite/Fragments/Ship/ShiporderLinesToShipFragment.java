@@ -21,6 +21,7 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
 import SSU_WHS.Picken.Shipment.cShipmentAdapter;
@@ -37,13 +38,10 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     //Region Private Properties
 
-    private TextView textViewSelectedOrder;
-    private ConstraintLayout shipThisView;
-
     private TextView quickhelpText;
     private ImageView quickhelpIcon;
     private ConstraintLayout quickhelpContainer;
-    private RecyclerView recyclerViewShiporderLinesToship;
+   private RecyclerView recyclerViewShiporderLinesToship;
 
     private cShipmentAdapter shipmentAdapter;
     private  cShipmentAdapter getShipmentAdapter(){
@@ -116,8 +114,6 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
         if (getView() != null) {
             this.recyclerViewShiporderLinesToship = getView().findViewById(R.id.recyclerViewShiporderLinesToship);
-            this.textViewSelectedOrder = getView().findViewById(R.id.textViewSelectedOrder);
-            this.shipThisView = getView().findViewById(R.id.shipThisView);
             this.quickhelpText = getView().findViewById(R.id.quickhelpText);
             this.quickhelpContainer = getView().findViewById(R.id.quickHelpContainer);
             this.quickhelpIcon = getView().findViewById(R.id.quickhelpIcon);
@@ -135,7 +131,6 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     @Override
     public void mSetListeners() {
-        this.mSetCurrentSourceNoListener();
         this.setQuickHelpListener();
     }
 
@@ -147,15 +142,12 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     public  void pSetChosenShipment(){
 
-        if (!cShipment.currentShipment.getProcessingSequenceStr().isEmpty()) {
-            this.textViewSelectedOrder.setText(cShipment.currentShipment.getProcessingSequenceStr());
-
+        if (cSetting.PICK_SELECTEREN_BARCODE()){
+            ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
+            shiporderLinesActivity.pHandleScan(null,true);
         }
-        else {
-            this.textViewSelectedOrder.setText(cShipment.currentShipment.getSourceNoStr());
-        }
-
     }
+
 
     //Region Private Methods
 
@@ -174,21 +166,8 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
         });
     }
 
-    private void mSetCurrentSourceNoListener() {
-        this.shipThisView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (cAppExtension.activity instanceof  ShiporderLinesActivity) {
-                    ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
-                    shiporderLinesActivity.pHandleScan(null,true);
-
-                }
-            }
-        });
-    }
 
     public void pGetData() {
-
         List<cShipment> notHandledShipmentsObl = cPickorder.currentPickOrder.pGetNotHandledShipmentsObl();
         this.mFillRecycler(notHandledShipmentsObl);
     }

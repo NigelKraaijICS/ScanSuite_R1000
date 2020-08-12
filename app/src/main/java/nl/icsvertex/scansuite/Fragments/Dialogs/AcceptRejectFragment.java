@@ -25,6 +25,8 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
@@ -141,6 +143,11 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
                     pickorderPickActivity.pAcceptRejectDialogDismissed();
                 }
 
+                if (cAppExtension.activity instanceof  PickorderQCActivity) {
+                    PickorderQCActivity pickorderQCActivity = (PickorderQCActivity)cAppExtension.activity;
+                    pickorderQCActivity.pAcceptRejectDialogDismissed();
+                }
+
                 if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
                     ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
                     returnorderDocumentActivity.pHandleFragmentDismissed();
@@ -211,6 +218,20 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof SortorderSortActivity) {
             SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
             sortorderSortActivity.pAcceptPick();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof QualityControlLinesActivity) {
+            QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
+            qualityControlLinesActivity.pQCDone();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof PickorderQCActivity) {
+            PickorderQCActivity pickorderQCActivity = (PickorderQCActivity)cAppExtension.activity;
+            pickorderQCActivity.pAcceptQC(ignoreAcceptBln);
             this.dismiss();
             return;
         }
@@ -333,6 +354,18 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof SortorderSortActivity) {
             SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
             sortorderSortActivity.pCancelPick();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof QualityControlLinesActivity) {
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof PickorderQCActivity) {
+            PickorderQCActivity pickorderQCActivity = (PickorderQCActivity)cAppExtension.activity;
+            pickorderQCActivity.pCancelQC();
             this.dismiss();
             return;
         }

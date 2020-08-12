@@ -34,8 +34,6 @@ public class cInventoryorderViewModel extends AndroidViewModel {
 
     public cWebresult pGetInventoryordersFromWebserviceWrs(String pvSearchTextStr) {return this.Repository.pGetInventoryordersFromWebserviceWrs(pvSearchTextStr);}
 
-    public List<cInventoryorderEntity> pGetInventoryordersFromDatabaseObl() {return this.Repository.pGetInventoryordersFromDatabaseObl();}
-
     public List<cInventoryorderEntity> pGetInventoriesWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.Repository.pGetInventoriesFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 
     public cWebresult pAddBinViaWebserviceWrs(String pvBinCodeStr) {return this.Repository.pAddBinViaWebserviceWrs(pvBinCodeStr);}

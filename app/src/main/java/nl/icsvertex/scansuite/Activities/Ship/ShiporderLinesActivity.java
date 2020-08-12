@@ -36,7 +36,7 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.OrderDoneFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.Fragments.Ship.ShiporderLinesToShipFragment;
 import nl.icsvertex.scansuite.PagerAdapters.ShiporderLinesPagerAdapter;
@@ -357,9 +357,9 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pPlaySound(R.raw.goodsound, null);
 
-        final OrderDoneFragment orderDoneFragment = new OrderDoneFragment(false);
-        orderDoneFragment.setCancelable(false);
-        orderDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
+        final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_packandshipdone), cAppExtension.activity.getString(R.string.message_close_packandship_fase),false);
+        stepDoneFragment.setCancelable(false);
+        stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
     public  void pWorkplaceSelected(){

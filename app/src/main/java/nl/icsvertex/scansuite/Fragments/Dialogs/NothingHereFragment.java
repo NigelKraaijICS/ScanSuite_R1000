@@ -54,11 +54,11 @@ public class NothingHereFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         this.imageTumbleweed = view.findViewById(R.id.imageViewTumbleweed);
-        this.imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
+        this.imageTumbleweed.setImageDrawable(cImages.pConvertToGrayscale(imageTumbleweed.getDrawable()));
         this.imageViewWind = view.findViewById(R.id.imageViewWind);
-        this.imageViewWind.setImageDrawable(cImages.convertToGrayscale(imageViewWind.getDrawable()));
+        this.imageViewWind.setImageDrawable(cImages.pConvertToGrayscale(imageViewWind.getDrawable()));
         this.imageViewCactus = view.findViewById(R.id.imageViewCactus);
-        this.imageViewCactus.setImageDrawable(cImages.convertToGrayscale(imageViewCactus.getDrawable()));
+        this.imageViewCactus.setImageDrawable(cImages.pConvertToGrayscale(imageViewCactus.getDrawable()));
         this.viewDesert = view.findViewById(R.id.viewDesert);
         this.blnToggleGrey = false;
 
@@ -73,9 +73,9 @@ public class NothingHereFragment extends Fragment {
                     blnToggleGrey = true;
                 }
                 else {
-                    imageTumbleweed.setImageDrawable(cImages.convertToGrayscale(imageTumbleweed.getDrawable()));
-                    imageViewCactus.setImageDrawable(cImages.convertToGrayscale(imageViewCactus.getDrawable()));
-                    imageViewWind.setImageDrawable(cImages.convertToGrayscale(imageViewWind.getDrawable()));
+                    imageTumbleweed.setImageDrawable(cImages.pConvertToGrayscale(imageTumbleweed.getDrawable()));
+                    imageViewCactus.setImageDrawable(cImages.pConvertToGrayscale(imageViewCactus.getDrawable()));
+                    imageViewWind.setImageDrawable(cImages.pConvertToGrayscale(imageViewWind.getDrawable()));
                     viewDesert.setBackgroundColor(getResources().getColor(R.color.colorDesertGrey));
                     blnToggleGrey = false;
                 }

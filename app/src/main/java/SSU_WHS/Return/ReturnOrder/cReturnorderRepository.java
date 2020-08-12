@@ -93,7 +93,6 @@ public class cReturnorderRepository {
         return webResultWrs;
     }
 
-
     public cWebresult pHandledViaWebserviceWrs() {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
@@ -109,6 +108,229 @@ public class cReturnorderRepository {
         }
         return webResultWrs;
     }
+
+    public List<cReturnorderEntity> pGetReturnOrdersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
+
+        List<cReturnorderEntity> ResultObl = null;
+        StringBuilder SQLStatementStr;
+        int i;
+
+        SQLStatementStr = new StringBuilder("SELECT * FROM " + cDatabase.TABLENAME_RETURNORDER);
+        if (pvUseFiltersBln) {
+//            TTT
+            if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr.append(" WHERE 1=1 ");
+            }
+//            TTF
+            else if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr.append(" WHERE AssignedUserId != '' ");
+            }
+//            TFT
+            else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr.append(" WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  AssignedUserId = '' ");
+                SQLStatementStr.append(" OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  CurrentUserId = '' ");
+            }
+//            FTT
+            else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr.append(" WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
+            }
+//            TFF
+            else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr.append(" WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
+                SQLStatementStr.append(" OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
+            }
+//            FTF
+            else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr.append(" WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" AND  AssignedUserId != '' ");
+            }
+//            FFT
+            else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr.append(" WHERE AssignedUserId = '' AND CurrentUserId = ''");
+            }
+//            FFF
+            else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
+                SQLStatementStr.append(" WHERE AssignedUserId = 'HELEMAALNIEMAND' ");
+            }
+
+        }
+
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+
+            String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
+            String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
+
+            if (splitFields.length == splitValues.length) {
+
+
+
+                for (i = 0; i < splitFields.length; i++) {
+                    if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
+                        SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    }
+                    else {
+                        SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    }
+                }
+            }
+        }
+
+        SQLStatementStr.append(" ORDER BY Priority, Opdrachtnummer ASC");
+
+
+        try {
+            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr.toString());
+            ResultObl = new mGetReturnOrdersFromDatabaseWithFilterAsyncTask(returnorderDao).execute(query).get();
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return ResultObl;
+    }
+
+    public cWebresult pAddUnkownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mReturnorderUnknownItemAddViaWebserviceAsyncTask().execute(pvBarcodeScan).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pAddERPItemViaWebserviceWrs(cArticleBarcode pvArticleBarcode) {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mReturnorderERPItemAddViaWebserviceAsyncTask().execute(pvArticleBarcode).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetCommentsFromWebservice() {
+        ArrayList<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetCommentsFromWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetLinesFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetLinesViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetHandledLinesFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetHandledLinesViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pReturnDisposedViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mReturnDisposedViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetBarcodesFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetBarcodesViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetLineBarcodesFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetLineBarcodesViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public void insert(cReturnorderEntity inventoryorderEntity) {
+        new mInsertAsyncTask(returnorderDao).execute(inventoryorderEntity);
+    }
+
+    public void deleteAll() {
+        new mDeleteAllAsyncTask(returnorderDao).execute();
+    }
+
+    //Endregion Public Methods
+
+    //Region Items
 
     private static class mReturnorderHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
@@ -157,106 +379,6 @@ public class cReturnorderRepository {
             }
             return webresult;
         }
-    }
-
-    public List<cReturnorderEntity> pGetReturnOrdersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
-
-        List<cReturnorderEntity> ResultObl = null;
-        String SQLStatementStr;
-
-        SQLStatementStr = "SELECT * FROM " + cDatabase.TABLENAME_RETURNORDER;
-        if (pvUseFiltersBln) {
-//            TTT
-            if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE 1=1 ";
-            }
-//            TTF
-            else if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != '' ";
-            }
-//            TFT
-            else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  AssignedUserId = '' ";
-                SQLStatementStr += " OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  CurrentUserId = '' ";
-            }
-//            FTT
-            else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
-            }
-//            TFF
-            else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
-                SQLStatementStr += " OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
-            }
-//            FTF
-            else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " AND  AssignedUserId != '' ";
-            }
-//            FFT
-            else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = '' AND CurrentUserId = ''";
-            }
-//            FFF
-            else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = 'HELEMAALNIEMAND' ";
-            }
-
-        }
-
-        try {
-            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
-            ResultObl = new mGetReturnOrdersFromDatabaseWithFilterAsyncTask(returnorderDao).execute(query).get();
-
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
-    }
-
-
-    //Endregion Public Methods
-
-    //Region Items
-
-    public cWebresult pAddUnkownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mReturnorderUnknownItemAddViaWebserviceAsyncTask().execute(pvBarcodeScan).get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
-
-    public cWebresult pAddERPItemViaWebserviceWrs(cArticleBarcode pvArticleBarcode) {
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mReturnorderERPItemAddViaWebserviceAsyncTask().execute(pvArticleBarcode).get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
-
-
-    public void insert(cReturnorderEntity inventoryorderEntity) {
-        new mInsertAsyncTask(returnorderDao).execute(inventoryorderEntity);
-    }
-
-    public void deleteAll() {
-        new mDeleteAllAsyncTask(returnorderDao).execute();
     }
 
     private static class mInsertAsyncTask extends AsyncTask<cReturnorderEntity, Void, Void> {
@@ -418,23 +540,6 @@ public class cReturnorderRepository {
         }
     }
 
-    public cWebresult pGetLinesFromWebserviceWrs() {
-
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mGetLinesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
-
     private static class mGetLinesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
@@ -464,23 +569,6 @@ public class cReturnorderRepository {
         }
     }
 
-    public cWebresult pGetHandledLinesFromWebserviceWrs() {
-
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mGetHandledLinesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
-
     private static class mGetHandledLinesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
@@ -507,23 +595,6 @@ public class cReturnorderRepository {
             }
             return webresult;
         }
-    }
-
-    public cWebresult pReturnDisposedViaWebserviceWrs() {
-
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mReturnDisposedViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
     }
 
     private static class mReturnDisposedViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
@@ -711,22 +782,6 @@ public class cReturnorderRepository {
         }
     }
 
-    public cWebresult pGetBarcodesFromWebserviceWrs() {
-
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mGetBarcodesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
 
     private static class mGetBarcodesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
@@ -755,22 +810,6 @@ public class cReturnorderRepository {
         }
     }
 
-    public cWebresult pGetLineBarcodesFromWebserviceWrs() {
-
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mGetLineBarcodesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
 
     private static class mGetLineBarcodesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
@@ -797,22 +836,6 @@ public class cReturnorderRepository {
             }
             return webresult;
         }
-    }
-
-    public cWebresult pGetCommentsFromWebservice() {
-        ArrayList<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mGetCommentsFromWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
     }
 
     private static class mGetCommentsFromWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {

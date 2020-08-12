@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import ICS.Utils.cDateAndTime;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
+import ICS.Utils.cText;
 import SSU_WHS.Basics.Packaging.cPackaging;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
@@ -83,48 +84,71 @@ public class cIntakeorderRepository {
     public List<cIntakeorderEntity> pGetIntakeordersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
 
         List<cIntakeorderEntity> ResultObl = null;
-        String SQLStatementStr;
+        StringBuilder SQLStatementStr;
+        int i;
 
-        SQLStatementStr = "SELECT * FROM " + cDatabase.TABLENAME_INTAKEORDER;
+        SQLStatementStr = new StringBuilder("SELECT * FROM " + cDatabase.TABLENAME_INTAKEORDER);
         if (pvUseFiltersBln) {
 //            TTT
             if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE 1=1 ";
+                SQLStatementStr.append(" WHERE 1=1 ");
             }
 //            TTF
             else if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != '' ";
+                SQLStatementStr.append(" WHERE AssignedUserId != '' ");
             }
 //            TFT
             else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  AssignedUserId = '' " ;
-                SQLStatementStr += " OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  CurrentUserId = '' " ;
+                SQLStatementStr.append(" WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  AssignedUserId = '' ");
+                SQLStatementStr.append(" OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  CurrentUserId = '' ");
             }
 //            FTT
             else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
+                SQLStatementStr.append(" WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
             }
 //            TFF
             else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
-                SQLStatementStr += " OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " " ;
+                SQLStatementStr.append(" WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
+                SQLStatementStr.append(" OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
             }
 //            FTF
             else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " AND  AssignedUserId != '' ";
+                SQLStatementStr.append(" WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" AND  AssignedUserId != '' ");
             }
 //            FFT
             else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = '' AND CurrentUserId = ''";
+                SQLStatementStr.append(" WHERE AssignedUserId = '' AND CurrentUserId = ''");
             }
 //            FFF
             else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = 'HELEMAALNIEMAND' ";
+                SQLStatementStr.append(" WHERE AssignedUserId = 'HELEMAALNIEMAND' ");
             }
         }
 
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+
+            String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
+            String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
+
+            if (splitFields.length == splitValues.length) {
+
+
+                for (i = 0; i < splitFields.length; i++) {
+                    if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
+                        SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    }
+                    else {
+                        SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    }
+                }
+            }
+        }
+
+        SQLStatementStr.append(" ORDER BY Priority, Opdrachtnummer ASC");
+
+
         try {
-            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
+            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr.toString());
             ResultObl = new cIntakeorderRepository.mGetIntakeordersFromDatabaseWithFilterAsyncTask(intakeorderDao).execute(query).get();
 
         } catch (InterruptedException | ExecutionException e) {
@@ -855,71 +879,6 @@ public class cIntakeorderRepository {
             try {
                 List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
 
-//                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-//                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
-//                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
-//                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
-//
-//                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
-//                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LANGUAGEASCULTURE;
-//                l_PropertyInfo2Pin.setValue(cUser.currentUser.getNameStr());
-//                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
-//
-//                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
-//                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
-//                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
-//                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
-//
-//                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
-//                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
-//                l_PropertyInfo4Pin.setValue("");
-//                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
-//
-//                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
-//                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOW;
-//                l_PropertyInfo5Pin.setValue(cWarehouseorder.WorkflowEnu.EOS.toString());
-//                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
-//
-//                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
-//                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEDDAT;
-//                l_PropertyInfo6Pin.setValue(cDateAndTime.pGetCurrentDateTimeForWebserviceStr());
-//                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
-//
-//                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
-//                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT;
-//                l_PropertyInfo7Pin.setValue(params[0].documentStr);
-//                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
-//
-//                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
-//                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT2;
-//                l_PropertyInfo8Pin.setValue(params[0].packingSlipStr);
-//                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
-//
-//                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
-//                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORIGINNO;
-//                l_PropertyInfo9Pin.setValue("");
-//                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
-//
-//                PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
-//                l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_EXTERNALREFERENCE;
-//                l_PropertyInfo10Pin.setValue(params[0].documentStr + ";" + params[0].packingSlipStr + ";" + cDateAndTime.pGetCurrentDateTimeForIntakeStr() );
-//                l_PropertyInfoObl.add(l_PropertyInfo10Pin);
-//
-//                PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
-//                l_PropertyInfo11Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBIN;
-//                l_PropertyInfo11Pin.setValue(params[0].binCodeStr);
-//                l_PropertyInfoObl.add(l_PropertyInfo11Pin);
-//
-//                PropertyInfo l_PropertyInfo12Pin = new PropertyInfo();
-//                l_PropertyInfo12Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBARCODECHECK;
-//                l_PropertyInfo12Pin.setValue(params[0].checkBarcodesBln);
-//                l_PropertyInfoObl.add(l_PropertyInfo12Pin);
-//
-//                PropertyInfo l_PropertyInfo13Pin = new PropertyInfo();
-//                l_PropertyInfo13Pin.name = cWebserviceDefinitions.WEBPROPERTY_ADMINISTRATION;
-//                l_PropertyInfo13Pin.setValue("");
-//                l_PropertyInfoObl.add(l_PropertyInfo13Pin);
-
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
                 l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
@@ -940,9 +899,18 @@ public class cIntakeorderRepository {
                 l_PropertyInfo4Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
+
+                String newWorkflowsStr = cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase();
+                newWorkflowsStr = newWorkflowsStr.replace("EOR","");
+                newWorkflowsStr = newWorkflowsStr.replace(";;",";");
+
+                if (newWorkflowsStr.endsWith(";")) {
+                    newWorkflowsStr = newWorkflowsStr.substring(0, newWorkflowsStr.length() - 1);
+                }
+
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
                 l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOW;
-                l_PropertyInfo5Pin.setValue(cSetting.RECEIVE_NEW_WORKFLOWS());
+                l_PropertyInfo5Pin.setValue(newWorkflowsStr);
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();

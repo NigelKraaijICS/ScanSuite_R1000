@@ -22,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/recyclerSearchView"
-            app:layout_constraintBottom_toTopOf="@id/buttonContainer"
-            >
+            app:layout_constraintBottom_toTopOf="@id/buttonContainer">
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefreshLayout"
                 style="@style/defaultSwipeToRefreshLayout"
@@ -41,9 +40,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonContainer"
             android:background="@color/colorDefaultbackground"

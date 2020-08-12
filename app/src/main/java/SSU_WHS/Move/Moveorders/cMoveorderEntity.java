@@ -8,6 +8,9 @@ import androidx.room.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import ICS.Utils.cText;
+import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
 
 @Entity(tableName= cDatabase.TABLENAME_MOVEORDER)
@@ -91,6 +94,14 @@ public class cMoveorderEntity {
     public String moveNoExtraPieces;
     public String getMoveNoExtraPiecesStr() {return this.moveNoExtraPieces;}
 
+    @ColumnInfo(name="IsProcessingOrParked")
+    public Boolean isprocessingorparked;
+    public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
+
+    @ColumnInfo(name="Priority")
+    public int priorityInt;
+    public int getPriorityInt() {return this.priorityInt;}
+
 
     //End Region Public Properties
 
@@ -124,6 +135,37 @@ public class cMoveorderEntity {
             this.sourceDocument = pvJsonObject.getString(cDatabase.SOURCEDOCUMENT_NAMESTR);
             this.document = pvJsonObject.getString(cDatabase.DOCUMENT_NAMESTR);
             this.document2 = pvJsonObject.getString(cDatabase.DOCUMENT2_NAMESTR);
+
+            this.isprocessingorparked = !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.MoveStatusEnu.Move_Take_Busy)) &&
+                    !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.MoveStatusEnu.Move_Take_Wait)) &&
+                    !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.MoveStatusEnu.Move_Place_Busy)) &&
+                     !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.MoveStatusEnu.Move_Place_Wait));
+
+            this.priorityInt = 6;
+
+            if (this.currentUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (this.isprocessingorparked)) {
+                this.priorityInt = 1;
+                return;
+            }
+
+            if (this.currentUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (!this.isprocessingorparked)) {
+                this.priorityInt = 2;
+                return;
+            }
+
+            if (this.assignedUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
+                this.priorityInt = 3;
+                return;
+            }
+
+            if (this.assignedUserId.isEmpty()) {
+                this.priorityInt = 4;
+                return;
+            }
+
+            if (!this.assignedUserId.equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
+                this.priorityInt = 5;
+            }
 
 
         } catch (JSONException e) {

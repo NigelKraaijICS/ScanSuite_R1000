@@ -102,65 +102,79 @@ public class cInventoryorderRepository {
         return webResultWrs;
     }
 
-    public List<cInventoryorderEntity> pGetInventoryordersFromDatabaseObl() {
-        List<cInventoryorderEntity> ResultObl = null;
-        try {
-            ResultObl = new mGetInventoryordersFromDatabaseAsyncTask(inventoryorderDao).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return ResultObl;
-    }
-
     public List<cInventoryorderEntity> pGetInventoriesFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
 
         List<cInventoryorderEntity> ResultObl = null;
-        String SQLStatementStr;
+        StringBuilder SQLStatementStr;
+        int i;
 
-        SQLStatementStr = "SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDER ;
+        SQLStatementStr = new StringBuilder( "SELECT * FROM " + cDatabase.TABLENAME_INVENTORYORDER);
         if (pvUseFiltersBln) {
 //            TTT
             if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE 1=1 ";
+                SQLStatementStr.append(" WHERE 1=1 ");
             }
 //            TTF
             else if (cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != '' ";
+                SQLStatementStr.append(" WHERE AssignedUserId != '' ");
             }
 //            TFT
             else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  AssignedUserId = '' " ;
-                SQLStatementStr += " OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " OR  CurrentUserId = '' " ;
+                SQLStatementStr.append(" WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  AssignedUserId = '' ");
+                SQLStatementStr.append(" OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" OR  CurrentUserId = '' ");
             }
 //            FTT
             else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
+                SQLStatementStr.append(" WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
             }
 //            TFF
             else if (cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " ";
-                SQLStatementStr += " OR CurrentUserId = " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " " ;
+                SQLStatementStr.append(" WHERE AssignedUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
+                SQLStatementStr.append(" OR CurrentUserId = ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" ");
             }
 //            FTF
             else if (!cSharedPreferences.showAssignedToMeBln() && cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId != " + pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase()) + " AND  AssignedUserId != '' ";
+                SQLStatementStr.append(" WHERE AssignedUserId != ").append(pAddSingleQuotesStr(pvCurrentUserStr.toUpperCase())).append(" AND  AssignedUserId != '' ");
             }
 //            FFT
             else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = '' AND CurrentUserId = ''";
+                SQLStatementStr.append(" WHERE AssignedUserId = '' AND CurrentUserId = ''");
             }
 //            FFF
             else if (!cSharedPreferences.showAssignedToMeBln() && !cSharedPreferences.showAssignedToOthersBln() && !cSharedPreferences.showNotAssignedBln()) {
-                SQLStatementStr += " WHERE AssignedUserId = 'HELEMAALNIEMAND' ";
+                SQLStatementStr.append(" WHERE AssignedUserId = 'HELEMAALNIEMAND' ");
             }
 
             if (cSharedPreferences.showProcessedWaitBln()) {
-                SQLStatementStr += " AND (IsProcessingOrParked) ";
+                SQLStatementStr.append(" AND (IsProcessingOrParked) ");
             }
         }
 
+
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+
+            String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
+            String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
+
+            if (splitFields.length == splitValues.length) {
+
+
+                for (i = 0; i < splitFields.length; i++) {
+                    if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
+                        SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    }
+                    else {
+                        SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    }
+                }
+            }
+        }
+
+        SQLStatementStr.append(" ORDER BY Priority, Opdrachtnummer ASC");
+
+
         try {
-            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr);
+            SupportSQLiteQuery query = new SimpleSQLiteQuery(SQLStatementStr.toString());
             ResultObl = new cInventoryorderRepository.mGetInventoriesFromDatabaseWithFilterAsyncTask(inventoryorderDao).execute(query).get();
 
         } catch (InterruptedException | ExecutionException e) {

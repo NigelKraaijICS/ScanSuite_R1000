@@ -146,7 +146,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         this.editTextDocument = findViewById(R.id.editTextDocument);
         this.editTextBin = findViewById(R.id.editTextBin);
         this.createReturnContainer = findViewById(R.id.createReturnContainer);
-        this.createReturnButton = findViewById(R.id.createOrderButton);
+        this.createReturnButton = findViewById(R.id.closeButton);
         this.cancelButton = findViewById(R.id.cancelButton);
         this.imageReason = findViewById(R.id.imageButtonReason);
         this.switchMultipleDocuments = findViewById(R.id.multipleDocumentSwitch);

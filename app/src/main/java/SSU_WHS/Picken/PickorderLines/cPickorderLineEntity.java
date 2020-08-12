@@ -51,6 +51,14 @@ public class cPickorderLineEntity {
     public Double quantityhandled;
     public Double getQuantityHandledDbl() {return this.quantityhandled;}
 
+    @ColumnInfo(name = "QuantityRejected")
+    public Double quantityRejected;
+    public Double getQuantityRejected() {return this.quantityRejected;}
+
+    @ColumnInfo(name = "QuantityChecked")
+    public Double quantityChecked;
+    public Double getQuantityChecked() {return this.quantityChecked;}
+
     @ColumnInfo(name = "SourceNo")
     public String sourceno;
     public String getSourceNoStr() {return this.sourceno;}
@@ -144,12 +152,18 @@ public class cPickorderLineEntity {
 
             this.quantity = pvJsonObject.getDouble(cDatabase.QUANTITY_NAMESTR);
             this.quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
+            this.quantityRejected = pvJsonObject.getDouble(cDatabase.QUANTITYREJECTED_NAMESTR);
 
-
-            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString()) || pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.QC.toString())  ) {
                 this.quantitytaken =  0;
             } else {
                 this.quantitytaken =  pvJsonObject.getDouble(cDatabase.QUANTITYTAKEN_NAMESTR);
+            }
+
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.QC.toString())  ) {
+                this.quantityChecked =  pvJsonObject.getDouble(cDatabase.QUANTITYCHECKED_NAMESTR);
+            } else {
+                this.quantitytaken =  0;
             }
 
             this.sourceno = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
@@ -179,6 +193,12 @@ public class cPickorderLineEntity {
                     if (Double.compare(this.getQuantityHandledDbl(),this.getQuantityDbl()) == 0) {
                         this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
                     }
+                }
+            }
+
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.QC.toString())) {
+                if (this.getQuantityChecked().equals(this.getQuantityDbl())) {
+                        this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
                 }
             }
 

@@ -42,7 +42,6 @@ public class cPickorderEntity {
     public String pickTransferaskworkplace;
     public String getPickTransferAskWorkplaceStr() {return this.pickTransferaskworkplace;}
 
-
     @ColumnInfo(name="Pick_Pick_PV_VKO_each_piece")
     public String pickPickPVVKOeachpiece;
     public String getPickPickPVVKOEachPieceStr() {return this.pickPickPVVKOeachpiece;}
@@ -62,6 +61,10 @@ public class cPickorderEntity {
     @ColumnInfo(name="Pick_activity_bin_required")
     public String pickActivityBinRequired;
     public String getPickActivityBinRequired() {return this.pickActivityBinRequired;}
+
+    @ColumnInfo(name="Pick_Qc_check_count")
+    public String pickQCCheckCount;
+    public String getPickQCCheckCount() {return this.pickActivityBinRequired;}
 
     @ColumnInfo(name="AssignedUserId")
     public String assignedUserId;
@@ -95,7 +98,7 @@ public class cPickorderEntity {
     public String document2;
     public String getDocument2Str() {return this.document2;}
 
-       @ColumnInfo(name="Currentlocation")
+    @ColumnInfo(name="Currentlocation")
     public String currentlocation;
     public String getCurrentLocationStr() {return this.currentlocation;}
 
@@ -106,6 +109,10 @@ public class cPickorderEntity {
     @ColumnInfo(name="IsProcessingOrParked")
     public Boolean isprocessingorparked;
     public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
+
+    @ColumnInfo(name="IsSelected")
+    public boolean isSelected;
+    public boolean getIsSelected() {return this.isSelected;}
 
     @ColumnInfo(name="Priority")
     public int priorityInt;
@@ -143,11 +150,14 @@ public class cPickorderEntity {
 
             this.interfaceresultmethod = pvJsonObject.getString(cDatabase.INTERFACERESULTMETHOD_NAMESTR);
 
+            this.isSelected = false;
+
 
             //Is processing
 
             this.isprocessingorparked = !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickPicking)) &&
                     !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickSorting)) &&
+                    !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickQualityControl)) &&
                     !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip));
 
             //Settings

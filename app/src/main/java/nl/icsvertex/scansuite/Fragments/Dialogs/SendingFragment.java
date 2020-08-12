@@ -25,6 +25,8 @@ import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.R;
 
+import static java.util.Objects.*;
+
 public class SendingFragment extends DialogFragment implements iICSDefaultFragment {
 
     //Region Public Properties
@@ -113,7 +115,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     public void pShowFlyAwayAnimation() {
 
         //new thread, so run in UI
-        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+        requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 textSending.setText(R.string.dialog_sent);
@@ -167,7 +169,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
         this.mShowHideTryAgain(true);
 
         //new thread, so run in UI
-        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+        requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                textSending.setText(R.string.dialog_notsent);
@@ -270,7 +272,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     private void mShowHideTryAgain(Boolean pvShowBln) {
 
         if (pvShowBln) {
-            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+            requireActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     textTryAgain.setVisibility(View.VISIBLE);
@@ -279,7 +281,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
             });
         }
 
-        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+        requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 textTryAgain.setVisibility(View.INVISIBLE);

@@ -16,7 +16,6 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
-import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Packaging.cPackaging;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
@@ -107,7 +106,7 @@ public class cIntakeorder {
     }
 
     public  boolean isGenerated(){
-        return this.getSourceDocumentInt() == cWarehouseorder.SoureDocumentTypeEnu.Generated;
+        return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.Generated;
     }
 
     private cIntakeorderEntity intakeorderEntity;

@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ICS.Utils.cText;
+import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
 
 @Entity(tableName= cDatabase.TABLENAME_RETURNORDER)
@@ -77,6 +79,14 @@ public class cReturnorderEntity {
     public String sorteringStr;
     public String getSorteringStr() {return this.sorteringStr;}
 
+    @ColumnInfo(name="IsProcessingOrParked")
+    public Boolean isprocessingorparked;
+    public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
+
+    @ColumnInfo(name="Priority")
+    public int priorityInt;
+    public int getPriorityInt() {return this.priorityInt;}
+
     //End Region Public Properties
 
     //Region Constructor
@@ -101,6 +111,37 @@ public class cReturnorderEntity {
             this.document2Str = pvJsonObject.getString(cDatabase.DOCUMENT2_NAMESTR);
             this.reasonStr = pvJsonObject.getString(cDatabase.REASON_NAMESTR);
             this.sorteringStr = pvJsonObject.getString(cDatabase.SORTING_NAMESTR);
+
+            //Is processing
+
+            this.isprocessingorparked = !this.getStatusStr().equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowReturnStepEnu.Return)) &&
+                    !this.getStatusStr().equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowReturnStepEnu.ReturnBusy));
+
+            this.priorityInt = 6;
+
+            if (this.getCurrentUserIdStr().equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (this.getIsProcessingOrParkedStr())) {
+                this.priorityInt = 1;
+                return;
+            }
+
+            if (this.getCurrentUserIdStr().equalsIgnoreCase(cUser.currentUser.getUsernameStr()) && (!this.getIsProcessingOrParkedStr())) {
+                this.priorityInt = 2;
+                return;
+            }
+
+            if (this.getCurrentUserIdStr().equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
+                this.priorityInt = 3;
+                return;
+            }
+
+            if (this.getCurrentUserIdStr().isEmpty()) {
+                this.priorityInt = 4;
+                return;
+            }
+
+            if (!this.getCurrentUserIdStr().equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
+                this.priorityInt = 5;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

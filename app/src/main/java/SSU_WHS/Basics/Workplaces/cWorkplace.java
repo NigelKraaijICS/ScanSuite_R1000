@@ -42,6 +42,13 @@ public class cWorkplace {
         this.workplaceStr = workplaceEntity.getWorkplaceStr();
         this.descriptionStr = workplaceEntity.getDescriptionStr();
     }
+
+    public cWorkplace(String pvWorkplaceStr, String pvDescriptionStr) {
+        this.workplaceEntity = null;
+        this.workplaceStr = pvWorkplaceStr;
+        this.descriptionStr = pvDescriptionStr;
+    }
+
     //End Region Constructor
 
     //Region Public Methods
@@ -90,6 +97,13 @@ public class cWorkplace {
                 cWorkplace Workplace = new cWorkplace(jsonObject);
                 Workplace.pInsertInDatabaseBln();
             }
+
+
+            cWorkplace workplaceToAdd1 = new cWorkplace("TEST1","Eerste");
+            cWorkplace.allWorkplacesObl.add((workplaceToAdd1));
+
+            cWorkplace workplaceToAdd2 = new cWorkplace("TEST2","Tweede");
+            cWorkplace.allWorkplacesObl.add((workplaceToAdd2));
 
             return  true;
         }

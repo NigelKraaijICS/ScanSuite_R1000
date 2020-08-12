@@ -443,7 +443,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
         this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
 
-        filteredPicksObl = cPickorder.pGetPicksFromDatabasObl();
+        filteredPicksObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
         if (filteredPicksObl.size() == 0) {
             return;
         }
