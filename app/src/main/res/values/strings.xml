@@ -797,7 +797,7 @@
     <string name="message_qcdone">Quality Control  done?</string>
     <string name="message_close_qc_fase">Would you like to finish quality control?</string>
 
-    <string name="message_packandshipdone">Pack and ship fase done?</string>
+    <string name="message_packandshipdone">Ship fase done?</string>
     <string name="message_close_packandship_fase">Would you like to finish the pack and ship control fase?</string>
 
     <!--End Region return-->

@@ -674,7 +674,7 @@
     <string name="message_close_sort_fase">Wilt u het sorteren afronden?</string>
     <string name="message_qcdone">Kwaliteitscontrole afronden?</string>
     <string name="message_close_qc_fase">Wilt u de kwaliteitscontrole afronden?</string>
-    <string name="message_packandshipdone">Inpakken en verzenden afronden?</string>
+    <string name="message_packandshipdone">Inpakken afronden?</string>
     <string name="message_close_packandship_fase">Wilt u het inpakken en verzenden afronden?</string>
 
 </resources>
