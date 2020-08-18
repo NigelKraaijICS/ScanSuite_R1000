@@ -254,7 +254,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         //SourceNo button has been pressed, so we already have a current line
         if (pvSourceNoSelectedBln) {
 
-            hulpRst = mCheckShipmentRst();
+            hulpRst = cShipment.currentShipment.pCheckShipmentRst();
             if (!hulpRst.resultBln ){
                 cUserInterface.pShowSnackbarMessage(this.container,hulpRst.messagesStr(),null,true);
                 return;
@@ -317,7 +317,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        hulpRst = mCheckShipmentRst();
+        hulpRst = cShipment.currentShipment.pCheckShipmentRst();
         if (!hulpRst.resultBln ){
             cUserInterface.pShowSnackbarMessage(this.container,hulpRst.messagesStr(),null,true);
             return;
@@ -384,7 +384,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);
     }
-
 
     //End Region Public Methods
 
@@ -542,38 +541,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         cAppExtension.activity.startActivity(intent);
     }
 
-    private cResult mCheckShipmentRst(){
 
-        cResult result = new cResult();
-        result.resultBln = true;
-
-        if (cShipment.currentShipment == null) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_current_shipment_unknown));
-            return  result;
-        }
-
-        if (cShipment.currentShipment.shippingAgent() == null) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agent_unkown_or_empty));
-            return  result;
-        }
-
-        if (cShipment.currentShipment.shippingAgentService() == null) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agentservice_unkown_or_empty));
-            return  result;
-        }
-
-        if (cShipment.currentShipment.shippingAgentService().shippingUnitsObl() == null || cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 0 ) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agentservice_shippingingunits_unkown_or_empty));
-            return  result;
-        }
-
-        return  result;
-
-
-    }
 
 }

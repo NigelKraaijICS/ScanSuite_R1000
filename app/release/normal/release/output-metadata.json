@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "properties": [],
-      "versionCode": 15835,
-      "versionName": "1.5.8.35A",
+      "versionCode": 15836,
+      "versionName": "1.5.8.36A",
       "enabled": true,
       "outputFile": "app-normal-release.apk"
     }

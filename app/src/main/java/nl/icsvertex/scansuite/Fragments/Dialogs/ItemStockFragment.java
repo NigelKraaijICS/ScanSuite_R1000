@@ -10,9 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
@@ -41,7 +44,7 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
 
         return  articleStockAdapter;
     }
-    TextView textViewItem;
+    private TextView textViewItem;
 
     //End Region Private Properties
 
@@ -130,15 +133,51 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
         cArticle.currentArticle.pGetStockViaWebserviceBln();
 
         if (cArticle.currentArticle.stockObl != null && cArticle.currentArticle.stockObl.size() > 0) {
-            this.mSetStockRecycler();
+            this.mShowNoLinesIcon(true);
+        }
+        else {
+            this.mShowNoLinesIcon(false);
         }
     }
 
-    private void mSetStockRecycler() {
-        this.stockRecyclerview.setHasFixedSize(false);
-        this.stockRecyclerview.setAdapter(this.getArticleStockAdapter());
-        this.stockRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+    private  void mShowNoLinesIcon(final Boolean pvShowBln){
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                cUserInterface.pHideGettingData();
+
+                if (pvShowBln) {
+
+                    stockRecyclerview.setVisibility(View.INVISIBLE);
+
+                    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                    NothingHereFragment fragment = new NothingHereFragment();
+                    fragmentTransaction.replace(R.id.itemStockContainer, fragment);
+                    fragmentTransaction.commit();
+                    return;
+
+
+                }
+
+                stockRecyclerview.setVisibility(View.VISIBLE);
+                stockRecyclerview.setHasFixedSize(false);
+                stockRecyclerview.setAdapter(getArticleStockAdapter());
+                stockRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof NothingHereFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                    }
+                }
+            }
+        });
     }
+
 
     //End Region Private Methods
 

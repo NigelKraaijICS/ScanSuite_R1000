@@ -122,6 +122,22 @@ public class cPickorderLine {
         return  this.getVendorItemNoStr() + " " + this.getVendorItemDescriptionStr();
     }
 
+    private String deliveryAdressCode;
+    public String getDeliveryAdressCodeStr() {
+        return deliveryAdressCode;
+    }
+
+    private String shippingAgentCode;
+    public String getShippingAgentCodeStr() {
+        return shippingAgentCode;
+    }
+
+    private String shippingAgentServiceCode;
+    public String getShippingAgentServiceCode() {
+        return shippingAgentServiceCode;
+    }
+
+
     private int statusInt;
     public int getStatusInt() {
         return statusInt;
@@ -274,6 +290,10 @@ public class cPickorderLine {
         this.vendorItemNo =  this.PickorderLineEntity.getVendorItemNoStr();
         this.vendorItemDescriptionStr =  this.PickorderLineEntity.getVendorItemDescriptionStr();
 
+        this.deliveryAdressCode = this.PickorderLineEntity.getDeliveryAdressCode();
+        this.shippingAgentCode = this.PickorderLineEntity.getShippingAgentCodeStr();
+        this.shippingAgentServiceCode = this.PickorderLineEntity.getShippingAgentServiceCodeStr();
+
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
         this.statusShippingInt =  this.PickorderLineEntity.getStatusShippingInt();
         this.statusPackingInt =  this.PickorderLineEntity.getStatusPackingInt();
@@ -333,6 +353,10 @@ public class cPickorderLine {
 
         this.vendorItemNo =  this.PickorderLineEntity.getVendorItemNoStr();
         this.vendorItemDescriptionStr =  this.PickorderLineEntity.getVendorItemDescriptionStr();
+
+        this.deliveryAdressCode = this.PickorderLineEntity.getDeliveryAdressCode();
+        this.shippingAgentCode = this.PickorderLineEntity.getShippingAgentCodeStr();
+        this.shippingAgentServiceCode = this.PickorderLineEntity.getShippingAgentServiceCodeStr();
 
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
         this.localStatusInt = this.PickorderLineEntity.getLocalstatusInt();
@@ -432,6 +456,23 @@ public class cPickorderLine {
 
         result.resultBln = true;
 
+        return  result;
+
+    }
+
+    public cResult pQCLineBusyRst(){
+
+
+        cResult result = new cResult();
+        result.resultBln = false;
+
+        if (this.mGetBarcodesObl() == null || Objects.requireNonNull(cPickorderLine.currentPickOrderLine.mGetBarcodesObl()).size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line));
+            return result;
+        }
+
+        result.resultBln = true;
         return  result;
 
     }

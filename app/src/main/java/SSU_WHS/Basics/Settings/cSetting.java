@@ -12,6 +12,7 @@ import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.Fragments.Packaging.PackagingUsedFragment;
 
 public class cSetting {
 
@@ -334,6 +335,16 @@ public class cSetting {
     //End Region Public Methods
 
     //Region Settings
+
+    public  static boolean REALTIME_BARCODE_CHECK() {
+
+        cSetting Setting =  mGetSettingByEnu(settingEnu.REALTIME_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
 
     public  static  boolean PICK_AUTO_NEXT(){
 
@@ -812,6 +823,17 @@ public class cSetting {
 
         return Setting.valueStr;
     }
+
+    public static boolean RETOUR_AUTO_CREATE_ORDER_RV(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_AUTO_CREATE_ORDER_RV);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
 
     public static String RECEIVE_STORE_DEVIATIONS_PASSWORD(){
 

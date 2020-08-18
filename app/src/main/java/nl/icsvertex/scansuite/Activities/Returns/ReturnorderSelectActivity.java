@@ -46,6 +46,7 @@ import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
@@ -61,11 +62,14 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     //Region Private Properties
 
     // Region Views
+
     private RecyclerView recyclerViewReturnorders;
+
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
     private TextView toolbarSubTitle2;
+
     private SearchView recyclerSearchView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Activity currentActivity;
@@ -83,6 +87,8 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
         return  this.returnorderAdapter;
     }
+
+    public static boolean startedViaMenuBln;
 
     // End Region Views
 
@@ -290,7 +296,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        hulpResult = this.mGetOrderDetailsRst();
+        hulpResult = cReturnorder.currentReturnOrder.pGetOrderDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -374,54 +380,6 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
                 cUserInterface.pHideGettingData();
             }
         });
-    }
-
-    private cResult mGetOrderDetailsRst(){
-
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all linesInt for current order, if size = 0 or webservice error then stop
-        if (!cReturnorder.currentReturnOrder.pGetLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cReturnorder.currentReturnOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-        //Get all barcodes
-        if (!cReturnorder.currentReturnOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-        //Get all ReturnHandledlines
-        if (!cReturnorder.currentReturnOrder.pGetHandledLinesViaWebserviceBln(true)){
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
-            return result;
-        }
-
-        //Get all Returnlinebarcodes
-        if (!cReturnorder.currentReturnOrder.pGetLineBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
-            return result;
-        }
-        if(!cReturnorder.currentReturnOrder.pDocumentsViaWebserviceBln(true)){
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnordersdocuments_failed));
-            return result;
-        }
-
-        return  result;
     }
 
     // End Region Private Methods
@@ -681,6 +639,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
                     NoOrdersFragment fragment = new NoOrdersFragment();
                     fragmentTransaction.replace(R.id.returnorderContainer, fragment);
                     fragmentTransaction.commit();
+                    mAutoOpenCreateActivity();
                     return;
                 }
 
@@ -722,7 +681,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mSetNewOrderButton() {
 
-        if (cSetting.RETOUR_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.RVS.toString().toUpperCase())) {
+        if (cSetting.RETOUR_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.RVS.toString().toUpperCase()) || cSetting.RETOUR_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.RVR.toString().toUpperCase())  ) {
             this.imageViewNewOrder.setVisibility(View.VISIBLE);
         }
         else {
@@ -814,6 +773,22 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         } else {
             this.toolbarSubTitle.setText(cReturnorder.getNumberOfFilteredOrdersStr());
         }
+    }
+
+    private  void  mAutoOpenCreateActivity(){
+
+        // We returned in this form, so don't start create activity
+        if (!ReturnorderSelectActivity.startedViaMenuBln) {
+            return;
+        }
+
+        // We can't create, so don't start create activity
+        if (cSetting.RETOUR_NEW_WORKFLOWS().isEmpty()) {
+            return;
+        }
+
+        mShowCreateReturnorderActivity();
+
     }
 
     // End No orders icon

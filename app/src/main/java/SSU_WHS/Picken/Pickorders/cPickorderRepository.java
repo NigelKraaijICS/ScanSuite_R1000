@@ -205,7 +205,7 @@ public class cPickorderRepository {
         pickorderLocalParams = new PickorderLocalParams(pvUsernameStr, cUser.currentUser.currentBranch.getBranchStr(), false, stepCodeInt, pvSearchTextStr, "");
 
         try {
-            webResultWrs = new mPickordersToSortFromWebserviceGetAsyncTask().execute(pickorderLocalParams).get();
+            webResultWrs = new mPickordersNextStepFromWebserviceGetAsyncTask().execute(pickorderLocalParams).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -852,7 +852,7 @@ public class cPickorderRepository {
         }
     }
 
-    private static class mPickordersToSortFromWebserviceGetAsyncTask extends AsyncTask<PickorderLocalParams, Void, cWebresult> {
+    private static class mPickordersNextStepFromWebserviceGetAsyncTask extends AsyncTask<PickorderLocalParams, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final PickorderLocalParams... params) {
             cWebresult WebresultWrs = new cWebresult();

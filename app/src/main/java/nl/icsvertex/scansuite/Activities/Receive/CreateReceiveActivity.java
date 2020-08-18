@@ -442,7 +442,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         cResult hulpResult;
 
         hulpResult = this.mTryToCreateOrderRst(pvDocumentstr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln);
-        //Try to create the order
         if (!hulpResult.resultBln) {
             return;
         }
@@ -486,7 +485,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         //Delete the detail, so we can get them from the webservice
         cIntakeorder.currentIntakeOrder.pDeleteDetailsBln();
 
-        hulpResult = this.mGetReceiveOrderDetailsRst();
+        hulpResult = cIntakeorder.currentIntakeOrder.pGetReceiveOrderDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -534,64 +533,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private  cResult mGetReceiveOrderDetailsRst(){
 
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all Items for current order, if size = 0 or webservice error then stop
-        if (!cIntakeorder.currentIntakeOrder.pGetReceiveItemsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
-            return result;
-        }
-
-        int indexInt = 0;
-
-        for (cScanner scanner : cScanner.allScannerObl ) {
-
-            boolean refreshBln = false;
-
-            if (indexInt == 0) {
-                refreshBln = true;
-            }
-
-            //Get all linesInt for current order, if size = 0 or webservice error then stop
-            if (!cIntakeorder.currentIntakeOrder.pGetReceiveLinesViaWebserviceBln(refreshBln, scanner.getScannerStr()) ) {
-                result.resultBln = false;
-                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
-                return result;
-            }
-
-            indexInt += 1;
-
-        }
-
-        // Get all barcodes, if size =0 or webservice error then stop
-        if (!cIntakeorder.currentIntakeOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-
-        //Get packaging
-        if (!cIntakeorder.currentIntakeOrder.pGetPackagingViaWebserviceBln()) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_packaging_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-
-        return  result;
-    }
 
     private  void mStepFailed(String pvErrorMessageStr){
 

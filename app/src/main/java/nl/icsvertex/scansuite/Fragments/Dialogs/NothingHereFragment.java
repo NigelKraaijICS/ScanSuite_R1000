@@ -99,6 +99,7 @@ public class NothingHereFragment extends Fragment {
         this.imageViewWind.startAnimation(anim2);
 
         cUserInterface.pEnableScanner();
+        cUserInterface.pPlaySound(R.raw.crickets,null);
     }
 
     //End Region Default Methods

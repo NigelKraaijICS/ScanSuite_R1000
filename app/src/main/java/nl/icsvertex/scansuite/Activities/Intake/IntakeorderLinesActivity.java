@@ -24,12 +24,14 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
@@ -37,7 +39,9 @@ import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLineAdapter;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.R;
@@ -65,6 +69,14 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     private RecyclerView recyclerViewLines;
 
     private Switch switchDeviations;
+
+    public enum InputType {
+        UNKNOWN,
+        BIN,
+        ARTICLE
+    }
+
+    private InputType currentInputType = InputType.UNKNOWN;
 
     private ImageView imageButtonCloseOrder;
 
@@ -263,13 +275,35 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         //Check if we have scanned a BIN and check if there are not handled linesInt for this BIN
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
-            //unknown scan
-            this.mDoUnknownScan(cAppExtension.context.getString(R.string.message_bin_not_allowed), pvBarcodeScan.getBarcodeOriginalStr());
+
+            if (!cIntakeorder.currentIntakeOrder.isBINScanPossible()) {
+                //unknown scan
+                cIntakeorder.currentIntakeOrder.currentBin= null;
+                this.mDoUnknownScan(cAppExtension.context.getString(R.string.message_bin_not_allowed), pvBarcodeScan.getBarcodeOriginalStr());
+                return;
+            }
+
+            //Handle the BIN scan
+            hulpResult = this.mHandleBINScan(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+
+            //Something went wrong, so show message and stop
+            if (!hulpResult.resultBln) {
+                this.mDoUnknownScan(hulpResult.messagesStr(), pvBarcodeScan.getBarcodeOriginalStr());
+                this.mFillRecycler(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+                return;
+            }
+
+            //Hide the keyboard
+            cUserInterface.pHideKeyboard();
+
+            //Filter has been set in mHandleBINScan so we are donereturn;
             return;
         }
 
         //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+
+
 
             //Handle the ARTICLE scan
             hulpResult = this.mHandleArticleScan(pvBarcodeScan);
@@ -364,6 +398,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
         result.resultBln = true;
 
         String searchStr;
+        this.currentInputType = InputType.ARTICLE;
 
         //Check if this is a barcodeStr we already know
         cIntakeorderBarcode.currentIntakeOrderBarcode = cIntakeorder.currentIntakeOrder.pGetOrderBarcode(pvBarcodeScan);
@@ -389,10 +424,52 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             searchStr += ' ' + cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr();
         }
 
+
+
         this.recyclerSearchView.setQuery(searchStr, true);
         this.recyclerSearchView.callOnClick();
 
         //Article is known and also not handled, so everything is fine
+        this.currentInputType = InputType.UNKNOWN;
+        return result;
+    }
+
+    private cResult mHandleBINScan(String pvBinCodeStr) {
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        this.currentInputType = InputType.BIN;
+
+        //Get the current BIN
+        cIntakeorder.currentIntakeOrder.currentBin =  cUser.currentUser.currentBranch.pGetBinByCode(pvBinCodeStr);
+        if (  cIntakeorder.currentIntakeOrder.currentBin  == null) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_unknown,pvBinCodeStr));
+            return result;
+        }
+
+        List<cIntakeorderMATSummaryLine> hulpObl = cIntakeorderMATSummaryLine.pGetSummaryLinesWithBINCode(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr());
+
+        //If there are no lines for the current BIN, then refresh recycler
+        if ( hulpObl  == null ||   hulpObl.size() == 0) {
+            this.mDoUnknownScan(cAppExtension.activity.getString(R.string.message_no_lines_for_this_bin), pvBinCodeStr);
+            cIntakeorder.currentIntakeOrder.currentBin= null;
+            ReceiveLinesActivity.busyBln = false;
+            result.resultBln = true;
+
+            if (!cIntakeorder.currentIntakeOrder.showDeviationsBln) {
+                this.getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+            } else {
+                this.getIntakeorderMATSummaryLineAdapter().pShowDeviations();
+            }
+            return result;
+        }
+
+        this.recyclerSearchView.setQuery(pvBinCodeStr, true);
+        this.recyclerSearchView.callOnClick();
+
+        this.currentInputType = InputType.UNKNOWN;
         return result;
     }
 
@@ -494,6 +571,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     }
 
     private  void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
+        this.currentInputType = InputType.UNKNOWN;
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 
@@ -679,16 +757,21 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             @Override
             public boolean onQueryTextChange(String pvQueryTextStr) {
 
-                // If this object is filled, we set the filter with a scan
-                if (cIntakeorderBarcode.currentIntakeOrderBarcode != null){
-                    getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, true);
+                switch (currentInputType) {
+                    case UNKNOWN:
+                        getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, false);
+                        return  true;
+
+                    case ARTICLE:
+                        getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, true);
+                        return  true;
+
+                    case BIN:
+                        getIntakeorderMATSummaryLineAdapter().pSetBINFilter(pvQueryTextStr);
+                        return  true;
                 }
 
-                //Someone typed the filter
-                else {
-                    getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, false);
-                }
-                return true;
+                return  true;
             }
 
         });
@@ -704,6 +787,8 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
                 //Clear the text from EditText view
                 et.setText("");
+                currentInputType = InputType.UNKNOWN;
+                cIntakeorder.currentIntakeOrder.currentBin = null;
 
                 //Clear query
                 recyclerSearchView.setQuery("", false);

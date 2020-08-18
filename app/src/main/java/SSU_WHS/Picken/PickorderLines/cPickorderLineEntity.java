@@ -79,6 +79,19 @@ public class cPickorderLineEntity {
     public String vendoritemdescription;
     public String getVendorItemDescriptionStr() {return this.vendoritemdescription;}
 
+    @ColumnInfo(name = "DeliveryAddressCode")
+    public String deliveryAdressCode;
+    public String getDeliveryAdressCode() {return this.deliveryAdressCode;}
+
+    @ColumnInfo(name = "ShippingAgentCode")
+    public String shippingAgentCode;
+    public String getShippingAgentCodeStr() {return this.shippingAgentCode;}
+
+    @ColumnInfo(name = "ShippingAgentServiceCode")
+    public String shippingAgentServiceCode;
+    public String getShippingAgentServiceCodeStr() {return this.shippingAgentServiceCode;}
+
+
     @ColumnInfo(name = "Status")
     public Integer status;
     public int getStatusInt() {return this.status;}
@@ -162,6 +175,9 @@ public class cPickorderLineEntity {
 
             if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.QC.toString())  ) {
                 this.quantityChecked =  pvJsonObject.getDouble(cDatabase.QUANTITYCHECKED_NAMESTR);
+                this.deliveryAdressCode = pvJsonObject.getString(cDatabase.DELIVERYADDRESSCODE_NAMESTR);
+                this.shippingAgentCode = pvJsonObject.getString(cDatabase.SHIPPINGAGENTCODE_NAMESTR);
+                this.shippingAgentServiceCode = pvJsonObject.getString(cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR);
             } else {
                 this.quantitytaken =  0;
             }

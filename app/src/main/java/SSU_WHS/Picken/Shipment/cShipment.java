@@ -15,13 +15,23 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Pickorders.cPickorderViewModel;
 import SSU_WHS.Webservice.cWebresult;
+import nl.icsvertex.scansuite.R;
 
 public class cShipment {
 
     //Region Public Properties
+
+    public enum ShipmentModusEnu {
+        Unknown,
+        Ship,
+        QC
+    }
+
+    public  ShipmentModusEnu currentShipmentModus = ShipmentModusEnu.Unknown;
 
     private String sourceNoStr;
     public String getSourceNoStr() {
@@ -43,6 +53,45 @@ public class cShipment {
 
     private List<cPickorderLinePackAndShip> packAndShipLineObl;
 
+    public List<cPickorderLine> QCLinesObl;
+
+    public  List<cPickorderLine> QCLinesToCheckObl(){
+
+        List<cPickorderLine> resultObl = new ArrayList<>();
+
+        if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cPickorderLine pickorderLine : this.QCLinesObl) {
+            if (pickorderLine.getQuantityCheckedDbl() == 0) {
+                resultObl.add(pickorderLine);
+            }
+        }
+
+        return  resultObl;
+    }
+
+    public  List<cPickorderLine> QCLinesCheckedObl(){
+
+        List<cPickorderLine> resultObl = new ArrayList<>();
+
+        if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cPickorderLine pickorderLine : this.QCLinesObl) {
+            if (pickorderLine.getQuantityCheckedDbl() > 0) {
+                resultObl.add(pickorderLine);
+            }
+        }
+
+        return  resultObl;
+
+
+    }
+
+
     public static List<cShipment> allShipmentsObl;
 
     public static cShipment currentShipment;
@@ -51,22 +100,47 @@ public class cShipment {
 
         cPickorderAddress resultAddress;
 
-        if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
-            return  null;
-        }
+        switch (this.currentShipmentModus) {
+            case Ship:
 
-        if (cPickorder.currentPickOrder.adressesObl() == null || cPickorder.currentPickOrder.adressesObl().size() == 0) {
-            return  null;
-        }
-
-        for (cPickorderLinePackAndShip pickorderLinePackAndShip : this.packAndShipLineObl) {
-            for (cPickorderAddress pickorderAddress : cPickorder.currentPickOrder.adressesObl()) {
-                if (pickorderAddress.getAddrescodeStr().equalsIgnoreCase(pickorderLinePackAndShip.getDeliveryAdressCodeStr())) {
-                    resultAddress = pickorderAddress;
-                    return  resultAddress;
+                if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
+                    return  null;
                 }
-            }
+
+                if (cPickorder.currentPickOrder.adressesObl() == null || cPickorder.currentPickOrder.adressesObl().size() == 0) {
+                    return  null;
+                }
+
+                for (cPickorderLinePackAndShip pickorderLinePackAndShip : this.packAndShipLineObl) {
+                    for (cPickorderAddress pickorderAddress : cPickorder.currentPickOrder.adressesObl()) {
+                        if (pickorderAddress.getAddrescodeStr().equalsIgnoreCase(pickorderLinePackAndShip.getDeliveryAdressCodeStr())) {
+                            resultAddress = pickorderAddress;
+                            return  resultAddress;
+                        }
+                    }
+                }
+
+            case QC:
+
+                if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
+                    return  null;
+                }
+
+                if (cPickorder.currentPickOrder.adressesObl() == null || cPickorder.currentPickOrder.adressesObl().size() == 0) {
+                    return  null;
+                }
+
+                for (cPickorderLine pickorderLine : this.QCLinesObl) {
+                    for (cPickorderAddress pickorderAddress : cPickorder.currentPickOrder.adressesObl()) {
+                        if (pickorderAddress.getAddrescodeStr().equalsIgnoreCase(pickorderLine.getDeliveryAdressCodeStr())) {
+                            resultAddress = pickorderAddress;
+                            return  resultAddress;
+                        }
+                    }
+                }
         }
+
+
 
         return  null;
 
@@ -76,25 +150,56 @@ public class cShipment {
 
         cShippingAgent resultShippingAgent;
 
-        if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
-            return  null;
+
+        switch (this.currentShipmentModus) {
+            case Ship:
+
+                if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
+                    return  null;
+                }
+
+                if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
+                    return  null;
+                }
+
+                cPickorderLinePackAndShip firstPickLine = this.packAndShipLineObl.get(0);
+
+                for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl) {
+
+
+                    if (shippingAgent.getShippintAgentStr().equalsIgnoreCase(firstPickLine.getShippingAgentCodeStr())) {
+                        resultShippingAgent = shippingAgent;
+                        return  resultShippingAgent;
+                    }
+
+                }
+
+            case QC:
+
+                if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
+                    return  null;
+                }
+
+                if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
+                    return  null;
+                }
+
+                cPickorderLine firstQCLine = this.QCLinesObl.get(0);
+
+                for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl) {
+
+
+                    if (shippingAgent.getShippintAgentStr().equalsIgnoreCase(firstQCLine.getShippingAgentCodeStr())) {
+                        resultShippingAgent = shippingAgent;
+                        return  resultShippingAgent;
+                    }
+
+                }
+
         }
 
-        if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
-            return  null;
-        }
-
-        cPickorderLinePackAndShip firstPickLine = this.packAndShipLineObl.get(0);
-
-        for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl) {
 
 
-            if (shippingAgent.getShippintAgentStr().equalsIgnoreCase(firstPickLine.getShippingAgentCodeStr())) {
-                resultShippingAgent = shippingAgent;
-                return  resultShippingAgent;
-            }
-
-        }
 
         return  null;
 
@@ -104,25 +209,55 @@ public class cShipment {
 
         cShippingAgentService resultShippingAgentService;
 
-        if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
-            return  null;
+
+        switch (this.currentShipmentModus) {
+            case Ship:
+
+                if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
+                    return  null;
+                }
+
+                if (this.shippingAgent() == null || this.shippingAgent().shippingAgentServicesObl() == null || this.shippingAgent().shippingAgentServicesObl().size() == 0) {
+                    return  null;
+                }
+
+                cPickorderLinePackAndShip firstPickLine = this.packAndShipLineObl.get(0);
+
+                for (cShippingAgentService shippingAgentService : this.shippingAgent().shippingAgentServicesObl()) {
+
+
+                    if (shippingAgentService.getShippingAgentStr().equalsIgnoreCase(firstPickLine.getShippingAgentCodeStr()) && shippingAgentService.getServiceStr().equalsIgnoreCase(firstPickLine.getShippingAgentServiceCodeStr())  ) {
+                        resultShippingAgentService = shippingAgentService;
+                        return  resultShippingAgentService;
+                    }
+
+                }
+
+            case QC:
+
+                if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
+                    return  null;
+                }
+
+                if (this.shippingAgent() == null || this.shippingAgent().shippingAgentServicesObl() == null || this.shippingAgent().shippingAgentServicesObl().size() == 0) {
+                    return  null;
+                }
+
+                cPickorderLine firstQCLine = this.QCLinesObl.get(0);
+
+                for (cShippingAgentService shippingAgentService : this.shippingAgent().shippingAgentServicesObl()) {
+
+
+                    if (shippingAgentService.getShippingAgentStr().equalsIgnoreCase(firstQCLine.getShippingAgentCodeStr()) && shippingAgentService.getServiceStr().equalsIgnoreCase(firstQCLine.getShippingAgentServiceCode())  ) {
+                        resultShippingAgentService = shippingAgentService;
+                        return  resultShippingAgentService;
+                    }
+
+                }
+
         }
 
-        if (this.shippingAgent() == null || this.shippingAgent().shippingAgentServicesObl() == null || this.shippingAgent().shippingAgentServicesObl().size() == 0) {
-            return  null;
-        }
 
-        cPickorderLinePackAndShip firstPickLine = this.packAndShipLineObl.get(0);
-
-        for (cShippingAgentService shippingAgentService : this.shippingAgent().shippingAgentServicesObl()) {
-
-
-            if (shippingAgentService.getShippingAgentStr().equalsIgnoreCase(firstPickLine.getShippingAgentCodeStr()) && shippingAgentService.getServiceStr().equalsIgnoreCase(firstPickLine.getShippingAgentServiceCodeStr())  ) {
-                resultShippingAgentService = shippingAgentService;
-                return  resultShippingAgentService;
-            }
-
-        }
 
         return  null;
 
@@ -137,9 +272,11 @@ public class cShipment {
 
     //Region Constructor
 
-    public cShipment(String pvSourceNoStr) {
+    public cShipment(String pvSourceNoStr, ShipmentModusEnu pvShipmentModusEnu) {
+        this.currentShipmentModus = pvShipmentModusEnu;
         this.sourceNoStr = pvSourceNoStr;
         this.packAndShipLineObl = new ArrayList<>();
+        this.QCLinesObl = new ArrayList<>();
         this.handledBln = false;
         this.quantityDbl = (double) 0;
         this.processingSequenceStr = "";
@@ -282,6 +419,79 @@ public class cShipment {
         this.quantityDbl += pvPickorderLinePackAndShip.getQuantityDbl();
         this.processingSequenceStr = pvPickorderLinePackAndShip.getProcessingSequenceStr();
     }
+
+    public void pAddQCLine(cPickorderLine pvPickorderLine){
+        this.QCLinesObl.add((pvPickorderLine));
+        this.quantityDbl += pvPickorderLine.getQuantityDbl();
+        this.processingSequenceStr = pvPickorderLine.getProcessingSequenceStr();
+    }
+
+    public cResult pCheckShipmentRst(){
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
+            return  result;
+        }
+
+        if (this.currentShipment.shippingAgent() == null) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agent_unkown_or_empty));
+            return  result;
+        }
+
+        if (this.shippingAgentService() == null) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agentservice_unkown_or_empty));
+            return  result;
+        }
+
+        if (this.shippingAgentService().shippingUnitsObl() == null || this.shippingAgentService().shippingUnitsObl().size() == 0 ) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agentservice_shippingingunits_unkown_or_empty));
+            return  result;
+        }
+
+        return  result;
+
+    }
+
+    public cPickorderLine pGetQCLineNotHandledByBarcode(String pvScannedBarcodeStr) {
+
+        if (cPickorder.currentPickOrder.barcodesObl() == null || cPickorder.currentPickOrder.barcodesObl().size() == 0)  {
+            return  null;
+        }
+
+
+        if (this.QCLinesToCheckObl() == null || this.QCLinesToCheckObl().size()  == 0) {
+            return  null;
+        }
+
+        cPickorderBarcode pickorderBarcodeMatched = null;
+
+        for (cPickorderBarcode pickorderBarcode : cPickorder.currentPickOrder.barcodesObl()) {
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)){
+                pickorderBarcodeMatched = pickorderBarcode;
+                break;
+            }
+        }
+
+        if (pickorderBarcodeMatched  == null) {
+            return  null;
+        }
+
+        for (cPickorderLine pickorderLine : this.QCLinesToCheckObl()) {
+            if (pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeMatched.getItemNoStr()) &&
+               pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeMatched.getVariantcodeStr()))) {
+                cPickorder.currentPickOrder.pickorderQCBarcodeScanned = pickorderBarcodeMatched;
+               return pickorderLine;
+            }
+        }
+
+        return null;
+    }
+
 
     //End Region Public Methods
 

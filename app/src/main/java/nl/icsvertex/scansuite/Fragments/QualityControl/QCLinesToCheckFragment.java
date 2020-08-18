@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,11 +18,11 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
-import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -132,7 +130,7 @@ public class QCLinesToCheckFragment extends Fragment implements iICSDefaultFragm
     //Region Private Methods
 
     private void mGetData() {
-        this.mFillRecycler(cPickorder.currentPickOrder.pGetQCLinesToCheckObl());
+        this.mFillRecycler(cShipment.currentShipment.QCLinesToCheckObl());
     }
 
     private void mFillRecycler(List<cPickorderLine> pvDataObl) {
@@ -149,14 +147,14 @@ public class QCLinesToCheckFragment extends Fragment implements iICSDefaultFragm
 
         if (cAppExtension.activity instanceof QualityControlLinesActivity) {
             QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
-            qualityControlLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+            qualityControlLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.QCLinesToCheckObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.QCLinesObl.size()));
         }
 
     }
 
     private void mNoLinesAvailable() {
 
-        if (QualityControlLinesActivity.currentLineFragment == this) {
+        if (QualityControlShipmentsActivity.currentShipmentFragment == this) {
             //Close no linesInt fragment if needed
 
 
@@ -170,9 +168,9 @@ public class QCLinesToCheckFragment extends Fragment implements iICSDefaultFragm
             fragmentTransaction.commit();
 
             //Change tabcounter text
-            if (cAppExtension.activity instanceof  QualityControlLinesActivity) {
+            if (cAppExtension.activity instanceof QualityControlLinesActivity) {
                 QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
-                qualityControlLinesActivity.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                qualityControlLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.QCLinesToCheckObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.QCLinesObl.size()));
             }
 
         }

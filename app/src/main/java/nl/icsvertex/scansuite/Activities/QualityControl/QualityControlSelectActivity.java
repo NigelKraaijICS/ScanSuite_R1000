@@ -37,9 +37,6 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
-import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
-import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
-import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
@@ -51,7 +48,6 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Pickorders.cPickorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
@@ -341,11 +337,17 @@ public class QualityControlSelectActivity extends AppCompatActivity implements i
 
         }
 
-        hulpResult = this.mGetOrderDetailsRst();
+        hulpResult = cPickorder.currentPickOrder.pGetQualityControlDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
         }
+
+//        if (cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
+//            if (! cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true));
+//            this.mStepFailed(cAppExtension.activity.getString(R.string.error_get_lines_failed));
+//            return;
+//        }
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -597,37 +599,13 @@ public class QualityControlSelectActivity extends AppCompatActivity implements i
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
-    private  cResult mGetOrderDetailsRst() {
-
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all TAKE linesInt for current order, if size = 0 or webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetQCLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
-            return result;
-        }
-
-        // Get all barcodes, if size =0 or webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-
-        return result;
-    }
-
     private  void mShowQCLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
 
-        Intent intent = new Intent(cAppExtension.context, QualityControlLinesActivity.class);
+        Intent intent = new Intent(cAppExtension.context, QualityControlShipmentsActivity.class);
         View clickedOrder = container.findViewWithTag(cPickorder.currentPickOrder.getOrderNumberStr());
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
         ActivityCompat.startActivity(cAppExtension.context, intent, activityOptions.toBundle());

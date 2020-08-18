@@ -219,6 +219,24 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
     }
 
+    public void pSetBINFilter(String pvQueryTextStr) {
+        this.localIntakeorderMATSummaryLinesObl = mGetFilteredListForBINObl(pvQueryTextStr);
+
+        if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+            intakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+
+        }
+
+        if (cAppExtension.activity instanceof  IntakeorderLinesActivity) {
+
+            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
+                intakeorderLinesActivity.pShowData(this.localIntakeorderMATSummaryLinesObl);
+        }
+
+    }
+
+
     //End Region Public Methods
 
     //Region Private Methods
@@ -264,6 +282,30 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
                     continue;
                 }
             }
+
+            resultObl.add(intakeorderMATSummaryLine);
+
+        }
+
+        return resultObl;
+    }
+
+    private List<cIntakeorderMATSummaryLine> mGetFilteredListForBINObl(String pvQueryTextStr) {
+        List<cIntakeorderMATSummaryLine> resultObl = new ArrayList<>();
+
+
+        if (this.localIntakeorderMATSummaryLinesObl == null || this.localIntakeorderMATSummaryLinesObl.size() == 0) {
+            return resultObl;
+        }
+
+
+
+        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine :this.localIntakeorderMATSummaryLinesObl){
+
+            if (!intakeorderMATSummaryLine.getBinCodeStr().equalsIgnoreCase(pvQueryTextStr)) {
+                continue;
+            }
+
 
             resultObl.add(intakeorderMATSummaryLine);
 

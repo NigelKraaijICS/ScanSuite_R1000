@@ -17,11 +17,15 @@ import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
+import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
@@ -229,15 +233,17 @@ public class cPickorder{
             return  false;
         }
 
-        if (cPickorder.currentPickOrder.pQuantityHandledDbl() <= 0) {
-            return  false;
+        if (!cPickorder.currentPickOrder.isQCNeededBln()) {
+            if (cPickorder.currentPickOrder.pQuantityHandledDbl() <= 0) {
+                return  false;
+            }
         }
 
         for (cPickorderLine pickorderLine : this.linesObl()) {
 
             if (pickorderLine.getStatusShippingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded ||
                 pickorderLine.getStatuPackingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded)
-                    return  true;
+                return  true;
         }
 
        return  false;
@@ -343,6 +349,8 @@ public class cPickorder{
 
     public static cPickorder currentPickOrder;
     public static cPickorder currentCombinedPickOrder;
+    public cPickorderBarcode pickorderQCBarcodeScanned;
+
 
     public List<cPickorderLine> linesObl(){
         return  cPickorderLine.allLinesObl;
@@ -672,6 +680,114 @@ public class cPickorder{
         return Webresult.getSuccessBln() && Webresult.getResultBln();
     }
 
+    public cResult pGetShipmentDetailsRst() {
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Check all ShippingAgents
+        if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagents_available));
+            return result;
+        }
+
+        //Check all ShippingAgents
+        if (cShippingAgentService.allShippingAgentServicesObl == null || cShippingAgentService.allShippingAgentServicesObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_available));
+            return result;
+        }
+
+        //Check all ShippingAgent Shipping Units
+        if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null || cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_units_available));
+            return result;
+        }
+
+        // Get all linesInt, if zero than there is something wrong
+        if (!cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));
+            return result;
+        }
+
+        // Get all packages
+        if (!cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
+            return result;
+        }
+
+        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
+        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        //If this is single article, then get barcodes
+        if (cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
+            if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+                return result;
+            }
+        }
+
+        return result;
+    }
+
+    public   cResult pGetQualityControlDetailsRst() {
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all TAKE linesInt for current order, if size = 0 or webservice error then stop
+        if (!cPickorder.currentPickOrder.pGetQCLinesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
+            return result;
+        }
+
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        // Get all packages
+        if (!cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
+            return result;
+        }
+
+        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
+        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
+            return result;
+        }
+
+
+
+        return result;
+    }
+
     public boolean pDeleteDetailsBln(){
 
         cPickorderLine.pTruncateTableBln();
@@ -939,6 +1055,25 @@ public class cPickorder{
 
                     pickorderLine.pInsertInDatabaseBln();
 
+
+                cShipment shipment = cShipment.pGetShipment(pickorderLine.getSourceNoStr());
+                if (shipment == null ) {
+                    cShipment shipmentToAdd = new cShipment(pickorderLine.getSourceNoStr(), cShipment.ShipmentModusEnu.QC);
+
+                    if (pickorderLine.getQuantityCheckedDbl() == pickorderLine.getQuantityDbl()) {
+                        shipmentToAdd.handledBln = true;
+                    }
+                    else {
+                        shipmentToAdd.handledBln = false;
+                    }
+
+                    cShipment.pAddShipment(shipmentToAdd);
+                    shipmentToAdd.pAddQCLine(pickorderLine);
+                    continue;
+                }
+
+                shipment.pAddQCLine(pickorderLine);
+
             }
 
             return cPickorderLine.allLinesObl.size() != 0;
@@ -1184,7 +1319,7 @@ public class cPickorder{
 
                 cShipment shipment = cShipment.pGetShipment(pickorderLinePackAndShip.getSourceNoStr());
                 if (shipment == null ) {
-                    cShipment shipmentToAdd = new cShipment(pickorderLinePackAndShip.getSourceNoStr());
+                    cShipment shipmentToAdd = new cShipment(pickorderLinePackAndShip.getSourceNoStr(),  cShipment.ShipmentModusEnu.Ship);
 
                     shipmentToAdd.handledBln = pickorderLinePackAndShip.localStatusInt != cWarehouseorder.PackingAndShippingStatusEnu.Needed;
 
@@ -1574,9 +1709,6 @@ public class cPickorder{
         WebResult =  this.getPickorderViewModel().pGetAdressesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-
-
-
             List<JSONObject> myList = WebResult.getResultDtt();
             for (int i = 0; i < myList.size(); i++) {
                 JSONObject jsonObject;
@@ -1804,60 +1936,6 @@ public class cPickorder{
         for (cPickorderLine pickorderLine : hulpObl) {
             if (pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeWithBarcode.getItemNoStr()) &&
                pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeWithBarcode.getVariantcodeStr()))) {
-
-                if (pickorderLine.getQuantityHandledDbl() >0 ) {
-                    busyLinesObl.add(pickorderLine);
-                }
-
-                if (pickorderLine.getQuantityHandledDbl() == 0 ) {
-                    newLinesObl.add(pickorderLine);
-                }
-            }
-        }
-
-        if (busyLinesObl.size() > 0) {
-            return  busyLinesObl.get(0);
-        }
-
-        if (newLinesObl .size() > 0) {
-            return  newLinesObl.get(0);
-        }
-
-
-        return null;
-    }
-
-    public cPickorderLine pGetQCLineNotHandledByBarcode(String pvScannedBarcodeStr) {
-
-        if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
-            return  null;
-        }
-
-        List<cPickorderLine> hulpObl = cPickorder.currentPickOrder.pGetQCLinesToCheckObl();
-        if (hulpObl == null || hulpObl.size() == 0) {
-            return  null;
-        }
-
-        cPickorderBarcode pickorderBarcodeWithBarcode = null;
-
-        for (cPickorderBarcode pickorderBarcode : this.barcodesObl()) {
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)){
-                pickorderBarcodeWithBarcode = pickorderBarcode;
-                break;
-            }
-        }
-
-        if (pickorderBarcodeWithBarcode  == null) {
-            return  null;
-        }
-
-
-        List<cPickorderLine> newLinesObl = new ArrayList<>();
-        List<cPickorderLine> busyLinesObl = new ArrayList<>();
-
-        for (cPickorderLine pickorderLine : hulpObl) {
-            if (pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeWithBarcode.getItemNoStr()) &&
-                    pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeWithBarcode.getVariantcodeStr()))) {
 
                 if (pickorderLine.getQuantityHandledDbl() >0 ) {
                     busyLinesObl.add(pickorderLine);

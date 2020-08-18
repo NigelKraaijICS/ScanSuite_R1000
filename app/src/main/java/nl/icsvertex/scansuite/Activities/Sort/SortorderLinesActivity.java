@@ -149,8 +149,8 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
 
         this.quantitySortordersText = findViewById(R.id.QCordersText);
-        this.sortorderLinesTabLayout = findViewById(R.id.QCLinesTabLayout);
-        this.sortorderLinesViewPager = findViewById(R.id.QCLinesViewpager);
+        this.sortorderLinesTabLayout = findViewById(R.id.QCOrdersTabLayout);
+        this.sortorderLinesViewPager = findViewById(R.id.QCOrdersViewpager);
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
     }

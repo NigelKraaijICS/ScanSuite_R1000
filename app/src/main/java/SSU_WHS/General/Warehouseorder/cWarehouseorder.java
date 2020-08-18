@@ -65,6 +65,7 @@ public class cWarehouseorder {
         IVS,
         MV,
         RVS,
+        RVR,
         MAT,
         EOS,
         EOR
@@ -176,6 +177,8 @@ public class cWarehouseorder {
     public static class SourceDocumentTypeEnu {
 
         public final static int Salesorder = 1;
+        public final static int PurchaseOrderReturn = 4;
+        public final static int PurchaseOrder = 5;
         public final static int PurchaseLine = 39;
         public final static int CombinedPick = 95;
         public final static int Generated = 99;

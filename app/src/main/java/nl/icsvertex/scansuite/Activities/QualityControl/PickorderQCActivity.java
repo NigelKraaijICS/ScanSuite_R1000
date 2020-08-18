@@ -33,11 +33,11 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
@@ -72,7 +72,8 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     private  TextView genericItemExtraField6Text;
     private  TextView genericItemExtraField7Text;
     private  TextView genericItemExtraField8Text;
-    private  TextView binText;
+
+    private CardView binContainer;
 
     private  TextView quantityText;
     private  TextView quantityRequiredText;
@@ -199,7 +200,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
         this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
-        this.binText = findViewById(R.id.binText);
+        this.binContainer = findViewById(R.id.binContainer);
         this.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
         this.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
         this.genericItemExtraField3Text = findViewById(R.id.genericItemExtraField3Text);
@@ -248,14 +249,14 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
         this.pickCounterPlusHelperInt = 0;
         this.pickCounterMinusHelperInt = 0;
-        this.toolbarSubtext.setText(cPickorder.currentPickOrder.getOrderNumberStr());
+        this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
 
         this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
         this.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
         this.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
         this.articleVendorItemText.setText(cPickorderLine.currentPickOrderLine.getVendorItemNoAndDescriptionStr());
 
-        this.binText.setText(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+        this.binContainer.setVisibility(View.GONE);
 
         this.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityCheckedDbl()));
         this.quantityRequiredText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
@@ -276,13 +277,13 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
         cBarcodeScan.pRegisterBarcodeReceiver();
 
-        //We scanned a BIN, so nu current barcodeStr known
-        if (cPickorderBarcode.currentPickorderBarcode == null) {
+        //Raise quantity with scanned barcodeStr, if we started this activity with a scan
+        if (cPickorder.currentPickOrder.pickorderQCBarcodeScanned != null) {
+            this.pHandleScan(cBarcodeScan.pFakeScan(cPickorder.currentPickOrder.pickorderQCBarcodeScanned.getBarcodeStr()));
+            cPickorder.currentPickOrder.pickorderQCBarcodeScanned =null;
             return;
         }
 
-         // We scanned an ARTICLE, so handle barciode
-        this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
 
     }
 
@@ -475,7 +476,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     private void mShowSortingInstruction() {
 
         //First show the SourceNumber
-        this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr());
+        this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
         this.sourcenoContainer.setVisibility(View.VISIBLE);
 
     }
@@ -870,7 +871,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     }
 
     private void mGoBackToLinesActivity() {
-        Intent intent = new Intent(cAppExtension.context, QualityControlLinesActivity.class);
+        Intent intent = new Intent(cAppExtension.context, QualityControlShipmentsActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }

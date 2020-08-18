@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,31 +17,20 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.Settings.cSetting;
-import SSU_WHS.Basics.Workplaces.cWorkplace;
-import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.WebserviceErrorFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
+import SSU_WHS.Picken.Shipment.cShipment;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
+import nl.icsvertex.scansuite.Fragments.QualityControl.QCLinesToCheckFragment;
 import nl.icsvertex.scansuite.PagerAdapters.QCLinesPagerAdapter;
 import nl.icsvertex.scansuite.R;
 
@@ -62,8 +50,6 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     private TextView quantityQCOrdersText;
     private TabLayout QCLinesTabLayout;
     private ViewPager QCLinesViewPager;
-    private ImageView imageButtonComments;
-    private ImageView imageButtonCloseOrder;
 
     private ImageView toolbarImage;
     private TextView toolbarTitle;
@@ -76,7 +62,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     @Override
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
-        setContentView(R.layout.activity_qcorderlines);
+        setContentView(R.layout.activity_qcordershipments);
         this.mActivityInitialize();
     }
 
@@ -146,12 +132,9 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
 
         this.quantityQCOrdersText = findViewById(R.id.QCordersText);
-        this.QCLinesTabLayout = findViewById(R.id.QCLinesTabLayout);
-        this.QCLinesViewPager = findViewById(R.id.QCLinesViewpager);
+        this.QCLinesTabLayout = findViewById(R.id.QCOrdersTabLayout);
+        this.QCLinesViewPager = findViewById(R.id.QCOrdersViewpager);
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
-        this.imageButtonComments = findViewById(R.id.imageButtonComments);
-
-        this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
     }
 
     @Override
@@ -173,9 +156,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     @Override
     public void mFieldsInitialize() {
 
-        this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
-
-        this.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
+        this.textViewChosenOrder.setText(cShipment.currentShipment.getProcessingSequenceStr());
         this.QCLinesTabLayout.addTab(QCLinesTabLayout.newTab().setText(R.string.tab_qcorderline_tocheck));
         this.QCLinesTabLayout.addTab(QCLinesTabLayout.newTab().setText(R.string.tab_qcorderline_checked));
 
@@ -204,15 +185,11 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
     @Override
     public void mSetListeners() {
-        this.mSetShowCommentListener();
-        this.mCloseOrderListener();
-    }
+
+}
 
     @Override
     public void mInitScreen() {
-
-        //Show comments first
-        this.mShowComments();
 
         //Call this here, because this is called everytime the activiy gets shown
         this.mCheckAllDone();
@@ -237,42 +214,8 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
     //Region Public Methods
 
-    public  void pQCLineSelected(cPickorderLine pvPickorderLine) {
-        cPickorderLine.currentPickOrderLine = pvPickorderLine;
-
-        if (cPickorderLine.currentPickOrderLine.barcodesObl != null && cPickorderLine.currentPickOrderLine.barcodesObl.size() > 0) {
-            cPickorderBarcode.currentPickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(0);
-        }
-        else {
-            cPickorderBarcode.currentPickorderBarcode = null;
-        }
-
-        if (cSetting.PICK_SELECTEREN_BARCODE()) {
-            this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
-        }
-    }
-
-    public  void pQCLineToResetSelected(cPickorderLine pvPickorderLine) {
-        cPickorderLine.currentPickOrderLine = pvPickorderLine;
-    }
-
     public  void pChangeTabCounterText(String pvTextStr){
         this.quantityQCOrdersText.setText(pvTextStr);
-    }
-
-    public  void pCloseQCAndDecideNextStep(){
-
-        //Close this step
-        if (!this.mTryToCloseOrderBln()) {
-            return;
-        }
-
-        //If there is nothing more to do, then we are done
-        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
-            this.mShowOrderDoneFragment();
-            return;
-        }
-
     }
 
     public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
@@ -280,71 +223,28 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
         cUserInterface.pCheckAndCloseOpenDialogs();
         cResult hulpResult;
 
-        //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+            this.mStepFailed(cAppExtension.activity.getString(R.string.message_article_required), pvBarcodeScan.getBarcodeOriginalStr());
+            return;
+        }
 
-            String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+        if (QualityControlLinesActivity.currentLineFragment instanceof QCLinesToCheckFragment) {
 
-            // Article always had BIN, so ARTICLE is EQUAL to BIN
-            cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetQCLineNotHandledByBarcode((barcodewithoutPrefix));
-            if (cPickorderLine.currentPickOrderLine == null) {
-                this.mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
+            cPickorderLine.currentPickOrderLine = cShipment.currentShipment.pGetQCLineNotHandledByBarcode(pvBarcodeScan.getBarcodeOriginalStr());
+            if ( cPickorderLine.currentPickOrderLine == null) {
+                this.mStepFailed(cAppExtension.activity.getString(R.string.message_no_lines_for_this_barcode), pvBarcodeScan.getBarcodeOriginalStr());
                 return;
             }
 
-            cPickorderBarcode.currentPickorderBarcode = cPickorderBarcode.pGetPickbarcodeViaBarcode(pvBarcodeScan);
-            if (cPickorderBarcode.currentPickorderBarcode == null) {
-                cPickorderLine.currentPickOrderLine = null;
-                this.mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
-                return;
-            }
-
-            hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
+            hulpResult = cPickorderLine.currentPickOrderLine.pQCLineBusyRst();
             if (!hulpResult.resultBln) {
-                this.mDoUnknownScan(hulpResult.messagesStr(),barcodewithoutPrefix);
+                this.mStepFailed(hulpResult.messagesStr(),"");
                 cPickorderLine.currentPickOrderLine = null;
                 return;
             }
 
-            //we have a line to handle, so start QC activity
             this.mStartQCActivity();
-            return;
         }
-
-        //unknown scan
-        this.mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr());
-
-    }
-
-    public  void pHandleLineReset() {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        if (!cPickorderLine.currentPickOrderLine.pResetBln()) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_couldnt_reset_line), cPickorderLine.currentPickOrderLine.getLineNoInt().toString(), true, true );
-            return;
-        }
-
-        //Set the selected tab to 0, and after that change it back to this tab
-        this.QCLinesViewPager.setCurrentItem(0);
-
-    }
-
-    public void pQCDone() {
-
-        //Check if we need to select a workplaceStr
-        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln() && cPickorder.currentPickOrder.isPickSalesAskWorkplaceBln() && cWorkplace.currentWorkplace == null ) {
-            this.mShowWorkplaceFragment();
-            return;
-        }
-
-        this.pCloseQCAndDecideNextStep();
-
-    }
-
-    public  void pStartOrderSelectActivity() {
-        Intent intent = new Intent(cAppExtension.context, QualityControlSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
     }
 
     //End Region Public Methods
@@ -353,73 +253,9 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
     //Region Fragments and Activities
 
-    private  void mShowWorkplaceFragment() {
-        WorkplaceFragment workplaceFragment = new WorkplaceFragment();
-        workplaceFragment.setCancelable(false);
-        workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
-    }
-
-    private void mShowOrderDoneFragment() {
-
-        cUserInterface.pPlaySound(R.raw.goodsound, null);
-
-        final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_qcdone), cAppExtension.activity.getString(R.string.message_close_qc_fase), false);
-        stepDoneFragment.setCancelable(false);
-        stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
-    }
-
-    private void mShowSending() {
-        //todo: show airplane animation until done
-        //cUserInterface.showToastMessage(thisContext, getString(R.string.sending_unsent_lines), R.raw.headsupsound);
-    }
-
-    private void mShowNotSent() {
-
-        ArrayList<String> errorObl = new ArrayList<>();
-        errorObl.add(cAppExtension.context.getString(R.string.lines_to_be_send));
-
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList(cPublicDefinitions.WEBSERVICEERROR_LIST_TAG, errorObl );
-        WebserviceErrorFragment webserviceErrorFragment = new WebserviceErrorFragment();
-        webserviceErrorFragment.setArguments(bundle);
-        webserviceErrorFragment.setCancelable(true);
-        webserviceErrorFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WEBSERVICEERROR_TAG);
-    }
-
-    private void mShowSent() {
-        cUserInterface.pShowToastMessage(getString(R.string.all_lines_sent), R.raw.goodsound);
-    }
-
-    private void mShowComments(){
-
-        if (cPickorder.currentPickOrder.pSortCommentObl() == null || cPickorder.currentPickOrder.pSortCommentObl().size() == 0) {
-            this.imageButtonComments.setVisibility(View.INVISIBLE);
-            return;
-        }
-
-        this.imageButtonComments.setVisibility(View.VISIBLE);
-
-        //We already showed the comments
-        if (cComment.commentsShownBln) {
-            return;
-        }
-
-        this.mShowCommentsFragment(cPickorder.currentPickOrder.pSortCommentObl(),"");
-        cComment.commentsShownBln = true;
-    }
-
-    private void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        Bundle bundle = new Bundle();
-        bundle.putString(cPublicDefinitions.KEY_COMMENTHEADER, pvTitleStr);
-
-        CommentFragment commentFragment = new CommentFragment(pvDataObl);
-        commentFragment.setArguments(bundle);
-
-        commentFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.COMMENTFRAGMENT_TAG);
-        cUserInterface.pPlaySound(R.raw.message, 0);
+    private void mStartOrderSelectActivity() {
+        Intent intent = new Intent(cAppExtension.context, QualityControlSelectActivity.class);
+        cAppExtension.activity.startActivity(intent);
     }
 
     private void mTryToLeaveActivity(){
@@ -463,10 +299,6 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
                         @Override
                         public void onClick(DialogInterface pvDialogInterface, int i) {
 
-                            // Update alle busy linesInt to statusInt to be send
-                            if (! mHandleBusyLinesBln()) {
-                                return;
-                            }
 
                             // Check if there are linesInt to be send, and send them, if we fail we stop
                             if (! mCheckAndSentLinesToBeSendBln()) {
@@ -475,7 +307,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
                             //We managed to send everuthing, so we are done
                             cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_QualityContol, cWarehouseorder.WorkflowPickStepEnu.PickQualityControl);
-                            pStartOrderSelectActivity();
+                            mStartOrderSelectActivity();
                         }
                     });
 
@@ -484,7 +316,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
                 //There is no progress, so we are done
                 else {
                     cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_QualityContol, cWarehouseorder.WorkflowPickStepEnu.PickQualityControl);
-                    pStartOrderSelectActivity();
+                    mStartOrderSelectActivity();
                 }
 
             }
@@ -500,70 +332,14 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
         cAppExtension.activity.startActivity(intent);
     }
 
-    private void mCloseOrderListener() {
-
-        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                String acceptStr = cAppExtension.activity.getString(R.string.message_close);
-                String rejectStr = cAppExtension.activity.getString(R.string.message_leave);
-
-
-                if (cIntakeorder.currentIntakeOrder.isGenerated()) {
-                    mShowCloseOrderDialog(rejectStr, acceptStr);
-                    return;
-                }
-
-                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
-
-            }
-        });
-    }
-
-    private void mShowCloseOrderDialog(String pvRejectStr, String pvAcceptStr) {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-        String messageStr = "";
-
-
-            if (cPickorder.currentPickOrder.pQCNotCheckedDbl() == 0) {
-                messageStr = (cAppExtension.activity.getString(R.string.message_exactly_what_you_needed));
-            }
-
-            if (cPickorder.currentPickOrder.pQCNotCheckedDbl() > 0) {
-                messageStr = cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQCNotCheckedDbl()) + " " + cAppExtension.activity.getString(R.string.message_less_items);
-            }
-
-
-            final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
-                    cAppExtension.activity.getString(R.string.message_close_qcorder_text,
-                            cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()),
-                            cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQCCheckedDbl()), messageStr),
-                    pvRejectStr,
-                    pvAcceptStr,
-                    false);
-
-            acceptRejectFragment.setCancelable(true);
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // show my popup
-                    acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-                }
-            });
-
-    }
-
     private void mSetTabselected(TabLayout.Tab pvTab) {
 
         switch (pvTab.getPosition()) {
             case 0:
-                this.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityNotHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                this.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.QCLinesToCheckObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.QCLinesObl.size()));
                 break;
             case 1:
-                this.pChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+                this.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.QCLinesCheckedObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.QCLinesObl.size()));
                 break;
             default:
 
@@ -574,61 +350,27 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
     private Boolean mCheckAndSentLinesToBeSendBln() {
 
-        List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabaseObl();
-        boolean hulpBln = false;
+        boolean hulpBln;
 
-        // If there is nothing to send, then we are done
-        if (linesToSendObl.size() == 0 ) {
-            return  true;
+
+        if (cShipment.currentShipment.QCLinesToCheckObl().size() > 0) {
+            return  false;
         }
 
-        //Show sending animation
-        this.mShowSending();
+            // Try to send each line, if one failes then stop
+            for (cPickorderLine pickorderLine : cShipment.currentShipment.QCLinesCheckedObl()) {
 
-        // Try to send each line, if one failes then stop
-        for (cPickorderLine pickorderLine : linesToSendObl) {
+                //Set the current line
+                cPickorderLine.currentPickOrderLine = pickorderLine;
 
-            //Set the current line
-            cPickorderLine.currentPickOrderLine = pickorderLine;
+                //Try to send the line
+                hulpBln = cPickorderLine.currentPickOrderLine.pCheckedBln();
+                if ( !hulpBln) {
+                    return  false;
+                }
 
-            //Try to send the line
-            hulpBln = cPickorderLine.currentPickOrderLine.pCheckedBln();
-            if ( !hulpBln) {
-                break;
             }
-
-        }
-
-        if (!hulpBln) {
-            this.mShowNotSent();
-            return false;
-        }
-
-        this.mShowSent();
-        return  true;
-
-    }
-
-    private Boolean mHandleBusyLinesBln() {
-
-        List<cPickorderLine> busyLinesObl = cPickorder.currentPickOrder.pGetLinesBusyFromDatabaseObl();
-
-        // If there is nothing to send, then we are done
-        if (busyLinesObl.size() == 0 ) {
             return  true;
-        }
-
-        // Try to send each line, if one failes then stop
-        for (cPickorderLine pickorderLine : busyLinesObl) {
-
-            //Set the current line
-            cPickorderLine.currentPickOrderLine = pickorderLine;
-            cPickorderLine.currentPickOrderLine.pHandledIndatabase();
-
-        }
-
-        return  true;
-
     }
 
     private void mCheckAllDone() {
@@ -643,63 +385,23 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
             return;
         }
 
-        // Set sorting done
-        this.pQCDone();
-
+        // Ship this order
+        this.mStartShipActivity();
     }
 
     private Boolean mAllLinesDoneBln() {
-        return cPickorder.currentPickOrder.pQCNotCheckedDbl() <= 0;
+        return cShipment.currentShipment.QCLinesToCheckObl().size() > 0;
     }
 
-    private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cPickorder.currentPickOrder.pSortCommentObl(),"");
-            }
-        });
-    }
-
-    private boolean mTryToCloseOrderBln(){
-
-        cResult hulpResult;
-        hulpResult = new cResult();
-        hulpResult.resultBln = false;
-
-        hulpResult = cPickorder.currentPickOrder.pQCHandledViaWebserviceRst();
-
-        //Everything was fine, so we are done
-        if (hulpResult.resultBln) {
-            return true;
-        }
-
-        //Something went wrong, but no further actions are needed, so ony show reason of failure
-        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
-            cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
-            return  false;
-        }
-
-        //Something went wrong, the order has been deleted, so show comments and refresh
-        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold ) {
-
-            //If we got any comments, show them
-            if (cPickorder.currentPickOrder.pFeedbackCommentObl() != null && cPickorder.currentPickOrder.pFeedbackCommentObl().size() > 0 ) {
-                //Process comments from webresult
-                this.mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
-            }
-
-            return  false;
-        }
-
-        return true;
-
-    }
-
-    private  void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
+    private  void mStepFailed(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 
+    private void mStartShipActivity(){
+        //we have a SourceDocument to handle, so start Ship activity
+        Intent intent = new Intent(cAppExtension.context, ShiporderShipActivity.class);
+        cAppExtension.activity.startActivity(intent);
+    }
 
     //End Region Private Methods
 

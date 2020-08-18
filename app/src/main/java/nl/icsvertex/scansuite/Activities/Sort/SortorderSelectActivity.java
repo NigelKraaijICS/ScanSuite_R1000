@@ -269,20 +269,20 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    public void pHandleScan(cBarcodeScan pvBarcodescan) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         //Set filter with scanned barcodeStr if there is no prefix
-        if (!cRegex.pHasPrefix(pvBarcodescan.getBarcodeOriginalStr())) {
+        if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine
-            this.recyclerSearchView.setQuery(pvBarcodescan.getBarcodeOriginalStr(), true);
+            this.recyclerSearchView.setQuery(pvBarcodeScan.getBarcodeOriginalStr(), true);
             this.recyclerSearchView.callOnClick();
             return;
         }
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodescan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
             //has prefix, is salesorderStr
-            this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodescan.getBarcodeOriginalStr()), true);
+            this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
             this.recyclerSearchView.callOnClick();
             return;
         }

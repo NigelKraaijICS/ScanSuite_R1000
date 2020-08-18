@@ -60,6 +60,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     //Region Private Properties
 
+    public  boolean startedWithBINBln = false;
+
     private  int counterMinusHelperInt;
     private  int counterPlusHelperInt;
     private  Handler minusHandler;
@@ -110,8 +112,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         }
         return  this.intakeorderMATLineAdapter;
     }
-
-
 
     //End Region Private Properties
 
@@ -166,7 +166,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         super.onStop();
         finish();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -320,7 +319,11 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned != null) {
             this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
             cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned =null;
-            return;
+        }
+
+        if (cIntakeorder.currentIntakeOrder.currentBin != null) {
+            this.startedWithBINBln = true;
+            this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr()));
         }
 
     }
@@ -387,8 +390,13 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
                 return;
             }
 
-            //We are done
-            this.mSendLine();
+            if (!this.startedWithBINBln) {
+                //We are done
+                this.mSendLine();
+                return;
+
+            }
+
             return;
 
         }
@@ -717,7 +725,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
       double newQuantityDbl;
 
-
         if ( this.scannedBarcodesObl == null) {
             this.scannedBarcodesObl = new ArrayList<>();
         }
@@ -725,8 +732,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         if (pvIsPositiveBln) {
 
             //Determine the new amount
-            if (pvAmountFixedBln) {
                 newQuantityDbl = pvAmountDbl;
+                if (pvAmountFixedBln) {
 
 
                 //Clear the barcodeStr list and refill it
@@ -751,7 +758,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             }
 
             //Check if we would exceed amount, then show message if needed
-            if (newQuantityDbl > cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl()) {
+            if (newQuantityDbl > cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGetQuantityToHandleDbl()) {
 
                 if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln()) {
                     this.mShowExtraPiecesNotAllowed();
@@ -1055,6 +1062,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
         cIntakeorderMATLine.currentIntakeorderMATLine = null;
+        cIntakeorder.currentIntakeOrder.currentBin = null;
         this.currentBin = null;
         this.articleScannedBln = false;
         this.binScannedBln = false;

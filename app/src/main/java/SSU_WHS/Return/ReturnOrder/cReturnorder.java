@@ -23,6 +23,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcodeViewModel;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
@@ -96,6 +97,14 @@ public class cReturnorder {
 
     public Boolean isGeneratedBln() {
         return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.Generated;
+    }
+
+    public Boolean isERPOrderBln() {
+        return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.PurchaseOrderReturn;
+    }
+
+    public Boolean isBasedOnPickBln() {
+        return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.PurchaseOrder;
     }
 
     private List<cComment> commentsObl() {
@@ -177,25 +186,90 @@ public class cReturnorder {
         return true;
     }
 
-    public static Boolean pCreateReturnOrderViaWebserviceBln(String pvDocumentStr, Boolean pvMultipleDocumentsBln, String pvBinCodeStr) {
+    public static cResult pCreateReturnOrderViaWebserviceRst(String pvDocumentStr, Boolean pvMultipleDocumentsBln, String pvBinCodeStr) {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
 
         cWebresult WebResult;
 
         cReturnorderViewModel returnorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
         WebResult = returnorderViewModel.pCreateReturnOrderViaWebserviceWrs(pvDocumentStr, pvMultipleDocumentsBln, pvBinCodeStr);
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
-            if (WebResult.getResultDtt() != null && WebResult.getResultDtt().size() == 1) {
-                cReturnorder returnorder = new SSU_WHS.Return.ReturnOrder.cReturnorder(WebResult.getResultDtt().get(0));
-                returnorder.pInsertInDatabaseBln();
-                cReturnorder.currentReturnOrder = returnorder;
-                return  true;
-            }
-        } else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RETURNORDERCREATE);
-            return false;
+        //No result, so something really went wrong
+        if (WebResult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
         }
 
-        return false;
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+
+
+            // We got a succesfull response, but we need to do something with this activity
+
+            Long actionLng = WebResult.getResultLng();
+
+            if (WebResult.getResultLng() < 10 ) {
+                actionLng = WebResult.getResultLng();
+            }
+
+            if (WebResult.getResultLng() > 100) {
+                actionLng  = WebResult.getResultLng()/100;
+            }
+
+
+
+            //Try to convert action long to action enumerate
+            result.activityActionEnu= cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_cant_be_started)));
+                return  result;
+            }
+
+            if (result.activityActionEnu== cWarehouseorder.ActivityActionEnu.Delete) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_has_deleted_by_erp)));
+                return  result;
+            }
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Next) {
+                result.resultBln = true;
+                result.pSetResultAction(WebResult.pGetNextActivityObl());
+                return  result;
+            }
+
+            //No activty created
+            if (WebResult.getResultDtt() == null || WebResult.getResultDtt().size() == 0) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_order_not_created)));
+                return  result;
+            }
+
+            //Something went wrong, we received a comment
+            if (actionLng == 80) {
+                result.resultBln = false;
+                cComment comment = new cComment(WebResult.getResultDtt().get(0));
+                result.pAddErrorMessage(comment.commentTextStr);
+                return  result;
+            }
+
+            cReturnorder returnorder = new cReturnorder(WebResult.getResultDtt().get(0));
+            returnorder.pInsertInDatabaseBln();
+            cReturnorder.currentReturnOrder = returnorder;
+
+
+
+            return result;
+
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RETURNORDERCREATE);
+            result.resultBln = false;
+            return result;
+        }
     }
 
     public static boolean pGetReturnOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr) {
@@ -374,6 +448,54 @@ public class cReturnorder {
 
         return result;
 
+    }
+
+    public cResult pGetOrderDetailsRst(){
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all linesInt for current order, if size = 0 or webservice error then stop
+        if (!cReturnorder.currentReturnOrder.pGetLinesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!cReturnorder.currentReturnOrder.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+        //Get all barcodes
+        if (!cReturnorder.currentReturnOrder.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+        //Get all ReturnHandledlines
+        if (!cReturnorder.currentReturnOrder.pGetHandledLinesViaWebserviceBln(true)){
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
+            return result;
+        }
+
+        //Get all Returnlinebarcodes
+        if (!cReturnorder.currentReturnOrder.pGetLineBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
+            return result;
+        }
+        if(!cReturnorder.currentReturnOrder.pDocumentsViaWebserviceBln(true)){
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnordersdocuments_failed));
+            return result;
+        }
+
+        return  result;
     }
 
     public boolean pReturnorderDisposedBln() {
@@ -885,16 +1007,14 @@ public class cReturnorder {
         if (cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl == null || cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.size() == 0) {
             return  null;
         }
+        
+        List<cReturnorderLine> linesForArticleObl = new ArrayList<>();
 
         for (cReturnorderLine returnorderLine : cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl) {
-
-
             //Check if item matches scanned item
             if (returnorderLine.getItemNoStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getItemNoStr()) &&
-                    returnorderLine.getVariantCodeStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getVariantCodeStr())) {
-                if (returnorderLine.quantityHandledTakeDbl < returnorderLine.getQuantitytakeDbl()) {
-                    return  returnorderLine;
-                }
+                returnorderLine.getVariantCodeStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getVariantCodeStr())) {
+                linesForArticleObl.add((returnorderLine));
             }
         }
 

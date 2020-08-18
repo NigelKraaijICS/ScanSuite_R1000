@@ -16,7 +16,9 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Packaging.cPackaging;
+import SSU_WHS.Basics.Scanners.cScanner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -76,6 +78,16 @@ public class cIntakeorder {
 
     private boolean receiveNoExtraPiecesBln;
     public boolean getReceiveNoExtraPiecesBln() {return this.receiveNoExtraPiecesBln;}
+
+    public   boolean isBINScanPossible(){
+
+        if (! this.getReceiveNoExtraBinsBln() || !this.getReceiveNoExtraItemsBln()) {
+            return  false;
+        }
+
+        return  true;
+
+    }
 
     private String receivedDateTime;
     public String getReceivedDateTime() {return this.receivedDateTime;}
@@ -154,6 +166,7 @@ public class cIntakeorder {
 
     public List<String> sourceNoObl;
     public boolean showDeviationsBln = true;
+    public cBranchBin currentBin;
 
     //Region Constructor
 
@@ -1082,6 +1095,112 @@ public class cIntakeorder {
         }
 
      }
+
+    public   cResult pGetReceiveOrderDetailsRst(){
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all Items for current order, if size = 0 or webservice error then stop
+        if (!cIntakeorder.currentIntakeOrder.pGetReceiveItemsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
+            return result;
+        }
+
+        int indexInt = 0;
+
+        for (cScanner scanner : cScanner.allScannerObl ) {
+
+            boolean refreshBln = false;
+
+            if (indexInt == 0) {
+                refreshBln = true;
+            }
+
+            //Get all linesInt for current order, if size = 0 or webservice error then stop
+            if (!cIntakeorder.currentIntakeOrder.pGetReceiveLinesViaWebserviceBln(refreshBln, scanner.getScannerStr()) ) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
+                return result;
+            }
+
+            indexInt += 1;
+
+        }
+
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!cIntakeorder.currentIntakeOrder.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        //Get packaging
+        if (!cIntakeorder.currentIntakeOrder.pGetPackagingViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_packaging_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        return  result;
+    }
+
+    public cResult pGetMATOrderDetailsRst(){
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all linesInt for current order, if size = 0 or webservice error then stop
+        if (!cIntakeorder.currentIntakeOrder.pGetMATLinesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
+            return result;
+        }
+
+        //Get line barcodes for current order
+        if (!cIntakeorder.currentIntakeOrder.pGetMATLineBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
+            return result;
+        }
+
+//        // Get all article images, only if neccesary
+        //todo: do this when there is a setting availaible
+//        if (cIntakeorder.currentIntakeOrder.pGetArticleImagesViaWebserviceBln(true) == false) {
+//            result.resultBln = false;
+//            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_article_images_failed));
+//            return result;
+//        }
+
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!cIntakeorder.currentIntakeOrder.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        return  result;
+    }
+
 
     private static void mTruncateTable() {
         cIntakeorderViewModel intakeorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);

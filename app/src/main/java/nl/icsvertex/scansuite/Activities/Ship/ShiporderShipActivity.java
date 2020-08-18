@@ -27,6 +27,7 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitAdapter;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.Shipment.cShipment;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Ship.ShippingUnitFragment;
 import nl.icsvertex.scansuite.R;
@@ -296,8 +297,8 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
             shippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 0;
         }
 
-        this.mGoBackToLinesActivity();
 
+        this.mGoBackToLinesActivity();
 
     }
 
@@ -309,9 +310,20 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mGoBackToLinesActivity() {
-        Intent intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
+
+       Intent intent = null;
+
+        switch (cShipment.currentShipment.currentShipmentModus) {
+           case Ship:
+                intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
+
+           case QC:
+                intent = new Intent(cAppExtension.context, QualityControlShipmentsActivity.class);
+       }
+
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
+
     }
 
     //region default private voids

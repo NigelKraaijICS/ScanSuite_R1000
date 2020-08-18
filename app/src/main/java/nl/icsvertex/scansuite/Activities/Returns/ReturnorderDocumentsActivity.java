@@ -43,6 +43,7 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocumentAdapter;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
@@ -511,6 +512,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     private void mStartOrderSelectActivity() {
         cBranchReason.currentBranchReason = null;
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
+        ReturnorderSelectActivity.startedViaMenuBln = true;
         cAppExtension.activity.startActivity(intent);
     }
 

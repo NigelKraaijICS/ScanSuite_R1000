@@ -30,10 +30,12 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
@@ -49,13 +51,17 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     //Region Private Properties
 
     private  ConstraintLayout createReturnContainer;
+
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
-    private  TextView textViewReturnReason;
+
+    private TextView textViewReturnReason;
     private EditText editTextDocument;
     private EditText editTextBin;
+
     private Button createReturnButton;
     private Button cancelButton;
+
     private Switch switchMultipleDocuments;
     private Switch switchReason;
     private ImageView imageReason;
@@ -100,12 +106,10 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         finish();
     }
 
-
     @Override
     public void onBackPressed() {
         this.mLeaveActivity();
     }
-
 
     //End Region Default Methods
 
@@ -192,6 +196,15 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         {
             this.editTextBin.setVisibility(View.GONE);
         }
+
+
+        if (cSetting.RETOUR_NEW_WORKFLOWS().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.RVR.toString())) {
+            this.editTextBin.setVisibility(View.GONE);
+            this.textViewReturnReason.setVisibility(View.GONE);
+            this.switchMultipleDocuments.setVisibility(View.GONE);
+            this.switchReason.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -341,6 +354,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
     private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
+        ReturnorderSelectActivity.startedViaMenuBln = false;
         cAppExtension.activity.startActivity(intent);
     }
 
@@ -358,7 +372,8 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
                     return;
                 }
 
-                pCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
+                ReturnorderSelectActivity.startedViaMenuBln = false;
+                mCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
 
             }
         });
@@ -415,21 +430,17 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
                 return true;
             }
         });
-
     }
 
     private void mSetBin(){
-
 
         if (!cUser.currentUser.currentBranch.getReturnDefaultBinStr().isEmpty()) {
             this.editTextBin.setText(cUser.currentUser.currentBranch.getReturnDefaultBinStr());
         }
 
-
-
     }
 
-    public  void pCreateOrder(final String pvDocumentStr, final Boolean pvMultipleDocumentsBln, final String pvBincodeStr){
+    private  void mCreateOrder(final String pvDocumentStr, final Boolean pvMultipleDocumentsBln, final String pvBincodeStr){
 
         // Show that we are getting data
         cUserInterface.pShowGettingData();
@@ -439,9 +450,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
                 mHandleCreateOrder(pvDocumentStr, pvMultipleDocumentsBln, pvBincodeStr);
             }
         }).start();
-
     }
-
 
     //End Region Public Methods
 
@@ -452,23 +461,51 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         cResult hulpResult;
 
         //Try to create the order
-        if (!this.mTryToCreateOrderBln(pvDocumentstr, pvMultipleDocumentsBln, pvBincodeStr)) {
-            this.mStepFailed(cAppExtension.activity.getString(R.string.message_couldnt_create_order));
+        hulpResult = this.mTryToCreateOrderRst(pvDocumentstr, pvMultipleDocumentsBln, pvBincodeStr);
+        if (!hulpResult.resultBln) {
             return;
+        }
+
+        // We created an assignment, but need to open a different assignment
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Next && hulpResult.resultAction != null) {
+
+            //all Intakeorders
+            if (!cReturnorder.pGetReturnOrdersViaWebserviceBln(true, "")) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_returnorders_failed), "", true, true );
+                return;
+            }
+
+            if (cReturnorder.allReturnordersObl == null || cReturnorder.allReturnordersObl.size() == 0) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_next_activity_failed), "", true, true );
+                return;
+            }
+
+
+            for (cReturnorder returnorder : cReturnorder.allReturnordersObl) {
+
+                if (returnorder.getOrderNumberStr().equalsIgnoreCase(hulpResult.resultAction.nextAssignmentStr)) {
+                    cReturnorder.currentReturnOrder = returnorder;
+                    break;
+                }
+            }
+
+            if (cReturnorder.currentReturnOrder == null) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_next_activity_not_found),"",true,true);
+                return;
+            }
+
         }
 
         //Try to lock the order
         if (!this.mTryToLockOrderBln()) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_locking_order_failed),"",true,true);
             return;
         }
 
         //Delete the detail, so we can get them from the webservice
-        if (!cReturnorder.currentReturnOrder.pDeleteDetailsBln()) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-            return;
-        }
+        cReturnorder.currentReturnOrder.pDeleteDetailsBln();
 
-        hulpResult = this.mGetOrderDetailsRst();
+        hulpResult = cReturnorder.currentReturnOrder.pGetOrderDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -484,8 +521,16 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    private  boolean mTryToCreateOrderBln(String pvDocumentstr, Boolean pvMultipleDocumentsBln, String pvBincodeStr){
-        return  cReturnorder.pCreateReturnOrderViaWebserviceBln(pvDocumentstr, pvMultipleDocumentsBln, pvBincodeStr);
+    private  cResult mTryToCreateOrderRst(String pvDocumentstr, Boolean pvMultipleDocumentsBln, String pvBincodeStr){
+
+        cResult result =  cReturnorder.pCreateReturnOrderViaWebserviceRst(pvDocumentstr, pvMultipleDocumentsBln, pvBincodeStr);
+        if (!result.resultBln) {
+            this.editTextDocument.setText("");
+            mStepFailed(result.messagesStr());
+            return  result;
+        }
+
+        return result;
     }
 
     private  void mStepFailed(String pvErrorMessageStr){
@@ -530,53 +575,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    private cResult mGetOrderDetailsRst(){
 
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all linesInt for current order, if size = 0 or webservice error then stop
-        if (!cReturnorder.currentReturnOrder.pGetLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cReturnorder.currentReturnOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-        //Get all barcodes
-        if (!cReturnorder.currentReturnOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-        //Get all ReturnHandledlines
-        if (!cReturnorder.currentReturnOrder.pGetHandledLinesViaWebserviceBln(true)){
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
-            return result;
-        }
-
-        //Get all Returnlinebarcodes
-        if (!cReturnorder.currentReturnOrder.pGetLineBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
-            return result;
-        }
-        if(!cReturnorder.currentReturnOrder.pDocumentsViaWebserviceBln(true)){
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnordersdocuments_failed));
-            return result;
-        }
-
-        return  result;
-    }
 
     private void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
 

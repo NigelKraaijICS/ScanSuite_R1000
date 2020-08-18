@@ -15,6 +15,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -110,6 +111,12 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
                 ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
                 shiporderLinesActivity.pShipmentSelected(shipment);
             }
+
+            if (cAppExtension.activity instanceof QualityControlShipmentsActivity) {
+                QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity)cAppExtension.activity;
+                qualityControlShipmentsActivity.pShipmentSelected(shipment);
+            }
+
         }
 
 
@@ -134,6 +141,16 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
                     }
                 }
+
+                if (id == R.id.recyclerViewQCShipmentsToCheck) {
+                    if (cAppExtension.activity instanceof QualityControlShipmentsActivity) {
+                        cShipment.currentShipment = shipment;
+                        QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity) cAppExtension.activity;
+                        qualityControlShipmentsActivity.pHandleScan(null,true);
+
+                    }
+                }
+
             }
         });
 

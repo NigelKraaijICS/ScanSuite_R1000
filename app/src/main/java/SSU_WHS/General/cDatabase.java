@@ -237,6 +237,7 @@ public class cDatabase {
     public static final String PICKWITHPICTURE_AUTO_OPEN_NAMESTR = "Pick_with_picture_auto_open";
     public static final String PICKWITHPICTURE_PREFETCH_NAMESTR = "Pick_with_picture_prefetch";
     public static final String PICKACTIVITYBINREQUIRED_NAMESTR = "Pick_Activity_bin_required";
+    public static final String PICKQCCHECKCOUNT_NAMESTR = "Pick_Qc_check_count";
 
     public static final String PRICE_NAMESTR = "Price";
     public static final String PRINTDOCUMENTS_NAMESTR = "PrintDocuments";

@@ -16,6 +16,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineViewModel;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -440,6 +441,24 @@ public class cIntakeorderMATSummaryLine {
         }
 
         return  null;
+
+    }
+
+    public static List<cIntakeorderMATSummaryLine> pGetSummaryLinesWithBINCode(String pvBINCodeStr) {
+
+        List<cIntakeorderMATSummaryLine> resultObl = new ArrayList<>();
+
+        if (cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl == null || cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl.size() ==0 ) {
+            return null;
+        }
+
+        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl) {
+            if (intakeorderMATSummaryLine.getBinCodeStr().equalsIgnoreCase(pvBINCodeStr)) {
+                resultObl.add(intakeorderMATSummaryLine);
+            }
+        }
+
+        return  resultObl;
 
     }
 

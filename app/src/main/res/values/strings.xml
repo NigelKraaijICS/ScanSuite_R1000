@@ -222,6 +222,7 @@
 
     <!--region Sortorder Lines-->
     <string name="screentitle_qclines">QC lines</string>
+    <string name="screentitle_qcorders">QC orders</string>
     <string name="error_no_more_articles_to_check">There are no more articles to check</string>
     <!--endregion Sortorder Lines-->
 
@@ -329,7 +330,7 @@
     <string name="error_no_more_articles_to_pick">There are no more articles to pick for this barcode</string>
     <string name="error_couldnt_lock_order">This order could not be locked</string>
     <string name="comments">comments</string>
-    <string name="button_roger">Roger</string>
+    <string name="button_ok">OK</string>
 
     <!--region lockorder-->
     <string name="lockorder_order_assigned_to_another_user">This order is assigned to another user</string>
@@ -537,9 +538,11 @@
     <string name="tab_inventorybin_todo">open</string>
     <string name="tab_inventorybin_done">done</string>
     <string name="tab_inventorybin_total">total</string>
+    <string name="hint_input_bin">Scan or type BIN</string>
     <string name="hint_add_bin">Scan or type new bin</string>
     <string name="hint_add_packingslip">Packingslip</string>
     <string name="add_bin_header_default">Add bin</string>
+    <string name="scan_bin_header_default">Scan BIN</string>
     <string name="button_add_bin">Add bin</string>
     <string name="message_bin_added">Bin %1$s was added</string>
     <string name="message_bin_not_added">Bin %1$s was not added</string>
@@ -556,6 +559,7 @@
     <string name="message_add_article_for_this_bin_now_allowed">Article belongs to another BIN, adding lines is not allowed</string>
     <string name="error_barcode_doesnt_belong_to_line">This barcode doesn\'t belong to this line</string>
     <string name="message_line_save_failed">Saving line failed, please try again</string>
+    <string name="scan_article_header_default">Add article</string>
     <string name="message_workplace_not_updated">Workplace not updated on server</string>
     <string name="message_close_inventoryorder_text">U are about to close this count order, are you sure?</string>
     <string name="message_close_inventoryorder">Close count order</string>
@@ -797,8 +801,9 @@
     <string name="message_qcdone">Quality Control  done?</string>
     <string name="message_close_qc_fase">Would you like to finish quality control?</string>
 
-    <string name="message_packandshipdone">Ship fase done?</string>
+    <string name="message_packandshipdone">Pack and ship fase done?</string>
     <string name="message_close_packandship_fase">Would you like to finish the pack and ship control fase?</string>
+
 
     <!--End Region return-->
 

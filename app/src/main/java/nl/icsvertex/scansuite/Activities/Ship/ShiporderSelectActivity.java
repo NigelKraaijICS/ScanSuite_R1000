@@ -52,6 +52,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Pickorders.cPickorderAdapter;
 import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
@@ -283,15 +284,15 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         }
 
         // If there is a prefix, check if its a salesorder, then remove prefix en set filter
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.SALESORDER)) {
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
             //has prefix, is salesorderStr
-            this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
-            this.recyclerSearchView.callOnClick();
-            return;
+           this.recyclerSearchView.setQuery(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()), true);
+           this.recyclerSearchView.callOnClick();
+           return;
         }
 
         //If there is a prefix but it's not a salesorder tgen do nope
-        cUserInterface.pDoNope(recyclerSearchView, true, true);
+        cUserInterface.pDoNope(this.recyclerSearchView, true, true);
     }
 
     //End Region Public Methods
@@ -341,7 +342,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
         }
 
-        hulpResult = this.mGetOrderDetailsRst();
+        hulpResult = cPickorder.currentPickOrder.pGetShipmentDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -598,73 +599,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
-    private  cResult mGetOrderDetailsRst() {
 
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Check all ShippingAgents
-        if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagents_available));
-            return result;
-        }
-
-        //Check all ShippingAgents
-        if (cShippingAgentService.allShippingAgentServicesObl == null || cShippingAgentService.allShippingAgentServicesObl.size() == 0) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_available));
-            return result;
-        }
-
-        //Check all ShippingAgent Shipping Units
-        if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null || cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl.size() == 0) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_units_available));
-            return result;
-        }
-
-        // Get all linesInt, if zero than there is something wrong
-        if (!cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));
-            return result;
-        }
-
-        // Get all packages
-        if (!cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
-            return result;
-        }
-
-        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
-        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-
-        //If this is single article, then get barcodes
-        if (cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
-            if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
-                result.resultBln = false;
-                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-                return result;
-            }
-        }
-
-        return result;
-    }
 
     private  void mShowShipLinesActivity() {
 

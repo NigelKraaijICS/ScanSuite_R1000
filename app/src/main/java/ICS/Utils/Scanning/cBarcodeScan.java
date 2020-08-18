@@ -20,6 +20,7 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlSelectActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
@@ -48,6 +49,8 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
@@ -184,6 +187,11 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof QualityControlSelectActivity){
                         QualityControlSelectActivity qualityControlSelectActivity = (QualityControlSelectActivity)cAppExtension.activity;
                         qualityControlSelectActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof QualityControlShipmentsActivity){
+                        QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity)cAppExtension.activity;
+                        qualityControlShipmentsActivity.pHandleScan(barcodeScan, false);
                     }
 
                     if (cAppExtension.activity instanceof QualityControlLinesActivity){
@@ -374,6 +382,19 @@ public class cBarcodeScan {
                     if (cAppExtension.dialogFragment instanceof AddArticleFragment) {
                         AddArticleFragment addArticleFragment = (AddArticleFragment)cAppExtension.dialogFragment;
                         addArticleFragment.pHandleScan(barcodeScan);
+                        return;
+                    }
+
+                    if (cAppExtension.dialogFragment instanceof ScanArticleFragment) {
+                        ScanArticleFragment scanArticleFragment = (ScanArticleFragment)cAppExtension.dialogFragment;
+                        scanArticleFragment.pHandleScan(barcodeScan);
+                        return;
+                    }
+
+
+                    if (cAppExtension.dialogFragment instanceof ScanBinFragment) {
+                        ScanBinFragment scanBinFragment = (ScanBinFragment)cAppExtension.dialogFragment;
+                        scanBinFragment.pHandleScan(barcodeScan);
                         return;
                     }
 

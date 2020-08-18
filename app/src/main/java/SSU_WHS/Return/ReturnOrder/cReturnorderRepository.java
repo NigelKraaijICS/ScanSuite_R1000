@@ -436,9 +436,20 @@ public class cReturnorderRepository {
                 l_PropertyInfo3Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
+                String newWorkflowsStr = cSetting.RETOUR_NEW_WORKFLOWS().toUpperCase();
+
+                if (newWorkflowsStr.contains(";")){
+                    newWorkflowsStr = newWorkflowsStr.replace("RVR","");
+                    newWorkflowsStr = newWorkflowsStr.replace(";;",";");
+
+                    if (newWorkflowsStr.endsWith(";")) {
+                        newWorkflowsStr = newWorkflowsStr.substring(0, newWorkflowsStr.length() - 1);
+                    }
+                }
+
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
                 l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOW;
-                l_PropertyInfo4Pin.setValue(cWarehouseorder.WorkflowEnu.RVS.toString());
+                l_PropertyInfo4Pin.setValue(newWorkflowsStr);
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();

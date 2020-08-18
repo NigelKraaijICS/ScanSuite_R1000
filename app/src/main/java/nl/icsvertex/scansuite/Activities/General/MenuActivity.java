@@ -2,6 +2,7 @@ package nl.icsvertex.scansuite.Activities.General;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +15,31 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.navigation.NavigationView;
 
 import ICS.Interfaces.iICSDefaultActivity;
+import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.Authorisations.cAuthorisationAdapter;
+import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
@@ -37,6 +48,10 @@ import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlSelectActi
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -58,6 +73,9 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     private  TextView toolbarTitle;
     private  TextView toolbarSubtext;
     private  TextView toolbarSubtext2;
+
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     cAuthorisationAdapter authorisationAdapter;
     cAuthorisationAdapter getAuthorisationAdapter(){
@@ -101,21 +119,68 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         finish();
     }
 
-
     @Override
     public void onBackPressed() {
         this.mLeaveActivity();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_stockactions,pvMenu);
+        return true;
+    }
 
-        if (item.getItemId() == android.R.id.home) {
-            this.mLeaveActivity();
-            return true;
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+        invalidateOptionsMenu();
+
+        pvMenu.findItem(R.id.item_bin_stock).setVisible(cSetting.REALTIME_BARCODE_CHECK());
+        pvMenu.findItem(R.id.item_article_stock).setVisible(cSetting.REALTIME_BARCODE_CHECK());
+
+        return super.onPrepareOptionsMenu(pvMenu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
+
+        DialogFragment selectedFragment = null;
+
+        switch (pvMenuItem.getItemId()) {
+
+            case android.R.id.home:
+                this.mLeaveActivity();
+                return true;
+
+            case R.id.item_bin_stock:
+                selectedFragment = new ScanBinFragment();
+                break;
+
+            case R.id.item_article_stock:
+
+                selectedFragment = new ScanArticleFragment();
+
+                break;
+
+            default:
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+        }
+
+        return true;
 
     }
 
@@ -156,6 +221,10 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         this.toolbarSubtext2 = findViewById(R.id.toolbarSubtext2);
         this.recyclerViewMenu = findViewById(R.id.recyclerViewMenu);
         this.shimmerViewContainer = findViewById(R.id.shimmerViewContainer);
+
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
+
     }
 
     @Override
@@ -364,6 +433,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             }
 
             intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
+            ReturnorderSelectActivity.startedViaMenuBln = true;
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_RETURN);
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_RETURN);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
@@ -389,6 +459,38 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     }
 
+
+    public  void pHandleHandleBINScanned(String pvBinCodeStr) {
+
+    String binCodeStr = cRegex.pStripRegexPrefixStr(pvBinCodeStr);
+
+        cBranchBin branchBin = cUser.currentUser.currentBranch.pGetBinByCode(binCodeStr);
+        if (branchBin == null) {
+            this.mStepFailed(cAppExtension.activity.getString(R.string.message_bin_not_valid), pvBinCodeStr);
+            return;
+        }
+
+    BinItemsFragment binItemsFragment = new BinItemsFragment(branchBin.getBinCodeStr());
+        binItemsFragment.setCancelable(true);
+        binItemsFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+
+}
+
+    public  void pHandleHandleArticleScanned(cBarcodeScan pvBarcodeScan) {
+
+        cArticle.currentArticle=  cArticle.pGetArticleByBarcodeViaWebservice(pvBarcodeScan);
+        if (cArticle.currentArticle == null) {
+            this.mStepFailed(cAppExtension.activity.getString(R.string.message_unknown_article), pvBarcodeScan.getBarcodeOriginalStr());
+            return;
+        }
+
+
+        ItemStockFragment itemStockFragment  = new ItemStockFragment();
+        itemStockFragment.setCancelable(true);
+        itemStockFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLESTOCKFRAGMENT_TAG);
+
+    }
+
     //End Region Public Methods
 
     //Region Private Methods
@@ -410,6 +512,11 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         //Stopping Shimmer Effect's animation after data is loaded
         this.shimmerViewContainer.stopShimmerAnimation();
         this.shimmerViewContainer.setVisibility(View.GONE);
+    }
+
+    private  void mStepFailed(String pvErrorMessageStr, String pvBarcodeStr) {
+        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvBarcodeStr, true, true);
+        cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
     private void mLeaveActivity(){

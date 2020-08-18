@@ -34,7 +34,7 @@
     </RelativeLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:elevation="1dp"
         android:background="@drawable/menu_row"
         android:id="@+id/view_foreground">
@@ -54,21 +54,21 @@
         <TextView
             style="@style/defaultRecyclerOrdernumberText"
             android:id="@+id/textViewDescription"
-            app:layout_constraintStart_toStartOf="@id/textViewBIN"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewBIN"
             />
         <TextView
             style="@style/defaultRecyclerSourcenoText"
             android:id="@+id/textViewSourceNo"
-            app:layout_constraintStart_toStartOf="@id/textViewDescription"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
             app:layout_constraintTop_toBottomOf="@id/textViewDescription"
             />
         <TextView
             style="@style/defaultRecyclerDestinationText"
             android:id="@+id/textViewDestination"
-            app:layout_constraintStart_toStartOf="@id/textViewDescription"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
             app:layout_constraintTop_toBottomOf="@id/textViewSourceNo"
             />

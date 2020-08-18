@@ -9,10 +9,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
@@ -131,16 +135,45 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
 
         boolean webserviceResult;
         webserviceResult = cBinItem.pGetBinItemsViaWebserviceBln(this.binCodeStr);
-
-        if (webserviceResult) {
-            this.mSetBinItemRecycler();
-        }
+        this.mShowNoLinesIcon(!webserviceResult);
     }
 
-    private void mSetBinItemRecycler() {
-        this.binRecyclerview.setHasFixedSize(false);
-        this.binRecyclerview.setAdapter(this.getBinItemAdapter());
-        this.binRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+    private  void mShowNoLinesIcon(final Boolean pvShowBln){
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                cUserInterface.pHideGettingData();
+
+                if (pvShowBln) {
+
+                    binRecyclerview.setVisibility(View.INVISIBLE);
+
+                    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                    NothingHereFragment fragment = new NothingHereFragment();
+                    fragmentTransaction.replace(R.id.binItemsContainer, fragment);
+                    fragmentTransaction.commit();
+                    return;
+
+
+                }
+
+                binRecyclerview.setVisibility(View.VISIBLE);
+                binRecyclerview.setHasFixedSize(false);
+                binRecyclerview.setAdapter(getBinItemAdapter());
+                binRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof NothingHereFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                    }
+                }
+            }
+        });
     }
 
     //End Region Private Methods

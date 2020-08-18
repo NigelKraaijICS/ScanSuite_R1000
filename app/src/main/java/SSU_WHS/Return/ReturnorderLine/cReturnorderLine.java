@@ -201,6 +201,11 @@ public class cReturnorderLine {
         this.extraField7Str =  this.returnorderLineEntity.getExtraField7Str();
         this.extraField8Str =  this.returnorderLineEntity.getExtraField8Str();
         this.generatedBln = this.returnorderLineEntity.getGeneratedBln();
+
+        if (this.getRetourRedenStr().isEmpty()) {
+            this.nieuweRegelBln = true;
+        }
+
     }
 
       public cReturnorderLine(cArticle pvArticle){
@@ -225,6 +230,10 @@ public class cReturnorderLine {
         this.extraField7Str =  this.returnorderLineEntity.getExtraField7Str();
         this.extraField8Str =  this.returnorderLineEntity.getExtraField8Str();
         this.generatedBln = this.returnorderLineEntity.getGeneratedBln();
+
+          if (this.getRetourRedenStr().isEmpty()) {
+              this.nieuweRegelBln = true;
+          }
     }
 
     public cReturnorderLine(cReturnorderBarcode pvReturnorderBarcode){
@@ -249,6 +258,10 @@ public class cReturnorderLine {
         this.extraField7Str =  this.returnorderLineEntity.getExtraField7Str();
         this.extraField8Str =  this.returnorderLineEntity.getExtraField8Str();
         this.generatedBln = this.returnorderLineEntity.getGeneratedBln();
+
+        if (this.getRetourRedenStr().isEmpty()) {
+            this.nieuweRegelBln = true;
+        }
     }
 
 
@@ -401,10 +414,12 @@ public class cReturnorderLine {
                     && returnorderLine.getItemNoStr().equals(cReturnorderLine.currentReturnOrderLine.getItemNoStr())
                     && returnorderLine.getVariantCodeStr().equals(cReturnorderLine.currentReturnOrderLine.getVariantCodeStr())){
 
-                lineBarcodeObl.addAll(cReturnorderLine.currentReturnOrderLine.lineBarcodesObl);
-                returnorderLine.quantityHandledTakeDbl += cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl();
-                cReturnorderLine.currentReturnOrderLine = returnorderLine;
-                cReturnorderLine.currentReturnOrderLine.lineBarcodesObl = lineBarcodeObl;
+                if (returnorderLine.getSortingSequenceNoInt() != cReturnorderLine.currentReturnOrderLine.getSortingSequenceNoInt()) {
+                    lineBarcodeObl.addAll(cReturnorderLine.currentReturnOrderLine.lineBarcodesObl);
+                    returnorderLine.quantityHandledTakeDbl += cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl();
+                    cReturnorderLine.currentReturnOrderLine = returnorderLine;
+                    cReturnorderLine.currentReturnOrderLine.lineBarcodesObl = lineBarcodeObl;
+                }
             }
         }
     }

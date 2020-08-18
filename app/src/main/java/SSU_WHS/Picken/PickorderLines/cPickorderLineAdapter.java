@@ -21,12 +21,10 @@ import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
-import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
-import nl.icsvertex.scansuite.Fragments.QualityControl.QCLinesCheckedFragment;
-import nl.icsvertex.scansuite.Fragments.QualityControl.QCLinesToCheckFragment;
 import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesToSortFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -200,13 +198,17 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesToCheck) {
             quantityToShowStr  = currentPickorderLine.getQuantityCheckedDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
             pvHolder.textViewBIN.setText(currentPickorderLine.getProcessingSequenceStr());
-            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+            pvHolder.textViewBIN.setVisibility(View.GONE);
+            pvHolder.textViewSourceNo.setVisibility(View.GONE);
+            pvHolder.imageSendStatus.setVisibility(View.GONE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesChecked) {
             quantityToShowStr  = currentPickorderLine.getQuantityCheckedDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
             pvHolder.textViewBIN.setText(currentPickorderLine.getProcessingSequenceStr());
-            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+            pvHolder.textViewBIN.setVisibility(View.GONE);
+            pvHolder.textViewSourceNo.setVisibility(View.GONE);
+            pvHolder.imageSendStatus.setVisibility(View.GONE);
         }
 
         pvHolder.textViewDescription.setText(lineDescriptionStr);
@@ -266,18 +268,19 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
                 }
 
-                if (cAppExtension.context  instanceof QualityControlLinesActivity) {
+                if (cAppExtension.context  instanceof QualityControlShipmentsActivity) {
 
-                    QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
+                    QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity)cAppExtension.activity;
 
-                    if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesToCheck) {
-                        qualityControlLinesActivity.pQCLineSelected(currentPickorderLine);
-
-                    }
-                    if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesChecked) {
-                        qualityControlLinesActivity.pQCLineToResetSelected(currentPickorderLine);
-                        return;
-                    }
+                    //todo: fix this?
+//                    if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesToCheck) {
+//                        qualityControlShipmentsActivity.pQCLineSelected(currentPickorderLine);
+//
+//                    }
+//                    if (thisRecyclerView.getId() == R.id.recyclerViewQCLinesChecked) {
+//                        qualityControlShipmentsActivity.pQCLineToResetSelected(currentPickorderLine);
+//                        return;
+//                    }
 
                 }
 
