@@ -132,7 +132,12 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
         AnimationSet animationSet = new AnimationSet(true);
             animationSet.addAnimation(anim1);
-            imageRocket.startAnimation(animationSet);
+
+
+            if (imageRocket != null) {
+                imageRocket.startAnimation(animationSet);
+            }
+
             animationSet.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {

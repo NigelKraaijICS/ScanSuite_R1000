@@ -6,6 +6,7 @@ import org.json.JSONException;
 
 import java.util.concurrent.ExecutionException;
 
+import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
@@ -17,7 +18,6 @@ public class cWebservice {
     public static String WEBSERVICE_NAMESPACE = "http://www.icsvertex.nl/"; //Include '/' at end
     public static String WEBSERVICE_URL = "";
     public static String WEBSERVICE_WEBSERVICENAME = ""; //Include '/' at end (except when empty))
-    public static Integer WEBSERVICE_HTTPS_PORT = 9443;
     public static Integer WEBSERVICE_HTTPS_TIMEOUT = 60*1000;
     //End Region Public Properties
 
@@ -67,12 +67,14 @@ public class cWebservice {
 
         if (webresult == null ||!webresult.getSuccessBln() || !webresult.getResultBln()) {
             cUserInterface.pDoExplodingScreen( cAppExtension.context.getResources().getString(R.string.message_webservice_not_live), "", true,true);
+
             return false;
         }
         if (!Long.toString(webresult.getResultLng()).equalsIgnoreCase(cPublicDefinitions.INTERFACE_VERSION)) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getResources().getString(R.string.error_interface_version_should_be_parameter1_is_parameter2, Long.toString(webresult.getResultLng()),cPublicDefinitions.INTERFACE_VERSION ),"",  true, true);
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getResources().getString(R.string.error_interface_version_should_be_parameter1_is_parameter2, cText.pLongToStringStr(webresult.getResultLng()),cPublicDefinitions.INTERFACE_VERSION ),"",  true, true);
             return false;
         }
+
         return true;
     }
 

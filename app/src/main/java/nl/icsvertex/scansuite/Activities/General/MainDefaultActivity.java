@@ -49,6 +49,7 @@ import SSU_WHS.ScannerLogon.cScannerLogon;
 import SSU_WHS.Webservice.cWebservice;
 import io.fabric.sdk.android.Fabric;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.HugeErrorFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
 import nl.icsvertex.scansuite.Fragments.Main.DateTimeFragment;
 import nl.icsvertex.scansuite.Fragments.Main.HomeFragment;
@@ -248,6 +249,13 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         // If scanner had different interface version then web service, then stop
         if (!cWebservice.pWebserviceIsAvailableAndRightVersionBln()) {
+
+            cAppExtension.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mShowHomeFragment();
+                }
+            });
             return;
         }
 
