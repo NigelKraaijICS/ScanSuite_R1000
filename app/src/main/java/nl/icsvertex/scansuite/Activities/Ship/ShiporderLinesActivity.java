@@ -35,6 +35,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
@@ -196,7 +197,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                cUserInterface.pKillAllSounds();
             }
 
             @Override
@@ -249,6 +250,18 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     public void pHandleScan(cBarcodeScan pvBarcodeScan, Boolean pvSourceNoSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+
+        if (cShipment.currentShipment.isCheckedBln()) {
+            this.mHandleStartShip(pvBarcodeScan,pvSourceNoSelectedBln);
+        }
+        else
+        {
+            this.mHandleStarQC(pvBarcodeScan,pvSourceNoSelectedBln);
+        }
+    }
+
+    private void mHandleStartShip(cBarcodeScan pvBarcodeScan, Boolean pvSourceNoSelectedBln){
+
         cResult hulpRst;
 
         //SourceNo button has been pressed, so we already have a current line
@@ -257,6 +270,11 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             hulpRst = cShipment.currentShipment.pCheckShipmentRst();
             if (!hulpRst.resultBln ){
                 cUserInterface.pShowSnackbarMessage(this.container,hulpRst.messagesStr(),null,true);
+                return;
+            }
+
+            if (cShipment.currentShipment.isHandledBln()) {
+                cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
                 return;
             }
 
@@ -332,13 +350,58 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         this.mStartShipActivity();
     }
 
+    private void mHandleStarQC(cBarcodeScan pvBarcodeScan, Boolean pvSourceNoSelectedBln){
+
+        //SourceNo button has been pressed, so we already have a current line
+        if (pvSourceNoSelectedBln) {
+
+            if (cShipment.currentShipment.isCheckedBln()) {
+                cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_checked),null,true);
+                return;
+            }
+
+            if (cShipment.currentShipment.isHandledBln()) {
+                cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
+                return;
+            }
+
+            //we have a SourceDocument to handle, so start Pick activity
+            this.mStartQCLinesActivity();
+            return;
+        }
+
+        //Get shipment by SourceNo or pickcartbox
+        cShipment.currentShipment = cShipment.pGetShipmentWithScannedBarcode(pvBarcodeScan);
+
+        // We did not find a match, so stop
+        if (cShipment.currentShipment == null) {
+            this.mStepFailed(cAppExtension.context.getString(R.string.message_unknown_barcode));
+            return;
+        }
+
+              if (cShipment.currentShipment.isCheckedBln()) {
+            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_checked),null,true);
+            return;
+        }
+
+        if (cShipment.currentShipment.isHandledBln()) {
+            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
+            return;
+        }
+
+        //We found a match in open shipments
+        this.mStartQCLinesActivity();
+
+    }
+
     public  void pShipmentSelected(cShipment pvShipment) {
         cShipment.currentShipment = pvShipment;
 
-        if (this.currentLineFragment instanceof ShiporderLinesToShipFragment) {
-            ShiporderLinesToShipFragment shiporderLinesToShipFragment = (ShiporderLinesToShipFragment)this.currentLineFragment;
-            shiporderLinesToShipFragment.pSetChosenShipment();
-        }
+        //todo: check why we did this?
+//        if (this.currentLineFragment instanceof ShiporderLinesToShipFragment) {
+//            ShiporderLinesToShipFragment shiporderLinesToShipFragment = (ShiporderLinesToShipFragment)this.currentLineFragment;
+//            shiporderLinesToShipFragment.pSetChosenShipment();
+//        }
     }
 
     public  void pShippingDone() {
@@ -357,7 +420,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pPlaySound(R.raw.goodsound, null);
 
-        final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_packandshipdone), cAppExtension.activity.getString(R.string.message_close_packandship_fase),false);
+final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_packandshipdone), cAppExtension.activity.getString(R.string.message_close_packandship_fase),false);
         stepDoneFragment.setCancelable(false);
         stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
@@ -383,6 +446,10 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         cBarcodeScan.pRegisterBarcodeReceiver();
 
         cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);
+
+        this.mCheckAllDone();
+
+
     }
 
     //End Region Public Methods
@@ -541,6 +608,11 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         cAppExtension.activity.startActivity(intent);
     }
 
+    private void mStartQCLinesActivity(){
+        //we have a SourceDocument to check, so start QC lines activity
+        Intent intent = new Intent(cAppExtension.context, QualityControlLinesActivity.class);
+        cAppExtension.activity.startActivity(intent);
+    }
 
 
 }

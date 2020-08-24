@@ -346,7 +346,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mHandleMoveorderSelected(){
 
-        cResult hulpResult;
+        cResult hulpResult = new cResult();
 
         //Try to lock the moveorder
         if (!this.mTryToLockOrderBln()) {
@@ -360,7 +360,16 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        hulpResult = this.mGetOrderDetailsRst();
+        switch ( cMoveorder.currentMoveOrder.getOrderTypeStr()) {
+            case"MV":
+                hulpResult = cMoveorder.currentMoveOrder.pGetOrderDetailsRst();
+                break;
+            case"MT":
+                hulpResult = cMoveorder.currentMoveOrder.pGetOrderDetailsMTRst();
+                break;
+        }
+
+
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -377,43 +386,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private cResult mGetOrderDetailsRst(){
-
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all linesInt for current order, if webservice error then stop
-        if (!cMoveorder.currentMoveOrder.pGetLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_movelines_failed));
-            return result;
-        }
-
-        // Get all barcodes, if webservice error then stop
-        if (!cMoveorder.currentMoveOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-
-        // Get all barcodes, if webservice error then stop
-        if (!cMoveorder.currentMoveOrder.pGetLineBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cMoveorder.currentMoveOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-
-        return  result;
-    }
 
     private  void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cMoveorder.currentMoveOrder.getOrderNumberStr(), true, true );
@@ -427,8 +399,18 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
+        Intent intent;
 
-        Intent intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
+        switch ( cMoveorder.currentMoveOrder.getOrderTypeStr()) {
+            case"MV":
+                intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
+                break;
+            case"MT":
+                intent = new Intent(cAppExtension.context, MoveLinesTakeMTActivity.class);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + cMoveorder.currentMoveOrder.getOrderTypeStr());
+        }
 
         if (container != null) {
             View clickedOrder = container.findViewWithTag(cMoveorder.currentMoveOrder.getOrderNumberStr());

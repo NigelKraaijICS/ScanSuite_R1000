@@ -25,17 +25,16 @@ import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
-import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
+import SSU_WHS.Picken.PickorderSetting.cPickorderSetting;
 import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackage;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Picken.Shipment.cShipment;
-import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -104,11 +103,6 @@ public class cPickorder{
         return pickActivityBinRequiredBln;
     }
 
-    private boolean pickQCCheckCountBln;
-    public boolean isQCNeededBln(){
-        return  pickQCCheckCountBln;
-    }
-
     private String assignedUserIdStr;
     public String getAssignedUserIdStr() {
         return assignedUserIdStr;
@@ -139,7 +133,7 @@ public class cPickorder{
         return isProcessingOrParkedBln;
     }
 
-    public Boolean isSelectedBln;
+    private Boolean isSelectedBln;
     public Boolean getIsSelectedBln() {
         return isSelectedBln;
     }
@@ -233,12 +227,6 @@ public class cPickorder{
             return  false;
         }
 
-        if (!cPickorder.currentPickOrder.isQCNeededBln()) {
-            if (cPickorder.currentPickOrder.pQuantityHandledDbl() <= 0) {
-                return  false;
-            }
-        }
-
         for (cPickorderLine pickorderLine : this.linesObl()) {
 
             if (pickorderLine.getStatusShippingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded ||
@@ -276,6 +264,22 @@ public class cPickorder{
         }
 
         return  true;
+
+    }
+
+    public  boolean PICK_SHIPPING_QC_CHECK_COUNT () {
+
+        if (this.settingsObl() == null || this.settingsObl().size() == 0) {
+            return  false;
+        }
+
+        for (cPickorderSetting pickorderSetting : this.settingsObl()) {
+            if (pickorderSetting.getSettingCodeStr().equalsIgnoreCase(cSetting.settingEnu.PICK_SHIPPING_QC_CHECK_COUNT.toString())) {
+                return  cText.pStringToBooleanBln(pickorderSetting.getSettingValueStr(), false);
+            }
+        }
+
+        return  false;
 
     }
 
@@ -359,6 +363,9 @@ public class cPickorder{
     public List<cPickorderAddress> adressesObl(){
      return  cPickorderAddress.allAdressesObl ;
     }
+    public List<cPickorderSetting> settingsObl(){
+        return  cPickorderSetting.allSettingObl  ;
+    }
     private List<cArticleImage> imagesObl()  {
         return  cArticleImage.allImages;
     }
@@ -388,7 +395,6 @@ public class cPickorder{
         this.pickWithPictureBln = cText.pStringToBooleanBln(this.pickorderEntity.getpickWithPictureStr(),false) ;
         this.pickPickWithAutoOpenBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
         this.pickPickWithPicturePrefetchBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
-        this.pickQCCheckCountBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickQCCheckCount(),false) ;
         this.pickActivityBinRequiredBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickActivityBinRequired(),false);
 
         this.assignedUserIdStr = this.pickorderEntity.getAssignedUserIdStr();
@@ -416,7 +422,6 @@ public class cPickorder{
         this.pickWithPictureBln = cText.pStringToBooleanBln(this.pickorderEntity.getpickWithPictureStr(),false) ;
         this.pickPickWithAutoOpenBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
         this.pickPickWithPicturePrefetchBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
-        this.pickQCCheckCountBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickQCCheckCount(),false);
         this.pickActivityBinRequiredBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickActivityBinRequired(),false);
         this.assignedUserIdStr = this.pickorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.pickorderEntity.getCurrentUserIdStr();
@@ -447,12 +452,12 @@ public class cPickorder{
 
     public static void pUnselectAllOrders() {
 
-    for (cPickorder pickorder : cPickorder.allPickordersObl) {
-        cPickorder.currentPickOrder = pickorder;
-        cPickorder.currentPickOrder.pUpdateSelectedRst(false);
-    }
-
-
+        if (cPickorder.allPickordersObl != null) {
+            for (cPickorder pickorder : cPickorder.allPickordersObl) {
+                cPickorder.currentPickOrder = pickorder;
+                cPickorder.currentPickOrder.pUpdateSelectedRst(false);
+            }
+        }
     }
 
     public static boolean pGetPickOrdersViaWebserviceBln(Boolean pvRefreshBln, Boolean pvProcessingOrParkedBln, String pvSearchTextStr) {
@@ -516,31 +521,6 @@ public class cPickorder{
         cWebresult WebResult;
         cPickorderViewModel pickorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
         WebResult =  pickorderViewModel.pGetPickordersNextStepFromWebserviceWrs(cUser.currentUser.getUsernameStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip,pvSearchTextStr);
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            for (JSONObject jsonObject :WebResult.getResultDtt()) {
-                cPickorder pickorder = new cPickorder(jsonObject);
-                pickorder.pInsertInDatabaseBln();
-            }
-
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERS);
-            return  false;
-        }
-    }
-
-    public static boolean pGetQCOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr) {
-
-        if (pvRefreshBln) {
-            cPickorder.allPickordersObl = null;
-            cPickorder.mTruncateTable();
-        }
-
-        cWebresult WebResult;
-        cPickorderViewModel pickorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
-        WebResult =  pickorderViewModel.pGetPickordersNextStepFromWebserviceWrs(cUser.currentUser.getUsernameStr(),cWarehouseorder.StepCodeEnu.Pick_QualityContol,pvSearchTextStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             for (JSONObject jsonObject :WebResult.getResultDtt()) {
@@ -708,10 +688,24 @@ public class cPickorder{
             return result;
         }
 
+        // Get all settings
+        if (!cPickorder.currentPickOrder.pGetSettingsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
         // Get all linesInt, if zero than there is something wrong
         if (!cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));
+            return result;
+        }
+
+        // Get Barcodes
+        if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
             return result;
         }
 
@@ -736,53 +730,20 @@ public class cPickorder{
             return result;
         }
 
-        //If this is single article, then get barcodes
-        if (cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
-            if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
-                result.resultBln = false;
-                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-                return result;
+
+
+//        //If this is single article, then get barcodes
+//        if (cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
+//
+//        }
+
+        if (cPickorder.currentPickOrder.PICK_SHIPPING_QC_CHECK_COUNT()) {
+
+            for (cShipment shipment : cShipment.allShipmentsObl) {
+                shipment.pCheckIfShipmentIsChecked();
             }
+
         }
-
-        return result;
-    }
-
-    public   cResult pGetQualityControlDetailsRst() {
-
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all TAKE linesInt for current order, if size = 0 or webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetQCLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
-            return result;
-        }
-
-        // Get all barcodes, if size =0 or webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-
-        // Get all packages
-        if (!cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
-            return result;
-        }
-
-        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
-        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
-            return result;
-        }
-
 
 
         return result;
@@ -853,31 +814,6 @@ public class cPickorder{
 
     public double pQuantityTotalDbl() {
         return  this.getPickorderViewModel().pGetQuantityTotalDbl();
-    }
-
-    public double pQCNotCheckedDbl() {
-
-        Double resultDbl = 0.0;
-
-        List<cPickorderLine> linesObl = this.pGetQCLinesToCheckObl();
-
-        if ( linesObl== null ||linesObl.size() ==0 ) {
-            return  resultDbl;
-        }
-
-        for (cPickorderLine pickorderLine : linesObl) {
-            resultDbl += pickorderLine.getQuantityDbl() - pickorderLine.getQuantityCheckedDbl();
-
-        }
-        return  resultDbl;
-
-    }
-
-    public double pQCCheckedDbl() {
-
-        double resultDbl = this.pQuantityTotalDbl() - this.pQCNotCheckedDbl();
-        return  resultDbl;
-
     }
 
     public int pGetIndexOfNotHandledLineInt(cPickorderLine pvPickorderLine) {
@@ -978,7 +914,7 @@ public class cPickorder{
             actionTypeEnu = cWarehouseorder.ActionTypeEnu.TAKE;
         }
 
-        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT || pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.QC) {
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT) {
             actionTypeEnu = cWarehouseorder.ActionTypeEnu.PLACE;
         }
 
@@ -1003,76 +939,6 @@ public class cPickorder{
                 if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT && pickorderLine.getQuantityTakenDbl() >0 ) {
                     pickorderLine.pInsertInDatabaseBln();
                 }
-
-                if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.QC) {
-
-                    if (pickorderLine.getQuantityHandledDbl() <=0  && pickorderLine.getQuantityRejectedDbl() <=0) {
-                        continue;
-                    }
-
-                    if (pickorderLine.getStatusInt() >=  cWarehouseorder.PicklineStatusEnu.QCDONE) {
-                        continue;
-                    }
-
-                    pickorderLine.pInsertInDatabaseBln();
-
-                }
-            }
-
-            return cPickorderLine.allLinesObl.size() != 0;
-
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERS);
-            return  false;
-        }
-    }
-
-    public boolean pGetQCLinesViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cPickorderLine.allLinesObl = null;
-            cPickorderLine.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-
-
-        WebResult =  this.getPickorderViewModel().pGetQCLinesFromWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                if (cPickorderLine.allLinesObl == null) {
-                    cPickorderLine.allLinesObl = new ArrayList<>();
-                }
-
-                cPickorderLine pickorderLine = new cPickorderLine(jsonObject,cWarehouseorder.PickOrderTypeEnu.QC);
-
-                    if (pickorderLine.getQuantityHandledDbl() <=0  && pickorderLine.getQuantityRejectedDbl() <=0) {
-                        continue;
-                    }
-
-                    pickorderLine.pInsertInDatabaseBln();
-
-
-                cShipment shipment = cShipment.pGetShipment(pickorderLine.getSourceNoStr());
-                if (shipment == null ) {
-                    cShipment shipmentToAdd = new cShipment(pickorderLine.getSourceNoStr(), cShipment.ShipmentModusEnu.QC);
-
-                    if (pickorderLine.getQuantityCheckedDbl() == pickorderLine.getQuantityDbl()) {
-                        shipmentToAdd.handledBln = true;
-                    }
-                    else {
-                        shipmentToAdd.handledBln = false;
-                    }
-
-                    cShipment.pAddShipment(shipmentToAdd);
-                    shipmentToAdd.pAddQCLine(pickorderLine);
-                    continue;
-                }
-
-                shipment.pAddQCLine(pickorderLine);
 
             }
 
@@ -1225,73 +1091,6 @@ public class cPickorder{
 
     }
 
-    private boolean mCreateCombinedOrderViaWebserviceBln() {
-
-        cWebresult WebResult;
-        WebResult =  this.getPickorderViewModel().pCreateCombinedPickViaWebserviceWrs();
-
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPickorder.currentCombinedPickOrder  = new cPickorder(jsonObject);
-                break;
-            }
-
-            return true;
-
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
-            return  false;
-        }
-    }
-
-    private boolean mAddOrderToCombinedOrderViaWebserviceBln() {
-
-        cWebresult WebResult;
-        WebResult =  this.getPickorderViewModel().pAddOrderToCombinedPickViaWebserviceWrs();
-
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-            return true;
-
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
-            return  false;
-        }
-    }
-
-    private boolean mRemoveOrderFromCombinedOrderViaWebserviceBln() {
-
-        cWebresult WebResult;
-        WebResult =  this.getPickorderViewModel().pRemoveOrderFromCombinedPickViaWebserviceWrs();
-
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-            return true;
-
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
-            return  false;
-        }
-    }
-
-    private boolean mRemoveCombinedOrderViaWebserviceBln() {
-
-        cWebresult WebResult;
-        WebResult =  this.getPickorderViewModel().pRemoveCombinedPickViaWebserviceWrs();
-
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-            cPickorder.currentCombinedPickOrder = null;
-            return true;
-
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
-            return  false;
-        }
-    }
-
     public boolean pGetPackAndShipLinesViaWebserviceBln(Boolean pvRefreshBln) {
 
         if (pvRefreshBln) {
@@ -1319,7 +1118,7 @@ public class cPickorder{
 
                 cShipment shipment = cShipment.pGetShipment(pickorderLinePackAndShip.getSourceNoStr());
                 if (shipment == null ) {
-                    cShipment shipmentToAdd = new cShipment(pickorderLinePackAndShip.getSourceNoStr(),  cShipment.ShipmentModusEnu.Ship);
+                    cShipment shipmentToAdd = new cShipment(pickorderLinePackAndShip.getSourceNoStr());
 
                     shipmentToAdd.handledBln = pickorderLinePackAndShip.localStatusInt != cWarehouseorder.PackingAndShippingStatusEnu.Needed;
 
@@ -1371,45 +1170,6 @@ public class cPickorder{
 
             if (shipment.handledBln) {
                 resultObl.add(shipment);
-            }
-
-        }
-        return  resultObl;
-    }
-
-    public List<cPickorderLine> pGetQCLinesToCheckObl() {
-
-        List<cPickorderLine> resultObl = new ArrayList<>();
-        List<cPickorderLine> linesObl= cPickorder.currentPickOrder.pGetLinesFromDatabaseObl();
-
-        if (linesObl == null || linesObl.size() == 0) {
-            return resultObl;
-        }
-
-        for (cPickorderLine pickorderLine : linesObl) {
-
-            if (!pickorderLine.getQuantityCheckedDbl().equals(pickorderLine.getQuantityDbl())) {
-                resultObl.add(pickorderLine);
-            }
-
-        }
-        return  resultObl;
-    }
-
-    public List<cPickorderLine> pGetQCLinesCheckedObl() {
-
-        List<cPickorderLine> resultObl = new ArrayList<>();
-        List<cPickorderLine> linesObl= cPickorder.currentPickOrder.pGetLinesFromDatabaseObl();
-
-
-        if (linesObl == null || linesObl.size() == 0) {
-            return resultObl;
-        }
-
-        for (cPickorderLine pickorderLine : linesObl) {
-
-            if (pickorderLine.getQuantityCheckedDbl().equals(pickorderLine.getQuantityDbl())) {
-                resultObl.add(pickorderLine);
             }
 
         }
@@ -1556,76 +1316,6 @@ public class cPickorder{
 
     }
 
-    public cResult pQCHandledViaWebserviceRst() {
-
-        cResult result;
-        result = new cResult();
-        result.resultBln = true;
-
-        String workplaceStr = "";
-
-        cWebresult webresult;
-
-        if (cWorkplace.currentWorkplace != null) {
-            workplaceStr = cWorkplace.currentWorkplace.getWorkplaceStr();
-        }
-
-        webresult =  this.getPickorderViewModel().pQCHandledViaWebserviceWrs(workplaceStr);
-
-        //No result, so something really went wrong
-        if (webresult == null) {
-            result.resultBln = false;
-            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
-            return result;
-        }
-
-        //Everything was fine, so we are done
-        if (webresult.getSuccessBln() && webresult.getResultBln()) {
-            result.resultBln = true;
-            return result;
-        }
-
-        //Something really went wrong
-        if (!webresult.getSuccessBln()) {
-            result.resultBln = false;
-            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
-            return result;
-        }
-
-        // We got a succesfull response, but we need to do something with this activity
-        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
-
-            Long actionLng = 0L;
-
-            if (webresult.getResultLng() < 10 ) {
-                actionLng = webresult.getResultLng();
-            }
-
-            if (webresult.getResultLng() > 100) {
-                actionLng  = webresult.getResultLng()/100;
-            }
-
-            //Try to convert action long to action enumerate
-            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
-
-            result.resultBln = false;
-            result.activityActionEnu = activityActionEnu;
-
-            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
-                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
-            }
-
-            cPickorder.currentPickOrder.mGetCommentsViaWebError(webresult.getResultDtt());
-            return result;
-        }
-
-        return  result;
-
-
-    }
-
     public cResult pShipHandledViaWebserviceRst() {
 
         cResult result;
@@ -1709,18 +1399,38 @@ public class cPickorder{
         WebResult =  this.getPickorderViewModel().pGetAdressesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cPickorderAddress pickorderAddress = new cPickorderAddress(jsonObject);
                 pickorderAddress.pInsertInDatabaseBln();
             }
+
             return  true;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERADDRESSES);
+            return  false;
+        }
+    }
+
+    public boolean pGetSettingsViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cPickorderSetting.allSettingObl = null;
+            cPickorderSetting.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pGetSetingsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPickorderSetting pickorderSetting = new cPickorderSetting(jsonObject);
+                pickorderSetting.pInsertInDatabaseBln();
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET);
             return  false;
         }
     }
@@ -2038,7 +1748,6 @@ public class cPickorder{
         return result ;
     }
 
-
     //End Region Public Methods
 
     //Region Private Methods
@@ -2058,6 +1767,74 @@ public class cPickorder{
         cPickorderViewModel pickorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
         pickorderViewModel.deleteAll();
     }
+
+    private boolean mCreateCombinedOrderViaWebserviceBln() {
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pCreateCombinedPickViaWebserviceWrs();
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPickorder.currentCombinedPickOrder  = new cPickorder(jsonObject);
+                break;
+            }
+
+            return true;
+
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
+            return  false;
+        }
+    }
+
+    private boolean mAddOrderToCombinedOrderViaWebserviceBln() {
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pAddOrderToCombinedPickViaWebserviceWrs();
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            return true;
+
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
+            return  false;
+        }
+    }
+
+    private boolean mRemoveOrderFromCombinedOrderViaWebserviceBln() {
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pRemoveOrderFromCombinedPickViaWebserviceWrs();
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            return true;
+
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
+            return  false;
+        }
+    }
+
+    private boolean mRemoveCombinedOrderViaWebserviceBln() {
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pRemoveCombinedPickViaWebserviceWrs();
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            cPickorder.currentCombinedPickOrder = null;
+            return true;
+
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
+            return  false;
+        }
+    }
+
 
     //End Region Private Methods
 

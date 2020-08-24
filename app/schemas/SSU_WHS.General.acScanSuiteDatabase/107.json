@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 107,
-    "identityHash": "cf0062f21fcaa22cf6b348e2f48db393",
+    "identityHash": "cea54ed722edcdc69504276ca26a381b",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -3140,13 +3140,19 @@
       },
       {
         "tableName": "Scanners",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Werkplek` TEXT NOT NULL, PRIMARY KEY(`Werkplek`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Werkplek` TEXT NOT NULL, `Omschrijving` TEXT, PRIMARY KEY(`Werkplek`))",
         "fields": [
           {
             "fieldPath": "scanner",
             "columnName": "Werkplek",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "omschrijving",
+            "columnName": "Omschrijving",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -3212,7 +3218,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cf0062f21fcaa22cf6b348e2f48db393')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cea54ed722edcdc69504276ca26a381b')"
     ]
   }
 }

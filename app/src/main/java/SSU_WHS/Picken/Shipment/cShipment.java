@@ -15,7 +15,6 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Pickorders.cPickorderViewModel;
 import SSU_WHS.Webservice.cWebresult;
@@ -24,14 +23,6 @@ import nl.icsvertex.scansuite.R;
 public class cShipment {
 
     //Region Public Properties
-
-    public enum ShipmentModusEnu {
-        Unknown,
-        Ship,
-        QC
-    }
-
-    public  ShipmentModusEnu currentShipmentModus = ShipmentModusEnu.Unknown;
 
     private String sourceNoStr;
     public String getSourceNoStr() {
@@ -51,46 +42,46 @@ public class cShipment {
     public Boolean handledBln;
     public Boolean isHandledBln(){return  this.handledBln;}
 
-    private List<cPickorderLinePackAndShip> packAndShipLineObl;
+    public Boolean checkedBln;
+    public Boolean isCheckedBln(){return  this.checkedBln;}
 
-    public List<cPickorderLine> QCLinesObl;
+    public List<cPickorderLinePackAndShip> packAndShipLineObl;
 
-    public  List<cPickorderLine> QCLinesToCheckObl(){
+    public List<cPickorderLinePackAndShip> linesToCheckObl(){
 
-        List<cPickorderLine> resultObl = new ArrayList<>();
+        List<cPickorderLinePackAndShip> resultObl = new ArrayList<>();
 
-        if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
+        if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
             return  resultObl;
         }
 
-        for (cPickorderLine pickorderLine : this.QCLinesObl) {
-            if (pickorderLine.getQuantityCheckedDbl() == 0) {
-                resultObl.add(pickorderLine);
-            }
-        }
-
-        return  resultObl;
-    }
-
-    public  List<cPickorderLine> QCLinesCheckedObl(){
-
-        List<cPickorderLine> resultObl = new ArrayList<>();
-
-        if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
-            return  resultObl;
-        }
-
-        for (cPickorderLine pickorderLine : this.QCLinesObl) {
-            if (pickorderLine.getQuantityCheckedDbl() > 0) {
-                resultObl.add(pickorderLine);
+        for (cPickorderLinePackAndShip pickorderLinePackAndShip :this.packAndShipLineObl ) {
+            if (pickorderLinePackAndShip.getQuantityCheckedDbl() == 0) {
+                resultObl.add((pickorderLinePackAndShip));
             }
         }
 
         return  resultObl;
 
-
     }
 
+    public List<cPickorderLinePackAndShip> linesCheckedObl(){
+
+        List<cPickorderLinePackAndShip> resultObl = new ArrayList<>();
+
+        if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cPickorderLinePackAndShip pickorderLinePackAndShip :this.packAndShipLineObl ) {
+            if (pickorderLinePackAndShip.getQuantityCheckedDbl() > 0) {
+                resultObl.add((pickorderLinePackAndShip));
+            }
+        }
+
+        return  resultObl;
+
+    }
 
     public static List<cShipment> allShipmentsObl;
 
@@ -100,8 +91,7 @@ public class cShipment {
 
         cPickorderAddress resultAddress;
 
-        switch (this.currentShipmentModus) {
-            case Ship:
+
 
                 if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
                     return  null;
@@ -118,28 +108,8 @@ public class cShipment {
                             return  resultAddress;
                         }
                     }
-                }
 
-            case QC:
-
-                if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
-                    return  null;
-                }
-
-                if (cPickorder.currentPickOrder.adressesObl() == null || cPickorder.currentPickOrder.adressesObl().size() == 0) {
-                    return  null;
-                }
-
-                for (cPickorderLine pickorderLine : this.QCLinesObl) {
-                    for (cPickorderAddress pickorderAddress : cPickorder.currentPickOrder.adressesObl()) {
-                        if (pickorderAddress.getAddrescodeStr().equalsIgnoreCase(pickorderLine.getDeliveryAdressCodeStr())) {
-                            resultAddress = pickorderAddress;
-                            return  resultAddress;
-                        }
-                    }
-                }
         }
-
 
 
         return  null;
@@ -151,8 +121,7 @@ public class cShipment {
         cShippingAgent resultShippingAgent;
 
 
-        switch (this.currentShipmentModus) {
-            case Ship:
+
 
                 if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
                     return  null;
@@ -174,33 +143,6 @@ public class cShipment {
 
                 }
 
-            case QC:
-
-                if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
-                    return  null;
-                }
-
-                if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
-                    return  null;
-                }
-
-                cPickorderLine firstQCLine = this.QCLinesObl.get(0);
-
-                for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl) {
-
-
-                    if (shippingAgent.getShippintAgentStr().equalsIgnoreCase(firstQCLine.getShippingAgentCodeStr())) {
-                        resultShippingAgent = shippingAgent;
-                        return  resultShippingAgent;
-                    }
-
-                }
-
-        }
-
-
-
-
         return  null;
 
     }
@@ -208,10 +150,6 @@ public class cShipment {
     public cShippingAgentService shippingAgentService () {
 
         cShippingAgentService resultShippingAgentService;
-
-
-        switch (this.currentShipmentModus) {
-            case Ship:
 
                 if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
                     return  null;
@@ -233,32 +171,6 @@ public class cShipment {
 
                 }
 
-            case QC:
-
-                if (this.QCLinesObl == null || this.QCLinesObl.size() == 0) {
-                    return  null;
-                }
-
-                if (this.shippingAgent() == null || this.shippingAgent().shippingAgentServicesObl() == null || this.shippingAgent().shippingAgentServicesObl().size() == 0) {
-                    return  null;
-                }
-
-                cPickorderLine firstQCLine = this.QCLinesObl.get(0);
-
-                for (cShippingAgentService shippingAgentService : this.shippingAgent().shippingAgentServicesObl()) {
-
-
-                    if (shippingAgentService.getShippingAgentStr().equalsIgnoreCase(firstQCLine.getShippingAgentCodeStr()) && shippingAgentService.getServiceStr().equalsIgnoreCase(firstQCLine.getShippingAgentServiceCode())  ) {
-                        resultShippingAgentService = shippingAgentService;
-                        return  resultShippingAgentService;
-                    }
-
-                }
-
-        }
-
-
-
         return  null;
 
     }
@@ -267,19 +179,23 @@ public class cShipment {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
     }
 
-
     //End Region Public Properties
 
     //Region Constructor
 
-    public cShipment(String pvSourceNoStr, ShipmentModusEnu pvShipmentModusEnu) {
-        this.currentShipmentModus = pvShipmentModusEnu;
+    public cShipment(String pvSourceNoStr) {
         this.sourceNoStr = pvSourceNoStr;
         this.packAndShipLineObl = new ArrayList<>();
-        this.QCLinesObl = new ArrayList<>();
         this.handledBln = false;
         this.quantityDbl = (double) 0;
         this.processingSequenceStr = "";
+
+        if (!cPickorder.currentPickOrder.PICK_SHIPPING_QC_CHECK_COUNT()) {
+            this.checkedBln = true;
+        }
+        else {
+            this.checkedBln = false;
+        }
 
     }
 
@@ -414,16 +330,20 @@ public class cShipment {
         return  result;
     }
 
+    public cResult pCheckingDoneRst() {
+
+        cResult result = new cResult();
+        result.resultBln = true;
+        //We are done, so this shipmemt is checked and result is true
+
+        this.checkedBln = true;
+        return  result;
+    }
+
     public void pAddPackAndShipLine(cPickorderLinePackAndShip pvPickorderLinePackAndShip){
         this.packAndShipLineObl.add((pvPickorderLinePackAndShip));
         this.quantityDbl += pvPickorderLinePackAndShip.getQuantityDbl();
         this.processingSequenceStr = pvPickorderLinePackAndShip.getProcessingSequenceStr();
-    }
-
-    public void pAddQCLine(cPickorderLine pvPickorderLine){
-        this.QCLinesObl.add((pvPickorderLine));
-        this.quantityDbl += pvPickorderLine.getQuantityDbl();
-        this.processingSequenceStr = pvPickorderLine.getProcessingSequenceStr();
     }
 
     public cResult pCheckShipmentRst(){
@@ -435,7 +355,7 @@ public class cShipment {
             return  result;
         }
 
-        if (this.currentShipment.shippingAgent() == null) {
+        if (cShipment.currentShipment.shippingAgent() == null) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agent_unkown_or_empty));
             return  result;
@@ -456,41 +376,60 @@ public class cShipment {
         return  result;
 
     }
+    
+    public void pCheckIfShipmentIsChecked(){
+        
+     if (this.packAndShipLineObl == null || this.packAndShipLineObl.size() == 0) {
+         return;
+         
+     }
 
-    public cPickorderLine pGetQCLineNotHandledByBarcode(String pvScannedBarcodeStr) {
+     //If we habe a line that still needs to be checken, then we are done
+     for (cPickorderLinePackAndShip pickorderLinePackAndShip : this.packAndShipLineObl) {
+         if (pickorderLinePackAndShip.getQuantityCheckedDbl() < pickorderLinePackAndShip.getQuantityDbl()) {
+             return;
+         }
+     }
+
+     //All lines are checken, so this shipment is checked
+     this.pCheckingDoneRst();
+     
+        
+    }
+
+    public cPickorderLinePackAndShip pGetLineNotHandledByBarcode(String pvScannedBarcodeStr) {
 
         if (cPickorder.currentPickOrder.barcodesObl() == null || cPickorder.currentPickOrder.barcodesObl().size() == 0)  {
             return  null;
         }
 
-
-        if (this.QCLinesToCheckObl() == null || this.QCLinesToCheckObl().size()  == 0) {
+        if (this.linesToCheckObl() == null || this.linesToCheckObl().size() == 0) {
             return  null;
         }
 
-        cPickorderBarcode pickorderBarcodeMatched = null;
 
-        for (cPickorderBarcode pickorderBarcode : cPickorder.currentPickOrder.barcodesObl()) {
+
+        for (cPickorderBarcode pickorderBarcode : cPickorder.currentPickOrder.barcodesObl() ) {
             if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)){
-                pickorderBarcodeMatched = pickorderBarcode;
+                cPickorder.currentPickOrder.pickorderQCBarcodeScanned = pickorderBarcode;
                 break;
             }
         }
 
-        if (pickorderBarcodeMatched  == null) {
+        if (cPickorder.currentPickOrder.pickorderQCBarcodeScanned   == null) {
             return  null;
         }
 
-        for (cPickorderLine pickorderLine : this.QCLinesToCheckObl()) {
-            if (pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeMatched.getItemNoStr()) &&
-               pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeMatched.getVariantcodeStr()))) {
-                cPickorder.currentPickOrder.pickorderQCBarcodeScanned = pickorderBarcodeMatched;
-               return pickorderLine;
+        for (cPickorderLinePackAndShip pickorderLinePackAndShip : this.linesToCheckObl()) {
+            if (pickorderLinePackAndShip.getItemNoStr().equalsIgnoreCase(cPickorder.currentPickOrder.pickorderQCBarcodeScanned .getItemNoStr()) &&
+                    pickorderLinePackAndShip.getVariantCodeStr().equalsIgnoreCase((cPickorder.currentPickOrder.pickorderQCBarcodeScanned .getVariantcodeStr()))) {
+                    return  pickorderLinePackAndShip;
             }
         }
 
         return null;
     }
+
 
 
     //End Region Public Methods

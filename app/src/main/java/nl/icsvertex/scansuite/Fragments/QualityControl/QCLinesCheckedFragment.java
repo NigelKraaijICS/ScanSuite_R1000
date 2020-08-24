@@ -18,11 +18,10 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipAdapter;
 import SSU_WHS.Picken.Shipment.cShipment;
-import SSU_WHS.Picken.Shipment.cShipmentAdapter;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
-import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -36,13 +35,13 @@ public class QCLinesCheckedFragment extends Fragment implements iICSDefaultFragm
     //Region Private Properties
     private RecyclerView recyclerViewQCLinesChecked;
 
-    private cShipmentAdapter shipmentAdapter;
-    private  cShipmentAdapter getShipmentAdapter(){
-        if (this.shipmentAdapter == null) {
-            this.shipmentAdapter = new cShipmentAdapter();
+    private cPickorderLinePackAndShipAdapter pickorderLinePackAndShipAdapter;
+    private  cPickorderLinePackAndShipAdapter getPickorderLinePackAndShipAdapter(){
+        if (this.pickorderLinePackAndShipAdapter == null) {
+            this.pickorderLinePackAndShipAdapter = new cPickorderLinePackAndShipAdapter();
         }
 
-        return  this.shipmentAdapter;
+        return  this.pickorderLinePackAndShipAdapter;
     }
 
     //End Region Private Properties
@@ -83,7 +82,8 @@ public class QCLinesCheckedFragment extends Fragment implements iICSDefaultFragm
     public void onResume() {
         super.onResume();
         cUserInterface.pEnableScanner();
-        QualityControlShipmentsActivity.currentShipmentFragment = this;
+
+        QualityControlLinesActivity.currentLineFragment = this;
         this.mFragmentInitialize();
 
     }
@@ -98,7 +98,7 @@ public class QCLinesCheckedFragment extends Fragment implements iICSDefaultFragm
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.pGetData();
+        this.mGetData();
         cUserInterface.pEnableScanner();
     }
 
@@ -128,42 +128,39 @@ public class QCLinesCheckedFragment extends Fragment implements iICSDefaultFragm
 
     //End Region Public Methods
 
-    public  void pSetChosenShipment(){
-
-
-    }
 
     //Region Private Methods
 
 
 
-    public void pGetData() {
-        List<cShipment> handledShipmentsObl = cPickorder.currentPickOrder.pGetHandledShipmentsObl();
-        this.mFillRecycler(handledShipmentsObl);
+    private void mGetData() {
+        this.mFillRecycler(cShipment.currentShipment.linesCheckedObl());
     }
 
-    private void mFillRecycler(List<cShipment> pvDataObl) {
+    private void mFillRecycler(List<cPickorderLinePackAndShip> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
             this.mNoLinesAvailable();
             return;
         }
 
-        this.getShipmentAdapter().pFillData(pvDataObl);
+        this.getPickorderLinePackAndShipAdapter().pFillData(pvDataObl);
         this.recyclerViewQCLinesChecked.setHasFixedSize(false);
-        this.recyclerViewQCLinesChecked.setAdapter(this.getShipmentAdapter());
+        this.recyclerViewQCLinesChecked.setAdapter(this.getPickorderLinePackAndShipAdapter());
         this.recyclerViewQCLinesChecked.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+
 
         if (cAppExtension.activity instanceof QualityControlLinesActivity) {
             QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
-            qualityControlLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.QCLinesCheckedObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.QCLinesObl.size()));
+            qualityControlLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.linesCheckedObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.packAndShipLineObl.size()));
         }
 
     }
 
     private void mNoLinesAvailable() {
 
-        if (QualityControlShipmentsActivity.currentShipmentFragment == this) {
+
+        if (QualityControlLinesActivity.currentLineFragment == this) {
             //Close no linesInt fragment if needed
 
 
@@ -179,7 +176,7 @@ public class QCLinesCheckedFragment extends Fragment implements iICSDefaultFragm
             //Change tabcounter text
             if (cAppExtension.activity instanceof QualityControlLinesActivity) {
                 QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
-                qualityControlLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.QCLinesCheckedObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.QCLinesObl.size()));
+                qualityControlLinesActivity.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.linesCheckedObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.packAndShipLineObl.size()));
             }
 
         }

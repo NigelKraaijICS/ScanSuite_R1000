@@ -35,11 +35,15 @@ public class cMoveorderViewModel extends AndroidViewModel {
 
     public cWebresult pGetLinesFromWebserviceWrs() {return this.Repository.pGetLinesFromWebserviceWrs(); }
 
+    public cWebresult pCloseTakeMTViaWebserviceWrs() {return this.Repository.pCloseTakeMTViamWebserviceWrs(); }
+
     public List<cMoveorderLineEntity> pGetLinesForBinFromDatabaseObl(String pvBinStr) {return Repository.pGetLinesForBinFromDatabaseObl(pvBinStr);}
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebserviceWrs();}
 
     public cWebresult pGetLineBarcodesFromWebserviceWrs() {return this.Repository.pGetLineBarcodesFromWebserviceWrs();}
+
+    public cWebresult pGetBINSFromWebserviceWrs(List<String> pvBinsObl ) {return this.Repository.pGetBINSFromWebserviceWrs(pvBinsObl);}
 
     public cWebresult pAddERPItemViaWebserviceWrs(cArticleBarcode pvArticleBarcode) {return this.Repository.pAddERPItemViaWebserviceWrs(pvArticleBarcode);}
 

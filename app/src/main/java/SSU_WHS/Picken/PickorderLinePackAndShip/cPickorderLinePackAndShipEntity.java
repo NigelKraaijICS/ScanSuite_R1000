@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 
 @Entity(tableName=cDatabase.TABLENAME_PICKORDERLINEPACKANDSHIP)
 public class cPickorderLinePackAndShipEntity {
@@ -21,6 +22,10 @@ public class cPickorderLinePackAndShipEntity {
     @ColumnInfo(name = cDatabase.LINENO_NAMESTR)
     public Integer lineno;
     public Integer getLineNoInt() { return this.lineno; }
+
+    @ColumnInfo(name = cDatabase.LINENOTAKE_NAMESTR)
+    public Integer linenoTake;
+    public Integer getLineNoTakeInt() { return this.linenoTake; }
 
     @ColumnInfo(name = cDatabase.SOURCENO_NAMESTR)
     public String sourceno;
@@ -78,6 +83,10 @@ public class cPickorderLinePackAndShipEntity {
     public Double quantity;
     public Double getQuantityDbl() { return this.quantity; }
 
+    @ColumnInfo(name = cDatabase.QUANTITYCHECKED_NAMESTR)
+    public Double quantityChecked;
+    public Double getQuantityChecked() {return this.quantityChecked;}
+
     @ColumnInfo(name = cDatabase.QUANTITYHANDLED_NAMESTR)
     public Double quantityhandled;
     public Double getQuantityHandledDbl() { return this.quantityhandled; }
@@ -103,6 +112,13 @@ public class cPickorderLinePackAndShipEntity {
         try {
             this.lineno = pvJsonObject.getInt(cDatabase.LINENO_NAMESTR);
 
+            if (cPickorder.currentPickOrder.PICK_SHIPPING_QC_CHECK_COUNT()) {
+                this.linenoTake = pvJsonObject.getInt(cDatabase.LINENOTAKE_NAMESTR);
+            }
+            else
+            {
+                this.linenoTake = 0;
+            }
             this.status = pvJsonObject.getInt(cDatabase.STATUS_NAMESTR);
             this.sourceno = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
             this.destinationno = pvJsonObject.getString(cDatabase.DESTINATIONNO_NAMESTR);
@@ -122,7 +138,8 @@ public class cPickorderLinePackAndShipEntity {
             this.vendoritemdescription = pvJsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
 
             this.quantity = pvJsonObject.getDouble(cDatabase.QUANTITY_NAMESTR);
-            this. quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
+            this.quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
+            this.quantityChecked = pvJsonObject.getDouble(cDatabase.QUANTITYCHECKED_NAMESTR);
 
             this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
 

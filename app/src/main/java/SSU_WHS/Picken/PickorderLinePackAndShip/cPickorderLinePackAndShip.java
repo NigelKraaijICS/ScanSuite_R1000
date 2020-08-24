@@ -1,10 +1,24 @@
 package SSU_WHS.Picken.PickorderLinePackAndShip;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import ICS.Utils.cResult;
+import ICS.Weberror.cWeberror;
+import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineViewModel;
+import SSU_WHS.Webservice.cWebresult;
+import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.R;
 
 public class cPickorderLinePackAndShip {
 
@@ -14,6 +28,11 @@ public class cPickorderLinePackAndShip {
     private int lineNoInt;
     public int getLineNoInt() {
         return lineNoInt;
+    }
+
+    private int lineNoTakeInt;
+    public int getLineNoTakeInt() {
+        return lineNoTakeInt;
     }
 
     private String itemNoStr;
@@ -101,7 +120,40 @@ public class cPickorderLinePackAndShip {
         return quantityHandledDbl;
     }
 
+    public double quantityCheckedDbl;
+    public Double getQuantityCheckedDbl() {
+        return quantityCheckedDbl;
+    }
+
     public static List<cPickorderLinePackAndShip> allPackAndShipLinesObl;
+    public static cPickorderLinePackAndShip currentPickorderLinePackAndShip;
+
+    public  List<cPickorderBarcode> barcodesObl;
+    public List<cPickorderLineBarcode> handledBarcodesObl(){
+
+
+        List<cPickorderLineBarcode> resultObl;
+        resultObl = new ArrayList<>();
+
+        if (cPickorderLineBarcode.allLineBarcodesObl == null) {
+            return  resultObl;
+        }
+
+        for (cPickorderLineBarcode pickorderLineBarcode :cPickorderLineBarcode.allLineBarcodesObl ) {
+
+            int result = Long.compare(pickorderLineBarcode.getLineNoLng(), this.getLineNoInt());
+            if (result == 0) {
+                resultObl.add(pickorderLineBarcode);
+            }
+        }
+
+
+        return  resultObl;
+    }
+
+    private cPickorderLinePackAndShipViewModel getPickorderLinePackAndShipViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLinePackAndShipViewModel.class);
+    }
 
     //End Region Public Properties
 
@@ -112,6 +164,7 @@ public class cPickorderLinePackAndShip {
         cPickorderLinePackAndShipEntity pickorderLinePackAndShipEntity = new cPickorderLinePackAndShipEntity(pvJsonObject);
 
         this.lineNoInt =  pickorderLinePackAndShipEntity.getLineNoInt();
+        this.lineNoTakeInt = pickorderLinePackAndShipEntity.getLineNoTakeInt();
 
         this.itemNoStr = pickorderLinePackAndShipEntity.getItemNoStr();
         this.variantCodeStr = pickorderLinePackAndShipEntity.getVariantCodeStr();
@@ -122,6 +175,7 @@ public class cPickorderLinePackAndShip {
 
         this.quantityDbl =  pickorderLinePackAndShipEntity.getQuantityDbl();
         this.quantityHandledDbl = pickorderLinePackAndShipEntity.getQuantityHandledDbl();
+        this.quantityCheckedDbl = pickorderLinePackAndShipEntity.getQuantityChecked();
         this.statusInt = pickorderLinePackAndShipEntity.getStatusInt();
         this.statusShippingInt =  pickorderLinePackAndShipEntity.getStatusShippingInt();
 
@@ -141,6 +195,104 @@ public class cPickorderLinePackAndShip {
         this.shippingAgentServiceCodeStr = pickorderLinePackAndShipEntity.getShippinAgentServiceCodeStr();
 
 
+    }
+
+    public boolean pCheckedBln() {
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderLinePackAndShipViewModel().pLineCheckedViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            return true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
+            return  false;
+        }
+    }
+
+    public void pAddOrUpdateLineBarcode(Double pvAmountDbl){
+
+        boolean addBarcodeBln = false;
+
+        //If there are no line barcodes, then simply add this one
+        if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
+            addBarcodeBln = true;
+        }
+
+        if (!addBarcodeBln) {
+            for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
+
+                if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
+                    pickorderLineBarcode.quantityHandledDbl += pvAmountDbl;
+                    pickorderLineBarcode.pUpdateAmountInDatabase();
+                    return;
+                }
+            }
+        }
+
+        cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode((long) cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getLineNoInt(), cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
+        pickorderLineBarcode.quantityHandledDbl = pvAmountDbl;
+        pickorderLineBarcode.pInsertInDatabaseBln();
+
+    }
+
+    public void pRemoveOrUpdateLineBarcode(){
+
+        //If there are no line barcodes, this should not be possible
+        if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
+            return;
+        }
+
+        for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
+
+            if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
+
+                pickorderLineBarcode.quantityHandledDbl -= cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl();
+
+                if (pickorderLineBarcode.getQuantityhandledDbl() > 0) {
+                    pickorderLineBarcode.pUpdateAmountInDatabase();
+                    return;
+                }
+
+                pickorderLineBarcode.pDeleteFromDatabaseBln();
+                return;
+            }
+        }
+    }
+
+
+    public cResult pLineBusyRst(){
+
+        cResult result = new cResult();
+        result.resultBln = false;
+
+        if (cPickorderLinePackAndShip.currentPickorderLinePackAndShip.mGetBarcodesObl() == null || Objects.requireNonNull(cPickorderLinePackAndShip.currentPickorderLinePackAndShip.mGetBarcodesObl()).size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line));
+            return result;
+        }
+
+
+        result.resultBln = true;
+
+        return  result;
+
+    }
+
+    private  List<cPickorderBarcode> mGetBarcodesObl(){
+
+        //If barcodes already filled, then we are done
+        if (this.barcodesObl != null) {
+            return this.barcodesObl;
+        }
+
+        // Get barcodes via PickorderBarcode class
+        this.barcodesObl = cPickorderBarcode.pGetPickbarcodesViaVariantAndItemNoObl(this.getItemNoStr(),this.getVariantCodeStr());
+        if (this.barcodesObl == null || this.barcodesObl.size() == 0) {
+            return  null;
+        }
+
+        return  this.barcodesObl;
     }
 
 

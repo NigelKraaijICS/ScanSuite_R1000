@@ -55,9 +55,7 @@ public class cPickorderLineEntity {
     public Double quantityRejected;
     public Double getQuantityRejected() {return this.quantityRejected;}
 
-    @ColumnInfo(name = "QuantityChecked")
-    public Double quantityChecked;
-    public Double getQuantityChecked() {return this.quantityChecked;}
+
 
     @ColumnInfo(name = "SourceNo")
     public String sourceno;
@@ -78,19 +76,6 @@ public class cPickorderLineEntity {
     @ColumnInfo(name = "VendorItemDescription")
     public String vendoritemdescription;
     public String getVendorItemDescriptionStr() {return this.vendoritemdescription;}
-
-    @ColumnInfo(name = "DeliveryAddressCode")
-    public String deliveryAdressCode;
-    public String getDeliveryAdressCode() {return this.deliveryAdressCode;}
-
-    @ColumnInfo(name = "ShippingAgentCode")
-    public String shippingAgentCode;
-    public String getShippingAgentCodeStr() {return this.shippingAgentCode;}
-
-    @ColumnInfo(name = "ShippingAgentServiceCode")
-    public String shippingAgentServiceCode;
-    public String getShippingAgentServiceCodeStr() {return this.shippingAgentServiceCode;}
-
 
     @ColumnInfo(name = "Status")
     public Integer status;
@@ -167,19 +152,10 @@ public class cPickorderLineEntity {
             this.quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
             this.quantityRejected = pvJsonObject.getDouble(cDatabase.QUANTITYREJECTED_NAMESTR);
 
-            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString()) || pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.QC.toString())  ) {
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.PICK.toString())) {
                 this.quantitytaken =  0;
             } else {
                 this.quantitytaken =  pvJsonObject.getDouble(cDatabase.QUANTITYTAKEN_NAMESTR);
-            }
-
-            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.QC.toString())  ) {
-                this.quantityChecked =  pvJsonObject.getDouble(cDatabase.QUANTITYCHECKED_NAMESTR);
-                this.deliveryAdressCode = pvJsonObject.getString(cDatabase.DELIVERYADDRESSCODE_NAMESTR);
-                this.shippingAgentCode = pvJsonObject.getString(cDatabase.SHIPPINGAGENTCODE_NAMESTR);
-                this.shippingAgentServiceCode = pvJsonObject.getString(cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR);
-            } else {
-                this.quantitytaken =  0;
             }
 
             this.sourceno = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
@@ -212,11 +188,6 @@ public class cPickorderLineEntity {
                 }
             }
 
-            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.QC.toString())) {
-                if (this.getQuantityChecked().equals(this.getQuantityDbl())) {
-                        this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
-                }
-            }
 
             //region extraField1Str
             if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {
@@ -329,8 +300,6 @@ public class cPickorderLineEntity {
                 this.extrafield8 = "";
             }
             //endregion extraField8Str
-
-
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -99,7 +99,7 @@ public class SupportFragment extends Fragment implements iICSDefaultFragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                cUserInterface.pKillAllSounds();
             }
 
             @Override

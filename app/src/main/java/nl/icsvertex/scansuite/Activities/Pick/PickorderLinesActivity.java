@@ -188,7 +188,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         this.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
         this.mSetTabLayout();
 
-
     }
 
     @Override
@@ -525,11 +524,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        if (cPickorder.currentPickOrder.isQCNeededBln()) {
-            this.mQCNextStep();
-            return;
-        }
-
         //If Pack or Ship is not required, then we are dibe
         if (cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
             this.mPackAndShipNextStap();
@@ -567,7 +561,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         }
 
         // If there is no next step, then we are done
-        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln() && !cPickorder.currentPickOrder.isBPBln() && !cPickorder.currentPickOrder.isBCBln()  && cPickorder.currentPickOrder.isQCNeededBln() ) {
+        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln() && !cPickorder.currentPickOrder.isBPBln() && !cPickorder.currentPickOrder.isBCBln()) {
             if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
                 !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
 
@@ -835,15 +829,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private  void mQCNextStep(){
-
-        this.mStartOrderSelectActivity();
-        return;
-
-
-
-    }
-
     private void mPackAndShipNextStap(){
 
         //If activity bin is not required, then don't show the fragment
@@ -960,8 +945,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-
-        hulpResult = this.mGetShipOrderDetailsRst();
+        hulpResult = cPickorder.currentPickOrder.pGetShipmentDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
             return;
@@ -1032,80 +1016,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    private  cResult mGetShipOrderDetailsRst() {
-
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Clear workplaceStr, so you have to select it in the next step
-        cWorkplace.currentWorkplace = null;
-
-        //Check all ShippingAgents
-        if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagents_available));
-            return result;
-        }
-
-        //Check all ShippingAgents
-        if (cShippingAgentService.allShippingAgentServicesObl == null || cShippingAgentService.allShippingAgentServicesObl.size() == 0) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_available));
-            return result;
-        }
-
-        //Check all ShippingAgent Shipping Units
-        if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null || cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl.size() == 0) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_units_available));
-            return result;
-        }
-
-        //Clear all shipments
-        cShipment.allShipmentsObl = null;
-
-        // Get all linesInt, if zero than there is something wrong
-        if (!cPickorder.currentPickOrder.pGetPackAndShipLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_pack_and_ship_lines_failed));
-            return result;
-        }
-
-        // Get all packages
-        if (!cPickorder.currentPickOrder.pGetShippingPackagedViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
-            return result;
-        }
-
-        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
-        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-
-        //If this is single article, then get barcodes
-        if (cPickorder.currentPickOrder.isSingleArticleOrdersBln()) {
-            if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
-                result.resultBln = false;
-                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-                return result;
-            }
-        }
-
-        return result;
-    }
-
     private  cResult mCheckDestionationRst(cBarcodeScan pvBarcodeScan) {
 
         cResult resultRst = new cResult();
@@ -1169,7 +1079,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
             @Override
             public void onTabUnselected(TabLayout.Tab pvTab) {
-
+                cUserInterface.pKillAllSounds();
             }
 
             @Override

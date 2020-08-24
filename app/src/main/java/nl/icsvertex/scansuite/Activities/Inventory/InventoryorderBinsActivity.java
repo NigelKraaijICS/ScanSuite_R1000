@@ -215,7 +215,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
             @Override
             public void onTabUnselected(TabLayout.Tab pvTab) {
-
+                cUserInterface.pKillAllSounds();
             }
 
             @Override

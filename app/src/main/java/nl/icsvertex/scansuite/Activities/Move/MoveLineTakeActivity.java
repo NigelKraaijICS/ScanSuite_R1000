@@ -810,7 +810,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         cResult result = new cResult();
         result.resultBln = true;
 
-        this.moveorderLineToUpdate = cMoveorder.currentMoveOrder.pGetTakeLineForCurrentArticleAndBin();
+        this.moveorderLineToUpdate = cMoveorder.currentMoveOrder.pGetTakeLineForCurrentArticleAndBin(cMoveorder.currentMoveOrder.currentMoveorderBarcode);
         if (   this.moveorderLineToUpdate == null) {
             return  result;
         }

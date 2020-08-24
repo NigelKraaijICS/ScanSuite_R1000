@@ -73,6 +73,8 @@ import SSU_WHS.Picken.PickorderLineBarcodes.iPickorderLineBarcodeDao;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
+import SSU_WHS.Picken.PickorderSetting.cPickorderSettingEntity;
+import SSU_WHS.Picken.PickorderSetting.iPickorderSettingDao;
 import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackageEntity;
 import SSU_WHS.Picken.PickorderShipPackages.iPickorderShipPackageDao;
 import SSU_WHS.Picken.Pickorders.cPickorderEntity;
@@ -115,6 +117,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cShippingAgentServiceShippingUnitEntity.class,
         cShippingAgentServiceShipMethodEntity.class,
         cPickorderShipPackageEntity.class,
+        cPickorderSettingEntity.class,
         cItemPropertyEntity.class,
         cPickorderLinePackAndShipEntity.class,
         cInventoryorderEntity.class,
@@ -139,7 +142,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackagingEntity.class,
         cScannerEntity.class,
         cCustomAuthorisationEntity.class
-        },version = 107)
+        },version = 112)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -159,6 +162,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iCommentDao commentDao();
     public abstract iSalesOrderPackingTableDao salesOrderPackingTableDao();
     public abstract iPickorderAddressDao pickorderAddressDao();
+    public abstract iPickorderSettingDao pickorderSettingDao();
     public abstract iShippingAgentDao shippingAgentDao();
     public abstract iShippingAgentServiceDao shippingAgentServiceDao();
     public abstract iShippingAgentServiceShippingUnitDao shippingAgentServiceShippingUnitDao();
@@ -186,7 +190,6 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iMoveorderBarcodeDao moveorderBarcodeDao();
     public  abstract iPackagingDao packagingDao();
     public  abstract iCustomAuthorisationDao customAuthorisationDao();
-      //public abstract iEnvironmentDao environmentDao();
 
     private static acScanSuiteDatabase INSTANCE;
 

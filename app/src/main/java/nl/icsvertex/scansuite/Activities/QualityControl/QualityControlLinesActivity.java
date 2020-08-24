@@ -26,9 +26,10 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.Fragments.QualityControl.QCLinesToCheckFragment;
 import nl.icsvertex.scansuite.PagerAdapters.QCLinesPagerAdapter;
@@ -172,7 +173,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                cUserInterface.pKillAllSounds();
             }
 
             @Override
@@ -230,16 +231,17 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
         if (QualityControlLinesActivity.currentLineFragment instanceof QCLinesToCheckFragment) {
 
-            cPickorderLine.currentPickOrderLine = cShipment.currentShipment.pGetQCLineNotHandledByBarcode(pvBarcodeScan.getBarcodeOriginalStr());
-            if ( cPickorderLine.currentPickOrderLine == null) {
+            cPickorderLinePackAndShip.currentPickorderLinePackAndShip =  cShipment.currentShipment.pGetLineNotHandledByBarcode(pvBarcodeScan.getBarcodeOriginalStr());
+
+            if (   cPickorderLinePackAndShip.currentPickorderLinePackAndShip  == null) {
                 this.mStepFailed(cAppExtension.activity.getString(R.string.message_no_lines_for_this_barcode), pvBarcodeScan.getBarcodeOriginalStr());
                 return;
             }
 
-            hulpResult = cPickorderLine.currentPickOrderLine.pQCLineBusyRst();
+            hulpResult = cPickorderLinePackAndShip.currentPickorderLinePackAndShip.pLineBusyRst();
             if (!hulpResult.resultBln) {
                 this.mStepFailed(hulpResult.messagesStr(),"");
-                cPickorderLine.currentPickOrderLine = null;
+                cPickorderLinePackAndShip.currentPickorderLinePackAndShip = null;
                 return;
             }
 
@@ -254,7 +256,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     //Region Fragments and Activities
 
     private void mStartOrderSelectActivity() {
-        Intent intent = new Intent(cAppExtension.context, QualityControlSelectActivity.class);
+        Intent intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
         cAppExtension.activity.startActivity(intent);
     }
 
@@ -335,11 +337,12 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     private void mSetTabselected(TabLayout.Tab pvTab) {
 
         switch (pvTab.getPosition()) {
+
             case 0:
-                this.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.QCLinesToCheckObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.QCLinesObl.size()));
+                this.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.linesToCheckObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.packAndShipLineObl.size()));
                 break;
             case 1:
-                this.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.QCLinesCheckedObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.QCLinesObl.size()));
+                this.pChangeTabCounterText(cText.pIntToStringStr(cShipment.currentShipment.linesCheckedObl().size()) + "/" + cText.pIntToStringStr(cShipment.currentShipment.packAndShipLineObl.size()));
                 break;
             default:
 
@@ -349,28 +352,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     //End Region Fragments and Activities
 
     private Boolean mCheckAndSentLinesToBeSendBln() {
-
-        boolean hulpBln;
-
-
-        if (cShipment.currentShipment.QCLinesToCheckObl().size() > 0) {
-            return  false;
-        }
-
-            // Try to send each line, if one failes then stop
-            for (cPickorderLine pickorderLine : cShipment.currentShipment.QCLinesCheckedObl()) {
-
-                //Set the current line
-                cPickorderLine.currentPickOrderLine = pickorderLine;
-
-                //Try to send the line
-                hulpBln = cPickorderLine.currentPickOrderLine.pCheckedBln();
-                if ( !hulpBln) {
-                    return  false;
-                }
-
-            }
-            return  true;
+        return cShipment.currentShipment.linesToCheckObl().size() <= 0;
     }
 
     private void mCheckAllDone() {
@@ -380,17 +362,17 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
             return;
         }
 
-        // If not everything is sent, then leave
-        if (!this.mCheckAndSentLinesToBeSendBln()) {
-            return;
-        }
-
         // Ship this order
         this.mStartShipActivity();
     }
 
     private Boolean mAllLinesDoneBln() {
-        return cShipment.currentShipment.QCLinesToCheckObl().size() > 0;
+
+        if (cShipment.currentShipment.linesToCheckObl().size() > 0  ) {
+            return  false;
+        }
+
+        return true;
     }
 
     private  void mStepFailed(String pvErrorMessageStr, String pvScannedBarcodeStr) {

@@ -59,7 +59,7 @@
     <!--endregion Network info-->
 
     <!--region Workplace-->
-    <string name="choose_workplace">Choose workplace</string>
+    <string name="choose_workplace">Where would you like to print?</string>
     <!--endregion Workplace-->
 
     <!--region Screens-->
@@ -238,9 +238,10 @@
     <!--region Pickorder Pick-->
     <string name="screentitle_pickorderpick">Picking</string>
     <string name="message_underpick_header">Finish order line?</string>
-    <string name="message_undercheck_header">Stop checking line?</string>
+    <string name="message_correcy_line_header">Correct line quanity?</string>
     <string name="message_underpick_text">You need %1$s of these, you\'ve only picked %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
-    <string name="message_undercheck_text">You need %1$s of these, you\'ve only checked %2$s. Are you sure that there you want to stop checking?</string>
+    <string name="message_undermove_text">You need %1$s of these, you\'ve only moved %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
+    <string name="message_undercheck_text">There were  %1$s picked items\n\You\'ve checked %2$s items.\n\nAre you sure that you want to correct the picked quantity?</string>
     <string name="button_close_orderline">Finish</string>
     <string name="choose_barcode">Choose barcode</string>
     <string name="quantity_per_scan">Quantity per scan: </string>
@@ -469,6 +470,7 @@
     <string name="error_getting_sort_lines_failed">Could not get sort lines</string>
     <string name="error_get_adresses_failed">Getting adresses failed</string>
     <string name="error_get_comments_failed">Getting comments failed</string>
+    <string name="error_get_settings_failed">Getting settings failed</string>
     <string name="error_couldnt_reset_line">Couldn\'t reset line</string>
     <string name="error_couldnt_abort_order">Could not abort order</string>
     <string name="error_article_scan_not_allowed">Article scan not allowed here</string>
@@ -645,6 +647,7 @@
     <string name="createmove_header_default">Create moveorder</string>
     <string name="createmove_text_default">Create new moveorder?</string>
     <string name="screentitle_moveorderlines">Move lines</string>
+    <string name="screentitle_moveorderlines_take">Move lines Take</string>
     <string name="tab_moveorderline_notdone">Not done</string>
     <string name="tab_moveorderline_done">Done</string>
     <string name="tab_moveorderline_total">Total</string>
@@ -653,7 +656,6 @@
     <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
     <string name="show_only_deviations">Show todo/deviations</string>
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
-    <string name="message_close_qcorder_text">You checked %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close quality control?</string>
     <string name="message_close_receiveorder_generated_text">You received %1$s items\n\n\n\nWould you like to close the order?</string>
     <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
     <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
@@ -704,6 +706,7 @@
     <string name="screentitle_returnorderdocuments">Return documents</string>
     <string name="scan_or_select_document">Scan or select document</string>
     <string name="message_clear_reason">Clear reason</string>
+    <string name="message_shipment_already_checked">This shipment is already checked</string>
     <string name="message_shipment_already_handled">This shipment is already handled</string>
     <string name="message_reason_scan_not_allowed">Reason scan is not allowed</string>
     <string name="message_reason_unknown">Reason unknown</string>
@@ -783,6 +786,7 @@
     <string name="screentitle_article_stock">Article Stock</string>
     <string name="message_place_line_already_exists">Place line already exists, if you want to mutate first rest the line</string>
     <string name="bin_stock">BIN stock</string>
+    <string name="close_take">Close TAKE</string>
     <string name="article_stock">Article stock</string>
     <string name="check_barcode">Check Barcode</string>
     <string name="pair_pro_glove">Pair Pro Glove</string>
@@ -801,8 +805,10 @@
     <string name="message_qcdone">Quality Control  done?</string>
     <string name="message_close_qc_fase">Would you like to finish quality control?</string>
 
-    <string name="message_packandshipdone">Pack and ship fase done?</string>
-    <string name="message_close_packandship_fase">Would you like to finish the pack and ship control fase?</string>
+    <string name="message_packandshipdone">Ship fase done?</string>
+    <string name="message_close_packandship_fase">Would you like to finish ship fase?</string>
+    <string name="message_no_lines_for_this_bin_and_article">No lines availabe for this BIN and article</string>
+    <string name="message_line_reset_succesfull">Line has been reset</string>
 
 
     <!--End Region return-->

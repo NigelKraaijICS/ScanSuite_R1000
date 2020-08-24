@@ -62,10 +62,6 @@ public class cPickorderEntity {
     public String pickActivityBinRequired;
     public String getPickActivityBinRequired() {return this.pickActivityBinRequired;}
 
-    @ColumnInfo(name="Pick_Qc_check_count")
-    public String pickQCCheckCount;
-    public String getPickQCCheckCount() {return this.pickQCCheckCount;}
-
     @ColumnInfo(name="AssignedUserId")
     public String assignedUserId;
     public String getAssignedUserIdStr() {return this.assignedUserId;}
@@ -166,7 +162,6 @@ public class cPickorderEntity {
             this.pickTransferaskworkplace = pvJsonObject.getString(cDatabase.PICKTRANSFERASKWORKPLACE_NAMESTR);
 
             this.pickPickPVVKOeachpiece = pvJsonObject.getString(cDatabase.PICKPICKPVVKKOEACHPIECE_NAMESTR);
-            this.pickQCCheckCount = pvJsonObject.getString(cDatabase.PICKQCCHECKCOUNT_NAMESTR);
 
             this.pickWithPicture = pvJsonObject.getString(cDatabase.PICKWITHPICTURE_NAMESTR);
             this.pickWithPictureAutoOpen = pvJsonObject.getString(cDatabase.PICKWITHPICTURE_AUTO_OPEN_NAMESTR);

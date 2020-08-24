@@ -20,6 +20,9 @@ import com.datalogic.device.input.KeyboardManager;
 import com.datalogic.device.input.Trigger;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.Fragments.Dialogs.GettingDataFragment;
@@ -36,6 +39,7 @@ import static SSU_WHS.General.cPublicDefinitions.PASSWORDFRAGMENT_TEXT;
 public class cUserInterface {
 
     private static GettingDataFragment gettingDataFragment;
+    private static Set<MediaPlayer> activePlayers = new HashSet<MediaPlayer>();
 
     private static void mDoVibrate() {
         // Get instance of Vibrator from current Context
@@ -135,13 +139,14 @@ public class cUserInterface {
             public void run() {
                 if (pvSoundInt != null && pvSoundInt != 0) {
                     final MediaPlayer mp = MediaPlayer.create(cAppExtension.context, pvSoundInt);
+                    activePlayers.add(mp);
                     if (mp != null) {
                         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
                             @Override
                             public void onCompletion(MediaPlayer mp) {
                                 mp.reset();
                                 mp.release();
+                                activePlayers.remove(mp);
                             }
                         });
                         if (pvStartAtMsInt != null && pvStartAtMsInt != 0) {
@@ -151,8 +156,22 @@ public class cUserInterface {
                     }
                 }
             }//run
-            }).start(); //thread
+        }).start(); //thread
     }
+
+    public static void pKillAllSounds() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (MediaPlayer mp : cUserInterface.activePlayers) {
+                    mp.reset();
+                    mp.release();
+                    cUserInterface.activePlayers.remove(mp);
+                }
+            }//run
+        }).start(); //thread
+    }
+
 
     public static void pDoNope(final View pvView, final Boolean pvPlaySoundBln, final Boolean pvVibrateBln) {
         cAppExtension.activity.runOnUiThread(new Runnable() {

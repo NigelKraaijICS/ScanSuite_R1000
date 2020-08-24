@@ -196,7 +196,7 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
 
             @Override
             public void onTabUnselected(TabLayout.Tab pvTab) {
-
+                cUserInterface.pKillAllSounds();
             }
 
             @Override

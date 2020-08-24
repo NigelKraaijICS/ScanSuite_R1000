@@ -12,6 +12,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -141,6 +142,11 @@ public class cMoveorderLine implements Comparable {
         return extraField8Str;
     }
 
+    public  boolean handledBln = false;
+    public boolean isHandledBln() {
+        return handledBln;
+    }
+
     public  String getKeyStr() {
         return  this.getItemNoStr() + "þ" + this.getVariantCodeStr();
     }
@@ -173,11 +179,28 @@ public class cMoveorderLine implements Comparable {
 
     }
 
+
     //Region Public Properties
 
     public cArticleImage articleImage;
 
     public  List<cMoveorderBarcode> barcodesObl;
+    public List<cMoveorderBarcode> orderBarcodesObl(){
+
+        List<cMoveorderBarcode> resultObl = new ArrayList<>();
+
+        //We have a different barcode, so check if this barcode belong to the current article
+        for (cMoveorderBarcode moveorderBarcode : cMoveorderBarcode.allMoveorderBarcodesObl) {
+
+            if (moveorderBarcode.getItemNoStr().equalsIgnoreCase(this.getItemNoStr()) && moveorderBarcode.getVariantCodeStr().equalsIgnoreCase(this.getVariantCodeStr())) {
+                resultObl.add((moveorderBarcode));
+            }
+        }
+
+        return  resultObl;
+
+    }
+
     //End Region Public Properties
 
     //Region Constructor
@@ -211,6 +234,13 @@ public class cMoveorderLine implements Comparable {
         this.extraField6Str =  this.moveorderLineEntity.getExtraField6Str();
         this.extraField7Str =  this.moveorderLineEntity.getExtraField7Str();
         this.extraField8Str =  this.moveorderLineEntity.getExtraField8Str();
+
+        if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MT")) {
+            if (this.getStatusInt() > cWarehouseorder.MoveStatusEnu.Move_Take ) {
+                this.handledBln = true;
+            }
+        }
+
     }
 
     public cMoveorderLine(String pvItemNoStr, String pvVariantCodeStr) {
@@ -321,6 +351,9 @@ public class cMoveorderLine implements Comparable {
         return resultRst;
 
     }
+
+
+
 
     @Override
     public int compareTo(Object o) {

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -25,29 +26,26 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
     public static class PickorderLinePackAndShipViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView textViewPickorderLinePackAndShipDocument;
-        private TextView textViewPickorderLinePackAndShipQuantity;
-        private TextView textViewPickorderLinePackAndShipPack;
+        private TextView textViewDocument;
+        private TextView textViewQuantity;
+        private ImageView imageSendStatus;
         public LinearLayout pickorderLinePackAndShipItemLinearLayout;
 
 
         public PickorderLinePackAndShipViewHolder(View pvItemView) {
             super(pvItemView);
-            this.textViewPickorderLinePackAndShipDocument = pvItemView.findViewById(R.id.textViewPickorderLinePackAndShipDocument);
-            this.textViewPickorderLinePackAndShipDocument.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewPickorderLinePackAndShipDocument.setSingleLine(true);
-            this.textViewPickorderLinePackAndShipDocument.setMarqueeRepeatLimit(5);
-            this.textViewPickorderLinePackAndShipDocument.setSelected(true);
-            this.textViewPickorderLinePackAndShipQuantity = pvItemView.findViewById(R.id.textViewPickorderLinePackAndShipQuantity);
-            this.textViewPickorderLinePackAndShipQuantity.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewPickorderLinePackAndShipQuantity.setSingleLine(true);
-            this.textViewPickorderLinePackAndShipQuantity.setMarqueeRepeatLimit(5);
-            this.textViewPickorderLinePackAndShipQuantity.setSelected(true);
-            this.textViewPickorderLinePackAndShipPack = pvItemView.findViewById(R.id.textViewPickorderLinePackAndShipPack);
-            this.textViewPickorderLinePackAndShipPack.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewPickorderLinePackAndShipPack.setSingleLine(true);
-            this.textViewPickorderLinePackAndShipPack.setMarqueeRepeatLimit(5);
-            this.textViewPickorderLinePackAndShipPack.setSelected(true);
+            this.textViewDocument = pvItemView.findViewById(R.id.textViewDocument);
+            this.textViewDocument.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDocument.setSingleLine(true);
+            this.textViewDocument.setMarqueeRepeatLimit(5);
+            this.textViewDocument.setSelected(true);
+            this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
+            this.textViewQuantity.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewQuantity.setSingleLine(true);
+            this.textViewQuantity.setMarqueeRepeatLimit(5);
+            this.textViewQuantity.setSelected(true);
+            this.imageSendStatus = pvItemView.findViewById(R.id.imageSendStatus);
+
             this.pickorderLinePackAndShipItemLinearLayout = pvItemView.findViewById(R.id.pickorderLinePackAndShipItemLinearLayout);
         }
 
@@ -74,7 +72,7 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
     @NonNull
     @Override
     public cShipmentAdapter.PickorderLinePackAndShipViewHolder onCreateViewHolder(@NonNull ViewGroup pvViewGroup, int pvViewTypeInt) {
-        View itemView = LayoutInflaterObject.inflate(R.layout.recycler_pickorderlinepackandship, pvViewGroup, false);
+        View itemView = LayoutInflaterObject.inflate(R.layout.recycler_shipment, pvViewGroup, false);
         return new PickorderLinePackAndShipViewHolder(itemView);
     }
 
@@ -96,14 +94,30 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
         final cShipment shipment = this.localShipmentsObl.get(pvPositionInt);
 
         if (!shipment.getProcessingSequenceStr().isEmpty()) {
-            pvHolder.textViewPickorderLinePackAndShipDocument.setText(shipment.getProcessingSequenceStr());
+            pvHolder.textViewDocument.setText(shipment.getProcessingSequenceStr());
         }
         else {
-            pvHolder.textViewPickorderLinePackAndShipDocument.setText(shipment.getSourceNoStr());
+            pvHolder.textViewDocument.setText(shipment.getSourceNoStr());
         }
 
-        pvHolder.textViewPickorderLinePackAndShipQuantity.setText(cText.pIntToStringStr(shipment.getQuantityDbl().intValue()));
-        pvHolder.textViewPickorderLinePackAndShipPack.setText("");
+        pvHolder.textViewQuantity.setText(cText.pIntToStringStr(shipment.getQuantityDbl().intValue()));
+
+
+        if (!cPickorder.currentPickOrder.PICK_SHIPPING_QC_CHECK_COUNT()) {
+            pvHolder.imageSendStatus.setVisibility(View.GONE);
+        }
+        else {
+
+            if (shipment.isCheckedBln()) {
+                pvHolder.imageSendStatus.setVisibility(View.VISIBLE);
+                pvHolder.imageSendStatus.setImageResource(R.drawable.ic_check_black_24dp);
+            }
+
+            if (shipment.isHandledBln()) {
+                pvHolder.imageSendStatus.setVisibility(View.VISIBLE);
+                pvHolder.imageSendStatus.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+            }
+        }
 
         if (pvPositionInt ==0) {
 
@@ -111,12 +125,6 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
                 ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
                 shiporderLinesActivity.pShipmentSelected(shipment);
             }
-
-            if (cAppExtension.activity instanceof QualityControlShipmentsActivity) {
-                QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity)cAppExtension.activity;
-                qualityControlShipmentsActivity.pShipmentSelected(shipment);
-            }
-
         }
 
 
@@ -138,15 +146,6 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
                         cShipment.currentShipment = shipment;
                             ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity) cAppExtension.activity;
                             shiporderLinesActivity.pHandleScan(null,true);
-
-                    }
-                }
-
-                if (id == R.id.recyclerViewQCShipmentsToCheck) {
-                    if (cAppExtension.activity instanceof QualityControlShipmentsActivity) {
-                        cShipment.currentShipment = shipment;
-                        QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity) cAppExtension.activity;
-                        qualityControlShipmentsActivity.pHandleScan(null,true);
 
                     }
                 }

@@ -495,22 +495,7 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pGetQCLinesFromWebserviceWrs() {
 
-        List<String> resultObl = new ArrayList<>();
-        cWebresult webResultWrs = new cWebresult();
-
-        try {
-            webResultWrs = new mGetQCLinesViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-        }
-        return webResultWrs;
-    }
 
     public List<cPickorderLineEntity> pGetAllLinesFromDatabaseObl() {
 
@@ -623,6 +608,25 @@ public class cPickorderRepository {
         }
         return webResultWrs;
     }
+
+    public cWebresult pGetSettingsFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetPickorderSettingsFromWebserviceTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+
 
     public cWebresult pGetBarcodesFromWebservice(){
         ArrayList<String> resultObl = new ArrayList<>();
@@ -1160,38 +1164,6 @@ public class cPickorderRepository {
         }
     }
 
-    private static class mGetQCLinesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
-        @Override
-        protected cWebresult doInBackground(Void... params) {
-            cWebresult webresult = new cWebresult();
-            try {
-                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
-
-                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
-                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
-                l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.PICKEN.toString());
-                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
-
-                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
-                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
-                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
-                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
-
-                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
-                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
-                l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
-                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
-
-                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETQCPICKORDERLINES, l_PropertyInfoObl);
-
-            } catch (JSONException e) {
-                webresult.setSuccessBln(false);
-                webresult.setResultBln(false);
-            }
-            return webresult;
-        }
-    }
-
     private static class mGetPackAndShipLinesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
@@ -1476,6 +1448,49 @@ public class cPickorderRepository {
             return webResult;
         }
     }
+
+    private static class mGetPickorderSettingsFromWebserviceTask extends AsyncTask<List<String>, Void, cWebresult> {
+        @SafeVarargs
+        @Override
+        protected final cWebresult doInBackground(final List<String>... params) {
+            cWebresult webResult = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+            l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.PICKEN.toString());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+            l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+            l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+            PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+            l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_SETTINGTYPE;
+            l_PropertyInfo4Pin.setValue("Pick_PackAndShip");
+            l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+
+            try {
+                webResult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webResult.setResultBln(false);
+                webResult.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return webResult;
+        }
+    }
+
 
     private static class mGetPickorderPackagesFromWebserviceTask extends AsyncTask<Void, Void, cWebresult> {
         @Override

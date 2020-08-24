@@ -402,7 +402,7 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
         }
 
         //Get ItemVariant with the key of the barcode
-        cMoveorder.currentMoveOrder.currentMoveItemVariant = cMoveItemVariant.allMoveItemVariantObl.get( cMoveorder.currentMoveOrder.moveorderBarcodeToHandle.getKeyStr());
+        cMoveorder.currentMoveOrder.currentMoveItemVariant = cMoveItemVariant.allMoveItemVariantObl.get(cMoveorder.currentMoveOrder.moveorderBarcodeToHandle.getKeyStr());
         if (cMoveorder.currentMoveOrder.currentMoveItemVariant == null) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_unknown_itemvariant));
@@ -441,7 +441,7 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
         cResult result = new cResult();
         result.resultBln = true;
 
-        cMoveorderLine moveorderLine = cMoveorder.currentMoveOrder.pGetTakeLineForCurrentArticleAndBin();
+        cMoveorderLine moveorderLine = cMoveorder.currentMoveOrder.pGetTakeLineForCurrentArticleAndBin(cMoveorder.currentMoveOrder.currentMoveorderBarcode);
         if (moveorderLine == null) {
             return  result;
         }

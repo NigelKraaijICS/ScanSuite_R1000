@@ -88,11 +88,6 @@ public class cPickorderLine {
         return quantityRejectedDbl;
     }
 
-    public Double quantityCheckedDbl;
-    public Double getQuantityCheckedDbl() {
-        return quantityCheckedDbl;
-    }
-
     private String sourceNoStr;
     public String getSourceNoStr() {
         return sourceNoStr;
@@ -121,22 +116,6 @@ public class cPickorderLine {
     public  String getVendorItemNoAndDescriptionStr(){
         return  this.getVendorItemNoStr() + " " + this.getVendorItemDescriptionStr();
     }
-
-    private String deliveryAdressCode;
-    public String getDeliveryAdressCodeStr() {
-        return deliveryAdressCode;
-    }
-
-    private String shippingAgentCode;
-    public String getShippingAgentCodeStr() {
-        return shippingAgentCode;
-    }
-
-    private String shippingAgentServiceCode;
-    public String getShippingAgentServiceCode() {
-        return shippingAgentServiceCode;
-    }
-
 
     private int statusInt;
     public int getStatusInt() {
@@ -269,7 +248,7 @@ public class cPickorderLine {
         this.binCodeStr= this.PickorderLineEntity.getBincodeStr();
 
 
-        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK ||pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.QC ) {
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK  ) {
             this.quantityDbl = this.PickorderLineEntity.getQuantityDbl();
         }
 
@@ -280,7 +259,6 @@ public class cPickorderLine {
         this.quantityHandledDbl = this.PickorderLineEntity.getQuantityHandledDbl();
         this.quantityTakenDbl =  this.PickorderLineEntity.getQuantityTakenDbl();
         this.quantityRejectedDbl = this.PickorderLineEntity.getQuantityRejected();
-        this.quantityCheckedDbl = this.PickorderLineEntity.getQuantityChecked();
 
         this.sourceNoStr = this.PickorderLineEntity.getSourceNoStr();
         this.destinationNoStr = this.PickorderLineEntity.getDestinationNoStr();
@@ -289,10 +267,6 @@ public class cPickorderLine {
 
         this.vendorItemNo =  this.PickorderLineEntity.getVendorItemNoStr();
         this.vendorItemDescriptionStr =  this.PickorderLineEntity.getVendorItemDescriptionStr();
-
-        this.deliveryAdressCode = this.PickorderLineEntity.getDeliveryAdressCode();
-        this.shippingAgentCode = this.PickorderLineEntity.getShippingAgentCodeStr();
-        this.shippingAgentServiceCode = this.PickorderLineEntity.getShippingAgentServiceCodeStr();
 
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
         this.statusShippingInt =  this.PickorderLineEntity.getStatusShippingInt();
@@ -312,12 +286,6 @@ public class cPickorderLine {
                     this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
                 }
             }
-        }
-
-        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.QC) {
-                if (Double.compare(this.getQuantityCheckedDbl(),this.getQuantityDbl()) == 0) {
-                    this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
-                }
         }
 
         this.takenTimeStampStr =  this.PickorderLineEntity.getTakenTimeStampStr();
@@ -344,7 +312,6 @@ public class cPickorderLine {
         this.quantityDbl = this.PickorderLineEntity.getQuantityDbl();
         this.quantityHandledDbl = this.PickorderLineEntity.getQuantityHandledDbl();
         this.quantityRejectedDbl = this.PickorderLineEntity.getQuantityRejected();
-        this.quantityCheckedDbl = this.PickorderLineEntity.getQuantityChecked();
 
         this.sourceNoStr = this.PickorderLineEntity.getSourceNoStr();
         this.destinationNoStr = this.PickorderLineEntity.getDestinationNoStr();
@@ -353,10 +320,6 @@ public class cPickorderLine {
 
         this.vendorItemNo =  this.PickorderLineEntity.getVendorItemNoStr();
         this.vendorItemDescriptionStr =  this.PickorderLineEntity.getVendorItemDescriptionStr();
-
-        this.deliveryAdressCode = this.PickorderLineEntity.getDeliveryAdressCode();
-        this.shippingAgentCode = this.PickorderLineEntity.getShippingAgentCodeStr();
-        this.shippingAgentServiceCode = this.PickorderLineEntity.getShippingAgentServiceCodeStr();
 
         this.statusInt =  this.PickorderLineEntity.getStatusInt();
         this.localStatusInt = this.PickorderLineEntity.getLocalstatusInt();
@@ -460,23 +423,6 @@ public class cPickorderLine {
 
     }
 
-    public cResult pQCLineBusyRst(){
-
-
-        cResult result = new cResult();
-        result.resultBln = false;
-
-        if (this.mGetBarcodesObl() == null || Objects.requireNonNull(cPickorderLine.currentPickOrderLine.mGetBarcodesObl()).size() == 0) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line));
-            return result;
-        }
-
-        result.resultBln = true;
-        return  result;
-
-    }
-
     public void pErrorSending() {
       this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING);
     }
@@ -533,22 +479,6 @@ public class cPickorderLine {
 
     }
 
-    public void pQCHandledIndatabase(){
-
-        if (!this.mUpdateQuanitityChecked(this.quantityCheckedDbl)) {
-            return;
-        }
-
-        if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT)) {
-            return;
-        }
-
-        this.takenTimeStampStr = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
-
-        this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
-
-    }
-
     public boolean pUpdateSortLineIndatabaseBln(){
 
 
@@ -563,32 +493,6 @@ public class cPickorderLine {
         this.takenTimeStampStr = cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
 
         return this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
-
-    }
-
-    public void pCancelQCIndatabase(){
-
-
-        cPickorderLine.currentPickOrderLine.quantityCheckedDbl = 0.0;
-
-        if (!this.mUpdateQuanitityChecked(this.getQuantityCheckedDbl())) {
-            return;
-        }
-
-        //Remove or update line barcodeStr
-        cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcode();
-        if (!this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW)) {
-            return;
-        }
-
-        for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()) {
-            pickorderLineBarcode.pDeleteFromDatabaseBln();
-        }
-
-        this.takenTimeStampStr = "";
-
-        this.mUpdateHandledTimeStampBln(this.takenTimeStampStr);
-
 
     }
 
@@ -672,20 +576,6 @@ public class cPickorderLine {
 
         cWebresult WebResult;
         WebResult =  this.getPickorderLineViewModel().pPickLineHandledViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
-            return  false;
-        }
-    }
-
-    public boolean pCheckedBln() {
-
-        cWebresult WebResult;
-        WebResult =  this.getPickorderLineViewModel().pPickLineCheckedViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
@@ -827,20 +717,6 @@ public class cPickorderLine {
         }
 
         this.quantityHandledDbl = pvQuantityHandledBln;
-        return true;
-
-    }
-
-    private boolean mUpdateQuanitityChecked(double pvQuantityCheckedDbl) {
-
-        boolean resultBln;
-        resultBln =   this.getPickorderLineViewModel().pUpdateQuantityCheckedBln(pvQuantityCheckedDbl);
-
-        if (!resultBln) {
-            return  false;
-        }
-
-        this.quantityCheckedDbl = pvQuantityCheckedDbl;
         return true;
 
     }

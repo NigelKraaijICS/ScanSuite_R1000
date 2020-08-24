@@ -16,12 +16,12 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
-import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
-import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlSelectActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
@@ -184,16 +184,6 @@ public class cBarcodeScan {
                     }
 
                     //QC
-                    if (cAppExtension.activity instanceof QualityControlSelectActivity){
-                        QualityControlSelectActivity qualityControlSelectActivity = (QualityControlSelectActivity)cAppExtension.activity;
-                        qualityControlSelectActivity.pHandleScan(barcodeScan);
-                    }
-
-                    if (cAppExtension.activity instanceof QualityControlShipmentsActivity){
-                        QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity)cAppExtension.activity;
-                        qualityControlShipmentsActivity.pHandleScan(barcodeScan, false);
-                    }
-
                     if (cAppExtension.activity instanceof QualityControlLinesActivity){
                         QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity)cAppExtension.activity;
                         qualityControlLinesActivity.pHandleScan(barcodeScan);
@@ -292,6 +282,15 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof MoveLinesActivity) {
                         MoveLinesActivity moveLinesActivity = (MoveLinesActivity)cAppExtension.activity;
                         moveLinesActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof MoveLinesTakeMTActivity) {
+                        MoveLinesTakeMTActivity moveLinesTakeMTActivity = (MoveLinesTakeMTActivity)cAppExtension.activity;
+                        moveLinesTakeMTActivity.pHandleScan(barcodeScan);
+                    }
+                    if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+                        MoveLineTakeMTActivity moveLineTakeMTActivity = (MoveLineTakeMTActivity)cAppExtension.activity;
+                        moveLineTakeMTActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof MoveLineTakeActivity){

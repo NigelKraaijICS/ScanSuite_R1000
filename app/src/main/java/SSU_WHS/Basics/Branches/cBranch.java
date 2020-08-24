@@ -60,7 +60,7 @@ public class cBranch {
         return  cWorkplace.allWorkplacesObl;
 
     }
-    private ArrayList<cBranchBin>  binsObl;
+    public ArrayList<cBranchBin>  binsObl;
     public ArrayList<cBranchReason>  returnReasonObl;
 
 
@@ -200,7 +200,6 @@ public class cBranch {
         //Search for the BIN in the cache
         if (this.binsObl != null && this.binsObl.size() > 0 ) {
             for (cBranchBin branchBin : this.binsObl) {
-
                 if (branchBin.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr)) {
                     return  branchBin;
                 }

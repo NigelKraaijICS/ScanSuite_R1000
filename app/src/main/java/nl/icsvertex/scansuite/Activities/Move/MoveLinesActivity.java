@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -61,8 +60,6 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     private TextView quickhelpText;
     private ImageView quickhelpIcon;
     private Switch switchTodo;
-
-    private LinearLayout redLayout;
 
     private ImageView imageButtonCloseOrder;
     public boolean closeOrderClickedBln = false;
@@ -175,7 +172,6 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         this.quickhelpIcon = findViewById(R.id.quickhelpIcon);
         this.switchTodo = findViewById(R.id.switchTodo);
 
-        this.redLayout = findViewById(R.id.redLayout);
 
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
     }
@@ -199,8 +195,6 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
         this.quickhelpText.setVisibility(View.GONE);
         this.switchTodo.setVisibility(View.GONE);
-
-        this.redLayout.setVisibility(View.GONE);
 
         this.imageButtonCloseOrder.setVisibility(View.INVISIBLE);
         if (cMoveorder.currentMoveOrder.placeLinesTodoObl().size() == 0 && cMoveorder.currentMoveOrder.takeLinesObl.size() > 0) {
@@ -226,7 +220,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
             @Override
             public void onTabUnselected(TabLayout.Tab pvTab) {
-
+                cUserInterface.pKillAllSounds();
             }
 
             @Override
@@ -542,6 +536,8 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
             });
 
     }
+
+
 
     //End Region Private Methods
 

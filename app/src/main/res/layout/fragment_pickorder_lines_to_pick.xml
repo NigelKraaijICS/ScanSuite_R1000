@@ -23,12 +23,12 @@
         style="@style/defaultRecyclerView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/currentBINView"
+        app:layout_constraintBottom_toTopOf="@id/currentBINContainer"
         />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/pillButton"
-        android:id="@+id/currentBINView"
+        android:id="@+id/currentBINContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:clickable="true"

@@ -37,12 +37,14 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
 
 public class SortorderSortActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -569,6 +571,57 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
+    private void mSetNumberListener() {
+        this.quantityText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mNumberClicked();
+            }
+        });
+        this.quantityRequiredText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mNumberClicked();
+            }
+        });
+    }
+
+    private void mNumberClicked() {
+
+        if (cSetting.PICK_PER_SCAN()) {
+            return;
+        }
+
+        if (cPickorderBarcode.currentPickorderBarcode == null) {
+            cUserInterface.pDoNope(quantityText, false, false);
+            cUserInterface.pShowSnackbarMessage(sourcenoContainer, getString(R.string.choose_barcode_first), null, false);
+            return;
+        }
+
+        if (cPickorderBarcode.currentPickorderBarcode.getQuantityHandledDbl() > 1) {
+            cUserInterface.pDoNope(quantityText, true, true);
+            cUserInterface.pShowSnackbarMessage(sourcenoContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
+            return;
+        }
+
+        this.mShowNumberPickerFragment();
+    }
+
+    private void mShowNumberPickerFragment() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getQuantityCheckedDbl().intValue());
+        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getQuantityDbl().intValue());
+
+        NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
+        numberpickerFragment.setArguments(bundle);
+
+        numberpickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.NUMBERPICKERFRAGMENT_TAG);
+    }
+
+
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
@@ -877,7 +930,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     private  void mEnablePlusMinusAndBarcodeSelectViews() {
 
-        if (!cSetting.PICK_PER_SCAN()) {
+        if (cSetting.PICK_PER_SCAN()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
         } else {

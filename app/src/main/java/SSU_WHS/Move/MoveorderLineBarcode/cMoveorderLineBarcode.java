@@ -33,6 +33,32 @@ public class cMoveorderLineBarcode {
         return this.barcode;
     }
 
+    public String getBarcodeWithoutCheckDigitStr() {
+
+        String barcodeWithoutCheckDigitStr = this.getBarcodeStr();
+
+        if (cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN8 && cText.pStringToIntegerInt(this.getBarcodeTypeStr()) != cBarcodeScan.BarcodeType.EAN13 ) {
+            return barcodeWithoutCheckDigitStr;
+        }
+
+        if (this.getBarcodeStr().length() != 8 && this.getBarcodeStr().length() != 13 ) {
+            return barcodeWithoutCheckDigitStr;
+        }
+
+        if (this.getBarcodeStr().length() == 8)  {
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,7);
+        }
+
+        if (this.getBarcodeStr().length() == 13)  {
+            barcodeWithoutCheckDigitStr = barcodeWithoutCheckDigitStr.substring(0,12);
+        }
+
+        return barcodeWithoutCheckDigitStr;
+    }
+
+    private String barcodetypeStr;
+    private String getBarcodeTypeStr() {return "2";}
+
     public Double quantityHandled;
     public Double getQuantityHandled() {
         return this.quantityHandled;

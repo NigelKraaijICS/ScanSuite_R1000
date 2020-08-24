@@ -205,6 +205,7 @@ public class cSetting {
         PICK_WITH_PICTURE,
         PICK_WITH_PICTURE_AUTO_OPEN,
         PICK_WITH_PICTURE_PREFETCH,
+        PICK_SHIPPING_QC_CHECK_COUNT,
         REALTIME_BARCODE_CHECK,
         RECEIVE_AMOUNT_MANUAL_EO,
         RECEIVE_AMOUNT_MANUAL_MA,
@@ -723,6 +724,16 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean MOVE_MT_TAKE_ALLOW_END(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_MT_TAKE_ALLOW_END);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
 
     public static boolean MOVE_AUTO_CREATE_ORDER_MV(){
 
@@ -777,6 +788,16 @@ public class cSetting {
     public static boolean MOVE_WITH_PICTURE_PREFETCH(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE_PREFETCH);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_AUTO_ACCEPT_AT_REQUESTED(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_ACCEPT_AT_REQUESTED);
         if (Setting == null) {
             return  false;
         }

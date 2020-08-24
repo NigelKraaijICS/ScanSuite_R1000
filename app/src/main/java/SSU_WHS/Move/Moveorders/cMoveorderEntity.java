@@ -48,7 +48,7 @@ public class cMoveorderEntity {
 
     @ColumnInfo(name= cDatabase.EXTERNALREFERENCE_NAMESTR)
     public String externalReference;
-    public String getExternalReferenceStr() {return this.bincode;}
+    public String getExternalReferenceStr() {return this.externalReference;}
 
     @ColumnInfo(name= cDatabase.SOURCEDOCUMENT_NAMESTR)
     public String sourceDocument;

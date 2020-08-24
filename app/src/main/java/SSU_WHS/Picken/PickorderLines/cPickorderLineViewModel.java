@@ -24,13 +24,11 @@ public class cPickorderLineViewModel extends AndroidViewModel {
     public void delete(cPickorderLineEntity pvPickorderLineEntity) {this.Repository.pDelete(pvPickorderLineEntity);}
 
     public boolean pUpdateQuantityHandledBln(Double pvQuantityHandledDbl) {return this.Repository.pUpdateQuantityHandledBln(pvQuantityHandledDbl);}
-    public boolean pUpdateQuantityCheckedBln(Double pvQuantityCheckedDbl) {return this.Repository.pUpdateQuantityCheckedBln(pvQuantityCheckedDbl);}
     public boolean pUpdateProcessingSequenceBln(String pvProcessingSequenceStr) {return this.Repository.pUpdateProcessingSequenceBln(pvProcessingSequenceStr);}
     public boolean pUpdateLocalStatusBln(Integer pvNewStatusInt) {return this.Repository.pUpdateLocalStatusBln(pvNewStatusInt);}
     public boolean pUpdateHandledTimeStampBln(String pvHandledTimeStampStr) {return this.Repository.pUpdateLocalHandledTimeStampBln(pvHandledTimeStampStr);}
 
     public cWebresult pPickLineHandledViaWebserviceWrs() {return this.Repository.pPickLineHandledViaWebserviceWrs();}
-    public cWebresult pPickLineCheckedViaWebserviceWrs() {return this.Repository.pPickLineCheckedViaWebserviceWrs();}
     public cWebresult pPickLineSortedViaWebserviceWrs() {return this.Repository.pPickLineSortedViaWebserviceWrs();}
     public cWebresult pResetViaWebserviceWrs() {return this.Repository.pResetViaWebserviceWrs();}
     public cWebresult pGetSortLocationAdviceViaWebserviceWrs(String pvSourceNoStr) {return this.Repository.pGetSortLocationAdviceViaWebserviceWrs(pvSourceNoStr);}

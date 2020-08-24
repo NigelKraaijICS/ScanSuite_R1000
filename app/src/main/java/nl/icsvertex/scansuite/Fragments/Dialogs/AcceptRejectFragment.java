@@ -21,12 +21,13 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
-import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
@@ -143,11 +144,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
                     pickorderPickActivity.pAcceptRejectDialogDismissed();
                 }
 
-                if (cAppExtension.activity instanceof  PickorderQCActivity) {
-                    PickorderQCActivity pickorderQCActivity = (PickorderQCActivity)cAppExtension.activity;
-                    pickorderQCActivity.pAcceptRejectDialogDismissed();
-                }
-
                 if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
                     ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
                     returnorderDocumentActivity.pHandleFragmentDismissed();
@@ -218,13 +214,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof SortorderSortActivity) {
             SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
             sortorderSortActivity.pAcceptPick();
-            this.dismiss();
-            return;
-        }
-
-        if (cAppExtension.activity instanceof QualityControlShipmentsActivity) {
-            QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity)cAppExtension.activity;
-            qualityControlShipmentsActivity.pQCDone();
             this.dismiss();
             return;
         }
@@ -335,6 +324,16 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             moveLineTakeActivity.pAcceptMove(true);
         }
 
+        if (cAppExtension.activity instanceof MoveLinesTakeMTActivity) {
+            MoveLinesTakeMTActivity moveLinesTakeMTActivity = (MoveLinesTakeMTActivity)cAppExtension.activity;
+            moveLinesTakeMTActivity.pLeaveActivity();
+        }
+
+        if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+            MoveLineTakeMTActivity moveLineTakeMTActivity = (MoveLineTakeMTActivity)cAppExtension.activity;
+            moveLineTakeMTActivity.pAcceptMove();
+        }
+
     }
 
     private void mReject() {
@@ -354,11 +353,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof SortorderSortActivity) {
             SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
             sortorderSortActivity.pCancelPick();
-            this.dismiss();
-            return;
-        }
-
-        if (cAppExtension.activity instanceof QualityControlShipmentsActivity) {
             this.dismiss();
             return;
         }
@@ -446,6 +440,12 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof MoveLineTakeActivity) {
             MoveLineTakeActivity moveLineTakeActivity = (MoveLineTakeActivity)cAppExtension.activity;
             moveLineTakeActivity.pCancelMove();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+            MoveLineTakeMTActivity moveLineTakeMTActivity = (MoveLineTakeMTActivity)cAppExtension.activity;
+            moveLineTakeMTActivity.pCancelMove();
             return;
         }
 

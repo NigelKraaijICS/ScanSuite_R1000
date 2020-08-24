@@ -22,6 +22,7 @@ public class cDatabase {
     public static final String TABLENAME_COMMENT = "Comment";
     public static final String TABLENAME_AUTHORISATIONS = "Authorisations";
     public static final String TABLENAME_SALESORDERPACKINGTABLE = "SalesOrderPackingTable";
+    public static final String TABLENAME_PICKORDERSETTING = "PickorderSetting";
     public static final String TABLENAME_PICKORDERADDRESS = "PickorderAddress";
     public static final String TABLENAME_SHIPPINGAGENTS = "ShippingAgents";
     public static final String TABLENAME_SHIPPINGAGENTSERVICES = "ShippingAgentServices";
@@ -251,6 +252,7 @@ public class cDatabase {
 
     //region Q
     public static final String QUANTITY_NAMESTR = "Quantity";
+
     public static final String QUANTITYAVAILABLE_NAMESTR = "Voorraad_beschikbaar";
     public static final String QUANTITYHANDLED_NAMESTR = "QuantityHandled";
     public static final String QUANTITYHANDLEDALLSCANNERS_NAMESTR = "QuantityHandledAllScanners";
@@ -307,6 +309,8 @@ public class cDatabase {
     //region S
     public static final String SALESORDER_NAMESTR = "Salesorder";
     public static final String SCANNER_NAMESTR = "Scanner";
+    public static final String SETTINGCODE_NAMESTR = "SettingCode";
+    public static final String SETTINGVALUE_NAMESTR = "SettingValue";
     public static final String SETTING_NAMESTR = "Instelling";
     public static final String SINGLEARTICLEORDERS_NAMESTR = "SingleArticleOrders";
     public static final String STATUS_NAMESTR = "Status";

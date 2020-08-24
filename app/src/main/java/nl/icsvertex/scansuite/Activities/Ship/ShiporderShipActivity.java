@@ -27,7 +27,6 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnitAdapter;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.Shipment.cShipment;
-import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Ship.ShippingUnitFragment;
 import nl.icsvertex.scansuite.R;
@@ -292,11 +291,13 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     public  void pHandleBackToLines(){
 
-        //Reset quanity's
-        for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit : cShipment.currentShipment.shippingAgentService().shippingUnitsObl()) {
-            shippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 0;
-        }
+       if (cShipment.currentShipment != null && cShipment.currentShipment.shippingAgentService() != null ) {
+           //Reset quanity's
+           for (cShippingAgentServiceShippingUnit shippingAgentServiceShippingUnit : cShipment.currentShipment.shippingAgentService().shippingUnitsObl()) {
+               shippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 0;
+           }
 
+       }
 
         this.mGoBackToLinesActivity();
 
@@ -311,16 +312,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     private  void mGoBackToLinesActivity() {
 
-       Intent intent = null;
-
-        switch (cShipment.currentShipment.currentShipmentModus) {
-           case Ship:
-                intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
-
-           case QC:
-                intent = new Intent(cAppExtension.context, QualityControlShipmentsActivity.class);
-       }
-
+       Intent intent =new Intent(cAppExtension.context, ShiporderLinesActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
 

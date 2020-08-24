@@ -606,7 +606,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mEnablePlusMinusAndBarcodeSelectViews() {
 
-        if (!cSetting.PICK_PER_SCAN()) {
+        if (cSetting.PICK_PER_SCAN()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
         } else {
@@ -625,6 +625,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     //Scans and manual input
 
     private void mNumberClicked() {
+
+        if (cSetting.PICK_PER_SCAN()) {
+            return;
+        }
 
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             cUserInterface.pDoNope(quantityText, false, false);
@@ -1276,7 +1280,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                     return;
                 }
 
-
+                PickorderPickActivity.articleScannedLastBln = true;
                 mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
             }
         });

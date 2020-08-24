@@ -202,7 +202,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
             @Override
             public void onTabUnselected(TabLayout.Tab pvTab) {
-
+                cUserInterface.pKillAllSounds();
             }
 
             @Override

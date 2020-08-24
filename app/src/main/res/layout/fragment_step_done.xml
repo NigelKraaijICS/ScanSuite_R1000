@@ -8,17 +8,24 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/stepDoneImageView"
         style="@style/stepDoneImageView"
-        app:layout_constraintTop_toTopOf="@id/textViewStepDoneHeader"
-        app:layout_constraintBottom_toBottomOf="@id/textViewStepDoneHeader"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
         />
     <TextView
         android:id="@+id/textViewStepDoneHeader"
-        style="@style/orderDoneHeader"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/stepDoneImageView"
+        style="@style/stepDoneHeader"
+        app:layout_constraintTop_toBottomOf="@id/stepDoneImageView"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:width="0dp"
+        />
+    <TextView
+        android:id="@+id/textViewStepDoneText"
+        style="@style/stepDoneText"
+        app:layout_constraintTop_toBottomOf="@id/textViewStepDoneHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         />
     <EditText
         android:imeOptions="actionDone"
@@ -30,22 +37,16 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewStepDoneHeader"
+        app:layout_constraintTop_toBottomOf="@id/textViewStepDoneText"
         />
-    <TextView
-        android:id="@+id/textViewStepDoneText"
-        style="@style/stepDoneText"
-        app:layout_constraintTop_toBottomOf="@id/editTextCurrentLocation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewConnection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewStepDoneText"
+        app:layout_constraintTop_toBottomOf="@id/editTextCurrentLocation"
         android:layout_margin="@dimen/default_double_margin"
         >
         <androidx.constraintlayout.widget.ConstraintLayout

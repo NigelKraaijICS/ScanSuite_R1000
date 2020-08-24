@@ -51,6 +51,12 @@ public class NothingHereFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        cUserInterface.pKillAllSounds();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         this.imageTumbleweed = view.findViewById(R.id.imageViewTumbleweed);
@@ -99,7 +105,6 @@ public class NothingHereFragment extends Fragment {
         this.imageViewWind.startAnimation(anim2);
 
         cUserInterface.pEnableScanner();
-        cUserInterface.pPlaySound(R.raw.crickets,null);
     }
 
     //End Region Default Methods

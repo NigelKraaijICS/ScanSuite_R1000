@@ -17,10 +17,15 @@ import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cMoveorderBarcodeAdapter extends RecyclerView.Adapter<cMoveorderBarcodeAdapter.moveorderBarcodeViewHolder>  {
+
+    cArticleBarcode articleBarcode = null;
+    cMoveorderBarcode moveorderBarcode = null;
 
     //Region Public Properties
     public static class moveorderBarcodeViewHolder extends RecyclerView.ViewHolder{
@@ -64,13 +69,26 @@ public class cMoveorderBarcodeAdapter extends RecyclerView.Adapter<cMoveorderBar
     @Override
     public void onBindViewHolder(@NonNull moveorderBarcodeViewHolder pvHolder, int pvPositionInt) {
 
-        if (cMoveorder.currentMoveOrder.currentArticle == null || cMoveorder.currentMoveOrder.currentArticle.barcodesObl == null || cMoveorder.currentMoveOrder.currentArticle.barcodesObl.size() == 0) {
-            return;
+        if (cAppExtension.activity instanceof MoveLineTakeActivity) {
+            if (cMoveorder.currentMoveOrder.currentArticle == null || cMoveorder.currentMoveOrder.currentArticle.barcodesObl == null || cMoveorder.currentMoveOrder.currentArticle.barcodesObl.size() == 0) {
+                return;
+            }
+
+            articleBarcode   = cMoveorder.currentMoveOrder.currentArticle.barcodesObl.get(pvPositionInt);
+            Objects.requireNonNull(pvHolder).textViewBarcode.setText(articleBarcode.getBarcodeStr());
+            pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(articleBarcode.getQuantityPerUnitOfMeasureDbl()));
         }
 
-       final cArticleBarcode articleBarcode = cMoveorder.currentMoveOrder.currentArticle.barcodesObl.get(pvPositionInt);
-        Objects.requireNonNull(pvHolder).textViewBarcode.setText(articleBarcode.getBarcodeStr());
-        pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(articleBarcode.getQuantityPerUnitOfMeasureDbl()));
+        if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+            if (cMoveorderLine.currentMoveOrderLine == null || cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() == null || cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() .size() == 0) {
+                return;
+            }
+
+            moveorderBarcode =    cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() .get(pvPositionInt);
+            Objects.requireNonNull(pvHolder).textViewBarcode.setText(moveorderBarcode.getBarcodeStr());
+            pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(moveorderBarcode.getQuantityPerUnitOfMeasureDbl()));
+        }
+
 
         pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,14 +100,32 @@ public class cMoveorderBarcodeAdapter extends RecyclerView.Adapter<cMoveorderBar
                     moveLineTakeActivity.pHandleScan(cBarcodeScan.pFakeScan(articleBarcode.getBarcodeStr()));
 
                 }
+
+                if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+                    MoveLineTakeMTActivity moveLineTakeMTActivity = (MoveLineTakeMTActivity)cAppExtension.activity;
+                    moveLineTakeMTActivity.pHandleScan(cBarcodeScan.pFakeScan(moveorderBarcode.getBarcodeStr()));
+
+                }
+
             }
         });
     }
 
     @Override
     public int getItemCount () {
-        if (cMoveorder.currentMoveOrder.currentArticle != null && cMoveorder.currentMoveOrder.currentArticle.barcodesObl != null)
-            return cMoveorder.currentMoveOrder.currentArticle.barcodesObl.size();
-        else return 0;
+
+        if (cAppExtension.activity instanceof MoveLineTakeActivity) {
+            if (cMoveorder.currentMoveOrder.currentArticle != null && cMoveorder.currentMoveOrder.currentArticle.barcodesObl != null)
+                return cMoveorder.currentMoveOrder.currentArticle.barcodesObl.size();
+            else return 0;
+        }
+
+        if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+            if (cMoveorderLine.currentMoveOrderLine != null && cMoveorderLine.currentMoveOrderLine.orderBarcodesObl()  != null)
+                return cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() .size();
+            else return 0;
+        }
+
+        return  0;
     }
 }

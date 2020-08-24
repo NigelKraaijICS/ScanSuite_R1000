@@ -34,6 +34,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETARTICLEIMAGE = "p_ArtikelImageGetJsonStr";
     public static String WEBMETHOD_PICKORDERLINE_HANDLED = "p_PickorderRegelTakeHandledJsonStr";
     public static String WEBMETHOD_PICKORDERLINECHECKED= "p_WarehouseopdrachtLineQcCheckCheckedJsonStr";
+    public static String WEBMETHOD_PICKORDERLINECORRECT= "p_PickorderRegelCorrectQcJsonStr";
     public static String WEBMETHOD_GETPICKORDERCOMMENTS = "p_PickorderCommentsGetJsonStr";
     public static String WEBMETHOD_PICKORDERSTEPHANDLED = "p_PickorderStapHandledJsonStr";
     public static String WEBMETHOD_PICKORDERLINERESET = "p_PickorderRegelResetPickenJsonStr";
@@ -54,6 +55,9 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_ADDORDERTOMERGEDPICKORDER = "p_PickorderAddToMergedJsonStr";
     public static String WEBMETHOD_REMOVEORDERFROMMERGEDPICKORDER = "p_PickorderRemoveFromMergedJsonStr";
     public static String WEBMETHOD_REMOVEMERGEDPICKORDER = "p_PickorderVerwijderenJsonStr";
+    public static String WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET = "p_WarehouseopdrachtSettingsGetJsonStr";
+
+
 
     public static String WEBMETHOD_GETPICKORDERSHIPPACKAGES = "p_PickorderShippingPackageGetJsonStr";
     public static String WEBMETHOD_PICKORDERSOURCEDOCUMENTSHIPPED = "p_PickorderSourceDocumentShippedJsonStr";
@@ -138,7 +142,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_MOVEORDERLINE_HANDLEDTAKEMT = "p_MoveRegelHandledTakeMTJsonStr";
     public static String WEBMETHOD_MOVEORDERLINE_HANDLEDPLACEMT = "p_MoveRegelHandledPlaceMTJsonStr";
     public static String WEBMETHOD_MOVEITEM_HANDLED = "p_MoveItemHandledJsonStr";
-
+    public static String WEBMETHOD_MOVEPICKHANDLED = "p_MovePickHandledJsonStr";
 
        //endregion Methods
 
@@ -158,7 +162,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_ORDERNUMBERTOREMOVE = "pv_OpdrachtnummerToRemoveStr";
     public static String WEBPROPERTY_SOURCENO = "pv_SourceNoStr";
     public static String WEBPROPERTY_INCLUDEIMAGE = "pv_IncludeImageBln";
-
+    public static String WEBPROPERTY_SETTINGTYPE = "pv_SettingTypeEnu";
 
     public static String WEBPROPERTY_ACTIONTYPECODE = "pv_ActiontypecodeStr";
     public static String WEBPROPERTY_SCANNER = "pv_ScannerStr";

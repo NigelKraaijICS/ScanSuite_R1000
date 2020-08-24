@@ -148,7 +148,6 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
         }
     }
 
-
     //Region Private Methods
 
     private void setQuickHelpListener() {

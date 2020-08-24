@@ -887,7 +887,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         cResult result = new cResult();
         result.resultBln = true;
 
-        cMoveorderLine moveorderLine = cMoveorder.currentMoveOrder.pGetTakeLineForCurrentArticleAndBin();
+        cMoveorderLine moveorderLine = cMoveorder.currentMoveOrder.pGetTakeLineForCurrentArticleAndBin(cMoveorder.currentMoveOrder.currentMoveorderBarcode);
         if (moveorderLine == null) {
             return  result;
         }

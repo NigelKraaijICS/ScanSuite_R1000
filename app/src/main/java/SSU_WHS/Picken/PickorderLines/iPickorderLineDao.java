@@ -62,9 +62,6 @@ public interface iPickorderLineDao {
     @Query("UPDATE Pickorderlines SET QuantityHandled = :pvQuantityHandledDbl WHERE recordid = :pvRecordInt")
     int updateOrderLineQuantityHandled(Integer pvRecordInt, Double pvQuantityHandledDbl);
 
-    @Query("UPDATE Pickorderlines SET QuantityChecked = :pvQuantityCheckedDbl WHERE recordid = :pvRecordInt")
-    int updateOrderLineQuantityChecked(Integer pvRecordInt, Double pvQuantityCheckedDbl);
-
     @Query("UPDATE Pickorderlines SET Localstatus = :pvNewStatusInt WHERE recordid = :pvRecordIdInt")
     int updateOrderLineLocalStatus(Integer pvRecordIdInt, Integer pvNewStatusInt);
 

@@ -23,7 +23,6 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.Basics.Workplaces.cWorkplaceAdapter;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
-import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlShipmentsActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -179,12 +178,6 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
                 cAppExtension.dialogFragment.dismiss();
                 PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
                 pickorderLinesActivity.pClosePickAndDecideNextStep();
-            }
-
-            if (cAppExtension.activity instanceof QualityControlShipmentsActivity) {
-                cAppExtension.dialogFragment.dismiss();
-                QualityControlShipmentsActivity qualityControlShipmentsActivity = (QualityControlShipmentsActivity)cAppExtension.activity;
-                qualityControlShipmentsActivity.pCloseQCAndDecideNextStep();
             }
 
             if (cAppExtension.activity instanceof SortorderLinesActivity) {

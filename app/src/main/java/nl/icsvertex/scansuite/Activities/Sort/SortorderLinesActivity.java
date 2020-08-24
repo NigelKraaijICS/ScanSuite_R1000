@@ -836,6 +836,14 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             return result;
         }
 
+        // Get all barcodes
+        if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+
         // Get all comments
         if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -851,6 +859,8 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
                 return result;
             }
         }
+
+
 
         return result;
     }

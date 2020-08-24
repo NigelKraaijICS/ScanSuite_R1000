@@ -14,10 +14,10 @@ public interface iScannerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(cScannerEntity workplaceEntity);
 
-    @Query("DELETE FROM " + cDatabase.TABLENAME_WORKPLACE)
+    @Query("DELETE FROM " + cDatabase.TABLENAME_SCANNERS)
     void deleteAll();
 
-    @Query("SELECT * FROM "  + cDatabase.TABLENAME_WORKPLACE)
+    @Query("SELECT * FROM "  + cDatabase.TABLENAME_SCANNERS)
     List<cScannerEntity> getAll();
 
 }

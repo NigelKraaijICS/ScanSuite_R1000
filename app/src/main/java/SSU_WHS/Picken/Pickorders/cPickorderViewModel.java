@@ -49,7 +49,6 @@ public class cPickorderViewModel extends AndroidViewModel {
     public Double pGetQuantityTotalDbl() {return this.PickorderRepository.pGetTotalQuantityDbl();}
 
     public cWebresult pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu ) {return this.PickorderRepository.pGetLinesFromWebserviceWrs(pvActionTypeEnu);}
-    public cWebresult pGetQCLinesFromWebserviceWrs() {return this.PickorderRepository.pGetQCLinesFromWebserviceWrs();}
     public List<cPickorderLineEntity> pGetAllLinesFromDatabaseObl(){return  this.PickorderRepository.pGetAllLinesFromDatabaseObl();}
     public List<cPickorderLineEntity> pGetPickorderLinesToSendFromDatabaseObl(){return  this.PickorderRepository.pGetPickorderLinesToSendFromDatabaseObl();}
     public List<cPickorderLineEntity> pGetLinesNotHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesNotHandledFromDatabaseObl();}
@@ -66,6 +65,8 @@ public class cPickorderViewModel extends AndroidViewModel {
     public cWebresult pGetLineBarcodesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {return this.PickorderRepository.pGetLineBarcodesFromWebservice(pvActionTypeEnu); }
 
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.PickorderRepository.pGetCommentsFromWebservice(); }
+
+    public cWebresult pGetSetingsFromWebserviceWrs() {return this.PickorderRepository.pGetSettingsFromWebserviceWrs();}
 
     public cWebresult pGetPackagesFromWebserviceWrs() {return this.PickorderRepository.pGetPackagesFromWebserviceWrs(); }
 

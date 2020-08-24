@@ -19,6 +19,11 @@ public class cScannerEntity {
     public String scanner = "";
     public String getScannerStr() {return this.scanner;}
 
+
+    @ColumnInfo(name=cDatabase.OMSCHRIJVING_NAMESTR)
+    public String omschrijving = "";
+    public String getOmschrijvingStr() {return this.omschrijving;}
+
     //empty constructor
     public cScannerEntity() {
 
@@ -26,6 +31,7 @@ public class cScannerEntity {
     public cScannerEntity(JSONObject jsonObject) {
         try {
             this.scanner = jsonObject.getString(cDatabase.SCANNER_NAMESTR);
+            this.omschrijving = jsonObject.getString(cDatabase.OMSCHRIJVING_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

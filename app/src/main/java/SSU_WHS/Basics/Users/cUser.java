@@ -14,7 +14,6 @@ import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.Authorisations.cAuthorisationViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Branches.cBranchViewModel;
-import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisation;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -221,7 +220,7 @@ public class cUser {
 
         boolean shippingAddedBln = false;
         boolean sortingAddedBln = false;
-        boolean qcAddedBln = false;
+
 
         cWebresult WebResult;
         cAuthorisationViewModel authorisationViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cAuthorisationViewModel.class);
@@ -269,16 +268,6 @@ public class cUser {
                           shippingAddedBln = true;
                       }
                     }
-
-                    if (cSetting.PICK_QC_FASE_AVAILABLE()) {
-                        cAuthorisation authorisationShipping = new cAuthorisation(cAuthorisation.AutorisationEnu.QC.toString(), this.autorisationObl.size() *10 + 10 );
-
-                        if (!qcAddedBln) {
-                            this.autorisationObl.add(authorisationShipping);
-                            qcAddedBln = true;
-                        }
-                    }
-
                 }
 
             }

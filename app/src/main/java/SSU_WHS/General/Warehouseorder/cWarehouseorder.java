@@ -35,8 +35,7 @@ public class cWarehouseorder {
 
     public enum PickOrderTypeEnu {
         PICK,
-        SORT,
-        QC
+        SORT
     }
 
     public  enum ReceiveAndStoreMainTypeEnu {
@@ -97,7 +96,6 @@ public class cWarehouseorder {
 
     public static class WorkflowReceiveStoreStepEnu {
         public static final int Receive_Store = 40;
-        public static final int Receive_StoreBezig = 41;
     }
 
 
@@ -139,12 +137,6 @@ public class cWarehouseorder {
     public static class MovelineLocalStatusEnu {
         public final static int LOCALSTATUS_NEW = 10;
         public final static int LOCALSTATUS_BUSY = 20;
-        public final static int LOCALSTATUS_DONE_ERROR_SENDING = 32;
-    }
-
-    public static class MovelineStatusEnu {
-        public static final int Needed = 10;
-        public static final int DONE = 11;
     }
 
     public static class InventoryBinStatusEnu {
