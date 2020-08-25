@@ -27,6 +27,7 @@ import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
+import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
@@ -67,6 +68,8 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
     private TextView quickhelpText;
     private ImageView quickhelpIcon;
     private Switch switchTodo;
+
+    private ConstraintLayout bottomContainer;
 
     public boolean closeOrderClickedBln = false;
 
@@ -202,6 +205,8 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
         this.quickHelpContainer = findViewById(R.id.quickHelpContainer);
         this.quickhelpIcon = findViewById(R.id.quickhelpIcon);
         this.switchTodo = findViewById(R.id.switchTodo);
+
+        this.bottomContainer = findViewById(R.id.bottomContainer);
 
         this.recyclerViewMoveLinesPlace = findViewById(R.id.recyclerViewMoveLinesPlace);
 
@@ -359,7 +364,7 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
             //Show lines for this BIN
             getMoveorderLineAdapter().pShowPLACETodo(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
             this.mSetBINInfo();
-            this.quickhelpText.setText(R.string.message_scan_article);
+            this.mSetQuickhelp();
             return;
 
         }
@@ -445,15 +450,18 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
                 if (pvShowBln) {
 
                     recyclerViewMoveLinesPlace.setVisibility(View.INVISIBLE);
+                    bottomContainer.setVisibility(View.INVISIBLE);
 
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                     NothingHereFragment fragment = new NothingHereFragment();
                     fragmentTransaction.replace(R.id.container, fragment);
                     fragmentTransaction.commit();
+                    pChangeToolBarSubText(cAppExtension.activity.getString(R.string.lines) + " 0");
                     return;
                 }
 
                 recyclerViewMoveLinesPlace.setVisibility(View.VISIBLE);
+                bottomContainer.setVisibility(View.VISIBLE);
 
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
@@ -501,7 +509,7 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
     }
 
     private void mSetQuickHelpListener() {
-        this.currentBINView.setOnClickListener(new View.OnClickListener() {
+        this.quickHelpContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(quickhelpIcon, 0);
@@ -591,13 +599,21 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
             }
         });
 
+    }
 
+    private void mSetQuickhelp(){
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                quickhelpText.setText(R.string.message_scan_article);
+            }
+        });
 
     }
 
     private void mSetCloseButton(){
 
-        if (cMoveorder.currentMoveOrder.placeLinesTodoObl().size() > 0 ) {
+        if (!cMoveorder.currentMoveOrder.isPlaceDoneBln() ) {
             this.imageButtonCloseOrder.setVisibility(View.GONE);
             return;
         }

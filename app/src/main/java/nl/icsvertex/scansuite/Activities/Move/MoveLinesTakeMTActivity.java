@@ -70,6 +70,8 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     private ImageView quickhelpIcon;
     private Switch switchTodo;
 
+    private ConstraintLayout bottomContainer;
+
     private DrawerLayout menuActionsDrawer;
     private NavigationView actionMenuNavigation;
 
@@ -236,6 +238,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
         this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
 
+        this.bottomContainer = findViewById(R.id.bottomContainer);
 
         this.quickHelpContainer = findViewById(R.id.quickHelpContainer);
         this.quickhelpIcon = findViewById(R.id.quickhelpIcon);
@@ -383,7 +386,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
             //Show lines for this BIN
             getMoveorderLineAdapter().pShowTAKETodo(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
             this.mSetBINInfo();
-            this.quickhelpText.setText(R.string.message_scan_article);
+            this.mSetQuickhelp();
             return;
 
         }
@@ -469,15 +472,19 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
                 if (pvShowBln) {
 
                     recyclerViewMoveLinesTake.setVisibility(View.INVISIBLE);
+                    bottomContainer.setVisibility(View.INVISIBLE);
 
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                     NothingHereFragment fragment = new NothingHereFragment();
                     fragmentTransaction.replace(R.id.container, fragment);
                     fragmentTransaction.commit();
+
                     return;
                 }
 
+
                 recyclerViewMoveLinesTake.setVisibility(View.VISIBLE);
+                bottomContainer.setVisibility(View.VISIBLE);
 
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
@@ -525,7 +532,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetQuickHelpListener() {
-        this.currentBINView.setOnClickListener(new View.OnClickListener() {
+        this.quickHelpContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cUserInterface.pDoRotate(quickhelpIcon, 0);
@@ -609,6 +616,16 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
     }
 
+    private void mSetQuickhelp(){
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                quickhelpText.setText(R.string.message_scan_article);
+            }
+        });
+
+    }
+
     private  void mStartMoveLineTakeActivity(){
 
         //we have an article or bin to handle, so start move activity
@@ -679,6 +696,11 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
         if (!cMoveorder.currentMoveOrder.pGetLinesMTViaWebserviceBln(true)) {
             this.mStepFailed(cAppExtension.activity.getString(R.string.error_get_lines_failed),"");
+            return;
+        }
+
+        if (!cMoveorder.currentMoveOrder.pGetBINSViaWebserviceBln()) {
+            this.mStepFailed(cAppExtension.activity.getString(R.string.error_get_bins_failed),"");
             return;
         }
 

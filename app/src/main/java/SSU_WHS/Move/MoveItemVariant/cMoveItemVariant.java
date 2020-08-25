@@ -30,7 +30,6 @@ public class cMoveItemVariant {
         return this.quantityPlacedDbl;
     }
 
-
     public String handledTimeStampStr;
     public String getHandledTimeStampStr(){ return  this.handledTimeStampStr;}
 
@@ -40,6 +39,10 @@ public class cMoveItemVariant {
 
     public  double getQuantityTodoPlaceDbl(){
         return  this.getQuantityTakenDbl() - this.getQuantityPlacedDbl();
+    }
+
+    public  double getQuantityTodoPlaceNewDbl(double pvQuanityToPlaceDbl){
+        return  this.getQuantityTodoPlaceDbl() - pvQuanityToPlaceDbl;
     }
 
     public  cMoveorderLine linePlaceTodoLine() {
@@ -64,6 +67,58 @@ public class cMoveItemVariant {
         }
 
         return  moveorderLine;
+    }
+
+    public  List<cMoveorderLine> todoPlaceObl(){
+
+        List<cMoveorderLine> resultObl = new ArrayList<>();
+
+        if (this.linesObl == null || this.linesObl.size() ==0) {
+            return  resultObl;
+        }
+
+        for (cMoveorderLine moveorderLine : this.linesObl) {
+
+            if (moveorderLine.getActionTypeCodeStr().equalsIgnoreCase("TAKE")) {
+                continue;
+            }
+
+            if(moveorderLine.isHandledBln()) {
+                continue;
+            }
+
+            resultObl.add(moveorderLine);
+
+        }
+
+        return  resultObl;
+
+    }
+
+    public double pCheckPlaceLeftDbl(double pvQuanityToPlaceDbl){
+
+        double quantityLeftDbl = 0;
+
+        quantityLeftDbl = this.getQuantityTodoPlaceNewDbl(pvQuanityToPlaceDbl);
+
+        if (quantityLeftDbl == 0) {
+            return  0;
+        }
+
+        for (cMoveorderLine moveorderLine : this.todoPlaceObl()) {
+            if (moveorderLine.getLineNoInt() == cMoveorderLine.currentMoveOrderLine.getLineNoInt()) {
+                continue;
+            }
+
+            quantityLeftDbl -= moveorderLine.getQuantityPlaceable();
+        }
+
+        if (quantityLeftDbl <= 0) {
+            return  0;
+        }
+
+        return  quantityLeftDbl;
+
     }
 
     public  List<cMoveorderLine> linesObl;

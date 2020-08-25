@@ -243,6 +243,17 @@ public class cMoveorder {
 
     }
 
+    public boolean isPlaceDoneBln(){
+
+        for (cMoveItemVariant moveItemVariant : cMoveItemVariant.allMoveItemVariantObl.values()) {
+            if (moveItemVariant.getQuantityTodoPlaceDbl() > 0 ) {
+                return  false;
+            }
+        }
+
+        return  true;
+
+    }
 
     public SortedMap<String, cArticle> articleObl;
     public List<cBranchBin> binsObl;
@@ -1292,6 +1303,14 @@ public class cMoveorder {
         WebResult =  this.getMoveorderLineViewModel().pMoveItemPlaceMTHandledViaWebserviceWrs(sortedBarcodeObl);
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for ( JSONObject jsonObject : WebResult.getResultDtt()) {
+                cMoveorderLine moveorderLine = new cMoveorderLine(jsonObject);
+                //Edit quantity for this ItemVariant
+                Objects.requireNonNull(moveorderLine.moveItemVariant()).quantityPlacedDbl +=  moveorderLine.getQuantityHandledDbl();
+            }
+
+
             return  true;
         }
         else {
@@ -1314,14 +1333,11 @@ public class cMoveorder {
                 cMoveorderLine moveorderLine = new cMoveorderLine(jsonObject);
                 moveorderLine.pInsertInDatabaseBln();
 
-                //Get ItemVariant
-                cMoveItemVariant moveItemVariant = cMoveItemVariant.allMoveItemVariantObl.get(moveorderLine.getKeyStr());
-
                 //Edit quantity for this ItemVariant
-                Objects.requireNonNull(moveItemVariant).quantityPlacedDbl +=  moveorderLine.getQuantityHandledDbl();
+                Objects.requireNonNull(moveorderLine.moveItemVariant()).quantityPlacedDbl +=  moveorderLine.getQuantityHandledDbl();
 
                 //Add line to variant
-                moveItemVariant.linesObl.add(moveorderLine);
+                moveorderLine.moveItemVariant().linesObl.add(moveorderLine);
 
                 //Init new list for lines that need to be removed
                 List<cMoveorderLine> linesToBeRemovedObl = new ArrayList<>();
@@ -1343,7 +1359,7 @@ public class cMoveorder {
                 //Remove lines from placelines Obl if needed
                 for (cMoveorderLine moveorderLineToBeRemoved : linesToBeRemovedObl ) {
                     this.placeLinesObl.remove(moveorderLineToBeRemoved);
-                    moveItemVariant.linesObl.remove(moveorderLineToBeRemoved);
+                    moveorderLine.moveItemVariant().linesObl.remove(moveorderLineToBeRemoved);
                     cMoveorder.currentMoveOrder.linesObl().remove(moveorderLineToBeRemoved);
                 }
 

@@ -16,6 +16,7 @@ import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveOrders.cMoveorderViewModel;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
@@ -142,6 +143,23 @@ public class cMoveorderLine implements Comparable {
         return extraField8Str;
     }
 
+    public  Double getQuantityPlaceable() {
+
+        if(this.moveItemVariant() == null) {
+            return Double.valueOf(0);
+        }
+
+
+        if (this.moveItemVariant().getQuantityTodoPlaceDbl() >  this.getQuantityDbl()) {
+           return  this.getQuantityDbl();
+        }
+        else
+        {
+            return  this.moveItemVariant().getQuantityTodoPlaceDbl();
+        }
+
+    }
+
     public  boolean handledBln = false;
     public boolean isHandledBln() {
         return handledBln;
@@ -149,6 +167,10 @@ public class cMoveorderLine implements Comparable {
 
     public  String getKeyStr() {
         return  this.getItemNoStr() + "þ" + this.getVariantCodeStr();
+    }
+
+    public  cMoveItemVariant moveItemVariant() {
+      return   cMoveItemVariant.allMoveItemVariantObl.get(this.getKeyStr());
     }
 
     private cMoveorderLineEntity moveorderLineEntity;
@@ -351,9 +373,6 @@ public class cMoveorderLine implements Comparable {
         return resultRst;
 
     }
-
-
-
 
     @Override
     public int compareTo(Object o) {

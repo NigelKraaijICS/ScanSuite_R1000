@@ -670,17 +670,11 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
                 newQuantityDbl = pvAmountDbl;
 
                 //Check if we would exceed   available, then show message
-                if (newQuantityDbl > cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
+                if (newQuantityDbl > cMoveorderLine.currentMoveOrderLine.getQuantityPlaceable()) {
                     this.mShowExtraPiecesNotAllowed();
                     return;
                 }
 
-                if (newQuantityDbl == cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
-                    this.imageButtonDone.setVisibility(View.VISIBLE);
-                }
-                else {
-                    this.imageButtonDone.setVisibility(View.GONE);
-                }
 
                 //Clear the barcodeStr list and refill it
                 this.scannedBarcodesObl.clear();
@@ -704,16 +698,9 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
             }
 
             //Check if we would exceed amount stock available, then show message
-            if (newQuantityDbl > cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
+            if (newQuantityDbl > cMoveorderLine.currentMoveOrderLine.getQuantityPlaceable()) {
                 this.mShowExtraPiecesNotAllowed();
                 return;
-            }
-
-            if (newQuantityDbl == cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
-                this.imageButtonDone.setVisibility(View.VISIBLE);
-            }
-            else {
-                this.imageButtonDone.setVisibility(View.GONE);
             }
 
             //Set the new quantityDbl and show in Activity
@@ -729,8 +716,6 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
         }
 
         //negative
-
-        this.imageButtonDone.setVisibility(View.GONE);
 
         //Check if value already is zero
         if ( this.quantityScannedDbl < 1 ) {
@@ -801,8 +786,8 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
         result.resultBln = true;
 
         this.imageButtonDone.setVisibility(View.VISIBLE);
-        if (this.quantityScannedDbl < cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
-            this.imageButtonDone.setVisibility(View.GONE);
+        if (this.quantityScannedDbl < cMoveorderLine.currentMoveOrderLine.getQuantityPlaceable()) {
+            this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
 
         }
         else{
@@ -852,6 +837,8 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
             return result;
         }
 
+        this.mUpdatePlaceLines();
+
         this.mResetCurrents();
         this.mGoBackToLinesActivity();
         return result;
@@ -859,14 +846,34 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
 
     }
 
+    private void mUpdatePlaceLines(){
+
+        for (cMoveorderLine moveorderLine : cMoveorderLine.currentMoveOrderLine.moveItemVariant().todoPlaceObl()) {
+
+            if (moveorderLine.getQuantityPlaceable() == 0 ) {
+                moveorderLine.handledBln = true;
+            }
+
+        }
+
+    }
+
     private void mHandleDoneClick() {
 
-        //Check if we picked less then asked, if so then show dialog
-        if (!this.quantityScannedDbl.equals(cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) ) {
+        if (cMoveorderLine.currentMoveOrderLine == null) {
             return;
         }
 
-        if (cMoveorderLine.currentMoveOrderLine == null) {
+        double quantityLeftDbl = cMoveorderLine.currentMoveOrderLine.moveItemVariant().pCheckPlaceLeftDbl(this.quantityScannedDbl);
+
+        if (quantityLeftDbl > 0) {
+
+            String messageStr =   cAppExtension.activity.getString(R.string.message_underplace_text,
+                    cText.pDoubleToStringStr(this.quantityScannedDbl),
+                    cText.pDoubleToStringStr(cMoveorderLine.currentMoveOrderLine.moveItemVariant().getQuantityTodoPlaceNewDbl(this.quantityScannedDbl)),
+                    cText.pDoubleToStringStr(quantityLeftDbl));
+
+            cUserInterface.pDoExplodingScreen(messageStr,"",true,true);
             return;
         }
 
@@ -878,7 +885,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
     private void mCheckLineDone(){
 
 
-        if (cSetting.MOVE_AUTO_ACCEPT_AT_REQUESTED() && this.quantityScannedDbl.equals(cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl())) {
+        if (cSetting.MOVE_AUTO_ACCEPT_AT_REQUESTED() && this.quantityScannedDbl.equals(cMoveorderLine.currentMoveOrderLine.getQuantityPlaceable())) {
             this.mHandleDoneClick();
         }
 
@@ -1042,7 +1049,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
 
         Bundle bundle = new Bundle();
         bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityHandled().intValue());
-        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl() );
+        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, cMoveorderLine.currentMoveOrderLine.getQuantityPlaceable() );
         NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
         numberpickerFragment.setArguments(bundle);
 
@@ -1066,7 +1073,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
 
     private void mSetQuantityInfo(){
 
-        this.quantityRequiredText.setText(cText.pDoubleToStringStr(cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()));
+        this.quantityRequiredText.setText(cText.pDoubleToStringStr(cMoveorderLine.currentMoveOrderLine.getQuantityPlaceable()));
 
         if (cMoveorder.currentMoveOrder.currentMoveorderBarcode == null) {
             this.quantityText.setText("0");

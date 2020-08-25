@@ -133,10 +133,10 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
         cArticle.currentArticle.pGetStockViaWebserviceBln();
 
         if (cArticle.currentArticle.stockObl != null && cArticle.currentArticle.stockObl.size() > 0) {
-            this.mShowNoLinesIcon(true);
+            this.mShowNoLinesIcon(false);
         }
         else {
-            this.mShowNoLinesIcon(false);
+            this.mShowNoLinesIcon(true);
         }
     }
 

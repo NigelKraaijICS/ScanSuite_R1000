@@ -671,6 +671,7 @@
     <string name="tab_qcorderline_checked">Gecheckt</string>
     <string name="screentitle_qc">Kwaliteitscontrole</string>
     <string name="message_correcy_line_header">Regel corrigeren?</string>
+    <string name="message_underplace_text">Te weinig geplaatst\n\nJe wilt %1$s items plaatsen\n\Je houdt %2$s te plaatsen items over\n\nMaar je kan  nog maximaal %3$s plaatsen op andere locatie(s)</string>
     <string name="message_undercheck_text">Er zijn %1$s items gepickt\n\Er zijn %2$s items gecheckt\n\nWeet je zeker dat u het gepickte aantal wilt corrigeren?</string>
     <string name="message_pick_done">Pick fase afronden</string>
     <string name="message_close_pick_fase">U bent klaar met picken, wilt u de pick fase afronden?</string>
