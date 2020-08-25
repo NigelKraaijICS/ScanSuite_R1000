@@ -19,6 +19,7 @@ import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Fragments.Move.MoveLinesPlaceFragment;
 import nl.icsvertex.scansuite.R;
@@ -137,23 +138,46 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
 
         if (moveorderLine.getActionTypeCodeStr().equalsIgnoreCase(cWarehouseorder.ActionTypeEnu.PLACE.toString())) {
 
-            if (moveorderLine.getQuantityHandledDbl() == 0) {
-                pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(moveorderLine.getQuantityDbl()));
-            }
-            else
-            {
-                pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl()));
+            if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MV")) {
+                if (moveorderLine.getQuantityHandledDbl() == 0) {
+                    pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(moveorderLine.getQuantityDbl()));
+                }
+                else
+                {
+                    pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl()));
+                }
+
+                if (moveorderLine.getBinCodeStr().isEmpty()) {
+                    pvHolder.textViewBIN.setVisibility(View.GONE);
+                    pvHolder.imageViewBIN.setVisibility(View.GONE);
+                }
+                else
+                {
+                    pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+                    pvHolder.imageViewBIN.setVisibility(View.VISIBLE);
+                    pvHolder.textViewBIN.setText(moveorderLine.getBinCodeStr());
+                }
             }
 
-            if (moveorderLine.getBinCodeStr().isEmpty()) {
-                pvHolder.textViewBIN.setVisibility(View.GONE);
-                pvHolder.imageViewBIN.setVisibility(View.GONE);
-            }
-            else
-            {
-                pvHolder.textViewBIN.setVisibility(View.VISIBLE);
-                pvHolder.imageViewBIN.setVisibility(View.VISIBLE);
-                pvHolder.textViewBIN.setText(moveorderLine.getBinCodeStr());
+            if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MT")) {
+                if (moveorderLine.getQuantityHandledDbl() == 0) {
+                    pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(moveorderLine.getQuantityTakenDbl()));
+                }
+                else
+                {
+                    pvHolder.textViewCounted.setText(cText.pDoubleToStringStr(moveorderLine.getQuantityTakenDbl()));
+                }
+
+                if (moveorderLine.getBinCodeStr().isEmpty()) {
+                    pvHolder.textViewBIN.setVisibility(View.GONE);
+                    pvHolder.imageViewBIN.setVisibility(View.GONE);
+                }
+                else
+                {
+                    pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+                    pvHolder.imageViewBIN.setVisibility(View.VISIBLE);
+                    pvHolder.textViewBIN.setText(moveorderLine.getBinCodeStr());
+                }
             }
 
         }
@@ -184,6 +208,12 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
             MoveLinesTakeMTActivity moveLinesTakeMTActivity = (MoveLinesTakeMTActivity)cAppExtension.activity ;
             moveLinesTakeMTActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.lines) + " " + cText.pIntToStringStr(pvDataObl.size()) );
             moveLinesTakeMTActivity.pShowData( this.localMoveorderLinesObl);
+        }
+
+        if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
+            MoveLinesPlaceMTActivity moveLinesPlaceMTActivity = (MoveLinesPlaceMTActivity)cAppExtension.activity ;
+            moveLinesPlaceMTActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.lines) + " " + cText.pIntToStringStr(pvDataObl.size()) );
+            moveLinesPlaceMTActivity.pShowData( this.localMoveorderLinesObl);
         }
     }
 
@@ -233,6 +263,33 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
                     moveLinesTakeMTActivity.pShowData( this.localMoveorderLinesObl);
                     moveLinesTakeMTActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.lines) + " " +  cText.pIntToStringStr(this.localMoveorderLinesObl.size()) + " / " + cText.pIntToStringStr(cMoveorder.currentMoveOrder.takeLinesObl.size()));
                 }
+
+            cAppExtension.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    public void pShowPLACETodo(String pvBinCodeStr) {
+
+        this.localMoveorderLinesObl = cMoveorder.currentMoveOrder.placeLinesTodoObl(pvBinCodeStr);
+
+        if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
+            MoveLinesPlaceMTActivity moveLinesPlaceMTActivity = (MoveLinesPlaceMTActivity) cAppExtension.activity;
+
+            //if there are no defects, then show no linesInt fragment
+            if (this.localMoveorderLinesObl.size() == 0 ) {
+                moveLinesPlaceMTActivity.pShowData(this.localMoveorderLinesObl);
+                moveLinesPlaceMTActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.lines) + " 0 / " + cText.pIntToStringStr(cMoveorder.currentMoveOrder.placeLinesObl.size()));
+            }
+            // There are linesInt to show, so refresh the fragent then all linesInt are shown again
+            else {
+                moveLinesPlaceMTActivity.pShowData( this.localMoveorderLinesObl);
+                moveLinesPlaceMTActivity.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.lines) + " " +  cText.pIntToStringStr(this.localMoveorderLinesObl.size()) + " / " + cText.pIntToStringStr(cMoveorder.currentMoveOrder.placeLinesObl.size()));
+            }
 
             cAppExtension.activity.runOnUiThread(new Runnable() {
                 @Override

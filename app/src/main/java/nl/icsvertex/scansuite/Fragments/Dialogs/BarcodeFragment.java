@@ -23,6 +23,7 @@ import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcodeAdapter;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeAdapter;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeAdapter;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
@@ -154,6 +155,10 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
         }
 
         if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+            this.barcodeRecyclerview.setAdapter(this.getMoveorderBarcodeAdapter());
+        }
+
+        if (cAppExtension.activity instanceof MoveLinePlaceActivity) {
             this.barcodeRecyclerview.setAdapter(this.getMoveorderBarcodeAdapter());
         }
 

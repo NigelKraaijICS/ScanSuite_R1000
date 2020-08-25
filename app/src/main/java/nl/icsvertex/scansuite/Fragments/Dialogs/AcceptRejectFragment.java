@@ -20,9 +20,11 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
@@ -329,9 +331,26 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             moveLinesTakeMTActivity.pLeaveActivity();
         }
 
+        if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
+
+
+
+            MoveLinesPlaceMTActivity moveLinesPlaceMTActivity = (MoveLinesPlaceMTActivity)cAppExtension.activity;
+            if (!moveLinesPlaceMTActivity.closeOrderClickedBln) {
+                moveLinesPlaceMTActivity.pLeaveActivity();
+                return;
+            }
+            moveLinesPlaceMTActivity.pDone();
+        }
+
         if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
             MoveLineTakeMTActivity moveLineTakeMTActivity = (MoveLineTakeMTActivity)cAppExtension.activity;
             moveLineTakeMTActivity.pAcceptMove();
+        }
+
+        if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
+            MoveLinePlaceMTActivity moveLinePlaceMTActivity = (MoveLinePlaceMTActivity)cAppExtension.activity;
+            moveLinePlaceMTActivity.pAcceptMove();
         }
 
     }
@@ -442,10 +461,22 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             moveLineTakeActivity.pCancelMove();
             return;
         }
+        if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
+            MoveLinesPlaceMTActivity moveLinesPlaceMTActivity = (MoveLinesPlaceMTActivity)cAppExtension.activity;
+            moveLinesPlaceMTActivity.closeOrderClickedBln = false;
+            return;
+        }
+
 
         if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
             MoveLineTakeMTActivity moveLineTakeMTActivity = (MoveLineTakeMTActivity)cAppExtension.activity;
             moveLineTakeMTActivity.pCancelMove();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
+            MoveLinePlaceMTActivity moveLinePlaceMTActivity = (MoveLinePlaceMTActivity)cAppExtension.activity;
+            moveLinePlaceMTActivity.pCancelMove();
             return;
         }
 

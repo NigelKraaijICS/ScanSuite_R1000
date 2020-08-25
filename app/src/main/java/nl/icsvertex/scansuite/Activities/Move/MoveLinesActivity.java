@@ -329,7 +329,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         hulpResult = new cResult();
         hulpResult.resultBln = false;
 
-        hulpResult = cMoveorder.currentMoveOrder.pOrderHandledViaWebserviceRst();
+        hulpResult = cMoveorder.currentMoveOrder.pHandledViaWebserviceRst();
 
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {

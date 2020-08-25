@@ -3,7 +3,6 @@ package nl.icsvertex.scansuite.Activities.Move;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -16,14 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
@@ -34,9 +30,10 @@ import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Comments.cComment;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
@@ -48,7 +45,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
 
 
-public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDefaultActivity, cMoveorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSDefaultActivity, cMoveorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     //Region Public Properties
     //End Region Public Properties
@@ -57,21 +54,21 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
+    private ImageView imageButtonCloseOrder;
 
     private  TextView textViewChosenOrder;
 
     private ConstraintLayout currentBINView;
     private TextView textViewBin;
 
-    private RecyclerView recyclerViewMoveLinesTake;
+    private RecyclerView recyclerViewMoveLinesPlace;
 
     private ConstraintLayout quickHelpContainer;
     private TextView quickhelpText;
     private ImageView quickhelpIcon;
     private Switch switchTodo;
 
-    private DrawerLayout menuActionsDrawer;
-    private NavigationView actionMenuNavigation;
+    public boolean closeOrderClickedBln = false;
 
     private cMoveorderLineAdapter moveorderLineAdapter;
     private cMoveorderLineAdapter getMoveorderLineAdapter() {
@@ -102,7 +99,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movelines_take_mt);
+        setContentView(R.layout.activity_movelines_place_mt);
         cBarcodeScan.pRegisterBarcodeReceiver();
         this.mActivityInitialize();
     }
@@ -111,7 +108,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     protected void onDestroy() {
         super.onDestroy();
 
-        if (cAppExtension.activity instanceof MoveLinesTakeMTActivity) {
+        if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
             cBarcodeScan.pUnregisterBarcodeReceiver();
         }
     }
@@ -135,48 +132,16 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu pvMenu) {
-        getMenuInflater().inflate(R.menu.menu_movemtactions,pvMenu);
-        return true;
-    }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu pvMenu) {
-        invalidateOptionsMenu();
-
-        pvMenu.findItem(R.id.item_close_take).setVisible(false);
-
-
-        if (cSetting.MOVE_MT_TAKE_ALLOW_END()) {
-            pvMenu.findItem(R.id.item_close_take).setVisible(true);
-        }
-        else {
-
-            if (cMoveorder.currentMoveOrder.takeLinesTodoObl("").size() <=0 )  {
-                pvMenu.findItem(R.id.item_close_take).setVisible(true);
-            }
-        }
-        return super.onPrepareOptionsMenu(pvMenu);
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
-        switch (pvMenuItem.getItemId()) {
-
-            case android.R.id.home:
-                this.mShowAcceptFragment();
-                return true;
-
-                case R.id.item_close_take:
-                this.mHandleTAKEDone();
-                break;
-
-            default:
-                return super.onOptionsItemSelected(pvMenuItem);
-
+        if (pvMenuItem.getItemId() == android.R.id.home) {
+            this.mShowAcceptFragment();
+            return true;
         }
         return super.onOptionsItemSelected(pvMenuItem);
+
     }
 
     @Override
@@ -195,7 +160,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
         this.mFindViews();
 
-        this.mSetToolbar(getResources().getString(R.string.screentitle_moveorderlines_take));
+        this.mSetToolbar(getResources().getString(R.string.screentitle_moveorderlines_place));
 
         this.mFieldsInitialize();
 
@@ -220,6 +185,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
 
+        this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
 
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
@@ -233,15 +199,11 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         this.quickhelpText.setMarqueeRepeatLimit(5);
         this.quickhelpText.setSelected(true);
 
-        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
-        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
-
-
         this.quickHelpContainer = findViewById(R.id.quickHelpContainer);
         this.quickhelpIcon = findViewById(R.id.quickhelpIcon);
         this.switchTodo = findViewById(R.id.switchTodo);
 
-        this.recyclerViewMoveLinesTake = findViewById(R.id.recyclerViewMoveLinesTake);
+        this.recyclerViewMoveLinesPlace = findViewById(R.id.recyclerViewMoveLinesPlace);
 
 
     }
@@ -266,15 +228,15 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         this.quickhelpText.setVisibility(View.GONE);
         this.switchTodo.setVisibility(View.GONE);
 
-
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cMoveorder.currentMoveOrder.getOrderNumberStr());
          this.quickhelpText.setText(R.string.scan_bincode);
 
          this.mSetBINInfo();
+         this.mSetCloseButton();
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cMoveorderLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewMoveLinesTake);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewMoveLinesPlace);
 
     }
 
@@ -284,6 +246,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         this.mSetQuickHelpListener();
         this.mSetClearBINListener();
         this.mSetTodoListener();
+        this.mSetSendOrderListener();
     }
 
     @Override
@@ -327,9 +290,9 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                recyclerViewMoveLinesTake.setHasFixedSize(false);
-                recyclerViewMoveLinesTake.setAdapter(getMoveorderLineAdapter());
-                recyclerViewMoveLinesTake.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+                recyclerViewMoveLinesPlace.setHasFixedSize(false);
+                recyclerViewMoveLinesPlace.setAdapter(getMoveorderLineAdapter());
+                recyclerViewMoveLinesPlace.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
             }
         });
 
@@ -354,6 +317,19 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
     }
 
+    public void pDone() {
+
+        // Show that we are getting data
+        cUserInterface.pShowGettingData();
+
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleClose();
+            }
+        }).start();
+
+    }
+
 
     //End Region Public Methods
 
@@ -372,7 +348,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
             }
 
             //Get open lines for this BIN
-            List<cMoveorderLine> linesForBinObl = cMoveorder.currentMoveOrder.pGetTakeLinesForCurrentBin();
+            List<cMoveorderLine> linesForBinObl = cMoveorder.currentMoveOrder.pGetPlaceLinesForCurrentBin();
             if (linesForBinObl == null || linesForBinObl.size() == 0) {
                 this.mStepFailed(cAppExtension.activity.getString(R.string.message_no_lines_for_this_bin), (cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr())));
                 cMoveorder.currentMoveOrder.currentBranchBin = null;
@@ -381,7 +357,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
             }
 
             //Show lines for this BIN
-            getMoveorderLineAdapter().pShowTAKETodo(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
+            getMoveorderLineAdapter().pShowPLACETodo(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
             this.mSetBINInfo();
             this.quickhelpText.setText(R.string.message_scan_article);
             return;
@@ -407,7 +383,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
                 }
             }
 
-            cMoveorderLine.currentMoveOrderLine = cMoveorder.currentMoveOrder.pGetTakeLineForCurrentArticleAndBin(cMoveorder.currentMoveOrder.moveorderBarcodeToHandle);
+            cMoveorderLine.currentMoveOrderLine = cMoveorder.currentMoveOrder.pGetPlaceLineForCurrentArticleAndBin(cMoveorder.currentMoveOrder.moveorderBarcodeToHandle);
            if (cMoveorderLine.currentMoveOrderLine == null) {
                this.mStepFailed(cAppExtension.activity.getString(R.string.message_no_lines_for_this_bin_and_article), (cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr())));
                return;
@@ -428,7 +404,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        this.mStartMoveLineTakeActivity();
+        this.mStartMoveLinePlaceActivity();
 
         }
 
@@ -468,7 +444,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
                 if (pvShowBln) {
 
-                    recyclerViewMoveLinesTake.setVisibility(View.INVISIBLE);
+                    recyclerViewMoveLinesPlace.setVisibility(View.INVISIBLE);
 
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                     NothingHereFragment fragment = new NothingHereFragment();
@@ -477,7 +453,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
                     return;
                 }
 
-                recyclerViewMoveLinesTake.setVisibility(View.VISIBLE);
+                recyclerViewMoveLinesPlace.setVisibility(View.VISIBLE);
 
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
@@ -493,7 +469,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetToolBarTitleWithCounters(){
-        String toolBarStr = cAppExtension.activity.getString(R.string.lines) + ' ' +  cMoveorder.currentMoveOrder.takeLinesObl.size();
+        String toolBarStr = cAppExtension.activity.getString(R.string.lines) + ' ' +  cMoveorder.currentMoveOrder.placeLinesObl.size();
         this.toolbarSubTitle.setText(toolBarStr);
     }
 
@@ -547,11 +523,21 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
                     mSetBINInfo();
 
                     if (cMoveorder.currentMoveOrder.showTodoBln) {
-                        getMoveorderLineAdapter().pShowTAKETodo("");
+                        getMoveorderLineAdapter().pShowPLACETodo("");
                     }
                     else{
-                        getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.takeLinesObl);
+                        getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.placeLinesObl);
                     }
+            }
+        });
+    }
+
+    private void mSetSendOrderListener() {
+
+        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
             }
         });
     }
@@ -565,16 +551,16 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
                     cMoveorder.currentMoveOrder.showTodoBln = true;
 
                     if (cMoveorder.currentMoveOrder.currentBranchBin == null) {
-                        getMoveorderLineAdapter().pShowTAKETodo("");
+                        getMoveorderLineAdapter().pShowPLACETodo("");
                     }
                     else {
-                        getMoveorderLineAdapter().pShowTAKETodo(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
+                        getMoveorderLineAdapter().pShowPLACETodo(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
                     }
 
                 }
                 else {
                     cMoveorder.currentMoveOrder.showTodoBln= false;
-                    getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.takeLinesObl);
+                    getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.placeLinesObl);
                 }
             }
         });
@@ -609,10 +595,20 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private  void mStartMoveLineTakeActivity(){
+    private void mSetCloseButton(){
+
+        if (cMoveorder.currentMoveOrder.placeLinesTodoObl().size() > 0 ) {
+            this.imageButtonCloseOrder.setVisibility(View.GONE);
+            return;
+        }
+        this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
+
+    }
+
+    private  void mStartMoveLinePlaceActivity(){
 
         //we have an article or bin to handle, so start move activity
-        Intent intent = new Intent(cAppExtension.context, MoveLineTakeMTActivity.class);
+        Intent intent = new Intent(cAppExtension.context, MoveLinePlaceMTActivity.class);
         cAppExtension.activity.startActivity(intent);
 
     }
@@ -625,16 +621,16 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         }
 
         if (cMoveorder.currentMoveOrder.showTodoBln) {
-            cUserInterface.pShowSnackbarMessage(recyclerViewMoveLinesTake, cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset),null,true);
-            getMoveorderLineAdapter().pShowTAKETodo("");
+            cUserInterface.pShowSnackbarMessage(recyclerViewMoveLinesPlace, cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset),null,true);
+            getMoveorderLineAdapter().pShowPLACETodo("");
             return;
         }
 
-        cMoveorderLine.currentMoveOrderLine =  cMoveorder.currentMoveOrder.takeLinesObl.get(pvPositionInt);
+        cMoveorderLine.currentMoveOrderLine =  cMoveorder.currentMoveOrder.placeLinesObl.get(pvPositionInt);
 
         if (!cMoveorderLine.currentMoveOrderLine.handledBln) {
-            cUserInterface.pShowSnackbarMessage(recyclerViewMoveLinesTake, cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset),null,true);
-            getMoveorderLineAdapter().pShowTAKETodo("");
+            cUserInterface.pShowSnackbarMessage(recyclerViewMoveLinesPlace, cAppExtension.activity.getString(R.string.message_zero_lines_cant_be_reset),null,true);
+            getMoveorderLineAdapter().pShowPLACETodo("");
             return;
         }
 
@@ -655,37 +651,85 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        cUserInterface.pShowSnackbarMessage(recyclerViewMoveLinesTake, cAppExtension.activity.getString(R.string.message_line_reset_succesfull),null,true);
+        cUserInterface.pShowSnackbarMessage(recyclerViewMoveLinesPlace, cAppExtension.activity.getString(R.string.message_line_reset_succesfull),null,true);
 
         //Renew data, so only current lines are shown
         if (!cMoveorder.currentMoveOrder.showTodoBln) {
-            getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.takeLinesObl);
+            getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.placeLinesObl);
 
         } else {
-            getMoveorderLineAdapter().pShowTAKETodo("");
+            getMoveorderLineAdapter().pShowPLACETodo("");
         }
 
         cUserInterface.pHideGettingData();
 
     }
 
-    private void mHandleTAKEDone(){
+    private  void mShowCloseOrderDialog(String pvRejectStr,String pvAcceptStr) {
 
-        cResult result =   cMoveorder.currentMoveOrder.pCloseTakeMTRst();
-        if (!result.resultBln) {
-            this.mStepFailed(result.messagesStr(),"");
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        this.closeOrderClickedBln = true;
+
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_place),
+                cAppExtension.activity.getString(R.string.message_close_place_text),
+                pvRejectStr,
+                pvAcceptStr ,
+                false);
+
+        acceptRejectFragment.setCancelable(true);
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // show my popup
+                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
+            }
+        });
+
+    }
+
+    private  void mHandleClose() {
+
+        if (!this.mTryToCloseOrderBln()) {
             return;
         }
 
-        if (!cMoveorder.currentMoveOrder.pGetLinesMTViaWebserviceBln(true)) {
-            this.mStepFailed(cAppExtension.activity.getString(R.string.error_get_lines_failed),"");
-            return;
+        this.mStartOrderSelectActivity();
+
+    }
+
+    private  boolean mTryToCloseOrderBln() {
+
+        cResult hulpResult;
+        hulpResult = new cResult();
+        hulpResult.resultBln = false;
+
+        hulpResult = cMoveorder.currentMoveOrder.pHandledViaWebserviceRst();
+
+        //Everything was fine, so we are done
+        if (hulpResult.resultBln) {
+            return true;
         }
 
-        Intent intent = new Intent(cAppExtension.context, MoveLinesPlaceMTActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        //Something went wrong, but no further actions are needed, so ony show reason of failure
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown) {
+            cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(), "", true, true);
+            return false;
+        }
 
+        //Something went wrong, the order has been deleted, so show comments and refresh
+        if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
 
+            //If we got any comments, show them
+            if (cIntakeorder.currentIntakeOrder.pFeedbackCommentObl() != null && cIntakeorder.currentIntakeOrder.pFeedbackCommentObl().size() > 0) {
+                //Process comments from webresult
+                this.mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
+            }
+
+            return false;
+        }
+
+        return true;
 
     }
 

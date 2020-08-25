@@ -283,6 +283,7 @@
     <string name="message_unknown_salesorder">Onbekende verkooporder</string>
     <string name="message_wrong_pickcartbox">Verkeerde pickcartbox</string>
     <string name="scan_article_or_salesorder_or_pickcartbox">Scan artikel, VKO of pickcartbox</string>
+    <string name="number_cannot_be_lower">Aantal mag niet lager zijn dan orderaantal</string>
     <string name="number_cannot_be_higher">Aantal mag niet hoger zijn dan orderaantal</string>
     <string name="number_cannot_be_higher_than_stock">Aantal mag niet hoger zijn dan beschikbare voorraad</string>
     <string name="select_shippingunit">Scan of selecteer verzendeenheid</string>
@@ -686,5 +687,8 @@
     <string name="message_no_lines_for_this_bin_and_article">Geen regels beschikbaar voor deze BIN en het gescande artikel</string>
     <string name="message_line_reset_succesfull">De regel is gereset</string>
     <string name="close_take">Sluit NEMEN</string>
+    <string name="screentitle_moveorderlines_place">Verplaatsregels PLAATSEN</string>
+    <string name="message_close_place">Sluit plaatsen?</string>
+    <string name="message_close_place_text">Weet u zeker dat u het PLAATSEN wilt sluiten?</string>
 
 </resources>

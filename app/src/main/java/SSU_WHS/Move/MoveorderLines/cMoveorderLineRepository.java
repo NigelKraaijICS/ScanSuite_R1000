@@ -85,6 +85,24 @@ public class cMoveorderLineRepository {
         return webResultWrs;
     }
 
+    public cWebresult pMoveItemPlaceMTHandledViaWebserviceWrs(List<cMoveorderBarcode> pvBarcodesObl) {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mMovePlaceItemMTHandledViaWebserviceAsyncTask().execute(pvBarcodesObl).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+
     public cWebresult pMoveItemPlaceHandledViaWebserviceWrs(List<cMoveorderBarcode> pvBarcodesObl) {
 
         List<String> resultObl = new ArrayList<>();
@@ -443,6 +461,85 @@ public class cMoveorderLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_MOVEORDERLINE_HANDLEDTAKEMT, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mMovePlaceItemMTHandledViaWebserviceAsyncTask extends AsyncTask<List<cMoveorderBarcode>, Void, cWebresult> {
+        @SafeVarargs
+        @Override
+        protected final cWebresult doInBackground(List<cMoveorderBarcode>... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNERID;
+                l_PropertyInfo2Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo4Pin.setValue(cMoveorder.currentMoveOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENO;
+                l_PropertyInfo5Pin.setValue(cMoveorderLine.currentMoveOrderLine.getLineNoInt());
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_HANDLEDTIMESTAMP;
+                l_PropertyInfo6Pin.setValue(cDateAndTime.pGetCurrentDateTimeForWebserviceStr());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_BINCODEHANDLED;
+                l_PropertyInfo7Pin.setValue(cMoveorderLine.currentMoveOrderLine.getBinCodeStr());
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+
+
+                SoapObject barcodesHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODESLIST);
+
+                //Only loop through handled barcodes, if there are any
+                if (params != null) {
+                    for (cMoveorderBarcode moveorderBarcode: params[0]) {
+
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, moveorderBarcode.getBarcodeStr());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandled());
+                        barcodesHandledList.addSoapObject(soapObject);
+                    }
+                }
+
+                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODELIST;
+                l_PropertyInfo8Pin.setValue(barcodesHandledList);
+                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
+                SoapObject propertiesHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLEDLIST);
+
+                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
+                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLEDLIST;
+                l_PropertyInfo9Pin.setValue(propertiesHandledList);
+                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_MOVEORDERLINE_HANDLEDPLACEMT, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

@@ -415,6 +415,7 @@
     <string name="message_unknown_order">Unknown order</string>
     <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>
     <string name="message_wrong_pickcartbox">Wrong pickcartbox</string>
+    <string name="number_cannot_be_lower">Number can not be lower than required number</string>
     <string name="number_cannot_be_higher">Number can not be higher than required number</string>
     <string name="number_cannot_be_higher_than_stock">Number can not be higher than available stock</string>
     <string name="select_shippingunit">Scan or select shippingunit</string>
@@ -648,6 +649,7 @@
     <string name="createmove_text_default">Create new moveorder?</string>
     <string name="screentitle_moveorderlines">Move lines</string>
     <string name="screentitle_moveorderlines_take">Move lines Take</string>
+    <string name="screentitle_moveorderlines_place">Move lines Place</string>
     <string name="tab_moveorderline_notdone">Not done</string>
     <string name="tab_moveorderline_done">Done</string>
     <string name="tab_moveorderline_total">Total</string>
@@ -809,6 +811,8 @@
     <string name="message_close_packandship_fase">Would you like to finish ship fase?</string>
     <string name="message_no_lines_for_this_bin_and_article">No lines availabe for this BIN and article</string>
     <string name="message_line_reset_succesfull">Line has been reset</string>
+    <string name="message_close_place">Close PLACE?</string>
+    <string name="message_close_place_text">Do you really want to close PLACE?</string>
 
 
     <!--End Region return-->

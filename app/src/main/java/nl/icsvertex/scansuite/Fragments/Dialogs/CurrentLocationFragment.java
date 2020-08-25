@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
@@ -104,6 +106,11 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cConnection.pRegisterWifiChangedFragmentReceiver();
         cUserInterface.pEnableScanner();
+
+        if (getDialog() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
     }
 
     @Override

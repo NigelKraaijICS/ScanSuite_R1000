@@ -17,6 +17,8 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.Objects;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
@@ -56,7 +58,7 @@ public class StepDoneFragment extends DialogFragment implements iICSDefaultFragm
 
 
     //Region Constructor
-    public StepDoneFragment( String pvHeaderStr, String pvMessageStr, Boolean pvShowCurrentLocationBln) {
+    public StepDoneFragment(String pvHeaderStr, String pvMessageStr, Boolean pvShowCurrentLocationBln) {
         this.headerStr = pvHeaderStr;
         this.messageStr = pvMessageStr;
         this.showCurrentLocationBln = pvShowCurrentLocationBln;
@@ -108,9 +110,15 @@ public class StepDoneFragment extends DialogFragment implements iICSDefaultFragm
     @Override
     public void onResume() {
         super.onResume();
+
         cBarcodeScan.pRegisterBarcodeFragmentReceiver();
         cConnection.pRegisterWifiChangedFragmentReceiver();
         cUserInterface.pEnableScanner();
+
+        if (getDialog() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
     }
 
     @Override

@@ -167,10 +167,21 @@ public class cMoveorder {
 
         for (cMoveorderLine moveorderLine :this.placeLinesObl)
         {
-            if (moveorderLine.getQuantityHandledDbl() < moveorderLine.getQuantityDbl())
-            {
-                resultObl.add(moveorderLine);
+
+            if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MV")) {
+                if (moveorderLine.getQuantityHandledDbl() < moveorderLine.getQuantityDbl())
+                {
+                    resultObl.add(moveorderLine);
+                }
             }
+
+            if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MT")) {
+                if (moveorderLine.getQuantityHandledDbl() < moveorderLine.getQuantityTakenDbl())
+                {
+                    resultObl.add(moveorderLine);
+                }
+            }
+
         }
         return resultObl;
 
@@ -185,6 +196,34 @@ public class cMoveorder {
         }
 
         for (cMoveorderLine moveorderLine :this.takeLinesObl)
+        {
+            if (!moveorderLine.isHandledBln())
+            {
+                if (pvBinCodeStr.isEmpty()) {
+                    resultObl.add(moveorderLine);
+                }
+                else
+                {
+                    if (moveorderLine.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr)) {
+                        resultObl.add((moveorderLine));
+                    }
+                }
+
+            }
+        }
+        return resultObl;
+
+    }
+
+    public  List<cMoveorderLine> placeLinesTodoObl (String pvBinCodeStr){
+
+        List<cMoveorderLine> resultObl = new ArrayList<>();
+
+        if (this.placeLinesObl == null || this.placeLinesObl.size() == 0) {
+            return resultObl;
+        }
+
+        for (cMoveorderLine moveorderLine :this.placeLinesObl)
         {
             if (!moveorderLine.isHandledBln())
             {
@@ -747,6 +786,14 @@ public class cMoveorder {
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cMoveorderLine moveorderLine = new cMoveorderLine(jsonObject);
+
+                if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MT")) {
+                    if (moveorderLine.getActionTypeCodeStr().equalsIgnoreCase(cWarehouseorder.ActionTypeEnu.PLACE.toString()) && moveorderLine.getQuantityTakenDbl() == 0) {
+                    continue;
+                    }
+                }
+
+
                 moveorderLine.pInsertInDatabaseBln();
 
                 // Try to get ItemVariant from SortedList
@@ -1003,6 +1050,32 @@ public class cMoveorder {
         return  null;
     }
 
+    public cMoveorderLine pGetPlaceLineForCurrentArticleAndBin(cMoveorderBarcode pvMoveorderBarcode ) {
+
+        if (this.linesObl() == null || this.linesObl().size() == 0 || cMoveorder.currentMoveOrder.currentBranchBin  == null) {
+            return  null;
+        }
+
+        for (cMoveorderLine moveorderLine : this.linesObl()) {
+
+            if (!moveorderLine.getActionTypeCodeStr().equalsIgnoreCase(cWarehouseorder.ActionTypeEnu.PLACE.toString())) {
+                continue;
+            }
+
+
+            //Check if item matches scanned item
+            if (moveorderLine.getItemNoStr().equalsIgnoreCase(pvMoveorderBarcode.getItemNoStr()) &&
+                    moveorderLine.getVariantCodeStr().equalsIgnoreCase(pvMoveorderBarcode.getVariantCodeStr())) {
+
+                if (moveorderLine.getBinCodeStr().equalsIgnoreCase(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr())) {
+                    return  moveorderLine;
+                }
+            }
+        }
+
+        return  null;
+    }
+
     public List<cMoveorderLine> pGetTakeLinesForCurrentBin() {
 
         List<cMoveorderLine> resulObl = new ArrayList<>();
@@ -1012,6 +1085,23 @@ public class cMoveorder {
         }
 
         for (cMoveorderLine moveorderLine : this.takeLinesObl) {
+            if (moveorderLine.getBinCodeStr().equalsIgnoreCase(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr())) {
+                resulObl.add(moveorderLine);
+            }
+        }
+
+        return  resulObl;
+    }
+
+    public List<cMoveorderLine> pGetPlaceLinesForCurrentBin() {
+
+        List<cMoveorderLine> resulObl = new ArrayList<>();
+
+        if (this.placeLinesObl == null || this.placeLinesObl.size() == 0 || cMoveorder.currentMoveOrder.currentBranchBin  == null) {
+            return  resulObl;
+        }
+
+        for (cMoveorderLine moveorderLine : this.placeLinesObl) {
             if (moveorderLine.getBinCodeStr().equalsIgnoreCase(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr())) {
                 resulObl.add(moveorderLine);
             }
@@ -1184,45 +1274,6 @@ public class cMoveorder {
         WebResult =  this.getMoveorderLineViewModel().pMoveItemTakeMTHandledViaWebserviceWrs(sortedBarcodeObl);
 
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-//            for ( JSONObject jsonObject : WebResult.getResultDtt()) {
-//                cMoveorderLine moveorderLine = new cMoveorderLine(jsonObject);
-//                moveorderLine.pInsertInDatabaseBln();
-//                cMoveorder.currentMoveOrder.takeLinesObl.add(moveorderLine);
-//
-//                cMoveItemVariant moveItemVariant = cMoveItemVariant.allMoveItemVariantObl.get(moveorderLine.getKeyStr());
-//                if (moveItemVariant == null) {
-//                    moveItemVariant  = new cMoveItemVariant(moveorderLine.getItemNoStr(),moveorderLine.getVariantCodeStr());
-//                    moveItemVariant.quantityPlacedDbl = 0;
-//                    moveItemVariant.quantityTakenDbl = 0;
-//                    moveItemVariant.linesObl = new ArrayList<>();
-//                    cMoveItemVariant.allMoveItemVariantObl.put(moveorderLine.getKeyStr(),moveItemVariant);
-//                }
-//
-//                //Add line to variant
-//                moveItemVariant.linesObl.add(moveorderLine);
-//
-//                for (cMoveorderLine loopMoveorderLine : cMoveorder.currentMoveOrder.placeLinesObl) {
-//                    if (loopMoveorderLine.getItemNoStr().equalsIgnoreCase(moveorderLine.getItemNoStr()) && loopMoveorderLine.getVariantCodeStr().equalsIgnoreCase(moveorderLine.getVariantCodeStr())) {
-//                        loopMoveorderLine.quantityTakenDbl += moveorderLine.quantityHandledDbl;
-//                        loopMoveorderLine.handledTimeStampStr = moveorderLine.handledTimeStampStr;
-//                    }
-//                }
-//
-//                moveItemVariant.quantityTakenDbl += moveorderLine.quantityHandledDbl;
-//
-//                cMoveorderLine moveorderLineToAdd = new cMoveorderLine(moveorderLine.getItemNoStr(),moveorderLine.getVariantCodeStr());
-//                moveorderLineToAdd.actionTypeCodeStr = cWarehouseorder.ActionTypeEnu.PLACE.toString();
-//                moveorderLineToAdd.descriptionStr = moveorderLine.getDescriptionStr();
-//                moveorderLineToAdd.description2Str = moveorderLine.getDescription2Str();
-//                moveorderLineToAdd.quantityDbl = moveorderLine.getQuantityHandledDbl();
-//                cMoveorder.currentMoveOrder.placeLinesObl.add(moveorderLineToAdd);
-//
-//                //Refresh line barcodes
-//                cMoveorder.currentMoveOrder.pGetLineBarcodesViaWebserviceBln(true);
-//                return true;
-//            }
-
             return  true;
         }
         else {
@@ -1232,6 +1283,23 @@ public class cMoveorder {
         }
     }
 
+    public boolean pMovePlaceMTItemHandledBln(List<cMoveorderBarcode> pvScannedBarcodesObl) {
+        cWebresult WebResult;
+
+
+        List<cMoveorderBarcode> sortedBarcodeObl = this.mSortedBarcodeListObl(pvScannedBarcodesObl);
+
+        WebResult =  this.getMoveorderLineViewModel().pMoveItemPlaceMTHandledViaWebserviceWrs(sortedBarcodeObl);
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            return  true;
+        }
+        else {
+
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
+            return  false;
+        }
+    }
 
     public boolean pMovePlaceItemHandledBln(List<cMoveorderBarcode> pvScannedBarcodesObl) {
         cWebresult WebResult;
@@ -1293,7 +1361,7 @@ public class cMoveorder {
         }
     }
 
-    public cResult pOrderHandledViaWebserviceRst() {
+    public cResult pHandledViaWebserviceRst() {
 
         cResult result;
         result = new cResult();

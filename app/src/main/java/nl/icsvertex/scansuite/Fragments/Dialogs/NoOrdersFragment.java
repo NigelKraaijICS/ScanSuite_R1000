@@ -16,6 +16,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
@@ -115,6 +116,11 @@ public class NoOrdersFragment extends Fragment implements iICSDefaultFragment {
                 if (cAppExtension.activity instanceof IntakeAndReceiveSelectActivity) {
                     IntakeAndReceiveSelectActivity intakeAndReceiveSelectActivity = (IntakeAndReceiveSelectActivity)cAppExtension.activity;
                     intakeAndReceiveSelectActivity.pFillOrders();
+                }
+
+                if (cAppExtension.activity instanceof MoveorderSelectActivity) {
+                    MoveorderSelectActivity moveorderSelectActivity = (MoveorderSelectActivity)cAppExtension.activity;
+                    moveorderSelectActivity.pFillOrders();
                 }
 
                 if (cAppExtension.activity instanceof ReturnorderSelectActivity) {

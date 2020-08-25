@@ -406,8 +406,17 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
                 intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
                 break;
             case"MT":
-                intent = new Intent(cAppExtension.context, MoveLinesTakeMTActivity.class);
-                break;
+
+                if (cMoveorder.currentMoveOrder.getStatusInt() <= cWarehouseorder.MoveStatusEnu.Move_Take_Wait) {
+                    intent = new Intent(cAppExtension.context, MoveLinesTakeMTActivity.class);
+                    break;
+                }
+
+                if (cMoveorder.currentMoveOrder.getStatusInt() >= cWarehouseorder.MoveStatusEnu.Move_Place) {
+                    intent = new Intent(cAppExtension.context, MoveLinesPlaceMTActivity.class);
+                    break;
+                }
+
             default:
                 throw new IllegalStateException("Unexpected value: " + cMoveorder.currentMoveOrder.getOrderTypeStr());
         }

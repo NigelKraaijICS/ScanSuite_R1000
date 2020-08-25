@@ -15,9 +15,11 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
@@ -291,6 +293,16 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
                         MoveLineTakeMTActivity moveLineTakeMTActivity = (MoveLineTakeMTActivity)cAppExtension.activity;
                         moveLineTakeMTActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
+                        MoveLinesPlaceMTActivity moveLinesPlaceMTActivity = (MoveLinesPlaceMTActivity)cAppExtension.activity;
+                        moveLinesPlaceMTActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
+                        MoveLinePlaceMTActivity moveLinePlaceMTActivity = (MoveLinePlaceMTActivity)cAppExtension.activity;
+                        moveLinePlaceMTActivity.pHandleScan(barcodeScan);
                     }
 
                     if (cAppExtension.activity instanceof MoveLineTakeActivity){

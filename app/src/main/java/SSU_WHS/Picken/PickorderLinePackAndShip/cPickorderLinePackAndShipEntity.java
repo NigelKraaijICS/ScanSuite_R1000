@@ -139,7 +139,13 @@ public class cPickorderLinePackAndShipEntity {
 
             this.quantity = pvJsonObject.getDouble(cDatabase.QUANTITY_NAMESTR);
             this.quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
-            this.quantityChecked = pvJsonObject.getDouble(cDatabase.QUANTITYCHECKED_NAMESTR);
+
+            if (cPickorder.currentPickOrder.PICK_SHIPPING_QC_CHECK_COUNT()) {
+                this.quantityChecked = pvJsonObject.getDouble(cDatabase.QUANTITYCHECKED_NAMESTR);
+            }
+            else{
+                this.quantityChecked = Double.valueOf(0);
+            }
 
             this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
 

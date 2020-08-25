@@ -16,6 +16,7 @@ import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineViewModel;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -176,6 +177,9 @@ public class cPickorderLinePackAndShip {
         this.quantityDbl =  pickorderLinePackAndShipEntity.getQuantityDbl();
         this.quantityHandledDbl = pickorderLinePackAndShipEntity.getQuantityHandledDbl();
         this.quantityCheckedDbl = pickorderLinePackAndShipEntity.getQuantityChecked();
+
+
+
         this.statusInt = pickorderLinePackAndShipEntity.getStatusInt();
         this.statusShippingInt =  pickorderLinePackAndShipEntity.getStatusShippingInt();
 

@@ -141,7 +141,7 @@ public class cMoveorderRepository {
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mMoveorderTakeHandledViaWebserviceAsyncTask().execute().get();
+            webResultWrs = new mMoveorderHandledViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -415,7 +415,7 @@ public class cMoveorderRepository {
         }
     }
 
-    private static class mMoveorderTakeHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+    private static class mMoveorderHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
             cWebresult webresult = new cWebresult();

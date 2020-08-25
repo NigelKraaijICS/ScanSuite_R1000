@@ -44,8 +44,6 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
@@ -56,7 +54,7 @@ import nl.icsvertex.scansuite.R;
 
 import static ICS.Utils.cText.pDoubleToStringStr;
 
-public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Private Properties
     private int counterMinusHelperInt;
@@ -115,7 +113,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_moveline_take);
+        setContentView(R.layout.activity_moveline_place);
         this.mActivityInitialize();
     }
 
@@ -217,7 +215,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
         super.onDestroy();
         LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
 
-        if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+        if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
             cBarcodeScan.pUnregisterBarcodeReceiver();
         }
 
@@ -272,7 +270,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
         this.mFindViews();
 
-        this.mSetToolbar(getResources().getString(R.string.screentitle_moveline_take));
+        this.mSetToolbar(getResources().getString(R.string.screentitle_moveline_place));
 
         this.mFieldsInitialize();
 
@@ -289,7 +287,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFindViews() {
 
-        this.container = findViewById(R.id.moveLineTakeContainer);
+        this.container = findViewById(R.id.moveLinePlaceContainer);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -350,7 +348,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        cMoveorder.currentMoveOrder.currenLineModusEnu = cMoveorder.lineModusEnu.TAKE;
+        cMoveorder.currentMoveOrder.currenLineModusEnu = cMoveorder.lineModusEnu.PLACE;
 
         this.counterPlusHelperInt = 0;
         this.counterMinusHelperInt = 0;
@@ -571,27 +569,6 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
         cUserInterface.pDoNope(this.quantityRequiredText, false, false);
     }
 
-    private  void mShowUnderMoveDialog(String pvRejectStr,String pvAcceptStr) {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_underpick_header),
-                cAppExtension.activity.getString(R.string.message_undermove_text,
-                        cText.pDoubleToStringStr(cMoveorderLine.currentMoveOrderLine.getQuantityDbl()),
-                        cText.pDoubleToStringStr(this.quantityScannedDbl)),
-                pvRejectStr,
-                pvAcceptStr ,
-                false);
-        acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
-        });
-    }
-
     private void mStepFailed(String pvErrorMessageStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, "", true, true);
     }
@@ -693,9 +670,16 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
                 newQuantityDbl = pvAmountDbl;
 
                 //Check if we would exceed   available, then show message
-                if (newQuantityDbl > cMoveorderLine.currentMoveOrderLine.getQuantityDbl()) {
+                if (newQuantityDbl > cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
                     this.mShowExtraPiecesNotAllowed();
                     return;
+                }
+
+                if (newQuantityDbl == cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
+                    this.imageButtonDone.setVisibility(View.VISIBLE);
+                }
+                else {
+                    this.imageButtonDone.setVisibility(View.GONE);
                 }
 
                 //Clear the barcodeStr list and refill it
@@ -720,9 +704,16 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
             }
 
             //Check if we would exceed amount stock available, then show message
-            if (newQuantityDbl > cMoveorderLine.currentMoveOrderLine.getQuantityDbl()) {
+            if (newQuantityDbl > cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
                 this.mShowExtraPiecesNotAllowed();
                 return;
+            }
+
+            if (newQuantityDbl == cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
+                this.imageButtonDone.setVisibility(View.VISIBLE);
+            }
+            else {
+                this.imageButtonDone.setVisibility(View.GONE);
             }
 
             //Set the new quantityDbl and show in Activity
@@ -738,6 +729,8 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
         }
 
         //negative
+
+        this.imageButtonDone.setVisibility(View.GONE);
 
         //Check if value already is zero
         if ( this.quantityScannedDbl < 1 ) {
@@ -808,11 +801,12 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
         result.resultBln = true;
 
         this.imageButtonDone.setVisibility(View.VISIBLE);
-        if (this.quantityScannedDbl < cMoveorderLine.currentMoveOrderLine.getQuantityDbl()) {
-            this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+        if (this.quantityScannedDbl < cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) {
+            this.imageButtonDone.setVisibility(View.GONE);
 
         }
         else{
+            this.imageButtonDone.setVisibility(View.VISIBLE);
             this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
         }
 
@@ -838,7 +832,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
             return result;
         }
 
-       if(!cMoveorder.currentMoveOrder.pMoveTakeMTItemHandledBln(this.scannedBarcodesObl)) {
+       if(!cMoveorder.currentMoveOrder.pMovePlaceMTItemHandledBln(this.scannedBarcodesObl)) {
            result.resultBln = false;
            result.pAddErrorMessage(cAppExtension.context.getString(R.string.couldnt_send_line));
            return result;
@@ -867,14 +861,12 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
     private void mHandleDoneClick() {
 
-        if (cMoveorderLine.currentMoveOrderLine == null) {
+        //Check if we picked less then asked, if so then show dialog
+        if (!this.quantityScannedDbl.equals(cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()) ) {
             return;
         }
 
-
-        //Check if we picked less then asked, if so then show dialog
-        if (!this.quantityScannedDbl.equals(cMoveorderLine.currentMoveOrderLine.getQuantityDbl()) ) {
-            this.mShowUnderMoveDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+        if (cMoveorderLine.currentMoveOrderLine == null) {
             return;
         }
 
@@ -886,12 +878,11 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
     private void mCheckLineDone(){
 
 
-        if (cSetting.MOVE_AUTO_ACCEPT_AT_REQUESTED() && this.quantityScannedDbl.equals(cMoveorderLine.currentMoveOrderLine.getQuantityDbl())) {
+        if (cSetting.MOVE_AUTO_ACCEPT_AT_REQUESTED() && this.quantityScannedDbl.equals(cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl())) {
             this.mHandleDoneClick();
         }
 
     }
-
 
     //Listeners
     private void mSetDoneListener() {
@@ -1022,7 +1013,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
     }
 
     private void mGoBackToLinesActivity() {
-        Intent intent = new Intent(cAppExtension.context, MoveLinesTakeMTActivity.class);
+        Intent intent = new Intent(cAppExtension.context, MoveLinesPlaceMTActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }
@@ -1051,7 +1042,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
         Bundle bundle = new Bundle();
         bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityHandled().intValue());
-        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, cMoveorderLine.currentMoveOrderLine.getQuantityDbl() );
+        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl() );
         NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
         numberpickerFragment.setArguments(bundle);
 
@@ -1075,7 +1066,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
     private void mSetQuantityInfo(){
 
-        this.quantityRequiredText.setText(cText.pDoubleToStringStr(cMoveorderLine.currentMoveOrderLine.getQuantityDbl()));
+        this.quantityRequiredText.setText(cText.pDoubleToStringStr(cMoveorderLine.currentMoveOrderLine.getQuantityTakenDbl()));
 
         if (cMoveorder.currentMoveOrder.currentMoveorderBarcode == null) {
             this.quantityText.setText("0");
