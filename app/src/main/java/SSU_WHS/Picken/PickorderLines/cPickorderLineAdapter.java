@@ -340,13 +340,18 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         }
 
         List<cPickorderLine> resultObl = new ArrayList<>();
-        for (cPickorderLine pickorderLine :this.localPickorderLinesObl)
-        {
-            if (pickorderLine.getQuantityHandledDbl() < pickorderLine.getQuantityDbl())
+
+        if (this.localPickorderLinesObl != null) {
+            for (cPickorderLine pickorderLine :this.localPickorderLinesObl)
             {
-                resultObl.add(pickorderLine);
+                if (pickorderLine.getQuantityHandledDbl() < pickorderLine.getQuantityDbl())
+                {
+                    resultObl.add(pickorderLine);
+                }
             }
         }
+
+
         return resultObl;
     }
 

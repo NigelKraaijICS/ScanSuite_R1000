@@ -600,9 +600,11 @@ public class cMoveorder {
 
         // Get all BINS, if webservice error then stop
         if (!cMoveorder.currentMoveOrder.pGetBINSViaWebserviceBln()) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_bins_failed));
-            return result;
+            if (cMoveorder.currentMoveOrder.linesObl().size() > 0) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_bins_failed));
+                return result;
+            }
         }
 
 

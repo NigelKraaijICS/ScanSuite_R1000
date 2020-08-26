@@ -545,7 +545,7 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
         this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
+                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close));
             }
         });
     }

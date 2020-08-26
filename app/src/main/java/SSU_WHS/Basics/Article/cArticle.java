@@ -189,7 +189,11 @@ public class cArticle {
             for (JSONObject jsonObject :  webresult.getResultDtt()) {
                 cArticleStock articleStock = new cArticleStock(jsonObject, this);
 
-                this.stockObl = new ArrayList<>();
+
+                if (this.stockObl == null) {
+                    this.stockObl = new ArrayList<>();
+                }
+
                 this.stockObl.add(articleStock);
 
             }
