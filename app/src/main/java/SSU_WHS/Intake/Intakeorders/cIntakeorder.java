@@ -529,7 +529,10 @@ public class cIntakeorder {
 
     }
 
-    public cResult pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu pvStepCodeEnu, int pvWorkFlowStepInt) {
+
+
+
+    public cResult pLockViaWebserviceRst()        {
 
         //Initialise result
         cResult result;
@@ -539,12 +542,30 @@ public class cIntakeorder {
         cWebresult Webresult;
         boolean ignoreBusyBln = false;
 
+        cWarehouseorder.StepCodeEnu stepCodeEnu = cWarehouseorder.StepCodeEnu.Unkown;
+        int workflowStepInt = 0;
+
+
+        switch (this.getOrderTypeStr()){
+            case "MAT":
+
+                stepCodeEnu = cWarehouseorder.StepCodeEnu.Receive_Store;
+                workflowStepInt = cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store;
+                break;
+
+            case "EOS":
+                stepCodeEnu = cWarehouseorder.StepCodeEnu.Receive_InTake;
+                workflowStepInt = cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External;
+                break;
+        }
+
+
         if (this.getStatusInt() > 10 && cUser.currentUser.getUsernameStr().equalsIgnoreCase(this.getCurrentUserIdStr())) {
             ignoreBusyBln = true;
         }
 
 
-        Webresult = this.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvStepCodeEnu.toString(), pvWorkFlowStepInt, ignoreBusyBln);
+        Webresult = this.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.ONTVANGST.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), stepCodeEnu.toString(), workflowStepInt, ignoreBusyBln);
 
         //No result, so something really went wrong
         if (Webresult == null) {
@@ -1096,7 +1117,22 @@ public class cIntakeorder {
 
      }
 
-    public   cResult pGetReceiveOrderDetailsRst(){
+     public  cResult pGetOrderDetailsRst(){
+
+
+        if (this.getOrderTypeStr().equalsIgnoreCase("MAT")) {
+
+
+            return  this.mGetMATOrderDetailsRst();
+        }
+
+        else {
+            return  this.mGetReceiveOrderDetailsRst();
+        }
+
+     }
+
+    private   cResult mGetReceiveOrderDetailsRst(){
 
         cResult result;
 
@@ -1155,7 +1191,7 @@ public class cIntakeorder {
         return  result;
     }
 
-    public cResult pGetMATOrderDetailsRst(){
+    private cResult mGetMATOrderDetailsRst(){
 
         cResult result;
 
@@ -1200,7 +1236,6 @@ public class cIntakeorder {
 
         return  result;
     }
-
 
     private static void mTruncateTable() {
         cIntakeorderViewModel intakeorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);

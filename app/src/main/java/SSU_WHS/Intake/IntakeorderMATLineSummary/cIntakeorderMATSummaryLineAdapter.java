@@ -101,7 +101,15 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         final cIntakeorderMATSummaryLine currentIntakeorderMATSummaryLine = this.localIntakeorderMATSummaryLinesObl.get(pvPositionInt);
 
         //Set fields
-        String itemNoAndVariantCodeStr = currentIntakeorderMATSummaryLine.getItemNoStr() + "~" + currentIntakeorderMATSummaryLine.getVariantCodeStr();
+        String itemNoAndVariantCodeStr;
+
+        if (currentIntakeorderMATSummaryLine.getVariantCodeStr().isEmpty()) {
+            itemNoAndVariantCodeStr = currentIntakeorderMATSummaryLine.getItemNoStr();
+        }
+        else {
+            itemNoAndVariantCodeStr = currentIntakeorderMATSummaryLine.getItemNoStr() + "~" + currentIntakeorderMATSummaryLine.getVariantCodeStr();
+        }
+
         String lineDescriptionStr = currentIntakeorderMATSummaryLine.getDescriptionStr();
 
         String quantityToShowStr = currentIntakeorderMATSummaryLine.getQuantityHandledDbl().intValue() + "/" + currentIntakeorderMATSummaryLine.getQuantityDbl().intValue();

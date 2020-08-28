@@ -124,13 +124,9 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     @Override
     public void mFindViews() {
-
-        if (cAppExtension.activity != null) {
-            this.toolbarImage = cAppExtension.activity.findViewById(R.id.toolbarImage);
-            this.toolbarTitle = cAppExtension.activity.findViewById(R.id.toolbarTitle);
-            this.recyclerViewUsers = cAppExtension.activity.findViewById(R.id.recyclerViewLines);
-        }
-
+            this.toolbarImage = findViewById(R.id.toolbarImage);
+            this.toolbarTitle = findViewById(R.id.toolbarTitle);
+            this.recyclerViewUsers = findViewById(R.id.recyclerViewLines);
     }
 
     @Override

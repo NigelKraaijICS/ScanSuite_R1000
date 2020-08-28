@@ -221,20 +221,24 @@ public class cPickorder{
 
     }
 
+    private Boolean isPackAndShipNeededLocalBln = null;
     public boolean isPackAndShipNeededBln(){
 
         if (this.linesObl() == null || this.linesObl().size() == 0 ) {
-            return  false;
+            isPackAndShipNeededLocalBln = false;
+            return  isPackAndShipNeededLocalBln;
         }
 
         for (cPickorderLine pickorderLine : this.linesObl()) {
 
             if (pickorderLine.getStatusShippingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded ||
                 pickorderLine.getStatuPackingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded)
-                return  true;
+                isPackAndShipNeededLocalBln = true;
+               return  isPackAndShipNeededLocalBln;
         }
 
-       return  false;
+        isPackAndShipNeededLocalBln = false;
+        return  isPackAndShipNeededLocalBln;
     }
 
     public  boolean isCombinedOrderBln() {
@@ -243,12 +247,19 @@ public class cPickorder{
 
     }
 
+
+    private Boolean isSinglePickLocalBln = null;
     public boolean isSingleBinBln(){
+
+        if (isSinglePickLocalBln != null) {
+            return  isSinglePickLocalBln;
+        }
 
         String binCodeStr = "";
 
         if (this.linesObl() == null || this.linesObl().size() ==0 ) {
-            return false;
+            isSinglePickLocalBln = false;
+            return isSinglePickLocalBln;
         }
 
         for (cPickorderLine pickorderLine : this.linesObl()) {
@@ -259,11 +270,13 @@ public class cPickorder{
             }
 
             if (!pickorderLine.getBinCodeStr().equalsIgnoreCase(binCodeStr)) {
-                return  false;
+                isSinglePickLocalBln = false;
+                return isSinglePickLocalBln;
             }
         }
 
-        return  true;
+        isSinglePickLocalBln = true;
+        return isSinglePickLocalBln;
 
     }
 

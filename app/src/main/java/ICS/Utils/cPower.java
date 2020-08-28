@@ -27,9 +27,12 @@ public class cPower {
             PowerConnectReceiver = new BroadcastReceiver(){
                 @Override
                 public void onReceive(Context context, Intent intent) {
-
+                    try {
                     SupportDeviceFragment supportDeviceFragment = (SupportDeviceFragment)cAppExtension.dialogFragment;
                     supportDeviceFragment.pPowerChanged();
+                    } catch (Exception ignored) {
+
+                    }
                 }
             };
         }

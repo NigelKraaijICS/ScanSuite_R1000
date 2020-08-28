@@ -30,6 +30,8 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
 
         private TextView textViewOrdernumber;
+
+        private ImageView imageViewUser;
         private TextView textViewOrderUser;
         private TextView textViewOrdertype;
         private TextView  textViewExternalreference;
@@ -38,6 +40,8 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
         public IntakeorderViewHolder(View pvItemView) {
             super(pvItemView);
+
+            this.imageViewUser = pvItemView.findViewById(R.id.imageViewUser);
 
             this.textViewOrderUser = pvItemView.findViewById(R.id.textViewOrderUser);
             this.textViewOrderUser.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -89,12 +93,26 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
         final cIntakeorder  selectedIntakeorder = localIntakeorderObl.get(pvPositionInt);
 
+        String userStr;
+
 
         if (selectedIntakeorder.getStatusInt() == 10 ) {
-            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedIntakeorder.getAssignedUserIdStr()));
+            userStr = cUser.pUserToShowStr(selectedIntakeorder.getAssignedUserIdStr());
         }
         else {
-            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedIntakeorder.getCurrentUserIdStr()));
+            userStr = cUser.pUserToShowStr(selectedIntakeorder.getCurrentUserIdStr());
+
+        }
+
+        if (userStr.isEmpty()) {
+            pvHolder.textViewOrderUser.setVisibility(View.GONE);
+            pvHolder.imageViewUser.setVisibility(View.GONE);
+        }
+        else {
+            pvHolder.textViewOrderUser.setVisibility(View.VISIBLE);
+            pvHolder.imageViewUser.setVisibility(View.VISIBLE);
+            pvHolder.textViewOrderUser.setText(userStr);
+
         }
 
         if (selectedIntakeorder.getProcessingOrParkedBln()) {

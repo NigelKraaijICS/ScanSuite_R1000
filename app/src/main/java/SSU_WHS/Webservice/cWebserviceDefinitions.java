@@ -57,8 +57,6 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_REMOVEMERGEDPICKORDER = "p_PickorderVerwijderenJsonStr";
     public static String WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET = "p_WarehouseopdrachtSettingsGetJsonStr";
 
-
-
     public static String WEBMETHOD_GETPICKORDERSHIPPACKAGES = "p_PickorderShippingPackageGetJsonStr";
     public static String WEBMETHOD_PICKORDERSOURCEDOCUMENTSHIPPED = "p_PickorderSourceDocumentShippedJsonStr";
     public static String WEBMETHOD_PICKORDERUPDATEWORKPLACE = "p_PickorderUpdateWorkplaceJsonStr";

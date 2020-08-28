@@ -485,7 +485,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         //Delete the detail, so we can get them from the webservice
         cIntakeorder.currentIntakeOrder.pDeleteDetailsBln();
 
-        hulpResult = cIntakeorder.currentIntakeOrder.pGetReceiveOrderDetailsRst();
+        hulpResult = cIntakeorder.currentIntakeOrder.pGetOrderDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -516,8 +516,8 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     private  boolean mTryToLockOrderBln(){
 
-        cResult hulpResult  = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Receive_InTake, cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External);
-
+        cResult hulpResult;
+        hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst();
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
             return true;

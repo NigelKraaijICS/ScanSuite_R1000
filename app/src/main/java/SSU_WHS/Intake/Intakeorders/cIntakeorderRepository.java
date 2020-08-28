@@ -703,7 +703,6 @@ public class cIntakeorderRepository {
         }
     }
 
-
     private static class mGetQuantityHandledAsyncTask extends AsyncTask<Void, Void, Double> {
         private iIntakeorderDao mAsyncTaskDao;
         mGetQuantityHandledAsyncTask(iIntakeorderDao dao) { mAsyncTaskDao = dao; }
@@ -901,7 +900,6 @@ public class cIntakeorderRepository {
 
 
                 String newWorkflowsStr = cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase();
-                newWorkflowsStr = newWorkflowsStr.replace("EOR","");
                 newWorkflowsStr = newWorkflowsStr.replace(";;",";");
 
                 if (newWorkflowsStr.endsWith(";")) {
@@ -953,7 +951,6 @@ public class cIntakeorderRepository {
                 l_PropertyInfo13Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo13Pin);
 
-                new cWebresult();
                 l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_RECEIVECREATE, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setSuccessBln(false);

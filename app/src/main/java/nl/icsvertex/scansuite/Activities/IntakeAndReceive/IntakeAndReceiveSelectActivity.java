@@ -741,18 +741,8 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     private  boolean mTryToLockOrderBln(){
 
-        cResult hulpResult = new cResult();
-
-        switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr()){
-            case "MAT":
-                hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Receive_Store, cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store);
-                break;
-
-            case "EOS":
-                hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Receive_InTake, cWarehouseorder.WorkflowExternalReceiveStepEnu.Receive_External);
-                break;
-        }
-
+        cResult hulpResult;
+        hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst();
 
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
