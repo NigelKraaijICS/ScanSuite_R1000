@@ -598,6 +598,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
 
         Intent intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
+        PickorderLinesActivity.startedViaOrderSelectBln = true;
         View clickedOrder = container.findViewWithTag(cPickorder.currentPickOrder.getOrderNumberStr());
 
         if (clickedOrder != null) {

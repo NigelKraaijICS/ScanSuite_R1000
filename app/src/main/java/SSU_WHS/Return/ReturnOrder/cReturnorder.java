@@ -54,6 +54,9 @@ public class cReturnorder {
     private String binCodeStr;
     public String getBinCodeStr() {return  this.binCodeStr;}
 
+    private String currentLocationStr;
+    public  String  getCurrentLocationStr(){return  currentLocationStr;}
+
     private String externalReferenceStr;
     public String getExternalReferenceStr() {return this.externalReferenceStr;}
 
@@ -68,6 +71,9 @@ public class cReturnorder {
 
     private String reasonStr;
     public String getReasonStr() {return this.reasonStr;}
+
+    private boolean retourOrderBINNoCheckBln;
+    public  boolean getRetourOrderBINNoCheckBln() { return  retourOrderBINNoCheckBln;}
 
     public int unknownVariantCounterInt = 0;
     public int getUnknownVariantCounterInt() {
@@ -144,12 +150,14 @@ public class cReturnorder {
         this.currentUserIdStr = this.returnorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.returnorderEntity.getStatusStr());
         this.binCodeStr = this.returnorderEntity.getBincodeStr();
+        this.currentLocationStr = this.returnorderEntity.getCurrentLocationStr();
         this.externalReferenceStr = this.returnorderEntity.getExternalReferenceStr();
         this.retourMultiDocumentBln = this.returnorderEntity.getRetourMultiDocumentBln();
         this.sourceDocumentInt = cText.pStringToIntegerInt(this.returnorderEntity.getSourceDocumentStr());
         this.documentStr = this.returnorderEntity.getDocumentStr();
         this.reasonStr = this.returnorderEntity.getReasonStr();
         this.retourMultiDocument = this.returnorderEntity.getRetourMultiDocumentBln();
+        this.retourOrderBINNoCheckBln = this.returnorderEntity.getRetourOrderBINNoCheckBln();
 
     }
 
@@ -162,12 +170,14 @@ public class cReturnorder {
         this.currentUserIdStr = this.returnorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.returnorderEntity.getStatusStr());
         this.binCodeStr = this.returnorderEntity.getBincodeStr();
+        this.currentLocationStr = this.returnorderEntity.getCurrentLocationStr();
         this.externalReferenceStr = this.returnorderEntity.getExternalReferenceStr();
         this.retourMultiDocumentBln = this.returnorderEntity.getRetourMultiDocumentBln();
         this.sourceDocumentInt = cText.pStringToIntegerInt(this.returnorderEntity.getSourceDocumentStr());
         this.documentStr = this.returnorderEntity.getDocumentStr();
         this.reasonStr = this.returnorderEntity.getReasonStr();
         this.retourMultiDocument = this.returnorderEntity.getRetourMultiDocumentBln();
+        this.retourOrderBINNoCheckBln = this.returnorderEntity.getRetourOrderBINNoCheckBln();
     }
 
     //End Region Constructor
@@ -509,6 +519,21 @@ public class cReturnorder {
             return false;
         }
         return true;
+    }
+
+    public boolean pUpdateCurrentLocationBln(String pvCurrentLocationStr) {
+
+
+        cWebresult Webresult;
+
+        Webresult = this.getReturnorderViewModel().pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);
+        if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
+            return  false;
+        }
+
+        this.currentLocationStr = pvCurrentLocationStr;
+        return  true;
+
     }
 
     public boolean pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu pvStepCodeEnu, int pvWorkFlowStepInt) {
@@ -1007,14 +1032,12 @@ public class cReturnorder {
         if (cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl == null || cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.size() == 0) {
             return  null;
         }
-        
-        List<cReturnorderLine> linesForArticleObl = new ArrayList<>();
 
         for (cReturnorderLine returnorderLine : cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl) {
             //Check if item matches scanned item
             if (returnorderLine.getItemNoStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getItemNoStr()) &&
                 returnorderLine.getVariantCodeStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getVariantCodeStr())) {
-                linesForArticleObl.add((returnorderLine));
+                return returnorderLine;
             }
         }
 

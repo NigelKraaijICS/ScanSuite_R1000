@@ -51,4 +51,6 @@ public class cReturnorderViewModel extends AndroidViewModel {
 
     public cWebresult pReturnDisposedViaWebserviceWrs(){return  this.Repository.pReturnDisposedViaWebserviceWrs();}
 
+    public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {return this.Repository.pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);}
+
 }

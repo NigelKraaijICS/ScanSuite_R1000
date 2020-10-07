@@ -27,7 +27,6 @@ import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocumentAdapter;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocumentRecyclerItemTouchHelper;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.SendOrderFragment;
 import nl.icsvertex.scansuite.R;
 
 public class ReturnDocumentsDoneFragment extends Fragment implements iICSDefaultFragment,  cReturnorderDocumentRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -207,7 +206,7 @@ public class ReturnDocumentsDoneFragment extends Fragment implements iICSDefault
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
+                    if (fragment instanceof NothingHereFragment) {
                         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                         fragmentTransaction.remove(fragment);
                         fragmentTransaction.commit();

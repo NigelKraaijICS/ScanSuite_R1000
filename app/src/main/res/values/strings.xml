@@ -117,6 +117,7 @@
     <string name="menuitem_inventoryclose">Inventory close</string>
     <string name="menuitem_move">Move</string>
     <string name="menuitem_move_mi">Move (only place)</string>
+    <string name="menuitem_move_mi_singlepiece">Move (only place singlepiece)</string>
     <string name="menuitem_move_mo">Move (only pick)</string>
     <string name="menuitem_move_mv">Move (pick and place)</string>
     <string name="menuitem_moveitem">Move item</string>
@@ -127,6 +128,7 @@
     <string name="menuitem_selfpick">Picking done by client</string>
     <string name="menuitem_sort">Sorting</string>
     <string name="menuitem_ship">Shipping</string>
+    <string name="menuitem_finish_ship">Finish Shipping</string>
     <string name="menuitem_qc">Quality Control</string>
     <!--endregion Menu Items-->
 
@@ -166,6 +168,7 @@
     <!--endregion Order types-->
 
     <!--region Login screen-->
+    <string name="screentitle_barcodeinfo">Barcode info</string>
     <string name="screentitle_login">Login</string>
     <string name="hint_password">Password</string>
     <string name="button_login">Log in</string>
@@ -286,6 +289,7 @@
 
     <!--region shiporder select-->
     <string name="screentitle_shiporderselect">Shiporder select</string>
+    <string name="screentitle_finish_shiporderselect">Finish Shiporder select</string>
     <!--endregion shiporder select-->
 
     <!--region qcporder select-->
@@ -643,6 +647,7 @@
 
     <!--region move-->
     <string name="screentitle_moveorderselect">Move orders</string>
+    <string name="screentitle_move_mi_singlepiece">Move Place Singlepiece</string>
     <string name="error_get_moveorders_failed">Getting moveorders from server failed</string>
     <string name="error_get_movelines_failed">Getting movelines from server failed</string>
     <string name="button_create_move">Create</string>
@@ -790,6 +795,7 @@
     <string name="message_place_line_already_exists">Place line already exists, if you want to mutate first rest the line</string>
     <string name="bin_stock">BIN stock</string>
     <string name="close_take">Close TAKE</string>
+    <string name="barcode_info">Barcode info</string>
     <string name="article_stock">Article stock</string>
     <string name="check_barcode">Check Barcode</string>
     <string name="pair_pro_glove">Pair Pro Glove</string>
@@ -814,7 +820,11 @@
     <string name="message_line_reset_succesfull">Line has been reset</string>
     <string name="message_close_place">Close PLACE?</string>
     <string name="message_close_place_text">Do you really want to close PLACE?</string>
-
+    <string name="message_scanning_not_allowed">You can\'t scan here</string>
+    <string name="message_print_failed">Print failed</string>
+    <string name="questionmarks">\???</string>
+    <string name="none">none</string>
+    <string name="enter_BIN">Enter BIN</string>
 
     <!--End Region return-->
 

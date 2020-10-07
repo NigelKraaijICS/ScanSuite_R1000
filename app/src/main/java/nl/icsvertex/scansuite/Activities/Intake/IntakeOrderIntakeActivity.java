@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -20,10 +22,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +45,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -48,10 +57,16 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineAdapter;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineRecyclerItemTouchHelper;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.AddBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
+import nl.icsvertex.scansuite.Fragments.Support.SupportFragment;
 import nl.icsvertex.scansuite.R;
 
 import static ICS.Utils.cText.pDoubleToStringStr;
@@ -97,6 +112,9 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private  TextView quantityRequiredText;
     private  TextView sourcenoText;
 
+    private CardView containerContainer;
+    private  TextView containerText;
+
     private  Boolean articleScannedBln = false;
     private  Boolean binScannedBln = false;
     private  Double quantityScannedDbl = 0.0;
@@ -104,6 +122,10 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private  cBranchBin currentBin;
 
     private  RecyclerView recyclerScanActions;
+    private MenuItem item_enter_bin;
+
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     private cIntakeorderMATLineAdapter intakeorderMATLineAdapter;
     private cIntakeorderMATLineAdapter getIntakeorderMATLineAdapter(){
@@ -168,20 +190,71 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_intakeactions,pvMenu);
+        return true;
+    }
 
-        if (item.getItemId() == android.R.id.home) {
-            if (this.quantityScannedDbl == 0 ) {
-                this.mResetCurrents();
-                this.mGoBackToLinesActivity();
-                return  true;
-            }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+        invalidateOptionsMenu();
 
-            this.mShowAcceptFragment();
+
+        this.item_enter_bin = pvMenu.findItem(R.id.item_enter_bin);
+        this.item_enter_bin .setVisible(true);
+
+        if (cIntakeorder.currentIntakeOrder.currentBin != null)  {
+            this.item_enter_bin.setVisible(false);
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onPrepareOptionsMenu(pvMenu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
+
+
+        DialogFragment selectedFragment = null;
+        switch (pvMenuItem.getItemId()) {
+
+            case android.R.id.home:
+
+                if (this.quantityScannedDbl == 0 ) {
+                    this.mResetCurrents();
+                    this.mGoBackToLinesActivity();
+                    return  true;
+                }
+
+                this.mShowAcceptFragment();
+                return true;
+
+            case R.id.item_enter_bin:
+                selectedFragment = new ScanBinFragment();
+                break;
+
+            default:
+                break;
+        }
+
+
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+        }
+
+        return true;
     }
 
     @Override
@@ -251,8 +324,10 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
 
         this.binContainer = findViewById(R.id.binContainer);
-
         this.sourcenoText = findViewById(R.id.sourcenoText);
+
+        this.containerContainer = findViewById(R.id.containerContainer);
+        this.containerText = findViewById(R.id.containerText);
 
         this.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
         this.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
@@ -273,6 +348,9 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.recyclerScanActions = findViewById(R.id.recyclerScanActions);
+
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
     }
 
     @Override
@@ -301,6 +379,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.mSetArticleInfo();
         this.mSetBinInfo();
         this.mSetSourceNoInfo();
+        this.mSetContainerInfo();
         this.mSetQuantityInfo();
 
         this.mEnablePlusMinusAndBarcodeSelectViews();
@@ -308,6 +387,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.mShowOrHideGenericExtraFields();
         this.mShowBarcodeInfo();
         this.mShowLines();
+
+
 
     }
 
@@ -441,6 +522,18 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     public void pCancelStore() {
         this.mResetCurrents();
         this.mGoBackToLinesActivity();
+    }
+
+    public  void pHandleHandleBINScanned(cBarcodeScan pvBarcodeScan) {
+
+        cResult hulpRst;
+
+        hulpRst = this.mHandleBINScanRst(pvBarcodeScan);
+        if (! hulpRst.resultBln) {
+            cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,hulpRst.messagesStr(),null,true);
+            return;
+        }
+
     }
 
     //End Region Public Methods
@@ -1018,6 +1111,46 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         });
     }
 
+    private void mSetMenuListener() {
+        this.actionMenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Fragment selectedFragment = null;
+                switch (menuItem.getItemId()) {
+
+                    case R.id.item_bin_stock:
+                        selectedFragment = new BinItemsFragment(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
+                        break;
+
+                    case R.id.item_article_stock:
+                        selectedFragment = new SupportFragment();
+                        break;
+
+                    default:
+                        break;
+                }
+
+                if (selectedFragment != null) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.mainFramelayout, selectedFragment);
+                    transaction.commit();
+                }
+
+                // deselect everything
+                int size = actionMenuNavigation.getMenu().size();
+                for (int i = 0; i < size; i++) {
+                    actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+                }
+
+                // set item as selected to persist highlight
+                menuItem.setChecked(true);
+                // close drawer when item is tapped
+                menuActionsDrawer.closeDrawers();
+                return true;
+            }
+        });
+    }
+
     //Dialogs and Activitys
 
     private void mShowFullArticleFragment() {
@@ -1129,6 +1262,18 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private void mSetSourceNoInfo(){
         this.sourcenoText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getSourceNoStr());
     }
+
+    private void mSetContainerInfo(){
+
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getContainerStr().isEmpty()) {
+            this.containerContainer.setVisibility(View.GONE);
+            return;
+        }
+        this.containerContainer.setVisibility(View.VISIBLE);
+        this.containerText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getContainerStr());
+    }
+
+
 
     //Region Number Broadcaster
 

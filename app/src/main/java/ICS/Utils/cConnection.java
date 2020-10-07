@@ -227,6 +227,7 @@ public class cConnection {
 
 
                     PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+                    PickorderLinesActivity.startedViaOrderSelectBln = false;
                     pickorderLinesActivity.pCheckAllDone();
 
 

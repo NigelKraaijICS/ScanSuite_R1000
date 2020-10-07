@@ -20,6 +20,7 @@
         app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:tabMode="scrollable"
         />
     <ICS.Utils.cNoSwipeViewPager
         android:id="@+id/moveLinesViewpager"

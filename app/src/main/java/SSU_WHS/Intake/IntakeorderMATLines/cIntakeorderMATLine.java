@@ -12,6 +12,7 @@ import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -45,6 +46,11 @@ public class cIntakeorderMATLine {
     private String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
+    }
+
+    private String containerStr;
+    public String getContainerStr() {
+        return containerStr;
     }
 
     public String binCodeHandledStr;
@@ -93,6 +99,11 @@ public class cIntakeorderMATLine {
     private Integer localStatusInt;
     public Integer getLocalStatusInt() {
         return localStatusInt;
+    }
+
+    public Integer sortingSequenceInt;
+    public Integer getSortingSequenceInt() {
+        return sortingSequenceInt;
     }
 
     private String extraField1Str;
@@ -182,6 +193,7 @@ public class cIntakeorderMATLine {
         this.variantCodeStr = this.intakeorderMATLineEntity.getVariantCodeStr();
         this.descriptionStr = this.intakeorderMATLineEntity.getDescriptionStr();
         this.description2Str = this.intakeorderMATLineEntity.getDescription2Str();
+        this.containerStr = this.intakeorderMATLineEntity.getContainerStr();
         this.binCodeStr= this.intakeorderMATLineEntity.getBincodeStr();
         this.binCodeHandledStr = this.intakeorderMATLineEntity.getBincodeHandledStr();
         this.quantityDbl = this.intakeorderMATLineEntity.getQuantityDbl();
@@ -193,6 +205,7 @@ public class cIntakeorderMATLine {
         this.statusInt = this.intakeorderMATLineEntity.getStatusInt();
         this.localStatusInt =  this.intakeorderMATLineEntity.getLocalStatusInt();
         this.actionTypeCodeStr = this.getActionTypeCodeStr();
+        this.sortingSequenceInt = this.intakeorderMATLineEntity.getSortingSequenceInt();
         this.extraField1Str =  this.intakeorderMATLineEntity.getExtraField1Str();
         this.extraField2Str = this.intakeorderMATLineEntity.getExtraField2Str();
         this.extraField3Str =  this.intakeorderMATLineEntity.getExtraField3Str();
@@ -344,7 +357,5 @@ public class cIntakeorderMATLine {
         this.quantityDbl = pvQuantityDbl;
 
     }
-
-
 
 }

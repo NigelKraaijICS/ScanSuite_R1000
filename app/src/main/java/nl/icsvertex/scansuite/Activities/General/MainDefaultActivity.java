@@ -2,6 +2,7 @@ package nl.icsvertex.scansuite.Activities.General;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -116,7 +117,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
         cPower.pUnregisterConnectPowerReceiver();
         cPower.pUnregisterPowerLevelChangedReceiver();
     }

@@ -24,7 +24,8 @@
             android:layout_width="0dp"
             app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/quantityShipordersText"
+            app:layout_constraintEnd_toStartOf="@id/quantityFinishShipordersText"
+            app:tabMode="scrollable"
         />
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/shiporderLinesViewpager"

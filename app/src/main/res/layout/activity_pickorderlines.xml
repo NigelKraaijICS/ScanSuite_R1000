@@ -24,6 +24,7 @@
             app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/quantityPickordersText"
+            app:tabMode="scrollable"
         />
         <ICS.Utils.cNoSwipeViewPager
             android:id="@+id/pickorderLinesViewpager"

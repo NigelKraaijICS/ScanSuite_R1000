@@ -58,6 +58,9 @@ public class cAuthorisation {
             case "MOVE_MI":
                 return  AutorisationEnu.MOVE_MI;
 
+            case "MOVE_MI_SINGLEPIECE":
+                return  AutorisationEnu.MOVE_MI_SINGLEPIECE;
+
             case "MOVE_MO":
                 return  AutorisationEnu.MOVE_MO;
 
@@ -90,6 +93,10 @@ public class cAuthorisation {
 
             case "SHIPPING":
                 return  AutorisationEnu.SHIPPING;
+
+            case "FINISH_SHIPPING":
+                return  AutorisationEnu.FINISH_SHIPPING;
+
 
             case "QC":
                 return  AutorisationEnu.QC;
@@ -164,6 +171,7 @@ public class cAuthorisation {
         INVENTORYCLOSE,
         MOVE,
         MOVE_MI,
+        MOVE_MI_SINGLEPIECE,
         MOVE_MO,
         MOVE_MV,
         MOVEITEM,
@@ -176,6 +184,7 @@ public class cAuthorisation {
         // Generated
         SORTING,
         SHIPPING,
+        FINISH_SHIPPING,
         QC
     }
 
@@ -193,6 +202,9 @@ public class cAuthorisation {
 
     public static String TAG_IMAGE_SHIP = "TAG_IMAGE_SHIP";
     public static String TAG_TEXT_SHIP = "TAG_TEXT_SHIP";
+
+    public static String TAG_IMAGE_FINISH_SHIP = "TAG_IMAGE_FINISH_SHIP";
+    public static String TAG_TEXT_FINSIH_SHIP = "TAG_TEXT_FINISH_SHIP";
 
     public static String TAG_IMAGE_QC = "TAG_IMAGE_QC";
     public static String TAG_TEXT_QC = "TAG_TEXT_QC";

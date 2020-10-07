@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
@@ -86,6 +87,12 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
                     if (cAppExtension.context instanceof ShiporderLinesActivity) {
                         ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
                         shiporderLinesActivity.pWorkplaceSelected();
+
+                    }
+
+                    if (cAppExtension.context instanceof FinishShipLinesActivity) {
+                        FinishShipLinesActivity finishShipLinesActivity = (FinishShipLinesActivity)cAppExtension.activity;
+                        finishShipLinesActivity.pWorkplaceSelected();
 
                     }
                 }

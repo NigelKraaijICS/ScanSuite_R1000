@@ -41,10 +41,14 @@ import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLineAdapter;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLineRecyclerItemTouchHelper;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
+import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
+import nl.icsvertex.scansuite.Fragments.FinishShip.SinglePieceLinesToShipFragment;
 import nl.icsvertex.scansuite.R;
 
 public class ReturnorderDocumentActivity extends AppCompatActivity implements iICSDefaultActivity, cReturnorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -290,6 +294,11 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     public  void pCloseDocument(){
 
+        //If we still need to fill a current location, show pop-up and we are done.
+        if (cReturnorder.currentReturnOrder.getCurrentLocationStr().isEmpty() && cSetting.RETOUR_VALIDATE_CURRENT_LOCATION()) {
+            mShowCurrentLocationFragment();
+            return;
+        }
 
         boolean resultBln = cReturnorderDocument.currentReturnOrderDocument.pCloseBln();
 
@@ -300,26 +309,24 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         if (!cReturnorder.currentReturnOrder.isRetourMultiDocument()) {
-            cResult hulpResult = cReturnorder.currentReturnOrder.pOrderHandledViaWebserviceRst();
-            if (!hulpResult.resultBln) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_document_close_fail),cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr(),true,true);
-                return;
-            }
 
+        mShowSending();
+        new Thread(new Runnable() {
+            public void run() {
+                mOrderHandledViaWebservice();
+            }
+        }).start();
+        }
+
+        else {
             //Clear cache
             cReturnorderDocument.currentReturnOrderDocument = null;
 
-            this.mStartOrderSelectActivity();
-            return;
-
+            //Start Documents activity
+            this.mStartDocumentsActivity();
         }
 
 
-        //Clear cache
-        cReturnorderDocument.currentReturnOrderDocument = null;
-
-        //Start Documents activity
-        this.mStartDocumentsActivity();
 
     }
 
@@ -327,18 +334,36 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         cBarcodeScan.pRegisterBarcodeReceiver();
     }
 
-    public void  pStartDocumentsActivity(){
+    public  void pSetCurrentLocation(String pvCurrentLocationStr) {
 
-        //Clear cache
-        cReturnorderDocument.currentReturnOrderDocument = null;
+        if (!cReturnorder.currentReturnOrder.pUpdateCurrentLocationBln(pvCurrentLocationStr)) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_currentlocation_could_not_update), "", true, false);
+            return;
+        }
 
-        //Start Documents activity
-        this.mStartDocumentsActivity();
+        //We are done
+        this.pCloseDocument();
+
     }
 
     //End Region Public Methods
 
     //Region Private Methods
+
+    private void mOrderHandledViaWebservice() {
+
+        cResult hulpResult = cReturnorder.currentReturnOrder.pOrderHandledViaWebserviceRst();
+        if (! hulpResult.resultBln) {
+            this.mShowShipmentNotSent(hulpResult.messagesStr());
+            return;
+        }
+
+        //Clear cache
+        cReturnorderDocument.currentReturnOrderDocument = null;
+        this.mShowSent();
+        this.mStartOrderSelectActivity();
+
+    }
 
     private void mHandleScan(cBarcodeScan pvBarcodeScan){
 
@@ -385,8 +410,6 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             this.mHandleUnknownBarcodeScan(pvBarcodeScan);
             return;
         }
-
-        cArticle.currentArticle  = cArticle.pGetArticleByBarcodeViaWebservice(pvBarcodeScan);
 
         //We scanned a barcodeStr we already know
         this.mHandleKnownBarcodeScan(returnorderBarcode, pvBarcodeScan);
@@ -698,6 +721,15 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
     }
 
+    private  void mShowCurrentLocationFragment() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        cUserInterface.pPlaySound(R.raw.goodsound, null);
+
+        final CurrentLocationFragment currentLocationFragment = new CurrentLocationFragment();
+        currentLocationFragment.setCancelable(true);
+        currentLocationFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.CURRENTLOCATION_TAG);
+    }
 
     private void mSetAddArticleListener() {
         this.imageAddArticle.setOnClickListener(new View.OnClickListener() {
@@ -802,6 +834,47 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
+    }
+
+    private void mShowSending() {
+        final SendingFragment sendingFragment = new SendingFragment();
+        sendingFragment.setCancelable(true);
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // show my popup
+                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
+            }
+        });
+    }
+
+    private void mShowSent() {
+
+        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.SENDING_TAG);
+        if (fragment != null) {
+            if (fragment instanceof SendingFragment) {
+                ((SendingFragment) fragment).pShowFlyAwayAnimation();
+            }
+        }
+
+
+        if (FinishShipLinesActivity.currentLineFragment instanceof SinglePieceLinesToShipFragment) {
+            SinglePieceLinesToShipFragment singlePieceLinesToShipFragment = (SinglePieceLinesToShipFragment) FinishShipLinesActivity.currentLineFragment;
+            singlePieceLinesToShipFragment.pGetData();
+            mInitScreen();
+        }
+
+    }
+
+    private void mShowShipmentNotSent(String pvErrorMessageStr) {
+        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.SENDING_TAG);
+        if (fragment != null) {
+            if (fragment instanceof SendingFragment) {
+                ((SendingFragment) fragment).pShowCrashAnimation(pvErrorMessageStr);
+            }
+        }
+
+
     }
 
     //End Region Private Methods

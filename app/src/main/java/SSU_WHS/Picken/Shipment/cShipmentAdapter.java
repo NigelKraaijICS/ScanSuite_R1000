@@ -20,19 +20,19 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.R;
 
-public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.PickorderLinePackAndShipViewHolder> {
+public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.ShipmentViewHolder> {
 
     //Region Public Properties
 
-    public static class PickorderLinePackAndShipViewHolder extends RecyclerView.ViewHolder{
+    public static class ShipmentViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewDocument;
         private TextView textViewQuantity;
         private ImageView imageSendStatus;
-        public LinearLayout pickorderLinePackAndShipItemLinearLayout;
+        public LinearLayout shipmentItemLinearLayout;
 
 
-        public PickorderLinePackAndShipViewHolder(View pvItemView) {
+        public ShipmentViewHolder(View pvItemView) {
             super(pvItemView);
             this.textViewDocument = pvItemView.findViewById(R.id.textViewDocument);
             this.textViewDocument.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -46,7 +46,7 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
             this.textViewQuantity.setSelected(true);
             this.imageSendStatus = pvItemView.findViewById(R.id.imageSendStatus);
 
-            this.pickorderLinePackAndShipItemLinearLayout = pvItemView.findViewById(R.id.pickorderLinePackAndShipItemLinearLayout);
+            this.shipmentItemLinearLayout = pvItemView.findViewById(R.id.shipmentItemLinearLayout);
         }
 
     }
@@ -54,7 +54,7 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
     //Region Private Properties
 
-    private List<LinearLayout> pickorderLinePackAndShipItemLinearLayouts = new ArrayList<>();
+    private List<LinearLayout> linearLayouts = new ArrayList<>();
     private RecyclerView thisRecyclerView;
     private final LayoutInflater LayoutInflaterObject;
     private List<cShipment> localShipmentsObl;
@@ -71,9 +71,9 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
     @NonNull
     @Override
-    public cShipmentAdapter.PickorderLinePackAndShipViewHolder onCreateViewHolder(@NonNull ViewGroup pvViewGroup, int pvViewTypeInt) {
+    public cShipmentAdapter.ShipmentViewHolder onCreateViewHolder(@NonNull ViewGroup pvViewGroup, int pvViewTypeInt) {
         View itemView = LayoutInflaterObject.inflate(R.layout.recycler_shipment, pvViewGroup, false);
-        return new PickorderLinePackAndShipViewHolder(itemView);
+        return new ShipmentViewHolder(itemView);
     }
 
     @Override
@@ -83,9 +83,9 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
     }
 
     @Override
-    public void onBindViewHolder(cShipmentAdapter.PickorderLinePackAndShipViewHolder pvHolder, final int pvPositionInt) {
+    public void onBindViewHolder(cShipmentAdapter.ShipmentViewHolder pvHolder, final int pvPositionInt) {
 
-        this.pickorderLinePackAndShipItemLinearLayouts.add(pvHolder.pickorderLinePackAndShipItemLinearLayout);
+        this.linearLayouts.add(pvHolder.shipmentItemLinearLayout);
 
         if (this.localShipmentsObl == null || this.localShipmentsObl.size() == 0 ) {
             return;
@@ -129,12 +129,12 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Pick
 
 
         final int id = thisRecyclerView.getId();
-        pvHolder.pickorderLinePackAndShipItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+        pvHolder.shipmentItemLinearLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 //deselect all
-                for (LinearLayout aLayout : pickorderLinePackAndShipItemLinearLayouts) {
+                for (LinearLayout aLayout : linearLayouts) {
                     aLayout.setSelected(false);
                 }
                 //select current

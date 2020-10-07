@@ -68,8 +68,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     private ImageView articleThumbImageView;
     private TextView binText;
     private EditText quantityText;
-    private AppCompatImageButton imageButtonMinus;
-    private AppCompatImageButton imageButtonPlus;
+
 
     private TextView reasonText;
     private ImageButton imageButtonReason;
@@ -90,6 +89,8 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     private TextView genericItemExtraField7Text;
     private TextView genericItemExtraField8Text;
 
+    private AppCompatImageButton imageButtonMinus;
+    private AppCompatImageButton imageButtonPlus;
     private ImageView imageButtonDone;
 
     private ImageButton imageButtonBarcode;
@@ -240,8 +241,12 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
         if (!cSetting.RETOUR_AMOUNT_MANUAL()) {
             this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonMinus.setVisibility(View.INVISIBLE);
+            this.imageButtonPlus.setVisibility(View.INVISIBLE);
         } else {
             this.imageButtonBarcode.setVisibility(View.VISIBLE);
+            this.imageButtonMinus.setVisibility(View.VISIBLE);
+            this.imageButtonPlus.setVisibility(View.VISIBLE);
         }
 
         this.returnCounterPlusHelperInt = 0;
@@ -321,7 +326,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         boolean newReasonAllowedBln;
 
         //Check if REASON scans are allowed
-        if (!cReturnorderLine.currentReturnOrderLine.isGeneratedBln()) {
+        if (!cReturnorderLine.currentReturnOrderLine.isGeneratedBln() && !cReturnorderLine.currentReturnOrderLine.getRetourRedenStr().isEmpty()) {
             newReasonAllowedBln = false;
         }
         else {
@@ -452,6 +457,8 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     public void pHandleFragmentDismissed(){
         cBarcodeScan.pRegisterBarcodeReceiver();
+        cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl = Double.valueOf(0);
+        this.mGoBackToDocumentActivity();
     }
 
     public  void pDone(){

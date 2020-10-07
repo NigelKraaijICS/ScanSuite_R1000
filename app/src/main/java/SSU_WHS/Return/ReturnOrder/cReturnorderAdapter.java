@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,32 +26,46 @@ public class cReturnorderAdapter extends RecyclerView.Adapter<cReturnorderAdapte
 
     public static class ReturnorderViewHolder extends RecyclerView.ViewHolder{
 
-        private View viewOrderStatus;
+
         private TextView textViewOrdernumber;
         private TextView textViewOrderUser;
-        private TextView textViewOrdertype;
+        private ImageView imageViewUser;
         private TextView  textViewDocument;
+        private  TextView textviewCurrentLocation;
+        private TextView textViewOrdertype;
         public LinearLayout returnorderItemLinearLayout;
 
         public ReturnorderViewHolder(View pvItemView) {
             super(pvItemView);
-            this.viewOrderStatus = pvItemView.findViewById(R.id.viewOrderStatus);
+
             this.textViewOrderUser = pvItemView.findViewById(R.id.textViewOrderUser);
             this.textViewOrderUser.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewOrderUser.setSingleLine(true);
             this.textViewOrderUser.setMarqueeRepeatLimit(5);
             this.textViewOrderUser.setSelected(true);
+
+            this.imageViewUser = pvItemView.findViewById(R.id.imageViewUser);
+
             this.textViewOrdernumber = pvItemView.findViewById(R.id.textViewOrdernumber);
             this.textViewOrdernumber.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewOrdernumber.setSingleLine(true);
             this.textViewOrdernumber.setMarqueeRepeatLimit(5);
             this.textViewOrdernumber.setSelected(true);
+
             this.textViewDocument = pvItemView.findViewById(R.id.textViewDocument);
             this.textViewDocument.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewDocument.setSingleLine(true);
             this.textViewDocument.setMarqueeRepeatLimit(5);
             this.textViewDocument.setSelected(true);
+
+            this.textviewCurrentLocation = pvItemView.findViewById(R.id.textViewCurrentLocation);
+            this.textviewCurrentLocation.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textviewCurrentLocation.setSingleLine(true);
+            this.textviewCurrentLocation.setMarqueeRepeatLimit(5);
+            this.textviewCurrentLocation.setSelected(true);
+
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
+
             this.returnorderItemLinearLayout = pvItemView.findViewById(R.id.returnorderItemLinearLayout);
 
         }
@@ -87,20 +102,39 @@ public class cReturnorderAdapter extends RecyclerView.Adapter<cReturnorderAdapte
 
         final cReturnorder selectedReturnorder = localReturnorderObl.get(pvPositionInt);
 
-        if (!selectedReturnorder.getAssignedUserIdStr().isEmpty()) {
-            pvHolder.viewOrderStatus.setBackgroundResource(R.color.colorOrderStatusAssignedUser);
-        }
+        String userStr;
+
 
         if (selectedReturnorder.getStatusInt() == 10 ) {
-            pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedReturnorder.getAssignedUserIdStr()));
+            userStr = cUser.pUserToShowStr(selectedReturnorder.getAssignedUserIdStr());
         }
         else {
+            userStr = cUser.pUserToShowStr(selectedReturnorder.getCurrentUserIdStr());
+        }
+
+
+        if (userStr.isEmpty()) {
+            pvHolder.textViewOrderUser.setVisibility(View.INVISIBLE);
+            pvHolder.imageViewUser.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
             pvHolder.textViewOrderUser.setText(cUser.pUserToShowStr(selectedReturnorder.getCurrentUserIdStr()));
+            pvHolder.imageViewUser.setVisibility(View.VISIBLE);
         }
 
         pvHolder.textViewOrdernumber.setText(selectedReturnorder.getOrderNumberStr());
         pvHolder.textViewOrdernumber.setTag(selectedReturnorder.getOrderNumberStr());
         pvHolder.textViewDocument.setText(selectedReturnorder.getDocumentStr());
+
+        if (selectedReturnorder.getCurrentLocationStr().isEmpty()) {
+            pvHolder.textviewCurrentLocation.setVisibility(View.GONE);
+        }
+        else
+            {
+            pvHolder.textviewCurrentLocation.setVisibility(View.VISIBLE);
+            pvHolder.textviewCurrentLocation.setText(selectedReturnorder.getCurrentLocationStr());
+        }
 
         if(selectedReturnorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.RVS.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_rvs);

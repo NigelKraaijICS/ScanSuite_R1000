@@ -43,6 +43,10 @@ public class cIntakeorderMATLineEntity {
     public String binCodeStr;
     public String getBincodeStr() {return this.binCodeStr;}
 
+    @ColumnInfo(name = cDatabase.CONTAINER_NAMESTR)
+    public String containerStr;
+    public String getContainerStr() {return this.containerStr;}
+
     @ColumnInfo(name = cDatabase.BINCODEHANDLED_NAMESTR)
     public String binCodehandledStr;
     public String getBincodeHandledStr() {return this.binCodehandledStr;}
@@ -81,6 +85,10 @@ public class cIntakeorderMATLineEntity {
     @ColumnInfo(name = cDatabase.LOCALSTATUS_NAMESTR)
     public int localStatusInt;
     public int getLocalStatusInt() {return this.localStatusInt;}
+
+    @ColumnInfo(name = cDatabase.SORTINGSEQUENCENO_NAMESTR)
+    public int sortingSequenceInt;
+    public int getSortingSequenceInt() {return this.sortingSequenceInt;}
 
     @ColumnInfo(name = cDatabase.EXTRAFIELD1_NAMESTR)
     public String extraField1Str;
@@ -131,6 +139,7 @@ public class cIntakeorderMATLineEntity {
             this.variantCodeStr = pvJsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
             this.descriptionStr = pvJsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
             this.description2Str = pvJsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
+            this.containerStr = pvJsonObject.getString(cDatabase.CONTAINER_NAMESTR);
             this.binCodeStr = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
             this.binCodehandledStr = pvJsonObject.getString(cDatabase.BINCODEHANDLED_NAMESTR);
             this.quantityDbl = cText.pStringToDoubleDbl(pvJsonObject.getString(cDatabase.QUANTITY_NAMESTR));
@@ -149,6 +158,8 @@ public class cIntakeorderMATLineEntity {
             if (this.getQuantityHandledDbl() >= this.getQuantityDbl()) {
                 this.localStatusInt = cWarehouseorder.IntakeMATLineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
             }
+
+            this.sortingSequenceInt = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.SORTINGSEQUENCENO_NAMESTR));
 
             //region extraField1Str
             if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {

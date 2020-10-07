@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -30,7 +29,6 @@ import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinAdapter;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinRecyclerItemTouchHelper;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.SendOrderFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFragment,  cInventoryorderBinRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -141,7 +139,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
 
     @Override
     public void mFindViews() {
-        this.recyclerViewInventoryBinsDone = Objects.requireNonNull(getView()).findViewById(R.id.recyclerViewInventoryBinsDone);
+        this.recyclerViewInventoryBinsDone = requireView().findViewById(R.id.recyclerViewInventoryBinsDone);
         this.imageCloseOrder = getView().findViewById(R.id.imageCloseOrder);
     }
 
@@ -209,7 +207,7 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
+                    if (fragment instanceof NothingHereFragment) {
                         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                         fragmentTransaction.remove(fragment);
                         fragmentTransaction.commit();

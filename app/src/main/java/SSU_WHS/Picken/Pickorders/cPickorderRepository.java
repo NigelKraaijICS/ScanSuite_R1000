@@ -200,6 +200,9 @@ public class cPickorderRepository {
         if (pvStepCodeEnu == cWarehouseorder.StepCodeEnu.Pick_PackAndShip) {
             stepCodeInt = 40;
         }
+        if (pvStepCodeEnu == cWarehouseorder.StepCodeEnu.Finish_Packing) {
+            stepCodeInt = 70;
+        }
 
         PickorderLocalParams pickorderLocalParams;
         pickorderLocalParams = new PickorderLocalParams(pvUsernameStr, cUser.currentUser.currentBranch.getBranchStr(), false, stepCodeInt, pvSearchTextStr, "");
@@ -393,6 +396,36 @@ public class cPickorderRepository {
 
         }
     }
+
+    public cWebresult pFinishSinglePiecesHandledViaWebserviceWrs(String pvWorkplaceStr) {
+
+        cWebresult webResult;
+
+        PickorderStepHandledParams pickorderStepHandledParams;
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(),
+                "",
+                cUser.currentUser.currentBranch.getBranchStr(),
+                cPickorder.currentPickOrder.getOrderNumberStr(),
+                cDeviceInfo.getSerialnumberStr(),
+                pvWorkplaceStr,
+                cWarehouseorder.StepCodeEnu.Finish_Packing.toString(),
+                cWarehouseorder.WorkflowPickStepEnu.PickFinishPacking,
+                "");
+
+        try {
+
+            webResult = new mPickorderStepHandledAsyncTask().execute(pickorderStepHandledParams).get();
+            return  webResult;
+        }
+
+        catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return  null;
+
+        }
+    }
+
+
 
     public cWebresult pPickorderSourceDocumentShippedViaWebserviceWrs() {
 
@@ -711,6 +744,25 @@ public class cPickorderRepository {
         }
         return webResultWrs;
     }
+
+    public cWebresult pGetFinishPackSinglePieceLinesViaWebserviceWrsWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetFinishPackSinglePieceLinesViaWebserviceWrsAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+
 
     public cWebresult pCreateCombinedPickViaWebserviceWrs() {
 
@@ -1182,6 +1234,33 @@ public class cPickorderRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mGetFinishPackSinglePieceLinesViaWebserviceWrsAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo2Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESFINISHSINGLEPIECE, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

@@ -17,7 +17,7 @@ public class cBarcodeLayout {
 
     //region Public Properties
     private String barcodeLayoutStr;
-    private String getBarcodeLayoutStr() {
+    public String getBarcodeLayoutStr() {
         return barcodeLayoutStr;
     }
     public barcodeLayoutEnu getBarcodeLayoutEnu(){

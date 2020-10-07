@@ -219,6 +219,7 @@ public class cUser {
         this.autorisationObl = null;
 
         boolean shippingAddedBln = false;
+        boolean finishShippingAddedBln = false;
         boolean sortingAddedBln = false;
 
 
@@ -268,6 +269,15 @@ public class cUser {
                           shippingAddedBln = true;
                       }
                     }
+
+                    if (cSetting.PICK_FINISH_PACK_FASE_AVAILABLE()) {
+                        cAuthorisation authorisationFinishShipping = new cAuthorisation(cAuthorisation.AutorisationEnu.FINISH_SHIPPING.toString(), this.autorisationObl.size() *10 + 10 );
+                        if (!finishShippingAddedBln) {
+                            this.autorisationObl.add(authorisationFinishShipping);
+                            finishShippingAddedBln = true;
+                        }
+                    }
+
                 }
 
             }

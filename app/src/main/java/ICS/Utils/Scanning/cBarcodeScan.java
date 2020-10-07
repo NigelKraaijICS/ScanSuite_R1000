@@ -5,11 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.Objects;
 
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
+import nl.icsvertex.scansuite.Activities.FinishShip.FinishShiporderSelectActivity;
+import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
@@ -21,6 +26,7 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveMISinglepieceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
@@ -60,8 +66,12 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
+import nl.icsvertex.scansuite.Fragments.Packaging.PackagingUsedFragment;
 
 public class cBarcodeScan {
+
+    public static String currentActivityContextStr = "";
+    public static String currentDialogContextStr = "";
 
     public static class BarcodeType {
 
@@ -83,6 +93,11 @@ public class cBarcodeScan {
     public String barcodeTypeStr;
     public String getBarcodeTypeStr() {
         return barcodeTypeStr;
+    }
+
+    private   Boolean containsCrlf = false;
+    public Boolean getContainsCrlfBln() {
+        return containsCrlf;
     }
 
     public cBarcodeScan(){
@@ -137,6 +152,12 @@ public class cBarcodeScan {
                         loginActivity.pHandleScan(barcodeScan);
                        }
 
+                    //BarcodeInfo
+                    if (cAppExtension.activity instanceof BarcodeInfoActivity) {
+                        BarcodeInfoActivity barcodeInfoActivity = (BarcodeInfoActivity)cAppExtension.activity;
+                        barcodeInfoActivity.pHandleScan(barcodeScan);
+                    }
+
                     //Pick
                     if (cAppExtension.activity instanceof PickorderSelectActivity){
                         PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
@@ -183,6 +204,17 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof ShiporderShipActivity){
                         ShiporderShipActivity shiporderShipActivity = (ShiporderShipActivity)cAppExtension.activity;
                         shiporderShipActivity.pHandleScan(barcodeScan);
+                    }
+
+                    //Finish Single Pieces
+                    if (cAppExtension.activity instanceof FinishShiporderSelectActivity){
+                        FinishShiporderSelectActivity finishShiporderSelectActivity = (FinishShiporderSelectActivity)cAppExtension.activity;
+                        finishShiporderSelectActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof FinishShipLinesActivity){
+                        FinishShipLinesActivity finishShipLinesActivity = (FinishShipLinesActivity)cAppExtension.activity;
+                        finishShipLinesActivity.pHandleScan(barcodeScan);
                     }
 
                     //QC
@@ -315,6 +347,12 @@ public class cBarcodeScan {
                         moveLinePlaceActivity.pHandleScan(barcodeScan);
                     }
 
+                    if (cAppExtension.activity instanceof MoveMISinglepieceActivity){
+                        MoveMISinglepieceActivity moveMISinglepieceActivity = (MoveMISinglepieceActivity)cAppExtension.activity;
+                        moveMISinglepieceActivity.pHandleScan(barcodeScan);
+                    }
+
+
                 }
             };
         }
@@ -434,6 +472,7 @@ public class cBarcodeScan {
 
     public static void pRegisterBarcodeReceiver(){
 
+
         //Turn off other receiver
         cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
 
@@ -441,8 +480,17 @@ public class cBarcodeScan {
         cBarcodeScan.getBarcodeIntentFilter();
         cBarcodeScan.getBarcodeReceiver();
 
+        //Prevent multiple receivers on same context
+        if (cBarcodeScan.currentActivityContextStr.equalsIgnoreCase(cAppExtension.context.getClass().getSimpleName())) {
+             return;
+        }
+
         //Attach receiver to context
         cAppExtension.context.registerReceiver(BarcodeReceiver,BarcodeIntentFilter);
+        cBarcodeScan.currentActivityContextStr  = cAppExtension.context.getClass().getSimpleName();
+
+//        Log.i("ICS","Register receiver: " +   cBarcodeScan.currentActivityContextStr);
+
     }
 
     public static void pRegisterBarcodeFragmentReceiver(){
@@ -456,12 +504,22 @@ public class cBarcodeScan {
 
         //Attach receiver to context
         cAppExtension.context.registerReceiver(BarcodeFragmentReceiver,BarcodeFragmentIntentFilter);
+
+//        if (cAppExtension.dialogFragment == null) {
+//            Log.i("ICS","Register fragment receiver: " +  cAppExtension.context.getClass().getSimpleName());
+//        }
+//        else {
+//            Log.i("ICS","Register fragment receiver: " +  cAppExtension.context.getClass().getSimpleName() + " for fragment: " + cAppExtension.dialogFragment.getClass().getSimpleName());
+//        }
+
+
     }
 
     public static void pUnregisterBarcodeReceiver(){
-
         try {
          cAppExtension.context.unregisterReceiver(BarcodeReceiver);
+//            Log.i("ICS","Unregister receiver: " +  cBarcodeScan.currentActivityContextStr);
+            cBarcodeScan.currentActivityContextStr = "";
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -471,6 +529,12 @@ public class cBarcodeScan {
 
         try {
             cAppExtension.context.unregisterReceiver(BarcodeFragmentReceiver);
+//            if (cAppExtension.dialogFragment == null) {
+//                Log.i("ICS","Unregister fragment receiver: " +  cAppExtension.context.getClass().getSimpleName());
+//            }
+//            else {
+//                Log.i("ICS","Unregister fragment receiver: " +  cAppExtension.context.getClass().getSimpleName() + " for fragment: " + cAppExtension.dialogFragment.getClass().getSimpleName());
+//            }
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -521,6 +585,10 @@ public class cBarcodeScan {
         }
 
         assert scannedBarcodeStr != null;
+
+
+
+
         scannedBarcodeStr = mCleanBarcodeStr(scannedBarcodeStr);
         returnBarcodeStr =  mCleanBarcodeStr(scannedBarcodeStr) ;
 
@@ -541,6 +609,13 @@ public class cBarcodeScan {
         resultBarcodeScan.barcodeOriginalStr = scannedBarcodeStr;
         resultBarcodeScan.barcodeFormattedStr = returnBarcodeStr;
         resultBarcodeScan.barcodeTypeStr = barcodeTypeStr;
+
+        resultBarcodeScan.containsCrlf = false;
+        if (scannedBarcodeStr.contains("\\n")) {
+            resultBarcodeScan.containsCrlf = true;
+        }
+
+
 
         return resultBarcodeScan;
     }

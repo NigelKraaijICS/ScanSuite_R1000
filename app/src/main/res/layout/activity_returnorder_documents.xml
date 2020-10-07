@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.returns.ReturnorderDocumentsActivity"
+    tools:context=".Activities.Returns.ReturnorderDocumentsActivity"
     android:id="@+id/returnorderDocumentscontainer"
     style="@style/defaultScreen">
     <include layout="@layout/toolbar_subtext_default"/>
@@ -20,6 +20,7 @@
         app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/quantityText"
+        app:tabMode="scrollable"
         />
     <TextView
         android:id="@+id/quantityText"

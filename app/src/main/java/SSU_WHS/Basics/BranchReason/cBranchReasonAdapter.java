@@ -84,7 +84,6 @@ public class cBranchReasonAdapter extends RecyclerView.Adapter<cBranchReasonAdap
                     if (cAppExtension.activity instanceof ReturnArticleDetailActivity) {
                         ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
                         returnArticleDetailActivity.pSetReason();
-                        returnArticleDetailActivity.pHandleFragmentDismissed();
                         cAppExtension.dialogFragment.dismiss();
                         return;
                     }

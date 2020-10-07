@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menuActionsDrawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,6 +29,7 @@
     <include layout="@layout/default_articleinfo" />
     <include layout="@layout/default_bininfo" />
     <include layout="@layout/default_sourcenoinfo" />
+    <include layout="@layout/default_containerinfo" />
     <TextView
         android:id="@+id/quantityText"
         style="@style/quantityText"
@@ -80,7 +89,7 @@
         android:layout_marginRight="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:elevation="@dimen/default_elevation"
-        app:layout_constraintTop_toBottomOf="@id/sourceNoContainer"
+        app:layout_constraintTop_toBottomOf="@id/containerContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/imageButtonDone"
@@ -94,3 +103,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/actionMenuNavigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        app:headerLayout="@layout/header_actions_menu"
+        app:menu="@menu/menu_intakeactions"
+        android:hapticFeedbackEnabled="true"
+        />
+</androidx.drawerlayout.widget.DrawerLayout>

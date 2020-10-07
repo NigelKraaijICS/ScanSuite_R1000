@@ -25,6 +25,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPICKORDERLINES = "p_PickorderRegelsGetJsonStr";
     public static String WEBMETHOD_GETQCPICKORDERLINES = "p_WarehouseopdrachtLinesQcCheckGetJsonStr";
 
+
     public static String WEBMETHOD_WAREHOUSEORDERLOCK = "p_WarehouseopdrachtLockJsonStr";
     public static String WEBMETHOD_WAREHOUSEORDERUNLOCK = "p_WarehouseopdrachtUnlockJsonStr";
     public static String WEBMETHOD_WAREHOUSEORDERLOCKRELEASE = "p_WarehouseopdrachtLockReleaseJsonStr";
@@ -34,6 +35,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETARTICLEIMAGE = "p_ArtikelImageGetJsonStr";
     public static String WEBMETHOD_PICKORDERLINE_HANDLED = "p_PickorderRegelTakeHandledJsonStr";
     public static String WEBMETHOD_PICKORDERLINECHECKED= "p_WarehouseopdrachtLineQcCheckCheckedJsonStr";
+    public static String WEBMETHOD_PICKORDERPRINTDOCUMENTS= "p_PickorderPrintDocumentsJsonStr";
     public static String WEBMETHOD_PICKORDERLINECORRECT= "p_PickorderRegelCorrectQcJsonStr";
     public static String WEBMETHOD_GETPICKORDERCOMMENTS = "p_PickorderCommentsGetJsonStr";
     public static String WEBMETHOD_PICKORDERSTEPHANDLED = "p_PickorderStapHandledJsonStr";
@@ -51,6 +53,8 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETSHIPPINGAGENTSERVICESHIPMETHODS = "p_ExpediteurServiceVerzendmethodsGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERSHIPMETHODS = "p_PickorderShippingmethodGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINESPACKANDSHIP = "p_PickorderRegelsPackAndShipGetJsonStr";
+    public static String WEBMETHOD_GETPICKORDERLINESFINISHSINGLEPIECE = "p_PickorderRegelsFinishPackSinglePieceGetJsonStr";
+
     public static String WEBMETHOD_CREATEMERGEDPICKORDER = "p_PickorderCreateMergedJsonStr";
     public static String WEBMETHOD_ADDORDERTOMERGEDPICKORDER = "p_PickorderAddToMergedJsonStr";
     public static String WEBMETHOD_REMOVEORDERFROMMERGEDPICKORDER = "p_PickorderRemoveFromMergedJsonStr";
@@ -114,6 +118,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_RETURNLINESGET = "p_RetourOrderItemInTakeGetJsonStr";
     public static String WEBMETHOD_RETURNLINERESET = "p_RetourInTakeRegelResetJsonStr";
     public static String WEBMETHOD_RETURNBARCODEGET = "p_RetourOrderBarcodesGetJsonStr";
+    public static String WEBMETHOD_RETURNORDERUPDATE = "p_RetourOrderUpdateJsonStr";
     public static String WEBMETHOD_RETURNBARCODECREATE = "p_RetourBarcodeCreateJsonStr";
     public static String WEBMETHOD_RETURNLINESAVE = "p_RetourInTakeItemJsonStr";
     public static String WEBMETHOD_RETURNORDERHANDLED = "p_RetourInTakeOrderHandledJsonStr";
@@ -193,6 +198,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_PROCESSINGSEQUENCE = "pv_ProcessingSequenceStr";
     public static String WEBPROPERTY_WORKPLACE = "pv_WorkplaceStr";
     public static String WEBPROPERTY_CULTURE = "pv_CultureStr";
+    public static String WEBPROPERTY_ORDERLOCATION = "pv_OrderLocationStr";
     public static String WEBPROPERTY_CURRENTLOCATION = "pv_OrderCurrentLocationStr";
     public static String WEBPROPERTY_PICKSTEP = "pv_PickStapInt";
     public static String WEBPROPERTY_NUMBER = "pv_AantalDbl";
@@ -213,6 +219,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_DOCUMENT = "pv_DocumentStr";
     public static String WEBPROPERTY_DOCUMENT2= "pv_Document2Str";
     public static String WEBPROPERTY_EXTERNALREFERENCE = "pv_ExternalReferenceStr";
+    public static String WEBPROPERTY_ORDERCONTAINER = "pv_OrderContainerStr";
     public static String WEBPROPERTY_INVENTORYBARCODECHECK = "pv_InventoryBarcodeCheckBln";
     public static String WEBPROPERTY_ADMINISTRATION = "pv_AdministrationStr";
     public static String WEBPROPERTY_BARCODETYPE = "pv_BarCodeTypeInt";

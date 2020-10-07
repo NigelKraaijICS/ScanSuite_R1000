@@ -55,6 +55,16 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".Activities.General.BarcodeInfoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.General.MainDefaultActivity" />
+        </activity>
+        <activity
             android:name=".Activities.General.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
@@ -121,6 +131,16 @@
             android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name=".Activities.Ship.ShiporderShipActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.FinishShip.FinishShiporderSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.FinishShip.FinishShipLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"/>
@@ -341,6 +361,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity" />
         </activity>
+        <activity android:name=".Activities.Move.MoveMISinglepieceActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.General.MenuActivity" />
+        </activity>
         <activity android:name=".Activities.Move.MoveLinePlaceActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
@@ -359,7 +388,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity" />
         </activity>
-
 
         <meta-data
             android:name="io.fabric.ApiKey"

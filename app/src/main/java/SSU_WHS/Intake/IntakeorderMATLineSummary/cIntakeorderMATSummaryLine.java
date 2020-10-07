@@ -3,6 +3,7 @@ package SSU_WHS.Intake.IntakeorderMATLineSummary;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -16,13 +17,13 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineViewModel;
-import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
 
 
-public class cIntakeorderMATSummaryLine {
+public class cIntakeorderMATSummaryLine implements Comparable {
 
     //Region Public Properties
 
@@ -55,31 +56,29 @@ public class cIntakeorderMATSummaryLine {
         return binCodeStr;
     }
 
-
     public String getBinCodeHandledStr() {
 
-        String resulStr = "";
+        StringBuilder resulStr = new StringBuilder();
 
         if (this.MATLinesObl == null || this.MATLinesObl.size() == 0) {
-            return  resulStr;
+            return resulStr.toString();
         }
 
         for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
 
-            if (resulStr.isEmpty()) {
-                resulStr = intakeorderMATLine.getBinCodeHandledStr();
+            if (resulStr.length() == 0) {
+                resulStr = new StringBuilder(intakeorderMATLine.getBinCodeHandledStr());
             }
             else
             {
-                resulStr += " | " + intakeorderMATLine.getBinCodeHandledStr();
+                resulStr.append(" | ").append(intakeorderMATLine.getBinCodeHandledStr());
             }
 
         }
 
-        return resulStr;
+        return resulStr.toString();
     }
 
-    private Double quantityDbl;
     public Double getQuantityDbl()
     {
         Double resultDbl =  0.0;
@@ -111,6 +110,9 @@ public class cIntakeorderMATSummaryLine {
         return resultDbl;
     }
 
+    public String containerStr;
+    public  String getContainerStr(){return this.containerStr;}
+
     private String sourceNoStr;
     public String getSourceNoStr() {
         return sourceNoStr;
@@ -128,6 +130,11 @@ public class cIntakeorderMATSummaryLine {
 
     public  String getVendorItemNoAndDescriptionStr(){
         return   this.getVendorItemNoStr() + " " + this.getVendorItemDescriptionStr();
+    }
+
+    public int sortingSequenceInt;
+    public int getSortingSequenceInt() {
+        return sortingSequenceInt;
     }
 
     private String extraField1Str;
@@ -173,6 +180,24 @@ public class cIntakeorderMATSummaryLine {
     public cArticleImage articleImage;
 
     public static List<cIntakeorderMATSummaryLine> allIntakeorderMATSummaryLinesObl;
+
+    public static List<cIntakeorderMATSummaryLine> sortedMATSummaryLinesObl() {
+
+        List<cIntakeorderMATSummaryLine> sortedLinesObl = new ArrayList<>();
+
+        if (cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl == null || cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl.size() == 0) {
+            return  sortedLinesObl;
+        }
+
+        sortedLinesObl.addAll(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+
+        Collections.sort(sortedLinesObl);
+        Collections.reverse(sortedLinesObl);
+
+        return  sortedLinesObl;
+
+    }
+
     private List<cIntakeorderMATLine> MATLinesObl;
 
     private cIntakeorderMATLineViewModel getIntakeorderMATLineViewModel() {
@@ -250,7 +275,7 @@ public class cIntakeorderMATSummaryLine {
 
         Double resultDbl = 0.0;
 
-        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl) {
+        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl()) {
             resultDbl += intakeorderMATSummaryLine.getQuantityDbl();
         }
 
@@ -262,7 +287,7 @@ public class cIntakeorderMATSummaryLine {
 
         Double resultDbl = 0.0;
 
-        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl) {
+        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl()) {
             resultDbl += intakeorderMATSummaryLine.getQuantityHandledDbl();
         }
 
@@ -305,7 +330,6 @@ public class cIntakeorderMATSummaryLine {
         this.variantCodeStr = pvVariantCodeStr;
         this.sourceNoStr = pvSourceNoStr;
 
-        this.quantityDbl = 0.0;
         this.quantityHandledDbl = 0.0;
 
         this.MATLinesObl = new ArrayList<>();
@@ -448,11 +472,11 @@ public class cIntakeorderMATSummaryLine {
 
         List<cIntakeorderMATSummaryLine> resultObl = new ArrayList<>();
 
-        if (cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl == null || cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl.size() ==0 ) {
+        if (cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl() == null || cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl().size() ==0 ) {
             return null;
         }
 
-        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl) {
+        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl()) {
             if (intakeorderMATSummaryLine.getBinCodeStr().equalsIgnoreCase(pvBINCodeStr)) {
                 resultObl.add(intakeorderMATSummaryLine);
             }
@@ -650,7 +674,13 @@ public class cIntakeorderMATSummaryLine {
 
     //Region Private Methods
 
+    @Override
+    public int compareTo(Object o) {
 
+        int compareint =((cIntakeorderMATSummaryLine)o).getSortingSequenceInt();
+        return compareint-this.getSortingSequenceInt();
+
+    }
     //End Region Private Methods
 
 

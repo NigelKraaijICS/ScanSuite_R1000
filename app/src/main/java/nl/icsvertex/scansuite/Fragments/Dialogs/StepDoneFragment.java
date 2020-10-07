@@ -27,6 +27,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
@@ -221,6 +222,11 @@ public class StepDoneFragment extends DialogFragment implements iICSDefaultFragm
                 if (cAppExtension.activity  instanceof ShiporderLinesActivity) {
                     ShiporderLinesActivity  shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
                     shiporderLinesActivity.pShippingDone();
+                }
+
+                if (cAppExtension.activity  instanceof FinishShipLinesActivity) {
+                    FinishShipLinesActivity  finishShipLinesActivity = (FinishShipLinesActivity)cAppExtension.activity;
+                    finishShipLinesActivity.pShippingDone();
                 }
 
                 if (cAppExtension.activity instanceof IntakeorderLinesActivity) {

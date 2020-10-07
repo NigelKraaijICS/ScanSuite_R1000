@@ -43,6 +43,10 @@ public class cReturnorderEntity {
     public String bincodeStr;
     public String getBincodeStr() {return  this.bincodeStr;}
 
+    @ColumnInfo(name = cDatabase.CURRENTLOCATION_NAMESTR)
+    public String currentLocationStr;
+    public String getCurrentLocationStr() {return  this.currentLocationStr;}
+
     @ColumnInfo(name= cDatabase.EXTERNALREFERENCE_NAMESTR)
     public String externalReferenceStr;
     public String getExternalReferenceStr() {return this.externalReferenceStr;}
@@ -79,11 +83,15 @@ public class cReturnorderEntity {
     public String sorteringStr;
     public String getSorteringStr() {return this.sorteringStr;}
 
-    @ColumnInfo(name="IsProcessingOrParked")
+    @ColumnInfo(name = cDatabase.RETOURORDERBINNOCHECK_NAMESTR)
+    public Boolean retourOrderBINNoCheckBln;
+    public Boolean getRetourOrderBINNoCheckBln() {return this.retourOrderBINNoCheckBln;}
+
+    @ColumnInfo(name=cDatabase.ISPROCESSINGORPARKED_NAMESTR)
     public Boolean isprocessingorparked;
     public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
 
-    @ColumnInfo(name="Priority")
+    @ColumnInfo(name=cDatabase.PRIORITY_NAMESTR)
     public int priorityInt;
     public int getPriorityInt() {return this.priorityInt;}
 
@@ -102,6 +110,7 @@ public class cReturnorderEntity {
             this.currentUserIdStr = pvJsonObject.getString(cDatabase.CURRENTUSERID_NAMESTR);
             this.statusStr = pvJsonObject.getString(cDatabase.STATUS_NAMESTR);
             this.bincodeStr = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
+            this.currentLocationStr = pvJsonObject.getString(cDatabase.CURRENTLOCATION_NAMESTR);
             this.externalReferenceStr = pvJsonObject.getString(cDatabase.EXTERNALREFERENCE_NAMESTR);
             this.retourAmountManualBln = cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.RETOURAMAOUNTMANUAL_NAMESTR),false);
             this.retourBarcodeCheckBln = cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.RETOURBARCODECHECK_NAMESTR),false);
@@ -111,6 +120,7 @@ public class cReturnorderEntity {
             this.document2Str = pvJsonObject.getString(cDatabase.DOCUMENT2_NAMESTR);
             this.reasonStr = pvJsonObject.getString(cDatabase.REASON_NAMESTR);
             this.sorteringStr = pvJsonObject.getString(cDatabase.SORTING_NAMESTR);
+            this.retourOrderBINNoCheckBln =  cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.RETOURORDERBINNOCHECK_NAMESTR), false);
 
             //Is processing
 

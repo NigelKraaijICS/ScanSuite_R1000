@@ -28,7 +28,6 @@ import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinAdapter;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.SendOrderFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFragment {
@@ -185,7 +184,7 @@ public class InventoryBinsToDoFragment extends Fragment implements iICSDefaultFr
             if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
+                    if (fragment instanceof NothingHereFragment) {
                         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                         fragmentTransaction.remove(fragment);
                         fragmentTransaction.commit();

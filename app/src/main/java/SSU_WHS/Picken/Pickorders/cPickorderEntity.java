@@ -62,6 +62,10 @@ public class cPickorderEntity {
     public String pickActivityBinRequired;
     public String getPickActivityBinRequired() {return this.pickActivityBinRequired;}
 
+    @ColumnInfo(name="Pick_auto_next")
+    public String pickAutoNext;
+    public String getPickAutoNext() {return this.pickAutoNext;}
+
     @ColumnInfo(name="AssignedUserId")
     public String assignedUserId;
     public String getAssignedUserIdStr() {return this.assignedUserId;}
@@ -167,6 +171,7 @@ public class cPickorderEntity {
             this.pickWithPictureAutoOpen = pvJsonObject.getString(cDatabase.PICKWITHPICTURE_AUTO_OPEN_NAMESTR);
             this.pickWithPicturePrefetch = pvJsonObject.getString(cDatabase.PICKWITHPICTURE_PREFETCH_NAMESTR);
             this.pickActivityBinRequired = pvJsonObject.getString(cDatabase.PICKACTIVITYBINREQUIRED_NAMESTR);
+            this.pickAutoNext = pvJsonObject.getString(cDatabase.PICKAUTONEXT_NAMESTR);
 
             this.priorityInt = 6;
 

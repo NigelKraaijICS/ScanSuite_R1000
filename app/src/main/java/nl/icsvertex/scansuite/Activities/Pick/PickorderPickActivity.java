@@ -838,7 +838,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //Check if quantityDbl is sufficient
         if (cPickorderLine.currentPickOrderLine.quantityHandledDbl < cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
             this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-            this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+            if (!cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
+                this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+            }
             return;
         }
 
@@ -1025,7 +1027,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        if (!cSetting.PICK_AUTO_ACCEPT() || !cSetting.PICK_AUTO_NEXT() ) {
+        if (!cSetting.PICK_AUTO_ACCEPT() || !cPickorder.currentPickOrder.isPickAutoNextBln() ) {
             this.imageButtonDone.setVisibility(View.VISIBLE);
             this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
             return;
@@ -1043,7 +1045,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cPickorderLine nextLine = cPickorder.currentPickOrder.pGetNextLineToHandleForBin(cPickorderLine.currentPickOrderLine.getBinCodeStr());
 
        //There is no next line, so close this activity
-        if (nextLine == null || ! cSetting.PICK_AUTO_NEXT()) {
+        if (nextLine == null || ! cPickorder.currentPickOrder.isPickAutoNextBln()) {
             //Clear current barcodeStr and reset defaults
             cPickorderLine.currentPickOrderLine = null;
             PickorderPickActivity.articleScannedLastBln = false;
@@ -1404,6 +1406,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
         Intent intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
+        PickorderLinesActivity.startedViaOrderSelectBln = false;
+
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }

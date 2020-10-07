@@ -16,5 +16,12 @@
         app:showAsAction="never"
         android:visible="false"
         />
+    <item
+        android:id="@+id/item_barcodeinfo"
+        android:title="@string/barcode_info"
+        android:icon="@drawable/ic_barcodescan_black_24dp"
+        app:showAsAction="never"
+        android:visible="false"
+        />
 </group>
 </menu>

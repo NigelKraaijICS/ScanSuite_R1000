@@ -27,7 +27,10 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -145,34 +148,68 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
      @Override
     public void mFieldsInitialize() {
 
-        if (!cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
-            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-            this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.toolbarSubtext.setSingleLine(true);
-            this.toolbarSubtext.setMarqueeRepeatLimit(5);
-            this.toolbarSubtext.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toolbarSubtext.setSelected(true);
-                }
-            },1500);
+
+        if (cAppExtension.activity instanceof PickorderLinesActivity) {
+            if (!cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
+                this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
+                this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                this.toolbarSubtext.setSingleLine(true);
+                this.toolbarSubtext.setMarqueeRepeatLimit(5);
+                this.toolbarSubtext.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toolbarSubtext.setSelected(true);
+                    }
+                },1500);
+            }
+
+            this.articleFullItemNoTextView.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
+            this.articleFullVariantTextView.setText(cPickorderLine.currentPickOrderLine.getVariantCodeStr());
+            this.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.articleFullVariantTextView.setSingleLine(true);
+            this.articleFullVariantTextView.setMarqueeRepeatLimit(5);
+            this.articleFullVariantTextView.setSelected(true);
+
+            if (cPickorderLine.currentPickOrderLine.articleImage != null) {
+                byte[] decodedString = Base64.decode(cPickorderLine.currentPickOrderLine.articleImage.getImageStr(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                this.articleFullImageView.setImageBitmap(decodedByte);
+            }
+            else {
+                this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_no_image_lightgrey_24dp));
+            }
         }
 
-         this.articleFullItemNoTextView.setText(cPickorderLine.currentPickOrderLine.getItemNoStr());
-         this.articleFullVariantTextView.setText(cPickorderLine.currentPickOrderLine.getVariantCodeStr());
-         this.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-         this.articleFullVariantTextView.setSingleLine(true);
-         this.articleFullVariantTextView.setMarqueeRepeatLimit(5);
-         this.articleFullVariantTextView.setSelected(true);
+         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
+             if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str().isEmpty()) {
+                 this.toolbarSubtext.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str());
+                 this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                 this.toolbarSubtext.setSingleLine(true);
+                 this.toolbarSubtext.setMarqueeRepeatLimit(5);
+                 this.toolbarSubtext.postDelayed(new Runnable() {
+                     @Override
+                     public void run() {
+                         toolbarSubtext.setSelected(true);
+                     }
+                 },1500);
+             }
 
-        if (cPickorderLine.currentPickOrderLine.articleImage != null) {
-            byte[] decodedString = Base64.decode(cPickorderLine.currentPickOrderLine.articleImage.getImageStr(), Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            this.articleFullImageView.setImageBitmap(decodedByte);
-        }
-        else {
-            this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_no_image_lightgrey_24dp));
-        }
+             this.articleFullItemNoTextView.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getItemNoStr());
+             this.articleFullVariantTextView.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getVariantCodeStr());
+             this.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+             this.articleFullVariantTextView.setSingleLine(true);
+             this.articleFullVariantTextView.setMarqueeRepeatLimit(5);
+             this.articleFullVariantTextView.setSelected(true);
+
+             if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.articleImage != null) {
+                 byte[] decodedString = Base64.decode(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.articleImage.getImageStr(), Base64.DEFAULT);
+                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                 this.articleFullImageView.setImageBitmap(decodedByte);
+             }
+             else {
+                 this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_no_image_lightgrey_24dp));
+             }
+         }
     }
 
     @Override
@@ -215,7 +252,14 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
 
     private void mSetToolbar() {
 
-        this.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+        if (cAppExtension.activity instanceof PickorderPickActivity) {
+            this.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+        }
+
+        if (cAppExtension.activity instanceof   IntakeOrderIntakeActivity) {
+            this.toolbarTitle.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr());
+        }
+
         this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         this.toolbarTitle.setSingleLine(true);
         this.toolbarTitle.setMarqueeRepeatLimit(5);
@@ -246,6 +290,13 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
             pickorderPickActivity.pHandleScan(pvBarcodeScan);
             cAppExtension.dialogFragment.dismiss();
         }
+
+        if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
+            IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
+            intakeOrderIntakeActivity.pHandleScan(pvBarcodeScan);
+            cAppExtension.dialogFragment.dismiss();
+        }
+
     }
 
     //End Region Private Mrethods

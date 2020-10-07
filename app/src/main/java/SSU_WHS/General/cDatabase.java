@@ -30,6 +30,8 @@ public class cDatabase {
     public static final String TABLENAME_SHIPPINGAGENTSERVICESHIPMETHODS = "ShippingAgentServiceShipMethods";
     public static final String TABLENAME_PICKORDERSHIPPACKAGES = "PickorderShipPackages";
     public static final String TABLENAME_PICKORDERLINEPACKANDSHIP = "PickorderLinePackAndShip";
+    public static final String TABLENAME_PICKORDERLINEFINISHSINGLEPIECE = "PickorderLineFinishSinglePiece";
+
     public static final String TABLENAME_INVENTORYORDER = "InventoryOrder";
     public static final String TABLENAME_INVENTORYORDERBIN = "InventoryOrderBin";
     public static final String TABLENAME_INVENTORYORDERLINE = "InventoryOrderLines";
@@ -96,6 +98,7 @@ public class cDatabase {
     public static final String CURRENTUSERID_NAMESTR = "CurrentUserId";
     public static final String CITY_NAMESTR = "Plaats";
     public static final String COUNTRY_NAMESTR = "Land";
+    public static final String CONTAINER_NAMESTR = "Container";
     public static final String CONTAINERTYPE_DUTCH_NAMESTR = "Containersoort";
     //endregion C
 
@@ -172,6 +175,9 @@ public class cDatabase {
     public static final String INVENTORYWITHPICTURE_AUTO_OPEN_NAMESTR = "Inv_with_picture_auto_open";
     public static final String INVENTORYWITHPICTURE_PREFETCH_NAMESTR = "Inv_with_picture_prefetch";
 
+    public static final String ISPROCESSINGORPARKED_NAMESTR = "IsProcessingOrParked";
+
+
 
     //endregion I
 
@@ -228,6 +234,7 @@ public class cDatabase {
     public static final String PACKINGTABLE_NAMESTR = "Packingtable";
     public static final String PICKSALESASKWORKPLACE_NAMESTR = "Pick_Sales_ask_workplace";
     public static final String PICKTRANSFERASKWORKPLACE_NAMESTR = "Pick_Transfer_ask_workplace";
+    public static final String PICKAUTONEXT_NAMESTR = "Pick_Auto_next";
     public static final String PICKBARCODECHECK_NAMESTR = "Pick_Barcode_check";
     public static final String PICKPICKPVVKKOEACHPIECE_NAMESTR = "Pick_Pick_PV_VKO_each_piece";
     public static final String PICKPICKTOCONTAINER_NAMESTR = "Pick_Pick_to_container";
@@ -239,6 +246,8 @@ public class cDatabase {
     public static final String PICKWITHPICTURE_PREFETCH_NAMESTR = "Pick_with_picture_prefetch";
     public static final String PICKACTIVITYBINREQUIRED_NAMESTR = "Pick_Activity_bin_required";
     public static final String PICKQCCHECKCOUNT_NAMESTR = "Pick_Qc_check_count";
+
+    public  static final String PRIORITY_NAMESTR = "Priority";
 
     public static final String PRICE_NAMESTR = "Price";
     public static final String PRINTDOCUMENTS_NAMESTR = "PrintDocuments";
@@ -300,6 +309,9 @@ public class cDatabase {
     public static final String RETOURAMAOUNTMANUAL_NAMESTR = "Retour_Amount_manual";
     public static final String RETOURBARCODECHECK_NAMESTR = "Retour_Barcode_check";
     public static final String RETOURMULTIDOCUMENT_NAMESTR = "Retour_multi_document";
+    public static final String RETOURORDERBINNOCHECK_NAMESTR = "Retour_Order_bin_no_check";
+
+
     public static final String REASON_NAMESTR = "Reason";
     public static final String REASONNL_NAMESTR = "Reden";
     public static final String RETURN_NAMESTR = "Return";
@@ -361,6 +373,8 @@ public class cDatabase {
     public static final String VENDORITEMNO_NAMESTR = "VendorItemNo";
     public static final String VENDORITEMDESCRIPTION_NAMESTR = "VendorItemDescription";
     public static final String VALUETYPE_NAMESTR = "ValueType";
+    public static final String VERZENDLABEL_STATUS_NAMESTR = "Verzendlabel_status";
+
 
     //endregion V
 

@@ -21,6 +21,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import nl.icsvertex.scansuite.Activities.FinishShip.FinishShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
@@ -280,6 +281,11 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
                 if (cAppExtension.activity instanceof ShiporderSelectActivity) {
                     ShiporderSelectActivity shiporderSelectActivity = (ShiporderSelectActivity)cAppExtension.activity;
                     shiporderSelectActivity.pShiporderSelected(selectedPickorder);
+                }
+
+                if (cAppExtension.activity instanceof FinishShiporderSelectActivity) {
+                    FinishShiporderSelectActivity finishShiporderSelectActivity = (FinishShiporderSelectActivity)cAppExtension.activity;
+                    finishShiporderSelectActivity.pFinishShiporderSelected(selectedPickorder);
                 }
 
             }

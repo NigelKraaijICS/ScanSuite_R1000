@@ -79,6 +79,7 @@
     <string name="menuitem_inventoryclose">Inventarisatie sluiten</string>
     <string name="menuitem_move">Verplaatsen</string>
     <string name="menuitem_move_mi">Verplaatsen (alleen place)</string>
+    <string name="menuitem_move_mi_singlepiece">Verplaatsen (alleen place singlepiece)</string>
     <string name="menuitem_move_mo">Verplaatsen (alleen picken)</string>
     <string name="menuitem_move_mv">Verplaatsen (pick en place)</string>
     <string name="menuitem_moveitem">Verplaats item</string>
@@ -242,6 +243,7 @@
     <string name="screentitle_determine_transport">Bepaal vervoer</string>
     <string name="screentitle_shiporderlines">Verzendregels</string>
     <string name="screentitle_shiporderselect">Verzendopdracht</string>
+    <string name="screentitle_finish_shiporderselect">Afronden inpakken</string>
     <string name="tab_shiporderline_shipped">Verzonden</string>
     <string name="tab_shiporderline_total">Totaal</string>
     <string name="tab_shiporderline_toship">Te verzenden</string>
@@ -503,6 +505,7 @@
     <string name="message_unknown_bin">Onbekende locatie</string>
     <string name="screentitle_moveorderlines">Verplaats regels</string>
     <string name="screentitle_moveorderselect">Verplaats opdrachten</string>
+    <string name="screentitle_move_mi_singlepiece">Verplaatsen Plaats Singlepiece</string>
     <string name="screentitle_moveordertake">Nemen</string>
     <string name="show_only_deviations">Te doen/afwijkingen tonen</string>
     <string name="stored">Opgeslagen:</string>
@@ -691,5 +694,13 @@
     <string name="screentitle_moveorderlines_place">Verplaatsregels PLAATSEN</string>
     <string name="message_close_place">Sluit plaatsen?</string>
     <string name="message_close_place_text">Weet u zeker dat u het PLAATSEN wilt sluiten?</string>
+    <string name="menuitem_finish_ship">Afronden Inpakken</string>
+    <string name="message_scanning_not_allowed">U kunt hier niet scannen</string>
+    <string name="message_print_failed">Printen mislukt</string>
+    <string name="screentitle_barcodeinfo">Barcode info</string>
+    <string name="barcode_info">Barcode info</string>
+    <string name="questionmarks">\???</string>
+    <string name="none">geen</string>
+    <string name="enter_BIN">BIN ingeven</string>
 
 </resources>

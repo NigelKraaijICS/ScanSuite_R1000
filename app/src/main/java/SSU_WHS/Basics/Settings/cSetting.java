@@ -237,6 +237,8 @@ public class cSetting {
         RETOUR_MULTI_DOCUMENT_POSSIBLE,
         RETOUR_NEW_WORKFLOWS,
         RETOUR_REASON_REQUIRED,
+        RETOUR_ORDER_BIN_NO_CHECK,
+        RETOUR_VALIDATE_CURRENT_LOCATION,
         SELFPICK_AMOUNT_MANUAL,
         SELFPICK_EXTERNAL_REFERENCES,
         SELFPICK_LOGIN,
@@ -347,16 +349,6 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-    public  static  boolean PICK_AUTO_NEXT(){
-
-        cSetting Setting =  mGetSettingByEnu(settingEnu.PICK_AUTO_NEXT);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
     public static boolean PICK_SORT_FASE_AVAILABLE(){
 
             cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SORT_FASE_AVAILABLE);
@@ -380,6 +372,16 @@ public class cSetting {
     public static boolean PICK_PACK_AND_SHIP_FASE_AVAILABLE(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_PACK_AND_SHIP_FASE_AVAILABLE);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean PICK_FINISH_PACK_FASE_AVAILABLE(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_FINISH_PACK_FASE_AVAILABLE);
         if (Setting == null) {
             return  false;
         }
@@ -734,7 +736,6 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-
     public static boolean MOVE_AUTO_CREATE_ORDER_MV(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_CREATE_ORDER_MV);
@@ -845,6 +846,17 @@ public class cSetting {
         return Setting.valueStr;
     }
 
+    public static boolean RETOUR_ORDER_BIN_NO_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_ORDER_BIN_NO_CHECK);
+        if (Setting == null) {
+            return false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+
     public static boolean RETOUR_AUTO_CREATE_ORDER_RV(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_AUTO_CREATE_ORDER_RV);
@@ -855,6 +867,14 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean RETOUR_VALIDATE_CURRENT_LOCATION(){
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_VALIDATE_CURRENT_LOCATION);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
 
     public static String RECEIVE_STORE_DEVIATIONS_PASSWORD(){
 

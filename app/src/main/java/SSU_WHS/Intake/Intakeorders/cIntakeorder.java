@@ -81,11 +81,7 @@ public class cIntakeorder {
 
     public   boolean isBINScanPossible(){
 
-        if (! this.getReceiveNoExtraBinsBln() || !this.getReceiveNoExtraItemsBln()) {
-            return  false;
-        }
-
-        return  true;
+        return this.getReceiveNoExtraBinsBln() && this.getReceiveNoExtraItemsBln();
 
     }
 
@@ -144,7 +140,7 @@ public class cIntakeorder {
     }
 
     public List<cIntakeorderMATSummaryLine> summaryMATLinesObl(){
-        return  cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl;
+        return  cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl();
     }
 
     public List<cIntakeorderMATLine> linesMATObl(){
@@ -529,9 +525,6 @@ public class cIntakeorder {
 
     }
 
-
-
-
     public cResult pLockViaWebserviceRst()        {
 
         //Initialise result
@@ -699,150 +692,6 @@ public class cIntakeorder {
         return  true;
     }
 
-    public boolean pGetMATLineBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cIntakeorderMATLineBarcode.allMATLineBarcodesObl = null;
-            cIntakeorderMATLineBarcode.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-        WebResult = this.getIntakeorderViewModel().pGetIntakeorderMATLineBarcodesFromWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cIntakeorderMATLineBarcode cIntakeorderMATLineBarcode = new cIntakeorderMATLineBarcode(jsonObject);
-                cIntakeorderMATLineBarcode.pInsertInDatabaseBln();
-            }
-
-            return true;
-        } else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
-            return false;
-        }
-    }
-
-    public boolean pGetMATLinesViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cIntakeorderMATLine.allIntakeorderMATLinesObl = null;
-            cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl = null;
-            cIntakeorderMATLine.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-        WebResult = this.getIntakeorderViewModel().pGetIntakeorderMATLinesFromWebserviceWrs();
-        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
-
-            this.sourceNoObl = new ArrayList<>();
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(jsonObject);
-                intakeorderMATLine.pInsertInDatabaseBln();
-
-                if (!this.sourceNoObl.contains(intakeorderMATLine.getSourceNoStr())) {
-                    this.sourceNoObl.add(intakeorderMATLine.getSourceNoStr());
-                }
-
-                cIntakeorderMATSummaryLine intakeorderMATSummaryLine = cIntakeorderMATSummaryLine.pGetSummaryLine(intakeorderMATLine.getItemNoStr(),
-                        intakeorderMATLine.getVariantCodeStr(),
-                        intakeorderMATLine.getSourceNoStr());
-
-                if (intakeorderMATSummaryLine == null ) {
-                    cIntakeorderMATSummaryLine summaryLineToAdd = new cIntakeorderMATSummaryLine(intakeorderMATLine.getItemNoStr(),
-                            intakeorderMATLine.getVariantCodeStr(),
-                            intakeorderMATLine.getSourceNoStr());
-
-
-                    cIntakeorderMATSummaryLine.pAddSummaryLine(summaryLineToAdd);
-
-                    if (!intakeorderMATLine.getBinCodeStr().isEmpty()){
-                        summaryLineToAdd.binCodeStr = intakeorderMATLine.getBinCodeStr();
-                    }
-
-                    summaryLineToAdd.pAddMATLine(intakeorderMATLine);
-                    continue;
-                }
-
-                intakeorderMATSummaryLine.pAddMATLine(intakeorderMATLine);
-            }
-            return true;
-
-        } else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
-            return false;
-        }
-    }
-
-    public boolean pGetReceiveLinesViaWebserviceBln(Boolean pvRefreshBln, String pvScannerStr) {
-
-        if (pvRefreshBln) {
-            cReceiveorderLine.allReceiveorderLines = null;
-            cIntakeorderMATLine.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-        WebResult = this.getIntakeorderViewModel().pGetIntakeorderReceiveLinesFromWebserviceWrs(pvScannerStr);
-        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
-
-
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cReceiveorderLine receiveorderLine = new cReceiveorderLine(jsonObject);
-
-               if (receiveorderLine.getHandledTimeStampStr() == "null" && cIntakeorder.currentIntakeOrder.isGenerated()) {
-                       continue;
-               }
-
-                receiveorderLine.pInsertInDatabaseBln();
-
-                cReceiveorderSummaryLine receiveorderSummaryLine = cReceiveorderSummaryLine.pGetSummaryLine(receiveorderLine.getItemNoStr(),
-                        receiveorderLine.getVariantCodeStr());
-
-                if (receiveorderSummaryLine == null ) {
-                    //Thats weird, but continue
-                    continue;
-                }
-
-                receiveorderSummaryLine.pAddLine(receiveorderLine);
-            }
-            return true;
-
-        } else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
-            return false;
-        }
-    }
-
-    public boolean pGetReceiveItemsViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl = null;
-            cReceiveorderLine.pTruncateTableBln();
-        }
-
-        cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl = new ArrayList<>();
-
-        cWebresult WebResult;
-        WebResult = this.getIntakeorderViewModel().pGetIntakeorderReceiveItemsFromWebserviceWrs();
-        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cReceiveorderSummaryLine receiveorderSummaryLine  = new cReceiveorderSummaryLine(jsonObject);
-                cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
-
-                if (receiveorderSummaryLine.getItemNoStr().equalsIgnoreCase("UNKNOWN")) {
-                    cIntakeorder.currentIntakeOrder.unknownVariantCounterInt += 1;
-                }
-
-            }
-            return true;
-
-        } else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
-            return false;
-        }
-    }
-
     public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
 
         if (pvRefreshBln) {
@@ -860,48 +709,6 @@ public class cIntakeorder {
                 intakeorderBarcode.pInsertInDatabaseBln();
             }
             return true;
-        } else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
-            return false;
-        }
-    }
-
-    public boolean pGetPackagingViaWebserviceBln() {
-
-
-        this.packagingInObl = new ArrayList<>();
-        this.packagingOutObl = new ArrayList<>();
-
-
-        cWebresult WebResult;
-        WebResult = this.getIntakeorderViewModel().pGetIntakeorderPackagingFromWebserviceWrs();
-        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPackaging packaging  = new cPackaging(jsonObject);
-                this.packagingInObl.add(packaging);
-                this.packagingOutObl.add(packaging);
-            }
-
-
-
-            //If there is no packaging defined, use the general list from the BASICS as a starting point
-            if (cPackaging.allPackaging == null)  {
-                return true;
-            }
-
-            if ( this.packagingInObl.size() == 0 || this.packagingOutObl.size() ==0 ) {
-
-                for (cPackaging packaging : cPackaging.allPackaging ) {
-                    packaging.quantityInUsedInt = 0;
-                    packaging.quantityOutUsedInt = 0;
-                }
-
-                this.packagingInObl.addAll(cPackaging.allPackaging);
-                this.packagingOutObl.addAll(cPackaging.allPackaging);
-            }
-
-            return true;
-
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
             return false;
@@ -1140,7 +947,7 @@ public class cIntakeorder {
         result.resultBln = true;
 
         //Get all Items for current order, if size = 0 or webservice error then stop
-        if (!cIntakeorder.currentIntakeOrder.pGetReceiveItemsViaWebserviceBln(true)) {
+        if (!cIntakeorder.currentIntakeOrder.mGetReceiveItemsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
             return result;
@@ -1157,7 +964,7 @@ public class cIntakeorder {
             }
 
             //Get all linesInt for current order, if size = 0 or webservice error then stop
-            if (!cIntakeorder.currentIntakeOrder.pGetReceiveLinesViaWebserviceBln(refreshBln, scanner.getScannerStr()) ) {
+            if (!cIntakeorder.currentIntakeOrder.mGetReceiveLinesViaWebserviceBln(refreshBln, scanner.getScannerStr()) ) {
                 result.resultBln = false;
                 result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
                 return result;
@@ -1175,7 +982,7 @@ public class cIntakeorder {
         }
 
         //Get packaging
-        if (!cIntakeorder.currentIntakeOrder.pGetPackagingViaWebserviceBln()) {
+        if (!cIntakeorder.currentIntakeOrder.mGetPackagingViaWebserviceBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_packaging_failed));
             return result;
@@ -1191,6 +998,117 @@ public class cIntakeorder {
         return  result;
     }
 
+    private boolean mGetReceiveLinesViaWebserviceBln(Boolean pvRefreshBln, String pvScannerStr) {
+
+        if (pvRefreshBln) {
+            cReceiveorderLine.allReceiveorderLines = null;
+            cIntakeorderMATLine.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderReceiveLinesFromWebserviceWrs(pvScannerStr);
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+
+
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cReceiveorderLine receiveorderLine = new cReceiveorderLine(jsonObject);
+
+                if (receiveorderLine.getHandledTimeStampStr() == "null" && cIntakeorder.currentIntakeOrder.isGenerated()) {
+                    continue;
+                }
+
+                receiveorderLine.pInsertInDatabaseBln();
+
+                cReceiveorderSummaryLine receiveorderSummaryLine = cReceiveorderSummaryLine.pGetSummaryLine(receiveorderLine.getItemNoStr(),
+                        receiveorderLine.getVariantCodeStr());
+
+                if (receiveorderSummaryLine == null ) {
+                    //Thats weird, but continue
+                    continue;
+                }
+
+                receiveorderSummaryLine.pAddLine(receiveorderLine);
+            }
+            return true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
+            return false;
+        }
+    }
+
+    private boolean mGetReceiveItemsViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl = null;
+            cReceiveorderLine.pTruncateTableBln();
+        }
+
+        cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl = new ArrayList<>();
+
+        cWebresult WebResult;
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderReceiveItemsFromWebserviceWrs();
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cReceiveorderSummaryLine receiveorderSummaryLine  = new cReceiveorderSummaryLine(jsonObject);
+                cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
+
+                if (receiveorderSummaryLine.getItemNoStr().equalsIgnoreCase("UNKNOWN")) {
+                    cIntakeorder.currentIntakeOrder.unknownVariantCounterInt += 1;
+                }
+
+            }
+            return true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
+            return false;
+        }
+    }
+
+    private boolean mGetPackagingViaWebserviceBln() {
+
+
+        this.packagingInObl = new ArrayList<>();
+        this.packagingOutObl = new ArrayList<>();
+
+
+        cWebresult WebResult;
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderPackagingFromWebserviceWrs();
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackaging packaging  = new cPackaging(jsonObject);
+                this.packagingInObl.add(packaging);
+                this.packagingOutObl.add(packaging);
+            }
+
+
+
+            //If there is no packaging defined, use the general list from the BASICS as a starting point
+            if (cPackaging.allPackaging == null)  {
+                return true;
+            }
+
+            if ( this.packagingInObl.size() == 0 || this.packagingOutObl.size() ==0 ) {
+
+                for (cPackaging packaging : cPackaging.allPackaging ) {
+                    packaging.quantityInUsedInt = 0;
+                    packaging.quantityOutUsedInt = 0;
+                }
+
+                this.packagingInObl.addAll(cPackaging.allPackaging);
+                this.packagingOutObl.addAll(cPackaging.allPackaging);
+            }
+
+            return true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
+            return false;
+        }
+    }
+
     private cResult mGetMATOrderDetailsRst(){
 
         cResult result;
@@ -1199,14 +1117,14 @@ public class cIntakeorder {
         result.resultBln = true;
 
         //Get all linesInt for current order, if size = 0 or webservice error then stop
-        if (!cIntakeorder.currentIntakeOrder.pGetMATLinesViaWebserviceBln(true)) {
+        if (!cIntakeorder.currentIntakeOrder.mGetMATLinesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
             return result;
         }
 
         //Get line barcodes for current order
-        if (!cIntakeorder.currentIntakeOrder.pGetMATLineBarcodesViaWebserviceBln(true)) {
+        if (!cIntakeorder.currentIntakeOrder.mGetMATLineBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
             return result;
@@ -1236,6 +1154,84 @@ public class cIntakeorder {
 
         return  result;
     }
+
+    private boolean mGetMATLinesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cIntakeorderMATLine.allIntakeorderMATLinesObl = null;
+            cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl = null;
+            cIntakeorderMATLine.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderMATLinesFromWebserviceWrs();
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+
+            this.sourceNoObl = new ArrayList<>();
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(jsonObject);
+                intakeorderMATLine.pInsertInDatabaseBln();
+
+                if (!this.sourceNoObl.contains(intakeorderMATLine.getSourceNoStr())) {
+                    this.sourceNoObl.add(intakeorderMATLine.getSourceNoStr());
+                }
+
+                cIntakeorderMATSummaryLine intakeorderMATSummaryLine = cIntakeorderMATSummaryLine.pGetSummaryLine(intakeorderMATLine.getItemNoStr(),
+                        intakeorderMATLine.getVariantCodeStr(),
+                        intakeorderMATLine.getSourceNoStr());
+
+                if (intakeorderMATSummaryLine == null ) {
+                    cIntakeorderMATSummaryLine summaryLineToAdd = new cIntakeorderMATSummaryLine(intakeorderMATLine.getItemNoStr(),
+                            intakeorderMATLine.getVariantCodeStr(),
+                            intakeorderMATLine.getSourceNoStr());
+
+                    summaryLineToAdd.sortingSequenceInt = intakeorderMATLine.getSortingSequenceInt();
+                    summaryLineToAdd.containerStr = intakeorderMATLine.getContainerStr();
+
+                    cIntakeorderMATSummaryLine.pAddSummaryLine(summaryLineToAdd);
+
+                    if (!intakeorderMATLine.getBinCodeStr().isEmpty()){
+                        summaryLineToAdd.binCodeStr = intakeorderMATLine.getBinCodeStr();
+                    }
+
+                    summaryLineToAdd.pAddMATLine(intakeorderMATLine);
+                    continue;
+                }
+
+                intakeorderMATSummaryLine.pAddMATLine(intakeorderMATLine);
+            }
+            return true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
+            return false;
+        }
+    }
+
+    private boolean mGetMATLineBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cIntakeorderMATLineBarcode.allMATLineBarcodesObl = null;
+            cIntakeorderMATLineBarcode.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult = this.getIntakeorderViewModel().pGetIntakeorderMATLineBarcodesFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cIntakeorderMATLineBarcode cIntakeorderMATLineBarcode = new cIntakeorderMATLineBarcode(jsonObject);
+                cIntakeorderMATLineBarcode.pInsertInDatabaseBln();
+            }
+
+            return true;
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETINTAKEORDERMATLINES);
+            return false;
+        }
+    }
+
 
     private static void mTruncateTable() {
         cIntakeorderViewModel intakeorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);

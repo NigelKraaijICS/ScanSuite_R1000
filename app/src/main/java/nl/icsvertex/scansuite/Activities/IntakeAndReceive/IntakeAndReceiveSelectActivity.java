@@ -372,7 +372,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr()) {
             case "MAT":
-                hulpResult =  cIntakeorder.currentIntakeOrder.pGetMATOrderDetailsRst();
+                hulpResult =  cIntakeorder.currentIntakeOrder.pGetOrderDetailsRst();
                 if (!hulpResult.resultBln) {
                     this.mStepFailed(hulpResult.messagesStr());
                     return;
@@ -389,7 +389,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
                 break;
 
             case "EOS":
-                hulpResult =  cIntakeorder.currentIntakeOrder.pGetReceiveOrderDetailsRst();
+                hulpResult =  cIntakeorder.currentIntakeOrder.pGetOrderDetailsRst();
                 if (!hulpResult.resultBln) {
                     this.mStepFailed(hulpResult.messagesStr());
                     return;

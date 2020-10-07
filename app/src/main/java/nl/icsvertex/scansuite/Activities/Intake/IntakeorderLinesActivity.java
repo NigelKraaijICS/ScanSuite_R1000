@@ -289,7 +289,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             //Something went wrong, so show message and stop
             if (!hulpResult.resultBln) {
                 this.mDoUnknownScan(hulpResult.messagesStr(), pvBarcodeScan.getBarcodeOriginalStr());
-                this.mFillRecycler(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+                this.mFillRecycler(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
                 return;
             }
 
@@ -311,7 +311,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             //Something went wrong, so show message and stop
             if (!hulpResult.resultBln) {
                 this.mDoUnknownScan(hulpResult.messagesStr(), pvBarcodeScan.getBarcodeOriginalStr());
-                this.mFillRecycler(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+                this.mFillRecycler(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
                 return;
             }
 
@@ -459,7 +459,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
             result.resultBln = true;
 
             if (!cIntakeorder.currentIntakeOrder.showDeviationsBln) {
-                this.getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+                this.getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
             } else {
                 this.getIntakeorderMATSummaryLineAdapter().pShowDeviations();
             }
@@ -538,7 +538,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
                 }
                 else {
                     cIntakeorder.currentIntakeOrder.showDeviationsBln = false;
-                    getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+                    getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
                 }
             }
         });

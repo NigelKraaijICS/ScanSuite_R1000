@@ -30,7 +30,6 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.SendOrderFragment;
 import nl.icsvertex.scansuite.R;
 
 
@@ -293,7 +292,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
             if (!pvEnabledBln) {
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
+                    if (fragment instanceof NothingHereFragment) {
                         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                         fragmentTransaction.remove(fragment);
                         fragmentTransaction.commit();
@@ -318,7 +317,7 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
 
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-            SendOrderFragment fragment = new SendOrderFragment();
+            NothingHereFragment fragment = new NothingHereFragment();
             fragmentTransaction.replace(R.id.fragmentPickorderLinesToPick, fragment);
             fragmentTransaction.commit();
 
@@ -331,8 +330,6 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
             //Change tabcounter text
         }
     }
-
-
 
     //End Region private Methods
 

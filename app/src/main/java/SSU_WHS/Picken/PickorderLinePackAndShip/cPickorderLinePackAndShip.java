@@ -178,8 +178,6 @@ public class cPickorderLinePackAndShip {
         this.quantityHandledDbl = pickorderLinePackAndShipEntity.getQuantityHandledDbl();
         this.quantityCheckedDbl = pickorderLinePackAndShipEntity.getQuantityChecked();
 
-
-
         this.statusInt = pickorderLinePackAndShipEntity.getStatusInt();
         this.statusShippingInt =  pickorderLinePackAndShipEntity.getStatusShippingInt();
 
@@ -197,7 +195,6 @@ public class cPickorderLinePackAndShip {
 
         this.shippingAgentCodeStr = pickorderLinePackAndShipEntity.getShippinAgentCodeStr();
         this.shippingAgentServiceCodeStr = pickorderLinePackAndShipEntity.getShippinAgentServiceCodeStr();
-
 
     }
 

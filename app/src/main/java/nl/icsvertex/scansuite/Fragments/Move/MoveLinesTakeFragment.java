@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
@@ -31,14 +30,9 @@ import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineAdapter;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineRecyclerItemTouchHelper;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
-import SSU_WHS.Picken.PickorderLines.cPickorderLineRecyclerItemTouchHelper;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.SendOrderFragment;
 import nl.icsvertex.scansuite.R;
 
 public class MoveLinesTakeFragment extends Fragment implements iICSDefaultFragment, cMoveorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -322,7 +316,7 @@ public class MoveLinesTakeFragment extends Fragment implements iICSDefaultFragme
                 if (!pvEnabledBln) {
                     List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                     for (Fragment fragment : fragments) {
-                        if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
+                        if (fragment instanceof NothingHereFragment) {
                             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                             fragmentTransaction.remove(fragment);
                             fragmentTransaction.commit();

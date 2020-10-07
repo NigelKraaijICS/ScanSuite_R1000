@@ -37,7 +37,6 @@ import SSU_WHS.Move.MoveorderLines.cMoveorderLineRecyclerItemTouchHelper;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.SendOrderFragment;
 import nl.icsvertex.scansuite.R;
 
 public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragment,cMoveorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener  {
@@ -217,7 +216,7 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
                 if (!pvEnabledBln) {
                     List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                     for (Fragment fragment : fragments) {
-                        if (fragment instanceof NothingHereFragment || fragment instanceof SendOrderFragment) {
+                        if (fragment instanceof NothingHereFragment) {
                             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                             fragmentTransaction.remove(fragment);
                             fragmentTransaction.commit();

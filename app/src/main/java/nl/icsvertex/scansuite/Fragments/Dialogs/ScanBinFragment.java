@@ -26,6 +26,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -146,6 +147,12 @@ public class ScanBinFragment extends DialogFragment implements iICSDefaultFragme
                 if (cAppExtension.activity instanceof MenuActivity) {
                     MenuActivity menuActivity = (MenuActivity)cAppExtension.activity;
                     menuActivity.pHandleHandleBINScanned(editTextScanBin.getText().toString());
+                    dismiss();
+                }
+
+                if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
+                    IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
+                    intakeOrderIntakeActivity.pHandleHandleBINScanned(cBarcodeScan.pFakeScan(editTextScanBin.getText().toString()));
                     dismiss();
                 }
 

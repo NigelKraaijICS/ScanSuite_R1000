@@ -24,6 +24,7 @@ public class cWarehouseorder {
         Pick_Picking,
         Pick_Sorting,
         Pick_PackAndShip,
+        Finish_Packing,
         Pick_QualityContol,
         Inventory,
         Receive_Store,
@@ -81,6 +82,7 @@ public class cWarehouseorder {
         public static final int PickSorting = 20;
         public static final int PickQualityControl = 30;
         public static final int PickPackAndShip = 40;
+        public static final int PickFinishPacking = 70;
 
     }
 

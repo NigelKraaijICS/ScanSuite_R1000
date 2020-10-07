@@ -199,10 +199,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
 
         if (cSetting.RETOUR_NEW_WORKFLOWS().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.RVR.toString())) {
-            this.editTextBin.setVisibility(View.GONE);
-            this.textViewReturnReason.setVisibility(View.GONE);
             this.switchMultipleDocuments.setVisibility(View.GONE);
-            this.switchReason.setVisibility(View.GONE);
         }
 
     }
@@ -272,17 +269,19 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         if (binBln) {
             barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
-            branchBin = cUser.currentUser.currentBranch.pGetBinByCode(barcodeWithoutPrefixStr);
+            if (!cSetting.RETOUR_ORDER_BIN_NO_CHECK() ) {
+                branchBin = cUser.currentUser.currentBranch.pGetBinByCode(barcodeWithoutPrefixStr);
 
-            if (branchBin == null) {
-                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_unknown_bin), null);
-                return;
-            }
-
-            if (!branchBin.getBinCodeStr().equalsIgnoreCase(cUser.currentUser.currentBranch.getReturnDefaultBinStr())) {
-                if (!branchBin.isUseForReturnSalesBln()){
-                    cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_bin_not_allowed_for_return),"",true,true);
+                if (branchBin == null) {
+                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_unknown_bin), null);
                     return;
+                }
+
+                if (!branchBin.getBinCodeStr().equalsIgnoreCase(cUser.currentUser.currentBranch.getReturnDefaultBinStr())) {
+                    if (!branchBin.isUseForReturnSalesBln()){
+                        cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_bin_not_allowed_for_return),"",true,true);
+                        return;
+                    }
                 }
             }
 
@@ -303,6 +302,21 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         }
 
         else {
+
+
+            barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+
+            if (this.editTextDocument.hasFocus()) {
+                this.pHandleScan(cBarcodeScan.pFakeScan(barcodeWithoutPrefixStr), true, false);
+                return;
+            }
+
+            if (this.editTextBin.hasFocus()) {
+                this.pHandleScan(cBarcodeScan.pFakeScan(barcodeWithoutPrefixStr), false, true);
+                return;
+            }
+
+
             //has prefix, isn't DOCUMENT
             cUserInterface.pDoNope(createReturnContainer, true, true);
         }
@@ -534,8 +548,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     }
 
     private  void mStepFailed(String pvErrorMessageStr){
-        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cReturnorder.currentReturnOrder.getOrderNumberStr(), true, true );
-        cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return);
+        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, "", true, true );
         cUserInterface.pCheckAndCloseOpenDialogs();
         cReturnorder.currentReturnOrder = null;
     }

@@ -442,9 +442,16 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             return;
         }
 
-        if (cAppExtension.activity instanceof ReturnorderDocumentsActivity){
-            ReturnorderDocumentsActivity returnorderDocumentsActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
-            returnorderDocumentsActivity.pHandleFragmentDismissed();
+        if (cAppExtension.activity instanceof  ReturnArticleDetailActivity) {
+            ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
+            returnArticleDetailActivity.pHandleFragmentDismissed();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof ReturnArticleDetailActivity){
+            ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
+            returnArticleDetailActivity.pHandleFragmentDismissed();
             this.dismiss();
         }
 

@@ -37,8 +37,14 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
+import nl.icsvertex.scansuite.Activities.FinishShip.FinishShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveMISinglepieceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
@@ -131,6 +137,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
         pvMenu.findItem(R.id.item_bin_stock).setVisible(cSetting.REALTIME_BARCODE_CHECK());
         pvMenu.findItem(R.id.item_article_stock).setVisible(cSetting.REALTIME_BARCODE_CHECK());
+        pvMenu.findItem(R.id.item_barcodeinfo).setVisible(true);
 
         return super.onPrepareOptionsMenu(pvMenu);
     }
@@ -151,10 +158,12 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
                 break;
 
             case R.id.item_article_stock:
-
                 selectedFragment = new ScanArticleFragment();
-
                 break;
+
+            case R.id.item_barcodeinfo:
+                mShowBarcodeInfoActivity();
+                return true;
 
             default:
                 break;
@@ -349,6 +358,24 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             return;
         }
 
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.FINISH_SHIPPING) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
+
+            if (!  cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+
+            intent = new Intent(cAppExtension.context, FinishShiporderSelectActivity.class);
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_FINISH_SHIP);
+            clickedText = container.findViewWithTag(cAuthorisation.TAG_TEXT_FINSIH_SHIP);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INVENTORY) {
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Inventory;
@@ -432,6 +459,22 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_MOVE);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.MOVE_MI_SINGLEPIECE){
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Move;
+            if (! cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+            intent = new Intent(cAppExtension.context, MoveMISinglepieceActivity.class);
+
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_MOVE);
+            clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_MOVE);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
         }
 
     }
@@ -447,7 +490,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             return;
         }
 
-    BinItemsFragment binItemsFragment = new BinItemsFragment(branchBin.getBinCodeStr());
+     BinItemsFragment binItemsFragment = new BinItemsFragment(branchBin.getBinCodeStr());
         binItemsFragment.setCancelable(true);
         binItemsFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
 
@@ -503,6 +546,15 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
+
+    }
+
+    private void mShowBarcodeInfoActivity() {
+
+
+        Intent  intent = new Intent(cAppExtension.context, BarcodeInfoActivity.class);
+        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+
 
     }
 

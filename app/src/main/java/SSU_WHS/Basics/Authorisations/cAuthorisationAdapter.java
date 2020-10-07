@@ -140,6 +140,11 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
                     pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mi);
                 }
 
+                if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MI_SINGLEPIECE) {
+                    pvHolder.textViewAuthorisation.setText(R.string.menuitem_move_mi_singlepiece);
+                    pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mi);
+                }
+
                 if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MO) {
                     pvHolder.textViewAuthorisation.setText(R.string.menuitem_move_mo);
                     pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mo);
@@ -177,6 +182,13 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
                     pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_SHIP);
                 }
 
+                    if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.FINISH_SHIPPING) {
+                        pvHolder.textViewAuthorisation.setText(R.string.menuitem_finish_ship);
+                        pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_ship);
+                        pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_FINISH_SHIP);
+                        pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_FINSIH_SHIP);
+                    }
+
                     if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.QC) {
                         pvHolder.textViewAuthorisation.setText(R.string.menuitem_qc);
                         pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_qualitycontrol);
@@ -210,9 +222,6 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
                     pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_selfpick);
                 }
             }
-
-
-
 
             pvHolder.authorisationItemLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

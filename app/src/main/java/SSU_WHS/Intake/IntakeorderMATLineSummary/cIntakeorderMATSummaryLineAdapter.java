@@ -129,12 +129,21 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
             pvHolder.textViewSourceNo.setText(sourceNoStr);
         }
 
+        String binCodeStr;
+
         if (currentIntakeorderMATSummaryLine.getBinCodeHandledStr().isEmpty()) {
-            pvHolder.textViewBinCode.setText(currentIntakeorderMATSummaryLine.getBinCodeStr());
+            binCodeStr = currentIntakeorderMATSummaryLine.getBinCodeStr();
+
         }
         else {
-            pvHolder.textViewBinCode.setText(currentIntakeorderMATSummaryLine.getBinCodeHandledStr());
+            binCodeStr = currentIntakeorderMATSummaryLine.getBinCodeHandledStr();
         }
+
+        if (!currentIntakeorderMATSummaryLine.getContainerStr().isEmpty()) {
+            binCodeStr += " (" + currentIntakeorderMATSummaryLine.getContainerStr() + ")";
+        }
+
+        pvHolder.textViewBinCode.setText(binCodeStr);
 
         pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
 
@@ -325,7 +334,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
     private List<cIntakeorderMATSummaryLine> mGetDeviationsListObl() {
 
         List<cIntakeorderMATSummaryLine> resultObl = new ArrayList<>();
-        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl)
+        for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine : cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl())
         {
             if (intakeorderMATSummaryLine.getQuantityHandledDbl() > intakeorderMATSummaryLine.getQuantityDbl() ||
                 intakeorderMATSummaryLine.getQuantityHandledDbl() < intakeorderMATSummaryLine.getQuantityDbl())

@@ -16,6 +16,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.R;
@@ -124,11 +125,14 @@ public class cReturnorderLineAdapter extends RecyclerView.Adapter<SSU_WHS.Return
         pvHolder.viewForeground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cReturnorderLine.currentReturnOrderLine = returnorderLine;
 
-                if (cAppExtension.activity instanceof  ReturnorderDocumentActivity) {
-                    ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
-                    returnorderDocumentActivity.pHandleSelectedLine();
+                if (cSetting.RETOUR_AMOUNT_MANUAL()) {
+                    cReturnorderLine.currentReturnOrderLine = returnorderLine;
+
+                    if (cAppExtension.activity instanceof  ReturnorderDocumentActivity) {
+                        ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
+                        returnorderDocumentActivity.pHandleSelectedLine();
+                    }
                 }
 
             }
