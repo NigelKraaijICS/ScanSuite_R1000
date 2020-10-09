@@ -235,9 +235,18 @@ public class cPickorder{
     private Boolean isPackAndShipNeededLocalBln = null;
     public boolean isPackAndShipNeededBln() {
 
+
+
+
+
         if (isPackAndShipNeededLocalBln != null) {
             return isPackAndShipNeededLocalBln;
          }
+
+        if (this.pQuantityHandledDbl() == 0) {
+            isPackAndShipNeededLocalBln = false;
+             return  isPackAndShipNeededLocalBln;
+        }
 
         if (this.linesObl() == null || this.linesObl().size() == 0 ) {
             isPackAndShipNeededLocalBln = false;
@@ -247,11 +256,6 @@ public class cPickorder{
         for (cPickorderLine pickorderLine : this.linesObl()) {
             if (pickorderLine.getStatusShippingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded ||
                 pickorderLine.getStatuPackingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded) {
-
-                if (pickorderLine.getQuantityHandledDbl() == 0 ) {
-                    continue;
-                }
-
                 isPackAndShipNeededLocalBln = true;
                 return  isPackAndShipNeededLocalBln;
             }
