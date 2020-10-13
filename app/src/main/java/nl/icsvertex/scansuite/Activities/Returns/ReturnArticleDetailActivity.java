@@ -889,10 +889,8 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     }
 
     private  void mGoBackToDocumentActivity() {
-
-        //Reset current branch
-
         Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentActivity.class);
+        ReturnorderDocumentActivity.busyBln = false;
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }
