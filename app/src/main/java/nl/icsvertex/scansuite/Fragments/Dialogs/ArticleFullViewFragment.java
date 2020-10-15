@@ -30,7 +30,6 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
-import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -149,7 +148,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     public void mFieldsInitialize() {
 
 
-        if (cAppExtension.activity instanceof PickorderLinesActivity) {
+        if (cAppExtension.activity instanceof PickorderPickActivity) {
             if (!cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
                 this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
                 this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);

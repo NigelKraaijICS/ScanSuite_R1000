@@ -534,6 +534,14 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             return;
         }
 
+        if (!this.startedWithBINBln) {
+            //We are done
+            this.mSendLine();
+            return;
+
+        }
+
+
     }
 
     //End Region Public Methods

@@ -193,7 +193,15 @@ public class cArticleImageRepository {
 
                 SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_ARTICLEINPUT_COMPLEX);
                 soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_ITEMNO_COMPLEX,itemNoAndVariantObl[0]);
-                soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE_COMPLEX, itemNoAndVariantObl[1]);
+
+                if (itemNoAndVariantObl.length > 1) {
+                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE_COMPLEX, itemNoAndVariantObl[1]);
+
+                }
+                else{
+                    soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE_COMPLEX, "");
+                }
+
                 articleImagesList.addSoapObject(soapObject);
             }
 
