@@ -103,7 +103,7 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movelines_place_mt);
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         this.mActivityInitialize();
     }
 
@@ -112,21 +112,21 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
         super.onDestroy();
 
         if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -170,7 +170,7 @@ public class MoveLinesPlaceMTActivity extends AppCompatActivity implements iICSD
         this.mInitScreen();
 
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override

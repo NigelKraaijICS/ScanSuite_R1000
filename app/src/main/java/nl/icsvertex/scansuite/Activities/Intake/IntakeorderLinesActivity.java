@@ -122,14 +122,14 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,7 +160,7 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -379,12 +379,12 @@ public class IntakeorderLinesActivity extends AppCompatActivity implements iICSD
     }
 
     public  void pPasswordSuccess() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         this.mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
     }
 
     public  void pPasswordCancelled() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
 

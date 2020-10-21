@@ -69,13 +69,12 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -83,13 +82,12 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     protected void onPause() {
 
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
         finish();
     }
 
@@ -111,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         this.mSetListeners();
         this.mFieldsInitialize();
         this.mInitScreen();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -220,7 +218,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     }
 
     public  void pHandlePasswordFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     //End Region Public Methods

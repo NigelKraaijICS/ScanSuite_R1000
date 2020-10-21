@@ -88,6 +88,7 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
     public void onResume() {
         super.onResume();
         ReturnorderDocumentsActivity.currentDocumentFragment = this;
+        this.mGetData();
     }
 
     //End Region Default Methods
@@ -262,7 +263,6 @@ public class ReturnDocumentsToDoFragment extends Fragment implements iICSDefault
         }
 
     }
-
 
     private void mSetQuickHelpListener() {
         this.quickhelpContainer.setOnClickListener(new View.OnClickListener() {

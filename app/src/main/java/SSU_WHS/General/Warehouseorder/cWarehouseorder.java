@@ -64,6 +64,7 @@ public class cWarehouseorder {
         PF,
         IVS,
         MV,
+        MI,
         RVS,
         RVR,
         MAT,

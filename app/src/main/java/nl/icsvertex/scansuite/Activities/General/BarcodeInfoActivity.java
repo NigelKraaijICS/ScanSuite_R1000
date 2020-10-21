@@ -54,26 +54,26 @@ public class BarcodeInfoActivity extends AppCompatActivity implements iICSDefaul
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
 }
 
     @Override
     protected void onStop() {
         super.onStop();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         finish();
     }
 

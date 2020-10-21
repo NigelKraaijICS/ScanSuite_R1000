@@ -35,6 +35,7 @@ public class cMoveorderLineViewModel extends AndroidViewModel {
 
     public cWebresult pMoveItemTakeMTHandledViaWebserviceWrs(List<cMoveorderBarcode> pvScannedBarcodesObl) {return this.Repository.pMoveItemTakeMTHandledViaWebserviceWrs(pvScannedBarcodesObl);}
     public cWebresult pMoveItemPlaceMTHandledViaWebserviceWrs(List<cMoveorderBarcode> pvScannedBarcodesObl) {return this.Repository.pMoveItemPlaceMTHandledViaWebserviceWrs(pvScannedBarcodesObl);}
+    public cWebresult pMoveItemPlaceMIHandledViaWebserviceWrs(List<cMoveorderBarcode> pvScannedBarcodesObl) {return this.Repository.pMoveItemPlaceMIHandledViaWebserviceWrs(pvScannedBarcodesObl);}
 
     public cWebresult pResetLineViaWebserviceWrs() {return  this.Repository.pResetLineViaWebserviceWrs();}
 

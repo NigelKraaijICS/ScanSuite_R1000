@@ -216,7 +216,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
         LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
 
         if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
 
     }
@@ -224,12 +224,12 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
         LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         super.onPause();
     }
 
@@ -237,7 +237,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 

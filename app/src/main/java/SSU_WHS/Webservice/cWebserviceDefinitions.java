@@ -17,6 +17,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETUSERS = "p_GebruikersGetJsonStr";
     public static String WEBMETHOD_GETSCANNERS = "p_ScannersGetJsonStr";
     public static String WEBMETHOD_GETWORKPLACES = "p_MagazijnWerkplekkenGetJsonStr";
+    public static String WEBMETHOD_GETIDENTIFIERWITHDESTINATION = "p_IdentifierWithDestinationGetJsonStr";
     public static String WEBMETHOD_GETBINARTICLES = "p_MagazijnlocatieArtikelenGetJsonStr";
     public static String WEBMETHOD_GETBRANCHES = "p_VestigingGetJsonStr";
     public static String WEBMETHOD_GETBRANCHESFORUSER = "p_GebruikerVestigingenGetJsonStr";
@@ -154,6 +155,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_USERNAME = "pv_UsernameStr";
     public static String WEBPROPERTY_USERNAMEDUNGLISH = "pv_GebruikersnameStr";
     public static String WEBPROPERTY_USERNAMEDUTCH = "pv_GebruikersnaamStr";
+    public static String WEBPROPERTY_IDENTIFIER = "pv_IdentifierStr";
     public static String WEBPROPERTY_LOCATION_NL = "pv_VestigingStr";
     public static String WEBPROPERTY_LICENSE = "pv_LicentieStr";
     public static String WEBPROPERTY_INPROGRESS = "pv_InBehandelingBln";

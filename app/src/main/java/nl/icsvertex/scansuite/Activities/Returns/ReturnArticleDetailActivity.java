@@ -121,13 +121,13 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -167,7 +167,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.mSetListeners();
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -456,8 +456,8 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     }
 
     public void pHandleFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
-        cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl = Double.valueOf(0);
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
+        cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl = (double) 0;
         this.mGoBackToDocumentActivity();
     }
 

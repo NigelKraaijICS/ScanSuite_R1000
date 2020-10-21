@@ -72,7 +72,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movelines);
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         this.mActivityInitialize();
     }
 
@@ -81,21 +81,21 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         super.onDestroy();
 
         if (cAppExtension.activity instanceof  MoveLinesActivity) {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -139,7 +139,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
         this.mSetListeners();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override

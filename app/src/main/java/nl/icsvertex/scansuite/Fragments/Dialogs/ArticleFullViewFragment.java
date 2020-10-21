@@ -77,7 +77,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     @Override
     public void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
 
             if (cAppExtension.activity instanceof  PickorderPickActivity) {
                 PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
@@ -93,7 +93,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
     @Override
     public void onDestroy() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
 
             if (cAppExtension.activity instanceof  PickorderPickActivity) {
                 PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
@@ -113,7 +113,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
         Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -124,7 +124,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
         this.mSetListeners();
         this.mSetToolbar();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
 
     }
 

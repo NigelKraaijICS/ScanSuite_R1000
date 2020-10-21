@@ -97,14 +97,14 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -152,7 +152,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -220,7 +220,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public void mInitScreen() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     //End Region iICSDefaultActivity defaults

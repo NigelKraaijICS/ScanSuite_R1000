@@ -470,11 +470,12 @@ public class cBarcodeScan {
         return BarcodeFragmentReceiver;
     }
 
-    public static void pRegisterBarcodeReceiver(){
+    public static void pRegisterBarcodeReceiver(String pvClassNameStr){
 
+        Log.i("ICS","pRegisterBarcodeReceiver: " +   pvClassNameStr);
 
         //Turn off other receiver
-        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver(pvClassNameStr);
 
         //Initialise this receiver
         cBarcodeScan.getBarcodeIntentFilter();
@@ -489,14 +490,16 @@ public class cBarcodeScan {
         cAppExtension.context.registerReceiver(BarcodeReceiver,BarcodeIntentFilter);
         cBarcodeScan.currentActivityContextStr  = cAppExtension.context.getClass().getSimpleName();
 
-//        Log.i("ICS","Register receiver: " +   cBarcodeScan.currentActivityContextStr);
+
 
     }
 
-    public static void pRegisterBarcodeFragmentReceiver(){
+    public static void pRegisterBarcodeFragmentReceiver(String pvClassNameStr){
+
+        Log.i("ICS","pRegisterBarcodeFragmentReceiver: " +   pvClassNameStr);
 
         //Turn off other receiver
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(pvClassNameStr);
 
         //Initialise this receiver
         cBarcodeScan.getBarcodeFragmentIntentFilter();
@@ -505,36 +508,28 @@ public class cBarcodeScan {
         //Attach receiver to context
         cAppExtension.context.registerReceiver(BarcodeFragmentReceiver,BarcodeFragmentIntentFilter);
 
-//        if (cAppExtension.dialogFragment == null) {
-//            Log.i("ICS","Register fragment receiver: " +  cAppExtension.context.getClass().getSimpleName());
-//        }
-//        else {
-//            Log.i("ICS","Register fragment receiver: " +  cAppExtension.context.getClass().getSimpleName() + " for fragment: " + cAppExtension.dialogFragment.getClass().getSimpleName());
-//        }
 
 
     }
 
-    public static void pUnregisterBarcodeReceiver(){
+    public static void pUnregisterBarcodeReceiver(String pvClassNameStr){
+
+        Log.i("ICS","pUnregisterBarcodeReceiver: " +   pvClassNameStr);
+
         try {
          cAppExtension.context.unregisterReceiver(BarcodeReceiver);
-//            Log.i("ICS","Unregister receiver: " +  cBarcodeScan.currentActivityContextStr);
             cBarcodeScan.currentActivityContextStr = "";
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
         }
     }
 
-    public static void pUnregisterBarcodeFragmentReceiver(){
+    public static void pUnregisterBarcodeFragmentReceiver(String pvClassNameStr){
+
+        Log.i("ICS","pUnregisterBarcodeFragmentReceiver: " +   pvClassNameStr);
 
         try {
             cAppExtension.context.unregisterReceiver(BarcodeFragmentReceiver);
-//            if (cAppExtension.dialogFragment == null) {
-//                Log.i("ICS","Unregister fragment receiver: " +  cAppExtension.context.getClass().getSimpleName());
-//            }
-//            else {
-//                Log.i("ICS","Unregister fragment receiver: " +  cAppExtension.context.getClass().getSimpleName() + " for fragment: " + cAppExtension.dialogFragment.getClass().getSimpleName());
-//            }
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
         }

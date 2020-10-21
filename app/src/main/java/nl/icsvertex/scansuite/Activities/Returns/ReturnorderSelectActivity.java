@@ -111,14 +111,14 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -168,7 +168,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -262,54 +262,70 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         this.recyclerSearchView.callOnClick();
     }
 
-    public  void pReturnorderSelected(cReturnorder pvReturnorder) {
-
-        cResult hulpResult;
-
-        if (!mCheckOrderIsLockableBln(pvReturnorder)) {
-            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
-            cUserInterface.pCheckAndCloseOpenDialogs();
-            return;
-        }
+    public  void pReturnorderSelected(final cReturnorder pvReturnorder) {
 
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        //Set the current returnorder
         cReturnorder.currentReturnOrder = pvReturnorder;
 
-        //Try to lock the returnorder
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleReturnOrderSelected();
+            }
+        }).start();
 
-        if (!this.mTryToLockOrderBln()) {
-            this.pFillOrders();
-            return;
-        }
-
-        //Delete the detail, so we can get them from the webservice
-        if (!cReturnorder.currentReturnOrder.pDeleteDetailsBln()) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
-            return;
-        }
-
-        if(!cUser.currentUser.currentBranch.pGetReasonBln(true)){
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_getting_return_reasons));
-            return;
-        }
-
-        hulpResult = cReturnorder.currentReturnOrder.pGetOrderDetailsRst();
-        if (!hulpResult.resultBln) {
-            this.mStepFailed(hulpResult.messagesStr());
-            return;
-        }
-
-          // If everything went well, then start Documents Activity
-        this.mShowReturnorderDocumentsActivity();
     }
 
     //End Region Public Methods
 
     // Region Private Methods
 
+   private void mHandleReturnOrderSelected(){
+
+       cResult hulpResult;
+
+       if (!mCheckOrderIsLockableBln(cReturnorder.currentReturnOrder)) {
+
+           cAppExtension.activity.runOnUiThread(new Runnable() {
+               @Override
+               public void run() {
+                   cReturnorder.currentReturnOrder = null;
+                   cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
+                   cUserInterface.pCheckAndCloseOpenDialogs();
+                   cUserInterface.pHideGettingData();
+                   return;
+               }
+           });
+       }
+
+       //Try to lock the returnorder
+       if (!this.mTryToLockOrderBln()) {
+           this.pFillOrders();
+           return;
+       }
+
+       //Delete the detail, so we can get them from the webservice
+       if (!cReturnorder.currentReturnOrder.pDeleteDetailsBln()) {
+           this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+           return;
+       }
+
+       if(!cUser.currentUser.currentBranch.pGetReasonBln(true)){
+           this.mStepFailed(cAppExtension.context.getString(R.string.error_getting_return_reasons));
+           return;
+       }
+
+       hulpResult = cReturnorder.currentReturnOrder.pGetOrderDetailsRst();
+       if (!hulpResult.resultBln) {
+           this.mStepFailed(hulpResult.messagesStr());
+           return;
+       }
+
+       // If everything went well, then start Documents Activity
+       this.mShowReturnorderDocumentsActivity();
+
+   }
 
     private boolean mTryToLockOrderBln(){
 
@@ -363,7 +379,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
             public void run() {
 
                 cReturnorder.allReturnordersObl  = cReturnorder.pGetReturnOrdersWithFilterFromDatabasObl();
-                if ( cReturnorder.allReturnordersObl == null ||  cReturnorder.allReturnordersObl.size() == 0) {
+                if (cReturnorder.allReturnordersObl.size() == 0) {
                     mShowNoOrdersIcon( true);
                     cUserInterface.pHideGettingData();
                     return;
@@ -689,11 +705,19 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         }
     }
 
-    private  void mStepFailed(String pvErrorMessageStr){
-        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cReturnorder.currentReturnOrder.getOrderNumberStr(), true, true );
-        cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return);
-        cUserInterface.pCheckAndCloseOpenDialogs();
-        cReturnorder.currentReturnOrder = null;
+    private  void mStepFailed(final String pvErrorMessageStr){
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                cUserInterface.pHideGettingData();
+                cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cReturnorder.currentReturnOrder.getOrderNumberStr(), true, true );
+                cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return);
+                cUserInterface.pCheckAndCloseOpenDialogs();
+                cReturnorder.currentReturnOrder = null;
+            }
+        });
+
     }
 
     private void mShowCreateReturnorderActivity() {
@@ -728,17 +752,22 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         cAppExtension.activity = this.currentActivity;
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.returnorderSelectcontainer);
-        View clickedOrder = container.findViewWithTag(cReturnorder.currentReturnOrder.getOrderNumberStr());
+        final View clickedOrder = container.findViewWithTag(cReturnorder.currentReturnOrder.getOrderNumberStr());
 
-        Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentsActivity.class);
+        final Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentsActivity.class);
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (clickedOrder != null) {
 
-        if (clickedOrder != null) {
-            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
-            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-        } else {
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
-        }
+                    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
+                    ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+                } else {
+                    cAppExtension.activity.startActivity(intent);
+                    cAppExtension.activity.finish();
+                }
+            }
+        });
     }
 
     private void mReleaseLicense() {

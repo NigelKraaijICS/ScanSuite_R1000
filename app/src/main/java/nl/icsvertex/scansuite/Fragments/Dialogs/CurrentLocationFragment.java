@@ -81,7 +81,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     @Override
     public void onDestroy() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
             cConnection.pUnregisterWifiChangedFragmentReceiver();
 
         } catch (Exception e) {
@@ -93,7 +93,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     @Override
     public void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
             cConnection.pUnregisterWifiChangedFragmentReceiver();
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +104,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedFragmentReceiver();
         cUserInterface.pEnableScanner();
 
@@ -120,7 +120,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
         this.mFieldsInitialize();
         this.mSetListeners();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedFragmentReceiver();
     }
 

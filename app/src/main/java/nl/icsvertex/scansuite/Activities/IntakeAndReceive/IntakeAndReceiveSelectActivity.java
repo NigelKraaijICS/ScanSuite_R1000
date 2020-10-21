@@ -104,7 +104,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_intake_and_receive_orderselect);
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -112,14 +112,14 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         super.onDestroy();
 
         if (cAppExtension.activity instanceof  IntakeAndReceiveSelectActivity){
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -177,7 +177,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override

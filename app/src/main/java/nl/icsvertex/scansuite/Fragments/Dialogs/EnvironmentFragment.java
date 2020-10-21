@@ -75,13 +75,13 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     public void onViewCreated(@NonNull View pvView, @Nullable Bundle pvSavedInstanceState) {
         cAppExtension.dialogFragment = this;
         this.mFragmentInitialize();
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,7 +92,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     @Override
     public void onDestroy() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +104,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         super.onResume();
         cAppExtension.dialogFragment = this;
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
 
         int width = getResources().getDisplayMetrics().widthPixels;
@@ -131,7 +131,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
         this.mFieldsInitialize();
         this.mSetListeners();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
 
@@ -176,7 +176,7 @@ public class EnvironmentFragment extends DialogFragment implements cEnvironmentR
     }
 
     public  void pHandlePasswordFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     private void mGetData() {

@@ -132,7 +132,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,7 +144,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -295,7 +295,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void mInitScreen() {
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
         PickorderPickActivity.destionationScannedBln = cPickorder.currentPickOrder.destionationBranch() != null;
 
@@ -400,7 +400,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     public  void pRegisterBarcodeReceiver(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     //End Region Public Methods

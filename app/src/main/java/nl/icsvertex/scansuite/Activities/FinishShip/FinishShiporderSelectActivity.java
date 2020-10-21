@@ -109,13 +109,13 @@ public class FinishShiporderSelectActivity extends AppCompatActivity implements 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -226,7 +226,7 @@ public class FinishShiporderSelectActivity extends AppCompatActivity implements 
 
     @Override
     public void mInitScreen() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     //End Region iICSDefaultActivity defaults

@@ -5,6 +5,7 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -65,13 +68,16 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = WindowManager.LayoutParams.WRAP_CONTENT;
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -80,7 +86,7 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
         this.mFieldsInitialize();
         this.mSetListeners();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override

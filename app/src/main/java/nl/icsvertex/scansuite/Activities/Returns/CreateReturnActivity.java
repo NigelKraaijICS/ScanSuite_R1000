@@ -91,13 +91,13 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -130,7 +130,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -323,7 +323,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     }
 
     public void pHandleFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     //End Region Public Methods

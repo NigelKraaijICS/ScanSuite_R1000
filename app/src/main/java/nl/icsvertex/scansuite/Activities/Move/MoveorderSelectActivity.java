@@ -96,7 +96,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_move_orderselect);
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -104,14 +104,14 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         super.onDestroy();
 
         if (cAppExtension.activity instanceof  MoveorderSelectActivity) {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
 
     }
 
@@ -168,7 +168,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override

@@ -77,7 +77,7 @@ public class ScanArticleFragment extends DialogFragment implements iICSDefaultFr
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ScanArticleFragment extends DialogFragment implements iICSDefaultFr
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
         Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -96,7 +96,7 @@ public class ScanArticleFragment extends DialogFragment implements iICSDefaultFr
         this.mFieldsInitialize();
         this.mSetListeners();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override

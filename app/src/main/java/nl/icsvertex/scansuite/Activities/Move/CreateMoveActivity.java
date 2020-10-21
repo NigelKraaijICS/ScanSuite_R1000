@@ -74,20 +74,20 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         super.onDestroy();
 
         if (cAppExtension.activity instanceof CreateMoveActivity) {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -412,7 +412,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
     private  cResult mTryToCreateOrderRst(String pvDocumentstr,  String pvBinCodeStr, boolean pvCheckBarcodesBln){
 
-        cResult result =  cMoveorder.pCreateMoveOrderViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
+        cResult result =  cMoveorder.pCreateMoveOrderMVViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
         if (!result.resultBln) {
             this.editTextDocument.setText("");
             this.mStepFailed(result.messagesStr());

@@ -655,8 +655,13 @@ public class cReturnorder {
         int resultInt = 0;
 
         for( cReturnorderLine returnorderLine : pvReturnorderDocument.returnorderLineObl){
-            resultDbl +=  returnorderLine.getQuantitytakeDbl();
 
+            if (returnorderLine.isGeneratedBln()) {
+                resultDbl +=  returnorderLine.getQuantityHandledTakeDbl();
+            }
+            else {
+                resultDbl +=  returnorderLine.getQuantitytakeDbl();
+            }
         }
         resultInt += resultDbl.intValue();
         return resultInt;

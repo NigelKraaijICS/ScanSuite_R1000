@@ -106,14 +106,14 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -184,7 +184,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -319,7 +319,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     }
 
     public void pHandleAddArticleFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     public  void pAcceptRejectDialogDismissed() {
@@ -328,12 +328,12 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
 
     public void pPasswordSuccess() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         this.mRemoveAdapterFromFragment();
     }
 
     public void pPasswordCancelled() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         getInventoryorderLineAdapter().notifyItemChanged(positionSwiped);
     }
 

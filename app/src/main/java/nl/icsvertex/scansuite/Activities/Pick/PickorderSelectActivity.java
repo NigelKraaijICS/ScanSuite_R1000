@@ -123,7 +123,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         super.onDestroy();
 
         if (cAppExtension.activity instanceof  PickorderSelectActivity) {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
 
     }
@@ -131,14 +131,14 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -252,7 +252,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override

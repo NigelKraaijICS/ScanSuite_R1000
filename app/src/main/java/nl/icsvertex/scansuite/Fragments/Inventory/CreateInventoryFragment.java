@@ -74,13 +74,13 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
         Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
@@ -92,7 +92,7 @@ public class CreateInventoryFragment extends DialogFragment implements iICSDefau
         this.mFieldsInitialize();
         this.mSetListeners();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
 
     }
 

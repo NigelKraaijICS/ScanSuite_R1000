@@ -159,7 +159,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,7 +171,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -342,7 +342,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     @Override
     public void mInitScreen() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         //Raise quantity with scanned barcodeStr, if we started this activity with a scan
         if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned != null) {
             this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
@@ -416,7 +416,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     }
 
     public void pRegisterBarcodeReceiver(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     public  void pCancelReceive() {
@@ -425,14 +425,14 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     }
 
     public  void pPasswordSuccess() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
         //Remove the line
         this.mRemoveAdapterFromFragment();
     }
 
     public  void pPasswordCancelled() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         this.getReceiverorderSummaryLineAdapter().notifyItemChanged( this.positionSwiped );
     }
 

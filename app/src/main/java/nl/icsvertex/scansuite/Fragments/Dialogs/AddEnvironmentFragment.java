@@ -66,7 +66,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AddEnvironmentFragment extends DialogFragment implements iICSDefaul
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
 
         int width = getResources().getDisplayMetrics().widthPixels;

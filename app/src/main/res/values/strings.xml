@@ -74,6 +74,9 @@
     <string name="button_get_started">Get started</string>
     <string name="question_no_internet_open_settings">Looks like this device is not connected to the internet. Do you want to open the internet settings screen?</string>
     <string name="open">open</string>
+    <string name="identifier">Identifier</string>
+    <string name="info">Info</string>
+    <string name="destination">Destination</string>
     <string name="question_no_internet_open_settings_title">No internet</string>
     <!--endregion Main screen-->
 
@@ -825,6 +828,13 @@
     <string name="questionmarks">\???</string>
     <string name="none">none</string>
     <string name="enter_BIN">Enter BIN</string>
+    <string name="message_identifier_unknown">Identifier unknown</string>
+    <string name="destination_invalid">Destination invalid</string>
+    <string name="message_action_handled">Action Handled</string>
+    <string name="message_action_failed">Action Failed</string>
+    <string name="instruction">Instruction</string>
+    <string name="message_scan_identifier">Scan Identifier</string>
+    <string name="message_scan_destination_mi_single_piece">Scan Destination</string>
 
     <!--End Region return-->
 

@@ -65,7 +65,7 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_branch, container);
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         return rootview;
     }
     @Override
@@ -78,7 +78,7 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
     public void onPause() {
         this.shimmerViewContainer.stopShimmerAnimation();
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,7 +88,7 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public void onDestroy() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,7 +99,7 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
     public void onResume() {
 
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
 
         this.shimmerViewContainer.startShimmerAnimation();

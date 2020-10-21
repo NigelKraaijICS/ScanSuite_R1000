@@ -105,7 +105,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,7 +117,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -247,7 +247,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void mInitScreen() {
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
         //Raise quantity with scanned barcodeStr, if we started this activity with a scan
         if (cPickorder.currentPickOrder.pickorderQCBarcodeScanned != null) {
@@ -309,7 +309,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     }
 
     public  void pRegisterBarcodeReceiver(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     //End Region Public Methods

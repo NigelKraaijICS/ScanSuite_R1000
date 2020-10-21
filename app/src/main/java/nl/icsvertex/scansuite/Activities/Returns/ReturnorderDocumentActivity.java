@@ -104,13 +104,13 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -163,7 +163,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -331,7 +331,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     }
 
     public void pHandleFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     public  void pSetCurrentLocation(String pvCurrentLocationStr) {
@@ -688,7 +688,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     }
 
     private void mSetToolBarTitleWithCounters(){
-        this.toolbarSubTitle.setText(cReturnorder.currentReturnOrder.getCountForCurrentSourceDocumentStr());
+        this.toolbarSubTitle.setText(cReturnorder.currentReturnOrder.getCountForCurrentSourceDocumentStr() + " " +  cAppExtension.activity.getString(R.string.items));
     }
 
     private void mShowCloseDocumentDialog() {

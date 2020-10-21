@@ -89,13 +89,13 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -138,7 +138,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
         this.pCheckForSingleDocument();
     }
@@ -294,7 +294,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     }
 
     public void pHandleFragmentDismissed() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     //End Region Public Methods

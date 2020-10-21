@@ -103,7 +103,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedReceiver();
         cUserInterface.pEnableScanner();
     }
@@ -111,7 +111,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
             cConnection.pUnregisterWifiChangedReceiver();
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,7 +142,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override

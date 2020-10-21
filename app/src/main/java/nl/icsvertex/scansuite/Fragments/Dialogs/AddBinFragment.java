@@ -73,7 +73,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -83,7 +83,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
         Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -93,12 +93,12 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
         this.mFieldsInitialize();
         this.mSetListeners();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void mFindViews() {
-        this.textViewAddBinHeader = Objects.requireNonNull(getView()).findViewById(R.id.textViewAddBinHeader );
+        this.textViewAddBinHeader = requireView().findViewById(R.id.textViewAddBinHeader );
         this.textViewAddBinText = getView().findViewById(R.id.textViewAddBinText);
         this.editTextAddBin = getView().findViewById(R.id.editTextAddBin);
         this.addBinButton = getView().findViewById(R.id.addBinButton);

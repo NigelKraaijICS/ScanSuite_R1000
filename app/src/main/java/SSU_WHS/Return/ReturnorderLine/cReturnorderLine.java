@@ -351,15 +351,18 @@ public class cReturnorderLine {
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             //Remove line barcodes from the database
-
-            //todo: check if this lineNo is filled or is bullshit
             this.getReturnorderLineBarcodeViewModel().pDeleteForLineNo(this.getLineNoInt());
 
             //Reset this line
             cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
-            cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.clear();
 
-            cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.remove(cReturnorderLine.currentReturnOrderLine);
+            if (cReturnorderLine.currentReturnOrderLine.lineBarcodesObl != null && cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.size() > 0) {
+                cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.clear();
+            }
+
+            if (cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl != null) {
+                cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.remove(cReturnorderLine.currentReturnOrderLine);
+            }
             cBranchReason.currentBranchReason = null;
             return  result;
         }

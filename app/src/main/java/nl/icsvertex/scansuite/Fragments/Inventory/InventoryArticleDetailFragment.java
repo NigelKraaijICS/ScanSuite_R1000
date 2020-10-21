@@ -117,7 +117,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     @Override
     public void onPause() {
             super.onPause();
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -132,7 +132,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
 
         Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -147,13 +147,13 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.mSetListeners();
         this.mSetToolbar();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     public void mFindViews() {
 
-        this.toolbarImage = Objects.requireNonNull(getView()).findViewById(R.id.toolbarImage);
+        this.toolbarImage = requireView().findViewById(R.id.toolbarImage);
         this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
         this.articleThumbImageView = getView().findViewById(R.id.articleThumbImageView);
 

@@ -73,7 +73,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,7 +84,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void onDestroy() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
         cAppExtension.dialogFragment = this;
 
@@ -114,7 +114,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
         this.mFieldsInitialize();
         this.mSetListeners();
 
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override

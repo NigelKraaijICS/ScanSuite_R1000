@@ -6,21 +6,22 @@
     android:id="@+id/addDocumentContainer"
     android:padding="@dimen/default_double_padding"
     >
-    <TextView
-        android:id="@+id/textViewAddDocumentHeader"
-        style="@style/orderDoneHeader"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="@dimen/default_padding"
-        />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/addDocumentImageView"
         style="@style/addBinImageView"
         app:layout_constraintTop_toTopOf="@id/textViewAddDocumentHeader"
         app:layout_constraintBottom_toBottomOf="@id/textViewAddDocumentHeader"
-        app:layout_constraintEnd_toStartOf="@id/textViewAddDocumentHeader"
+        app:layout_constraintStart_toStartOf="parent"
         />
+    <TextView
+        android:id="@+id/textViewAddDocumentHeader"
+        style="@style/orderDoneHeader"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/addDocumentImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/default_padding"
+        />
+
     <EditText
         android:imeOptions="actionDone"
         android:singleLine="true"

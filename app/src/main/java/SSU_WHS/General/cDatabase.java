@@ -54,6 +54,7 @@ public class cDatabase {
     public static final String TABLENAME_RECEIVELINES  = "ReceiveLines";
     public static final String TABLENAME_PACKAGING = "Packaging";
     public static final String TABLENAME_CUSTOMAUTHORISATIONS = "CustomAuthorisations";
+    public static final String TABLENAME_IDENTIFIERWITHDESTINATION  = "IdentifierWithDestination";
 
     //endregion Tables
 
@@ -107,6 +108,7 @@ public class cDatabase {
     public static final String DESCRIPTION_DUTCH_NAMESTR = "Omschrijving";
     public static final String DESCRIPTION_NAMESTR = "Description";
     public static final String DESCRIPTION2_NAMESTR = "Description2";
+    public static final String DESTINATION_NAMESTR = "Destination";
     public static final String DESTINATIONNO_NAMESTR = "DestinationNo";
     public static final String DOCUMENT_NAMESTR = "Document";
     public static final String DOCUMENTTYPE_NAMESTR = "DocumentType";
@@ -155,6 +157,9 @@ public class cDatabase {
 
 
     //Region I
+    public static final String IDENTIFIER_NAMESTR = "Identifier";
+    public static final String INFOKEY_NAMESTR = "InfoKey";
+    public static final String INFOVALUE_NAMESTR = "InfoValue";
     public static final String IMAGE_NAMESTR = "Image";
     public static final String INTERFACERESULTMETHOD_NAMESTR = "Interface_result_method";
     public static final String ISPARTOFMULTILINEORDER_NAMESTR = "IsPartOfMultiLineOrder";

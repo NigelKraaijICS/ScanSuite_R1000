@@ -91,14 +91,14 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -137,7 +137,7 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
         this.mSetListeners();
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
     }
 
@@ -328,7 +328,7 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
         }
 
         //Register barcodeStr receiver, because the workplaceStr fragment has been shown
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
         cUserInterface.pShowSnackbarMessage(this.container, cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr(), R.raw.headsupsound, false);
 

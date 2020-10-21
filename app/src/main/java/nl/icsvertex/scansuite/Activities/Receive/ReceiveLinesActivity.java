@@ -137,14 +137,14 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,7 +197,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
         this.pShowData(cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl);
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -426,12 +426,12 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     }
 
     public void pPasswordSuccess() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         this.mRemoveAdapterFromFragment();
     }
 
     public void pPasswordCancelled() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     public void pAddUnknownScan(cBarcodeScan pvBarcodeScan) {

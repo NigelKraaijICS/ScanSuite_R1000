@@ -116,12 +116,12 @@ public class InventoryBinsDoneFragment extends Fragment implements iICSDefaultFr
     }
 
     public  void pPasswordSuccess() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         this.mRemoveAdapterFromFragment();
     }
 
     public  void pPasswordCancelled() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         getInventoryorderBinAdapter().notifyItemChanged(this.positionSwiped);
     }
 

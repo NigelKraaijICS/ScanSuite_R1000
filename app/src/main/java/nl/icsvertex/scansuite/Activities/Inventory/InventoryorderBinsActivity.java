@@ -85,14 +85,14 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     @Override
     protected void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver();
+        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -142,7 +142,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         this.mInitScreen();
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -259,7 +259,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     }
 
     public  void pHandleAddBinFragmentDismissed() {
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     public  void pHandleOrderCloseClick() {

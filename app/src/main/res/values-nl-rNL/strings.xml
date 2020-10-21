@@ -702,5 +702,15 @@
     <string name="questionmarks">\???</string>
     <string name="none">geen</string>
     <string name="enter_BIN">BIN ingeven</string>
+    <string name="message_identifier_unknown">Identifier onbekend</string>
+    <string name="identifier">Identificatie</string>
+    <string name="info">Info</string>
+    <string name="destination">Bestemming</string>
+    <string name="destination_invalid">Bestemming onjuist</string>
+    <string name="message_action_handled">Actie afgehandeld</string>
+    <string name="message_action_failed">Actie mislukt</string>
+    <string name="instruction">Instructie</string>
+    <string name="message_scan_identifier">Scan Identifier</string>
+    <string name="message_scan_destination_mi_single_piece">Scan Bestemming</string>
 
 </resources>

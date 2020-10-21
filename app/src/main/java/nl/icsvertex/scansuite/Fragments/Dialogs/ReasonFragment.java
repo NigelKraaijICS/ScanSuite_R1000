@@ -67,7 +67,7 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public View onCreateView(LayoutInflater pvInflater, ViewGroup pvContainer, Bundle pvSavedInstanceState) {
         View rootview = pvInflater.inflate(R.layout.fragment_reason, pvContainer);
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
 
         return rootview;
     }
@@ -82,7 +82,7 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
     public void onPause() {
         try {
             this.shimmerViewContainer.stopShimmerAnimation();
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,7 +93,7 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public void onDestroy() {
         try {
-            cBarcodeScan.pUnregisterBarcodeFragmentReceiver();
+            cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +103,7 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
     @Override
     public void onResume() {
         super.onResume();
-        cBarcodeScan.pRegisterBarcodeFragmentReceiver();
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
 
         this.shimmerViewContainer.startShimmerAnimation();
         int width = getResources().getDisplayMetrics().widthPixels;
@@ -190,7 +190,6 @@ public class ReasonFragment extends DialogFragment implements iICSDefaultFragmen
             if (cAppExtension.activity instanceof ReturnArticleDetailActivity) {
                 ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
                 returnArticleDetailActivity.pSetReason();
-                returnArticleDetailActivity.pHandleFragmentDismissed();
                 cAppExtension.dialogFragment.dismiss();
                 return;
             }

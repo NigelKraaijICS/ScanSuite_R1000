@@ -340,7 +340,7 @@ public class cMoveorder {
         return true;
     }
 
-    public static cResult pCreateMoveOrderViaWebserviceRst(String pvDocumentStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {
+    public static cResult pCreateMoveOrderMVViaWebserviceRst(String pvDocumentStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {
 
         cResult result;
         result = new cResult();
@@ -349,7 +349,7 @@ public class cMoveorder {
         cWebresult WebResult;
 
         cMoveorderViewModel moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
-        WebResult = moveorderViewModel.pCreateMoveOrderViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);
+        WebResult = moveorderViewModel.pCreateMoveOrderMVViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);
 
         //No result, so something really went wrong
         if (WebResult == null) {
@@ -423,6 +423,88 @@ public class cMoveorder {
         return result;
     }
 
+    public static cResult pCreateMoveOrderMIViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult;
+
+        cMoveorderViewModel moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
+        WebResult = moveorderViewModel.pCreateMoveOrderMIViaWebserviceWrs();
+
+        //No result, so something really went wrong
+        if (WebResult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+
+
+            // We got a succesfull response, but we need to do something with this activity
+
+            Long actionLng = WebResult.getResultLng();
+
+            if (WebResult.getResultLng() < 10 ) {
+                actionLng = WebResult.getResultLng();
+            }
+
+            if (WebResult.getResultLng() > 100) {
+                actionLng  = WebResult.getResultLng()/100;
+            }
+
+
+
+            //Try to convert action long to action enumerate
+            result.activityActionEnu= cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_cant_be_started)));
+                return  result;
+            }
+
+            if (result.activityActionEnu== cWarehouseorder.ActivityActionEnu.Delete) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_has_deleted_by_erp)));
+                return  result;
+            }
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Next) {
+                result.resultBln = true;
+                result.pSetResultAction(WebResult.pGetNextActivityObl());
+                return  result;
+            }
+
+            //No activty created
+            if (WebResult.getResultDtt() == null || WebResult.getResultDtt().size() == 0) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_order_not_created)));
+                return  result;
+            }
+
+            //Something went wrong, we received a comment
+            if (actionLng == 80) {
+                result.resultBln = false;
+                cComment comment = new cComment(WebResult.getResultDtt().get(0));
+                result.pAddErrorMessage(comment.commentTextStr);
+                return  result;
+            }
+
+            cMoveorder moveorder = new cMoveorder(WebResult.getResultDtt().get(0));
+            moveorder.pInsertInDatabaseBln();
+            cMoveorder.currentMoveOrder = moveorder;
+
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVECREATE);
+            result.resultBln = false;
+        }
+        return result;
+    }
     public static boolean pGetMoveOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr, String pvMainTypeStr) {
 
         cWebresult WebResult;
@@ -1321,6 +1403,25 @@ public class cMoveorder {
             return  false;
         }
     }
+
+    public boolean pMovePlaceMIItemHandledBln(List<cMoveorderBarcode> pvScannedBarcodesObl) {
+        cWebresult WebResult;
+
+
+        List<cMoveorderBarcode> sortedBarcodeObl = this.mSortedBarcodeListObl(pvScannedBarcodesObl);
+
+        WebResult =  this.getMoveorderLineViewModel().pMoveItemPlaceMIHandledViaWebserviceWrs(sortedBarcodeObl);
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            return  true;
+        }
+        else {
+
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
+            return  false;
+        }
+    }
+
 
     public boolean pMovePlaceItemHandledBln(List<cMoveorderBarcode> pvScannedBarcodesObl) {
         cWebresult WebResult;

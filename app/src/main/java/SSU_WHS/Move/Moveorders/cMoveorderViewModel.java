@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
-import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
 import SSU_WHS.Webservice.cWebresult;
@@ -27,7 +26,9 @@ public class cMoveorderViewModel extends AndroidViewModel {
     public void insert(cMoveorderEntity pvMoveorderEntity) {this.Repository.insert(pvMoveorderEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
-    public cWebresult pCreateMoveOrderViaWebserviceWrs(String pvDocumentStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateMoveOrderViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);}
+    public cWebresult pCreateMoveOrderMVViaWebserviceWrs(String pvDocumentStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateMoveOrderMVViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);}
+
+    public cWebresult pCreateMoveOrderMIViaWebserviceWrs() {return this.Repository.pCreateMoveOrderMIViaWebserviceWrs();}
 
     public cWebresult pGetMoveordersFromWebserviceWrs(String pvSearchTextStr, String pvMainTypeStr) {return this.Repository.pGetMoveordersFromWebserviceWrs(pvSearchTextStr, pvMainTypeStr);}
 

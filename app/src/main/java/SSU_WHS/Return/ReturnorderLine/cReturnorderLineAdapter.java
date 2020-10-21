@@ -36,7 +36,7 @@ public class cReturnorderLineAdapter extends RecyclerView.Adapter<SSU_WHS.Return
 
         public ReturnorderLineViewHolder(View pvItemView) {
             super(pvItemView);
-                   this.textViewArticle = pvItemView.findViewById(R.id.textViewArticle);
+            this.textViewArticle = pvItemView.findViewById(R.id.textViewArticle);
             this.textViewArticle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewArticle.setSingleLine(true);
             this.textViewArticle.setMarqueeRepeatLimit(5);
@@ -57,8 +57,20 @@ public class cReturnorderLineAdapter extends RecyclerView.Adapter<SSU_WHS.Return
                     textViewDescription.setSelected(true);
                 }
             },1500);
+
             this.textViewCounted = pvItemView.findViewById(R.id.textViewCounted);
+
             this.textViewReason = pvItemView.findViewById(R.id.textViewReason);
+            this.textViewReason.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewReason.setSingleLine(true);
+            this.textViewReason.setMarqueeRepeatLimit(5);
+            this.textViewReason.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    textViewReason.setSelected(true);
+                }
+            },1500);
+
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
             this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
         }

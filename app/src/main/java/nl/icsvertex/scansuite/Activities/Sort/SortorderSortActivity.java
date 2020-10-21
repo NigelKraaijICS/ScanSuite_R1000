@@ -118,7 +118,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onPause() {
         try {
-            cBarcodeScan.pUnregisterBarcodeReceiver();
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
             LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,7 +130,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver,new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
 
@@ -279,7 +279,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void mInitScreen() {
 
-        cBarcodeScan.pRegisterBarcodeReceiver();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
         //Register scan here, so we start things off
         SortorderSortActivity.articleScannedLastBln = false;
