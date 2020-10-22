@@ -2,21 +2,27 @@ package nl.icsvertex.scansuite.Fragments.Support;
 
 
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cUserInterface;
+import ICS.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
+import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.AddBinFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.SetSerialFragment;
 import nl.icsvertex.scansuite.R;
 
 public class SupportDeviceFragment extends DialogFragment implements iICSDefaultFragment {
@@ -40,6 +46,8 @@ public class SupportDeviceFragment extends DialogFragment implements iICSDefault
     private  ImageView imageIsCharging;
     private  TextView textChargeState;
     private  ImageView imageViewBatteryRefresh;
+
+    private Button buttonSetSerial;
 
     //End Region Private Properties
 
@@ -91,6 +99,7 @@ public class SupportDeviceFragment extends DialogFragment implements iICSDefault
             this.imageIsCharging = getView().findViewById(R.id.imageIsCharging);
             this.textChargeState = getView().findViewById(R.id.textChargeState);
             this.imageViewBatteryRefresh = getView().findViewById(R.id.imageViewBatteryRefresh);
+            this.buttonSetSerial = getView().findViewById(R.id.buttonSetSerial);
         }
     }
 
@@ -101,12 +110,22 @@ public class SupportDeviceFragment extends DialogFragment implements iICSDefault
         this.textViewDeviceModel.setText(cDeviceInfo.getDeviceModel());
         this.textViewSerialnumber.setText(cDeviceInfo.getSerialnumberStr());
         this.textViewAndroidversion.setText(cDeviceInfo.getAndroidVersionStr());
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            this.buttonSetSerial.setVisibility(View.VISIBLE);
+//        }
+//        else
+//        {
+//            this.buttonSetSerial.setVisibility(View.INVISIBLE);
+//        }
+
         this.mSetBatteryInfo();
     }
 
     @Override
     public void mSetListeners() {
         this.mSetBatteryRefreshListener();
+        this.mSetSetSerialListener();
     }
 
     private void mSetBatteryRefreshListener() {
@@ -119,6 +138,15 @@ public class SupportDeviceFragment extends DialogFragment implements iICSDefault
         });
     }
 
+
+    private void mSetSetSerialListener() {
+        this.buttonSetSerial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShowSetSerialFragment();
+            }
+        });
+    }
     public void pPowerChanged() {
         this.mSetBatteryInfo();
     }
@@ -177,5 +205,15 @@ public class SupportDeviceFragment extends DialogFragment implements iICSDefault
         batteryAnimation.start();
     }
 
+
+    private void mShowSetSerialFragment(){
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        SetSerialFragment serialFragment = new SetSerialFragment();
+        serialFragment.setCancelable(true);
+        serialFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SETSERIAL_TAG);
+
+    }
 
 }

@@ -15,6 +15,7 @@ public class cPublicDefinitions {
     public static String NUMBERINTENT_MAXQUANTITY = "NUMBERINTENT_MAXQUANTITY";
     public static String KEY_COMMENTHEADER = "KEY_COMMENTHEADER";
     public static String ADDBIN_TAG = "ADDBIN_TAG";
+    public static String SETSERIAL_TAG = "SETSERIAL_TAG";
     public static String ADDARTICLE_TAG = "ADDARTICLE_TAG";
     public static int CHANGELANGUAGE_REQUESTCODE = 45;
     public static int CHANGEDATETIME_REQUESTCODE = 46;

@@ -133,6 +133,12 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
             @Override
             public void onClick(View view) {
 
+
+                if (cDeviceInfo.getSerialnumberStr().isEmpty()) {
+                    cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_set_serial_first),"", true,true);
+                    return;
+                }
+
                 if (cAppExtension.context instanceof MainDefaultActivity) {
 
                     if (!cConnection.isInternetConnectedBln()) {

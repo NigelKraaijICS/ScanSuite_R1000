@@ -712,5 +712,8 @@
     <string name="instruction">Instructie</string>
     <string name="message_scan_identifier">Scan Identifier</string>
     <string name="message_scan_destination_mi_single_piece">Scan Bestemming</string>
+    <string name="hint_set_serial">Geef serienummer in</string>
+    <string name="button_set">Wijzig</string>
+    <string name="set_serial_header_default">Wijzig serienummer</string>
 
 </resources>

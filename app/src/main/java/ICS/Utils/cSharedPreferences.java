@@ -35,6 +35,14 @@ public class cSharedPreferences {
         return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_nobodys_orders_key), false);
     }
 
+    public static String getSerialNumerStr(){
+        return cSharedPreferences.mGetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_serial_key), "");
+    }
+
+    public static void  setSerialNumerStr(String pvSerialStr){
+        mSetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_serial_key),pvSerialStr);
+    }
+
     private static SharedPreferences gSharedPreferences;
 
     private static SharedPreferences getSharedPreferences() {
@@ -44,17 +52,19 @@ public class cSharedPreferences {
         return gSharedPreferences;
     }
 
-    public static void pSetSharedPreferenceString(String pvKeyStr, String pvValueStr) {
+
+    private static Boolean mGetDefaultSharedPreferenceBoolean(String pv_KeyStr, Boolean pvDefaultValueStr) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
+        return sharedPreferences.getBoolean(pv_KeyStr, pvDefaultValueStr);
+    }
+
+    private static String mGetSharedPreferenceString(String pvKeyStr, String pvDefaultValueStr) {
+        return cSharedPreferences.getSharedPreferences().getString(pvKeyStr, pvDefaultValueStr);
+    }
+
+    public static void mSetSharedPreferenceString(String pvKeyStr, String pvValueStr) {
         SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
         editor.putString(pvKeyStr, pvValueStr);
         editor.apply();
-    }
-    private static String mGetSharedPreferenceString(String pvKeyStr, String pvDefaultValueStr) {
-
-        return cSharedPreferences.getSharedPreferences().getString(pvKeyStr, pvDefaultValueStr);
-    }
-    private static Boolean mGetDefaultSharedPreferenceBoolean(String pv_KeyStr, Boolean pv_DefaultValueBln) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
-        return sharedPreferences.getBoolean(pv_KeyStr, pv_DefaultValueBln);
     }
 }

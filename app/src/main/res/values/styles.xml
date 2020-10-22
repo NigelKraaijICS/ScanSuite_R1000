@@ -935,6 +935,12 @@
         <item name="android:layout_marginEnd">@dimen/default_margin</item>
         <item name="srcCompat">@drawable/ic_addbin</item>
     </style>
+    <style name="setSerialImageView">
+        <item name="android:layout_width">@dimen/maintopbutton_width</item>
+        <item name="android:layout_height">@dimen/maintopbutton_height</item>
+        <item name="android:layout_marginEnd">@dimen/default_margin</item>
+        <item name="srcCompat">@drawable/ic_settings</item>
+    </style>
     <style name="addArticleImageView">
         <item name="android:layout_width">@dimen/maintopbutton_width</item>
         <item name="android:layout_height">@dimen/maintopbutton_height</item>

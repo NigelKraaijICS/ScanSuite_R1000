@@ -282,6 +282,7 @@
     <string name="filter_orderlines_nobodys_orders">Not assigned to anyone</string>
     <string name="filter_orderlines_nobodys_orders_summary">Orders that are not assigned to anyone</string>
     <string name="filter_orderlines_nobodys_orders_key" translatable="false">FILTERORDERLINES_NOBODYSORDERS</string>
+    <string name="shared_preference_serial_key" translatable="false">SHARED_PREFRENCE_SERIAL</string>
     <string name="filter_orderlines_apply_key" translatable="false">FILTERORDERLINES_APPLY</string>
     <string name="filter_orderlines_apply">Click or swipe down to apply</string>
 
@@ -550,11 +551,14 @@
     <string name="tab_inventorybin_done">done</string>
     <string name="tab_inventorybin_total">total</string>
     <string name="hint_input_bin">Scan or type BIN</string>
+    <string name="hint_set_serial">Type serial</string>
     <string name="hint_add_bin">Scan or type new bin</string>
     <string name="hint_add_packingslip">Packingslip</string>
     <string name="add_bin_header_default">Add bin</string>
     <string name="scan_bin_header_default">Scan BIN</string>
+    <string name="set_serial_header_default">Set serial</string>
     <string name="button_add_bin">Add bin</string>
+    <string name="button_set">Set</string>
     <string name="message_bin_added">Bin %1$s was added</string>
     <string name="message_bin_not_added">Bin %1$s was not added</string>
     <string name="screentitle_inventoryordercount">Inventory count</string>
@@ -835,6 +839,7 @@
     <string name="instruction">Instruction</string>
     <string name="message_scan_identifier">Scan Identifier</string>
     <string name="message_scan_destination_mi_single_piece">Scan Destination</string>
+    <string name="message_set_serial_first">Serial empty, please set serial</string>
 
     <!--End Region return-->
 

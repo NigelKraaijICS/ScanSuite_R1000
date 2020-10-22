@@ -46,16 +46,29 @@ public class cDeviceInfo {
 
     @SuppressLint("HardwareIds")
     public static String getSerialnumberStr() {
+
+        if (!cSharedPreferences.getSerialNumerStr().isEmpty()) {
+            return cSharedPreferences.getSerialNumerStr();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            return "";
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             if (ActivityCompat.checkSelfPermission(cAppExtension.context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             }
+
             return Build.getSerial();
         }
         else
         {
             return Build.SERIAL;
         }
+
+
+
     }
 
 

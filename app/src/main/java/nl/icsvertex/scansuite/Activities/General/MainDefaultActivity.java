@@ -1,6 +1,7 @@
 package nl.icsvertex.scansuite.Activities.General;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -30,8 +31,10 @@ import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
+import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cPermissions;
 import ICS.Utils.cPower;
+import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
@@ -101,6 +104,9 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         //set environment from preferences/by QR code
         this.mSetEnviroment();
+
+        //Try to set the serialnumber
+        this.mSetSerialNumberIfPossible();
 
         //set Crashlytics, otherwise Firebase wont work
         Fabric.with(this, new Crashlytics());
@@ -347,11 +353,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
             return false;
         }
 
-
-//        if (!cPackaging.pGetPackagingViaWebserviceBln(true)) {
-//            return false;
-//        }
-
         return  mAllBasicsAvailableBln();
 
     }
@@ -511,6 +512,18 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
         cAppExtension.context.startActivity(intent);
+    }
+
+    private void mSetSerialNumberIfPossible(){
+
+        if (!cSharedPreferences.getSerialNumerStr().isEmpty()) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !cDeviceInfo.getSerialnumberStr().isEmpty()) {
+            cSharedPreferences.setSerialNumerStr(cDeviceInfo.getSerialnumberStr());
+        }
+
     }
 
 }
