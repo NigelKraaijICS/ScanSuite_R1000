@@ -143,6 +143,8 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
                 if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MI_SINGLEPIECE) {
                     pvHolder.textViewAuthorisation.setText(R.string.menuitem_move_mi_singlepiece);
                     pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_move_mi);
+                    pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_MOVE);
+                    pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_MOVE);
                 }
 
                 if (authorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MO) {
