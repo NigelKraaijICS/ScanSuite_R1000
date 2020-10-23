@@ -3,7 +3,6 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +21,12 @@ import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
-import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
 public class AddArticleFragment extends DialogFragment implements iICSDefaultFragment {
@@ -120,9 +117,6 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(20);
         this.editTextAddArticle.setFilters(filterArray);
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.editTextAddArticle.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        }
         cUserInterface.pShowKeyboard(this.editTextAddArticle);
         this.textViewAddArticleText.setVisibility(View.GONE);
     }

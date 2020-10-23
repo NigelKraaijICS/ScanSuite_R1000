@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
@@ -173,12 +172,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     //Region Public Methods
 
     public  void pHandleScan(cBarcodeScan pvBarcodeScan){
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.pUserSelected(pvBarcodeScan, false);
-            return;
-        }
-
         this.pUserSelected(pvBarcodeScan, true);
     }
 

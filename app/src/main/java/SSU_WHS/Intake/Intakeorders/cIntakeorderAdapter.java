@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cProductFlavor;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -124,12 +123,6 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
 
         pvHolder.textViewOrdernumber.setText(selectedIntakeorder.getOrderNumberStr());
         pvHolder.textViewOrdernumber.setTag(selectedIntakeorder.getOrderNumberStr());
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            pvHolder.textViewOrdernumber.setText(selectedIntakeorder.getDocumentStr());
-            pvHolder.textViewOrdernumber.setTag(selectedIntakeorder.getDocumentStr());
-        }
-
         pvHolder.textViewExternalreference.setText(selectedIntakeorder.getExternalReferenceStr());
 
 

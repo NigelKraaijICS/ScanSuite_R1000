@@ -23,14 +23,12 @@ import androidx.core.view.ViewCompat;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
-import SSU_WHS.Basics.Scanners.cScanner;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -186,9 +184,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(50);
         this.editTextDocument.setFilters(filterArray);
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.editTextDocument.setInputType(InputType.TYPE_CLASS_NUMBER );
-        }
 
         if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
             this.editTextBin.setVisibility(View.GONE);
@@ -207,13 +202,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         else{
             this.switchCheckBarcodes.setChecked(true);
         }
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.editTextBin.setVisibility(View.GONE);
-            this.editTextPackingslip.setVisibility(View.GONE);
-            this.switchCheckBarcodes.setVisibility(View.GONE);
-        }
-
     }
 
     @Override
@@ -259,14 +247,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_is_not_document),"",true,true);
-                return;
-            }
-        }
-
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
             binBln = true;
         }
@@ -278,17 +258,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         //has prefix, is DOCUMENT
         if (documentBln   ||this.editTextDocument.getText().toString().isEmpty()) {
             this.editTextDocument.setText(barcodeWithoutPrefixStr);
-
-            if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-
-                IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-                this.mCreateOrder(this.editTextDocument.getText().toString().trim(),
-                        this.editTextPackingslip.getText().toString().trim(),
-                        this.editTextBin.getText().toString().trim(),
-                        this.switchCheckBarcodes.isChecked());
-                return;
-            }
-
             this.editTextPackingslip.requestFocus();
             return;
         }
@@ -360,14 +329,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_document),null);
                     return;
                 }
-
-                if (!BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString()))
-                    if (editTextBin.getText().toString().isEmpty() && cUser.currentUser.currentBranch.isBinMandatoryBln()){
-                        cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_bin),null);
-                        return;
-                    }
-
-
                 IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
                 mCreateOrder(editTextDocument.getText().toString().trim(),
                         editTextPackingslip.getText().toString().trim(),

@@ -37,7 +37,6 @@ import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
 import ICS.Utils.cNumberTextWatcher;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
@@ -321,12 +320,8 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.counterMinusHelperInt = 0;
 
 
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.toolbarSubtext.setText(cIntakeorder.currentIntakeOrder.getDocumentStr());
-        }
-        else{
+
             this.toolbarSubtext.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
-        }
 
         this.mSetArticleInfo();
         this.mSetSourceNoInfo();
@@ -632,13 +627,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         } else {
             this.imageButtonMinus.setVisibility(View.VISIBLE);
             this.imageButtonPlus.setVisibility(View.VISIBLE);
-
-            if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-                this.imageButtonBarcode.setVisibility(View.INVISIBLE);
-            }
-            else{
-                this.imageButtonBarcode.setVisibility(View.VISIBLE);
-            }
+            this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
     }
 
@@ -988,10 +977,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             @Override
             public void onClick(View view) {
 
-                if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-                    cIntakeorderBarcode.pTryToSetStandardBarcode(cReceiveorderSummaryLine.currentReceiveorderSummaryLine);
-                }
-
                 //There is no selected barcodeStr, select one first
                 if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
@@ -1027,10 +1012,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-                    cIntakeorderBarcode.pTryToSetStandardBarcode(cReceiveorderSummaryLine.currentReceiveorderSummaryLine);
-                }
 
                 //There is no selected barcodeStr, select one first
                 if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
@@ -1230,12 +1211,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     }
 
     private  void mSetSourceNoInfo(){
-
-        if (nl.icsvertex.scansuite.BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.sourceNoContainer.setVisibility(View.GONE);
-            return;
-        }
-
         this.sourcenoText.setText( cIntakeorder.currentIntakeOrder.getOrderNumberStr());
     }
 
@@ -1354,10 +1329,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.quantityText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-                    cIntakeorderBarcode.pTryToSetStandardBarcode(cReceiveorderSummaryLine.currentReceiveorderSummaryLine);
-                }
 
                 //There is no selected barcodeStr, select one first
                 if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {

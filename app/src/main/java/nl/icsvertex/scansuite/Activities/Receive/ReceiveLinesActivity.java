@@ -26,17 +26,13 @@ import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cProductFlavor;
-import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
-import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
@@ -246,12 +242,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
 
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getDocumentStr());
-        } else {
-            this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
-        }
-
+        this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
         if (cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl.size() == 0) {
             mNoLinesAvailable(true);
             this.imageButtonCloseOrder.setVisibility(View.INVISIBLE);

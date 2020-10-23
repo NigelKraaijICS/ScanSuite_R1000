@@ -17,7 +17,6 @@ import com.google.android.material.tabs.TabLayout;
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cNoSwipeViewPager;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -272,16 +271,7 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     //region private voids
 
     private void mSetSourceNo() {
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getDocumentStr());
-
-        }
-        else
-        {
             this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
-        }
-
     }
 
     private void mSetOrderDoneListener() {

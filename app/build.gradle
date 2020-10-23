@@ -20,8 +20,8 @@ android {
         applicationId "nl.icsvertex.scansuite"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 15854
-        versionName "1.5.8.54A"
+        versionCode 15855
+        versionName "1.5.8.55A"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -43,13 +43,6 @@ android {
     flavorDimensions("default")
     productFlavors {
         normal {
-            dimension "default"
-        }
-
-        bmn {
-            dimension "default"
-        }
-        tcog {
             dimension "default"
         }
     }

@@ -32,7 +32,6 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
@@ -40,7 +39,6 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.Scanners.cScanner;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
@@ -48,7 +46,6 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Intake.Intakeorders.cIntakeorderAdapter;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
@@ -423,14 +420,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         View clickedOrder;
 
         Intent intent = new Intent(cAppExtension.context, IntakeorderLinesActivity.class);
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-             clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getDocumentStr());
-        }
-        else
-        {
-             clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
-        }
+        clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
         ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
@@ -451,16 +441,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
 
         if (container != null) {
-
-
-            if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-                clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getDocumentStr());
-            }
-            else
-            {
-                clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
-            }
-
+            clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;

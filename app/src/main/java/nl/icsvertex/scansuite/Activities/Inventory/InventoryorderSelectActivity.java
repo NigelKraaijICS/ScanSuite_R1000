@@ -31,7 +31,6 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
@@ -45,7 +44,6 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorderAdapter;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
@@ -853,11 +851,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         Intent intent = new Intent(cAppExtension.context, InventoryorderBinsActivity.class);
         View clickedOrder = container.findViewWithTag(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
-
-        if (!cInventoryorder.currentInventoryOrder.getDocumentStr().isEmpty() && BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            clickedOrder =  container.findViewWithTag(cInventoryorder.currentInventoryOrder.getDocumentStr());
-        }
-
         if (clickedOrder != null) {
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());

@@ -25,7 +25,6 @@ import java.util.List;
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cNoSwipeViewPager;
-import ICS.Utils.cProductFlavor;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
@@ -186,18 +185,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
 
-        if (!cInventoryorder.currentInventoryOrder.getDocumentStr().isEmpty() && BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.BMN.toString())) {
-            this.textViewChosenOrder.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewChosenOrder.setSingleLine(true);
-            this.textViewChosenOrder.setMarqueeRepeatLimit(5);
-            this.textViewChosenOrder.setSelected(true);
-            this.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getDocumentStr());
-        }
-        else
-        {
-            this.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
-        }
-
+        this.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
         this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_todo));
         this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
         this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_total));

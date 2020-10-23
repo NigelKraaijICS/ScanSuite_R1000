@@ -540,7 +540,7 @@ final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.act
             @Override
             public void onClick(DialogInterface pvDialogInterface, int i) {
 
-                cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
+                cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_PackAndShip,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
 
                 //If activity bin is not required, then don't show the fragment
                 if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
@@ -598,6 +598,9 @@ final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.act
     }
 
     private  void mStartOrderSelectActivity() {
+
+        cWorkplace.currentWorkplace = null;
+
         Intent intent = new Intent(cAppExtension.context, ShiporderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
     }

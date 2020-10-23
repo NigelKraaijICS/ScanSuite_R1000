@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cProductFlavor;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Authorisations.cAuthorisation;
@@ -234,13 +233,6 @@ public class cUser {
 
                 if(this.autorisationObl == null) {
                     this.autorisationObl =  new ArrayList<>();
-                }
-
-                        if (BuildConfig.FLAVOR.equalsIgnoreCase(cProductFlavor.FlavorEnu.TCOG.toString())) {
-                        if ((authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK &&
-                             authorisation.getAutorisationEnu() != cAuthorisation.AutorisationEnu.PICK_PV)) {
-                            continue;
-                    }
                 }
 
                 authorisation.pInsertInDatabaseBln();
