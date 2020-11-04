@@ -1,19 +1,17 @@
 {
-  "version": 1,
+  "version": 2,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
   "applicationId": "nl.icsvertex.scansuite",
-  "variantName": "normalRelease",
+  "variantName": "processNormalReleaseResources",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "properties": [],
-      "versionCode": 15854,
-      "versionName": "1.5.8.54A",
-      "enabled": true,
+      "versionCode": 15855,
+      "versionName": "1.5.8.55A",
       "outputFile": "app-normal-release.apk"
     }
   ]

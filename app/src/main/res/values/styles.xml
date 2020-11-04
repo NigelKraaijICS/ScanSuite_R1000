@@ -88,7 +88,7 @@
         <item name="android:layout_height">0dp</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:fadeScrollbars">true</item>
-   </style>
+    </style>
     <style name="settingsRecyclerLinearLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -156,6 +156,26 @@
         <item name="android:textSize">@dimen/textsize_normal</item>
         <item name="android:textColor">@color/colorNeutral</item>
     </style>
+    <style name="identifierInfoRecyclerLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/default_margin</item>
+    </style>
+    <style name="identifierInfoKey">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+    </style>
+    <style name="identifierInfoValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
+    </style>
+
     <style name="userUserNameSmallText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -228,19 +248,19 @@
         <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
     </style>
     <style name="smallButton">
-    <item name="android:layout_height">@dimen/smallbutton_height</item>
-    <item name="android:layout_width">@dimen/smallbutton_width</item>
-    <item name="android:scaleType">fitXY</item>
-    <item name="android:tint">@color/colorPrimary</item>
-    <item name="android:background">@drawable/button_round_white</item>
-    <item name="android:padding">@dimen/default_padding</item>
-    <item name="android:layout_marginRight">@dimen/default_margin</item>
-    <item name="android:layout_marginEnd">@dimen/default_margin</item>
-    <item name="android:layout_marginBottom">@dimen/default_margin</item>
-    <item name="android:layout_marginTop">@dimen/default_margin</item>
-    <item name="android:layout_marginLeft">@dimen/default_margin</item>
-    <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
-</style>
+        <item name="android:layout_height">@dimen/smallbutton_height</item>
+        <item name="android:layout_width">@dimen/smallbutton_width</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_marginRight">@dimen/default_margin</item>
+        <item name="android:layout_marginEnd">@dimen/default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_margin</item>
+        <item name="android:layout_marginTop">@dimen/default_margin</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
+    </style>
     <style name="smallButtonNoColour">
         <item name="android:layout_height">@dimen/smallbutton_height</item>
         <item name="android:layout_width">@dimen/smallbutton_width</item>
@@ -846,12 +866,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
     </style>
-<!--    <style name="currentLocationImageView">-->
-<!--        <item name="android:layout_width">@dimen/header_image_width</item>-->
-<!--        <item name="android:layout_height">@dimen/header_image_height</item>-->
-<!--        <item name="android:layout_margin">@dimen/default_double_margin</item>-->
-<!--        <item name="srcCompat">@drawable/ic_current_location</item>-->
-<!--    </style>-->
+    <!--    <style name="currentLocationImageView">-->
+    <!--        <item name="android:layout_width">@dimen/header_image_width</item>-->
+    <!--        <item name="android:layout_height">@dimen/header_image_height</item>-->
+    <!--        <item name="android:layout_margin">@dimen/default_double_margin</item>-->
+    <!--        <item name="srcCompat">@drawable/ic_current_location</item>-->
+    <!--    </style>-->
     <style name="orderDoneCurrentLocation">
         <item name="android:layout_margin">@dimen/default_double_margin</item>
     </style>

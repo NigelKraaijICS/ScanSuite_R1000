@@ -46,4 +46,11 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_island_black_24dp"
         />
+    <item android:id="@+id/action_proglove"
+        android:theme="@style/menuButton"
+        android:orderInCategory="100"
+        android:title="@string/mainmenu_proglove"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_barcodescan_black_24dp"
+        />
 </menu>

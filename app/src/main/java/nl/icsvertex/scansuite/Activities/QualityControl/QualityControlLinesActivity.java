@@ -245,8 +245,14 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
                 return;
             }
 
-            this.mStartQCActivity();
+            this.pStartQCActivity();
         }
+    }
+
+    public void pStartQCActivity(){
+        //we have a line to handle, so start Sort activity
+        Intent intent = new Intent(cAppExtension.context, PickorderQCActivity.class);
+        cAppExtension.activity.startActivity(intent);
     }
 
     //End Region Public Methods
@@ -328,11 +334,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
     }
 
-    private void mStartQCActivity(){
-        //we have a line to handle, so start Sort activity
-        Intent intent = new Intent(cAppExtension.context, PickorderQCActivity.class);
-        cAppExtension.activity.startActivity(intent);
-    }
+
 
     private void mSetTabselected(TabLayout.Tab pvTab) {
 

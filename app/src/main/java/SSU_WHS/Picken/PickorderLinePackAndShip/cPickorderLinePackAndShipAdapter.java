@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.cAppExtension;
+import SSU_WHS.Picken.Shipment.cShipment;
+import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderLinePackAndShipAdapter extends RecyclerView.Adapter<cPickorderLinePackAndShipAdapter.PickorderLineViewHolder>  {
@@ -109,6 +112,8 @@ public class cPickorderLinePackAndShipAdapter extends RecyclerView.Adapter<cPick
         pvHolder.textViewDescription.setText(lineDescriptionStr);
         pvHolder.textViewQuantity.setText(quantityToShowStr);
 
+
+        final int id = thisRecyclerView.getId();
         //Start On Click Listener
         pvHolder.pickorderLinePackAndShipItemLinearLayout.setOnClickListener(new View.OnClickListener() {
 
@@ -122,6 +127,16 @@ public class cPickorderLinePackAndShipAdapter extends RecyclerView.Adapter<cPick
 
                 //select current
                 pvView.setSelected(true);
+
+                if (id == R.id.recyclerViewQCLinesToCheck) {
+                    if (cAppExtension.activity instanceof QualityControlLinesActivity) {
+                        cPickorderLinePackAndShip.currentPickorderLinePackAndShip = pickorderLinePackAndShip;
+                        cPickorderLinePackAndShip.currentPickorderLinePackAndShip.pLineBusyRst();
+                        QualityControlLinesActivity qualityControlLinesActivity = (QualityControlLinesActivity) cAppExtension.activity;
+                        qualityControlLinesActivity.pStartQCActivity();
+
+                    }
+                }
 
 
             }

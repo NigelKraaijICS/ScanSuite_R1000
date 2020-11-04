@@ -12,6 +12,7 @@ public class cBarcodeScanDefinitions {
         barcodeActionsObl.add("nl.icsvertex.scansuite.decodewedge.decode_action.tc55");
         barcodeActionsObl.add("nl.icsvertex.scan.action");
         barcodeActionsObl.add("nl.icsvertex.shopscan.decodewedge.decode_action");
+        barcodeActionsObl.add("com.proglove.api.BARCODE");
         return barcodeActionsObl;
     }
     public static List<String> getBarcodeCategories() {

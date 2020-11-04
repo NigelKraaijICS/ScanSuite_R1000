@@ -209,16 +209,22 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             @Override
             public void onClick(View view) {
                 if (cAppExtension.dialogFragment != null) {
+
                     cAppExtension.dialogFragment.dismiss();
 
-                    if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+                    if (cAppExtension.activity instanceof  MainDefaultActivity) {
+                        dismiss();
+                        MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+                        mainDefaultActivity.pPasswordCancelled();
+                    }
 
+                    if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
                         if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
                             InventoryBinsDoneFragment inventoryBinsDoneFragment = (InventoryBinsDoneFragment)InventoryorderBinsActivity.currentBinFragment;
                             inventoryBinsDoneFragment.pPasswordCancelled();
                         }
 
-                        if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
+                    if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
                             InventoryBinsTotalFragment inventoryBinsTotalFragment =  (InventoryBinsTotalFragment)InventoryorderBinsActivity.currentBinFragment;
                             inventoryBinsTotalFragment.pPasswordCancelled();
                         }
@@ -238,7 +244,6 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                         EnvironmentFragment environmentFragment = (EnvironmentFragment)cAppExtension.dialogFragment;
                         environmentFragment.pHandlePasswordFragmentDismissed();
                     }
-
 
 
                     if (cAppExtension.activity instanceof LoginActivity) {

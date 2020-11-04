@@ -251,6 +251,11 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
+        if (cShipment.currentShipment == null) {
+            this.mHandleStarQC(pvBarcodeScan,pvSourceNoSelectedBln);
+            return;
+        }
+
         if (cShipment.currentShipment.isCheckedBln()) {
             this.mHandleStartShip(pvBarcodeScan,pvSourceNoSelectedBln);
         }

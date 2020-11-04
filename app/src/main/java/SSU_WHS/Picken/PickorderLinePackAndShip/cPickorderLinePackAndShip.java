@@ -46,6 +46,10 @@ public class cPickorderLinePackAndShip {
         return variantCodeStr;
     }
 
+    public  String getItemNoAndVariantStr(){
+        return  this.getItemNoStr() + " " + this.getVariantCodeStr();
+    }
+
     private String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;

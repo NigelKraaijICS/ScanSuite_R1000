@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     style="@style/defaultScreen">
-    <include layout="@layout/toolbar_subtext_expanded_default"/>
+    <include layout="@layout/toolbar_subtext_default"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/infoContainer"
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/textViewIdentifier"
             app:layout_constraintTop_toBottomOf="@id/textViewIdentifier"
-            android:text="@string/questionmarks"
+            android:text="@string/novalueyet"
             />
         <TextView
             style="@style/defaultRecyclerDestinationText"
@@ -57,7 +57,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/textViewInfo"
             app:layout_constraintTop_toBottomOf="@id/textViewInfo"
-            android:text="@string/questionmarks"
+            android:text="@string/novalueyet"
             />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerIdentifierInfo"
@@ -65,10 +65,6 @@
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/default_margin"
             android:layout_marginBottom="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
             app:layout_constraintStart_toStartOf="@id/textViewInfo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewInfo"
@@ -93,7 +89,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/textViewDestination"
             app:layout_constraintBottom_toTopOf="@id/textViewInstruction"
-            android:text="@string/questionmarks"
+            android:text="@string/novalueyet"
             />
         <TextView
             style="@style/defaultRecyclerDestinationText"
@@ -113,7 +109,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/textViewInstruction"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="@string/questionmarks"
+            android:text="@string/novalueyet"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

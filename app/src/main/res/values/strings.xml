@@ -90,6 +90,7 @@
     <string name="mainmenu_language">Language</string>
     <string name="mainmenu_datetime">Date and time</string>
     <string name="mainmenu_environments">Environments</string>
+    <string name="mainmenu_proglove">Pair ProGlove</string>
     <string name="changelanguage_description">Change language</string>
     <string name="changedatetime_description">Change date and time</string>
     <string name="tab_support_network">Network</string>
@@ -829,7 +830,7 @@
     <string name="message_close_place_text">Do you really want to close PLACE?</string>
     <string name="message_scanning_not_allowed">You can\'t scan here</string>
     <string name="message_print_failed">Print failed</string>
-    <string name="questionmarks">\???</string>
+    <string name="novalueyet">\???</string>
     <string name="none">none</string>
     <string name="enter_BIN">Enter BIN</string>
     <string name="message_identifier_unknown">Identifier unknown</string>

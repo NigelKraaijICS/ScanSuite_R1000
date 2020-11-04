@@ -191,12 +191,12 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
     @Override
     public void mFieldsInitialize() {
 
-        this.textViewIdentifierData.setText(cAppExtension.activity.getString(R.string.questionmarks));
-        this.textViewDestinationData.setText(cAppExtension.activity.getString(R.string.questionmarks));
+        this.textViewIdentifierData.setText(cAppExtension.activity.getString(R.string.novalueyet));
+        this.textViewDestinationData.setText(cAppExtension.activity.getString(R.string.novalueyet));
         this.textViewInstructionData.setText(cAppExtension.activity.getString(R.string.message_scan_identifier));
 
         this.textViewInfoData.setVisibility(View.VISIBLE);
-        this.textViewInfoData.setText(cAppExtension.activity.getString(R.string.questionmarks));
+        this.textViewInfoData.setText(cAppExtension.activity.getString(R.string.novalueyet));
         this.recyclerIdentifierInfo.setVisibility(View.INVISIBLE);
 
     }
@@ -273,7 +273,7 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
                 this.textViewDestinationData.setText(cIdentifierWithDestination.currentIdentifier.getDestinationStr());
             }
             else {
-                this.textViewDestinationData.setText(cAppExtension.activity.getString(R.string.questionmarks));
+                this.textViewDestinationData.setText(cAppExtension.activity.getString(R.string.novalueyet));
             }
 
             this.textViewInstructionData.setText(cAppExtension.activity.getString(R.string.message_scan_destination_mi_single_piece));
@@ -285,7 +285,7 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
             this.recyclerIdentifierInfo.setVisibility(View.INVISIBLE);
             this.textViewInfoData.setVisibility(View.VISIBLE);
             this.textViewInfoData.setText(R.string.message_identifier_unknown);
-            this.textViewDestinationData.setText(cAppExtension.activity.getString(R.string.questionmarks));
+            this.textViewDestinationData.setText(cAppExtension.activity.getString(R.string.novalueyet));
 
             this.textViewInstructionData.setText(cAppExtension.activity.getString(R.string.message_scan_identifier));
         }

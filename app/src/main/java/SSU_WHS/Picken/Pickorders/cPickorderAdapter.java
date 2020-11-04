@@ -212,12 +212,18 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             pvHolder.textViewQuantityTotal.setText(cText.pIntToStringStr(selectedPickorder.getQuantityTotalInt()));
         }
 
+
+
+        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BM.toString())) {
+            pvHolder.textViewOrdertype.setText(R.string.ordertype_bm);
+        }
+
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BC.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_bc);
         }
 
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BM.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_bm);
+        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PV.toString())) {
+            pvHolder.textViewOrdertype.setText(R.string.ordertype_pv);
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BP.toString())) {
@@ -230,10 +236,6 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PF.toString())) {
             pvHolder.textViewOrdertype.setText(R.string.ordertype_pf);
-        }
-
-        if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PV.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_pv);
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.UNKNOWN.toString())) {

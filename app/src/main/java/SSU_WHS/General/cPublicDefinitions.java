@@ -67,6 +67,8 @@ public class cPublicDefinitions {
     public  static final String VIEW_CHOSEN_DOCUMENT = "VIEW_CHOSEN_DOCUMENT";
     public static final int ACTIVITY_WIFI_SETTINGS = 1;
 
+    public static String PROGLOVE_CONNECT_ACTION = "com.proglove.api.CONNECT";
+
 
     public enum Workflows {
         BC,

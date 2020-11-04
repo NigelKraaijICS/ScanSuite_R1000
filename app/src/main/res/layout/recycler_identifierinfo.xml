@@ -3,30 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/identifierInfoItemLinearLayout"
-    style="@style/userRecyclerLinearLayout"
+    style="@style/identifierInfoRecyclerLinearLayout"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/textViewInfoKey"
-            style="@style/userNameSmallText"
+            style="@style/identifierInfoKey"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
         <TextView
-            style="@style/userUserNameSmallText"
+            style="@style/identifierInfoValue"
             android:id="@+id/textViewInfoValue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewInfoKey"
-            />
-        <View
-            android:id="@+id/menuSeparator"
-            style="@style/menuSeparator"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

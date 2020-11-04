@@ -15,8 +15,10 @@ import java.util.Objects;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderBarcodeAdapter extends RecyclerView.Adapter<cPickorderBarcodeAdapter.pickorderBarcodeViewHolder>  {
@@ -63,32 +65,62 @@ public class cPickorderBarcodeAdapter extends RecyclerView.Adapter<cPickorderBar
     @Override
     public void onBindViewHolder(@NonNull pickorderBarcodeViewHolder pvHolder, int pvPositionInt) {
 
-        if (cPickorderLine.currentPickOrderLine == null || cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
-            return;
+        if (cAppExtension.activity instanceof  PickorderPickActivity) {
+            if (cPickorderLine.currentPickOrderLine == null || cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
+                return;
+            }
+
+            final cPickorderBarcode pickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(pvPositionInt);
+            Objects.requireNonNull(pvHolder).textViewBarcode.setText(pickorderBarcode.getBarcodeStr());
+            pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(pickorderBarcode.getQuantityPerUnitOfMeasureDbl()));
+
+            pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                        PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
+                        pickorderPickActivity.pHandleScan(cBarcodeScan.pFakeScan(pickorderBarcode.getBarcodeStr()));
+                }
+            });
         }
 
-       final cPickorderBarcode pickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(pvPositionInt);
-        Objects.requireNonNull(pvHolder).textViewBarcode.setText(pickorderBarcode.getBarcodeStr());
-        pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(pickorderBarcode.getQuantityPerUnitOfMeasureDbl()));
-
-        pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                if (cAppExtension.activity instanceof  PickorderPickActivity) {
-                    PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
-                    pickorderPickActivity.pHandleScan(cBarcodeScan.pFakeScan(pickorderBarcode.getBarcodeStr()));
-
-                }
+        if (cAppExtension.activity instanceof PickorderQCActivity) {
+            if (cPickorderLinePackAndShip.currentPickorderLinePackAndShip == null || cPickorderLinePackAndShip.currentPickorderLinePackAndShip .barcodesObl == null || cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl.size() == 0) {
+                return;
             }
-        });
+
+            final cPickorderBarcode pickorderBarcode = cPickorderLinePackAndShip.currentPickorderLinePackAndShip .barcodesObl.get(pvPositionInt);
+            Objects.requireNonNull(pvHolder).textViewBarcode.setText(pickorderBarcode.getBarcodeStr());
+            pvHolder.textViewQuantity.setText(cText.pDoubleToStringStr(pickorderBarcode.getQuantityPerUnitOfMeasureDbl()));
+
+            pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PickorderQCActivity pickorderQCActivity = (PickorderQCActivity)cAppExtension.activity;
+                    pickorderQCActivity.pHandleScan(cBarcodeScan.pFakeScan(pickorderBarcode.getBarcodeStr()));
+                }
+            });
+        }
+
+
     }
 
     @Override
     public int getItemCount () {
-        if (cPickorderLine.currentPickOrderLine != null && cPickorderLine.currentPickOrderLine.barcodesObl != null)
-            return cPickorderLine.currentPickOrderLine.barcodesObl.size();
-        else return 0;
+
+
+        if (cAppExtension.activity instanceof  PickorderPickActivity) {
+            if (cPickorderLine.currentPickOrderLine != null && cPickorderLine.currentPickOrderLine.barcodesObl != null)
+                return cPickorderLine.currentPickOrderLine.barcodesObl.size();
+            else return 0;
+        }
+        if (cAppExtension.activity instanceof PickorderQCActivity) {
+            if (cPickorderLinePackAndShip.currentPickorderLinePackAndShip != null && cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl != null)
+                return cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl.size();
+            else return 0;
+        }
+
+
+        return  0;
+
     }
 }

@@ -35,6 +35,7 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
@@ -226,7 +227,8 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
         this.articleDescriptionText.setText(cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getDescriptionStr());
         this.articleDescription2Text.setText(cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getDescription2Str());
-        this.articleItemText.setVisibility(View.GONE);
+
+        this.articleItemText.setText(cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getItemNoAndVariantStr());
         this.articleVendorItemText.setVisibility(View.GONE);
 
         this.sourceNoContainer.setVisibility(View.GONE);
@@ -343,9 +345,9 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     private void mShowBarcodeInfo() {
 
         if (cPickorderBarcode.currentPickorderBarcode == null) {
-            if (cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl.size() == 1) {
-                cPickorderBarcode.currentPickorderBarcode = cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl.get(0);
-            }
+                if (cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl.size() == 1) {
+                    cPickorderBarcode.currentPickorderBarcode = cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl.get(0);
+                }
         }
 
         if (cPickorderBarcode.currentPickorderBarcode != null) {
@@ -537,6 +539,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
         this.imageButtonDone.setVisibility(View.VISIBLE);
         this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+        this.imageButtonDone.callOnClick();
 
     }
 

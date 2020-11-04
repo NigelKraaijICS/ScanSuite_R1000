@@ -699,7 +699,7 @@
     <string name="message_print_failed">Printen mislukt</string>
     <string name="screentitle_barcodeinfo">Barcode info</string>
     <string name="barcode_info">Barcode info</string>
-    <string name="questionmarks">\???</string>
+    <string name="novalueyet">\???</string>
     <string name="none">geen</string>
     <string name="enter_BIN">BIN ingeven</string>
     <string name="message_identifier_unknown">Identifier onbekend</string>
@@ -715,5 +715,7 @@
     <string name="hint_set_serial">Geef serienummer in</string>
     <string name="button_set">Wijzig</string>
     <string name="set_serial_header_default">Wijzig serienummer</string>
+    <string name="message_set_serial_first">Serienummer is leeg, geef een serienummer in</string>
+    <string name="mainmenu_proglove">Koppel ProGlove</string>
 
 </resources>

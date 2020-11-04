@@ -27,6 +27,7 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -66,6 +67,8 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
         }
         return  this.moveorderBarcodeAdapter;
     }
+
+
 
     //End Region Private Properties
 
@@ -161,6 +164,11 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
         if (cAppExtension.activity instanceof MoveLinePlaceActivity) {
             this.barcodeRecyclerview.setAdapter(this.getMoveorderBarcodeAdapter());
         }
+
+        if (cAppExtension.activity instanceof PickorderQCActivity) {
+            this.barcodeRecyclerview.setAdapter(this.getPickorderBarcodeAdapter());
+        }
+
 
         this.barcodeRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }

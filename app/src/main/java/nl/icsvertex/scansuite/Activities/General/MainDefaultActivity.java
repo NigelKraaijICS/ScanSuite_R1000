@@ -289,6 +289,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     }
 
+    public void pPasswordCancelled() {
+        this.mShowHomeFragment();
+    }
+
     public  void pPasswordSuccess(){
         this.mShowEnvironmentFragment();
     }
@@ -462,6 +466,12 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                         break;
                     case R.id.action_environments:
                         cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
+
+                    case R.id.action_proglove:
+                        imageHome.setVisibility(View.GONE);
+                        mShowPairGlove();
+                        return true;
+
                     default:
                         imageHome.setVisibility(View.GONE);
                         selectedFragment = new HomeFragment();
@@ -524,6 +534,12 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
             cSharedPreferences.setSerialNumerStr(cDeviceInfo.getSerialnumberStr());
         }
 
+    }
+
+    private void mShowPairGlove() {
+        Intent i = new Intent();
+        i.setAction(cPublicDefinitions.PROGLOVE_CONNECT_ACTION);
+        cAppExtension.context.sendBroadcast(i);
     }
 
 }
