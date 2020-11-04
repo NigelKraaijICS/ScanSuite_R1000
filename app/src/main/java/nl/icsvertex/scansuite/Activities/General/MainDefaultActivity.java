@@ -466,6 +466,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                         break;
                     case R.id.action_environments:
                         cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
+                        break;
 
                     case R.id.action_proglove:
                         imageHome.setVisibility(View.GONE);
