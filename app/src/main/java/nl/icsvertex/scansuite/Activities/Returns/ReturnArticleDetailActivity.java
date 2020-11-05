@@ -2,8 +2,6 @@ package nl.icsvertex.scansuite.Activities.Returns;
 
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,16 +36,15 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLineViewModel;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
@@ -411,6 +408,12 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
             if (!this.mCheckBarcodeWithLineBarcodesBln(pvBarcodeScan)) {
 
+                if (!cReturnorder.currentReturnOrder.isGeneratedBln()) {
+                    cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line), pvBarcodeScan.getBarcodeOriginalStr(),true,true);
+                    return;
+                }
+
+
                 if (cReturnorderLine.currentReturnOrderLine.getRetourRedenStr().isEmpty()) {
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_reason_first), null);
                     return;
@@ -426,7 +429,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
             //Try to raise quantityDbl
             this.mTryToChangeReturnorderQuantity(true, false,cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl() );
-
+            return;
         }
 
         if (isDocumentBln) {
@@ -450,7 +453,13 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
                 ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
                 returnorderDocumentActivity.pHandleScan(pvBarcodeScan);
             }
+
+            return;
         }
+
+
+        //You scanned somethin unknown
+        cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode),pvBarcodeScan.getBarcodeOriginalStr(),true,true);
 
     }
 
@@ -656,13 +665,19 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
             //Determine the new amount
             if (pvAmountFixedBln) {
-                cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl = pvAmountDbl;
-                cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl = pvAmountDbl;
+                newQuantityDbl = cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl = pvAmountDbl;;
             } else {
-                cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl += pvAmountDbl;
-                cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl += pvAmountDbl;
+                newQuantityDbl = cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl + pvAmountDbl;
             }
 
+            //Check if we would exceed amount, then show message
+            if (newQuantityDbl > cReturnorderLine.currentReturnOrderLine.getQuantitytakeDbl() && !cReturnorder.currentReturnOrder.isGeneratedBln() ) {
+                this.mShowExtrasNotAllowed();
+                return;
+            }
+
+            cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl += pvAmountDbl;
+            cReturnorderLineBarcode.currentreturnorderLineBarcode.quantityHandledDbl += pvAmountDbl;
 
             //Change quantityDbl in activuty
             if (cReturnorderLine.currentReturnOrderLine.getQuantitytakeDbl() == 0.0 ){
@@ -754,7 +769,6 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.articleThumbImageView.setImageBitmap(cReturnorderLine.currentReturnOrderLine.articleImage.imageBitmap());
 
     }
-
 
     private  void mShowOrHideGenericExtraFields() {
 
@@ -959,6 +973,11 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         ArticleFullViewFragment articleFullViewFragment = new ArticleFullViewFragment();
         articleFullViewFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLEFULL_TAG);
 
+    }
+
+    private  void mShowExtrasNotAllowed(){ ;
+        cUserInterface.pShowSnackbarMessage(quantityText , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
+        cUserInterface.pDoNope(quantityText, true, true);
     }
 
 
