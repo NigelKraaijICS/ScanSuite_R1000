@@ -793,14 +793,14 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
 
         if (cReturnorder.allReturnordersObl== null ) {
-            this.toolbarSubTitle.setText("(0)");
+            this.toolbarSubTitle.setText("0 " + cAppExtension.activity.getString(R.string.orders));
             return;
         }
 
         if (!cSharedPreferences.userFilterBln()) {
-            this.toolbarSubTitle.setText(cReturnorder.getNumberOfOrdersStr());
+            this.toolbarSubTitle.setText(cReturnorder.getNumberOfOrdersStr() + " " + cAppExtension.activity.getString(R.string.orders));
         } else {
-            this.toolbarSubTitle.setText(cReturnorder.getNumberOfFilteredOrdersStr());
+            this.toolbarSubTitle.setText(cReturnorder.getNumberOfFilteredOrdersStr() + " " + cAppExtension.activity.getString(R.string.orders));
         }
     }
 

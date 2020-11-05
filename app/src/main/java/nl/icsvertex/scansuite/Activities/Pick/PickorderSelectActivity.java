@@ -957,7 +957,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     private  void mSetToolBarTitleWithCounters(){
 
         if (cPickorder.allPickordersObl == null ) {
-            this.toolbarSubTitle.setText("(0)");
+            this.toolbarSubTitle.setText("0"  + " " + cAppExtension.activity.getString(R.string.orders));
             return;
         }
         String subtitleStr;

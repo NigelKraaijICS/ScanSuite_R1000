@@ -40,6 +40,8 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
@@ -47,6 +49,7 @@ import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLineViewModel;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.R;
@@ -68,7 +71,6 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     private ImageView articleThumbImageView;
     private TextView binText;
     private EditText quantityText;
-
 
     private TextView reasonText;
     private ImageButton imageButtonReason;
@@ -299,6 +301,8 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     @Override
     public void mSetListeners() {
+
+        this.mSetArticleImageListener();
         this.mSetDoneListener();
         this.mSetReasonListener();
 
@@ -722,9 +726,35 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         }
     }
 
-    private void mShowArticleImage() {
+    private  void mShowArticleImage() {
+
         this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+
+        //If pick with picture is false, then hide image view
+        if (!cReturnorder.currentReturnOrder.isReturnWithPictureBln()) {
+            this.articleThumbImageView.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        //If picture is not in cache (via webservice) then show no image
+        if (!cReturnorderLine.currentReturnOrderLine.pGetArticleImageBln()) {
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
+            this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+            return;
+        }
+
+        //If picture is in cache but can't be converted, then show no image
+        if (cReturnorderLine.currentReturnOrderLine.articleImage == null || cReturnorderLine.currentReturnOrderLine.articleImage.imageBitmap() == null) {
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
+            this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+            return;
+        }
+
+        //Show the image
+        this.articleThumbImageView.setImageBitmap(cReturnorderLine.currentReturnOrderLine.articleImage.imageBitmap());
+
     }
+
 
     private  void mShowOrHideGenericExtraFields() {
 
@@ -915,7 +945,21 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         });
     }
 
+    private void mSetArticleImageListener() {
+        this.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShowFullArticleFragment();
+            }
+        });
+    }
 
+    private void mShowFullArticleFragment() {
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        ArticleFullViewFragment articleFullViewFragment = new ArticleFullViewFragment();
+        articleFullViewFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLEFULL_TAG);
+
+    }
 
 
     //End Region Private Methods

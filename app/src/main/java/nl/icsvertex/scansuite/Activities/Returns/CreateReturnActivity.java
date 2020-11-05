@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -109,6 +110,17 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     @Override
     public void onBackPressed() {
         this.mLeaveActivity();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
+
+        if (pvMenuItem.getItemId() == android.R.id.home) {
+            mLeaveActivity();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(pvMenuItem);
     }
 
     //End Region Default Methods
@@ -403,7 +415,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     }
 
     private void mLeaveActivity(){
-
+        ReturnorderSelectActivity.startedViaMenuBln = false;
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();

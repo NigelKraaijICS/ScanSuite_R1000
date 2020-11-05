@@ -13,6 +13,8 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Basics.ArticleImages.cArticleImage;
+import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cDatabase;
@@ -167,6 +169,8 @@ public class cReturnorderLine {
     public boolean isGeneratedBln() {
         return generatedBln;
     }
+
+    public cArticleImage articleImage;
 
     private cReturnorderLineViewModel getReturnorderLineViewModel(){
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderLineViewModel.class);
@@ -427,5 +431,35 @@ public class cReturnorderLine {
         }
     }
 
+
+    public boolean pGetArticleImageBln(){
+
+        if (this.articleImage != null) {
+            return  true;
+        }
+
+        this.articleImage = cArticleImage.pGetArticleImageByItemNoAndVariantCode(this.getItemNoStr(),this.getVariantCodeStr());
+        if (this.articleImage != null){
+            return  true;
+        }
+
+        cWebresult Webresult;
+
+        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+        Webresult = articleImageViewModel.pGetArticleImageFromWebserviceWrs(this.getItemNoStr(),this.getVariantCodeStr());
+        if (!Webresult.getSuccessBln() || !Webresult.getResultBln()) {
+            return  false;
+        }
+
+        if (Webresult.getResultDtt().size() == 1) {
+            cArticleImage articleImage = new cArticleImage(Webresult.getResultDtt().get(0));
+            articleImage.pInsertInDatabaseBln();
+            this.articleImage = articleImage;
+            return true;
+        }
+
+        return  false;
+
+    }
 
 }

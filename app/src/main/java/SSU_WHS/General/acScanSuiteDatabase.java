@@ -144,7 +144,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackagingEntity.class,
         cScannerEntity.class,
         cCustomAuthorisationEntity.class
-        },version = 119)
+        },version = 120)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {

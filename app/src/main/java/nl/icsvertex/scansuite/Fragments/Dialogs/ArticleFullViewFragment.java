@@ -29,8 +29,10 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 import nl.icsvertex.scansuite.R;
 
 public class ArticleFullViewFragment extends DialogFragment implements iICSDefaultFragment {
@@ -209,6 +211,38 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
                  this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_no_image_lightgrey_24dp));
              }
          }
+
+         if (cAppExtension.activity instanceof ReturnArticleDetailActivity) {
+             if (!cReturnorderLine.currentReturnOrderLine.getDescription2Str().isEmpty()) {
+                 this.toolbarSubtext.setText(cReturnorderLine.currentReturnOrderLine.getDescription2Str());
+                 this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                 this.toolbarSubtext.setSingleLine(true);
+                 this.toolbarSubtext.setMarqueeRepeatLimit(5);
+                 this.toolbarSubtext.postDelayed(new Runnable() {
+                     @Override
+                     public void run() {
+                         toolbarSubtext.setSelected(true);
+                     }
+                 },1500);
+             }
+
+             this.articleFullItemNoTextView.setText(cReturnorderLine.currentReturnOrderLine.getItemNoStr());
+             this.articleFullVariantTextView.setText(cReturnorderLine.currentReturnOrderLine.getVariantCodeStr());
+             this.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+             this.articleFullVariantTextView.setSingleLine(true);
+             this.articleFullVariantTextView.setMarqueeRepeatLimit(5);
+             this.articleFullVariantTextView.setSelected(true);
+
+             if (cReturnorderLine.currentReturnOrderLine.articleImage != null) {
+                 byte[] decodedString = Base64.decode(cReturnorderLine.currentReturnOrderLine.articleImage.getImageStr(), Base64.DEFAULT);
+                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                 this.articleFullImageView.setImageBitmap(decodedByte);
+             }
+             else {
+                 this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_no_image_lightgrey_24dp));
+             }
+         }
+
     }
 
     @Override
@@ -259,6 +293,10 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
             this.toolbarTitle.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr());
         }
 
+        if (cAppExtension.activity instanceof  ReturnArticleDetailActivity) {
+            this.toolbarTitle.setText(cReturnorderLine.currentReturnOrderLine.getDescriptionStr());
+        }
+
         this.toolbarTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         this.toolbarTitle.setSingleLine(true);
         this.toolbarTitle.setMarqueeRepeatLimit(5);
@@ -293,6 +331,12 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
             IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
             intakeOrderIntakeActivity.pHandleScan(pvBarcodeScan);
+            cAppExtension.dialogFragment.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof ReturnArticleDetailActivity) {
+            ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
+            returnArticleDetailActivity.pHandleScan(pvBarcodeScan);
             cAppExtension.dialogFragment.dismiss();
         }
 

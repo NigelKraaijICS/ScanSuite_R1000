@@ -72,6 +72,12 @@ public class cReturnorder {
     private String reasonStr;
     public String getReasonStr() {return this.reasonStr;}
 
+    private boolean returnWithPictureBln;
+    public boolean isReturnWithPictureBln() {
+        return returnWithPictureBln;
+    }
+
+
     private boolean retourOrderBINNoCheckBln;
     public  boolean getRetourOrderBINNoCheckBln() { return  retourOrderBINNoCheckBln;}
 
@@ -156,6 +162,7 @@ public class cReturnorder {
         this.sourceDocumentInt = cText.pStringToIntegerInt(this.returnorderEntity.getSourceDocumentStr());
         this.documentStr = this.returnorderEntity.getDocumentStr();
         this.reasonStr = this.returnorderEntity.getReasonStr();
+        this.returnWithPictureBln = this.returnorderEntity.getReturnWithPictureBln();
         this.retourMultiDocument = this.returnorderEntity.getRetourMultiDocumentBln();
         this.retourOrderBINNoCheckBln = this.returnorderEntity.getRetourOrderBINNoCheckBln();
 
@@ -176,6 +183,7 @@ public class cReturnorder {
         this.sourceDocumentInt = cText.pStringToIntegerInt(this.returnorderEntity.getSourceDocumentStr());
         this.documentStr = this.returnorderEntity.getDocumentStr();
         this.reasonStr = this.returnorderEntity.getReasonStr();
+        this.returnWithPictureBln = this.returnorderEntity.getReturnWithPictureBln();
         this.retourMultiDocument = this.returnorderEntity.getRetourMultiDocumentBln();
         this.retourOrderBINNoCheckBln = this.returnorderEntity.getRetourOrderBINNoCheckBln();
     }

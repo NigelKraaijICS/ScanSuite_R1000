@@ -79,6 +79,10 @@ public class cReturnorderEntity {
     public String reasonStr;
     public String getReasonStr() {return this.reasonStr;}
 
+    @ColumnInfo(name = cDatabase.RETOURWITHPICTURE_NAMESTR)
+    public Boolean returnWithPictureBln;
+    public Boolean getReturnWithPictureBln() {return this.returnWithPictureBln;}
+
     @ColumnInfo(name = cDatabase.RETOURORDERBINNOCHECK_NAMESTR)
     public Boolean retourOrderBINNoCheckBln;
     public Boolean getRetourOrderBINNoCheckBln() {return this.retourOrderBINNoCheckBln;}
@@ -115,6 +119,7 @@ public class cReturnorderEntity {
             this.documentStr = pvJsonObject.getString(cDatabase.DOCUMENT_NAMESTR);
             this.document2Str = pvJsonObject.getString(cDatabase.DOCUMENT2_NAMESTR);
             this.reasonStr = pvJsonObject.getString(cDatabase.REASON_NAMESTR);
+            this.returnWithPictureBln = cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.RETOURWITHPICTURE_NAMESTR),false);
             this.retourOrderBINNoCheckBln =  cText.pStringToBooleanBln(pvJsonObject.getString(cDatabase.RETOURORDERBINNOCHECK_NAMESTR), false);
 
             //Is processing

@@ -321,6 +321,8 @@ public class cDatabase {
     public static final String REASONNL_NAMESTR = "Reden";
     public static final String RETURN_NAMESTR = "Return";
     public static final String RETURNEXTERNAL_NAMESTR = "ReturnExternal";
+
+    public static final String RETOURWITHPICTURE_NAMESTR = "Retour_with_picture";
     //endregion R
 
     //region S
