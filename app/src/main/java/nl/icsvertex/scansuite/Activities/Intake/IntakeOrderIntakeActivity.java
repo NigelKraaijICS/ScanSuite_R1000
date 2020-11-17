@@ -45,7 +45,6 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -59,11 +58,9 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineRecyclerItemTouchHe
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.AddBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.Fragments.Support.SupportFragment;
@@ -277,7 +274,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        cIntakeorderMATLine.currentIntakeorderMATLine = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowObl().get(pvPositionInt);
+        cIntakeorderMATLine.currentIntakeorderMATLine = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowInvertedObl().get(pvPositionInt);
 
         //Remove the enviroment
         this.mRemoveAdapterFromFragment();
@@ -553,12 +550,12 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     private void mShowLines() {
 
-        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowObl() == null  || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowObl().size() == 0) {
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowInvertedObl() == null  || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowInvertedObl().size() == 0) {
             this.mFillRecycler(new ArrayList<cIntakeorderMATLine>());
             return;
         }
 
-        this.mFillRecycler(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowObl());
+        this.mFillRecycler(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowInvertedObl());
     }
 
     private void mSetArticleImageListener() {
@@ -859,20 +856,23 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             }
 
             //Check if we would exceed amount, then show message if needed
-            if (newQuantityDbl > cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGetQuantityToHandleDbl()) {
+            if (!cIntakeorder.currentIntakeOrder.isGenerated()) {
+                if (newQuantityDbl > cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGetQuantityToHandleDbl()) {
 
-                if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln()) {
-                    this.mShowExtraPiecesNotAllowed();
+                    if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln()) {
+                        this.mShowExtraPiecesNotAllowed();
 
-                    if (this.quantityScannedDbl> 0) {
-                        this.articleScannedBln = true;
+                        if (this.quantityScannedDbl> 0) {
+                            this.articleScannedBln = true;
+                            return;
+                        }
+
+                        this.articleScannedBln = false;
                         return;
                     }
-
-                    this.articleScannedBln = false;
-                    return;
                 }
             }
+
 
             //Set the new quantityDbl and show in Activity
             this.quantityScannedDbl = newQuantityDbl;
@@ -997,11 +997,22 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             return;
         }
 
-       if(!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pItemVariantHandledBln(this.currentBin.getBinCodeStr(),
-               this.scannedBarcodesObl)) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.couldnt_send_line), "",true,true);
-            return;
+        List<cIntakeorderBarcode> sortedBarcodeList = this.mSortBarcodeList(this.scannedBarcodesObl);
+
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
+            if(!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pItemVariantHandledBln(this.currentBin.getBinCodeStr(), sortedBarcodeList)) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.couldnt_send_line), "",true,true);
+                return;
+            }
         }
+
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAS")) {
+            if(!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGeneratedItemVariantHandledBln(this.currentBin.getBinCodeStr(),sortedBarcodeList)) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.couldnt_send_line), "",true,true);
+                return;
+            }
+        }
+
 
         this.mResetCurrents();
         this.mGoBackToLinesActivity();
@@ -1119,46 +1130,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         });
     }
 
-    private void mSetMenuListener() {
-        this.actionMenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment selectedFragment = null;
-                switch (menuItem.getItemId()) {
-
-                    case R.id.item_bin_stock:
-                        selectedFragment = new BinItemsFragment(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
-                        break;
-
-                    case R.id.item_article_stock:
-                        selectedFragment = new SupportFragment();
-                        break;
-
-                    default:
-                        break;
-                }
-
-                if (selectedFragment != null) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.mainFramelayout, selectedFragment);
-                    transaction.commit();
-                }
-
-                // deselect everything
-                int size = actionMenuNavigation.getMenu().size();
-                for (int i = 0; i < size; i++) {
-                    actionMenuNavigation.getMenu().getItem(i).setChecked(false);
-                }
-
-                // set item as selected to persist highlight
-                menuItem.setChecked(true);
-                // close drawer when item is tapped
-                menuActionsDrawer.closeDrawers();
-                return true;
-            }
-        });
-    }
-
     //Dialogs and Activitys
 
     private void mShowFullArticleFragment() {
@@ -1194,7 +1165,17 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     }
 
     private void mGoBackToLinesActivity() {
-        Intent intent = new Intent(cAppExtension.context, IntakeorderLinesActivity.class);
+
+        Intent intent = null;
+
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAS")) {
+            intent = new Intent(cAppExtension.context, IntakeorderMASLinesActivity.class);
+        }
+
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
+            intent = new Intent(cAppExtension.context, IntakeorderMATLinesActivity.class);
+        }
+
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }
@@ -1261,6 +1242,10 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.quantityText.setText("0");
         this.quantityRequiredText.setText(pDoubleToStringStr(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGetQuantityToHandleDbl()));
 
+        if (cIntakeorder.currentIntakeOrder.isGenerated()) {
+            this.quantityRequiredText.setVisibility(View.GONE);
+        }
+
     }
 
     private void mSetBinInfo(){
@@ -1281,6 +1266,30 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.containerText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getContainerStr());
     }
 
+    private  List<cIntakeorderBarcode> mSortBarcodeList(List<cIntakeorderBarcode> pvUnsortedBarcodeObl) {
+
+        List<cIntakeorderBarcode> resultList = new ArrayList<>();
+
+        boolean barcodeFoundBln = false;
+
+        for (cIntakeorderBarcode intakeorderBarcode : pvUnsortedBarcodeObl) {
+            for (cIntakeorderBarcode resultBarcode : resultList) {
+                if (resultBarcode.getBarcodeStr().equalsIgnoreCase(intakeorderBarcode.getBarcodeStr())) {
+                    resultBarcode.quantityHandledDbl +=  intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
+                    barcodeFoundBln = true;
+                }
+            }
+            if (barcodeFoundBln) {
+                barcodeFoundBln = false;
+            }
+            else {
+                //new barcode, so add
+                intakeorderBarcode.quantityHandledDbl = intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
+                resultList.add(intakeorderBarcode);
+            }
+        }
+        return resultList;
+    }
 
 
     //Region Number Broadcaster

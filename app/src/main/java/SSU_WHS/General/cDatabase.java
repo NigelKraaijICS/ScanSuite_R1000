@@ -342,6 +342,7 @@ public class cDatabase {
     public static final String SOURCEDOCUMENT_NAMESTR = "SourceDocument";
     public static final String SOURCENO_NAMESTR = "SourceNo";
     public static final String SORTINGSEQUENCENO_NAMESTR = "SortingSequenceNo";
+    public static final String SORTINGSEQUENCENOPLACE_NAMESTR = "SortingSequenceNo_place";
     public static final String STORAGEBINCODE_NAMESTR = "StorageBinCode";
     public static final String STOREBINCODE_NAMESTR = "StoreBinCode";
     public static final String STORESOURCEORDER_NAMESTR = "StoreSourceOpdracht";

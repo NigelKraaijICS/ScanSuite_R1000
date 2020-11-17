@@ -95,6 +95,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETINTAKEORDERLINES = "p_ReceiveOrderScannerRegelsInTakeGetJsonStr";
     public static String WEBMETHOD_GETINTAKEORDERITEMS = "p_ReceiveOrderItemInTakeGetJsonStr";
     public static String WEBMETHOD_RECEIVEITEMVARIANTCREATE = "p_ReceiveInTakeWarehouseopdrachtItemVariantCreateJsonStr";
+    public static String WEBMETHOD_RECEIVESTOREITEMVARIANTCREATE = "p_ReceiveStoreWarehouseopdrachtItemVariantCreateJsonStr";
     public static String WEBMETHOD_RECEIVEBARCODECREATE =  "p_ReceiveBarcodeCreateJsonStr";
     public static String WEBMETHOD_RECEIVEINTAKEITEM =  "p_ReceiveInTakeItemJsonStr";
     public static String WEBMETHOD_RECEIVELINRESET = "p_ReceiveInTakeRegelResetJsonStr";
@@ -104,6 +105,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_INTAKELINEMATHANDLEDPART = "p_ReceiveRegelHandledPartPlaceMATJsonStr";
     public static String WEBMETHOD_INTAKEHANLED= "p_ReceiveMATOrderHandledJsonStr";
     public static String WEBMETHOD_INTAKEITEMHANLED= "p_ReceiveMATItemHandledJsonStr";
+    public static String WEBMETHOD_INTAKESTOREITEMHANLED= "p_ReceiveStoreItemJsonStr";
     public static String WEBMETHOD_RECEIVECREATE = "p_ReceiveOrderCreateJsonStr";
     public static String WEBMETHOD_RECEIVEINVALIDATE = "p_ReceiveVervallenJsonStr";
     public static String WEBMETHOD_RECEIVEHANDLED = "p_ReceiveInTakeOrderHandledJsonStr";

@@ -967,7 +967,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
 
         boolean hulpBln = true;
 
-        if (!cIntakeorder.currentIntakeOrder.pAddUnkownBarcodeAndItemVariantBln(pvBarcodeScan)){
+        if (!cIntakeorder.currentIntakeOrder.pReceiveAddUnkownBarcodeAndItemVariantBln(pvBarcodeScan)){
             hulpBln = false ;
         }
 

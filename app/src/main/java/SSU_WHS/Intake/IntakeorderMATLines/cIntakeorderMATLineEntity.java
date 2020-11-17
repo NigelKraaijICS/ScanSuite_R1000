@@ -11,6 +11,7 @@ import ICS.Utils.cText;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 
 @Entity(tableName= cDatabase.TABLENAME_INTAKEORDERMATLINES)
 public class cIntakeorderMATLineEntity {
@@ -279,6 +280,151 @@ public class cIntakeorderMATLineEntity {
         }
     }
 
+    public cIntakeorderMATLineEntity(Long pvLineNoLng, JSONObject pvJsonObject, double pvQuantityDbl) {
+        try {
+            this.lineNoInt = pvLineNoLng.intValue();
+            this.itemNoStr = pvJsonObject.getString(cDatabase.ITEMNO_NAMESTR);
+            this.variantCodeStr = pvJsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
+            this.descriptionStr = pvJsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
+            this.description2Str = pvJsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
+            this.containerStr = "";
+            this.binCodeStr = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
+            this.binCodehandledStr = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
+            this.quantityDbl = pvQuantityDbl;
+            this.quantityHandledDbl = pvQuantityDbl;
+            this.sourceNoStr = cIntakeorder.currentIntakeOrder.getOrderNumberStr();
+            this.destinationNoStr = "";
+            this.isPartOfMultilineOrderStr = "";
 
+            this.vendorItemNoStr = pvJsonObject.getString(cDatabase.VENDORITEMNO_NAMESTR);
+            this.vendorItemDescriptionStr = pvJsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
+            this.statusInt = cWarehouseorder.IntakeMATLineLocalStatusEnu.LOCALSTATUS_NEW;
+
+            this.localStatusInt =  cWarehouseorder.IntakeMATLineLocalStatusEnu.LOCALSTATUS_NEW;
+            this.sourceTypeInt =0;
+
+            if (this.getQuantityHandledDbl() >= this.getQuantityDbl()) {
+                this.localStatusInt = cWarehouseorder.IntakeMATLineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+            }
+
+            this.sortingSequenceInt = cText.pStringToIntegerInt(pvJsonObject.getString(cDatabase.SORTINGSEQUENCENOPLACE_NAMESTR));
+
+            //region extraField1Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {
+                try {
+                    this.extraField1Str = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD1());
+                }
+                catch (JSONException e) {
+                    this.extraField1Str = "";
+                }
+            }
+            else {
+                this.extraField1Str = "";
+            }
+            //endregion extraField1Str
+
+            //region extraField2Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD2().trim().isEmpty()) {
+                try {
+                    this.extraField2Str = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD2());
+                }
+                catch (JSONException e) {
+                    this.extraField2Str = "";
+                }
+            }
+            else {
+                this.extraField2Str = "";
+            }
+            //endregion extraField2Str
+
+            //region extraField3Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD3().trim().isEmpty()) {
+                try {
+                    this.extraField3Str = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD3());
+                }
+                catch (JSONException e) {
+                    this.extraField3Str = "";
+                }
+            }
+            else {
+                this.extraField3Str = "";
+            }
+            //endregion extraField3Str
+
+            //region extraField4Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD4().trim().isEmpty()) {
+                try {
+                    this.extraField4Str = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD4());
+                }
+                catch (JSONException e) {
+                    this.extraField4Str = "";
+                }
+            }
+            else {
+                this.extraField4Str = "";
+            }
+            //endregion extraField4Str
+
+            //region extraField5Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD5().trim().isEmpty()) {
+                try {
+                    this.extraField5Str = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD5());
+                }
+                catch (JSONException e) {
+                    this.extraField5Str = "";
+                }
+            }
+            else {
+                this.extraField5Str = "";
+            }
+            //endregion extraField5Str
+
+            //region extraField6Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD6().trim().isEmpty()) {
+                try {
+                    this.extraField6Str = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD6());
+                }
+                catch (JSONException e) {
+                    this.extraField6Str = "";
+                }
+            }
+            else {
+                this.extraField6Str = "";
+            }
+            //endregion extraField6Str
+
+            //region extraField7Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD7().trim().isEmpty()) {
+                try {
+                    this.extraField7Str = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD7());
+                }
+                catch (JSONException e) {
+                    this.extraField7Str = "";
+                }
+            }
+            else {
+                this.extraField7Str = "";
+            }
+            //endregion extraField7Str
+
+            //region extraField8Str
+            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD8().trim().isEmpty()) {
+                try {
+                    this.extraField8Str = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD8());
+                }
+                catch (JSONException e) {
+                    this.extraField8Str = "";
+                }
+            }
+            else {
+                this.extraField8Str = "";
+            }
+            //endregion extraField8Str
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

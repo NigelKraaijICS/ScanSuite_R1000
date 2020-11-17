@@ -266,19 +266,9 @@ public class cReturnorder {
                 return  result;
             }
 
-            //Something went wrong, we received a comment
-            if (actionLng == 80) {
-                result.resultBln = false;
-                cComment comment = new cComment(WebResult.getResultDtt().get(0));
-                result.pAddErrorMessage(comment.commentTextStr);
-                return  result;
-            }
-
             cReturnorder returnorder = new cReturnorder(WebResult.getResultDtt().get(0));
             returnorder.pInsertInDatabaseBln();
             cReturnorder.currentReturnOrder = returnorder;
-
-
 
             return result;
 

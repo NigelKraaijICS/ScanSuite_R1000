@@ -17,9 +17,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
-import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
-import nl.icsvertex.scansuite.BuildConfig;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorderLineAdapter.ReceiveorderLineViewHolder>  {
@@ -130,7 +128,7 @@ public class cReceiveorderLineAdapter extends RecyclerView.Adapter<cReceiveorder
 
 
         //Select the first one, or selected index
-        if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderLinesActivity &&  RecyclerView.getId() == R.id.recyclerViewLines) {
+        if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderMATLinesActivity &&  RecyclerView.getId() == R.id.recyclerViewLines) {
             pvHolder.receiverorderItemFrameLayout.performClick();
         }
     }

@@ -672,6 +672,7 @@
     <string name="couldnt_send_line_no_connection">Could not send line, because there is no connection available</string>
     <string name="show_only_deviations">Show todo/deviations</string>
     <string name="message_close_storeorder_text">You stored %1$s items\nYou needed %2$s items\n\n%3$s\n\nWould you like to close the order?</string>
+    <string name="message_close_generated_storeorder_text">You stored %1$s items\n\n\nWould you like to close the order?</string>
     <string name="message_close_receiveorder_generated_text">You received %1$s items\n\n\n\nWould you like to close the order?</string>
     <string name="message_close_bin_with_progress">You already made progress in this bin. Do you really want to close it?</string>
     <string name="message_bin_empty_close">Do you really want to close this BIN although it\'s empty?</string>
@@ -729,6 +730,7 @@
     <string name="message_scan_reason_first">Decide reason, before you scan a different article</string>
     <string name="message_document_already_active">This document is the current document</string>
     <string name="create_external_receive">Create external receive</string>
+    <string name="create_intake_order">Create intake order</string>
     <string name="message_scan_receive_document">Scan/type document</string>
     <string name="screentitle_receive">Receive</string>
     <string name="error_could_not_invalidate_order">Could not invalidate order</string>

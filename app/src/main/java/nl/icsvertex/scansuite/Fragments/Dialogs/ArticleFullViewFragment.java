@@ -289,7 +289,7 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
             this.toolbarTitle.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
         }
 
-        if (cAppExtension.activity instanceof   IntakeOrderIntakeActivity) {
+        if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
             this.toolbarTitle.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr());
         }
 

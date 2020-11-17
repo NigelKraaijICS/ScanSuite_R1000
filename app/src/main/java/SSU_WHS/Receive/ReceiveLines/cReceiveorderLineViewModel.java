@@ -33,10 +33,14 @@ public class cReceiveorderLineViewModel extends AndroidViewModel {
     public cWebresult pResetReceiveLineViaWebserviceWrs() {return this.Repository.pResetReceiveLineViaWebserviceWrs();}
     public cWebresult pLineHandledViaWebserviceWrs(List<cIntakeorderBarcode> pvBarcodeObl ) {return this.Repository.pReceiveLineHandledViaWebserviceWrs(pvBarcodeObl);}
 
-    public  cWebresult pAddUnknownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddUnkownItemViaWebserviceWrs(pvBarcodeScan);}
-    public  cWebresult pAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
+    public  cWebresult pReceiveAddUnknownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pReceiveAddUnkownItemViaWebserviceWrs(pvBarcodeScan);}
+    public  cWebresult pReceiveAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pReceiveAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
+
+
+    public  cWebresult pIntakeAddUnknownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pIntakeAddUnkownItemViaWebserviceWrs(pvBarcodeScan);}
+    public  cWebresult pIntakeAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pIntakeAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
 
     public  cWebresult pAddERPItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddERPItemViaWebserviceWrs(pvBarcodeScan);}
-    public  cWebresult pAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
+    public  cWebresult pReceiveAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pReceiveAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
 
 }

@@ -192,7 +192,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
             this.mSetBin();
         }
 
-        if (!cUser.currentUser.currentBranch.getReturnDefaultBinStr().isEmpty()) {
+        if (!cUser.currentUser.currentBranch.getReceiveDefaultBinStr().isEmpty()) {
             this.editTextBin.setText(cUser.currentUser.currentBranch.getReceiveDefaultBinStr());
         }
 

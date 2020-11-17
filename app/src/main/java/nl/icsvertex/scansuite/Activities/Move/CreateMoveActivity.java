@@ -25,6 +25,7 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Authorisations.cAuthorisation;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -412,11 +413,24 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
     private  cResult mTryToCreateOrderRst(String pvDocumentstr,  String pvBinCodeStr, boolean pvCheckBarcodesBln){
 
-        cResult result =  cMoveorder.pCreateMoveOrderMVViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
-        if (!result.resultBln) {
-            this.editTextDocument.setText("");
-            this.mStepFailed(result.messagesStr());
-            return  result;
+        cResult result = null;
+
+        if(cUser.currentUser.currentAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE || cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.MOVE_MV) {
+             result =  cMoveorder.pCreateMoveOrderMVViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
+            if (!result.resultBln) {
+                this.editTextDocument.setText("");
+                this.mStepFailed(result.messagesStr());
+                return  result;
+            }
+        }
+
+        if(cUser.currentUser.currentAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MI) {
+             result =  cMoveorder.pCreateMoveOrderMIViaWebserviceRst();
+            if (!result.resultBln) {
+                this.editTextDocument.setText("");
+                this.mStepFailed(result.messagesStr());
+                return  result;
+            }
         }
 
         return result;

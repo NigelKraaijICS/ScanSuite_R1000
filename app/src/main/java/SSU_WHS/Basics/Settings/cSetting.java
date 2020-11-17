@@ -695,6 +695,16 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean RECEIVE_AUTO_CREATE_ORDER_MA(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_AUTO_CREATE_ORDER_MA);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
     public  static String RECEIVE_INTAKE_EO_CREATE_EXTRA_ITEM_VALIDATION(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_INTAKE_EO_CREATE_EXTRA_ITEM_VALIDATION);

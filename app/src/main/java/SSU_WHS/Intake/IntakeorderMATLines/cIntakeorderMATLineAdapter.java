@@ -18,7 +18,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorderMATLineAdapter.IntakeorderMATLineViewHolder>  {
@@ -127,7 +127,7 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
 
 
         //Select the first one, or selected index
-        if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderLinesActivity &&  RecyclerView.getId() == R.id.recyclerViewLines) {
+        if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderMATLinesActivity &&  RecyclerView.getId() == R.id.recyclerViewLines) {
             pvHolder.intakeOrderMATItemFrameLayout.performClick();
         }
     }
@@ -145,9 +145,9 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     public void pFillData(List<cIntakeorderMATLine> pvDataObl ) {
         this.localIntakeorderMATLinesObl = pvDataObl;
 
-        if (cAppExtension.activity instanceof IntakeorderLinesActivity ) {
-            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-            intakeorderLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesMATObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+        if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
+            IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
+            intakeorderMATLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.linesMATObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
         }
 
         notifyDataSetChanged();

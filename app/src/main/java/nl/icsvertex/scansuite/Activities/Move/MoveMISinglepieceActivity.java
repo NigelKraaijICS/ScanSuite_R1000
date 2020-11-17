@@ -21,6 +21,7 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -312,7 +313,10 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
 
     private void mHandleDestinationScan(cBarcodeScan pvBarcodeScan) {
 
-        if (!pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cIdentifierWithDestination.currentIdentifier.getDestinationStr())) {
+
+        String barcodeStrippedStr = cRegex.pStripRegexPrefixStr((pvBarcodeScan.getBarcodeOriginalStr()));
+
+        if (!barcodeStrippedStr.equalsIgnoreCase(cIdentifierWithDestination.currentIdentifier.getDestinationStr())) {
 
             if (!cIdentifierWithDestination.currentIdentifier.getDestinationStr().isEmpty()) {
                 this.mStepFailed(cAppExtension.activity.getString(R.string.destination_invalid));
@@ -322,7 +326,7 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        cIdentifierWithDestination.currentIdentifier.destinationStr = pvBarcodeScan.getBarcodeOriginalStr();
+        cIdentifierWithDestination.currentIdentifier.destinationStr = barcodeStrippedStr;
         this.mShowSending();
         new Thread(new Runnable() {
             public void run() {

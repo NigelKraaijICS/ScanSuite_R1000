@@ -37,21 +37,18 @@ public class cBinItem {
 
     private double stockDbl;
     public double getStockDbl() {
-
         if (stockAvailaibleBln) {
             return  stockDbl;
         }
-
         cArticle article = new cArticle(this.getItemNoStr(),this.getVariantCodeStr());
-
 
         cArticleStock articleStock =  article.pGetStockForBINViaWebservice(this.getBinCodeStr());
         if (articleStock == null) {
             stockAvailaibleBln = true;
             return  0;
         }
-
         stockAvailaibleBln = true;
+        stockDbl = articleStock.quantityDbl;
         return articleStock.quantityDbl;
     }
 

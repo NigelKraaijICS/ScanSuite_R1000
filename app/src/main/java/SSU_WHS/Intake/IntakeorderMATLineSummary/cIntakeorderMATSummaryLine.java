@@ -2,21 +2,27 @@ package SSU_WHS.Intake.IntakeorderMATLineSummary;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cResult;
+import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.cDatabase;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineViewModel;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -60,22 +66,28 @@ public class cIntakeorderMATSummaryLine implements Comparable {
 
         StringBuilder resulStr = new StringBuilder();
 
+        List<String> binsObl = new ArrayList<>();
+
+
         if (this.MATLinesObl == null || this.MATLinesObl.size() == 0) {
             return resulStr.toString();
         }
 
         for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
-
-            if (resulStr.length() == 0) {
-                resulStr = new StringBuilder(intakeorderMATLine.getBinCodeHandledStr());
+            if (!binsObl.contains(intakeorderMATLine.getBinCodeHandledStr())) {
+                binsObl.add(intakeorderMATLine.getBinCodeHandledStr());
             }
-            else
-            {
-                resulStr.append(" | ").append(intakeorderMATLine.getBinCodeHandledStr());
-            }
-
         }
 
+        if (binsObl.size() == 1) {
+            resulStr = new StringBuilder(binsObl.get(0));
+        }
+        else
+        {
+            for (String binStr : binsObl) {
+                resulStr.append(" | ").append(binStr);
+            }
+        }
         return resulStr.toString();
     }
 
@@ -86,11 +98,16 @@ public class cIntakeorderMATSummaryLine implements Comparable {
             if (this.MATLinesObl == null || this.MATLinesObl.size() == 0) {
                 return resultDbl ;
             }
-
-            for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
-                resultDbl += intakeorderMATLine.getQuantityDbl();
+            if (cIntakeorder.currentIntakeOrder.isGenerated()) {
+                for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
+                    resultDbl += intakeorderMATLine.getQuantityHandledDbl();
+                }
             }
-
+            else {
+                for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
+                    resultDbl += intakeorderMATLine.getQuantityDbl();
+                }
+            }
         return resultDbl;
     }
 
@@ -213,14 +230,11 @@ public class cIntakeorderMATSummaryLine implements Comparable {
             return  resultObl;
         }
 
-
         if (this.MATLinesObl.size() == 1) {
-
             if (!this.MATLinesObl.get(0).getBinCodeStr().isEmpty() || !this.MATLinesObl.get(0).getBinCodeHandledStr().isEmpty()) {
                 resultObl.addAll(this.MATLinesObl);
 
             }
-
             return resultObl;
         }
 
@@ -235,6 +249,10 @@ public class cIntakeorderMATSummaryLine implements Comparable {
         //Loop a second time, so we can build the list
         for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
 
+
+            if (cIntakeorder.currentIntakeOrder.isGenerated() && intakeorderMATLine.getQuantityHandledDbl() == 0 ) {
+                continue;
+            }
 
             if (intakeorderMATLine.getBinCodeHandledStr().isEmpty() && intakeorderMATLine.getSourceTypeInt() != cWarehouseorder.SourceDocumentTypeEnu.PurchaseLine) {
                 continue;
@@ -251,6 +269,22 @@ public class cIntakeorderMATSummaryLine implements Comparable {
         }
 
         return  resultObl;
+    }
+
+    public List<cIntakeorderMATLine> MATLinesToShowInvertedObl() {
+
+        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
+
+
+        if (this.MATLinesToShowObl() == null || this.MATLinesToShowObl().size() == 0) {
+            return  resultObl;
+        }
+
+
+        resultObl.addAll(this.MATLinesToShowObl());
+
+        Collections.reverse(resultObl);
+        return  resultObl;
 
 
     }
@@ -258,6 +292,20 @@ public class cIntakeorderMATSummaryLine implements Comparable {
     public List<cIntakeorderBarcode> barcodesObl(){
 
         List<cIntakeorderBarcode> resultObl = new ArrayList<>();
+
+        if (cIntakeorder.currentIntakeOrder.isGenerated()) {
+            for (cIntakeorderBarcode intakeorderBarcode : cIntakeorderBarcode.allBarcodesObl) {
+
+                if (intakeorderBarcode.getItemNoStr().equalsIgnoreCase(this.getItemNoStr()) && intakeorderBarcode.getVariantCodeStr().equalsIgnoreCase(this.variantCodeStr)) {
+                    if (! resultObl.contains(intakeorderBarcode)) {
+                        resultObl.add(intakeorderBarcode);
+                    }
+                }
+            }
+
+            return  resultObl;
+        }
+
 
         for (cIntakeorderMATLine intakeorderMATLine : MATLinesObl) {
 
@@ -334,6 +382,45 @@ public class cIntakeorderMATSummaryLine implements Comparable {
 
         this.MATLinesObl = new ArrayList<>();
 
+    }
+
+    public  cIntakeorderMATSummaryLine(JSONObject pvJsonObject) {
+
+        try {
+            this.itemNoStr = pvJsonObject.getString(cDatabase.ITEMNO_NAMESTR);
+
+            this.variantCodeStr = pvJsonObject.getString(cDatabase.VARIANTCODE_NAMESTR);
+            this.descriptionStr = pvJsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
+            this.description2Str = pvJsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
+            this.vendorItemNo = pvJsonObject.getString(cDatabase.VENDORITEMNO_NAMESTR);
+            this.vendorItemDescriptionStr = pvJsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
+            this.sourceNoStr = cIntakeorder.currentIntakeOrder.getOrderNumberStr();
+            this.binCodeStr = "";
+            this.containerStr = "";
+            this.quantityHandledDbl = 0.0;
+
+            this.extraField1Str = "";
+            this.extraField2Str = "";
+            this.extraField3Str = "";
+            this.extraField4Str = "";
+            this.extraField5Str = "";
+            this.extraField6Str = "";
+            this.extraField7Str = "";
+            this.extraField8Str = "";
+
+            this.MATLinesObl = new ArrayList<>();
+
+            if (cIntakeorder.currentIntakeOrder.sourceNoObl == null) {
+                cIntakeorder.currentIntakeOrder.sourceNoObl = new ArrayList<>();
+            }
+
+            if (!cIntakeorder.currentIntakeOrder.sourceNoObl.contains(this.getSourceNoStr())) {
+                cIntakeorder.currentIntakeOrder.sourceNoObl.add(this.getSourceNoStr());
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -494,32 +581,30 @@ public class cIntakeorderMATSummaryLine implements Comparable {
 
         cWebresult WebResult;
 
-        if (this.MATLinesObl == null || this.MATLinesObl.size() == 0 )  {
-            return  false;
-        }
 
-        if (this.MATLinesObl.size() == 1) {
-            matchedLinesObl.add(this.MATLinesObl.get(0));
-        }
-        else  {
-            //Loop through all lines and look for a match
-            for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
+            if (this.MATLinesObl == null || this.MATLinesObl.size() == 0 )  {
+                return  false;
+            }
 
-                //We have a match on BIN/the BIN is empty
-                if (intakeorderMATLine.getBinCodeHandledStr().equalsIgnoreCase(pvBinCodeStr) || intakeorderMATLine.getBinCodeHandledStr().isEmpty()) {
-                    matchedLinesObl.add(intakeorderMATLine);
+            if (this.MATLinesObl.size() == 1) {
+                matchedLinesObl.add(this.MATLinesObl.get(0));
+            }
+            else  {
+                //Loop through all lines and look for a match
+                for (cIntakeorderMATLine intakeorderMATLine : this.MATLinesObl) {
+
+                    //We have a match on BIN/the BIN is empty
+                    if (intakeorderMATLine.getBinCodeHandledStr().equalsIgnoreCase(pvBinCodeStr) || intakeorderMATLine.getBinCodeHandledStr().isEmpty()) {
+                        matchedLinesObl.add(intakeorderMATLine);
+                    }
                 }
             }
-        }
 
         //Handle matched lines
         switch(matchedLinesObl.size()) {
 
             //We have no match, so this will result in a new line
             case 0:
-
-
-
 
                 WebResult =  this.getIntakeorderMATLineViewModel().pMATCreateLineViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl);
                 if (WebResult.getResultBln() && WebResult.getSuccessBln()){
@@ -566,7 +651,7 @@ public class cIntakeorderMATSummaryLine implements Comparable {
             //loop through barcodes to calculate scanned quantity
             for (cIntakeorderBarcode intakeorderBarcode : pvScannedBarcodesObl) {
                 cIntakeorderMATLine.currentIntakeorderMATLine.pAddOrUpdateLineBarcode(intakeorderBarcode);
-                quantityScannedDbl += intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
+                quantityScannedDbl += intakeorderBarcode.getQuantityHandledDbl();
             }
 
 
@@ -628,6 +713,112 @@ public class cIntakeorderMATSummaryLine implements Comparable {
         return  true;
     }
 
+    public boolean pGeneratedItemVariantHandledBln(String pvBinCodeStr, List<cIntakeorderBarcode> pvScannedBarcodesObl ) {
+
+        cIntakeorderMATLine matchedLine = null;
+        Double quantityScannedDbl = 0.0;
+
+        cWebresult WebResult;
+
+        WebResult =  this.getIntakeorderMATLineViewModel().pStoreCreateLineViaWebserviceWrs(pvBinCodeStr,pvScannedBarcodesObl);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            if (this.getBinCodeStr().isEmpty()) {
+                this.binCodeStr = pvBinCodeStr;
+            }
+
+            //loop through barcodes to calculate scanned quantity
+            for (cIntakeorderBarcode intakeorderBarcode : pvScannedBarcodesObl) {
+//                cIntakeorderMATLine.currentIntakeorderMATLine.pAddOrUpdateLineBarcode(intakeorderBarcode);
+                quantityScannedDbl += intakeorderBarcode.getQuantityHandledDbl();
+            }
+
+            this.quantityHandledDbl += quantityScannedDbl;
+
+            //Add new line so the quanity gets raised again
+            cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(WebResult.getResultLng(),
+                                                                             WebResult.getResultDtt().get(0),
+                                                                             quantityScannedDbl,
+                                                                             pvBinCodeStr);
+            intakeorderMATLine.pInsertInDatabaseBln();
+            this.pAddMATLine(intakeorderMATLine);
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKEITEMHANLED);
+            return  false;
+        }
+}
+        //We have a match, so we can handle this line
+//        if (matchedLine != null) {
+//
+//            cIntakeorderMATLine.currentIntakeorderMATLine = matchedLine;
+//
+//            //loop through barcodes to calculate scanned quantity
+//            for (cIntakeorderBarcode intakeorderBarcode : pvScannedBarcodesObl) {
+//                cIntakeorderMATLine.currentIntakeorderMATLine.pAddOrUpdateLineBarcode(intakeorderBarcode);
+//                quantityScannedDbl += intakeorderBarcode.getQuantityPerUnitOfMeasureDbl();
+//            }
+//
+//
+//            //Update the MAT line
+//            cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = pvBinCodeStr;
+//            cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl += quantityScannedDbl;
+//            cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabase();
+//
+//            //If quantity is equal or bigger then asked, the line is finished
+//            if (cIntakeorderMATLine.currentIntakeorderMATLine.pQuantityReachedBln()) {
+//
+//                WebResult =  this.getIntakeorderMATLineViewModel().pMATLineHandledViaWebserviceWrs();
+//                if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+//
+//                    if (this.getBinCodeStr().isEmpty()) {
+//                        this.binCodeStr = pvBinCodeStr;
+//                    }
+//
+//                    this.quantityHandledDbl += quantityScannedDbl;
+//
+//                    return  true;
+//                }
+//                else {
+//
+//                    //Undo updated MAT line + own quantity
+//                    cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = "";
+//                    cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl -= quantityScannedDbl;
+//                    cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabase();
+//                    cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLED);
+//                    return  false;
+//                }
+//
+//            }
+//            else {
+//                //if quantity is lower, we have to split the line
+//                WebResult =  this.getIntakeorderMATLineViewModel().pMATLineSplitViaWebserviceWrs();
+//                if (WebResult.getResultBln() && WebResult.getSuccessBln() ){
+//
+//                    //Set the quantity to the quantity scanned
+//                    cIntakeorderMATLine.currentIntakeorderMATLine.binCodeHandledStr = pvBinCodeStr;
+//                    cIntakeorderMATLine.currentIntakeorderMATLine.quantityDbl = quantityScannedDbl;
+//                    cIntakeorderMATLine.currentIntakeorderMATLine.quantityHandledDbl = quantityScannedDbl;
+//                    cIntakeorderMATLine.currentIntakeorderMATLine.pHandledIndatabase();
+//
+//                    //Add new line so the quantity gets raised again
+//                    cIntakeorderMATLine intakeorderMATLine = new cIntakeorderMATLine(WebResult.getResultDtt().get(0));
+//                    intakeorderMATLine.pInsertInDatabaseBln();
+//                    this.pAddMATLine(intakeorderMATLine);
+//                    return  true;
+//                }
+//                else {
+//                    cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INTAKELINEMATHANDLEDPART);
+//                    return  false;
+//                }
+//            }
+//        }
+
+        //We have no match, so we have to add a line
+//        return  true;
+//    }
+
     public boolean pGetArticleImageBln(){
 
         if (this.articleImage != null) {
@@ -659,6 +850,10 @@ public class cIntakeorderMATSummaryLine implements Comparable {
     }
 
     public Boolean pQuantityReachedBln(List<cIntakeorderBarcode> pvScannedBarcodesObl){
+
+        if (cIntakeorder.currentIntakeOrder.isGenerated()) {
+            return true;
+        }
 
         Double quantityTotalDbl = this.quantityHandledDbl;
 

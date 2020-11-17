@@ -33,4 +33,8 @@ public class cIntakeorderMATLineViewModel extends AndroidViewModel {
     public cWebresult pMATLineHandledViaWebserviceWrs() {return this.Repository.pMATLineHandledViaWebserviceWrs();}
     public cWebresult pMATLineSplitViaWebserviceWrs() {return this.Repository.pMATLineSplitViaWebserviceWrs();}
     public cWebresult pMATCreateLineViaWebserviceWrs(String pvBarcodeStr, List<cIntakeorderBarcode> pvBarcodeObl) {return this.Repository.pCreateMATLineViaWebserviceWrs(pvBarcodeStr,pvBarcodeObl);}
+
+
+    public cWebresult pStoreCreateLineViaWebserviceWrs(String pvBarcodeStr, List<cIntakeorderBarcode> pvBarcodeObl) {return this.Repository.pCreateStoreLineViaWebserviceWrs(pvBarcodeStr,pvBarcodeObl);}
+
 }

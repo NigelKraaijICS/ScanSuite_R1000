@@ -17,7 +17,8 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
@@ -241,9 +242,16 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             return;
         }
 
-        if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-            intakeorderLinesActivity.pDone();
+        if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
+            IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
+            intakeorderMATLinesActivity.pDone();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof IntakeorderMASLinesActivity) {
+            IntakeorderMASLinesActivity intakeorderMASLinesActivity = (IntakeorderMASLinesActivity)cAppExtension.activity;
+            intakeorderMASLinesActivity.pDone();
             this.dismiss();
             return;
         }
@@ -402,9 +410,16 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             return;
         }
 
-        if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-            intakeorderLinesActivity.pLeaveActivity();
+        if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
+            IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
+            intakeorderMATLinesActivity.pLeaveActivity();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof IntakeorderMASLinesActivity) {
+            IntakeorderMASLinesActivity intakeorderMASLinesActivity = (IntakeorderMASLinesActivity)cAppExtension.activity;
+            intakeorderMASLinesActivity.pLeaveActivity();
             this.dismiss();
             return;
         }
@@ -447,12 +462,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             returnArticleDetailActivity.pHandleFragmentDismissed();
             this.dismiss();
             return;
-        }
-
-        if (cAppExtension.activity instanceof ReturnArticleDetailActivity){
-            ReturnArticleDetailActivity returnArticleDetailActivity = (ReturnArticleDetailActivity)cAppExtension.activity;
-            returnArticleDetailActivity.pHandleFragmentDismissed();
-            this.dismiss();
         }
 
         if (cAppExtension.activity instanceof PackagingActivity){

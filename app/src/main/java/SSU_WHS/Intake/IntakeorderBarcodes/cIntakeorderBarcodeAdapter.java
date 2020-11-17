@@ -66,7 +66,7 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
     public void onBindViewHolder(@NonNull intakeorderBarcodeViewHolder pvHolder, final int pvPositionInt) {
 
 
-        if (cAppExtension.activity instanceof  IntakeOrderIntakeActivity) {
+        if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
             if ( cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size() == 0) {
                 return;
             }
@@ -87,7 +87,7 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
             @Override
             public void onClick(View v) {
 
-                if (cAppExtension.activity instanceof  IntakeOrderIntakeActivity) {
+                if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
                     cIntakeorderBarcodeAdapter.intakeorderBarcode = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(pvPositionInt);
                     IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
                     intakeOrderIntakeActivity.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcodeAdapter.intakeorderBarcode.getBarcodeStr()));
@@ -107,7 +107,7 @@ public class cIntakeorderBarcodeAdapter extends RecyclerView.Adapter<cIntakeorde
     @Override
     public int getItemCount () {
 
-        if (cAppExtension.activity instanceof  IntakeOrderIntakeActivity) {
+        if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
             if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine != null && cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl() != null) {
                 return cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size();
             }

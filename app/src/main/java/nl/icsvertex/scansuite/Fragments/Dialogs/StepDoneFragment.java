@@ -17,8 +17,6 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.Objects;
-
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
@@ -28,7 +26,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
@@ -229,9 +227,9 @@ public class StepDoneFragment extends DialogFragment implements iICSDefaultFragm
                     finishShipLinesActivity.pShippingDone();
                 }
 
-                if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-                    IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-                    intakeorderLinesActivity.pDone();
+                if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
+                    IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
+                    intakeorderMATLinesActivity.pDone();
                 }
 
 

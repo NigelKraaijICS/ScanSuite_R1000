@@ -10,14 +10,15 @@ import android.util.Log;
 import java.util.Objects;
 
 import ICS.Utils.cText;
-import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
+import nl.icsvertex.scansuite.Activities.Intake.CreateIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
@@ -66,7 +67,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
-import nl.icsvertex.scansuite.Fragments.Packaging.PackagingUsedFragment;
 
 public class cBarcodeScan {
 
@@ -255,6 +255,11 @@ public class cBarcodeScan {
                         createReceiveActivity.pHandleScan(barcodeScan,false,false,false);
                     }
 
+                    if (cAppExtension.activity instanceof CreateIntakeActivity){
+                        CreateIntakeActivity createIntakeActivity = (CreateIntakeActivity)cAppExtension.activity;
+                        createIntakeActivity.pHandleScan(barcodeScan);
+                    }
+
                     if (cAppExtension.activity instanceof ReceiveLinesActivity){
                         ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
                         receiveLinesActivity.pHandleScan(barcodeScan,false);
@@ -266,9 +271,14 @@ public class cBarcodeScan {
                     }
 
 
-                    if (cAppExtension.activity instanceof IntakeorderLinesActivity){
-                        IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-                        intakeorderLinesActivity.pHandleScan(barcodeScan,false);
+                    if (cAppExtension.activity instanceof IntakeorderMATLinesActivity){
+                        IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
+                        intakeorderMATLinesActivity.pHandleScan(barcodeScan,false);
+                    }
+
+                    if (cAppExtension.activity instanceof IntakeorderMASLinesActivity){
+                        IntakeorderMASLinesActivity intakeorderMASLinesActivity = (IntakeorderMASLinesActivity)cAppExtension.activity;
+                        intakeorderMASLinesActivity.pHandleScan(barcodeScan, false);
                     }
 
                     if (cAppExtension.activity instanceof IntakeOrderIntakeActivity){

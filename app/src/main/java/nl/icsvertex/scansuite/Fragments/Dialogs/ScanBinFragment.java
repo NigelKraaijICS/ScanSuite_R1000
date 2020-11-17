@@ -27,7 +27,6 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
-import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.R;
 
 public class ScanBinFragment extends DialogFragment implements iICSDefaultFragment {

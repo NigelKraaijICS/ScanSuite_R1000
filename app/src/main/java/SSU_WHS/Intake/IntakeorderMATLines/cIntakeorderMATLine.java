@@ -217,6 +217,38 @@ public class cIntakeorderMATLine {
         this.sourceTypeInt = this.intakeorderMATLineEntity.getSourceTypeInt();
     }
 
+    public cIntakeorderMATLine(Long pvLineNoLng, JSONObject pvJsonObject, double pvQuantityDbl, String pvBinCodeStr) {
+
+        this.intakeorderMATLineEntity = new cIntakeorderMATLineEntity(pvLineNoLng,pvJsonObject,pvQuantityDbl);
+        this.lineNoInt = this.intakeorderMATLineEntity.getLineNoInt();
+        this.itemNoStr = this.intakeorderMATLineEntity.getItemNoStr();
+        this.variantCodeStr = this.intakeorderMATLineEntity.getVariantCodeStr();
+        this.descriptionStr = this.intakeorderMATLineEntity.getDescriptionStr();
+        this.description2Str = this.intakeorderMATLineEntity.getDescription2Str();
+        this.containerStr = this.intakeorderMATLineEntity.getContainerStr();
+        this.binCodeStr= pvBinCodeStr;
+        this.binCodeHandledStr = pvBinCodeStr;
+        this.quantityDbl = this.intakeorderMATLineEntity.getQuantityDbl();
+        this.quantityHandledDbl = this.intakeorderMATLineEntity.getQuantityHandledDbl();
+        this.sourceNoStr = this.intakeorderMATLineEntity.getSourceNoStr();
+        this.destinationNoStr = this.intakeorderMATLineEntity.getDestinationNoStr();
+        this.vendorItemNo = this.intakeorderMATLineEntity.getVendorItemNoStr();
+        this.vendorItemDescriptionStr = this.intakeorderMATLineEntity.getVendorItemDescriptionStr();
+        this.statusInt = this.intakeorderMATLineEntity.getStatusInt();
+        this.localStatusInt =  this.intakeorderMATLineEntity.getLocalStatusInt();
+        this.actionTypeCodeStr = this.getActionTypeCodeStr();
+        this.sortingSequenceInt = this.intakeorderMATLineEntity.getSortingSequenceInt();
+        this.extraField1Str =  this.intakeorderMATLineEntity.getExtraField1Str();
+        this.extraField2Str = this.intakeorderMATLineEntity.getExtraField2Str();
+        this.extraField3Str =  this.intakeorderMATLineEntity.getExtraField3Str();
+        this.extraField4Str =  this.intakeorderMATLineEntity.getExtraField4Str();
+        this.extraField5Str =  this.intakeorderMATLineEntity.getExtraField5Str();
+        this.extraField6Str =  this.intakeorderMATLineEntity.getExtraField6Str();
+        this.extraField7Str =  this.intakeorderMATLineEntity.getExtraField7Str();
+        this.extraField8Str =  this.intakeorderMATLineEntity.getExtraField8Str();
+        this.sourceTypeInt = this.intakeorderMATLineEntity.getSourceTypeInt();
+    }
+
     //End Region Constructor
 
     public boolean pInsertInDatabaseBln() {

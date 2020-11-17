@@ -47,10 +47,11 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Intake.Intakeorders.cIntakeorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.CreateIntakeActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
-import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.R;
@@ -369,6 +370,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr()) {
             case "MAT":
+            case "MAS":
                 hulpResult =  cIntakeorder.currentIntakeOrder.pGetOrderDetailsRst();
                 if (!hulpResult.resultBln) {
                     this.mStepFailed(hulpResult.messagesStr());
@@ -414,16 +416,31 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     private  void mShowIntakeLinesActivity() {
 
+        final Intent intent;
+
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
         View clickedOrder;
 
-        Intent intent = new Intent(cAppExtension.context, IntakeorderLinesActivity.class);
+
+        switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr().toUpperCase()) {
+            case  "MAT":
+                intent = new Intent(cAppExtension.context, IntakeorderMATLinesActivity.class);
+                break;
+
+            case "MAS":
+                intent = new Intent(cAppExtension.context, IntakeorderMASLinesActivity.class);
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected value: " + cIntakeorder.currentIntakeOrder.getOrderTypeStr().toUpperCase());
+        }
+
         clickedOrder = container.findViewWithTag(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
-        ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+           ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
     }
 
     private  void mShowReceiveLinesActivity() {
@@ -456,6 +473,14 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Intent intent = new Intent(cAppExtension.context, CreateReceiveActivity.class);
+        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+    }
+
+    private  void mShowCreateIntakeActivity() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        Intent intent = new Intent(cAppExtension.context, CreateIntakeActivity.class);
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
     }
 
@@ -517,11 +542,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         this.mFillRecycler(filteredIntakesObl);
 
-        if (filteredIntakesObl.size() == 0) {
-            this.mShowNoOrdersIcon(true);
-        } else {
-            this.mShowNoOrdersIcon(false);
-        }
+        this.mShowNoOrdersIcon(filteredIntakesObl.size() == 0);
 
     }
 
@@ -538,12 +559,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mShowHideBottomSheet(true);
-                }
-                else {
-                    mShowHideBottomSheet(false);
-                }
+                mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
     }
@@ -789,12 +805,21 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     private void mSetNewOrderButton() {
 
         if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Store) {
-            imageViewNewOrder.setVisibility(View.INVISIBLE);
-            return;
+
+
+            if (cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.MAS.toString().toUpperCase())) {
+                imageViewNewOrder.setVisibility(View.VISIBLE);
+                return;
+            }
+            else {
+                imageViewNewOrder.setVisibility(View.INVISIBLE);
+                return;
+            }
         }
 
         if (cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.EOS.toString().toUpperCase()) |
-                cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.EOR.toString().toUpperCase())) {
+            cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.EOR.toString().toUpperCase()) ) {
+
             imageViewNewOrder.setVisibility(View.VISIBLE);
         }
         else {
@@ -806,7 +831,18 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                mShowCreateReceiveActivity();
+
+
+
+               if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.External) {
+                   mShowCreateReceiveActivity();
+                   return;
+               }
+
+               if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Store) {
+                   mShowCreateIntakeActivity();
+               }
+
             }
         });
     }
@@ -824,8 +860,14 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         }
 
         // We can't create STORE, so don't start create activity
-        if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Store) {
-            return;
+        if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Store ) {
+
+          if (!cSetting.RECEIVE_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.MAS.toString()) || !cSetting.RECEIVE_AUTO_CREATE_ORDER_MA()) {
+              return;
+          }
+
+          this.mShowCreateIntakeActivity();
+          return;
         }
 
         if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.External ||IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Unknown ) {
@@ -835,7 +877,8 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
                 return;
             }
 
-            mShowCreateReceiveActivity();
+            this.mShowCreateReceiveActivity();
+            return;
         }
     }
 

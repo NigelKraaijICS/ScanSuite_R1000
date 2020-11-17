@@ -22,6 +22,7 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/binRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"

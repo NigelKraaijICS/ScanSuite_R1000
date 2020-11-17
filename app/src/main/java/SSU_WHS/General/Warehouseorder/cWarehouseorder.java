@@ -68,6 +68,7 @@ public class cWarehouseorder {
         RVS,
         RVR,
         MAT,
+        MAS,
         EOS,
         EOR
     }

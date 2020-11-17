@@ -157,20 +157,18 @@ public class cReturnorderRepository {
         }
 
         if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+            if (!cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().isEmpty()) {
+                String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
+                String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
 
-            String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
-            String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
-
-            if (splitFields.length == splitValues.length) {
-
-
-
-                for (i = 0; i < splitFields.length; i++) {
-                    if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
-                        SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
-                    }
-                    else {
-                        SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                if (splitFields.length == splitValues.length) {
+                    for (i = 0; i < splitFields.length; i++) {
+                        if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
+                            SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                        }
+                        else {
+                            SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                        }
                     }
                 }
             }

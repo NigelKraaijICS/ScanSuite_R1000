@@ -179,6 +179,23 @@ public class cIntakeorderMATLineRepository {
         return webResultWrs;
     }
 
+    public cWebresult pCreateStoreLineViaWebserviceWrs(String pvBinCodeStr, List<cIntakeorderBarcode> pvBarcodeObl) {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        CreateLineParams createLineParams = new CreateLineParams(pvBinCodeStr, pvBarcodeObl);
+        try {
+            webResultWrs = new mStoreLineCreateViaWebserviceAsyncTask().execute(createLineParams).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     private static class mInsertAsyncTask extends AsyncTask<cIntakeorderMATLineEntity, Void, Void> {
         private iIntakeorderMATLineDao mAsyncTaskDao;
 
@@ -494,6 +511,100 @@ public class cIntakeorderMATLineRepository {
         }
     }
 
+    private static class mStoreLineCreateViaWebserviceAsyncTask extends AsyncTask<CreateLineParams, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(CreateLineParams... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
 
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNERID;
+                l_PropertyInfo2Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+
+                PropertyInfo l_PropertyInfo4PinPn = new PropertyInfo();
+                l_PropertyInfo4PinPn.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo4PinPn.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4PinPn);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_HANDLEDTIMESTAMP;
+                l_PropertyInfo5Pin.setValue((cDateAndTime.pGetCurrentDateTimeForWebserviceStr()));
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMNO;
+                l_PropertyInfo6Pin.setValue(cIntakeorderBarcode.currentIntakeOrderBarcode.getItemNoStr());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE;
+                l_PropertyInfo7Pin.setValue(cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr());
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+
+                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_BINCODE;
+                l_PropertyInfo8Pin.setValue(params[0].binCodeStr);
+                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
+                SoapObject barcodesHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODESLIST);
+
+                if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
+                    //Only loop through handled barcodes, of there are any
+                    if (params[0].barcodeObl != null) {
+                        for (cIntakeorderBarcode intakeorderBarcode: params[0].barcodeObl ) {
+                            SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, intakeorderBarcode.getBarcodeStr());
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, intakeorderBarcode.getQuantityHandledDbl());
+                            barcodesHandledList.addSoapObject(soapObject);
+                        }
+                    }
+                }
+
+                if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAS")) {
+                    //Only loop through handled barcodes, of there are any
+                    if (params[0].barcodeObl != null) {
+                        for (cIntakeorderBarcode intakeorderBarcode: params[0].barcodeObl ) {
+                            SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, intakeorderBarcode.getBarcodeStr());
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, intakeorderBarcode.getQuantityHandledDbl());
+                            barcodesHandledList.addSoapObject(soapObject);
+                        }
+                    }
+                }
+
+                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
+                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODELIST;
+                l_PropertyInfo9Pin.setValue(barcodesHandledList);
+                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
+
+                SoapObject propertiesHandledObl = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
+                PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
+                l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
+                l_PropertyInfo10Pin.setValue(propertiesHandledObl);
+                l_PropertyInfoObl.add(l_PropertyInfo10Pin);
+
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_INTAKESTOREITEMHANLED, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
 
 }

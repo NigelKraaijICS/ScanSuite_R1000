@@ -40,14 +40,24 @@ public class cIntakeorderRepository {
 
     //Region Private Properties
 
-
     private static class IntakeCreateParams {
+
+        String documentStr;
+        boolean checkBarcodesBln;
+
+        IntakeCreateParams(String pvDocumentStr,boolean pvCheckBarcodesBln ) {
+            this.documentStr = pvDocumentStr;
+            this.checkBarcodesBln = pvCheckBarcodesBln;
+        }
+    }
+
+    private static class ReceiveCreateParams {
         String documentStr;
         String packingSlipStr;
         String binCodeStr;
         boolean checkBarcodesBln;
 
-        IntakeCreateParams(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln ) {
+        ReceiveCreateParams(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln ) {
             this.documentStr = pvDocumentStr;
             this.packingSlipStr = pvPackingSlipStr;
             this.binCodeStr = pvBinCodeStr;
@@ -127,18 +137,20 @@ public class cIntakeorderRepository {
 
         if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
 
-            String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
-            String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
+            if (!cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().isEmpty()) {
+                String[] splitFields =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFilterfieldStr().split("\\|");
+                String[] splitValues =    cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getFiltervalueStr().split("\\|");
 
-            if (splitFields.length == splitValues.length) {
+                if (splitFields.length == splitValues.length) {
 
 
-                for (i = 0; i < splitFields.length; i++) {
-                    if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
-                        SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
-                    }
-                    else {
-                        SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                    for (i = 0; i < splitFields.length; i++) {
+                        if (!SQLStatementStr.toString().toUpperCase().contains("WHERE")) {
+                            SQLStatementStr.append(" WHERE ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                        }
+                        else {
+                            SQLStatementStr.append(" AND ").append(splitFields[i]).append(" = ").append(cText.pAddSingleQuotesStr(splitValues[i]));
+                        }
                     }
                 }
             }
@@ -357,11 +369,32 @@ public class cIntakeorderRepository {
     }
 
 
-    public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {
+    public cWebresult pCreateReceiveOrderViaWebserviceWrs(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {
+
+        List<String> resultObl = new ArrayList<>();
+        ReceiveCreateParams receiveCreateParams;
+        receiveCreateParams = new ReceiveCreateParams(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
+
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mCreateReceiveOrderViaWebserviceAsyncTask().execute(receiveCreateParams).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+
+    public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, boolean pvCheckBarcodesBln) {
 
         List<String> resultObl = new ArrayList<>();
         IntakeCreateParams intakeCreateParams;
-        intakeCreateParams = new IntakeCreateParams(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
+        intakeCreateParams = new IntakeCreateParams(pvDocumentStr, pvCheckBarcodesBln);
 
         cWebresult webResultWrs = new cWebresult();
 
@@ -874,6 +907,87 @@ public class cIntakeorderRepository {
     private static class mCreateIntakeOrderViaWebserviceAsyncTask extends AsyncTask<IntakeCreateParams, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(IntakeCreateParams... params) {
+            cWebresult l_WebresultWrs = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LANGUAGEASCULTURE;
+                l_PropertyInfo2Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
+                l_PropertyInfo4Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOW;
+                l_PropertyInfo5Pin.setValue("MAS");
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEDDAT;
+                l_PropertyInfo6Pin.setValue(cDateAndTime.pGetCurrentDateTimeForWebserviceStr());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT;
+                l_PropertyInfo7Pin.setValue(params[0].documentStr);
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+
+                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT2;
+                l_PropertyInfo8Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
+                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
+                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORIGINNO;
+                l_PropertyInfo9Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
+
+                PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
+                l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_EXTERNALREFERENCE;
+                l_PropertyInfo10Pin.setValue(params[0].documentStr + ";" + cUser.currentUser.currentBranch.getReceiveDefaultBinStr() + ";" + cDateAndTime.pGetCurrentDateTimeForIntakeStr() );
+                l_PropertyInfoObl.add(l_PropertyInfo10Pin);
+
+                PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
+                l_PropertyInfo11Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBIN;
+                l_PropertyInfo11Pin.setValue(cUser.currentUser.currentBranch.getReceiveDefaultBinStr());
+                l_PropertyInfoObl.add(l_PropertyInfo11Pin);
+
+                PropertyInfo l_PropertyInfo12Pin = new PropertyInfo();
+                l_PropertyInfo12Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBARCODECHECK;
+                l_PropertyInfo12Pin.setValue(params[0].checkBarcodesBln);
+                l_PropertyInfoObl.add(l_PropertyInfo12Pin);
+
+                PropertyInfo l_PropertyInfo13Pin = new PropertyInfo();
+                l_PropertyInfo13Pin.name = cWebserviceDefinitions.WEBPROPERTY_ADMINISTRATION;
+                l_PropertyInfo13Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo13Pin);
+
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_RECEIVECREATE, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                l_WebresultWrs.setSuccessBln(false);
+                l_WebresultWrs.setResultBln(false);
+            }
+            return l_WebresultWrs;
+        }
+    }
+
+    private static class mCreateReceiveOrderViaWebserviceAsyncTask extends AsyncTask<ReceiveCreateParams, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(ReceiveCreateParams... params) {
             cWebresult l_WebresultWrs = new cWebresult();
             try {
                 List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();

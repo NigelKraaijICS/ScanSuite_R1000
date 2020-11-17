@@ -27,7 +27,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
@@ -182,7 +182,7 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                         mWrongPassword();
                     }
                 }
-                if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
+                if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
                     if (editPassword.getText().toString().equals(cSetting.RECEIVE_STORE_DEVIATIONS_PASSWORD())) {
                         mRightPassword();
                     }
@@ -235,9 +235,9 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
                         inventoryorderBinActivity.pPasswordCancelled();
                     }
 
-                    if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-                        IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-                        intakeorderLinesActivity.pPasswordCancelled();
+                    if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
+                        IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
+                        intakeorderMATLinesActivity.pPasswordCancelled();
                     }
 
                     if (cAppExtension.dialogFragment instanceof EnvironmentFragment) {
@@ -314,9 +314,9 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
             dismiss();
         }
 
-        if (cAppExtension.activity instanceof IntakeorderLinesActivity) {
-            IntakeorderLinesActivity intakeorderLinesActivity = (IntakeorderLinesActivity)cAppExtension.activity;
-            intakeorderLinesActivity.pPasswordSuccess();
+        if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
+            IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
+            intakeorderMATLinesActivity.pPasswordSuccess();
             dismiss();
         }
 
