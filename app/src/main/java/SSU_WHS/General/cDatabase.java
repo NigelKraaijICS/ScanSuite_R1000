@@ -13,6 +13,8 @@ public class cDatabase {
     public static final String TABLENAME_BRANCH = "Branches";
     public static final String TABLENAME_BRANCHBIN = "BranchBin";
     public static final String TABLENAME_ITEMPROPERTY = "ItemProperties";
+    public static final String TABLENAME_PROPERTYGROUP = "PropertyGroup";
+    public static final String TABLENAME_PROPERTYGROUPPROPERTY = "PropertyGroupProperty";
     public static final String TABLENAME_PICKORDERBARCODE = "PickorderBarcode";
     public static final String TABLENAME_PICKORDERLINEBARCODE = "PickorderLineBarcode";
     public static final String TABLENAME_ARTICLEIMAGE = "ArticleImage";
@@ -222,15 +224,19 @@ public class cDatabase {
     //region N
     public static final String NAME_NAMESTR = "Naam";
     public static final String NAMEADDITION_NAMESTR = "Naamtoevoeging";
+    public static final String NAMESHORT_NAMESTR = "Naam_kort";
+
 
     public static final String NUMBEROFBINS_NAMESTR = "Aantal_bins";
     //endregion N
 
     //region O
-    public static final String ORDER_NAMESTR = "Volgorde";
+    public static final String ORDERDUTCH_NAMESTR = "Volgorde";
     public static final String OMSCHRIJVING_NAMESTR = "Omschrijving";
     public static final String ORDERNUMBER_NAMESTR = "Opdrachtnummer";
     public static final String ORDERTYPE_NAMESTR = "Opdrachttype";
+    public static final String ORIGINDUTCH_NAMESTR = "Herkomstcode";
+    public static final String ORIGINKEYDUTCH_NAMESTR = "Herkomstsleutel";
     //endregion O
 
     //region P
@@ -258,6 +264,10 @@ public class cDatabase {
     public static final String PRINTDOCUMENTS_NAMESTR = "PrintDocuments";
     public static final String PROCESSINGSEQUENCE_NAMESTR = "ProcessingSequence";
     public static final String PROPERTY_NAMESTR = "Property";
+    public static final String PROPERTYDUTCH_NAMESTR = "Propertie";
+    public static final String PROPERTYSDUTCH_NAMESTR = "Properties";
+    public static final String PROPERTYGROUP_NAMESTR = "Propertiegroep";
+
     public static final String PICKORDERLINEBARCODE_LINENO = "LineNo";
     public static final String PICKORDERLINEBARCODE_BARCODE = "Barcode";
     public static final String PICKORDERLINEBARCODE_QUANTITY = "Quantity";

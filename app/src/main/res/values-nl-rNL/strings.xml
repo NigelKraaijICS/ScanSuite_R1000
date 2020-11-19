@@ -719,5 +719,6 @@
     <string name="message_set_serial_first">Serienummer is leeg, geef een serienummer in</string>
     <string name="mainmenu_proglove">Koppel ProGlove</string>
     <string name="create_intake_order">Creeer magazijnopslag</string>
+    <string name="error_get_property_line_data_failed">Ophalen regel informatie mislukt</string>
 
 </resources>

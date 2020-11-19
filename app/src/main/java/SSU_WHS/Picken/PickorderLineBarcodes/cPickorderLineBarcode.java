@@ -74,16 +74,4 @@ public class cPickorderLineBarcode {
         return true;
     }
 
-    //todo: this is not used?
-//    public static cPickorderLineBarcode pPickorderLineBarcode(String pvScannedBarcode) {
-//        if (cPickorderLineBarcode.allLineBarcodesObl == null || cPickorderLineBarcode.allLineBarcodesObl.size() == 0 ) {
-//            return null;
-//        }
-//        for (cPickorderLineBarcode pickorderLineBarcode : cPickorderLineBarcode.allLineBarcodesObl) {
-//            if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcode)) {
-//                return pickorderLineBarcode;
-//            }
-//        }return null;
-//    }
-
 }

@@ -70,11 +70,11 @@ public class cPickorderRepository {
         String ordernumber;
         String workplace;
 
-        PickorderUpdateWorkplaceParams(String pv_user, String pv_branch, String pv_ordernumber, String pv_workplace) {
-            this.user = pv_user;
-            this.branch = pv_branch;
-            this.ordernumber = pv_ordernumber;
-            this.workplace = pv_workplace;
+        PickorderUpdateWorkplaceParams(String pvUserStr, String pvBranchStr, String pvOrdernumberStr, String pvWorkplaceStr) {
+            this.user = pvUserStr;
+            this.branch = pvBranchStr;
+            this.ordernumber = pvOrdernumberStr;
+            this.workplace = pvWorkplaceStr;
         }
     }
 

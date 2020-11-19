@@ -310,9 +310,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mHandleFillOrders(){
 
-
-        String
-
         //all Moveorders
         if (!cMoveorder.pGetMoveOrdersViaWebserviceBln(true, "", "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_moveorders_failed), "", true, true );

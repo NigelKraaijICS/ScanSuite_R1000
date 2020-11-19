@@ -3,9 +3,6 @@ package nl.icsvertex.scansuite.Activities.General;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -25,11 +22,12 @@ import androidx.fragment.app.FragmentTransaction;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONException;
+
 import java.util.concurrent.ExecutionException;
 
 import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
-import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cPermissions;
@@ -41,6 +39,7 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisation;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
+import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
 import SSU_WHS.Basics.Scanners.cScanner;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
@@ -53,7 +52,6 @@ import SSU_WHS.ScannerLogon.cScannerLogon;
 import SSU_WHS.Webservice.cWebservice;
 import io.fabric.sdk.android.Fabric;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.HugeErrorFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
 import nl.icsvertex.scansuite.Fragments.Main.DateTimeFragment;
 import nl.icsvertex.scansuite.Fragments.Main.HomeFragment;
@@ -311,6 +309,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln &&
                 cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln &&
                 cItemProperty.itemPropertiesAvaliableBln &&
+                cPropertyGroup.propertyGroupsAvailableBln &&
                 cScanner.scannersAvailableBln &&
                 cCustomAuthorisation.customAutorisationsAvailableBln;
     }
@@ -344,6 +343,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         if (!cItemProperty.pGetItemPropertiesViaWebserviceBln(true)) {
             return false;
         }
+
+            if (!cPropertyGroup.pGetPropertyGroupsViaWebserviceBln(true)) {
+                return  false;
+            }
 
         if (!mGetshippingInfoViawebserviceBln()) {
             return false;

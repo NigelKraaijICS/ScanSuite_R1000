@@ -20,6 +20,10 @@ import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
 import SSU_WHS.Basics.ItemProperty.iItemPropertyDao;
 import SSU_WHS.Basics.Packaging.cPackagingEntity;
 import SSU_WHS.Basics.Packaging.iPackagingDao;
+import SSU_WHS.Basics.PropertyGroup.cPropertyGroupEntity;
+import SSU_WHS.Basics.PropertyGroup.iPropertyGroupDao;
+import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupPropertyEntity;
+import SSU_WHS.Basics.PropertyGroupProperty.iPropertyGroupPropertyDao;
 import SSU_WHS.Basics.Scanners.cScannerEntity;
 import SSU_WHS.Basics.Scanners.iScannerDao;
 import SSU_WHS.Basics.Settings.cSettingsEntity;
@@ -121,6 +125,8 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPickorderLineFinishSinglePieceEntity.class,
         cPickorderSettingEntity.class,
         cItemPropertyEntity.class,
+        cPropertyGroupEntity.class,
+        cPropertyGroupPropertyEntity.class,
         cPickorderLinePackAndShipEntity.class,
         cInventoryorderEntity.class,
         cInventoryorderBinEntity.class,
@@ -144,7 +150,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackagingEntity.class,
         cScannerEntity.class,
         cCustomAuthorisationEntity.class
-        },version = 120)
+        },version = 122)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -171,6 +177,8 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iShippingAgentServiceShipMethodDao shippingAgentServiceShipMethodDao();
     public abstract iPickorderShipPackageDao pickorderShipPackageDao();
     public abstract iItemPropertyDao itemPropertyDao();
+    public abstract iPropertyGroupDao propertyGroupDao();
+    public abstract iPropertyGroupPropertyDao propertyGroupPropertyDao();
     public abstract iInventoryorderDao inventoryorderDao();
     public abstract iInventoryorderBinDao inventoryorderBinDao();
     public abstract iInventoryorderLineDao inventoryorderLineDao();

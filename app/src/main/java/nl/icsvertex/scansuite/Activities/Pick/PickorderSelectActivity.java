@@ -581,6 +581,12 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             return result;
         }
 
+        if (!cPickorder.currentPickOrder.pGetPropertyLineDataViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_property_line_data_failed));
+            return result;
+        }
+
         return  result;
     }
 

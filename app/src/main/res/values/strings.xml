@@ -510,6 +510,7 @@
     <string name="error_couldnt_handle_step">This step could not be handled</string>
     <string name="send_order">(Re)Send order</string>
     <string name="error_get_sorting_detals_failed">Getting sort details failed</string>
+    <string name="error_get_property_line_data_failed">Getting property line data failed</string>
     <string name="scan_pickcartbox">Scan pickcartbox</string>
     <string name="all_lines_sent">All lines are sent</string>
     <string name="error_article_scan_mandatory">You can only scan articles</string>

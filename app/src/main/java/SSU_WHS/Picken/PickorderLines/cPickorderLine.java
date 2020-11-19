@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,6 +18,7 @@ import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.Pickorders.cPickorder;
@@ -229,6 +231,8 @@ public class cPickorderLine {
 
     public static List<cPickorderLine> allLinesObl;
     public static cPickorderLine currentPickOrderLine;
+
+    public static LinkedHashMap<String,  List<LinkedHashMap<String,String>> >  itemProperyDataObl;
 
     private cPickorderLineViewModel getPickorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLineViewModel.class);

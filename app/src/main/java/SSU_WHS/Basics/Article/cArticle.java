@@ -66,7 +66,7 @@ public class cArticle {
     public  List<cArticleBarcode> barcodesObl;
     public  List<cArticleStock> stockObl;
 
-    public List<cArticleStock> sortedTStockObl() {
+    public List<cArticleStock> sortedStockObl() {
 
         List<cArticleStock> sortedTakeLinesObl = new ArrayList<>();
 

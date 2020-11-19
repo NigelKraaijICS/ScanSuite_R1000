@@ -37,7 +37,7 @@ import SSU_WHS.General.cDatabase;
         public cAuthorisationEntity(JSONObject jsonObject) {
             try {
                 this.authorisation = jsonObject.getString(cDatabase.AUTHORISATION_NAMESTR);
-                this.order = jsonObject.getInt(cDatabase.ORDER_NAMESTR);
+                this.order = jsonObject.getInt(cDatabase.ORDERDUTCH_NAMESTR);
                 this.license = jsonObject.getString(cDatabase.LICENSE_NL_NAMESTR);
             } catch (JSONException e) {
                 e.printStackTrace();

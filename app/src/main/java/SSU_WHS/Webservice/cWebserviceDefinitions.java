@@ -69,6 +69,10 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETARTICLEIMAGESMULTIPLE = "p_ArtikelenImageGetJsonStr";
     public static String WEBMETHOD_USERLOGIN = "p_GebruikerLoginJsonStr";
     public static String WEBMETHOD_GETITEMPROPERTY = "p_ItemPropertyGetJsonStr";
+    public static String WEBMETHOD_GETPROPERTYGROUPS = "p_PropertiegroepenGetJsonStr";
+    public static String WEBMETHOD_GETPROPERTYLINEDATA = "p_WarehouseopdrachtPropertiegroepLineDataGetJsonStr";
+
+
     public static String WEBMETHOD_INVENTORYCREATE = "p_InventoryOrderCreateJsonStr ";
     public static String WEBMETHOD_GETINVENTORYORDERS = "p_InventoryOrdersGetJsonStr";
     public static String WEBMETHOD_GETINVENTORYORDERLINES = "p_InventoryOrderRegelsGetJsonStr";
@@ -207,6 +211,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_PICKSTEP = "pv_PickStapInt";
     public static String WEBPROPERTY_NUMBER = "pv_AantalDbl";
     public static String WEBPROPERTY_PROPERTIESHANDLED = "pv_PropertiesHandledObl";
+    public static String WEBPROPERTY_PROPERTIEGROUP = "pv_PropertiegroepStr";
     public static String WEBPROPERTY_LOCATION = "pv_LocationStr";
     public static String WEBPROPERTY_SHIPPINGAGENT = "pv_ShippingAgentStr";
     public static String WEBPROPERTY_SHIPPINGSERVICE = "pv_ShippingServiceStr";

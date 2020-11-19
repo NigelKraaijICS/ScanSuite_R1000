@@ -11,6 +11,7 @@ import java.util.List;
 import ICS.Utils.cRegex;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -91,13 +92,10 @@ public class cItemProperty {
         cWebresult WebResult;
         cItemPropertyViewModel itemPropertyViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cItemPropertyViewModel.class);
         WebResult =  itemPropertyViewModel.pGetItemPropertyFromWebserviceWrs();
+
+
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            List<JSONObject> myList = WebResult.getResultDtt();
-            for (int i = 0; i < myList.size(); i++) {
-                JSONObject jsonObject;
-                jsonObject = myList.get(i);
-
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cItemProperty itemProperty = new cItemProperty(jsonObject);
                 itemProperty.pInsertInDatabaseBln();
             }
