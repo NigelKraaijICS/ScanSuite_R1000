@@ -233,6 +233,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public  void pPicklineSelected(cPickorderLine pvPickorderLine) {
         cPickorderLine.currentPickOrderLine = pvPickorderLine;
+        cPickorderLine.currentPickOrderLine.pTest();
 
         if (PickorderLinesActivity.currentLineFragment instanceof  PickorderLinesToPickFragment) {
             PickorderLinesToPickFragment pickorderLinesToPickFragment = (PickorderLinesToPickFragment)PickorderLinesActivity.currentLineFragment;

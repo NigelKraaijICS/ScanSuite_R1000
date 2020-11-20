@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import ICS.Utils.cDateAndTime;
@@ -16,9 +17,12 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
+import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupProperty;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.Pickorders.cPickorder;
@@ -232,11 +236,13 @@ public class cPickorderLine {
     public static List<cPickorderLine> allLinesObl;
     public static cPickorderLine currentPickOrderLine;
 
-    public static LinkedHashMap<String,  List<LinkedHashMap<String,String>> >  itemProperyDataObl;
+    public static LinkedHashMap<String,  LinkedHashMap<String,String> >  itemProperyDataObl;
 
     private cPickorderLineViewModel getPickorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLineViewModel.class);
     }
+
+
 
     //End Region Public Properties
 
@@ -754,6 +760,52 @@ public class cPickorderLine {
         return this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_BUSY);
 
     }
+
+    public void pTest(){
+
+       if(cPropertyGroup.allPropertyGroupsObl == null || cPropertyGroup.allPropertyGroupsObl.size() == 0) {
+           return;
+       }
+
+       for (cPropertyGroup propertyGroup : cPropertyGroup.allPropertyGroupsObl) {
+
+           if (propertyGroup.propertyObl == null || propertyGroup.propertyObl.size() == 0) {
+               continue;
+           }
+
+            if (this.itemProperyDataObl == null || this.itemProperyDataObl.size() == 0 ) {
+                continue;
+            }
+
+           if (!this.itemProperyDataObl.containsKey(propertyGroup.getPropertyGroupStr())) {
+               continue;
+           }
+
+           LinkedHashMap<String, String> fielsAndValuesHashMap =this.itemProperyDataObl.get(propertyGroup.getPropertyGroupStr());
+            if (fielsAndValuesHashMap == null || fielsAndValuesHashMap.size() == 0 ) {
+                continue;
+            }
+            for (cPropertyGroupProperty propertyGroupProperty : propertyGroup.propertyObl) {
+
+                if (!fielsAndValuesHashMap.containsKey(propertyGroupProperty.getPropertyStr())) {
+                    continue;
+                }
+
+               String fieldValueStr =  fielsAndValuesHashMap.get(propertyGroupProperty.getPropertyStr());
+
+                if (fieldValueStr.isEmpty()) {
+                    continue;
+                }
+            }
+
+       }
+
+
+
+
+
+    }
+
 
      //End Region Private Methods
 

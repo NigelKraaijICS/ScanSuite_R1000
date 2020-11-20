@@ -1647,7 +1647,7 @@ public class cPickorder{
             //Get data for this property group
             cWebresult WebResult = propertyGroupViewModel.pGetPropertyDataFromWebserviceWrs("PICKEN",
                                                                                              this.getOrderNumberStr(),
-                                                                                              propertyGroup.getPropertyGroupStr());
+                                                                                             propertyGroup.getPropertyGroupStr());
 
             if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
@@ -1665,30 +1665,26 @@ public class cPickorder{
                                     pickorderLine.itemProperyDataObl = new LinkedHashMap<>();
                                 }
 
+                                LinkedHashMap<String,  String> fieldAndValueHasmap = new LinkedHashMap<>();
+
                                 //Create a new hasmmap with name and value of the property, do this for all propertys in this group
-                                List<LinkedHashMap<String,String>> linkedHashMaps = new ArrayList<>();
                                 for (cPropertyGroupProperty propertyGroupProperty : propertyGroup.propertyObl) {
                                     try {
-
                                         //Create the hasmap dynammically and fill it
-                                        LinkedHashMap<String, String> jsonObjectLinkedHashMap = new LinkedHashMap<>();
-                                        jsonObjectLinkedHashMap.put(propertyGroupProperty.getPropertyStr(), jsonObject.getString(propertyGroupProperty.getPropertyStr()));
-                                        linkedHashMaps.add((jsonObjectLinkedHashMap));
-
+                                        fieldAndValueHasmap.put(propertyGroupProperty.getPropertyStr(), jsonObject.getString(propertyGroupProperty.getPropertyStr()));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }
-
                                 //Add key and value for this propertygroup, so groupname and hashmaplist of propertys and values
-                                pickorderLine.itemProperyDataObl.put(propertyGroup.getPropertyGroupStr(),linkedHashMaps);
+                                pickorderLine.itemProperyDataObl.put(propertyGroup.getPropertyGroupStr(),fieldAndValueHasmap);
+
                             }
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
                     }
                 }
-                return true;
             } else {
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
                 return false;
