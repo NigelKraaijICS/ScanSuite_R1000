@@ -175,8 +175,8 @@ public class cPickorderLinePackAndShip {
         this.variantCodeStr = pickorderLinePackAndShipEntity.getVariantCodeStr();
         this.descriptionStr = pickorderLinePackAndShipEntity.getDescriptionStr();
         this.description2Str = pickorderLinePackAndShipEntity.getDescription2Str();
-        this.vendorItemNoStr =   this.descriptionStr = pickorderLinePackAndShipEntity.getVendorItemNoStr();
-        this.vendorItemDescriptionStr =   this.descriptionStr = pickorderLinePackAndShipEntity.getVendorItemDescriptionStr();
+        this.vendorItemNoStr = pickorderLinePackAndShipEntity.getVendorItemNoStr();
+        this.vendorItemDescriptionStr = pickorderLinePackAndShipEntity.getVendorItemDescriptionStr();
 
         this.quantityDbl =  pickorderLinePackAndShipEntity.getQuantityDbl();
         this.quantityHandledDbl = pickorderLinePackAndShipEntity.getQuantityHandledDbl();

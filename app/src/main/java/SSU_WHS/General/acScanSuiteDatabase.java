@@ -36,6 +36,8 @@ import SSU_WHS.Basics.ShippingAgents.cShippingAgentEntity;
 import SSU_WHS.Basics.ShippingAgents.iShippingAgentDao;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentServiceShipMethodEntity;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.iShippingAgentServiceShipMethodDao;
+import SSU_WHS.Basics.Translations.cTranslationEntity;
+import SSU_WHS.Basics.Translations.iTranslationDao;
 import SSU_WHS.Basics.Users.cUserEntity;
 import SSU_WHS.Basics.Users.iUserDao;
 import SSU_WHS.Basics.Workplaces.cWorkplaceEntity;
@@ -149,8 +151,9 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cMoveorderLineBarcodeEntity.class,
         cPackagingEntity.class,
         cScannerEntity.class,
-        cCustomAuthorisationEntity.class
-        },version = 122)
+        cCustomAuthorisationEntity.class,
+        cTranslationEntity.class
+        },version = 123)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -200,6 +203,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iMoveorderBarcodeDao moveorderBarcodeDao();
     public  abstract iPackagingDao packagingDao();
     public  abstract iCustomAuthorisationDao customAuthorisationDao();
+    public  abstract iTranslationDao translationDao();
 
     private static acScanSuiteDatabase INSTANCE;
 

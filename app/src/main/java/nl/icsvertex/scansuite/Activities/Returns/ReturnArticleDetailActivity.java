@@ -76,17 +76,6 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     private TextView articleDescription2Text;
     private TextView articleItemText;
     private TextView articleBarcodeText;
-    private TextView articleUnitOfMeasureText;
-    private TextView articleVendorItemText;
-
-    private TextView genericItemExtraField1Text;
-    private TextView genericItemExtraField2Text;
-    private TextView genericItemExtraField3Text;
-    private TextView genericItemExtraField4Text;
-    private TextView genericItemExtraField5Text;
-    private TextView genericItemExtraField6Text;
-    private TextView genericItemExtraField7Text;
-    private TextView genericItemExtraField8Text;
 
     private AppCompatImageButton imageButtonMinus;
     private AppCompatImageButton imageButtonPlus;
@@ -203,18 +192,6 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
             this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
             this.articleItemText = findViewById(R.id.articleItemText);
             this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-            this.articleUnitOfMeasureText = findViewById(R.id.articleUnitOfMeasureText);
-            this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
-
-            this.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
-            this.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
-            this.genericItemExtraField3Text = findViewById(R.id.genericItemExtraField3Text);
-            this.genericItemExtraField4Text = findViewById(R.id.genericItemExtraField4Text);
-            this.genericItemExtraField5Text = findViewById(R.id.genericItemExtraField5Text);
-            this.genericItemExtraField6Text = findViewById(R.id.genericItemExtraField6Text);
-            this.genericItemExtraField7Text = findViewById(R.id.genericItemExtraField7Text);
-            this.genericItemExtraField8Text = findViewById(R.id.genericItemExtraField8Text);
-
             this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
 
@@ -256,14 +233,10 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.articleItemText.setText(cReturnorderLine.currentReturnOrderLine.getItemNoAndVariantCodeStr());
 
         if (cReturnorderBarcode.currentReturnOrderBarcode != null) {
-            this.articleBarcodeText.setText(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeAndQuantityStr());
-            this.articleUnitOfMeasureText.setText(cReturnorderBarcode.currentReturnOrderBarcode.getUnitOfMeasureStr());
+            this.articleBarcodeText.setText(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeAndQuantityStr() + " " +  cReturnorderBarcode.currentReturnOrderBarcode.getUnitOfMeasureStr());
         } else {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.message_unknown_barcode));
-            this.articleUnitOfMeasureText.setText("");
         }
-
-        this.articleVendorItemText.setText(cReturnorderLine.currentReturnOrderLine.getVendorItemNoAndDescriptionStr());
 
         if (!cReturnorderLine.currentReturnOrderLine.isGeneratedBln()){
             cBranchReason.currentBranchReason = cUser.currentUser.currentBranch.pGetReasonByName(cReturnorderLine.currentReturnOrderLine.getRetourRedenStr());
@@ -772,38 +745,6 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     private  void mShowOrHideGenericExtraFields() {
 
-        if (!cReturnorderLine.currentReturnOrderLine.getExtraField1Str().isEmpty()) {
-            this.genericItemExtraField1Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField1Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField1Str());
-        }
-        if (!cReturnorderLine.currentReturnOrderLine.getExtraField2Str().isEmpty()) {
-            this.genericItemExtraField2Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField2Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField2Str());
-        }
-        if (!cReturnorderLine.currentReturnOrderLine.getExtraField3Str().isEmpty()) {
-            this.genericItemExtraField3Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField3Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField3Str());
-        }
-        if (!cReturnorderLine.currentReturnOrderLine.getExtraField4Str().isEmpty()) {
-            this.genericItemExtraField4Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField4Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField4Str());
-        }
-        if (!cReturnorderLine.currentReturnOrderLine.getExtraField5Str().isEmpty()) {
-            this.genericItemExtraField5Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField5Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField5Str());
-        }
-        if (!cReturnorderLine.currentReturnOrderLine.getExtraField6Str().isEmpty()) {
-            this.genericItemExtraField6Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField6Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField6Str());
-        }
-        if (!cReturnorderLine.currentReturnOrderLine.getExtraField7Str().isEmpty()) {
-            this.genericItemExtraField7Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField7Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField7Str());
-        }
-        if (!cReturnorderLine.currentReturnOrderLine.getExtraField8Str().isEmpty()) {
-            this.genericItemExtraField8Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField8Text.setText(cReturnorderLine.currentReturnOrderLine.getExtraField8Str());
-        }
     }
 
     private void mHandleDone() {

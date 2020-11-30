@@ -27,6 +27,13 @@
             app:layout_constraintTop_toBottomOf="@id/textViewItemNoAndVariant"
             />
         <TextView
+            style="@style/defaultRecyclerOrdernumberText"
+            android:id="@+id/textViewDescription2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewDescription"
+            />
+        <TextView
             style="@style/defaultLineRecyclerQuantityText"
             android:id="@+id/textViewQuantity"
             app:layout_constraintEnd_toEndOf="parent"

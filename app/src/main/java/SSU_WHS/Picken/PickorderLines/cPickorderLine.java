@@ -761,52 +761,6 @@ public class cPickorderLine {
 
     }
 
-    public void pTest(){
-
-       if(cPropertyGroup.allPropertyGroupsObl == null || cPropertyGroup.allPropertyGroupsObl.size() == 0) {
-           return;
-       }
-
-       for (cPropertyGroup propertyGroup : cPropertyGroup.allPropertyGroupsObl) {
-
-           if (propertyGroup.propertyObl == null || propertyGroup.propertyObl.size() == 0) {
-               continue;
-           }
-
-            if (this.itemProperyDataObl == null || this.itemProperyDataObl.size() == 0 ) {
-                continue;
-            }
-
-           if (!this.itemProperyDataObl.containsKey(propertyGroup.getPropertyGroupStr())) {
-               continue;
-           }
-
-           LinkedHashMap<String, String> fielsAndValuesHashMap =this.itemProperyDataObl.get(propertyGroup.getPropertyGroupStr());
-            if (fielsAndValuesHashMap == null || fielsAndValuesHashMap.size() == 0 ) {
-                continue;
-            }
-            for (cPropertyGroupProperty propertyGroupProperty : propertyGroup.propertyObl) {
-
-                if (!fielsAndValuesHashMap.containsKey(propertyGroupProperty.getPropertyStr())) {
-                    continue;
-                }
-
-               String fieldValueStr =  fielsAndValuesHashMap.get(propertyGroupProperty.getPropertyStr());
-
-                if (fieldValueStr.isEmpty()) {
-                    continue;
-                }
-            }
-
-       }
-
-
-
-
-
-    }
-
-
      //End Region Private Methods
 
 }

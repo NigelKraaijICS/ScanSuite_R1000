@@ -39,11 +39,12 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
     private cArticleStockAdapter articleStockAdapter;
     private cArticleStockAdapter getArticleStockAdapter(){
         if (this.articleStockAdapter == null) {
-            this.articleStockAdapter = new cArticleStockAdapter();
+            this.articleStockAdapter = new cArticleStockAdapter(false);
         }
 
         return  articleStockAdapter;
     }
+
     private TextView textViewItem;
 
     //End Region Private Properties
@@ -102,13 +103,10 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
 
     @Override
     public void mFindViews() {
-
         if (getView() != null) {
             this.textViewItem = getView().findViewById(R.id.textViewItem);
             this.stockRecyclerview = getView().findViewById(R.id.stockRecyclerview);
-
         }
-
     }
 
 
@@ -129,6 +127,11 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
 
     private void mGetData() {
 
+
+        if (cArticle.currentArticle.stockObl != null && cArticle.currentArticle.stockObl.size() > 0 ) {
+            this.mShowNoLinesIcon(true);
+            return;
+        }
 
         cArticle.currentArticle.pGetStockViaWebserviceBln();
 

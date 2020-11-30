@@ -10,10 +10,11 @@ import java.util.List;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroupViewModel;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
-public class cPropertyGroupProperty {
+public class cPropertyGroupProperty implements Comparable {
 
     private String originStr;
     public String getOriginStr() { return originStr; }
@@ -60,7 +61,12 @@ public class cPropertyGroupProperty {
 
     //Region Private Methods
 
+    @Override
+    public int compareTo(Object o) {
+        int compareint =((cPropertyGroupProperty)o).getOrderInt();
+        return compareint-this.getOrderInt();
 
+    }
 
     //End Region Private Methods
 }

@@ -162,6 +162,19 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_marginBottom">@dimen/default_margin</item>
     </style>
+    <style name="propertyInfoKey">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textColor">@color/colorTextDefault</item>
+    </style>
+    <style name="propertyValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textColor">@color/colorTextDarker</item>
+        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+    </style>
     <style name="identifierInfoKey">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -175,12 +188,20 @@
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
-
     <style name="userUserNameSmallText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textsize_small</item>
         <item name="android:textColor">@color/colorNeutral</item>
+    </style>
+    <style name="imageviewUserTinyButton">
+        <item name="android:layout_height">@dimen/imageview_menu_tiny_height</item>
+        <item name="android:layout_width">@dimen/imageview_menu_tiny_width</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
     </style>
     <style name="imageviewUserButton">
         <item name="android:layout_height">@dimen/imageview_menu_height</item>
@@ -202,6 +223,16 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">75dp</item>
         <item name="android:background">@color/colorWhite</item>
+    </style>
+    <style name="smallBottomButton">
+        <item name="android:layout_height">@dimen/smallbutton_height</item>
+        <item name="android:layout_width">@dimen/smallbutton_height</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_double_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
     </style>
     <style name="defaultBottomButton">
         <item name="android:layout_height">@dimen/bottombutton_height</item>
@@ -655,6 +686,16 @@
         <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+    <style name="countSmallButton">
+        <item name="android:layout_height">@dimen/smallbutton_height</item>
+        <item name="android:layout_width">@dimen/smallbutton_width</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/colorPrimary</item>
+        <item name="android:background">@drawable/button_round_white</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
     </style>
     <style name="countButton">
         <item name="android:layout_height">@dimen/bottombutton_height</item>

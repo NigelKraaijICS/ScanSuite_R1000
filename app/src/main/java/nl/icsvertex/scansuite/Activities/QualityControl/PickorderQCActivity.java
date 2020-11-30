@@ -61,8 +61,6 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     private  TextView articleDescription2Text;
     private  TextView articleItemText;
     private  TextView articleBarcodeText;
-    private  TextView articleVendorItemText;
-
     private CardView sourceNoContainer;
     private CardView binContainer;
     private CardView destinationContainer;
@@ -185,7 +183,6 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-        this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
 
         this.sourceNoContainer = findViewById(R.id.sourceNoContainer);
         this.binContainer = findViewById(R.id.binContainer);
@@ -229,7 +226,6 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         this.articleDescription2Text.setText(cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getDescription2Str());
 
         this.articleItemText.setText(cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getItemNoAndVariantStr());
-        this.articleVendorItemText.setVisibility(View.GONE);
 
         this.sourceNoContainer.setVisibility(View.GONE);
         this.binContainer.setVisibility(View.GONE);
@@ -357,7 +353,6 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         }
     }
 
-
     private void mEnablePlusMinusAndBarcodeSelectViews() {
 
         if (cSetting.PICK_PER_SCAN()) {
@@ -452,11 +447,6 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
             //Add or update line barcodeStr
             cPickorderLinePackAndShip.currentPickorderLinePackAndShip.pAddOrUpdateLineBarcode(pvAmountDbl);
-
-            //Update orderline info (quantityDbl, timestamp, localStatusInt)
-
-            //todo: make this work
-//            cPickorderLine.currentPickOrderLine.pQCHandledIndatabase();
 
             //Check if this line is done
             this.mCheckLineDone();
@@ -556,6 +546,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         if (!cPickorderLinePackAndShip.currentPickorderLinePackAndShip.pCheckedBln()) {
             //could not send line, let user know but answer succes so user can go to next line
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), null);
+            return;
         }
 
         this.mGoBackToLinesActivity();

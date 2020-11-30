@@ -64,13 +64,14 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     //Region Private Properties
 
     //Region Views
-    private TextView textViewChosenOrder;
     private TextView quantityPickordersText;
     private TabLayout pickorderLinesTabLayout;
     private cNoSwipeViewPager pickorderLinesViewPager;
     private ImageView imageButtonComments;
+
     private ImageView toolbarImage;
     private TextView toolbarTitle;
+    private  TextView toolbarSubtext;
 
     private ImageView imageButtonCloseOrder;
 
@@ -158,19 +159,25 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+
         this.quantityPickordersText = findViewById(R.id.quantityPickordersText);
         this.pickorderLinesTabLayout = findViewById(R.id.pickorderLinesTabLayout);
         this.pickorderLinesViewPager = findViewById(R.id.pickorderLinesViewpager);
-        this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
+
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
     }
 
     @Override
     public void mSetToolbar(String pvScreenTitleStr) {
+
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
         this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
+
+        this.toolbarSubtext.setText(cPickorder.currentPickOrder.getOrderNumberStr());
+        this.toolbarSubtext.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -182,13 +189,8 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     public void mFieldsInitialize() {
-
-        ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
-
-        this.textViewChosenOrder.setText(cPickorder.currentPickOrder.getOrderNumberStr());
         this.imageButtonCloseOrder.setVisibility(View.INVISIBLE);
         this.mSetTabLayout();
-
     }
 
     @Override
@@ -233,7 +235,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public  void pPicklineSelected(cPickorderLine pvPickorderLine) {
         cPickorderLine.currentPickOrderLine = pvPickorderLine;
-        cPickorderLine.currentPickOrderLine.pTest();
 
         if (PickorderLinesActivity.currentLineFragment instanceof  PickorderLinesToPickFragment) {
             PickorderLinesToPickFragment pickorderLinesToPickFragment = (PickorderLinesToPickFragment)PickorderLinesActivity.currentLineFragment;
@@ -373,6 +374,19 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
             //Set last selected index
             cPickorder.currentPickOrder.lastSelectedIndexInt = cPickorder.currentPickOrder.pGetIndexOfNotHandledLineInt(cPickorderLine.currentPickOrderLine);
+
+            if (cPickorderLine.currentPickOrderLine.getQuantityDbl() == 1 && cPickorder.currentPickOrder.isSingleBinBln() && !cPickorder.currentPickOrder.isPickAutoNextBln()) {
+
+                //Add barcode
+                cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
+
+                //Update orderline info (quantityDbl, timestamp, localStatusInt)
+                cPickorderLine.currentPickOrderLine.pHandledIndatabase();
+                this.mSendPickorderLine();
+                return;
+            }
+
+
 
             //we have a line to handle, so start Pick activity
             this.mStartPickActivity();
@@ -1105,9 +1119,12 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private void mSetTabLayout(){
 
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_topick));
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_picked));
-        this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
+        if (this.pickorderLinesTabLayout.getTabCount() == 0) {
+            this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_topick));
+            this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_picked));
+            this.pickorderLinesTabLayout.addTab(this.pickorderLinesTabLayout.newTab().setText(R.string.tab_pickorderline_total));
+        }
+
 
         PickorderLinesPagerAdapter pickorderLinesPagerAdapter = new PickorderLinesPagerAdapter(this.pickorderLinesTabLayout.getTabCount());
         this.pickorderLinesViewPager.setAdapter(pickorderLinesPagerAdapter);
@@ -1146,6 +1163,29 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         //Check if we are done
         PickorderLinesActivity.startedViaOrderSelectBln = false;
         this.pCheckAllDone();
+
+    }
+
+    private  void mSendPickorderLine() {
+
+        //If internet is not connected
+        if (!cConnection.isInternetConnectedBln()) {
+            //could not send line, let user know but answer succes so user can go to next line
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), R.raw.badsound);
+            cPickorderLine.currentPickOrderLine.pErrorSending();
+            return;
+        }
+
+        if (!cPickorderLine.currentPickOrderLine.pHandledBln()) {
+            //could not send line, let user know but answer succes so user can go to next line
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), R.raw.badsound);
+            cPickorderLine.currentPickOrderLine.pErrorSending();
+        }
+
+        cPickorder.currentPickOrder.lastSelectedIndexInt = 0;
+        cPickorderLine.currentPickOrderLine = null;
+        cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_line_send), R.raw.headsupsound);
+        this.mActivityInitialize();
 
     }
 

@@ -17,6 +17,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETUSERS = "p_GebruikersGetJsonStr";
     public static String WEBMETHOD_GETSCANNERS = "p_ScannersGetJsonStr";
     public static String WEBMETHOD_GETWORKPLACES = "p_MagazijnWerkplekkenGetJsonStr";
+    public static String WEBMETHOD_GETTRANSLATIONS = "p_VertalingGetJsonStr";
     public static String WEBMETHOD_GETIDENTIFIERWITHDESTINATION = "p_IdentifierWithDestinationGetJsonStr";
     public static String WEBMETHOD_GETBINARTICLES = "p_MagazijnlocatieArtikelenGetJsonStr";
     public static String WEBMETHOD_GETBRANCHES = "p_VestigingGetJsonStr";
@@ -43,6 +44,9 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_PICKORDERLINERESET = "p_PickorderRegelResetPickenJsonStr";
     public static String WEBMETHOD_UPDATECURRENTORDERLOCATION = "p_PickOrderUpdateCurrentOrderLocationJsonStr";
     public static String WEBMETHOD_GETPICKORDERSSEQUELSTEP = "p_PickordersVervolgstapGetJsonStr";
+
+
+    public static String WEBMETHOD_GETLOCATIONARTICLEVIAOWNERBARCODE = "p_VestigingArtikelGetViaOwnerBarcodeJsonStr";
     public static String WEBMETHOD_GETARTICLEVIAOWNERBARCODE = "p_ArtikelGetViaOwnerBarcodeJsonStr";
     public static String WEBMETHOD_GETARTICLEBARCODES = "p_ArtikelBarcodesGetJsonStr";
     public static String WEBMETHOD_GETARTICLESTOCK = "p_ArtikelVoorraadGetJsonStr";

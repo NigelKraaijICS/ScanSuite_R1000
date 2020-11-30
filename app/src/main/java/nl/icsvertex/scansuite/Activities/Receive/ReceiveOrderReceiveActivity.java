@@ -82,8 +82,8 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private  TextView articleDescription2Text;
     private  TextView articleItemText;
     private  TextView articleBarcodeText;
-    private  TextView articleUnitOfMeasureText;
-    private  TextView articleVendorItemText;
+
+
     private  TextView genericItemExtraField1Text;
     private  TextView genericItemExtraField2Text;
     private  TextView genericItemExtraField3Text;
@@ -98,7 +98,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private  EditText quantityText;
     private  TextView quantityRequiredText;
 
-    private  CardView sourceNoContainer;
+
     private  TextView sourcenoText;
 
     private  TextView binCodeText;
@@ -269,21 +269,10 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-        this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
-        this.articleUnitOfMeasureText = findViewById(R.id.articleUnitOfMeasureText);
 
-        this.sourceNoContainer = findViewById(R.id.sourceNoContainer);
         this.sourcenoText = findViewById(R.id.sourcenoText);
         this.binCodeText = findViewById(R.id.binText);
 
-        this.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
-        this.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
-        this.genericItemExtraField3Text = findViewById(R.id.genericItemExtraField3Text);
-        this.genericItemExtraField4Text = findViewById(R.id.genericItemExtraField4Text);
-        this.genericItemExtraField5Text = findViewById(R.id.genericItemExtraField5Text);
-        this.genericItemExtraField6Text = findViewById(R.id.genericItemExtraField6Text);
-        this.genericItemExtraField7Text = findViewById(R.id.genericItemExtraField7Text);
-        this.genericItemExtraField8Text = findViewById(R.id.genericItemExtraField8Text);
 
         this.quantityText = findViewById(R.id.quantityText);
         this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
@@ -319,9 +308,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.counterPlusHelperInt = 0;
         this.counterMinusHelperInt = 0;
 
-
-
-            this.toolbarSubtext.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+        this.toolbarSubtext.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
         this.mSetArticleInfo();
         this.mSetSourceNoInfo();
@@ -566,11 +553,9 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         }
 
         if (cIntakeorderBarcode.currentIntakeOrderBarcode!= null) {
-            this.articleBarcodeText.setText(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeAndQuantityStr());
-            this.articleUnitOfMeasureText.setText(cIntakeorderBarcode.currentIntakeOrderBarcode.getUnitOfMeasureStr());
+            this.articleBarcodeText.setText(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeAndQuantityStr() + " " + cIntakeorderBarcode.currentIntakeOrderBarcode.getUnitOfMeasureStr() );
         } else {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
-            this.articleUnitOfMeasureText.setText("");
         }
     }
 
@@ -1167,13 +1152,11 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             this.articleDescriptionText.setText("???");
             this.articleDescription2Text.setText("???");
             this.articleItemText.setText("???");
-            this.articleVendorItemText.setText("???");
             return;
         }
             this.articleDescriptionText.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getDescriptionStr());
             this.articleDescription2Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getDescription2Str());
             this.articleItemText.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getItemNoAndVariantCodeStr());
-            this.articleVendorItemText.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getVendorItemNoAndDescriptionStr());
     }
 
     private  void mSetQuantityInfo(){

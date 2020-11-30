@@ -108,17 +108,22 @@ public class cArticleRepository {
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
             PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
-            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
-            l_PropertyInfo3Pin.setValue(params[0].getBarcodeFormattedStr());
+            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
             PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
-            l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODEORIGINAL;
-            l_PropertyInfo4Pin.setValue(params[0].getBarcodeOriginalStr());
+            l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
+            l_PropertyInfo4Pin.setValue(params[0].getBarcodeFormattedStr());
             l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
+            PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+            l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODEORIGINAL;
+            l_PropertyInfo5Pin.setValue(params[0].getBarcodeOriginalStr());
+            l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
             try {
-                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEVIAOWNERBARCODE, l_PropertyInfoObl);
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETLOCATIONARTICLEVIAOWNERBARCODE, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);

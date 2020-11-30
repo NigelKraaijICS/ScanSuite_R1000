@@ -14,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Translations.cTranslation;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
@@ -212,39 +214,41 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             pvHolder.textViewQuantityTotal.setText(cText.pIntToStringStr(selectedPickorder.getQuantityTotalInt()));
         }
 
-
+        String orderTypeText = "";
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BM.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_bm);
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_bm);
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BC.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_bc);
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_bc);
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PV.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_pv);
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_pv);
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BP.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_bp);
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_bp);
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PA.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_pa);
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_pa);
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.PF.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_pf);
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_pf);
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.UNKNOWN.toString())) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_unknown);
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_unknown);
         }
 
         if (selectedPickorder.isCombinedOrderBln()) {
-            pvHolder.textViewOrdertype.setText(R.string.ordertype_combined);
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_combined);
         }
+
+        pvHolder.textViewOrdertype.setText(cTranslation.pGetTranslastionStr(orderTypeText, Locale.getDefault().getLanguage().toUpperCase()));
 
         pvHolder.pickorderItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

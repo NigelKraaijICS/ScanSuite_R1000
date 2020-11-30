@@ -46,6 +46,7 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
+import SSU_WHS.Basics.Translations.cTranslation;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.ScannerLogon.cScannerLogon;
@@ -309,9 +310,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln &&
                 cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln &&
                 cItemProperty.itemPropertiesAvaliableBln &&
-                cPropertyGroup.propertyGroupsAvailableBln &&
+                 cPropertyGroup.propertyGroupsAvailableBln &&
                 cScanner.scannersAvailableBln &&
-                cCustomAuthorisation.customAutorisationsAvailableBln;
+                cCustomAuthorisation.customAutorisationsAvailableBln &&
+                cTranslation.translationsAvailableBln;
     }
 
     private boolean mGetBasicDataBln() throws ExecutionException {
@@ -344,9 +346,9 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
             return false;
         }
 
-            if (!cPropertyGroup.pGetPropertyGroupsViaWebserviceBln(true)) {
-                return  false;
-            }
+        if (!cPropertyGroup.pGetPropertyGroupsViaWebserviceBln(true)) {
+            return  false;
+        }
 
         if (!mGetshippingInfoViawebserviceBln()) {
             return false;
@@ -357,6 +359,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
 
         if (!cCustomAuthorisation.pGetCustomAutorisationsViaWebserviceBln(true)) {
+            return false;
+        }
+
+        if (!cTranslation.pGetTranslationsViaWebserviceBln()) {
             return false;
         }
 

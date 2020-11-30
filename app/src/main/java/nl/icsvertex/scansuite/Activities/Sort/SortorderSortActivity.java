@@ -75,7 +75,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     private TextView articleDescription2Text;
     private TextView articleItemText;
     private TextView articleBarcodeText;
-    private TextView articleVendorItemText;
+
     private TextView quantityText;
     private TextView quantityRequiredText;
     private ImageView articleThumbImageView;
@@ -197,7 +197,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-        this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
+
 
         this.sourcenoText = findViewById(R.id.sourcenoText);
         this.sourcenoContainer = findViewById(R.id.destinationContainer);
@@ -246,8 +246,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
         this.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
         this.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
-
-        this.articleVendorItemText.setText(cPickorderLine.currentPickOrderLine.getVendorItemNoAndDescriptionStr());
         this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr());
         if (cPickorderLine.currentPickOrderLine.getSourceNoStr().trim().isEmpty()) {
             this.sourcenoContainer.setVisibility(View.INVISIBLE);

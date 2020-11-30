@@ -349,6 +349,8 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+
+
     public static boolean PICK_SORT_FASE_AVAILABLE(){
 
             cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SORT_FASE_AVAILABLE);

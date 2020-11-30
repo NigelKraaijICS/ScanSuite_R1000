@@ -5,23 +5,18 @@
         android:id="@+id/container"
         tools:context=".Activities.Pick.PickorderLinesActivity"
         style="@style/defaultScreen">
-        <include layout="@layout/toolbar_default" />
-        <include layout="@layout/default_orderinfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            />
+        <include layout="@layout/toolbar_subtext_default" />
         <TextView
             android:id="@+id/quantityPickordersText"
             style="@style/quantityPickordersText"
-            app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintEnd_toEndOf="parent"
             />
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/pickorderLinesTabLayout"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            app:layout_constraintTop_toBottomOf="@id/chosenOrderContainer"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/quantityPickordersText"
             app:tabMode="scrollable"

@@ -28,6 +28,7 @@ public class cPickorderLinePackAndShipAdapter extends RecyclerView.Adapter<cPick
 
         private TextView textViewItemNoAndVariant;
         private TextView textViewDescription;
+        private TextView textViewDescription2;
         private TextView textViewQuantity;
         private FrameLayout pickorderLinePackAndShipItemLinearLayout;
         public ConstraintLayout container;
@@ -45,6 +46,13 @@ public class cPickorderLinePackAndShipAdapter extends RecyclerView.Adapter<cPick
             this.textViewDescription.setSingleLine(true);
             this.textViewDescription.setMarqueeRepeatLimit(5);
             this.textViewDescription.setSelected(true);
+
+
+            this.textViewDescription2 = pvItemView.findViewById(R.id.textViewDescription2);
+            this.textViewDescription2.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textViewDescription2.setSingleLine(true);
+            this.textViewDescription2.setMarqueeRepeatLimit(5);
+            this.textViewDescription2.setSelected(true);
 
             this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
             this.pickorderLinePackAndShipItemLinearLayout = pvItemView.findViewById(R.id.pickorderLinePackAndShipItemLinearLayout);
@@ -94,7 +102,6 @@ public class cPickorderLinePackAndShipAdapter extends RecyclerView.Adapter<cPick
         final cPickorderLinePackAndShip pickorderLinePackAndShip = this.localPackAndShipLinesObl.get(pvPositionInt);
 
         String itemNoAndVariantCode = pickorderLinePackAndShip.getItemNoStr() + "~" + pickorderLinePackAndShip.getVariantCodeStr();
-        String lineDescriptionStr =  pickorderLinePackAndShip.getDescriptionStr() + " " + pickorderLinePackAndShip.getDescription2Str();
         String quantityToShowStr = "";
 
 
@@ -109,7 +116,16 @@ public class cPickorderLinePackAndShipAdapter extends RecyclerView.Adapter<cPick
 
         }
         pvHolder.textViewItemNoAndVariant.setText(itemNoAndVariantCode);
-        pvHolder.textViewDescription.setText(lineDescriptionStr);
+        pvHolder.textViewDescription.setText(pickorderLinePackAndShip.getDescriptionStr());
+        pvHolder.textViewDescription2.setText(pickorderLinePackAndShip.getDescription2Str());
+
+        if (pickorderLinePackAndShip.getDescription2Str().isEmpty()) {
+            pvHolder.textViewDescription2.setVisibility(View.GONE);
+        }
+        else
+        {
+            pvHolder.textViewDescription2.setVisibility(View.VISIBLE);
+        }
         pvHolder.textViewQuantity.setText(quantityToShowStr);
 
 

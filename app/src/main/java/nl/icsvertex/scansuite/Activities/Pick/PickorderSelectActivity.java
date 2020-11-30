@@ -433,6 +433,22 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
+    public  void pSetToolBarTitleWithCounters(int pvCountFilterInt){
+
+        if (cPickorder.allPickordersObl == null ) {
+            this.toolbarSubTitle.setText("0"  + " " + cAppExtension.activity.getString(R.string.orders));
+            return;
+        }
+        String subtitleStr;
+        if (!cSharedPreferences.userFilterBln()) {
+            subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cPickorder.totalPicksInt,cPickorder.totalPicksInt);
+        } else {
+            subtitleStr = cText.pIntToStringStr(pvCountFilterInt)  + "/" + cText.pIntToStringStr(cPickorder.totalPicksInt) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
+        }
+        this.toolbarSubTitle.setText(subtitleStr);
+    }
+
+
     //End Region Public Methods
 
     // Region Private Methods
@@ -452,9 +468,12 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         }
 
         if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
+            cPickorder.totalPicksInt = 0;
             this.mShowNoOrdersIcon(true);
             return;
         }
+
+        cPickorder.totalPicksInt  = cPickorder.allPickordersObl.size();
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -855,10 +874,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                 cUserInterface.pHideGettingData();
                 swipeRefreshLayout.setRefreshing(false);
 
-
-                mSetToolBarTitleWithCounters();
-
-
                 if (pvShowBln) {
 
                     recyclerViewPickorders.setVisibility(View.INVISIBLE);
@@ -958,21 +973,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         commentFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.COMMENTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
-    }
-
-    private  void mSetToolBarTitleWithCounters(){
-
-        if (cPickorder.allPickordersObl == null ) {
-            this.toolbarSubTitle.setText("0"  + " " + cAppExtension.activity.getString(R.string.orders));
-            return;
-        }
-        String subtitleStr;
-        if (!cSharedPreferences.userFilterBln()) {
-            subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cPickorder.allPickordersObl.size(),cPickorder.allPickordersObl.size());
-        } else {
-            subtitleStr = cText.pIntToStringStr(cPickorder.pGetPicksWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cPickorder.allPickordersObl.size()) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
-        }
-        this.toolbarSubTitle.setText(subtitleStr);
     }
 
     private void mReleaseLicense() {

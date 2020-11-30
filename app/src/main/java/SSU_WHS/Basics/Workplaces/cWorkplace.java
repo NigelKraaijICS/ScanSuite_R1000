@@ -14,17 +14,17 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cWorkplace {
 
     //region Public Properties
-    private String workplaceStr;
+    private final String workplaceStr;
     public String getWorkplaceStr() {
         return workplaceStr;
     }
 
-    private String descriptionStr;
+    private final String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    private cWorkplaceEntity workplaceEntity;
+    private final cWorkplaceEntity workplaceEntity;
 
 
     public static ArrayList<cWorkplace> allWorkplacesObl;
@@ -97,14 +97,6 @@ public class cWorkplace {
                 cWorkplace Workplace = new cWorkplace(jsonObject);
                 Workplace.pInsertInDatabaseBln();
             }
-
-
-            cWorkplace workplaceToAdd1 = new cWorkplace("TEST1","Eerste");
-            cWorkplace.allWorkplacesObl.add((workplaceToAdd1));
-
-            cWorkplace workplaceToAdd2 = new cWorkplace("TEST2","Tweede");
-            cWorkplace.allWorkplacesObl.add((workplaceToAdd2));
-
             return  true;
         }
         else {

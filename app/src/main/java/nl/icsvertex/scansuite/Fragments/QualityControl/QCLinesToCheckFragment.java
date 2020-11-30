@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,6 +63,7 @@ public class QCLinesToCheckFragment extends Fragment implements iICSDefaultFragm
                              Bundle pvSavedInstanceState) {
         // Inflate the layout for this fragment
         return pvLayoutInflater.inflate(R.layout.fragment_qc_lines_to_check, pvViewGroup, false);
+
     }
 
     @Override
@@ -97,7 +99,7 @@ public class QCLinesToCheckFragment extends Fragment implements iICSDefaultFragm
         this.mFindViews();
         this.mFieldsInitialize();
         this.mSetListeners();
-        this.mGetData();
+        this.pGetData();
         cUserInterface.pEnableScanner();
     }
 
@@ -128,8 +130,7 @@ public class QCLinesToCheckFragment extends Fragment implements iICSDefaultFragm
 
     //Region Private Methods
 
-    private void mGetData() {
-
+    public void pGetData() {
         this.mFillRecycler(cShipment.currentShipment.linesToCheckObl());
     }
 
@@ -166,7 +167,7 @@ public class QCLinesToCheckFragment extends Fragment implements iICSDefaultFragm
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
             NothingHereFragment fragment = new NothingHereFragment();
-            fragmentTransaction.replace(R.id.fragmentQCLinesToCheck, fragment);
+            fragmentTransaction.replace(R.id.recyclerViewQCLinesToCheck, fragment);
             fragmentTransaction.commit();
 
             //Change tabcounter text

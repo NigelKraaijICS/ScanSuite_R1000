@@ -301,20 +301,9 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-        this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
 
         this.binContainer = findViewById(R.id.binContainer);
         this.binText = findViewById(R.id.binText);
-
-        this.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
-        this.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
-        this.genericItemExtraField3Text = findViewById(R.id.genericItemExtraField3Text);
-        this.genericItemExtraField4Text = findViewById(R.id.genericItemExtraField4Text);
-        this.genericItemExtraField5Text = findViewById(R.id.genericItemExtraField5Text);
-        this.genericItemExtraField6Text = findViewById(R.id.genericItemExtraField6Text);
-        this.genericItemExtraField7Text = findViewById(R.id.genericItemExtraField7Text);
-        this.genericItemExtraField8Text = findViewById(R.id.genericItemExtraField8Text);
-
         this.quantityText = findViewById(R.id.quantityText);
         this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
 

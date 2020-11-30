@@ -94,7 +94,7 @@
     <string name="menuitem_ship">Verzenden</string>
     <string name="ordertype_bc">Batch picking sorteren per document</string>
     <string name="ordertype_bm">Picken zonder sortering op scanner</string>
-    <string name="ordertype_bp">PBatch picking sorteren per artikel</string>
+    <string name="ordertype_bp">Batch picking sorteren per artikel</string>
     <string name="ordertype_eom">Externe Ontvangst Multi-user</string>
     <string name="ordertype_eoom">Externe Ontvangst en Opslag Multi-user</string>
     <string name="ordertype_eoos">Externe Ontvangst en Opslag Single-user</string>
@@ -720,5 +720,6 @@
     <string name="mainmenu_proglove">Koppel ProGlove</string>
     <string name="create_intake_order">Creeer magazijnopslag</string>
     <string name="error_get_property_line_data_failed">Ophalen regel informatie mislukt</string>
+    <string name="message_line_send">De regel is verzonden</string>
 
 </resources>

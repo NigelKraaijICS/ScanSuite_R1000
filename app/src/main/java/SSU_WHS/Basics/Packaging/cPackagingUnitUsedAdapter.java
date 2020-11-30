@@ -10,13 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-
 import nl.icsvertex.scansuite.R;
 
 public class cPackagingUnitUsedAdapter extends RecyclerView.Adapter<cPackagingUnitUsedAdapter.PackagingUnitUsedViewHolder> {
@@ -27,10 +24,10 @@ public class cPackagingUnitUsedAdapter extends RecyclerView.Adapter<cPackagingUn
 
     static class PackagingUnitUsedViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView textViewDescription;
-        private TextView textViewPackagingUnit;
-        private TextView textViewQuantityUsed;
-        private ImageView imageViewPackagingUnit;
+        private final TextView textViewDescription;
+        private final TextView textViewPackagingUnit;
+        private final TextView textViewQuantityUsed;
+        private final ImageView imageViewPackagingUnit;
 
         PackagingUnitUsedViewHolder(View pvView) {
             super(pvView);
@@ -55,7 +52,7 @@ public class cPackagingUnitUsedAdapter extends RecyclerView.Adapter<cPackagingUn
 
     //Region Private Properties
 
-    private LayoutInflater layoutInflater;
+    private final LayoutInflater layoutInflater;
     private List<cPackaging> localPackagingUnits;
 
 

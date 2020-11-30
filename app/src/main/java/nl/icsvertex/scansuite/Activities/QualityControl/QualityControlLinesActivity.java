@@ -19,6 +19,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cConnection;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
@@ -26,6 +27,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
@@ -158,8 +160,11 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     public void mFieldsInitialize() {
 
         this.textViewChosenOrder.setText(cShipment.currentShipment.getProcessingSequenceStr());
-        this.QCLinesTabLayout.addTab(QCLinesTabLayout.newTab().setText(R.string.tab_qcorderline_tocheck));
-        this.QCLinesTabLayout.addTab(QCLinesTabLayout.newTab().setText(R.string.tab_qcorderline_checked));
+
+        if (this.QCLinesTabLayout.getTabCount() == 0) {
+            this.QCLinesTabLayout.addTab(QCLinesTabLayout.newTab().setText(R.string.tab_qcorderline_tocheck));
+            this.QCLinesTabLayout.addTab(QCLinesTabLayout.newTab().setText(R.string.tab_qcorderline_checked));
+        }
 
         QCLinesPagerAdapter qcLinesPagerAdapter = new QCLinesPagerAdapter(this.QCLinesTabLayout.getTabCount());
         this.QCLinesViewPager.setAdapter(qcLinesPagerAdapter);
@@ -242,6 +247,11 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
             if (!hulpResult.resultBln) {
                 this.mStepFailed(hulpResult.messagesStr(),"");
                 cPickorderLinePackAndShip.currentPickorderLinePackAndShip = null;
+                return;
+            }
+
+            if (cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getQuantityDbl() == 1) {
+                this.mSendQCOrderLine(pvBarcodeScan);
                 return;
             }
 
@@ -334,7 +344,21 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
     }
 
+    private boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
 
+        if ( cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl == null ||  cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl.size() == 0) {
+            return false;
+        }
+
+        for (cPickorderBarcode pickorderBarcode :  cPickorderLinePackAndShip.currentPickorderLinePackAndShip.barcodesObl) {
+
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
+                cPickorderBarcode.currentPickorderBarcode = pickorderBarcode;
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void mSetTabselected(TabLayout.Tab pvTab) {
 
@@ -369,12 +393,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     }
 
     private Boolean mAllLinesDoneBln() {
-
-        if (cShipment.currentShipment.linesToCheckObl().size() > 0  ) {
-            return  false;
-        }
-
-        return true;
+        return cShipment.currentShipment.linesToCheckObl().size() <= 0;
     }
 
     private  void mStepFailed(String pvErrorMessageStr, String pvScannedBarcodeStr) {
@@ -385,6 +404,42 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
         //we have a SourceDocument to handle, so start Ship activity
         Intent intent = new Intent(cAppExtension.context, ShiporderShipActivity.class);
         cAppExtension.activity.startActivity(intent);
+    }
+
+    private void mSendQCOrderLine(cBarcodeScan pvBarcodeScan) {
+
+        //If internet is not connected
+        if (!cConnection.isInternetConnectedBln()) {
+            //could not send line, let user know but answer succes so user can go to next line
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), null);
+            return;
+        }
+
+        if (!this.mFindBarcodeInLineBarcodes(pvBarcodeScan)) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+            return;
+        }
+
+        //Add or update line barcodeStr
+        cPickorderLinePackAndShip.currentPickorderLinePackAndShip.pAddOrUpdateLineBarcode(cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
+        cPickorderLinePackAndShip.currentPickorderLinePackAndShip.quantityCheckedDbl += cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl();
+
+        if (!cPickorderLinePackAndShip.currentPickorderLinePackAndShip.pCheckedBln()) {
+            //could not send line, let user know but answer succes so user can go to next line
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), null);
+            return;
+        }
+
+        cPickorderLinePackAndShip.currentPickorderLinePackAndShip = null;
+        cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_line_send), R.raw.headsupsound);
+
+        if (QualityControlLinesActivity.currentLineFragment instanceof  QCLinesToCheckFragment) {
+            QCLinesToCheckFragment qcLinesToCheckFragment = (QCLinesToCheckFragment)QualityControlLinesActivity.currentLineFragment;
+            qcLinesToCheckFragment.pGetData();
+        }
+
+        this.mActivityInitialize();
+
     }
 
     //End Region Private Methods

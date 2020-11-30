@@ -46,6 +46,8 @@ import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Picken.Shipment.cShipment;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorder{
@@ -399,6 +401,8 @@ public class cPickorder{
     public static cPickorder currentCombinedPickOrder;
     public cPickorderBarcode pickorderQCBarcodeScanned;
 
+    public static int totalPicksInt;
+
 
     public List<cPickorderLine> linesObl(){
         return  cPickorderLine.allLinesObl;
@@ -614,6 +618,8 @@ public class cPickorder{
         List<cPickorder> resultObl = new ArrayList<>();
         List<cPickorderEntity> hulpResultObl;
 
+        int countTotalInt = cPickorder.allPickordersObl.size();
+
         cPickorderViewModel pickorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
         hulpResultObl =  pickorderViewModel.pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(),cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
@@ -625,6 +631,11 @@ public class cPickorder{
             resultObl.add(pickorder);
         }
 
+        if (cAppExtension.activity instanceof PickorderSelectActivity) {
+            PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
+            pickorderSelectActivity.pSetToolBarTitleWithCounters(resultObl.size());
+
+        }
         return  resultObl;
     }
 
@@ -1651,24 +1662,26 @@ public class cPickorder{
 
             if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
+                for (cPickorderLine pickorderLine : this.linesObl()) {
+
+                    //Initiate new hashmap for this line, this is a hasmap of propertygoup name and list of hasmap for each property
+                    if (pickorderLine.itemProperyDataObl == null) {
+                        pickorderLine.itemProperyDataObl = new LinkedHashMap<>();
+                    }
+
                 //Loop through received JSON objects
                 for (JSONObject jsonObject : WebResult.getResultDtt()) {
 
                     //JSON object contains LineNo, search lines for this LineNo
-                    for (cPickorderLine pickorderLine : this.linesObl()) {
-
                         try {
                             if (pickorderLine.getLineNoInt() == jsonObject.getInt(cDatabase.LINENO_NAMESTR)) {
 
-                                //Initiate new hashmap for this line, this is a hasmap of propertygoup name and list of hasmap for each property
-                                if (pickorderLine.itemProperyDataObl == null) {
-                                    pickorderLine.itemProperyDataObl = new LinkedHashMap<>();
-                                }
+
 
                                 LinkedHashMap<String,  String> fieldAndValueHasmap = new LinkedHashMap<>();
 
                                 //Create a new hasmmap with name and value of the property, do this for all propertys in this group
-                                for (cPropertyGroupProperty propertyGroupProperty : propertyGroup.propertyObl) {
+                                for (cPropertyGroupProperty propertyGroupProperty : propertyGroup.sortedPropertyObl()) {
                                     try {
                                         //Create the hasmap dynammically and fill it
                                         fieldAndValueHasmap.put(propertyGroupProperty.getPropertyStr(), jsonObject.getString(propertyGroupProperty.getPropertyStr()));

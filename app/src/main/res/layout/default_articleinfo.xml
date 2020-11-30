@@ -1,4 +1,4 @@
-<androidx.cardview.widget.CardView android:id="@+id/addressContainer"
+<androidx.cardview.widget.CardView android:id="@+id/articleContainer"
     style="@style/articleInfoContainer"
     app:layout_constraintTop_toBottomOf="@id/toolbar"
     android:layout_width="match_parent"
@@ -19,11 +19,11 @@
             android:contentDescription="@string/articleimage_thumb_description"
             />
         <TextView
-            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/articleDescriptionText"
             style="@style/articleDescriptionText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/articleThumbImageView"
+            app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
             android:id="@+id/articleDescription2Text"
@@ -45,72 +45,19 @@
             app:layout_constraintTop_toBottomOf="@id/articleItemText"
             app:layout_constraintStart_toStartOf="parent"
             />
-        <TextView
-            android:id="@+id/articleUnitOfMeasureText"
-            style="@style/articleBarcodeText"
-            app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/articleVendorItemText"
-            style="@style/articleVendorItemText"
-            app:layout_constraintTop_toBottomOf="@id/articleUnitOfMeasureText"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/genericItemExtraField1Text"
-            style="@style/genericItemExtraFieldText"
-            app:layout_constraintTop_toBottomOf="@id/articleVendorItemText"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/genericItemExtraField2Text"
-            style="@style/genericItemExtraFieldText"
-            app:layout_constraintTop_toBottomOf="@id/genericItemExtraField1Text"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/genericItemExtraField3Text"
-            style="@style/genericItemExtraFieldText"
-            app:layout_constraintTop_toBottomOf="@id/genericItemExtraField2Text"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/genericItemExtraField4Text"
-            style="@style/genericItemExtraFieldText"
-            app:layout_constraintTop_toBottomOf="@id/genericItemExtraField3Text"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/genericItemExtraField5Text"
-            style="@style/genericItemExtraFieldText"
-            app:layout_constraintTop_toBottomOf="@id/genericItemExtraField4Text"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/genericItemExtraField6Text"
-            style="@style/genericItemExtraFieldText"
-            app:layout_constraintTop_toBottomOf="@id/genericItemExtraField5Text"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/genericItemExtraField7Text"
-            style="@style/genericItemExtraFieldText"
-            app:layout_constraintTop_toBottomOf="@id/genericItemExtraField6Text"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <TextView
-            android:id="@+id/genericItemExtraField8Text"
-            style="@style/genericItemExtraFieldText"
-            app:layout_constraintTop_toBottomOf="@id/genericItemExtraField7Text"
-            app:layout_constraintStart_toStartOf="parent"
-            />
         <androidx.appcompat.widget.AppCompatImageButton
             style="@style/smallButton"
             android:id="@+id/imageButtonBarcode"
             app:srcCompat="@drawable/ic_barcodescan_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/articleBarcodeText"
+            app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
+            />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/articleInfoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="315dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

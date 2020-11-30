@@ -8,6 +8,7 @@ public class cDatabase {
     public static final String TABLENAME_SCANNERLOGON = "ScannerLogon";
     public static final String TABLENAME_BARCODELAYOUTS = "BarcodeLayouts";
     public static final String TABLENAME_BINITEM = "BinItem";
+    public static final String TABLENAME_TRANSLATION = "Translations";
     public static final String TABLENAME_WORKPLACE = "Workplaces";
     public static final String TABLENAME_SCANNERS = "Scanners";
     public static final String TABLENAME_BRANCH = "Branches";
@@ -189,6 +190,7 @@ public class cDatabase {
     //endregion I
 
     //region L
+    public static final String LANGUAGEDUTCH_NAMESTR = "Taal";
     public static final String LAYOUTVALUE_NAMESTR = "Layout";
     public static final String LICENSE_NAMESTR = "License";
     public static final String LICENSE_NL_NAMESTR = "Licentie";
@@ -374,6 +376,8 @@ public class cDatabase {
 
     //region T
     public static final String TAKENTIMESTAMP_NAMESTR = "TakenTimestamp";
+    public static final String TEXTDUTCH_NAMESTR = "Tekst";
+    public static final String TRANSLATIONDUTCH_NAMESTR = "Vertaling";
     //endregion T
 
 

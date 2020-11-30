@@ -264,9 +264,16 @@ public class cPickorderRepository {
             if (cSharedPreferences.showSingleArticlesBln()) {
                 SQLStatementStr.append(" AND SingleArticleOrders = 1 ");
             }
+            else
+            {
+                SQLStatementStr.append(" AND SingleArticleOrders = 0 ");
+            }
 
             if (cSharedPreferences.showProcessedWaitBln()) {
-                SQLStatementStr.append(" AND (IsProcessingOrParked) ");
+                SQLStatementStr.append(" AND (IsProcessingOrParked) = 1 ");
+            }
+            else {
+                SQLStatementStr.append(" AND (IsProcessingOrParked) = 0 ");
             }
         }
 

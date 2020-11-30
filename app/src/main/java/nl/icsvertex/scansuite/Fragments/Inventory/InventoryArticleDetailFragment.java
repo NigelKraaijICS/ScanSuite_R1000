@@ -73,17 +73,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private  TextView articleDescription2Text;
     private  TextView articleItemText;
     private  TextView articleBarcodeText;
-    private  TextView articleUnitOfMeasureText;
-    private  TextView articleVendorItemText;
-
-    private  TextView genericItemExtraField1Text;
-    private  TextView genericItemExtraField2Text;
-    private  TextView genericItemExtraField3Text;
-    private  TextView genericItemExtraField4Text;
-    private  TextView genericItemExtraField5Text;
-    private  TextView genericItemExtraField6Text;
-    private  TextView genericItemExtraField7Text;
-    private  TextView genericItemExtraField8Text;
 
     private  ImageView imageButtonDone;
 
@@ -167,17 +156,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.articleDescription2Text = getView().findViewById(R.id.articleDescription2Text);
         this.articleItemText = getView().findViewById(R.id.articleItemText);
         this.articleBarcodeText = getView().findViewById(R.id.articleBarcodeText);
-        this.articleUnitOfMeasureText = getView().findViewById(R.id.articleUnitOfMeasureText);
-        this.articleVendorItemText = getView().findViewById(R.id.articleVendorItemText);
-
-        this.genericItemExtraField1Text = getView().findViewById(R.id.genericItemExtraField1Text);
-        this.genericItemExtraField2Text = getView().findViewById(R.id.genericItemExtraField2Text);
-        this.genericItemExtraField3Text = getView().findViewById(R.id.genericItemExtraField3Text);
-        this.genericItemExtraField4Text = getView().findViewById(R.id.genericItemExtraField4Text);
-        this.genericItemExtraField5Text = getView().findViewById(R.id.genericItemExtraField5Text);
-        this.genericItemExtraField6Text = getView().findViewById(R.id.genericItemExtraField6Text);
-        this.genericItemExtraField7Text = getView().findViewById(R.id.genericItemExtraField7Text);
-        this.genericItemExtraField8Text = getView().findViewById(R.id.genericItemExtraField8Text);
 
         this.inventoryArticleDetailContainer = getView().findViewById(R.id.inventoryArticleDetailContainer);
 
@@ -199,8 +177,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.articleDescriptionText.setText(cInventoryorderLine.currentInventoryOrderLine.getDescriptionStr());
         this.articleDescription2Text.setText(cInventoryorderLine.currentInventoryOrderLine.getDescription2Str());
         this.articleItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getItemNoAndVariantCodeStr());
-
-        this.articleVendorItemText.setText(cInventoryorderLine.currentInventoryOrderLine.getVendorItemNoAndVendorDescriptionStr());
 
         this.binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
 
@@ -599,38 +575,6 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     private  void mShowOrHideGenericExtraFields() {
 
-        if (!cInventoryorderLine.currentInventoryOrderLine.getExtraField1Str().isEmpty()) {
-            this.genericItemExtraField1Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField1Text.setText(cInventoryorderLine.currentInventoryOrderLine.getExtraField1Str());
-        }
-        if (!cInventoryorderLine.currentInventoryOrderLine.getExtraField2Str().isEmpty()) {
-            this.genericItemExtraField2Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField2Text.setText(cInventoryorderLine.currentInventoryOrderLine.getExtraField2Str());
-        }
-        if (!cInventoryorderLine.currentInventoryOrderLine.getExtraField3Str().isEmpty()) {
-            this.genericItemExtraField3Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField3Text.setText(cInventoryorderLine.currentInventoryOrderLine.getExtraField3Str());
-        }
-        if (!cInventoryorderLine.currentInventoryOrderLine.getExtraField4Str().isEmpty()) {
-            this.genericItemExtraField4Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField4Text.setText(cInventoryorderLine.currentInventoryOrderLine.getExtraField4Str());
-        }
-        if (!cInventoryorderLine.currentInventoryOrderLine.getExtraField5Str().isEmpty()) {
-            this.genericItemExtraField5Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField5Text.setText(cInventoryorderLine.currentInventoryOrderLine.getExtraField5Str());
-        }
-        if (!cInventoryorderLine.currentInventoryOrderLine.getExtraField6Str().isEmpty()) {
-            this.genericItemExtraField6Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField6Text.setText(cInventoryorderLine.currentInventoryOrderLine.getExtraField6Str());
-        }
-        if (!cInventoryorderLine.currentInventoryOrderLine.getExtraField7Str().isEmpty()) {
-            this. genericItemExtraField7Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField7Text.setText(cInventoryorderLine.currentInventoryOrderLine.getExtraField7Str());
-        }
-        if (!cInventoryorderLine.currentInventoryOrderLine.getExtraField8Str().isEmpty()) {
-            this.genericItemExtraField8Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField8Text.setText(cInventoryorderLine.currentInventoryOrderLine.getExtraField8Str());
-        }
     }
 
     private  void mHandleDone() {
@@ -702,11 +646,9 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
 
         if (cInventoryorderBarcode.currentInventoryOrderBarcode != null) {
-            this.articleBarcodeText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeAndQuantityStr());
-            this.articleUnitOfMeasureText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getUnitOfMeasureStr());
+            this.articleBarcodeText.setText(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeAndQuantityStr() + " " + cInventoryorderBarcode.currentInventoryOrderBarcode.getUnitOfMeasureStr());
         } else {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.message_unknown_barcode));
-            this.articleUnitOfMeasureText.setText("");
         }
 
     }

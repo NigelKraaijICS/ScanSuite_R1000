@@ -10,9 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatImageView
-            style="@style/imageviewUserButton"
-            android:id="@+id/imageViewBinItem"
+            style="@style/imageviewUserTinyButton"
+            android:id="@+id/imageViewBinItemPositive"
             android:backgroundTint="@color/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            style="@style/imageviewUserTinyButton"
+            android:id="@+id/imageViewBinItemNegative"
+            android:backgroundTint="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

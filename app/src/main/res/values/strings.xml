@@ -794,6 +794,7 @@
     <string name="message_scan_bin">Scan BIN</string>
     <string name="message_unknown_article">Unknown article</string>
     <string name="message_no_place_lines_for_article">There\'s nothing to place for this article</string>
+    <string name="message_line_send">Line has been send</string>
     <string name="message_previous_line_send">Previous line has been send</string>
     <string name="message_unknown_itemvariant">Unknown ItemVariant</string>
     <string name="message_itemvariant_not_taken_so_cant_be_placed">ItemVariant not taken, so no items to place</string>

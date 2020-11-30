@@ -9,9 +9,6 @@ import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Fragments.Packaging.PackagingInFragment;
 import nl.icsvertex.scansuite.Fragments.Packaging.PackagingOutFragment;
 import nl.icsvertex.scansuite.Fragments.Packaging.PackagingUsedFragment;
-import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
-import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
-import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesTotalFragment;
 
 public class PackagingPagerAdapter extends FragmentPagerAdapter {
 

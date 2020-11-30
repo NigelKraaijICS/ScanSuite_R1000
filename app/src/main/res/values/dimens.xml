@@ -52,6 +52,10 @@
     <dimen name="recycleritem_padding">4dp</dimen>
     <dimen name="recycleritem_margin">4dp</dimen>
 
+
+    <dimen name="imageview_menu_tiny_height">24dp</dimen>
+    <dimen name="imageview_menu_tiny_width">24dp</dimen>
+
     <dimen name="imageview_menu_height">48dp</dimen>
     <dimen name="imageview_menu_width">48dp</dimen>
 

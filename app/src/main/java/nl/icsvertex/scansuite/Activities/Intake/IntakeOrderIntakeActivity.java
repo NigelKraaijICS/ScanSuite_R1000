@@ -92,15 +92,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private  TextView articleDescription2Text;
     private  TextView articleItemText;
     private  TextView articleBarcodeText;
-    private  TextView articleVendorItemText;
-    private  TextView genericItemExtraField1Text;
-    private  TextView genericItemExtraField2Text;
-    private  TextView genericItemExtraField3Text;
-    private  TextView genericItemExtraField4Text;
-    private  TextView genericItemExtraField5Text;
-    private  TextView genericItemExtraField6Text;
-    private  TextView genericItemExtraField7Text;
-    private  TextView genericItemExtraField8Text;
     private  ImageView articleThumbImageView;
     private  ImageView imageButtonBarcode;
 
@@ -318,7 +309,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-        this.articleVendorItemText = findViewById(R.id.articleVendorItemText);
 
         this.binContainer = findViewById(R.id.binContainer);
         this.sourcenoText = findViewById(R.id.sourcenoText);
@@ -326,14 +316,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.containerContainer = findViewById(R.id.containerContainer);
         this.containerText = findViewById(R.id.containerText);
 
-        this.genericItemExtraField1Text = findViewById(R.id.genericItemExtraField1Text);
-        this.genericItemExtraField2Text = findViewById(R.id.genericItemExtraField2Text);
-        this.genericItemExtraField3Text = findViewById(R.id.genericItemExtraField3Text);
-        this.genericItemExtraField4Text = findViewById(R.id.genericItemExtraField4Text);
-        this.genericItemExtraField5Text = findViewById(R.id.genericItemExtraField5Text);
-        this.genericItemExtraField6Text = findViewById(R.id.genericItemExtraField6Text);
-        this.genericItemExtraField7Text = findViewById(R.id.genericItemExtraField7Text);
-        this.genericItemExtraField8Text = findViewById(R.id.genericItemExtraField8Text);
+
 
         this.quantityText = findViewById(R.id.quantityText);
         this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
@@ -597,59 +580,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     }
 
     private  void mShowOrHideGenericExtraFields() {
-
-
-        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
-            this.genericItemExtraField1Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField2Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField3Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField4Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField5Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField6Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField7Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField8Text.setVisibility(View.INVISIBLE);
-            return;
-        }
-
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField1Str().isEmpty()) {
-            this.genericItemExtraField1Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField1Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField1Str());
-        }
-
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField2Str().isEmpty()) {
-            this.genericItemExtraField2Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField2Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField2Str());
-        }
-
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField3Str().isEmpty()) {
-            this.genericItemExtraField3Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField3Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField3Str());
-        }
-
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField4Str().isEmpty()) {
-            this.genericItemExtraField4Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField4Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField4Str());
-        }
-
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField5Str().isEmpty()) {
-            this.genericItemExtraField5Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField5Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField5Str());
-        }
-
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField6Str().isEmpty()) {
-            this.genericItemExtraField6Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField6Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField6Str());
-        }
-
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField7Str().isEmpty()) {
-            this.genericItemExtraField7Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField7Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField7Str());
-        }
-
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField8Str().isEmpty()) {
-            this.genericItemExtraField8Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField8Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getExtraField8Str());
-        }
 
     }
 
@@ -1222,13 +1152,11 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             this.articleDescriptionText.setText("???");
             this.articleDescription2Text.setText("???");
             this.articleItemText.setText("???");
-            this.articleVendorItemText.setText("???");
             return;
         }
         this.articleDescriptionText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr());
         this.articleDescription2Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str());
         this.articleItemText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getItemNoAndVariantCodeStr());
-        this.articleVendorItemText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getVendorItemNoAndDescriptionStr());
     }
 
     private void mSetQuantityInfo(){
