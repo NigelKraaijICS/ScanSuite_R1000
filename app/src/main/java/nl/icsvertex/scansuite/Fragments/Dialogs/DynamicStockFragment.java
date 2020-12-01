@@ -115,7 +115,7 @@ public class DynamicStockFragment extends Fragment implements iICSDefaultFragmen
                     stockRecyclerview.setVisibility(View.INVISIBLE);
 
                     FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                    NothingHereFragment fragment = new NothingHereFragment();
+                    NoStockFragment fragment = new NoStockFragment();
                     fragmentTransaction.replace(R.id.itemStockContainer, fragment);
                     fragmentTransaction.commit();
                     return;
@@ -130,7 +130,7 @@ public class DynamicStockFragment extends Fragment implements iICSDefaultFragmen
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment) {
+                    if (fragment instanceof NoStockFragment) {
                         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                         fragmentTransaction.remove(fragment);
                         fragmentTransaction.commit();

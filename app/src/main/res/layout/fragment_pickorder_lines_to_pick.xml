@@ -24,6 +24,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/currentBINContainer"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
         />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <androidx.constraintlayout.widget.ConstraintLayout

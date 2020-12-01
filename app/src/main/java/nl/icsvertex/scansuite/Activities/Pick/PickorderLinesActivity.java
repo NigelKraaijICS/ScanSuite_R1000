@@ -971,6 +971,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
+        if (!cPickorder.currentPickOrder.pGetPropertyLineDataViaWebserviceBln()) {
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_get_property_line_data_failed),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            return;
+        }
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             public void run() {

@@ -18,6 +18,12 @@
         android:layout_height="0dp"
         android:layout_margin="@dimen/default_margin"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/sourceNoContainer"
+        />
+    <include layout="@layout/default_sourcenoinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
         app:layout_constraintBottom_toTopOf="@id/quantityControlsContainer"
         />
     <include layout="@layout/default_quantity_controls"
@@ -26,12 +32,6 @@
         android:layout_margin="@dimen/default_double_margin"
         app:layout_constraintBottom_toTopOf="@id/imageButtonDone"
         />
-    <!--    <include layout="@layout/default_sourcenoinfo"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_margin="@dimen/default_double_margin"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/quantityControlsContainer"-->
-    <!--        />-->
     <TextView
         android:id="@+id/textViewAction"
         android:layout_height="wrap_content"

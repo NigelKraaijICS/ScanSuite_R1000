@@ -281,9 +281,9 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
+    public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
-        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarSubTitle2.setText(cUser.currentUser.currentBranch.getBranchNameStr());
         this.toolbarTitle.setSelected(true);
         this.toolbarSubTitle.setSelected(true);

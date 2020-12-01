@@ -400,7 +400,6 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         this.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
     }
 
-
     private void mInitBottomSheet() {
 
         this.bottomSheetBehavior = BottomSheetBehavior.from(constraintFilterOrders);
@@ -653,6 +652,12 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         if (!cPickorder.currentPickOrder.pGetSortingDetailsBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_sorting_detals_failed));
+            return result;
+        }
+
+        if (!cPickorder.currentPickOrder.pGetPropertyLineDataViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_property_line_data_failed));
             return result;
         }
 

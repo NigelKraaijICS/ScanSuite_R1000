@@ -318,6 +318,7 @@
 
     <string name="choose_branch">Choose branch</string>
     <string name="no_orders">There are no orders</string>
+    <string name="get_stock_failed">Getting stock failed</string>
     <string name="show_only_defects">Show only defects</string>
     <string name="refreshorders_description">Refresh orders</string>
     <string name="couldnt_connect">No connection</string>

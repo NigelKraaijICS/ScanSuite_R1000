@@ -82,14 +82,15 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private  ImageView articleThumbImageView;
     private  ImageView imageButtonBarcode;
 
-//    private  CardView sourcenoContainer;
-//    private  TextView sourcenoText;
+    private  CardView sourcenoContainer;
+    private  TextView sourcenoText;
 
     private  AppCompatImageButton imageButtonMinus;
     private  AppCompatImageButton imageButtonPlus;
     private  AppCompatImageButton imageButtonDone;
 
     private  TextView textViewAction;
+
 
 
     //End Region Private Properties
@@ -193,7 +194,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         this.pickorderPickContainer = findViewById(R.id.pickorderPickContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
-        
+
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -203,8 +204,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
 
-//        this.sourcenoText = findViewById(R.id.sourcenoText);
-//        this.sourcenoContainer = findViewById(R.id.sourceNoContainer);
+        this.sourcenoText = findViewById(R.id.sourcenoText);
+        this.sourcenoContainer = findViewById(R.id.sourceNoContainer);
 
         this.quantityText = findViewById(R.id.quantityText);
         this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
@@ -294,7 +295,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-         // We scanned an ARTICLE, so handle barcide
+        // We scanned an ARTICLE, so handle barcide
         if (cSetting.PICK_BIN_IS_ITEM()) {
             PickorderPickActivity.articleScannedLastBln = false;
             this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
@@ -361,7 +362,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             cUserInterface.pDoBoing(this.textViewAction);
             return;
         }
-             cPickorderLine.currentPickOrderLine.pHandledIndatabase();
+        cPickorderLine.currentPickOrderLine.pHandledIndatabase();
         this.mPickDone();
     }
 
@@ -508,7 +509,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mShowSortingInstruction() {
 
-//        this.sourcenoContainer.setVisibility(View.GONE);
+        this.sourcenoContainer.setVisibility(View.GONE);
 
         //If workflow is not PV, then d we are ready
         if (!cPickorder.currentPickOrder.isPVBln()) {
@@ -517,8 +518,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         // We already have a processing sequence, show it and pInsertInDatabase a SalesOrderPackingTable in database
         if (!cPickorderLine.currentPickOrderLine.getProcessingSequenceStr().isEmpty()) {
-//            this.sourcenoContainer.setVisibility(View.VISIBLE);
-//            this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
+            this.sourcenoContainer.setVisibility(View.VISIBLE);
+            this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr());
             this.mAddSalesOrderPackingTableBln();
             return;
         }
@@ -540,7 +541,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //If we found something, show it
         if (recordForSalesOrder != null) {
             //Set scan instruction
-//            this.sourcenoText.setText(recordForSalesOrder.getPackingtableStr());
+            this.sourcenoContainer.setVisibility(View.VISIBLE);
+            this.sourcenoText.setText(recordForSalesOrder.getPackingtableStr());
         }
     }
 
@@ -625,7 +627,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mTryToChangePickedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
 
-      double newQuantityDbl;
+        double newQuantityDbl;
         List<cPickorderLineBarcode>  hulpObl;
         if (pvIsPositiveBln) {
 
@@ -983,7 +985,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //check if there is a next line for this BIN
         cPickorderLine nextLine = cPickorder.currentPickOrder.pGetNextLineToHandleForBin(cPickorderLine.currentPickOrderLine.getBinCodeStr());
 
-       //There is no next line, so close this activity
+        //There is no next line, so close this activity
         if (nextLine == null) {
             //Clear current barcodeStr and reset defaults
             cPickorderLine.currentPickOrderLine = null;
@@ -1068,7 +1070,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //If there are no known salesOrderPackingTables then initiaite so we can add later
         if (cPickorder.currentPickOrder.salesOrderPackingTableObl() == null || cPickorder.currentPickOrder.salesOrderPackingTableObl().size() == 0) {
-           cSalesOrderPackingTable.allSalesOrderPackingTabelsObl = new ArrayList<>();
+            cSalesOrderPackingTable.allSalesOrderPackingTabelsObl = new ArrayList<>();
         }
 
         //if salesOrderPackingTable already exists, then we are done
@@ -1308,12 +1310,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_underpick_header),
-                                                                                   cAppExtension.activity.getString(R.string.message_underpick_text,
-                                                                                   cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()),
-                                                                                   cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())),
-                                                                                   pvRejectStr,
-                                                                                   pvAcceptStr ,
-                                                                     false);
+                cAppExtension.activity.getString(R.string.message_underpick_text,
+                        cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()),
+                        cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())),
+                pvRejectStr,
+                pvAcceptStr ,
+                false);
         acceptRejectFragment.setCancelable(true);
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
@@ -1333,8 +1335,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderbusy_header),
-                                                                                   cAppExtension.activity.getString(R.string.message_orderbusy_text),
-                                                                                   cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line),ignoreAccept);
+                cAppExtension.activity.getString(R.string.message_orderbusy_text),
+                cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line),ignoreAccept);
         acceptRejectFragment.setCancelable(true);
 
         runOnUiThread(new Runnable() {

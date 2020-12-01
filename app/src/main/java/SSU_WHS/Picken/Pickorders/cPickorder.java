@@ -621,6 +621,11 @@ public class cPickorder{
         cPickorderViewModel pickorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
         hulpResultObl =  pickorderViewModel.pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(),cSharedPreferences.userFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
+            if (cAppExtension.activity instanceof PickorderSelectActivity) {
+                PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
+                pickorderSelectActivity.pSetToolBarTitleWithCounters(0);
+            }
+
             return  resultObl;
         }
 

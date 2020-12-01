@@ -164,9 +164,19 @@ public class cPropertyGroupRepository {
             l_PropertyInfo3Pin.setValue(params[0].orderStr);
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
+            String actionTypeStr;
+
+            if (cPickorder.currentPickOrder.getStatusInt() < 20) {
+                actionTypeStr = "TAKE";
+            }
+            else
+            {
+                actionTypeStr = "PLACE";
+            }
+
             PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
             l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ACTIONTYPECODE;
-            l_PropertyInfo4Pin.setValue("TAKE");
+            l_PropertyInfo4Pin.setValue(actionTypeStr);
             l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
             PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();

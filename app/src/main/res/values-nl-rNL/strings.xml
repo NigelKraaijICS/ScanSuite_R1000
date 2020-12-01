@@ -721,5 +721,6 @@
     <string name="create_intake_order">Creeer magazijnopslag</string>
     <string name="error_get_property_line_data_failed">Ophalen regel informatie mislukt</string>
     <string name="message_line_send">De regel is verzonden</string>
+    <string name="get_stock_failed">Voorraad opvragen mislukt</string>
 
 </resources>

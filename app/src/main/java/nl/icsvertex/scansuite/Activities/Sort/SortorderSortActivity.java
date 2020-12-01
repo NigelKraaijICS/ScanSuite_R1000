@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
@@ -44,6 +46,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
@@ -58,6 +61,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     private static boolean articleScannedLastBln;
     private boolean defaultBarcodeSelectedBln;
+
     private List<String> sortingAdviceObl;
 
     private int pickCounterMinusHelperInt;
@@ -67,10 +71,10 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     private Handler plusHandler;
 
     //Region Views
-
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubtext;
+    private TextView toolbarSubtext2;
 
     private TextView articleDescriptionText;
     private TextView articleDescription2Text;
@@ -81,9 +85,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     private TextView quantityRequiredText;
     private ImageView articleThumbImageView;
     private ImageView imageButtonBarcode;
-    private TextView sourcenoText;
-    private CardView sourcenoContainer;
-    private TextView textViewPackingTable;
+
+
     private TextView textViewAction;
     private TextView textAdviceLocation;
 
@@ -195,16 +198,12 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        this.toolbarSubtext2 = findViewById(R.id.toolbarSubtext2);
 
         this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-
-
-        this.sourcenoText = findViewById(R.id.sourcenoText);
-        this.sourcenoContainer = findViewById(R.id.destinationContainer);
-        this.textViewPackingTable = findViewById(R.id.textViewPackingTable);
 
         this.quantityText = findViewById(R.id.quantityText);
         this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
@@ -227,6 +226,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
         this.toolbarSubtext.setSelected(true);
+        this.toolbarSubtext2.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr());
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -250,16 +251,19 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
         this.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-        this.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
-        this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr());
-        if (cPickorderLine.currentPickOrderLine.getSourceNoStr().trim().isEmpty()) {
-            this.sourcenoContainer.setVisibility(View.INVISIBLE);
+
+        if (cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
+            this.articleDescription2Text.setVisibility(View.GONE);
+        }
+        else
+        {
+            this.articleDescription2Text.setVisibility(View.VISIBLE);
         }
 
-        this.quantityText.setText("0");
+        this.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
 
+        this.quantityText.setText("0");
         this.quantityRequiredText.setText(cText.pIntToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl().intValue()));
-        this.textViewPackingTable.setText("");
 
         this.imageButtonDone.setVisibility(View.INVISIBLE);
 
@@ -267,8 +271,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.mShowArticleImage();
         this.mSetAdviceLocation();
         this.mShowBarcodeInfo();
-
-        this.articleInfoContainer.setVisibility(View.GONE);
+        this.mShowOrHideGenericExtraFields();
 
     }
 
@@ -521,7 +524,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         //Set the ProcessingSequence
         cPickorderLine.currentPickOrderLine.processingSequenceStr = barcodeWithoutPrefixStr;
-        this.sourcenoText.setText(cPickorderLine.currentPickOrderLine.processingSequenceStr);
 
         // If this is VKO after each piece, then show new instructions
         if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
@@ -599,13 +601,13 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             cUserInterface.pDoNope(quantityText, false, false);
-            cUserInterface.pShowSnackbarMessage(sourcenoContainer, getString(R.string.choose_barcode_first), null, false);
+            cUserInterface.pShowSnackbarMessage(quantityText, getString(R.string.choose_barcode_first), null, false);
             return;
         }
 
         if (cPickorderBarcode.currentPickorderBarcode.getQuantityHandledDbl() > 1) {
             cUserInterface.pDoNope(quantityText, true, true);
-            cUserInterface.pShowSnackbarMessage(sourcenoContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
+            cUserInterface.pShowSnackbarMessage(quantityText, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
             return;
         }
 
@@ -625,7 +627,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         numberpickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.NUMBERPICKERFRAGMENT_TAG);
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
@@ -925,6 +926,23 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
             this.articleBarcodeText.setText(cPickorderBarcode.currentPickorderBarcode.getBarcodeAndQuantityStr());
         } else {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
+        }
+    }
+
+    private  void mShowOrHideGenericExtraFields() {
+
+        //Get article info via the web service
+        cArticle.currentArticle  = new cArticle(cPickorderLine.currentPickOrderLine.getItemNoStr(), cPickorderLine.currentPickOrderLine.getVariantCodeStr());
+
+        if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
+            this.articleInfoContainer.setVisibility(View.GONE);
+        }
+        else{
+            this.articleInfoContainer.setVisibility(View.VISIBLE);
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.articleInfoContainer, new ArticleInfoFragment(cPickorderLine.currentPickOrderLine.itemProperyDataObl()));
+            transaction.commit();
         }
     }
 

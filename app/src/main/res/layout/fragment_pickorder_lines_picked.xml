@@ -21,6 +21,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recyclerSearchView"
         app:layout_constraintBottom_toTopOf="@id/actionsConstraintView"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/actionsConstraintView"
