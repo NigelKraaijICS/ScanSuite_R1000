@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
@@ -51,8 +52,9 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     private Handler minusHandler;
     private Handler plusHandler;
 
-    private  ConstraintLayout pickorderPickContainer;
+    private  ConstraintLayout pickorderQCContainer;
 
+    private  Toolbar toolbar;
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
     private  TextView toolbarSubtext;
@@ -75,6 +77,10 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     private  AppCompatImageButton imageButtonPlus;
     private  AppCompatImageButton imageButtonDone;
     private  TextView textViewAction;
+
+
+    private  CardView articleContainer;
+    private ConstraintLayout articleInfoContainer;
 
     //End Region Private Properties
 
@@ -173,8 +179,9 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void mFindViews() {
 
-        this.pickorderPickContainer = findViewById(R.id.pickorderPickContainer);
+        this.pickorderQCContainer = findViewById(R.id.pickorderPickContainer);
 
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -197,6 +204,9 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.textViewAction = findViewById(R.id.textViewAction);
+
+        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
     }
 
     @Override
@@ -238,8 +248,9 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
         this.mShowBarcodeInfo();
 
-
         this.mCheckLineDone();
+        this.mHideArticleInfo();
+
     }
 
     @Override
@@ -381,13 +392,13 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             cUserInterface.pDoNope(quantityText, false, false);
-            cUserInterface.pShowSnackbarMessage(pickorderPickContainer, getString(R.string.choose_barcode_first), null, false);
+            cUserInterface.pShowSnackbarMessage(pickorderQCContainer, getString(R.string.choose_barcode_first), null, false);
             return;
         }
 
         if (cPickorderBarcode.currentPickorderBarcode.getQuantityHandledDbl() > 1) {
             cUserInterface.pDoNope(quantityText, true, true);
-            cUserInterface.pShowSnackbarMessage(pickorderPickContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
+            cUserInterface.pShowSnackbarMessage(pickorderQCContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
             return;
         }
 
@@ -567,6 +578,20 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
     private void mQCDone() {
         this.mSendQCOrderLine();
+    }
+
+    private void mHideArticleInfo(){
+
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(this.pickorderQCContainer);
+        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(this.pickorderQCContainer);
+
     }
 
     //Listeners

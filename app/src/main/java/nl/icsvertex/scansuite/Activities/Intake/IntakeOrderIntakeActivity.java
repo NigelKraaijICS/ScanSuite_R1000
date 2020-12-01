@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
@@ -84,10 +86,13 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     private  ConstraintLayout intakeorderIntakeContainer;
 
+    private  Toolbar toolbar;
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
     private  TextView toolbarSubtext;
 
+    private  CardView articleContainer;
+    private ConstraintLayout articleInfoContainer;
     private  TextView articleDescriptionText;
     private  TextView articleDescription2Text;
     private  TextView articleItemText;
@@ -110,10 +115,11 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private  cBranchBin currentBin;
 
     private  RecyclerView recyclerScanActions;
-    private MenuItem item_enter_bin;
 
     private DrawerLayout menuActionsDrawer;
     private NavigationView actionMenuNavigation;
+
+
 
     private cIntakeorderMATLineAdapter intakeorderMATLineAdapter;
     private cIntakeorderMATLineAdapter getIntakeorderMATLineAdapter(){
@@ -188,11 +194,11 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         invalidateOptionsMenu();
 
 
-        this.item_enter_bin = pvMenu.findItem(R.id.item_enter_bin);
-        this.item_enter_bin .setVisible(true);
+        MenuItem item_enter_bin = pvMenu.findItem(R.id.item_enter_bin);
+        item_enter_bin.setVisible(true);
 
         if (cIntakeorder.currentIntakeOrder.currentBin != null)  {
-            this.item_enter_bin.setVisible(false);
+            item_enter_bin.setVisible(false);
             return true;
         }
 
@@ -301,6 +307,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     public void mFindViews() {
 
         this.intakeorderIntakeContainer = findViewById(R.id.intakeorderIntakeContainer);
+
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -331,6 +339,9 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
         this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
+
+        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
     }
 
     @Override
@@ -368,6 +379,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.mShowBarcodeInfo();
         this.mShowLines();
 
+        this.mHideArticleInfo();
 
 
     }
@@ -659,6 +671,20 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             this.imageButtonPlus.setVisibility(View.VISIBLE);
             this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void mHideArticleInfo(){
+
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(this.intakeorderIntakeContainer);
+        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(this.intakeorderIntakeContainer);
+
     }
 
     //Scans and manual input

@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -50,6 +52,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
+import okhttp3.internal.platform.ConscryptPlatform;
 
 public class SortorderSortActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -71,6 +74,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     private Handler plusHandler;
 
     //Region Views
+    private ConstraintLayout sortOrderSortContainer;
+    private  Toolbar toolbar;
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubtext;
@@ -94,6 +99,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     private AppCompatImageButton imageButtonPlus;
     private AppCompatImageButton imageButtonDone;
 
+    private  CardView articleContainer;
     private ConstraintLayout articleInfoContainer;
 
     //End Region Views
@@ -195,6 +201,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void mFindViews() {
 
+        this.sortOrderSortContainer = findViewById(R.id.sortOrderSortContainer);
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -216,6 +224,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.textViewAction = findViewById(R.id.textViewAction);
         this.textAdviceLocation = findViewById(R.id.textAdviceLocation);
 
+        this.articleContainer = findViewById(R.id.articleContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
     }
@@ -578,21 +587,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private void mSetNumberListener() {
-        this.quantityText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mNumberClicked();
-            }
-        });
-        this.quantityRequiredText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mNumberClicked();
-            }
-        });
-    }
-
     private void mNumberClicked() {
 
         if (cSetting.PICK_PER_SCAN()) {
@@ -935,7 +929,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         cArticle.currentArticle  = new cArticle(cPickorderLine.currentPickOrderLine.getItemNoStr(), cPickorderLine.currentPickOrderLine.getVariantCodeStr());
 
         if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
-            this.articleInfoContainer.setVisibility(View.GONE);
+            this.mHideArticleInfo();
         }
         else{
             this.articleInfoContainer.setVisibility(View.VISIBLE);
@@ -997,6 +991,20 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         // We are completely done
         this.mSortDone();
+    }
+
+    private void mHideArticleInfo(){
+
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(this.sortOrderSortContainer);
+        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(this.sortOrderSortContainer);
+
     }
 
     private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {

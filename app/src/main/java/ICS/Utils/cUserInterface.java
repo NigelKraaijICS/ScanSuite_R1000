@@ -160,16 +160,19 @@ public class cUserInterface {
     }
 
     public static void pKillAllSounds() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (MediaPlayer mp : cUserInterface.activePlayers) {
-                    mp.reset();
-                    mp.release();
-                    cUserInterface.activePlayers.remove(mp);
-                }
-            }//run
-        }).start(); //thread
+//        cAppExtension.activity.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if (cUserInterface.activePlayers != null){
+//                    for (MediaPlayer mp : cUserInterface.activePlayers) {
+//                        mp.reset();
+//                        mp.release();
+//                        cUserInterface.activePlayers.remove(mp);
+//                    }
+//                }
+//            }//run
+//        });
     }
 
 

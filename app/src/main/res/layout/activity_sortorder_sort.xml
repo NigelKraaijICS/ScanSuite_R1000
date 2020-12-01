@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Activities.Sort.SortorderSortActivity"
     android:background="@color/colorBart"
+    android:id="@+id/sortOrderSortContainer"
     >
     <include layout="@layout/toolbar_subtext_expanded_default" />
     <include layout="@layout/default_articleinfo"

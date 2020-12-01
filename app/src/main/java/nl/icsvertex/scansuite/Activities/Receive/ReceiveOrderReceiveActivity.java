@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -74,24 +76,20 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     private  ConstraintLayout receiveOrderReceiveContainer;
 
+    private  Toolbar toolbar;
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
     private  TextView toolbarSubtext;
+
+
+    private  CardView articleContainer;
+    private ConstraintLayout articleInfoContainer;
 
     private  TextView articleDescriptionText;
     private  TextView articleDescription2Text;
     private  TextView articleItemText;
     private  TextView articleBarcodeText;
 
-
-    private  TextView genericItemExtraField1Text;
-    private  TextView genericItemExtraField2Text;
-    private  TextView genericItemExtraField3Text;
-    private  TextView genericItemExtraField4Text;
-    private  TextView genericItemExtraField5Text;
-    private  TextView genericItemExtraField6Text;
-    private  TextView genericItemExtraField7Text;
-    private  TextView genericItemExtraField8Text;
     private  ImageView articleThumbImageView;
     private  ImageView imageButtonBarcode;
 
@@ -106,6 +104,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private  Double quantityScannedDbl = 0.0;
     private  List<cIntakeorderBarcode> scannedBarcodesObl;
     private  RecyclerView recyclerScanActions;
+
 
     private cReceiverorderSummaryLineAdapter receiverorderSummaryLineAdapter;
     private cReceiverorderSummaryLineAdapter getReceiverorderSummaryLineAdapter(){
@@ -261,9 +260,14 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     public void mFindViews() {
 
         this.receiveOrderReceiveContainer = findViewById(R.id.receiveOrderReceiveContainer);
+
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+
+        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
         this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
@@ -284,6 +288,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.recyclerScanActions = findViewById(R.id.recyclerScanActions);
+
     }
 
     @Override
@@ -320,6 +325,8 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.mShowOrHideGenericExtraFields();
         this.mShowBarcodeInfo();
         this.mShowLines();
+        this.mHideArticleInfo();
+
     }
 
     @Override
@@ -476,67 +483,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     private  void mShowOrHideGenericExtraFields() {
 
-        if (BuildConfig.FLAVOR.equalsIgnoreCase("BMN")) {
-            this.genericItemExtraField1Text.setVisibility(View.VISIBLE);
-            this.genericItemExtraField1Text.setText(cAppExtension.activity.getString(R.string.message_quantity_sourceno) + " "  +  cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl()));
-        }
-
-        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine == null) {
-            this.genericItemExtraField1Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField2Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField3Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField4Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField5Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField6Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField7Text.setVisibility(View.INVISIBLE);
-            this.genericItemExtraField8Text.setVisibility(View.INVISIBLE);
-        }
-
-        else{
-
-            if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField1Str().isEmpty()) {
-                this.genericItemExtraField1Text.setVisibility(View.VISIBLE);
-                this.genericItemExtraField1Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField1Str());
-            }
-
-            if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField2Str().isEmpty()) {
-                this.genericItemExtraField2Text.setVisibility(View.VISIBLE);
-                this.genericItemExtraField2Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField2Str());
-            }
-
-            if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField3Str().isEmpty()) {
-                this.genericItemExtraField3Text.setVisibility(View.VISIBLE);
-                this.genericItemExtraField3Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField3Str());
-            }
-
-            if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField4Str().isEmpty()) {
-                this.genericItemExtraField4Text.setVisibility(View.VISIBLE);
-                this.genericItemExtraField4Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField4Str());
-            }
-
-            if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField5Str().isEmpty()) {
-                this.genericItemExtraField5Text.setVisibility(View.VISIBLE);
-                this.genericItemExtraField5Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField5Str());
-            }
-
-            if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField6Str().isEmpty()) {
-                this.genericItemExtraField6Text.setVisibility(View.VISIBLE);
-                this.genericItemExtraField6Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField6Str());
-            }
-
-            if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField7Str().isEmpty()) {
-                this.genericItemExtraField7Text.setVisibility(View.VISIBLE);
-                this.genericItemExtraField7Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField7Str());
-            }
-
-            if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField8Str().isEmpty()) {
-                this.genericItemExtraField8Text.setVisibility(View.VISIBLE);
-                this. genericItemExtraField8Text.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getExtraField8Str());
-            }
-
-
-        }
-
     }
 
     private  void mShowBarcodeInfo() {
@@ -615,6 +561,21 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
     }
+
+    private void mHideArticleInfo(){
+
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(this.receiveOrderReceiveContainer);
+        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(this.receiveOrderReceiveContainer);
+
+    }
+
 
     //Scans and manual input
 

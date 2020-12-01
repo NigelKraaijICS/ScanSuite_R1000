@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,6 +22,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -56,26 +60,34 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     //Region Private Properties
 
+    private ConstraintLayout returnArticleDetailContainer;
+
     private int returnCounterMinusHelperInt;
     private int returnCounterPlusHelperInt;
     private Handler minusHandler;
     private Handler plusHandler;
 
+    private Toolbar toolbar;
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubtext;
 
+    private CardView articleContainer;
+    private ConstraintLayout articleInfoContainer;
+
     private ImageView articleThumbImageView;
+    private TextView articleDescriptionText;
+    private TextView articleDescription2Text;
+    private TextView articleItemText;
+    private TextView articleBarcodeText;
+
     private TextView binText;
     private EditText quantityText;
 
     private TextView reasonText;
     private ImageButton imageButtonReason;
 
-    private TextView articleDescriptionText;
-    private TextView articleDescription2Text;
-    private TextView articleItemText;
-    private TextView articleBarcodeText;
+
 
     private AppCompatImageButton imageButtonMinus;
     private AppCompatImageButton imageButtonPlus;
@@ -169,31 +181,35 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     @Override
     public void mFindViews() {
 
+        this.returnArticleDetailContainer = findViewById(R.id.returnArticleDetailContainer);
 
-            this.toolbarImage = findViewById(R.id.toolbarImage);
-            this.toolbarTitle = findViewById(R.id.toolbarTitle);
-            this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        this.toolbar = findViewById(R.id.toolbar);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-            this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
-            this.binText = findViewById(R.id.binText);
-            this.quantityText = findViewById(R.id.quantityText);
-            this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
-            this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
-            this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
+        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
-            this.reasonText = findViewById(R.id.reasonText);
-            this.reasonText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.reasonText.setSingleLine(true);
-            this.reasonText.setMarqueeRepeatLimit(5);
-            this.reasonText.setSelected(true);
-            this.imageButtonReason = findViewById(R.id.imageButtonReason);
+        this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
+        this.binText = findViewById(R.id.binText);
+        this.quantityText = findViewById(R.id.quantityText);
+        this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
+        this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
+        this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
 
-            this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
-            this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
-            this.articleItemText = findViewById(R.id.articleItemText);
-            this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
-            this.imageButtonDone = findViewById(R.id.imageButtonDone);
+        this.reasonText = findViewById(R.id.reasonText);
+        this.reasonText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        this.reasonText.setSingleLine(true);
+        this.reasonText.setMarqueeRepeatLimit(5);
+        this.reasonText.setSelected(true);
+        this.imageButtonReason = findViewById(R.id.imageButtonReason);
 
+        this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
+        this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
+        this.articleItemText = findViewById(R.id.articleItemText);
+        this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
+        this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
     }
 
@@ -267,6 +283,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.mShowArticleImage();
         this.mShowOrHideGenericExtraFields();
 
+        this.articleInfoContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -459,7 +476,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
         //If scanned value matches the current barcodeStr, then we have a match
         if (pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cReturnorderLineBarcode.currentreturnorderLineBarcode.getBarcodeStr()) ||
-            pvBarcodeScan.getBarcodeFormattedStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr()) ) {
+                pvBarcodeScan.getBarcodeFormattedStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeStr()) ) {
             //We have a match, so leave
             return  true;
         }
@@ -474,7 +491,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
         //We scanned a barcodeStr for a different article
         if (!returnorderBarcode.getItemNoStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getItemNoStr()) ||
-             ! returnorderBarcode.getVariantCodeStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getVariantCodeStr())) {
+                ! returnorderBarcode.getVariantCodeStr().equalsIgnoreCase(cReturnorderBarcode.currentReturnOrderBarcode.getVariantCodeStr())) {
             return false;
         }
 
@@ -483,7 +500,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
             //We have a match, so set
             if (returnorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
-               returnorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
+                    returnorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
                 cReturnorderLineBarcode.currentreturnorderLineBarcode = returnorderLineBarcode;
                 cReturnorderBarcode.currentReturnOrderBarcode = returnorderBarcode;
                 return true;
@@ -780,11 +797,11 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
             return;
         }
 
-            //Change quantityDbl handled in database
-            cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
-            this.mLineHandled();
-            cUserInterface.pHideGettingData();
-            this.mGoBackToDocumentActivity();
+        //Change quantityDbl handled in database
+        cReturnorderLine.currentReturnOrderLine.pUpdateQuantityInDatabase();
+        this.mLineHandled();
+        cUserInterface.pHideGettingData();
+        this.mGoBackToDocumentActivity();
     }
 
     private void mLineHandled() {
@@ -799,6 +816,21 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         cBranchReason.currentBranchReason = null;
 
     }
+
+    private void mHideArticleInfo(){
+
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(this.returnArticleDetailContainer);
+        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(this.returnArticleDetailContainer);
+
+    }
+
 
     private Runnable mMinusAction = new Runnable() {
         @Override

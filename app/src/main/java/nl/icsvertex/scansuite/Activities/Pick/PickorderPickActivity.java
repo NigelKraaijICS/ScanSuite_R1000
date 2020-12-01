@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -21,12 +22,12 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,8 +68,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private Handler plusHandler;
 
     private  ConstraintLayout pickorderPickContainer;
+
+    private  CardView articleContainer;
     private ConstraintLayout articleInfoContainer;
 
+    private  Toolbar toolbar;
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
     private  TextView toolbarSubtext;
@@ -195,6 +199,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.pickorderPickContainer = findViewById(R.id.pickorderPickContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -218,6 +223,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.textViewAction = findViewById(R.id.textViewAction);
+        this.articleContainer = findViewById(R.id.articleContainer);
     }
 
     @Override
@@ -436,6 +442,14 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
             this.articleInfoContainer.setVisibility(View.GONE);
+            ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            newCardViewLayoutParams.setMargins(15,15,15,15);
+            this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+            ConstraintSet constraintSetSpace = new ConstraintSet();
+            constraintSetSpace.clone(pickorderPickContainer);
+            constraintSetSpace.connect(articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+            constraintSetSpace.applyTo(pickorderPickContainer);
         }
         else{
             this.articleInfoContainer.setVisibility(View.VISIBLE);
@@ -1388,9 +1402,18 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pDoNope(quantityRequiredText, false, false);
     }
 
-    private void mShowArticleInfoFragment() {
-//        ArticleInfoFragment articleInfoFragment = new ArticleInfoFragment(cPickorderLine.currentPickOrderLine.itemProperyDataObl);
-//        articleInfoFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BARCODEPICKERFRAGMENT_TAG);
+    private void mHideArticleInfo(){
+
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(pickorderPickContainer);
+        constraintSetSpace.connect(articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(pickorderPickContainer);
+
     }
 
     //Region Number Broadcaster

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
@@ -44,8 +46,6 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
@@ -67,27 +67,23 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
     private AppCompatImageButton imageButtonPlus;
     private AppCompatImageButton imageButtonDone;
 
-    private ConstraintLayout container;
+    private ConstraintLayout moveLineTakeContainer;
 
+    private  Toolbar toolbar;
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubtext;
+
+    private  CardView articleContainer;
+    private ConstraintLayout articleInfoContainer;
 
     private TextView articleDescriptionText;
     private TextView articleDescription2Text;
     private TextView articleItemText;
     private TextView articleBarcodeText;
-    private TextView articleVendorItemText;
+
     private ImageView articleThumbImageView;
 
-    private TextView genericItemExtraField1Text;
-    private TextView genericItemExtraField2Text;
-    private TextView genericItemExtraField3Text;
-    private TextView genericItemExtraField4Text;
-    private TextView genericItemExtraField5Text;
-    private TextView genericItemExtraField6Text;
-    private TextView genericItemExtraField7Text;
-    private TextView genericItemExtraField8Text;
 
     private ImageView imageButtonBarcode;
 
@@ -105,6 +101,8 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
     private DrawerLayout menuActionsDrawer;
     private NavigationView actionMenuNavigation;
+
+
 
 
     //End Region Private Properties
@@ -289,10 +287,15 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
     @Override
     public void mFindViews() {
 
-        this.container = findViewById(R.id.moveLineTakeContainer);
+        this.moveLineTakeContainer = findViewById(R.id.moveLineTakeContainer);
+
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+
+        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
         this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
@@ -315,7 +318,6 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
         this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
         this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
-
 
     }
 
@@ -355,6 +357,8 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
         this.mShowOrHideGenericExtraFields();
         this.mShowBarcodeInfo();
         this.mSetInstructions();
+        this.mHideArticleInfo();
+
     }
 
     @Override
@@ -395,14 +399,14 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
         //BIN scan is not allowed here
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
-            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_bin_not_allowed),null,true);
+            cUserInterface.pShowSnackbarMessage(this.moveLineTakeContainer,cAppExtension.activity.getString(R.string.message_bin_not_allowed),null,true);
             return;
         }
 
         //Scan must be an article, so handle the scan
         cResult hulpRst = this.mHandleScanRst(pvBarcodeScan);
         if (! hulpRst.resultBln) {
-            cUserInterface.pShowSnackbarMessage(this.container,hulpRst.messagesStr(),null,true);
+            cUserInterface.pShowSnackbarMessage(this.moveLineTakeContainer,hulpRst.messagesStr(),null,true);
            this.mSetInstructions();
            this.mFieldsInitialize();
         }
@@ -412,12 +416,12 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
     public void pAcceptMove() {
 
         if (cMoveorder.currentMoveOrder.currentBranchBin == null) {
-            cUserInterface.pShowSnackbarMessage(container, cAppExtension.activity.getString(R.string.message_bin_required),null, true);
+            cUserInterface.pShowSnackbarMessage(moveLineTakeContainer, cAppExtension.activity.getString(R.string.message_bin_required),null, true);
             return;
         }
 
         if (cMoveorder.currentMoveOrder.currentArticle == null) {
-            cUserInterface.pShowSnackbarMessage(container, cAppExtension.activity.getString(R.string.message_article_required),null, true);
+            cUserInterface.pShowSnackbarMessage(moveLineTakeContainer, cAppExtension.activity.getString(R.string.message_article_required),null, true);
             return;
         }
 
@@ -478,14 +482,6 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
     private void mShowOrHideGenericExtraFields() {
 
-        this.genericItemExtraField1Text.setVisibility(View.GONE);
-        this.genericItemExtraField2Text.setVisibility(View.GONE);
-        this.genericItemExtraField3Text.setVisibility(View.GONE);
-        this.genericItemExtraField4Text.setVisibility(View.GONE);
-        this.genericItemExtraField5Text.setVisibility(View.GONE);
-        this.genericItemExtraField6Text.setVisibility(View.GONE);
-        this.genericItemExtraField7Text.setVisibility(View.GONE);
-        this.genericItemExtraField8Text.setVisibility(View.GONE);
 
     }
 
@@ -556,7 +552,7 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
     private void mShowExtraPiecesNotAllowed(){
         this.quantityText.setText(this.quantityRequiredText.getText());
-        cUserInterface.pShowSnackbarMessage(this.container , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
+        cUserInterface.pShowSnackbarMessage(this.moveLineTakeContainer, cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
         cUserInterface.pDoNope(this.quantityText, true, true);
         cUserInterface.pDoNope(this.quantityRequiredText, false, false);
     }
@@ -584,6 +580,20 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
     private void mStepFailed(String pvErrorMessageStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, "", true, true);
+    }
+
+    private void mHideArticleInfo(){
+
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(this.moveLineTakeContainer);
+        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(this.moveLineTakeContainer);
+
     }
 
     //Scans and manual input
@@ -642,13 +652,13 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
 
         if (cMoveorder.currentMoveOrder.currentMoveorderBarcode== null) {
             cUserInterface.pDoNope(quantityText, false, false);
-            cUserInterface.pShowSnackbarMessage(container, getString(R.string.choose_barcode_first), null, false);
+            cUserInterface.pShowSnackbarMessage(moveLineTakeContainer, getString(R.string.choose_barcode_first), null, false);
             return;
         }
 
         if (cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityPerUnitOfMeasureDbl() > 1) {
             cUserInterface.pDoNope(quantityText, true, true);
-            cUserInterface.pShowSnackbarMessage(container, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
+            cUserInterface.pShowSnackbarMessage(moveLineTakeContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
             return;
         }
 
@@ -1054,13 +1064,12 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
             this.articleDescriptionText.setText("???");
             this.articleDescription2Text.setText("???");
             this.articleItemText.setText("???");
-            this.articleVendorItemText.setText("???");
             return;
         }
         this.articleDescriptionText.setText(cMoveorderLine.currentMoveOrderLine.getDescriptionStr());
         this.articleDescription2Text.setText(cMoveorderLine.currentMoveOrderLine.getDescription2Str());
         this.articleItemText.setText(cMoveorderLine.currentMoveOrderLine.getItemNoAndVariantCodeStr());
-        this.articleVendorItemText.setText("");
+
     }
 
     private void mSetQuantityInfo(){

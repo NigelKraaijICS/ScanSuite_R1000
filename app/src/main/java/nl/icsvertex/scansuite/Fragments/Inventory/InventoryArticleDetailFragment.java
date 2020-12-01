@@ -17,11 +17,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -59,6 +62,9 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private  Handler minusHandler;
     private  Handler plusHandler;
 
+    private  ConstraintLayout inventoryArticleDetailContainer;
+
+    private Toolbar toolbar;
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
 
@@ -69,6 +75,9 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private  AppCompatImageButton imageButtonMinus;
     private  AppCompatImageButton imageButtonPlus;
 
+    private CardView articleContainer;
+    private ConstraintLayout articleInfoContainer;
+
     private  TextView articleDescriptionText;
     private  TextView articleDescription2Text;
     private  TextView articleItemText;
@@ -77,7 +86,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     private  ImageView imageButtonDone;
 
     private  ImageButton imageButtonBarcode;
-    private  ConstraintLayout inventoryArticleDetailContainer;
+
 
     //End Region Private Properties
 
@@ -142,9 +151,21 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
     @Override
     public void mFindViews() {
 
+        this.inventoryArticleDetailContainer = getView().findViewById(R.id.inventoryArticleDetailContainer);
+
+        this.toolbar =  getView().findViewById(R.id.toolbar);
         this.toolbarImage = requireView().findViewById(R.id.toolbarImage);
         this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
+
+        this.articleContainer = getView().findViewById(R.id.articleContainer);
+        this.articleInfoContainer = getView().findViewById(R.id.articleInfoContainer);
         this.articleThumbImageView = getView().findViewById(R.id.articleThumbImageView);
+
+        this.articleDescriptionText = getView().findViewById(R.id.articleDescriptionText);
+        this.articleDescription2Text = getView().findViewById(R.id.articleDescription2Text);
+        this.articleItemText = getView().findViewById(R.id.articleItemText);
+        this.articleBarcodeText = getView().findViewById(R.id.articleBarcodeText);
+
 
         this.binText = getView().findViewById(R.id.binText);
         this.quantityText = getView().findViewById(R.id.quantityText);
@@ -152,14 +173,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
         this.imageButtonBarcode = getView().findViewById(R.id.imageButtonBarcode);
 
-        this.articleDescriptionText = getView().findViewById(R.id.articleDescriptionText);
-        this.articleDescription2Text = getView().findViewById(R.id.articleDescription2Text);
-        this.articleItemText = getView().findViewById(R.id.articleItemText);
-        this.articleBarcodeText = getView().findViewById(R.id.articleBarcodeText);
-
-        this.inventoryArticleDetailContainer = getView().findViewById(R.id.inventoryArticleDetailContainer);
-
         this.imageButtonDone = getView().findViewById(R.id.imageButtonDone);
+
     }
 
     @Override
@@ -194,6 +209,8 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.mShowArticleImage();
         this.mShowOrHideGenericExtraFields();
         this.mShowBarcodeInfo();
+
+        this.mHideArticleInfo();
 
     }
 
@@ -600,6 +617,20 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
 
     private  void mDoUnknownScan(String pvErrorMessageStr) {
         cUserInterface.pShowSnackbarMessage(this.inventoryArticleDetailContainer,pvErrorMessageStr,null,true);
+    }
+
+    private void mHideArticleInfo(){
+
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
+
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(this.inventoryArticleDetailContainer);
+        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(this.inventoryArticleDetailContainer);
+
     }
 
     private Runnable mMinusAction = new Runnable() {
