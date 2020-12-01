@@ -2,6 +2,7 @@ package SSU_WHS.Picken.PickorderLines;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -35,22 +36,22 @@ public class cPickorderLine {
 
     //Region Public Properties
 
-    private Integer recordIDInt;
+    private final Integer recordIDInt;
     public Integer getRecordIDInt() {
         return recordIDInt;
     }
 
-    private Integer lineNoInt;
+    private final Integer lineNoInt;
     public Integer getLineNoInt() {
         return lineNoInt;
     }
 
-    private String itemNoStr;
+    private final String itemNoStr;
     public String getItemNoStr() {
         return itemNoStr;
     }
 
-    private String variantCodeStr;
+    private final String variantCodeStr;
     public String getVariantCodeStr() {
         return variantCodeStr;
     }
@@ -59,17 +60,17 @@ public class cPickorderLine {
         return  this.getItemNoStr() + " " + this.getVariantCodeStr();
     }
 
-    private String descriptionStr;
+    private final String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    private String description2Str;
+    private final String description2Str;
     public String getDescription2Str() {
         return description2Str;
     }
 
-    private String binCodeStr;
+    private final String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
     }
@@ -84,22 +85,22 @@ public class cPickorderLine {
         return quantityHandledDbl;
     }
 
-    private Double quantityTakenDbl;
+    private final Double quantityTakenDbl;
     public Double getQuantityTakenDbl() {
         return quantityTakenDbl;
     }
 
-    private Double quantityRejectedDbl;
+    private final Double quantityRejectedDbl;
     public Double getQuantityRejectedDbl() {
         return quantityRejectedDbl;
     }
 
-    private String sourceNoStr;
+    private final String sourceNoStr;
     public String getSourceNoStr() {
         return sourceNoStr;
     }
 
-    private String destinationNoStr;
+    private final String destinationNoStr;
     public String getDestinationNoStr() {
         return destinationNoStr;
     }
@@ -109,12 +110,12 @@ public class cPickorderLine {
         return processingSequenceStr;
     }
 
-    private String vendorItemNo;
+    private final String vendorItemNo;
     public String getVendorItemNoStr() {
         return vendorItemNo;
     }
 
-    private String vendorItemDescriptionStr;
+    private final String vendorItemDescriptionStr;
     public String getVendorItemDescriptionStr() {
         return vendorItemDescriptionStr;
     }
@@ -148,42 +149,42 @@ public class cPickorderLine {
         return localStatusInt;
     }
 
-    private String extraField1Str;
+    private final String extraField1Str;
     public String getExtraField1Str() {
         return extraField1Str;
     }
 
-    private String extraField2Str;
+    private final String extraField2Str;
     public String getExtraField2Str() {
         return extraField2Str;
     }
 
-    private String extraField3Str;
+    private final String extraField3Str;
     public String getExtraField3Str() {
         return extraField3Str;
     }
 
-    private String extraField4Str;
+    private final String extraField4Str;
     public String getExtraField4Str() {
         return extraField4Str;
     }
 
-    private String extraField5Str;
+    private final String extraField5Str;
     public String getExtraField5Str() {
         return extraField5Str;
     }
 
-    private String extraField6Str;
+    private final String extraField6Str;
     public String getExtraField6Str() {
         return extraField6Str;
     }
 
-    private String extraField7Str;
+    private final String extraField7Str;
     public String getExtraField7Str() {
         return extraField7Str;
     }
 
-    private String extraField8Str;
+    private final String extraField8Str;
     public String getExtraField8Str() {
         return extraField8Str;
     }
@@ -208,7 +209,7 @@ public class cPickorderLine {
 
     }
 
-    private cPickorderLineEntity PickorderLineEntity;
+    private final cPickorderLineEntity PickorderLineEntity;
     public  List<cPickorderBarcode> barcodesObl;
 
     public List<cPickorderLineBarcode> handledBarcodesObl(){
@@ -236,7 +237,49 @@ public class cPickorderLine {
     public static List<cPickorderLine> allLinesObl;
     public static cPickorderLine currentPickOrderLine;
 
-    public static LinkedHashMap<String,  LinkedHashMap<String,String> >  itemProperyDataObl;
+   private LinkedHashMap<String,  LinkedHashMap<String,String>> itemProperyDataObl;
+    public  LinkedHashMap<String,  LinkedHashMap<String,String> > itemProperyDataObl(){
+
+
+
+        if (this.itemProperyDataObl != null) {
+            return  this.itemProperyDataObl;
+        }
+
+        if (cPickorder.currentPickOrder.itemProperyDataObl == null) {
+            return  null;
+        }
+
+        this.itemProperyDataObl = new LinkedHashMap<>();
+        List<JSONObject> jsonONjectObl = cPickorder.currentPickOrder.itemProperyDataObl.get(this.lineNoInt);
+
+        if (jsonONjectObl == null) {
+            return  null;
+        }
+
+        for (cPropertyGroup propertyGroup : cPropertyGroup.allPropertyGroupsObl) {
+            // Init new hashmap, to store info per key for this line
+            //Ddo this for all propertys in the current group
+            LinkedHashMap<String,  String> fieldAndValueHasmap = new LinkedHashMap<>();
+
+            for (JSONObject jsonObject : jsonONjectObl) {
+                for (cPropertyGroupProperty propertyGroupProperty : propertyGroup.sortedPropertyObl()) {
+                    try {
+                        //Create the hasmap dynammically and fill it
+                        fieldAndValueHasmap.put(propertyGroupProperty.getPropertyStr(), jsonObject.getString(propertyGroupProperty.getPropertyStr()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            //Add key and value for this propertygroup, so groupname and hashmaplist of propertys and values
+            this.itemProperyDataObl.put(propertyGroup.getPropertyGroupStr(),fieldAndValueHasmap);
+        }
+
+        return  this.itemProperyDataObl;
+
+    }
 
     private cPickorderLineViewModel getPickorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLineViewModel.class);

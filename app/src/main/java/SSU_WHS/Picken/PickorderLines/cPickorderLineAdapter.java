@@ -32,13 +32,13 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     //Region Public Properties
     public static class PickorderLineViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView textViewBIN;
-        private TextView textViewDescription;
-        private TextView textViewQuantity;
-        private TextView textViewSourceNo;
-        private TextView textViewDestination;
-        private FrameLayout pickorderLineItemFrameLayout;
-        private ImageView imageSendStatus;
+        private final TextView textViewBIN;
+        private final TextView textViewDescription;
+        private final TextView textViewQuantity;
+        private final TextView textViewSourceNo;
+        private final TextView textViewDestination;
+        private final FrameLayout pickorderLineItemFrameLayout;
+        private final ImageView imageSendStatus;
 
         public RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
@@ -83,7 +83,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     private List<cPickorderLine> localPickorderLinesObl;
     //End Region Private Propertiess
 
-    private List<FrameLayout> pickorderLineItemLinearLayouts = new ArrayList<>();
+    private final List<FrameLayout> pickorderLineItemLinearLayouts = new ArrayList<>();
     private RecyclerView thisRecyclerView;
 
     //Region Constructor

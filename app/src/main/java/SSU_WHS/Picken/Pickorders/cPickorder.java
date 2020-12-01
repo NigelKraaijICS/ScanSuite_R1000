@@ -2,6 +2,7 @@ package SSU_WHS.Picken.Pickorders;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,8 +32,6 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
-import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -46,7 +45,6 @@ import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Picken.Shipment.cShipment;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
-import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -427,6 +425,8 @@ public class cPickorder{
         return  cSalesOrderPackingTable.allSalesOrderPackingTabelsObl;
     }
 
+    public  LinkedHashMap<Integer, List<JSONObject>>  itemProperyDataObl;
+
     //End region Public Properties
 
     //Region Constructor
@@ -617,8 +617,6 @@ public class cPickorder{
 
         List<cPickorder> resultObl = new ArrayList<>();
         List<cPickorderEntity> hulpResultObl;
-
-        int countTotalInt = cPickorder.allPickordersObl.size();
 
         cPickorderViewModel pickorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
         hulpResultObl =  pickorderViewModel.pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(),cSharedPreferences.userFilterBln());
@@ -1648,7 +1646,13 @@ public class cPickorder{
             return true;
         }
 
-       //We need a viewmodel to make a call to the web service
+        if (this.itemProperyDataObl != null && this.itemProperyDataObl.size() > 0) {
+            return true;
+        }
+
+        this.itemProperyDataObl = new LinkedHashMap<>();
+
+        //We need a viewmodel to make a call to the web service
         cPropertyGroupViewModel propertyGroupViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cPropertyGroupViewModel.class);
 
         //Get data for each property group
@@ -1657,53 +1661,37 @@ public class cPickorder{
 
             //Get data for this property group
             cWebresult WebResult = propertyGroupViewModel.pGetPropertyDataFromWebserviceWrs("PICKEN",
-                                                                                             this.getOrderNumberStr(),
-                                                                                             propertyGroup.getPropertyGroupStr());
+                    this.getOrderNumberStr(),
+                    propertyGroup.getPropertyGroupStr());
 
             if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
-
-                for (cPickorderLine pickorderLine : this.linesObl()) {
-
-                    //Initiate new hashmap for this line, this is a hasmap of propertygoup name and list of hasmap for each property
-                    if (pickorderLine.itemProperyDataObl == null) {
-                        pickorderLine.itemProperyDataObl = new LinkedHashMap<>();
-                    }
 
                 //Loop through received JSON objects
                 for (JSONObject jsonObject : WebResult.getResultDtt()) {
 
                     //JSON object contains LineNo, search lines for this LineNo
-                        try {
-                            if (pickorderLine.getLineNoInt() == jsonObject.getInt(cDatabase.LINENO_NAMESTR)) {
+                    try {
 
+                        List<JSONObject> objectsForThisLineObl;
 
+                        objectsForThisLineObl = this.itemProperyDataObl.get(jsonObject.getInt(cDatabase.LINENO_NAMESTR));
 
-                                LinkedHashMap<String,  String> fieldAndValueHasmap = new LinkedHashMap<>();
-
-                                //Create a new hasmmap with name and value of the property, do this for all propertys in this group
-                                for (cPropertyGroupProperty propertyGroupProperty : propertyGroup.sortedPropertyObl()) {
-                                    try {
-                                        //Create the hasmap dynammically and fill it
-                                        fieldAndValueHasmap.put(propertyGroupProperty.getPropertyStr(), jsonObject.getString(propertyGroupProperty.getPropertyStr()));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                //Add key and value for this propertygroup, so groupname and hashmaplist of propertys and values
-                                pickorderLine.itemProperyDataObl.put(propertyGroup.getPropertyGroupStr(),fieldAndValueHasmap);
-
-                            }
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
+                        if (objectsForThisLineObl == null) {
+                            objectsForThisLineObl = new ArrayList<>();
+                            objectsForThisLineObl.add(jsonObject);
+                            this.itemProperyDataObl.put(jsonObject.getInt(cDatabase.LINENO_NAMESTR), objectsForThisLineObl);
+                        } else {
+                            objectsForThisLineObl.add(jsonObject);
                         }
+
+
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
                     }
                 }
-            } else {
-                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
-                return false;
             }
         }
-        return  true;
+        return true;
     }
 
     public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {

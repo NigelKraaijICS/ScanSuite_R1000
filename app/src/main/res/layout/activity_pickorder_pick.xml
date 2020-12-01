@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,9 +15,10 @@
         />
     <include layout="@layout/default_articleinfo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_margin="@dimen/default_margin"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/quantityControlsContainer"
         />
     <include layout="@layout/default_quantity_controls"
         android:layout_width="match_parent"
@@ -26,12 +26,12 @@
         android:layout_margin="@dimen/default_double_margin"
         app:layout_constraintBottom_toTopOf="@id/imageButtonDone"
         />
-<!--    <include layout="@layout/default_sourcenoinfo"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="@dimen/default_double_margin"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/quantityControlsContainer"-->
-<!--        />-->
+    <!--    <include layout="@layout/default_sourcenoinfo"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="@dimen/default_double_margin"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/quantityControlsContainer"-->
+    <!--        />-->
     <TextView
         android:id="@+id/textViewAction"
         android:layout_height="wrap_content"
@@ -46,9 +46,9 @@
         />
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/imageButtonDone"
-        style="@style/smallBottomButton"
+        style="@style/smallButton"
         app:srcCompat="@drawable/ic_check_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

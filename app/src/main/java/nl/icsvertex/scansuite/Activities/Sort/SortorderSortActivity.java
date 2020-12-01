@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -89,6 +90,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     private AppCompatImageButton imageButtonMinus;
     private AppCompatImageButton imageButtonPlus;
     private AppCompatImageButton imageButtonDone;
+
+    private ConstraintLayout articleInfoContainer;
 
     //End Region Views
 
@@ -214,6 +217,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.textViewAction = findViewById(R.id.textViewAction);
         this.textAdviceLocation = findViewById(R.id.textAdviceLocation);
 
+        this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
+
     }
 
     @Override
@@ -262,6 +267,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.mShowArticleImage();
         this.mSetAdviceLocation();
         this.mShowBarcodeInfo();
+
+        this.articleInfoContainer.setVisibility(View.GONE);
 
     }
 

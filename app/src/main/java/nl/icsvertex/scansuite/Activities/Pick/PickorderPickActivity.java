@@ -431,16 +431,16 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private  void mShowOrHideGenericExtraFields() {
 
         //Get article info via the web service
-        cArticle.currentArticle  = cArticle.pGetArticleByBarcodeViaWebservice(cBarcodeScan.pFakeScan(cPickorderLine.currentPickOrderLine.barcodesObl.get(0).getBarcodeStr()));
+        cArticle.currentArticle  = new cArticle(cPickorderLine.currentPickOrderLine.getItemNoStr(), cPickorderLine.currentPickOrderLine.getVariantCodeStr());
 
-        if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl == null) {
+        if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
             this.articleInfoContainer.setVisibility(View.GONE);
         }
         else{
             this.articleInfoContainer.setVisibility(View.VISIBLE);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.articleInfoContainer, new ArticleInfoFragment(cPickorderLine.currentPickOrderLine.itemProperyDataObl));
+            transaction.replace(R.id.articleInfoContainer, new ArticleInfoFragment(cPickorderLine.currentPickOrderLine.itemProperyDataObl()));
             transaction.commit();
         }
     }
