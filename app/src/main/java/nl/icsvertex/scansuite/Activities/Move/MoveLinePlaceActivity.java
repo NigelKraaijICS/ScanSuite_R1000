@@ -294,7 +294,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
 
         this.moveLinePlaceContainer = findViewById(R.id.moveLinePlaceContainer);
 
-        this.toolbar = findViewById(R.id.moveLinePlaceContainer);
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
