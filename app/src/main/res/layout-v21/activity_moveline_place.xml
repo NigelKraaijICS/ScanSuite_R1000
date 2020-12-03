@@ -14,12 +14,6 @@
     android:translationZ="2dp"
     android:layout_height="match_parent"
     android:background="@color/colorBart">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:translationZ="0dp"
-        >
-    </androidx.constraintlayout.widget.ConstraintLayout>
     <include layout="@layout/toolbar_subtext_default" />
     <include layout="@layout/default_articleinfo" />
     <include layout="@layout/default_bininfo" />

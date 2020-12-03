@@ -37,6 +37,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.CompositeBarcode.cCompositeBarcode;
 import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisation;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
@@ -310,7 +311,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cShippingAgentServiceShippingUnit.shippingAgentServiceShippingUnitsAvailableBln &&
                 cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln &&
                 cItemProperty.itemPropertiesAvaliableBln &&
-                 cPropertyGroup.propertyGroupsAvailableBln &&
+                cPropertyGroup.propertyGroupsAvailableBln &&
+                cCompositeBarcode.compositeBarcodesAvailableBln &&
                 cScanner.scannersAvailableBln &&
                 cCustomAuthorisation.customAutorisationsAvailableBln &&
                 cTranslation.translationsAvailableBln;
@@ -347,6 +349,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
 
         if (!cPropertyGroup.pGetPropertyGroupsViaWebserviceBln(true)) {
+            return  false;
+        }
+
+        if (!cCompositeBarcode.pGetCompositeBarcodesViaWebserviceBln(true)) {
             return  false;
         }
 

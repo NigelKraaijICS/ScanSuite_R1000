@@ -76,6 +76,9 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPROPERTYGROUPS = "p_PropertiegroepenGetJsonStr";
     public static String WEBMETHOD_GETPROPERTYLINEDATA = "p_WarehouseopdrachtPropertiegroepLineDataGetJsonStr";
 
+    public static String WEBMETHOD_GETCOMPOSITEBARCODES= "p_CompositeBarcodesGetJsonStr";
+
+
 
     public static String WEBMETHOD_INVENTORYCREATE = "p_InventoryOrderCreateJsonStr ";
     public static String WEBMETHOD_GETINVENTORYORDERS = "p_InventoryOrdersGetJsonStr";

@@ -14,6 +14,10 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
 import SSU_WHS.Basics.BarcodeLayouts.iBarcodeLayoutDao;
 import SSU_WHS.Basics.Branches.cBranchEntity;
 import SSU_WHS.Basics.Branches.iBranchDao;
+import SSU_WHS.Basics.CompositeBarcode.cCompositeBarcodeEntity;
+import SSU_WHS.Basics.CompositeBarcode.iCompositeBarcodeDao;
+import SSU_WHS.Basics.CompositeBarcodeProperty.cCompositeBarcodePropertyEntity;
+import SSU_WHS.Basics.CompositeBarcodeProperty.iCompositeBarcodePropertyDao;
 import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisationEntity;
 import SSU_WHS.Basics.CustomAuthorisations.iCustomAuthorisationDao;
 import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
@@ -152,8 +156,10 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackagingEntity.class,
         cScannerEntity.class,
         cCustomAuthorisationEntity.class,
-        cTranslationEntity.class
-        },version = 123)
+        cTranslationEntity.class,
+        cCompositeBarcodeEntity.class,
+        cCompositeBarcodePropertyEntity.class
+        },version = 124)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -182,6 +188,8 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iItemPropertyDao itemPropertyDao();
     public abstract iPropertyGroupDao propertyGroupDao();
     public abstract iPropertyGroupPropertyDao propertyGroupPropertyDao();
+    public abstract iCompositeBarcodeDao compositeBarcodeDao();
+    public abstract iCompositeBarcodePropertyDao compositeBarcodePropertyDao();
     public abstract iInventoryorderDao inventoryorderDao();
     public abstract iInventoryorderBinDao inventoryorderBinDao();
     public abstract iInventoryorderLineDao inventoryorderLineDao();

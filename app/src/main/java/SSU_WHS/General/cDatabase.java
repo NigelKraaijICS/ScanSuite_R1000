@@ -16,6 +16,8 @@ public class cDatabase {
     public static final String TABLENAME_ITEMPROPERTY = "ItemProperties";
     public static final String TABLENAME_PROPERTYGROUP = "PropertyGroup";
     public static final String TABLENAME_PROPERTYGROUPPROPERTY = "PropertyGroupProperty";
+    public static final String TABLENAME_COMPOSITEBARCODE = "CompositeBarcode";
+    public static final String TABLENAME_COMPOSITEBARCODEPROPERTY = "CompositeBarcodeProperty";
     public static final String TABLENAME_PICKORDERBARCODE = "PickorderBarcode";
     public static final String TABLENAME_PICKORDERLINEBARCODE = "PickorderLineBarcode";
     public static final String TABLENAME_ARTICLEIMAGE = "ArticleImage";
@@ -96,6 +98,7 @@ public class cDatabase {
     //region C
     public static final String COMMENTLINENO_NAMESTR = "CommentLineNo";
     public static final String CURRENTLOCATION_NAMESTR = "CurrentLocation";
+    public static final String COMMENT_NAMESTR = "Comment";
     public static final String COMMENTCODE_NAMESTR = "CommentCode";
     public static final String COMMENTTEXT_NAMESTR = "CommentText";
     public static final String COMPONENT10_NAMESTR = "Component10";
@@ -145,6 +148,9 @@ public class cDatabase {
     //endregion E
 
     //region F
+    public static final String FIELD_NAMESTR = "Field";
+    public static final String FIELDIDENTIFIER_NAMESTR = "Field_identifier";
+    public static final String FIELDTYPE_NAMESTR = "Field_type";
     public static final String FILTERFIELD_NAMESTR = "Filter_veld";
     public static final String FILTERVALUE_NAMESTR = "Filter_waarde";
     //endregion F
@@ -260,6 +266,9 @@ public class cDatabase {
     public static final String PICKACTIVITYBINREQUIRED_NAMESTR = "Pick_Activity_bin_required";
     public static final String PICKQCCHECKCOUNT_NAMESTR = "Pick_Qc_check_count";
 
+    public static final String POSITIONSTART_NAMESTR = "Position_start";
+    public static final String POSITIONEND_NAMESTR = "Position_end";
+
     public  static final String PRIORITY_NAMESTR = "Priority";
 
     public static final String PRICE_NAMESTR = "Price";
@@ -269,6 +278,13 @@ public class cDatabase {
     public static final String PROPERTYDUTCH_NAMESTR = "Propertie";
     public static final String PROPERTYSDUTCH_NAMESTR = "Properties";
     public static final String PROPERTYGROUP_NAMESTR = "Propertiegroep";
+
+    public static final String COMPOSITEBARCODE_NAMESTR = "Composite_barcode";
+    public static final String COMPOSITEBARCODETYPE_NAMESTR = "Compositebarcode_type";
+    public static final String FIELDSEPERATOR_NAMESTR = "Field_separator";
+    public static final String LAYOUTREGEX_NAMESTR = "Layout_regex";
+    public static final String LAYOUTTYPE_NAMESTR = "Layout_type";
+
 
     public static final String PICKORDERLINEBARCODE_LINENO = "LineNo";
     public static final String PICKORDERLINEBARCODE_BARCODE = "Barcode";
@@ -372,6 +388,7 @@ public class cDatabase {
     public static final String SHOWONTERMINAL_NAMESTR = "ShowOnTerminal";
     public static final String SOURCETYPE_NAMESTR = "SourceType";
     public static final String SORTINGSEQUENCENOTAKE_NAMESTR = "SortingSequenceNo_take";
+    public static final String STRIPTHIS_NAMESTR = "Strip_this";
     //endregion S
 
     //region T
