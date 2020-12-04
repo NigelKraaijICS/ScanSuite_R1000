@@ -147,6 +147,9 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_MOVEBARCODECREATE = "p_MoveBarcodeCreateJsonStr";
     public static String WEBMETHOD_MOVEHANDLED = "p_MoveOrderHandledJsonStr";
     public static String WEBMETHOD_MOVEORDERCREATE = "p_MoveOrderCreateJsonStr";
+    public static String WEBMETHOD_PICKORDERCREATE = "p_PickorderCreateJsonStr";
+
+
     public static String WEBMETHOD_GETMOVEORDERLINES = "p_MoveRegelsGetJsonStr";
     public static String WEBMETHOD_GETMOVEORDERBARCODES = "p_MoveOrderBarcodesGetJsonStr";
     public static String WEBMETHOD_GETMOVEORDERLINEBARCODES = "p_MoveRegelBarcodesGetJsonStr";
@@ -250,6 +253,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_PROPERTIESHANDLEDLIST = "pv_PropertiesHandledObl";
     public static String WEBPROPERTY_ACTIONTYPECODE_CAMELCASE = "pv_ActionTypeCodeStr";
     public static String WEBPROPERTY_CURRENTLOCATION_SHORT = "pv_CurrentLocationStr";
+    public static String WEBPROPERTY_PICKBARCODECHECK = "pv_PickBarcodeCheckBln";
     public static String WEBPROPERTY_MOVEBARCODECHECK = "pv_MoveBarcodeCheckBln";
     public static String WEBPROPERTY_MIBATCHTRAKEBIN = "pv_MiBatchTakeBinStr";
 

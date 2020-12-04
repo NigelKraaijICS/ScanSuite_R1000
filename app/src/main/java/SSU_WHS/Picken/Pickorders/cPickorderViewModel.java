@@ -40,6 +40,8 @@ public class cPickorderViewModel extends AndroidViewModel {
     public cWebresult pFinishSinglePiecesHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pFinishSinglePiecesHandledViaWebserviceWrs(pvWorkplaceStr);}
     public cWebresult pPickorderSourceDocumentShippedViaWebserviceBln() { return this.PickorderRepository.pPickorderSourceDocumentShippedViaWebserviceWrs();}
 
+    public cWebresult pCreatePickOrderViaWebserviceWrs(String pvDocumentstr,  boolean pvCheckBarcodesBln) {return this.PickorderRepository.pCreatePickOrderViaWebserviceWrs(pvDocumentstr, pvCheckBarcodesBln);}
+
     public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {return this.PickorderRepository.pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);}
     public Boolean pUpdatePickorderCurrentLocationInDatabaseBln(String pvCurrentLocationStr) {return this.PickorderRepository.pPickorderUpdatCurrentLocationInDatabaseBln(pvCurrentLocationStr);}
     public boolean pUpdateIsSelectedBln() {return this.PickorderRepository.pPickorderUpdatIsSelectedInDatabaseBln();}

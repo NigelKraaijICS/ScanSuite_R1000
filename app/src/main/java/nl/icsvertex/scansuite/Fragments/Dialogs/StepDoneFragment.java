@@ -28,6 +28,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -147,7 +148,7 @@ public class StepDoneFragment extends DialogFragment implements iICSDefaultFragm
             this.textViewConnection = getView().findViewById(R.id.textViewConnection);
             this.imageButtonWifiReconnect = getView().findViewById(R.id.imageButtonWifiReconnect);
 
-            this.closeButton = getView().findViewById(R.id.closeButton);
+            this.closeButton = getView().findViewById(R.id.createButton);
             this.cancelButton = getView().findViewById(R.id.cancelButton);
         }
 
@@ -210,6 +211,21 @@ public class StepDoneFragment extends DialogFragment implements iICSDefaultFragm
                     }
                     dismiss();
                     pickorderLinesActivity.pPickingDone(editTextCurrentLocation.getText().toString().trim());
+                }
+
+                if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
+
+                    PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
+
+                    if (cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+                        //we need a location
+                        if (editTextCurrentLocation.getText().toString().trim().isEmpty() && showCurrentLocationBln ) {
+                            cUserInterface.pDoNope(editTextCurrentLocation, true, true);
+                            return;
+                        }
+                    }
+                    dismiss();
+                    pickorderLinesGeneratedActivity.pPickingDone(editTextCurrentLocation.getText().toString().trim());
                 }
 
                 if (cAppExtension.activity  instanceof SortorderLinesActivity) {

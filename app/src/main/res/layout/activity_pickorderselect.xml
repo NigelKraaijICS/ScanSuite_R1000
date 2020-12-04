@@ -81,6 +81,13 @@
                 />
             <androidx.appcompat.widget.AppCompatImageView
                 style="@style/defaultBottomButton"
+                android:id="@+id/imageViewNewOrder"
+                app:srcCompat="@drawable/ic_new_black_24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/defaultBottomButton"
                 android:id="@+id/imageStartCombinedOrder"
                 app:srcCompat="@drawable/ic_done"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -21,6 +21,7 @@ import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
@@ -223,6 +224,14 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
                     if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
                         pickorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
                     }
+                }
+
+                if (cAppExtension.context instanceof PickorderLinesGeneratedActivity) {
+
+                    PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
+
+                    pickorderLinesGeneratedActivity.pPicklineToResetSelected(currentPickorderLine);
+
                 }
 
 

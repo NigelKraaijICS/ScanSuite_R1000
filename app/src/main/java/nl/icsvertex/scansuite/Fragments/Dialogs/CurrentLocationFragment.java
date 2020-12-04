@@ -26,6 +26,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -183,6 +184,20 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
                     else {
                         dismiss();
                         pickorderLinesActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
+                    }
+                }
+
+
+                if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
+
+                    PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
+
+                    if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
+                        cUserInterface.pDoNope(editTextCurrentLocation, true, true);
+                    }
+                    else {
+                        dismiss();
+                        pickorderLinesGeneratedActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
                     }
                 }
 

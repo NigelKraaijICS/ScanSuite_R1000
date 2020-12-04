@@ -18,6 +18,7 @@ import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroupViewModel;
@@ -32,6 +33,8 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorderViewModel;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -279,6 +282,12 @@ public class cPickorder{
 
     }
 
+    public  boolean isGeneratedOrderBln() {
+
+        return cWarehouseorder.SourceDocumentTypeEnu.Generated == this.getSourceDocumentInt();
+
+    }
+
     private Boolean isSinglePickLocalBln = null;
     public boolean isSingleBinBln(){
 
@@ -328,6 +337,7 @@ public class cPickorder{
     }
 
     public cBranch scannedBranch;
+    public cBranchBin currentBranchBin;
 
     public int lastSelectedIndexInt;
     public int getLastSelectedIndexInt() {
@@ -1053,7 +1063,17 @@ public class cPickorder{
 
             }
 
-            return cPickorderLine.allLinesObl.size() != 0;
+            if (!this.isGeneratedOrderBln()) {
+                return cPickorderLine.allLinesObl.size() != 0;
+            }
+            else
+            {
+                if (cPickorderLine.allLinesObl == null) {
+                    cPickorderLine.allLinesObl = new ArrayList<>();
+                }
+                return  true;
+            }
+
 
         }
         else {
@@ -1718,8 +1738,17 @@ public class cPickorder{
                 pickorderBarcode.pInsertInDatabaseBln();
             }
 
-            return cPickorderBarcode.allBarcodesObl.size() != 0;
+          if (!this.isGeneratedOrderBln()) {
+              return cPickorderBarcode.allBarcodesObl.size() != 0;
+          }
+          else
+          {
+              if (cPickorderBarcode.allBarcodesObl == null ){
+                  cPickorderBarcode.allBarcodesObl = new ArrayList<>();
 
+              }
+              return  true;
+          }
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERBARCODES);
@@ -1743,6 +1772,13 @@ public class cPickorder{
                 cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(jsonObject);
                 pickorderLineBarcode.pInsertInDatabaseBln();
             }
+
+            if (this.isGeneratedOrderBln()) {
+                if (cPickorderLineBarcode.allLineBarcodesObl == null) {
+                    cPickorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
+                }
+            }
+
                   return  true;
 
         }
@@ -1957,6 +1993,89 @@ public class cPickorder{
         }
 
         return result ;
+    }
+
+    public static cResult pCreatePickOrderViaWebserviceRst(String pvDocumentstr,  boolean pvCheckBarcodesBln) {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult;
+
+        cPickorderViewModel pickorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
+        WebResult = pickorderViewModel.pCreatePickOrderViaWebserviceWrs(pvDocumentstr, pvCheckBarcodesBln);
+
+        //No result, so something really went wrong
+        if (WebResult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        if (WebResult.getResultBln()&& WebResult.getSuccessBln()) {
+
+
+            // We got a succesfull response, but we need to do something with this activity
+
+            Long actionLng = WebResult.getResultLng();
+
+            if (WebResult.getResultLng() < 10 ) {
+                actionLng = WebResult.getResultLng();
+            }
+
+            if (WebResult.getResultLng() > 100) {
+                actionLng  = WebResult.getResultLng()/100;
+            }
+
+
+
+            //Try to convert action long to action enumerate
+            result.activityActionEnu= cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.NoStart) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_cant_be_started)));
+                return  result;
+            }
+
+            if (result.activityActionEnu== cWarehouseorder.ActivityActionEnu.Delete) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.order_has_deleted_by_erp)));
+                return  result;
+            }
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Next) {
+                result.resultBln = true;
+                result.pSetResultAction(WebResult.pGetNextActivityObl());
+                return  result;
+            }
+
+            //No activty created
+            if (WebResult.getResultDtt() == null || WebResult.getResultDtt().size() == 0) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_order_not_created)));
+                return  result;
+            }
+
+            //Something went wrong, we received a comment
+            if (actionLng == 80) {
+                result.resultBln = false;
+                cComment comment = new cComment(WebResult.getResultDtt().get(0));
+                result.pAddErrorMessage(comment.commentTextStr);
+                return  result;
+            }
+
+            cPickorder pickorder = new cPickorder(WebResult.getResultDtt().get(0));
+            pickorder.pInsertInDatabaseBln();
+            cPickorder.currentPickOrder = pickorder;
+
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVECREATE);
+            result.resultBln = false;
+        }
+        return result;
     }
 
     //End Region Public Methods

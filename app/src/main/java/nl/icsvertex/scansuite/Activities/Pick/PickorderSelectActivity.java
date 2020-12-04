@@ -1,6 +1,7 @@
 package nl.icsvertex.scansuite.Activities.Pick;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -57,6 +58,7 @@ import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
+import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.R;
 
 public class PickorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
@@ -80,7 +82,8 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     private MenuItem item_select_single_pick;
 
     private ImageView imageViewFilter;
-    private  ImageView imageStartCombinedOrder;
+    private ImageView imageStartCombinedOrder;
+    private ImageView imageViewNewOrder;
     private ConstraintLayout constraintFilterOrders;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -182,6 +185,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         return super.onPrepareOptionsMenu(pvMenu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
@@ -273,6 +277,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
         this.imageViewFilter = findViewById(R.id.imageViewFilter);
         this.imageStartCombinedOrder = findViewById(R.id.imageStartCombinedOrder);
+        this.imageViewNewOrder = findViewById(R.id.imageViewNewOrder);
         this.constraintFilterOrders = findViewById(R.id.constraintFilterOrders);
         this.swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
@@ -300,6 +305,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     public void mFieldsInitialize() {
         this.mInitBottomSheet();
+        this.mSetNewOrderButton();
         this.mInitCombinePickViews();
         this.mResetCurrents();
         this.pFillOrders();
@@ -312,7 +318,9 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         this.mSetFilterListener();
         this.mSetSwipeRefreshListener();
         this.mSetOpenCombinedOrderListener();
+        this.mSetNewOrderListener();
     }
+
 
     @Override
     public void mInitScreen() {
@@ -622,8 +630,16 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
 
-        Intent intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
-        PickorderLinesActivity.startedViaOrderSelectBln = true;
+        Intent intent;
+
+        if (cPickorder.currentPickOrder.isGeneratedOrderBln()) {
+            intent = new Intent(cAppExtension.context, PickorderLinesGeneratedActivity.class);
+        }
+        else{
+            intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
+            PickorderLinesActivity.startedViaOrderSelectBln = true;
+        }
+
         View clickedOrder = container.findViewWithTag(cPickorder.currentPickOrder.getOrderNumberStr());
 
         if (clickedOrder != null) {
@@ -675,6 +691,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         }
         else {
             this.combinePicksConstraintLayout.setVisibility(View.VISIBLE);
+            this.imageViewNewOrder.setVisibility(View.GONE);
 
             if (cPickorder.pickorderSelectedObl().size() > 1) {
                 this.imageStartCombinedOrder.setVisibility(View.VISIBLE);
@@ -702,6 +719,30 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
+    private void mSetNewOrderButton() {
+
+        if (currentModusEnu == ModusEnu.COMBINE) {
+            this.imageViewNewOrder.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        if (cSetting.PICK_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.PF.toString().toUpperCase())) {
+            this.imageViewNewOrder.setVisibility(View.VISIBLE);
+        }
+        else {
+            this.imageViewNewOrder.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void mSetNewOrderListener() {
+        this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View pvView) {
+                mShowCreatePickActivity();
+            }
+        });
+    }
+
     //End Bottom Sheet
 
     //Filter
@@ -714,11 +755,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         this.mSetPickorderRecycler(filteredPicksObl);
 
-        if (filteredPicksObl.size() == 0) {
-            this.mShowNoOrdersIcon(true);
-        } else {
-            this.mShowNoOrdersIcon(false);
-        }
+        this.mShowNoOrdersIcon(filteredPicksObl.size() == 0);
 
     }
 
@@ -735,12 +772,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mShowHideBottomSheet(true);
-                }
-                else {
-                    mShowHideBottomSheet(false);
-                }
+                mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
     }
@@ -760,6 +792,10 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         this.swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent), getResources().getColor(R.color.colorActive), getResources().getColor(R.color.colorPrimary));
     }
 
+    private void mShowCreatePickActivity() {
+        Intent intent = new Intent(cAppExtension.context, CreatePickActivity.class);
+        cAppExtension.activity.startActivity(intent);
+    }
 
     // End Filter
 

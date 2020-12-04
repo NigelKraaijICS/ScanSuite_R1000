@@ -152,7 +152,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         this.editTextDocument = findViewById(R.id.editTextDocument);
         this.editTextBin = findViewById(R.id.editTextBin);
         this.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
-        this.createMoveButton = findViewById(R.id.closeButton);
+        this.createMoveButton = findViewById(R.id.createButton);
         this.cancelButton = findViewById(R.id.cancelButton);
     }
 

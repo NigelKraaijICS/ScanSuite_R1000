@@ -4,7 +4,6 @@ package nl.icsvertex.scansuite.Activities.Receive;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +34,6 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
-import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
 
@@ -158,7 +156,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         this.editTextPackingslip = findViewById(R.id.editTextPackingslip);
         this.editTextBin = findViewById(R.id.editTextBin);
         this.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
-        this.createReceiveButton = findViewById(R.id.closeButton);
+        this.createReceiveButton = findViewById(R.id.createButton);
         this.cancelButton = findViewById(R.id.cancelButton);
     }
 

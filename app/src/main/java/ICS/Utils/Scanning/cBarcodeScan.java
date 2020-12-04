@@ -29,6 +29,8 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveMISinglepieceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderPickGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.CreateReceiveActivity;
@@ -169,9 +171,19 @@ public class cBarcodeScan {
                         pickorderLinesActivity.pHandleScan(barcodeScan, false);
                     }
 
+                    if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
+                        PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
+                        pickorderLinesGeneratedActivity.pHandleScan(barcodeScan);
+                    }
+
                     if (cAppExtension.activity instanceof PickorderPickActivity) {
                         PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
                         pickorderPickActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof PickorderPickGeneratedActivity) {
+                        PickorderPickGeneratedActivity pickorderPickGeneratedActivity = (PickorderPickGeneratedActivity)cAppExtension.activity;
+                        pickorderPickGeneratedActivity.pHandleScan(barcodeScan);
                     }
 
                     //Sort

@@ -760,6 +760,7 @@
     <string name="number_received_total_cant_be_higher_then">You are not allowed to receive more then %1$s items of this variant</string>
     <string name="number_received_total_eminently_more">You are about to receive %1$s pieces\n\nThis is eminently more then the %2$s expected pieces.\n\nAre you sure?</string>
     <string name="message_reset_variant_via_webservice_failed">Resetting variant via webservice failed</string>
+    <string name="create_pick">Create Pick order</string>
     <string name="create_move">Create Move order</string>
     <string name="tab_moveorderline_take">Take</string>
     <string name="tab_moveorderline_place">Place</string>

@@ -24,6 +24,7 @@ import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.Basics.Workplaces.cWorkplaceAdapter;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -179,6 +180,12 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
                 cAppExtension.dialogFragment.dismiss();
                 PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
                 pickorderLinesActivity.pClosePickAndDecideNextStep();
+            }
+
+            if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
+                cAppExtension.dialogFragment.dismiss();
+                PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
+                pickorderLinesGeneratedActivity.pClosePickAndDecideNextStep();
             }
 
             if (cAppExtension.activity instanceof SortorderLinesActivity) {

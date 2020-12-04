@@ -36,7 +36,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
@@ -162,7 +161,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         this.editTextDocument = findViewById(R.id.editTextDocument);
         this.editTextBin = findViewById(R.id.editTextBin);
         this.createReturnContainer = findViewById(R.id.createReturnContainer);
-        this.createReturnButton = findViewById(R.id.closeButton);
+        this.createReturnButton = findViewById(R.id.createButton);
         this.cancelButton = findViewById(R.id.cancelButton);
         this.imageReason = findViewById(R.id.imageButtonReason);
         this.switchMultipleDocuments = findViewById(R.id.multipleDocumentSwitch);

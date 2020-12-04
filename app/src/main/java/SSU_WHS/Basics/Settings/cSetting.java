@@ -493,6 +493,16 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean PICK_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
     public static boolean GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED);
@@ -655,6 +665,16 @@ public class cSetting {
         }
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static String PICK_NEW_WORKFLOWS(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
     }
 
     public static boolean RECEIVE_BARCODE_CHECK(){

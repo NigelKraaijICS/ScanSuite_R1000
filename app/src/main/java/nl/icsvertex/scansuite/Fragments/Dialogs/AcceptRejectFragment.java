@@ -29,6 +29,7 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
@@ -203,6 +204,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof PickorderLinesActivity) {
             PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
             pickorderLinesActivity.pLeaveActivity();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
+            PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
+            pickorderLinesGeneratedActivity.pLeaveActivity();
             this.dismiss();
             return;
         }

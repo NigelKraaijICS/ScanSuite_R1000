@@ -957,7 +957,7 @@ public class cMoveorder {
                 cMoveorderLineBarcode moveorderLineBarcode = new cMoveorderLineBarcode(jsonObject);
                 moveorderLineBarcode.pInsertInDatabaseBln();
             }
-
+            
             return  true;
 
         } else {

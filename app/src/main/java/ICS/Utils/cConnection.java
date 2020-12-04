@@ -14,6 +14,7 @@ import android.os.Handler;
 
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.R;
@@ -224,11 +225,16 @@ public class cConnection {
                         return;
                     }
 
+                    if (cAppExtension.activity instanceof PickorderLinesActivity) {
+                        PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+                        PickorderLinesActivity.startedViaOrderSelectBln = false;
+                        pickorderLinesActivity.pCheckAllDone();
+                    }
 
-
-                    PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
-                    PickorderLinesActivity.startedViaOrderSelectBln = false;
-                    pickorderLinesActivity.pCheckAllDone();
+                    if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
+                        PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
+                        pickorderLinesGeneratedActivity.pCheckAllDone();
+                    }
 
 
                 }

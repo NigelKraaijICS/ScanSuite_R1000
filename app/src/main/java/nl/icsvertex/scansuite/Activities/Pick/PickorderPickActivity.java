@@ -494,6 +494,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //If pick with picture is false, then hide image view
         if (!cPickorder.currentPickOrder.isPickWithPictureBln()) {
+            this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
             this.articleThumbImageView.setVisibility(View.INVISIBLE);
             return;
         }

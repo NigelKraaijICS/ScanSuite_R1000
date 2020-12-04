@@ -150,7 +150,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         this.editTextDocument = findViewById(R.id.editTextDocument);
         this.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
-        this.createIntakeButton = findViewById(R.id.closeButton);
+        this.createIntakeButton = findViewById(R.id.createButton);
         this.cancelButton = findViewById(R.id.cancelButton);
     }
 

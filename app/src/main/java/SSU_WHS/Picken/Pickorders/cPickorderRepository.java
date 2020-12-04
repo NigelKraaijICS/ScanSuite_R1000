@@ -21,6 +21,7 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
+import SSU_WHS.Move.MoveOrders.cMoveorderRepository;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.Shipment.cShipment;
@@ -97,6 +98,17 @@ public class cPickorderRepository {
             this.selectedBln = pvSelectedBln;
         }
     }
+
+    private static class CreateOrderLocalParams {
+        String documentStr;
+        Boolean  checkBarcodesBln;
+
+        CreateOrderLocalParams(String pvDocumentStr, Boolean checkBarcodesBln) {
+            this.documentStr = pvDocumentStr;
+            this.checkBarcodesBln = checkBarcodesBln;
+        }
+    }
+
 
     private static class PickorderLocalParams {
         String userNameStr;
@@ -434,8 +446,6 @@ public class cPickorderRepository {
         }
     }
 
-
-
     public cWebresult pPickorderSourceDocumentShippedViaWebserviceWrs() {
 
         cWebresult webResult;
@@ -517,6 +527,26 @@ public class cPickorderRepository {
             return  false;
         }
     }
+
+    public cWebresult pCreatePickOrderViaWebserviceWrs(String pvDocumentStr, boolean pvCheckBarcodesBln) {
+
+        List<String> resultObl = new ArrayList<>();
+        CreateOrderLocalParams orderLocalParams = new CreateOrderLocalParams(pvDocumentStr,pvCheckBarcodesBln);
+
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new cPickorderRepository.mCreatePickorderViaWebserviceAsyncTask().execute(orderLocalParams).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
 
 
     //Pick Lines
@@ -628,6 +658,11 @@ public class cPickorderRepository {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+
+        if (resultDbl== null) {
+            resultDbl = Double.valueOf(0);
+        }
+
         return resultDbl;
     }
 
@@ -1731,6 +1766,63 @@ public class cPickorderRepository {
 
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_UPDATECURRENTORDERLOCATION, l_PropertyInfoObl);
 
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mCreatePickorderViaWebserviceAsyncTask extends AsyncTask<CreateOrderLocalParams, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(CreateOrderLocalParams... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
+                l_PropertyInfo3Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOW;
+                l_PropertyInfo4Pin.setValue(cWarehouseorder.WorkflowEnu.PF.toString());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT;
+                l_PropertyInfo5Pin.setValue(params[0].documentStr);
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_EXTERNALREFERENCE;
+                l_PropertyInfo6Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
+                l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_PICKBARCODECHECK;
+                l_PropertyInfo7Pin.setValue(params[0].checkBarcodesBln);
+                l_PropertyInfoObl.add(l_PropertyInfo7Pin);
+
+                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_ADMINISTRATION;
+                l_PropertyInfo8Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERCREATE, l_PropertyInfoObl);
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
                 webresult.setResultBln(false);
