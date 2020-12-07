@@ -44,7 +44,12 @@ public class cIntakeorderMATSummaryLine implements Comparable {
     }
 
     public  String getItemNoAndVariantCodeStr(){
-        return   this.getItemNoStr() + " " + this.getVariantCodeStr();
+        if (!this.getVariantCodeStr().isEmpty()) {
+            return   this.getItemNoStr() + " " + this.getVariantCodeStr();
+        }
+        else{
+            return  this.getItemNoStr();
+        }
     }
 
     private String descriptionStr;

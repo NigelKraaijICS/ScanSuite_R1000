@@ -147,19 +147,25 @@ public class cArticleRepository {
             l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
             PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
-            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_OWNER;
-            l_PropertyInfo2Pin.setValue("");
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
+
             PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
-            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMNO;
-            l_PropertyInfo3Pin.setValue(params[0].getItemNoStr());
+            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_OWNER;
+            l_PropertyInfo3Pin.setValue("");
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
             PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
-            l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE;
-            l_PropertyInfo4Pin.setValue(params[0].getVariantCodeStr());
+            l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMNO;
+            l_PropertyInfo4Pin.setValue(params[0].getItemNoStr());
             l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+            PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+            l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_VARIANTCODE;
+            l_PropertyInfo5Pin.setValue(params[0].getVariantCodeStr());
+            l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
             try {
                 WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES, l_PropertyInfoObl);

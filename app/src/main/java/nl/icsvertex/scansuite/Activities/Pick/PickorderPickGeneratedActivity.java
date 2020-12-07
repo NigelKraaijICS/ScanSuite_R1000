@@ -314,10 +314,10 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         //If we still need a destination scan, make sure we scan this first
         if (cPickorder.currentPickOrder.scannedBranch  == null && cPickorder.currentPickOrder.isPFBln() ) {
-            cResult hulpRst = this.mCheckDestionationRst(pvBarcodeScan);
-            if (! hulpRst.resultBln) {
-                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"", true, true);
-            }
+//            cResult hulpRst = this.mCheckDestionationRst(pvBarcodeScan);
+//            if (! hulpRst.resultBln) {
+//                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"", true, true);
+//            }
 
             //If we scanned, refresh to pick fragment and leave this void
             if (PickorderLinesActivity.currentLineFragment instanceof PickorderLinesToPickFragment) {

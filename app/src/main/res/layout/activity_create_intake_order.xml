@@ -17,18 +17,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
-    <TextView
-        android:id="@+id/textViewBinHint"
-        style="@style/createReturnText"
-        android:layout_marginTop="120dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.906"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPackingslip" />
     <EditText
+        android:id="@+id/editTextBin"
         android:imeOptions="actionDone"
         android:singleLine="true"
-        android:id="@+id/editTextBin"
         style="@style/createReturnDocument"
         android:hint="@string/hint_add_bin"
         android:cursorVisible="false"
@@ -36,7 +28,15 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextPackingslip"/>
+        app:layout_constraintTop_toBottomOf="@id/editTextDocument"/>
+    <TextView
+        android:id="@+id/textViewBinHint"
+        style="@style/createReturnText"
+        android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.906"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextDocument" />
     <Switch
         android:id="@+id/checkBarcodesSwitch"
         android:layout_width="wrap_content"

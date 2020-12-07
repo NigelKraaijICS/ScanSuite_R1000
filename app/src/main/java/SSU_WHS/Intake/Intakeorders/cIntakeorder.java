@@ -825,41 +825,86 @@ public class cIntakeorder {
         }
 
         cWebresult WebResult;
-        WebResult =  this.getReceiveorderLineViewModel().pAddERPItemViaWebserviceWrs(pvBarcodeScan);
-        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
-            if (WebResult.getResultDtt().size() == 1) {
-                cReceiveorderSummaryLine receiveorderSummaryLine = new cReceiveorderSummaryLine(WebResult.getResultDtt().get(0));
-                cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
-                cReceiveorderSummaryLine.currentReceiveorderSummaryLine = receiveorderSummaryLine;
-            }
-        }
 
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEITEMVARIANTCREATE);
-            return  false;
-        }
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("EOS")) {
+            WebResult =  this.getReceiveorderLineViewModel().pAddERPItemViaWebserviceWrs(pvBarcodeScan);
 
-        //Then add barcode
-        WebResult =  this.getReceiveorderLineViewModel().pReceiveAddERPBarcodeViaWebserviceWrs(pvBarcodeScan);
-        if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+            if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
-            if (WebResult.getResultDtt().size() == 1) {
-                cIntakeorderBarcode intakeorderBarcode = new cIntakeorderBarcode(WebResult.getResultDtt().get(0));
-
-                if (cIntakeorderBarcode.allBarcodesObl == null) {
-                    cIntakeorderBarcode.allBarcodesObl = new ArrayList<>();
+                if (WebResult.getResultDtt().size() == 1) {
+                    cReceiveorderSummaryLine receiveorderSummaryLine = new cReceiveorderSummaryLine(WebResult.getResultDtt().get(0));
+                    cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
+                    cReceiveorderSummaryLine.currentReceiveorderSummaryLine = receiveorderSummaryLine;
                 }
+            }
 
-                cIntakeorderBarcode.allBarcodesObl.add(intakeorderBarcode);
-                cIntakeorderBarcode.currentIntakeOrderBarcode = intakeorderBarcode;
-                cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = intakeorderBarcode;
+            else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEITEMVARIANTCREATE);
+                return  false;
+            }
+
+            //Then add barcode
+            WebResult =  this.getReceiveorderLineViewModel().pReceiveAddERPBarcodeViaWebserviceWrs(pvBarcodeScan);
+            if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+
+                if (WebResult.getResultDtt().size() == 1) {
+                    cIntakeorderBarcode intakeorderBarcode = new cIntakeorderBarcode(WebResult.getResultDtt().get(0));
+
+                    if (cIntakeorderBarcode.allBarcodesObl == null) {
+                        cIntakeorderBarcode.allBarcodesObl = new ArrayList<>();
+                    }
+
+                    cIntakeorderBarcode.allBarcodesObl.add(intakeorderBarcode);
+                    cIntakeorderBarcode.currentIntakeOrderBarcode = intakeorderBarcode;
+                    cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = intakeorderBarcode;
+                }
+            }
+            else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEBARCODECREATE);
+                return  false;
             }
         }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEBARCODECREATE);
-            return  false;
+
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAS")) {
+            WebResult =  this.getReceiveorderLineViewModel().pIntakeAddUnknownItemViaWebserviceWrs(pvBarcodeScan);
+
+            if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+
+                if (WebResult.getResultDtt().size() == 1) {
+                    cIntakeorderMATSummaryLine intakeorderMATSummaryLine = new cIntakeorderMATSummaryLine(WebResult.getResultDtt().get(0));
+                    cIntakeorderMATSummaryLine.pAddSummaryLine(intakeorderMATSummaryLine);
+                    cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = intakeorderMATSummaryLine;
+                }
+            }
+
+            else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEITEMVARIANTCREATE);
+                return  false;
+            }
+
+            //Then add barcode
+            WebResult =  this.getReceiveorderLineViewModel().pIntakeAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan);
+            if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+
+                if (WebResult.getResultDtt().size() == 1) {
+                    cIntakeorderBarcode intakeorderBarcode = new cIntakeorderBarcode(WebResult.getResultDtt().get(0));
+
+                    if (cIntakeorderBarcode.allBarcodesObl == null) {
+                        cIntakeorderBarcode.allBarcodesObl = new ArrayList<>();
+                    }
+
+                    cIntakeorderBarcode.allBarcodesObl.add(intakeorderBarcode);
+                    cIntakeorderBarcode.currentIntakeOrderBarcode = intakeorderBarcode;
+                    cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = intakeorderBarcode;
+                }
+            }
+            else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVEBARCODECREATE);
+                return  false;
+            }
         }
+
 
         return  true;
     }

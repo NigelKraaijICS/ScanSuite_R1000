@@ -48,7 +48,7 @@ public class cWebserviceDefinitions {
 
     public static String WEBMETHOD_GETLOCATIONARTICLEVIAOWNERBARCODE = "p_VestigingArtikelGetViaOwnerBarcodeJsonStr";
     public static String WEBMETHOD_GETARTICLEVIAOWNERBARCODE = "p_ArtikelGetViaOwnerBarcodeJsonStr";
-    public static String WEBMETHOD_GETARTICLEBARCODES = "p_ArtikelBarcodesGetJsonStr";
+    public static String WEBMETHOD_GETARTICLEBARCODES = "p_VestigingArtikelBarcodesGetJsonStr";
     public static String WEBMETHOD_GETARTICLESTOCK = "p_ArtikelVoorraadGetJsonStr";
     public static String WEBMETHOD_SORTORDERLINE_HANDLED = "p_PickorderRegelPlaceSortedJsonStr";
     public static String WEBMETHOD_GETPICKORDERADDRESSES = "p_PickorderAdresGetJsonStr";

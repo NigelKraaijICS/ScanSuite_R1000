@@ -119,6 +119,9 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
         if (currentIntakeorderMATSummaryLine.getQuantityHandledDbl().intValue() >= currentIntakeorderMATSummaryLine.getQuantityDbl().intValue() && cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAS")) {
             quantityToShowStr =  cText.pDoubleToStringStr(currentIntakeorderMATSummaryLine.getQuantityHandledDbl());
+
+
+
         }
         else
         {
@@ -130,6 +133,11 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         //Set description and quantity
         pvHolder.textViewItemNoAndVariantCode.setText(itemNoAndVariantCodeStr);
         pvHolder.textViewDescription.setText(lineDescriptionStr);
+
+        if (lineDescriptionStr.equalsIgnoreCase(itemNoAndVariantCodeStr)) {
+            pvHolder.textViewDescription.setVisibility(View.GONE);
+        }
+
         pvHolder.textViewQuantity.setText(quantityToShowStr);
 
         if (cIntakeorder.currentIntakeOrder.sourceNoObl.size() == 1) {

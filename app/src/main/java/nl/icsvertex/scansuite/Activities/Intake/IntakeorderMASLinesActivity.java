@@ -39,6 +39,7 @@ import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLineAdapter;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
@@ -81,12 +82,13 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     private ImageView imageButtonCloseOrder;
 
     private cIntakeorderMATSummaryLineAdapter intakeorderMATSummaryLineAdapter;
-    private cIntakeorderMATSummaryLineAdapter getIntakeorderMATSummaryLineAdapter(){
+
+    private cIntakeorderMATSummaryLineAdapter getIntakeorderMATSummaryLineAdapter() {
         if (this.intakeorderMATSummaryLineAdapter == null) {
             this.intakeorderMATSummaryLineAdapter = new cIntakeorderMATSummaryLineAdapter();
         }
 
-        return  this.intakeorderMATSummaryLineAdapter;
+        return this.intakeorderMATSummaryLineAdapter;
     }
 
     //End Region Views
@@ -176,7 +178,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
         this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        this.closeButton =  this.recyclerSearchView.findViewById(R.id.search_close_btn);
+        this.closeButton = this.recyclerSearchView.findViewById(R.id.search_close_btn);
         this.recyclerViewLines = findViewById(R.id.recyclerViewLines);
         this.imageViewStart = findViewById(R.id.imageViewStart);
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
@@ -251,12 +253,12 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     //Region Public Methods
 
-    public  void pIntakelineSelected(cIntakeorderMATSummaryLine pvIntakeorderMATSummaryLine) {
+    public void pIntakelineSelected(cIntakeorderMATSummaryLine pvIntakeorderMATSummaryLine) {
         cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = pvIntakeorderMATSummaryLine;
     }
 
-    public  void pHandleScan(cBarcodeScan pvBarcodeScan,
-                             Boolean pvLineSelectedBln) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan,
+                            Boolean pvLineSelectedBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         cResult hulpResult;
@@ -301,7 +303,6 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
 
 
-
             //Handle the ARTICLE scan
             hulpResult = this.mHandleArticleScan(pvBarcodeScan);
 
@@ -344,15 +345,16 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         this.mStartOrderSelectActivity();
     }
 
-    public void pStartLine(){
+    public void pStartLine() {
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 imageViewStart.performClick();
-            }});
+            }
+        });
     }
 
-    public  void pSetToolBarTitleWithCounters(final String pvTextStr){
+    public void pSetToolBarTitleWithCounters(final String pvTextStr) {
 
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
@@ -371,7 +373,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     }
 
-    public  void pShowData(List<cIntakeorderMATSummaryLine> pvDataObl) {
+    public void pShowData(List<cIntakeorderMATSummaryLine> pvDataObl) {
         this.mFillRecycler(pvDataObl);
     }
 
@@ -379,7 +381,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     //Region Private Methods
 
-    private  cResult mHandleArticleScan(cBarcodeScan pvBarcodeScan) {
+    private cResult mHandleArticleScan(cBarcodeScan pvBarcodeScan) {
 
         cResult result = new cResult();
         result.resultBln = true;
@@ -390,7 +392,8 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         //Check if this is a barcodeStr we already know
         cIntakeorderBarcode.currentIntakeOrderBarcode = cIntakeorder.currentIntakeOrder.pGetOrderBarcode(pvBarcodeScan);
         if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
-            cIntakeorder.currentIntakeOrder.pIntakeAddUnkownBarcodeAndItemVariantBln(pvBarcodeScan);
+            this.mHandleUnknownBarcodeScan(pvBarcodeScan);
+            return result;
         }
 
         //Set the scanned barcodeStr, so we can raise quantity in next activity
@@ -421,19 +424,19 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         this.currentInputType = InputType.BIN;
 
         //Get the current BIN
-        cIntakeorder.currentIntakeOrder.currentBin =  cUser.currentUser.currentBranch.pGetBinByCode(pvBinCodeStr);
-        if (  cIntakeorder.currentIntakeOrder.currentBin  == null) {
+        cIntakeorder.currentIntakeOrder.currentBin = cUser.currentUser.currentBranch.pGetBinByCode(pvBinCodeStr);
+        if (cIntakeorder.currentIntakeOrder.currentBin == null) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_unknown,pvBinCodeStr));
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_bin_unknown, pvBinCodeStr));
             return result;
         }
 
         List<cIntakeorderMATSummaryLine> hulpObl = cIntakeorderMATSummaryLine.pGetSummaryLinesWithBINCode(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr());
 
         //If there are no lines for the current BIN, then refresh recycler
-        if ( hulpObl  == null ||   hulpObl.size() == 0) {
+        if (hulpObl == null || hulpObl.size() == 0) {
             this.mDoUnknownScan(cAppExtension.activity.getString(R.string.message_no_lines_for_this_bin), pvBinCodeStr);
-            cIntakeorder.currentIntakeOrder.currentBin= null;
+            cIntakeorder.currentIntakeOrder.currentBin = null;
             ReceiveLinesActivity.busyBln = false;
             result.resultBln = true;
 
@@ -452,7 +455,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         return result;
     }
 
-    private  boolean mTryToCloseOrderBln() {
+    private boolean mTryToCloseOrderBln() {
 
         cResult hulpResult;
         hulpResult = new cResult();
@@ -487,7 +490,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     }
 
-    private  void mHandleClose() {
+    private void mHandleClose() {
 
         if (!this.mTryToCloseOrderBln()) {
             return;
@@ -516,12 +519,12 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         });
     }
 
-    private  void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
+    private void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         this.currentInputType = InputType.UNKNOWN;
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 
-    private  void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
+    private void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -535,13 +538,13 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
-    private  void mStepFailed(String pvErrorMessageStr) {
+    private void mStepFailed(String pvErrorMessageStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cIntakeorder.currentIntakeOrder.getOrderNumberStr(), true, true);
         cIntakeorder.currentIntakeOrder.pLockReleaseViaWebserviceBln();
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
-    private  void mStartOrderSelectActivity() {
+    private void mStartOrderSelectActivity() {
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             public void run() {
@@ -553,7 +556,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     }
 
-    private  void mShowComments() {
+    private void mShowComments() {
 
         if (cIntakeorder.currentIntakeOrder.pCommentObl() == null || cIntakeorder.currentIntakeOrder.pCommentObl().size() == 0) {
             this.imageButtonComments.setVisibility(View.INVISIBLE);
@@ -571,40 +574,38 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         cComment.commentsShownBln = true;
     }
 
-    private  void mShowCloseOrderDialog(String pvRejectStr,String pvAcceptStr) {
+    private void mShowCloseOrderDialog(String pvRejectStr, String pvAcceptStr) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         String messageStr = "";
-        if (cIntakeorderMATSummaryLine.totalItemsDifference() == 0 ) {
+        if (cIntakeorderMATSummaryLine.totalItemsDifference() == 0) {
             messageStr = (cAppExtension.activity.getString(R.string.message_exactly_what_you_needed));
         }
 
         if (cIntakeorderMATSummaryLine.totalItems() > cIntakeorderMATSummaryLine.totalItemsHandled()) {
-            messageStr =   cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " LESS items";
+            messageStr = cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " LESS items";
         }
 
         if (cIntakeorderMATSummaryLine.totalItems() < cIntakeorderMATSummaryLine.totalItemsHandled()) {
-            messageStr =   cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " EXTRA items";
+            messageStr = cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " EXTRA items";
         }
 
-         AcceptRejectFragment acceptRejectFragment = null;
+        AcceptRejectFragment acceptRejectFragment = null;
 
         if (!cIntakeorder.currentIntakeOrder.isGenerated()) {
-            acceptRejectFragment  = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
+            acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
                     cAppExtension.activity.getString(R.string.message_close_storeorder_text,
                             cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsHandled()),
                             cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItems()), messageStr),
                     pvRejectStr,
-                    pvAcceptStr ,
+                    pvAcceptStr,
                     false);
-        }
-        else
-            {
-                acceptRejectFragment  = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
-                        cAppExtension.activity.getString(R.string.message_close_generated_storeorder_text,cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsHandled())),
-                        pvRejectStr,
-                        pvAcceptStr ,
-                        false);
+        } else {
+            acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
+                    cAppExtension.activity.getString(R.string.message_close_generated_storeorder_text, cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsHandled())),
+                    pvRejectStr,
+                    pvAcceptStr,
+                    false);
         }
 
         acceptRejectFragment.setCancelable(true);
@@ -619,7 +620,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     }
 
-    private void mStartStoreActivity(){
+    private void mStartStoreActivity() {
 
         //we have a LINE to handle, so start Store activity
         Intent intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);
@@ -638,7 +639,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
         //Show the recycler view
         this.recyclerViewLines.setHasFixedSize(false);
-        this.recyclerViewLines.setAdapter( this.getIntakeorderMATSummaryLineAdapter());
+        this.recyclerViewLines.setAdapter(this.getIntakeorderMATSummaryLineAdapter());
         this.recyclerViewLines.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         this.recyclerViewLines.setVisibility(View.VISIBLE);
     }
@@ -653,7 +654,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutmanager = (LinearLayoutManager)recyclerView.getLayoutManager();
+                LinearLayoutManager layoutmanager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (dy < 0) {
 
                     int itemPosition = 0;
@@ -661,7 +662,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
                         itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
                     }
 
-                    if(itemPosition==0){
+                    if (itemPosition == 0) {
                         // Prepare the View for the animation
                         recyclerSearchView.setVisibility(View.VISIBLE);
                         recyclerSearchView.setAlpha(0.0f);
@@ -681,7 +682,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
                         itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
                     }
 
-                    if(itemPosition>1){// your *second item your recyclerview
+                    if (itemPosition > 1) {// your *second item your recyclerview
                         // Start the animation
                         recyclerSearchView.setVisibility(View.GONE);
                     }
@@ -719,18 +720,18 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
                 switch (currentInputType) {
                     case UNKNOWN:
                         getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, false);
-                        return  true;
+                        return true;
 
                     case ARTICLE:
                         getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, true);
-                        return  true;
+                        return true;
 
                     case BIN:
                         getIntakeorderMATSummaryLineAdapter().pSetBINFilter(pvQueryTextStr);
-                        return  true;
+                        return true;
                 }
 
-                return  true;
+                return true;
             }
 
         });
@@ -764,12 +765,12 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         this.imageViewStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pHandleScan(null,true);
+                pHandleScan(null, true);
             }
         });
     }
 
-    private  void mNoLinesAvailable(final boolean pvShowBln) {
+    private void mNoLinesAvailable(final boolean pvShowBln) {
 
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
@@ -810,9 +811,83 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     }
 
-    //End Region Private Methods
+    private void mHandleUnknownBarcodeScan(cBarcodeScan pvBarcodeScan) {
+
+
+        //We can add a line, but we don't check with the ERP, so add line and open it
+        if (!cSetting.RECEIVE_BARCODE_CHECK()) {
+            this.mAddUnkownArticle(pvBarcodeScan);
+            cUserInterface.pHideGettingData();
+            return;
+        }
+
+        //We can add a line, and we need to check with the ERP, so check, add and open it
+        this.mAddERPArticle(pvBarcodeScan);
+        cUserInterface.pHideGettingData();
+
+
+        //End Region Private Methods
 
     }
 
+    private void mAddUnkownArticle(cBarcodeScan pvBarcodeScan){
+
+        cResult hulpResult = new cResult();
+        hulpResult.resultBln = false;
+        String searchStr;
+
+        boolean hulpBln = true;
+
+        if (!cIntakeorder.currentIntakeOrder.pIntakeAddUnkownBarcodeAndItemVariantBln(pvBarcodeScan)){
+            hulpBln = false ;
+        }
+
+        //Add the barcodeStr via the webservice
+        if (!hulpBln) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_adding_unkown_article_failed),"",true,true);
+            return;
+        }
+
+        //Set the scanned barcodeStr, so we can raise quantity in next activity
+        cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcode.currentIntakeOrderBarcode;
+
+        this.mNoLinesAvailable(false);
+        getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+
+        searchStr = cIntakeorderBarcode.currentIntakeOrderBarcode.getItemNoStr();
+
+        if (!cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr().isEmpty()) {
+            searchStr += ' ' + cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr();
+        }
+
+        this.recyclerSearchView.setQuery(searchStr, true);
+        this.recyclerSearchView.callOnClick();
+
+        //Article is known and also not handled, so everything is fine
+        this.currentInputType = InputType.UNKNOWN;
+    }
+
+    private void mAddERPArticle(cBarcodeScan pvBarcodeScan){
+
+        //Add the barcodeStr via the webservice
+        if (!cIntakeorder.currentIntakeOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.barcodeOriginalStr),"",true,true);
+            ReceiveLinesActivity.busyBln = false;
+            return;
+        }
+
+        cResult hulpResult = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pSummaryLineBusyRst();
+        if (!hulpResult.resultBln) {
+            mStepFailed(hulpResult.messagesStr());
+            cReceiveorderSummaryLine.currentReceiveorderSummaryLine = null;
+            return;
+        }
+
+        //Open the line, so we can edit it
+        this.mStartStoreActivity();
+
+    }
+
+}
 
 

@@ -1183,6 +1183,11 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.articleDescriptionText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr());
         this.articleDescription2Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str());
         this.articleItemText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getItemNoAndVariantCodeStr());
+
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getItemNoAndVariantCodeStr().equalsIgnoreCase(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr())){
+            this.articleDescriptionText.setVisibility(View.GONE);
+            this.articleDescription2Text.setVisibility(View.GONE);
+        }
     }
 
     private void mSetQuantityInfo(){

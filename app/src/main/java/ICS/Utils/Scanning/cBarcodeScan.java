@@ -73,7 +73,6 @@ import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 public class cBarcodeScan {
 
     public static String currentActivityContextStr = "";
-    public static String currentDialogContextStr = "";
 
     public static class BarcodeType {
 

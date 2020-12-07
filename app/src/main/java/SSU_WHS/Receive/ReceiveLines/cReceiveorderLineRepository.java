@@ -373,15 +373,32 @@ public class cReceiveorderLineRepository {
                 l_PropertyInfo3Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
+
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
                 l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ITEMNO;
-                l_PropertyInfo4Pin.setValue("UNKNOWN");
+
+
+                if (cArticle.currentArticle == null) {
+                    l_PropertyInfo4Pin.setValue("UNKNOWN");
+                }
+                else{
+                    l_PropertyInfo4Pin.setValue(cArticle.currentArticle.getItemNoStr());
+                }
+
+
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
                 l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_VARIANTCODETINY;
 
-                String testStr = cText.rPadStr(cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.getUnknownVariantCounterInt()),"0",4, cText.ePadLocation.Left );
+                String testStr;
+
+                if (cArticle.currentArticle == null) {
+                    testStr  = cText.rPadStr(cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.getUnknownVariantCounterInt()),"0",4, cText.ePadLocation.Left );
+                }
+                else{
+                    testStr = cArticle.currentArticle.getVariantCodeStr();
+                }
 
                 l_PropertyInfo5Pin.setValue(testStr);
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
