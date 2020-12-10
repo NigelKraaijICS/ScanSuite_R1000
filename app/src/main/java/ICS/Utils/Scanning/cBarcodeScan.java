@@ -17,6 +17,7 @@ import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.Intake.CreateIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
@@ -295,6 +296,11 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof IntakeOrderIntakeActivity){
                         IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
                         intakeOrderIntakeActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity){
+                        IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
+                        intakeOrderIntakeGeneratedActivity.pHandleScan(barcodeScan);
                     }
 
                     //Return

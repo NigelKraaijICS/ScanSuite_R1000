@@ -917,7 +917,7 @@ public class cInventoryorder {
         }
 
         //Get barcodes for this article
-        if (!cArticle.currentArticle.pGetBarcodesViaWebserviceBln()) {
+        if (!cArticle.currentArticle.pGetBarcodesViaWebserviceBln(pvBarcodeScan)) {
             return false;
         }
 

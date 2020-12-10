@@ -847,6 +847,7 @@
     <string name="message_scan_identifier">Scan Identifier</string>
     <string name="message_scan_destination_mi_single_piece">Scan Destination</string>
     <string name="message_set_serial_first">Serial empty, please set serial</string>
+    <string name="message_barcode_already_scanned_and_unique">Barcode has already been scanned and is unique</string>
 
     <!--End Region return-->
 

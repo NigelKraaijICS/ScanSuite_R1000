@@ -301,29 +301,9 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
         //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
-
-
-            //Handle the ARTICLE scan
-            hulpResult = this.mHandleArticleScan(pvBarcodeScan);
-
-            //Something went wrong, so show message and stop
-            if (!hulpResult.resultBln) {
-                this.mDoUnknownScan(hulpResult.messagesStr(), pvBarcodeScan.getBarcodeOriginalStr());
-                this.mFillRecycler(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
-                return;
-            }
-
-            //Hide the keyboard
-            cUserInterface.pHideKeyboard();
-
-            //Filter has been set in mHandleArticleScan so we are done
+            this.mDoUnknownScan(cAppExtension.activity.getString(R.string.error_article_scan_not_allowed), pvBarcodeScan.getBarcodeOriginalStr());
             return;
-
         }
-
-        //unknown scan
-        this.mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr());
-
     }
 
     public void pDone() {
@@ -381,40 +361,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     //Region Private Methods
 
-    private cResult mHandleArticleScan(cBarcodeScan pvBarcodeScan) {
 
-        cResult result = new cResult();
-        result.resultBln = true;
-
-        String searchStr;
-        this.currentInputType = InputType.ARTICLE;
-
-        //Check if this is a barcodeStr we already know
-        cIntakeorderBarcode.currentIntakeOrderBarcode = cIntakeorder.currentIntakeOrder.pGetOrderBarcode(pvBarcodeScan);
-        if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
-            this.mHandleUnknownBarcodeScan(pvBarcodeScan);
-            return result;
-        }
-
-        //Set the scanned barcodeStr, so we can raise quantity in next activity
-        cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcode.currentIntakeOrderBarcode;
-
-        this.mNoLinesAvailable(false);
-        getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
-
-        searchStr = cIntakeorderBarcode.currentIntakeOrderBarcode.getItemNoStr();
-
-        if (!cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr().isEmpty()) {
-            searchStr += ' ' + cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr();
-        }
-
-        this.recyclerSearchView.setQuery(searchStr, true);
-        this.recyclerSearchView.callOnClick();
-
-        //Article is known and also not handled, so everything is fine
-        this.currentInputType = InputType.UNKNOWN;
-        return result;
-    }
 
     private cResult mHandleBINScan(String pvBinCodeStr) {
 
@@ -431,27 +378,9 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
             return result;
         }
 
-        List<cIntakeorderMATSummaryLine> hulpObl = cIntakeorderMATSummaryLine.pGetSummaryLinesWithBINCode(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr());
-
-        //If there are no lines for the current BIN, then refresh recycler
-        if (hulpObl == null || hulpObl.size() == 0) {
-            this.mDoUnknownScan(cAppExtension.activity.getString(R.string.message_no_lines_for_this_bin), pvBinCodeStr);
-            cIntakeorder.currentIntakeOrder.currentBin = null;
-            ReceiveLinesActivity.busyBln = false;
-            result.resultBln = true;
-
-            if (!cIntakeorder.currentIntakeOrder.showDeviationsBln) {
-                this.getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
-            } else {
-                this.getIntakeorderMATSummaryLineAdapter().pShowDeviations();
-            }
-            return result;
-        }
-
-        this.recyclerSearchView.setQuery(pvBinCodeStr, true);
-        this.recyclerSearchView.callOnClick();
-
         this.currentInputType = InputType.UNKNOWN;
+        this.mStartStoreActivity();
+
         return result;
     }
 
@@ -622,8 +551,16 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     private void mStartStoreActivity() {
 
-        //we have a LINE to handle, so start Store activity
-        Intent intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);
+        Intent intent;
+
+        if (cIntakeorder.currentIntakeOrder.isGenerated()) {
+            intent = new Intent(cAppExtension.context, IntakeOrderIntakeGeneratedActivity.class);
+        }
+        else
+        {
+            intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);
+        }
+
         cAppExtension.activity.startActivity(intent);
 
     }
@@ -811,82 +748,6 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     }
 
-    private void mHandleUnknownBarcodeScan(cBarcodeScan pvBarcodeScan) {
-
-
-        //We can add a line, but we don't check with the ERP, so add line and open it
-        if (!cSetting.RECEIVE_BARCODE_CHECK()) {
-            this.mAddUnkownArticle(pvBarcodeScan);
-            cUserInterface.pHideGettingData();
-            return;
-        }
-
-        //We can add a line, and we need to check with the ERP, so check, add and open it
-        this.mAddERPArticle(pvBarcodeScan);
-        cUserInterface.pHideGettingData();
-
-
-        //End Region Private Methods
-
-    }
-
-    private void mAddUnkownArticle(cBarcodeScan pvBarcodeScan){
-
-        cResult hulpResult = new cResult();
-        hulpResult.resultBln = false;
-        String searchStr;
-
-        boolean hulpBln = true;
-
-        if (!cIntakeorder.currentIntakeOrder.pIntakeAddUnkownBarcodeAndItemVariantBln(pvBarcodeScan)){
-            hulpBln = false ;
-        }
-
-        //Add the barcodeStr via the webservice
-        if (!hulpBln) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_adding_unkown_article_failed),"",true,true);
-            return;
-        }
-
-        //Set the scanned barcodeStr, so we can raise quantity in next activity
-        cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcode.currentIntakeOrderBarcode;
-
-        this.mNoLinesAvailable(false);
-        getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
-
-        searchStr = cIntakeorderBarcode.currentIntakeOrderBarcode.getItemNoStr();
-
-        if (!cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr().isEmpty()) {
-            searchStr += ' ' + cIntakeorderBarcode.currentIntakeOrderBarcode.getVariantCodeStr();
-        }
-
-        this.recyclerSearchView.setQuery(searchStr, true);
-        this.recyclerSearchView.callOnClick();
-
-        //Article is known and also not handled, so everything is fine
-        this.currentInputType = InputType.UNKNOWN;
-    }
-
-    private void mAddERPArticle(cBarcodeScan pvBarcodeScan){
-
-        //Add the barcodeStr via the webservice
-        if (!cIntakeorder.currentIntakeOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_adding_erp_article_failed, pvBarcodeScan.barcodeOriginalStr),"",true,true);
-            ReceiveLinesActivity.busyBln = false;
-            return;
-        }
-
-        cResult hulpResult = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pSummaryLineBusyRst();
-        if (!hulpResult.resultBln) {
-            mStepFailed(hulpResult.messagesStr());
-            cReceiveorderSummaryLine.currentReceiveorderSummaryLine = null;
-            return;
-        }
-
-        //Open the line, so we can edit it
-        this.mStartStoreActivity();
-
-    }
 
 }
 

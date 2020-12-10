@@ -156,28 +156,36 @@ public class cArticle {
         }
     }
 
-    public boolean pGetBarcodesViaWebserviceBln(){
+    public boolean pGetBarcodesViaWebserviceBln(cBarcodeScan pvBarcodeScan) {
         cWebresult webresult;
 
         webresult = getArticleViewModel().pGetBarcodesViaWebserviceWrs(this);
         if (webresult.getResultBln() && webresult.getSuccessBln()) {
 
-            if (webresult.getResultDtt().size() > 0 ) {
-                this.barcodesObl = new ArrayList<>();
-            }
-
-            for (JSONObject jsonObject :  webresult.getResultDtt()) {
+            this.barcodesObl = new ArrayList<>();
+            for (JSONObject jsonObject : webresult.getResultDtt()) {
                 cArticleBarcode articleBarcode = new cArticleBarcode(jsonObject, this);
-
                 this.barcodesObl.add(articleBarcode);
 
             }
-            return true;
+
+            // We didn't receive a barcode, so this barcode should be an unique barcode
+            if (this.barcodesObl.size() == 0) {
+                webresult = getArticleViewModel().pGetUniqueBarcodeViaWebserviceWrs(pvBarcodeScan);
+                if (webresult.getResultBln() && webresult.getSuccessBln()) {
+                    for (JSONObject jsonObject : webresult.getResultDtt()) {
+                        cArticleBarcode articleBarcode = new cArticleBarcode(jsonObject, this);
+                        this.barcodesObl.add(articleBarcode);
+                    }
+                }
+                return true;
+            } else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES);
+                return false;
+            }
         }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES);
-            return false;
-        }
+
+        return  true;
     }
 
     public void pGetStockViaWebserviceBln(){

@@ -162,6 +162,7 @@ public class cIntakeorder {
     public List<String> sourceNoObl;
     public boolean showDeviationsBln = true;
     public cBranchBin currentBin;
+    public  String binScanToHandeStr;
 
     //Region Constructor
 
@@ -786,7 +787,7 @@ public class cIntakeorder {
         }
 
         //Then add barcode
-        WebResult =  this.getReceiveorderLineViewModel().pIntakeAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan);
+        WebResult =  this.getReceiveorderLineViewModel().pIntakeAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan, false);
         if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
             if (WebResult.getResultDtt().size() == 1) {
@@ -820,7 +821,7 @@ public class cIntakeorder {
         }
 
         //Get barcodes for this article
-        if (!cArticle.currentArticle.pGetBarcodesViaWebserviceBln()) {
+        if (!cArticle.currentArticle.pGetBarcodesViaWebserviceBln(pvBarcodeScan)) {
             return false;
         }
 
@@ -884,7 +885,7 @@ public class cIntakeorder {
             }
 
             //Then add barcode
-            WebResult =  this.getReceiveorderLineViewModel().pIntakeAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan);
+            WebResult =  this.getReceiveorderLineViewModel().pIntakeAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan, false);
             if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
                 if (WebResult.getResultDtt().size() == 1) {

@@ -19,6 +19,7 @@ public class cArticleViewModel extends AndroidViewModel {
 
     public cWebresult pGetArticleByBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return this.Repository.pGetArticleViaBarcodeWrs(pvBarcodeScan);}
     public cWebresult pGetBarcodesViaWebserviceWrs(cArticle pvArticle) {return this.Repository.pGetBarcodesWrs(pvArticle);}
+    public cWebresult pGetUniqueBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return this.Repository.pGetUniqueBarcodesWrs(pvBarcodeScan);}
     public cWebresult pGetStockViaWebserviceWrs(cArticle pvArticle) {return this.Repository.pGetStockWrs(pvArticle);}
 
 

@@ -1274,7 +1274,7 @@ public class cMoveorder {
 
 
         //Get barcodes for this article
-        if (! cMoveorder.currentMoveOrder.currentArticle.pGetBarcodesViaWebserviceBln()) {
+        if (! cMoveorder.currentMoveOrder.currentArticle.pGetBarcodesViaWebserviceBln(pvBarcodeScan)) {
             return false;
         }
 

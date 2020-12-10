@@ -199,7 +199,7 @@ public class cReceiveorderLineRepository {
         return webResultWrs;
     }
 
-    public cWebresult pIntakeAddUnkownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {
+    public cWebresult pIntakeAddUnkownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan, boolean pvIsUniqueBarcodeBln) {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 

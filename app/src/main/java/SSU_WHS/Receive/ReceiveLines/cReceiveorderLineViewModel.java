@@ -38,7 +38,7 @@ public class cReceiveorderLineViewModel extends AndroidViewModel {
 
 
     public  cWebresult pIntakeAddUnknownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pIntakeAddUnkownItemViaWebserviceWrs(pvBarcodeScan);}
-    public  cWebresult pIntakeAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pIntakeAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
+    public  cWebresult pIntakeAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan, boolean pvIsUniqueBarcodeBln) {return  this.Repository.pIntakeAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan, pvIsUniqueBarcodeBln);}
 
     public  cWebresult pAddERPItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddERPItemViaWebserviceWrs(pvBarcodeScan);}
     public  cWebresult pReceiveAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pReceiveAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
