@@ -151,6 +151,22 @@ public class cIntakeorderMATLine {
         return  sourceTypeInt;
     }
 
+    public boolean isUniqueBln() {
+
+        if (this.barcodesObl == null || this.barcodesObl.size() == 0) {
+            return  false;
+        }
+
+        for (cIntakeorderBarcode intakeorderBarcode : this.barcodesObl) {
+            if (intakeorderBarcode.getIsUniqueBarcodeBln()) {
+                return  true;
+            }
+        }
+
+        return  false;
+
+    }
+
     public  List<cIntakeorderBarcode> barcodesObl;
 
     public static ArrayList<cIntakeorderMATLineBarcode> allLineBarcodesObl;
@@ -318,6 +334,11 @@ public class cIntakeorderMATLine {
             //delete all line barcodes
             for (cIntakeorderMATLineBarcode intakeorderMATLineBarcode : this.handledBarcodesObl()  ) {
                 intakeorderMATLineBarcode.pDeleteFromDatabaseBln();
+
+                cIntakeorderBarcode intakeorderBarcodeToCheck = cIntakeorderBarcode.pGetIntakeOrderBarcodeByBarcode(intakeorderMATLineBarcode.getBarcodeStr());
+                if (intakeorderBarcodeToCheck != null && intakeorderBarcodeToCheck.getIsUniqueBarcodeBln()) {
+                        cIntakeorderBarcode.allBarcodesObl.remove(intakeorderBarcodeToCheck);
+                }
             }
 
             return  true;
@@ -387,6 +408,23 @@ public class cIntakeorderMATLine {
         }
 
         this.quantityDbl = pvQuantityDbl;
+
+    }
+
+    public static cIntakeorderMATLine pGetLineByLineNo(int pvLineNoLInt){
+
+        if (cIntakeorderMATLine.allIntakeorderMATLinesObl == null) {
+            return  null;
+        }
+
+        for (cIntakeorderMATLine intakeorderMATLine : cIntakeorderMATLine.allIntakeorderMATLinesObl ) {
+
+            if (intakeorderMATLine.getLineNoInt().equals(pvLineNoLInt)) {
+                return  intakeorderMATLine;
+            }
+        }
+
+        return  null;
 
     }
 

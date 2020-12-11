@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -146,6 +147,29 @@ public class cIntakeorder {
         return  cIntakeorderMATLine.allIntakeorderMATLinesObl;
     }
 
+    public List<cIntakeorderMATLine> linesHandledMATForBinObl(String pvBinCodeStr){
+
+        List<cIntakeorderMATLine> resultObl = new ArrayList<>();
+
+        if ( cIntakeorderMATLine.allIntakeorderMATLinesObl == null) {
+            return  resultObl;
+        }
+
+        for (cIntakeorderMATLine intakeorderMATLine : cIntakeorderMATLine.allIntakeorderMATLinesObl) {
+
+            if (intakeorderMATLine.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr) && intakeorderMATLine.getQuantityHandledDbl() > 0) {
+                resultObl.add(intakeorderMATLine);
+            }
+
+        }
+
+        if (resultObl.size() > 1) {
+            Collections.reverse(resultObl);
+        }
+
+        return  resultObl;
+    }
+
     public List<cReceiveorderSummaryLine> summaryReceiveLinesObl(){
         return  cReceiveorderSummaryLine.allReceiveorderSummaryLinesObl;
     }
@@ -162,7 +186,6 @@ public class cIntakeorder {
     public List<String> sourceNoObl;
     public boolean showDeviationsBln = true;
     public cBranchBin currentBin;
-    public  String binScanToHandeStr;
 
     //Region Constructor
 
@@ -673,6 +696,36 @@ public class cIntakeorder {
         }
     }
 
+    public boolean pMatchBarcodesAndLinesBln() {
+
+      if (cIntakeorderBarcode.allBarcodesObl == null || cIntakeorderBarcode.allBarcodesObl.size() == 0 ||
+         cIntakeorderMATLineBarcode.allMATLineBarcodesObl == null || cIntakeorderMATLineBarcode.allMATLineBarcodesObl.size() == 0 ||
+         cIntakeorderMATLine.allIntakeorderMATLinesObl == null ||  cIntakeorderMATLine.allIntakeorderMATLinesObl.size() == 0 )  {
+          return true;
+      }
+
+      for (cIntakeorderMATLineBarcode intakeorderMATLineBarcode : cIntakeorderMATLineBarcode.allMATLineBarcodesObl) {
+
+        cIntakeorderBarcode intakeorderBarcode =   cIntakeorderBarcode.pGetIntakeOrderBarcodeByBarcode(intakeorderMATLineBarcode.getBarcodeStr());
+          if (intakeorderBarcode == null) {
+              continue;
+          }
+
+        cIntakeorderMATLine intakeorderMATLine =   cIntakeorderMATLine.pGetLineByLineNo(intakeorderMATLineBarcode.getLineNoLng().intValue());
+          if (intakeorderMATLine == null) {
+              continue;
+          }
+
+          if (intakeorderMATLine.barcodesObl == null) {
+              intakeorderMATLine.barcodesObl = new ArrayList<>();
+          }
+
+          intakeorderMATLine.barcodesObl.add(intakeorderBarcode);
+      }
+
+      return  true;
+    }
+
     public double pQuantityHandledDbl() {
 
         Double resultDbl =this.getIntakeorderViewModel().pQuantityHandledDbl();
@@ -884,8 +937,15 @@ public class cIntakeorder {
                 return  false;
             }
 
+            Boolean isUniqueBarcodeBln = false;
+
+            if (cArticle.currentArticle.barcodesObl != null && cArticle.currentArticle.barcodesObl.get(0).getUniqueBarcodeBln()) {
+                isUniqueBarcodeBln = true;
+            }
+
             //Then add barcode
-            WebResult =  this.getReceiveorderLineViewModel().pIntakeAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan, false);
+            WebResult =  this.getReceiveorderLineViewModel().pIntakeAddUnknownBarcodeViaWebserviceWrs(pvBarcodeScan, isUniqueBarcodeBln);
+
             if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
                 if (WebResult.getResultDtt().size() == 1) {
@@ -1317,6 +1377,12 @@ public class cIntakeorder {
             return result;
         }
 
+        if (!cIntakeorder.currentIntakeOrder.pMatchBarcodesAndLinesBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_matching_lines_and_barcodes_failed));
+            return result;
+        }
+
         // Get all comments
         if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -1329,6 +1395,8 @@ public class cIntakeorder {
                 cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl = new ArrayList<>();
             }
         }
+
+
 
         return  result;
     }

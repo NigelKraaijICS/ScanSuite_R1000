@@ -21,7 +21,6 @@ public class cIntakeorderBarcode {
     public static List<cIntakeorderBarcode> allBarcodesObl;
     public static cIntakeorderBarcode currentIntakeOrderBarcode;
 
-
     //Region Public Properties
 
     private String barcodeStr;
@@ -138,21 +137,21 @@ public class cIntakeorderBarcode {
         return true;
     }
 
-    public  static void pTryToSetStandardBarcode(cReceiveorderSummaryLine pvReceiveorderSummaryLine) {
+    public static cIntakeorderBarcode pGetIntakeOrderBarcodeByBarcode(String pvBarcodeStr){
 
-        if (cIntakeorderBarcode.allBarcodesObl == null || cIntakeorderBarcode.allBarcodesObl.size() == 0) {
-            return;
+        if (cIntakeorderBarcode.allBarcodesObl == null) {
+            return  null;
         }
 
-        for (cIntakeorderBarcode intakeorderBarcode : cIntakeorderBarcode.allBarcodesObl) {
+        for (cIntakeorderBarcode intakeorderBarcode : cIntakeorderBarcode.allBarcodesObl ) {
 
-            if (intakeorderBarcode.getItemNoStr().equalsIgnoreCase(pvReceiveorderSummaryLine.getItemNoStr()) && intakeorderBarcode.getItemNoStr().equalsIgnoreCase(pvReceiveorderSummaryLine.getItemNoStr())) {
-                if (intakeorderBarcode.getBarcodeStr().equalsIgnoreCase(pvReceiveorderSummaryLine.getItemNoStr()) ) {
-                    cIntakeorderBarcode.currentIntakeOrderBarcode = intakeorderBarcode;
-                    return;
-                }
+            if (intakeorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr) || intakeorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeStr)) {
+                return  intakeorderBarcode;
             }
         }
+
+        return  null;
+
     }
 
     public boolean pInsertInDatabaseBln() {

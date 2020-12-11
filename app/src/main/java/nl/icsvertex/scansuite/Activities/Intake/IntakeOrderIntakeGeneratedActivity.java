@@ -23,14 +23,10 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.DialogFragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +57,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.R;
 
 import static ICS.Utils.cText.pDoubleToStringStr;
@@ -80,7 +75,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private  AppCompatImageButton imageButtonPlus;
     private  AppCompatImageButton imageButtonDone;
 
-    private  ConstraintLayout intakeorderIntakeContainer;
+    private  ConstraintLayout intakeorderIntakeGeneratedContainer;
 
     private  Toolbar toolbar;
     private  ImageView toolbarImage;
@@ -99,27 +94,15 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private  CardView binContainer;
     private TextView binText;
 
+    private  ConstraintLayout quantityControlsContainer;
     private  TextView quantityText;
-    private  TextView quantityRequiredText;
-
-    private CardView sourceNoContainer;
-    private TextView sourcenoText;
-
-    private CardView containerContainer;
-    private  TextView containerText;
 
     private  Boolean articleScannedBln = false;
     private  Boolean binScannedBln = false;
     private  Double quantityScannedDbl = 0.0;
     private  List<cIntakeorderBarcode> scannedBarcodesObl;
-    private  cBranchBin currentBin;
 
     private  RecyclerView recyclerScanActions;
-
-    private DrawerLayout menuActionsDrawer;
-    private NavigationView actionMenuNavigation;
-
-
 
     private cIntakeorderMATLineAdapter intakeorderMATLineAdapter;
     private cIntakeorderMATLineAdapter getIntakeorderMATLineAdapter(){
@@ -136,7 +119,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_intakeorder_intake);
+        setContentView(R.layout.activity_intakeorder_intake_generated);
         this.mActivityInitialize();
     }
 
@@ -208,44 +191,15 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
-
-        DialogFragment selectedFragment = null;
-        switch (pvMenuItem.getItemId()) {
-
-            case android.R.id.home:
-
-                if (this.quantityScannedDbl == 0 ) {
-                    this.mResetCurrents();
-                    this.mGoBackToLinesActivity();
-                    return  true;
-                }
-
-                this.mShowAcceptFragment();
+        if (pvMenuItem.getItemId() == android.R.id.home) {
+            if (this.quantityScannedDbl == 0) {
+                this.mResetCurrents();
+                this.mGoBackToLinesActivity();
                 return true;
+            }
 
-            case R.id.item_enter_bin:
-                selectedFragment = new ScanBinFragment();
-                break;
-
-            default:
-                break;
-        }
-
-
-        // deselect everything
-        int size = actionMenuNavigation.getMenu().size();
-        for (int i = 0; i < size; i++) {
-            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
-        }
-
-        // set item as selected to persist highlight
-        pvMenuItem.setChecked(true);
-        // close drawer when item is tapped
-        this.menuActionsDrawer.closeDrawers();
-
-        if (selectedFragment != null) {
-            selectedFragment.setCancelable(true);
-            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+            this.mShowAcceptFragment();
+            return true;
         }
 
         return true;
@@ -271,7 +225,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
             return;
         }
 
-        cIntakeorderMATLine.currentIntakeorderMATLine = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowInvertedObl().get(pvPositionInt);
+        cIntakeorderMATLine.currentIntakeorderMATLine = cIntakeorder.currentIntakeOrder.linesHandledMATForBinObl(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr()).get(pvPositionInt);
 
         //Remove the enviroment
         this.mRemoveAdapterFromFragment();
@@ -306,7 +260,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     @Override
     public void mFindViews() {
 
-        this.intakeorderIntakeContainer = findViewById(R.id.intakeorderIntakeContainer);
+        this.intakeorderIntakeGeneratedContainer = findViewById(R.id.intakeorderIntakeGeneratedContainer);
 
         this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
@@ -321,14 +275,8 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.binContainer = findViewById(R.id.binContainer);
         this.binText = findViewById(R.id.binText);
 
-        this.sourceNoContainer = findViewById(R.id.sourceNoContainer);
-        this.sourcenoText = findViewById(R.id.sourcenoText);
-
-        this.containerContainer = findViewById(R.id.containerContainer);
-        this.containerText = findViewById(R.id.containerText);
-
+        this.quantityControlsContainer = findViewById(R.id.quantityControlsContainer);
         this.quantityText = findViewById(R.id.quantityText);
-        this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
 
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
         this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
@@ -338,17 +286,22 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         this.recyclerScanActions = findViewById(R.id.recyclerScanActions);
 
-        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
-        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
-
         this.articleContainer = findViewById(R.id.articleContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
-        this.toolbarTitle.setText(pvScreenTitle);
+    public void mSetToolbar(String pvScreenTitleStr) {
+
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+            this.toolbarImage.setImageBitmap(cUser.currentUser.currentAuthorisation.customImageBmp());
+            this.toolbarTitle.setText( cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getDescriptionStr());
+        }
+        else {
+            this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
+            this.toolbarTitle.setText(pvScreenTitleStr);
+        }
+
         this.toolbarTitle.setSelected(true);
         this.toolbarSubtext.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -362,16 +315,12 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     @Override
     public void mFieldsInitialize() {
 
-        this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-
         this.counterPlusHelperInt = 0;
         this.counterMinusHelperInt = 0;
         this.toolbarSubtext.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
         this.mSetArticleInfo();
         this.mSetBinInfo();
-        this.mSetSourceNoInfo();
-        this.mSetContainerInfo();
         this.mSetQuantityInfo();
 
         this.mEnablePlusMinusAndBarcodeSelectViews();
@@ -381,7 +330,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.mShowLines();
 
         this.mHideArticleInfo();
-
+        this.mSetScanlineConstraints();
 
     }
 
@@ -440,9 +389,9 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
             if (branchBin != null) {
 
-                hulpRst = this.mHandleBINScanRst(pvBarcodeScan);
+                hulpRst = this.mHandleBINScanRst(branchBin);
                 if (! hulpRst.resultBln) {
-                    cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,hulpRst.messagesStr(),null,true);
+                    cUserInterface.pShowSnackbarMessage(intakeorderIntakeGeneratedContainer,hulpRst.messagesStr(),null,true);
                     return;
                 }
             }
@@ -453,10 +402,11 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         //Check if we have scanned a BIN and check if there are not handled linesInt for this BIN
         if (!binCheckedBln && cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
-
-            hulpRst = this.mHandleBINScanRst(pvBarcodeScan);
+            //First check if this is a BIN
+            cBranchBin branchBin =  cUser.currentUser.currentBranch.pGetBinByCode(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+            hulpRst = this.mHandleBINScanRst(branchBin);
             if (! hulpRst.resultBln) {
-                cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,hulpRst.messagesStr(),null,true);
+                cUserInterface.pShowSnackbarMessage(intakeorderIntakeGeneratedContainer,hulpRst.messagesStr(),null,true);
                 return;
             }
             return;
@@ -473,16 +423,11 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
             return;
         }
 
-        cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,cAppExtension.activity.getString(R.string.message_unknown_barcode),null,true);
+        cUserInterface.pShowSnackbarMessage(intakeorderIntakeGeneratedContainer,cAppExtension.activity.getString(R.string.message_unknown_barcode),null,true);
 
     }
 
-    public  void pAcceptStore() {
-
-        if (this.currentBin == null) {
-            cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer, cAppExtension.activity.getString(R.string.message_bin_required),null, true);
-            return;
-        }
+    private  void mAcceptStore() {
 
         if (this.quantityScannedDbl == 0 ) {
             this.mResetCurrents();
@@ -491,36 +436,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
 
         //We are done
-        this.mSendLine();
-
-    }
-
-    public void pRegisterBarcodeReceiver(){
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
-    }
-
-    public void pCancelStore() {
-        this.mResetCurrents();
-        this.mGoBackToLinesActivity();
-    }
-
-    public  void pHandleHandleBINScanned(cBarcodeScan pvBarcodeScan) {
-
-        cResult hulpRst;
-
-        hulpRst = this.mHandleBINScanRst(pvBarcodeScan);
-        if (! hulpRst.resultBln) {
-            cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,hulpRst.messagesStr(),null,true);
-            return;
-        }
-
-        if (!this.startedWithBINBln) {
-            //We are done
-            this.mSendLine();
-            return;
-
-        }
-
+        this.mSendLine(null);
 
     }
 
@@ -530,15 +446,8 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
     //Views
 
-
     private void mShowLines() {
-
-        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowInvertedObl() == null  || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowInvertedObl().size() == 0) {
-            this.mFillRecycler(new ArrayList<cIntakeorderMATLine>());
-            return;
-        }
-
-        this.mFillRecycler(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesToShowInvertedObl());
+        this.mFillRecycler(cIntakeorder.currentIntakeOrder.linesHandledMATForBinObl(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr()));
     }
 
     private void mSetArticleImageListener() {
@@ -609,7 +518,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         //If pick with picture is false, then hide image view
         if (!cIntakeorder.currentIntakeOrder.isReceiveWithPictureBln()) {
-            this.articleThumbImageView.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -648,11 +556,8 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
             this.imageButtonBarcode.setVisibility(View.INVISIBLE);
-            this.imageButtonDone.setVisibility(View.INVISIBLE);
             return;
         }
-
-        this.imageButtonDone.setVisibility(View.VISIBLE);
 
         if (!cSetting.RECEIVE_AMOUNT_MANUAL_MA()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
@@ -674,9 +579,9 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.articleContainer.setLayoutParams(newCardViewLayoutParams);
 
         ConstraintSet constraintSetSpace = new ConstraintSet();
-        constraintSetSpace.clone(this.intakeorderIntakeContainer);
+        constraintSetSpace.clone(this.intakeorderIntakeGeneratedContainer);
         constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
-        constraintSetSpace.applyTo(this.intakeorderIntakeContainer);
+        constraintSetSpace.applyTo(this.intakeorderIntakeGeneratedContainer);
 
     }
 
@@ -698,7 +603,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
 
        if (cIntakeorderBarcode.currentIntakeOrderBarcode.getIsUniqueBarcodeBln()) {
-           cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_barcode_already_scanned_and_unique),"",true, true);
+           result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_barcode_already_scanned_and_unique));
            result.resultBln = false;
            cIntakeorderBarcode.currentIntakeOrderBarcode = null;
            return result;
@@ -711,31 +616,24 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         return result;
     }
 
-    private  cResult mHandleBINScanRst(cBarcodeScan pvBarcodescan){
+    private  cResult mHandleBINScanRst(cBranchBin pvBranchBin){
 
         cResult result = new cResult();
         result.resultBln = true;
 
         //If we already handled this BIN scan in previous activity, we are done
-        if (pvBarcodescan.getBarcodeOriginalStr().equalsIgnoreCase(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr())) {
-            this.binScannedBln = true;
-            this.mSetBinInfo();
+        if (pvBranchBin.getBinCodeStr().equalsIgnoreCase(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr())) {
             return result;
         }
 
-        if ( cIntakeorder.currentIntakeOrder.currentBin != null && !pvBarcodescan.getBarcodeOriginalStr().equalsIgnoreCase(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr())) {
-            //We scanned a BIN, but we need to scan an article first
-            if (! this.articleScannedBln) {
-                result.resultBln = false;
-                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_scan_article_first));
-                return result;
-            }
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
+            this.binScannedBln = true;
+            cIntakeorder.currentIntakeOrder.currentBin = pvBranchBin;
+            this.mFieldsInitialize();
+            return result;
         }
 
-        //We scanned a new BIN, handle it in previous activity
-        cIntakeorder.currentIntakeOrder.binScanToHandeStr = pvBarcodescan.getBarcodeOriginalStr();
-        this.mResetCurrents();
-        this.mGoBackToLinesActivity();
+        this.mSendLine(pvBranchBin);
         return  result;
 
     }
@@ -744,13 +642,13 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
             cUserInterface.pDoNope(quantityText, false, false);
-            cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer, getString(R.string.choose_barcode_first), null, false);
+            cUserInterface.pShowSnackbarMessage(intakeorderIntakeGeneratedContainer, getString(R.string.choose_barcode_first), null, false);
             return;
         }
 
         if (cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityHandledDbl() > 1) {
             cUserInterface.pDoNope(quantityText, true, true);
-            cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
+            cUserInterface.pShowSnackbarMessage(intakeorderIntakeGeneratedContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
             return;
         }
 
@@ -758,15 +656,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     }
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
-
-
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangeQuantity(false, true,pvQuantityDbl);
-        }
-        else {
-            this.mTryToChangeQuantity(true, true,pvQuantityDbl);
-        }
-
+        this.mTryToChangeQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
     }
 
     private  void mTryToChangeQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
@@ -797,7 +687,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
                 //Update activity and Check if this line is done
                 this.quantityScannedDbl = newQuantityDbl;
                 this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
-                this.mCheckLineDone();
                 return;
 
 
@@ -805,34 +694,12 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
                 newQuantityDbl = this.quantityScannedDbl + pvAmountDbl;
             }
 
-            //Check if we would exceed amount, then show message if needed
-            if (!cIntakeorder.currentIntakeOrder.isGenerated()) {
-                if (newQuantityDbl > cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGetQuantityToHandleDbl()) {
-
-                    if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln()) {
-                        this.mShowExtraPiecesNotAllowed();
-
-                        if (this.quantityScannedDbl> 0) {
-                            this.articleScannedBln = true;
-                            return;
-                        }
-
-                        this.articleScannedBln = false;
-                        return;
-                    }
-                }
-            }
-
-
             //Set the new quantityDbl and show in Activity
             this.quantityScannedDbl = newQuantityDbl;
             this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
 
             //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
             this.scannedBarcodesObl.add(cIntakeorderBarcode.currentIntakeOrderBarcode);
-
-            //Check if this line is done
-            this.mCheckLineDone();
             return;
         }
 
@@ -890,7 +757,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
 
         this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl));
-        this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+
     }
 
     private void mBarcodeSelected(cIntakeorderBarcode pvBarcode) {
@@ -902,8 +769,14 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.mShowBarcodeInfo();
 
         this.mTryToChangeQuantity(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
-    }
 
+
+
+        if (cIntakeorderBarcode.currentIntakeOrderBarcode.getIsUniqueBarcodeBln()) {
+            this.mSendLine(null);
+        }
+
+    }
 
     private void mHandleUnknownBarcodeScan(cBarcodeScan pvBarcodeScan) {
 
@@ -964,43 +837,14 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
 
         this.mFieldsInitialize();
+        this.mBarcodeSelected(cIntakeorderBarcode.currentIntakeOrderBarcode);
     }
 
     // Lines, Barcodes
 
-    private  void mCheckLineDone() {
+    private void mSendLine(cBranchBin pvBranchBin) {
 
-        //Start with complete
-        this.imageButtonDone.setVisibility(View.VISIBLE);
-
-        //If article or BIN hasn't been scanned then we are not done
-        if (!this.articleScannedBln || !this.binScannedBln) {
-            this.imageButtonDone.setVisibility(View.INVISIBLE);
-            return;
-        }
-
-        //Check if quantityDbl is sufficient
-        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pQuantityReachedBln(this.scannedBarcodesObl)) {
-            this.imageButtonDone.setVisibility(View.VISIBLE);
-            this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-            return;
-        }
-
-        //We are complete
-        this.imageButtonDone.setVisibility(View.VISIBLE);
-        this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
-
-        //If auto accept is false, we are done here
-        if (!cIntakeorder.currentIntakeOrder.getReceiveStoreAutoAcceptAtRequestedBln()) {
-            return;
-        }
-
-        //All is done
-        this.mSendLine();
-
-    }
-
-    private void mSendLine() {
+        String scannedBarcodeStr;
 
         //If internet is not connected
         if (!cConnection.isInternetConnectedBln()) {
@@ -1011,28 +855,41 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         List<cIntakeorderBarcode> sortedBarcodeList = this.mSortBarcodeList(this.scannedBarcodesObl);
 
-        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
-            if(!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pItemVariantHandledBln(this.currentBin.getBinCodeStr(), sortedBarcodeList)) {
+
+            if(!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGeneratedItemVariantHandledBln(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr(),sortedBarcodeList)) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.couldnt_send_line), "",true,true);
                 return;
             }
-        }
 
-        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAS")) {
-            if(!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGeneratedItemVariantHandledBln(this.currentBin.getBinCodeStr(),sortedBarcodeList)) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.couldnt_send_line), "",true,true);
+            if (cIntakeorderBarcode.currentIntakeOrderBarcode.getIsUniqueBarcodeBln() || pvBranchBin != null) {
+                scannedBarcodeStr = cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeStr();
+                this.mResetCurrentsForUniqueBarcode();
+
+                if (pvBranchBin != null) {
+                    cIntakeorder.currentIntakeOrder.currentBin = pvBranchBin;
+                }
+
+                this.mFieldsInitialize();
+                cUserInterface.pShowSnackbarMessage(this.quantityText, scannedBarcodeStr +  " send", R.raw.headsupsound, true);
                 return;
             }
-        }
 
-
-        this.mResetCurrents();
-        this.mGoBackToLinesActivity();
+            this.mResetCurrents();
+            this.mGoBackToLinesActivity();
 
     }
 
      //ScanActions
      private void mFillRecycler(List<cIntakeorderMATLine> pvDataObl) {
+
+        if (pvDataObl == null | pvDataObl.size() == 0) {
+            this.imageButtonDone.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            this.imageButtonDone.setVisibility(View.VISIBLE);
+            this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+        }
          this.getIntakeorderMATLineAdapter().pFillData(pvDataObl);
          this.recyclerScanActions.setHasFixedSize(false);
          this.recyclerScanActions.setAdapter(this.getIntakeorderMATLineAdapter());
@@ -1044,7 +901,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               pAcceptStore();
+               mAcceptStore();
             }
         });
     }
@@ -1134,12 +991,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
                 mNumberClicked();
             }
         });
-        this.quantityRequiredText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mNumberClicked();
-            }
-        });
     }
 
     //Dialogs and Activitys
@@ -1169,13 +1020,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         });
     }
 
-    private void mShowExtraPiecesNotAllowed(){
-        this.quantityText.setText(this.quantityRequiredText.getText());
-        cUserInterface.pShowSnackbarMessage(this.toolbarImage , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
-        cUserInterface.pDoNope(this.quantityText, true, true);
-        cUserInterface.pDoNope(this.quantityRequiredText, false, false);
-    }
-
     private void mGoBackToLinesActivity() {
 
         Intent intent = null;
@@ -1195,11 +1039,20 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private void mResetCurrents() {
 
         cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
+        cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = null;
         cIntakeorderMATLine.currentIntakeorderMATLine = null;
         cIntakeorder.currentIntakeOrder.currentBin = null;
-        this.currentBin = null;
         this.articleScannedBln = false;
         this.binScannedBln = false;
+        this.scannedBarcodesObl = null;
+        this.quantityScannedDbl = 0.0;
+    }
+
+    private void mResetCurrentsForUniqueBarcode() {
+
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
+        cIntakeorderMATLine.currentIntakeorderMATLine = null;
+        this.articleScannedBln = false;
         this.scannedBarcodesObl = null;
         this.quantityScannedDbl = 0.0;
     }
@@ -1231,11 +1084,11 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private void mSetArticleInfo(){
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
-            this.articleDescriptionText.setText("???");
-            this.articleDescription2Text.setText("???");
-            this.articleItemText.setText("???");
+            this.articleContainer.setVisibility(View.GONE);
             return;
         }
+
+        this.articleContainer.setVisibility(View.VISIBLE);
         this.articleDescriptionText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr());
         this.articleDescription2Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str());
         this.articleItemText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getItemNoAndVariantCodeStr());
@@ -1248,8 +1101,13 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
     private void mSetQuantityInfo(){
 
-        this.quantityRequiredText.setVisibility(View.GONE);
-        this.quantityText.setText("0");
+        if (this.quantityScannedDbl == 0) {
+            this.quantityControlsContainer.setVisibility(View.GONE);
+            return;
+        }
+
+        this.quantityControlsContainer.setVisibility(View.VISIBLE);
+        this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
 
     }
 
@@ -1263,28 +1121,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.binContainer.setVisibility(View.VISIBLE);
         this.binText.setText(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr());
 
-
-    }
-
-    private void mSetSourceNoInfo(){
-
-        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
-            this.sourceNoContainer.setVisibility(View.GONE);
-            return;
-        }
-
-        this.sourceNoContainer.setVisibility(View.VISIBLE);
-        this.sourcenoText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getSourceNoStr());
-    }
-
-    private void mSetContainerInfo(){
-
-        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine  == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getContainerStr().isEmpty()) {
-            this.containerContainer.setVisibility(View.GONE);
-            return;
-        }
-        this.containerContainer.setVisibility(View.VISIBLE);
-        this.containerText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getContainerStr());
     }
 
     private  List<cIntakeorderBarcode> mSortBarcodeList(List<cIntakeorderBarcode> pvUnsortedBarcodeObl) {
@@ -1312,10 +1148,9 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         return resultList;
     }
 
-
     //Region Number Broadcaster
 
-    private Runnable mMinusAction = new Runnable() {
+    private final Runnable mMinusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonMinus.performClick();
@@ -1335,7 +1170,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
     };
 
-    private Runnable mPlusAction = new Runnable() {
+    private final Runnable mPlusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonPlus.performClick();
@@ -1355,7 +1190,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
     };
 
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int numberChosenInt = 0;
@@ -1387,8 +1222,23 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
             return;
         }
 
+        cUserInterface.pShowSnackbarMessage(this.imageButtonDone,cAppExtension.activity.getString(R.string.message_line_reset_succesfull), R.raw.headsupsound, true);
+
         //Renew data, so only current lines are shown
         this.mFieldsInitialize();
+    }
+
+    private void mSetScanlineConstraints(){
+
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null){
+            ConstraintSet constraintSetSpace = new ConstraintSet();
+            constraintSetSpace.clone(intakeorderIntakeGeneratedContainer);
+            constraintSetSpace.connect(recyclerScanActions.getId(), ConstraintSet.TOP, binContainer.getId(), ConstraintSet.BOTTOM);
+            constraintSetSpace.applyTo(intakeorderIntakeGeneratedContainer);
+        }
+
+
+
     }
 
     //End Region Number Broadcaster

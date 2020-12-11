@@ -2,8 +2,9 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/receiveorderLineItemSummaryLinearLayout"
+    android:id="@+id/receiveorderLineItemSummaryFrameLayout"
     style="@style/defaultLineRecyclerLinearLayout"
+    android:animateLayoutChanges="true"
     >
     <RelativeLayout
         android:layout_width="match_parent"

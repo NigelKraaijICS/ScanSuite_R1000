@@ -47,6 +47,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
     private EditText editTextDocument;
+    private EditText editTextBin;
     private Switch switchCheckBarcodes;
     private  Button createIntakeButton;
     private  Button cancelButton;
@@ -149,15 +150,25 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         this.editTextDocument = findViewById(R.id.editTextDocument);
+        this.editTextBin = findViewById(R.id.editTextBin);
         this.switchCheckBarcodes = findViewById(R.id.checkBarcodesSwitch);
         this.createIntakeButton = findViewById(R.id.createButton);
         this.cancelButton = findViewById(R.id.cancelButton);
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
+    public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_intake_ma);
-        this.toolbarTitle.setText(pvScreenTitle);
+
+        if (cUser.currentUser.currentAuthorisation.getCustomAuthorisation() != null) {
+            this.toolbarImage.setImageBitmap(cUser.currentUser.currentAuthorisation.customImageBmp());
+            this.toolbarTitle.setText(cAppExtension.activity.getString(R.string.create) + " " + cUser.currentUser.currentAuthorisation.getCustomAuthorisation().getDescriptionStr());
+        }
+        else {
+            this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
+            this.toolbarTitle.setText(pvScreenTitleStr);
+        }
+
         this.toolbarTitle.setSelected(true);
         this.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
@@ -176,6 +187,14 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         InputFilter[] filterArray = new InputFilter[1];
         filterArray[0] = new InputFilter.LengthFilter(50);
         this.editTextDocument.setFilters(filterArray);
+
+        if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
+            this.editTextBin.setVisibility(View.GONE);
+        }
+        else {
+            this.mSetBin();
+        }
+
 
         if (!cSetting.RECEIVE_BARCODE_CHECK()) {
             this.switchCheckBarcodes.setVisibility(View.GONE);
@@ -246,11 +265,6 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         this.createIntakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-
-                if (editTextDocument.getText().toString().isEmpty()){
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_document),null);
-                    return;
-                }
                 IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
                 mCreateOrder(editTextDocument.getText().toString().trim(),
                         switchCheckBarcodes.isChecked());
@@ -370,8 +384,6 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-
-
     private  void mStepFailed(String pvErrorMessageStr){
 
         if (cIntakeorder.currentIntakeOrder != null) {
@@ -396,6 +408,23 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         Intent intent = new Intent(cAppExtension.context, IntakeorderMASLinesActivity.class);
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
 
+    }
+
+    private void mSetBin(){
+
+        if (!cUser.currentUser.currentBranch.getReceiveDefaultBinStr().isEmpty()) {
+            this.editTextBin.setText(cUser.currentUser.currentBranch.getReceiveDefaultBinStr());
+        }
+        else {
+
+            if (!cUser.currentUser.currentBranch.pGetReceiveBinsViaWebserviceBln()) {
+                return;
+            }
+
+            if (cUser.currentUser.currentBranch.receiveBinsObl != null&& cUser.currentUser.currentBranch.receiveBinsObl.size() == 1) {
+                this.editTextBin.setText(cUser.currentUser.currentBranch.receiveBinsObl.get(0).getBinCodeStr());
+            }
+        }
     }
 
     //End Region Private Methods

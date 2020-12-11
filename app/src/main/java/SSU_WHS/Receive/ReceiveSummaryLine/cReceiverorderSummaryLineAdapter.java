@@ -39,7 +39,7 @@ public class cReceiverorderSummaryLineAdapter extends RecyclerView.Adapter<cRece
         public ReceiverorderLineViewHolder(View pvItemView) {
             super(pvItemView);
 
-            this.receiveorderItemLinearLayout = pvItemView.findViewById(R.id.receiveorderLineItemSummaryLinearLayout);
+            this.receiveorderItemLinearLayout = pvItemView.findViewById(R.id.receiveorderLineItemSummaryFrameLayout);
 
             this.textViewItemNoAndVariantCode = pvItemView.findViewById(R.id.textViewItemNoAndVariant);
             this.textViewItemNoAndVariantCode.setEllipsize(TextUtils.TruncateAt.MARQUEE);

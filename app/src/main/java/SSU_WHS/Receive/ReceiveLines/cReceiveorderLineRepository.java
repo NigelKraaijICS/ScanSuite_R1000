@@ -54,6 +54,16 @@ public class cReceiveorderLineRepository {
         }
     }
 
+    private static class AddBarcodeParams {
+        cBarcodeScan barcodeScan;
+        Boolean isUniqueBarcodeBln;
+
+        AddBarcodeParams(cBarcodeScan pvBarcodeScan, Boolean pvIsUniqueBarcodeBln) {
+            this.barcodeScan = pvBarcodeScan;
+            this.isUniqueBarcodeBln = pvIsUniqueBarcodeBln;
+        }
+    }
+
     //Region Constructor
     cReceiveorderLineRepository(Application pvApplication) {
         acScanSuiteDatabase db = acScanSuiteDatabase.pGetDatabase(pvApplication);
@@ -203,8 +213,10 @@ public class cReceiveorderLineRepository {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
+        AddBarcodeParams addBarcodeParams = new AddBarcodeParams(pvBarcodeScan,pvIsUniqueBarcodeBln);
+
         try {
-            webResultWrs = new mIntakeUnknownBarcodeViaWebserviceAsyncTask().execute(pvBarcodeScan).get();
+            webResultWrs = new mIntakeUnknownBarcodeViaWebserviceAsyncTask().execute(addBarcodeParams).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -550,9 +562,9 @@ public class cReceiveorderLineRepository {
         }
     }
 
-    private static class mIntakeUnknownBarcodeViaWebserviceAsyncTask extends AsyncTask<cBarcodeScan, Void, cWebresult> {
+    private static class mIntakeUnknownBarcodeViaWebserviceAsyncTask extends AsyncTask<AddBarcodeParams, Void, cWebresult> {
         @Override
-        protected cWebresult doInBackground(cBarcodeScan... params) {
+        protected cWebresult doInBackground(AddBarcodeParams... params) {
             cWebresult webresult = new cWebresult();
             try {
 
@@ -592,7 +604,7 @@ public class cReceiveorderLineRepository {
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
                 l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
-                l_PropertyInfo6Pin.setValue(params[0].getBarcodeOriginalStr());
+                l_PropertyInfo6Pin.setValue(params[0].barcodeScan.getBarcodeOriginalStr());
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
                 PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
@@ -602,7 +614,7 @@ public class cReceiveorderLineRepository {
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_ISUNIQUEBARCODE;
-                l_PropertyInfo8Pin.setValue(false);
+                l_PropertyInfo8Pin.setValue(params[0].isUniqueBarcodeBln);
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();

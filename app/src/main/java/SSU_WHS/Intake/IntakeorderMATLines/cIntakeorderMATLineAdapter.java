@@ -1,10 +1,12 @@
 package SSU_WHS.Intake.IntakeorderMATLines;
 
+import android.media.Image;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -27,6 +30,8 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
     public static class IntakeorderMATLineViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textViewBinCode;
+
+        private ImageView imageStoredQuantity;
         private TextView textViewQuantity;
         private FrameLayout intakeOrderMATItemFrameLayout;
 
@@ -46,6 +51,8 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
             this.textViewBinCode.setSelected(true);
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
             this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
+
+            this.imageStoredQuantity = pvItemView.findViewById(R.id.imageStoredQuantity);
             this.textViewQuantity = pvItemView.findViewById(R.id.storedQuantityText);
 
         }
@@ -102,9 +109,22 @@ public class cIntakeorderMATLineAdapter extends RecyclerView.Adapter<cIntakeorde
             binCodeStr = currentIntakeorderMatLine.getBinCodeHandledStr();
         }
 
+        if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity) {
+            binCodeStr = currentIntakeorderMatLine.getItemNoStr();
+
+            if (!currentIntakeorderMatLine.getVariantCodeStr().isEmpty()) {
+                binCodeStr += " " + currentIntakeorderMatLine.getVariantCodeStr();
+            }
+        }
+
         //Set description and quantity
         pvHolder.textViewQuantity.setText(quantityToShowStr);
         pvHolder.textViewBinCode.setText(binCodeStr);
+
+        if (currentIntakeorderMatLine.isUniqueBln()) {
+            pvHolder.textViewQuantity.setVisibility(View.GONE);
+            pvHolder.imageStoredQuantity.setVisibility(View.GONE);
+        }
 
         //Start On Click Listener
         pvHolder.intakeOrderMATItemFrameLayout.setOnClickListener(new View.OnClickListener() {

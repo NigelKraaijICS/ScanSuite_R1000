@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,24 +23,27 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.R;
 
-public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder>  {
+public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cIntakeorderMATSummaryLineAdapter.IntakeorderMATSummaryLineViewHolder>  {
 
     //Region Public Properties
-    public static class IntakeorderMATLineViewHolder extends RecyclerView.ViewHolder{
+    public static class IntakeorderMATSummaryLineViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView textViewItemNoAndVariantCode;
-        private TextView textViewDescription;
-        private TextView textViewQuantity;
-        private TextView textViewSourceNo;
-        private ImageView imageBin;
-        private TextView textViewBinCode;
-        private FrameLayout intakeOrderMATItemLinearLayout;
-        private ImageView imageSendStatus;
+        private final TextView textViewItemNoAndVariantCode;
+        private final TextView textViewDescription;
+        private final TextView textViewQuantity;
+        private final TextView textViewSourceNo;
+        private final ImageView imageBin;
+        private final TextView textViewBinCode;
+        private final FrameLayout receiveorderLineItemSummaryFrameLayout;
+        private final ImageView imageSendStatus;
 
-        public IntakeorderMATLineViewHolder(View pvItemView) {
+        public RelativeLayout viewBackground;
+        public ConstraintLayout viewForeground;
+
+        public IntakeorderMATSummaryLineViewHolder(View pvItemView) {
             super(pvItemView);
 
-            this.intakeOrderMATItemLinearLayout = pvItemView.findViewById(R.id.receiveorderLineItemSummaryLinearLayout);
+            this.receiveorderLineItemSummaryFrameLayout = pvItemView.findViewById(R.id.receiveorderLineItemSummaryFrameLayout);
 
             this.textViewItemNoAndVariantCode = pvItemView.findViewById(R.id.textViewItemNoAndVariant);
             this.textViewItemNoAndVariantCode.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -64,6 +69,9 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
             this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
             this.imageSendStatus = pvItemView.findViewById(R.id.imageSendStatus);
 
+            this.viewBackground = pvItemView.findViewById(R.id.view_background);
+            this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
+
         }
     }
     //End Region Public Properties
@@ -73,7 +81,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
     private List<cIntakeorderMATSummaryLine> localIntakeorderMATSummaryLinesObl;
     //End Region Private Propertiess
 
-    private List<FrameLayout> intakeorderLineItemFrameLayout = new ArrayList<>();
+    private final List<FrameLayout> intakeorderLineItemFrameLayout = new ArrayList<>();
 
 
     //Region Constructor
@@ -87,15 +95,15 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
     @NonNull
     @Override
-    public cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
+    public cIntakeorderMATSummaryLineAdapter.IntakeorderMATSummaryLineViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_intakeorderline_summary, pvParent, false);
-        return new IntakeorderMATLineViewHolder(itemView);
+        return new IntakeorderMATSummaryLineViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final cIntakeorderMATSummaryLineAdapter.IntakeorderMATLineViewHolder pvHolder, final int pvPositionInt) {
+    public void onBindViewHolder(final cIntakeorderMATSummaryLineAdapter.IntakeorderMATSummaryLineViewHolder pvHolder, final int pvPositionInt) {
 
-        this.intakeorderLineItemFrameLayout.add(pvHolder.intakeOrderMATItemLinearLayout);
+        this.intakeorderLineItemFrameLayout.add(pvHolder.receiveorderLineItemSummaryFrameLayout);
 
         if (this.localIntakeorderMATSummaryLinesObl == null || this.localIntakeorderMATSummaryLinesObl.size() == 0 ) {
             return;
@@ -115,7 +123,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
         String lineDescriptionStr = currentIntakeorderMATSummaryLine.getDescriptionStr();
 
-        String quantityToShowStr = "";
+        String quantityToShowStr;
 
         if (currentIntakeorderMATSummaryLine.getQuantityHandledDbl().intValue() >= currentIntakeorderMATSummaryLine.getQuantityDbl().intValue() && cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAS")) {
             quantityToShowStr =  cText.pDoubleToStringStr(currentIntakeorderMATSummaryLine.getQuantityHandledDbl());
@@ -126,6 +134,10 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         else
         {
             quantityToShowStr = currentIntakeorderMATSummaryLine.getQuantityHandledDbl().intValue() + "/" + currentIntakeorderMATSummaryLine.getQuantityDbl().intValue();
+        }
+
+        if (currentIntakeorderMATSummaryLine.isUniqueBln()) {
+            quantityToShowStr = "";
         }
 
         String sourceNoStr = currentIntakeorderMATSummaryLine.getSourceNoStr();
@@ -173,7 +185,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
         pvHolder.imageSendStatus.setVisibility(View.GONE);
 
         //Start On Click Listener
-        pvHolder.intakeOrderMATItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+        pvHolder.receiveorderLineItemSummaryFrameLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View pvView) {
@@ -203,7 +215,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
         //Select the first one, or selected index
         if (pvPositionInt == 0 && cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
-            pvHolder.intakeOrderMATItemLinearLayout.performClick();
+            pvHolder.receiveorderLineItemSummaryFrameLayout.performClick();
         }
     }
 
@@ -228,7 +240,7 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
         if (cAppExtension.activity instanceof IntakeorderMASLinesActivity) {
             IntakeorderMASLinesActivity intakeorderMASLinesActivity = (IntakeorderMASLinesActivity)cAppExtension.activity;
-            intakeorderMASLinesActivity.pSetToolBarTitleWithCounters( cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+            intakeorderMASLinesActivity.pSetToolBarTitleWithCounters(  cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
             intakeorderMASLinesActivity.pShowData(this.localIntakeorderMATSummaryLinesObl);
         }
 
@@ -264,11 +276,9 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
 
         if (cAppExtension.activity instanceof IntakeorderMASLinesActivity) {
             IntakeorderMASLinesActivity intakeorderMASLinesActivity = (IntakeorderMASLinesActivity)cAppExtension.activity;
-            intakeorderMASLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(this.localIntakeorderMATSummaryLinesObl.size())  + "/" + cText.pIntToStringStr(cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size()) + ") " + cAppExtension.activity.getString(R.string.lines) + " " + cAppExtension.activity.getString(R.string.shown) );
+            intakeorderMASLinesActivity.pSetToolBarTitleWithCounters("(" + cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + cAppExtension.activity.getString(R.string.lines));
             if (this.localIntakeorderMATSummaryLinesObl.size() == 1 && pvScannedBln) {
-
                 intakeorderMASLinesActivity.pIntakelineSelected(this.localIntakeorderMATSummaryLinesObl.get(0));
-                intakeorderMASLinesActivity.pStartLine();
             }
             else{
                 intakeorderMASLinesActivity.pShowData(this.localIntakeorderMATSummaryLinesObl);

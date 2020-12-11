@@ -368,6 +368,7 @@
     <string name="message_packingtable_already_assigned">This packing table is already assigned to a different sales order</string>
     <string name="message_salesorder_assigned_different_packingtable">This sales order is already assigned to a different packing table</string>
     <string name="message_scan_article">Scan article</string>
+    <string name="message_scan_article_or_new_bin">Scan article or new BIN</string>
     <string name="scan_packingtable_parameter1">Scan packing table %1$s</string>
     <string name="question_open_sort">Do you want to continue with sorting?</string>
     <string name="question_open_sort_title">Open sort?</string>
@@ -732,6 +733,7 @@
     <string name="message_scan_reason_first">Decide reason, before you scan a different article</string>
     <string name="message_document_already_active">This document is the current document</string>
     <string name="create_external_receive">Create external receive</string>
+    <string name="create">Create</string>
     <string name="create_intake_order">Create intake order</string>
     <string name="message_scan_receive_document">Scan/type document</string>
     <string name="screentitle_receive">Receive</string>
@@ -848,6 +850,7 @@
     <string name="message_scan_destination_mi_single_piece">Scan Destination</string>
     <string name="message_set_serial_first">Serial empty, please set serial</string>
     <string name="message_barcode_already_scanned_and_unique">Barcode has already been scanned and is unique</string>
+    <string name="error_matching_lines_and_barcodes_failed">Matching lines and barcodes failed</string>
 
     <!--End Region return-->
 

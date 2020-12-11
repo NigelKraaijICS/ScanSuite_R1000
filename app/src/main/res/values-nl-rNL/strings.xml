@@ -724,5 +724,8 @@
     <string name="get_stock_failed">Voorraad opvragen mislukt</string>
     <string name="create_pick">Creeer pick opdracht</string>
     <string name="message_barcode_already_scanned_and_unique">Barcode is al eerder gescanned, en is uniek</string>
+    <string name="create">Creeer</string>
+    <string name="message_scan_article_or_new_bin">Scan artikel of nieuwe BIN</string>
+    <string name="error_matching_lines_and_barcodes_failed">Regels en barcodes koppelen mislukt</string>
 
 </resources>

@@ -232,8 +232,8 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarTitle.setText(pvScreenTitle);
+    public void mSetToolbar(String pvScreenTitleStr) {
+        this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarImage.setImageResource(R.drawable.ic_menu);
         this.toolbarTitle.setSelected(true);
         this.toolbarSubtext.setSelected(true);

@@ -4,19 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +27,6 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -38,19 +34,17 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLineAdapter;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLineRecyclerItemTouchHelper;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
-import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
 
-public class IntakeorderMASLinesActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class IntakeorderMASLinesActivity extends AppCompatActivity implements iICSDefaultActivity, cIntakeorderMATSummaryLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
     //Region Public Properties
-    public static Fragment currentLineFragment;
     //End Region Public Properties
 
     //Region Private Properties
@@ -64,20 +58,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
 
-    private ImageView imageViewStart;
-    private SearchView recyclerSearchView;
-    private ImageView closeButton;
     private RecyclerView recyclerViewLines;
-
-    private Switch switchDeviations;
-
-    public enum InputType {
-        UNKNOWN,
-        BIN,
-        ARTICLE
-    }
-
-    private InputType currentInputType = InputType.UNKNOWN;
 
     private ImageView imageButtonCloseOrder;
 
@@ -100,7 +81,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     @Override
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
-        setContentView(R.layout.activity_intakeorder_lines);
+        setContentView(R.layout.activity_intakeorder_lines_generated);
         this.mActivityInitialize();
     }
 
@@ -142,6 +123,19 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     }
 
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder pvViewHolder, int pvDirectionInt, int pvPositionInt) {
+
+        if (!(pvViewHolder instanceof  cIntakeorderMATSummaryLineAdapter.IntakeorderMATSummaryLineViewHolder)) {
+            return;
+        }
+
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().get(pvPositionInt);
+
+        //Reset the line
+        this.mRemoveAdapterFromFragment();
+    }
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -177,12 +171,8 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
-        this.recyclerSearchView = findViewById(R.id.recyclerSearchView);
-        this.closeButton = this.recyclerSearchView.findViewById(R.id.search_close_btn);
         this.recyclerViewLines = findViewById(R.id.recyclerViewLines);
-        this.imageViewStart = findViewById(R.id.imageViewStart);
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
-        this.switchDeviations = findViewById(R.id.switchDeviations);
     }
 
     @Override
@@ -205,25 +195,21 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
-        this.imageViewStart.setVisibility(View.INVISIBLE);
-        this.switchDeviations.setVisibility(View.INVISIBLE);
-
         if (cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl.size() == 0) {
             mNoLinesAvailable(true);
             return;
         }
 
-        mNoLinesAvailable(false);
-        getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl);
+        this.mNoLinesAvailable(false);
+        this.getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl());
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cIntakeorderMATSummaryLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewLines);
 
     }
 
     @Override
     public void mSetListeners() {
-        this.mSetRecyclerOnScrollListener();
-        this.mSetStartLineListener();
-        this.mSetSearchListener();
-        this.mSetSearchCloseListener();
         this.mSetShowCommentListener();
         this.mSetSendOrderListener();
     }
@@ -288,7 +274,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
             //Something went wrong, so show message and stop
             if (!hulpResult.resultBln) {
                 this.mDoUnknownScan(hulpResult.messagesStr(), pvBarcodeScan.getBarcodeOriginalStr());
-                this.mFillRecycler(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
+                this.mFillRecycler(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl());
                 return;
             }
 
@@ -302,7 +288,6 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             this.mDoUnknownScan(cAppExtension.activity.getString(R.string.error_article_scan_not_allowed), pvBarcodeScan.getBarcodeOriginalStr());
-            return;
         }
     }
 
@@ -323,15 +308,6 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
         cIntakeorder.currentIntakeOrder.pLockReleaseViaWebserviceBln();
         this.mStartOrderSelectActivity();
-    }
-
-    public void pStartLine() {
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                imageViewStart.performClick();
-            }
-        });
     }
 
     public void pSetToolBarTitleWithCounters(final String pvTextStr) {
@@ -361,14 +337,10 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     //Region Private Methods
 
-
-
     private cResult mHandleBINScan(String pvBinCodeStr) {
 
         cResult result = new cResult();
         result.resultBln = true;
-
-        this.currentInputType = InputType.BIN;
 
         //Get the current BIN
         cIntakeorder.currentIntakeOrder.currentBin = cUser.currentUser.currentBranch.pGetBinByCode(pvBinCodeStr);
@@ -378,7 +350,6 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
             return result;
         }
 
-        this.currentInputType = InputType.UNKNOWN;
         this.mStartStoreActivity();
 
         return result;
@@ -449,7 +420,6 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     }
 
     private void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
-        this.currentInputType = InputType.UNKNOWN;
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 
@@ -519,7 +489,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
             messageStr = cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.totalItemsDifference()) + " EXTRA items";
         }
 
-        AcceptRejectFragment acceptRejectFragment = null;
+        AcceptRejectFragment acceptRejectFragment;
 
         if (!cIntakeorder.currentIntakeOrder.isGenerated()) {
             acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
@@ -552,6 +522,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     private void mStartStoreActivity() {
 
         Intent intent;
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
 
         if (cIntakeorder.currentIntakeOrder.isGenerated()) {
             intent = new Intent(cAppExtension.context, IntakeOrderIntakeGeneratedActivity.class);
@@ -568,143 +539,14 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     private void mFillRecycler(List<cIntakeorderMATSummaryLine> pvDataObl) {
 
         if (pvDataObl.size() == 0) {
-            this.imageViewStart.setVisibility(View.INVISIBLE);
             return;
         }
-
-        this.imageViewStart.setVisibility(View.VISIBLE);
 
         //Show the recycler view
         this.recyclerViewLines.setHasFixedSize(false);
         this.recyclerViewLines.setAdapter(this.getIntakeorderMATSummaryLineAdapter());
         this.recyclerViewLines.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         this.recyclerViewLines.setVisibility(View.VISIBLE);
-    }
-
-    private void mSetRecyclerOnScrollListener() {
-        this.recyclerViewLines.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView pvRecyclerView, int pvNewStateInt) {
-                super.onScrollStateChanged(pvRecyclerView, pvNewStateInt);
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutmanager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (dy < 0) {
-
-                    int itemPosition = 0;
-                    if (layoutmanager != null) {
-                        itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
-                    }
-
-                    if (itemPosition == 0) {
-                        // Prepare the View for the animation
-                        recyclerSearchView.setVisibility(View.VISIBLE);
-                        recyclerSearchView.setAlpha(0.0f);
-
-                        // Start the animation
-                        recyclerSearchView.animate()
-                                .translationY(0)
-                                .alpha(1.0f)
-                                .setListener(null);
-
-                    }
-
-                } else {
-
-                    int itemPosition = 0;
-                    if (layoutmanager != null) {
-                        itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
-                    }
-
-                    if (itemPosition > 1) {// your *second item your recyclerview
-                        // Start the animation
-                        recyclerSearchView.setVisibility(View.GONE);
-                    }
-
-                }
-            }
-        });
-    }
-
-    private void mSetSearchListener() {
-        //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-
-                cAppExtension.activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        recyclerSearchView.setIconified(false);
-                    }
-                });
-            }
-        });
-
-        //query entered
-        this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String pvString) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String pvQueryTextStr) {
-
-                switch (currentInputType) {
-                    case UNKNOWN:
-                        getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, false);
-                        return true;
-
-                    case ARTICLE:
-                        getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, true);
-                        return true;
-
-                    case BIN:
-                        getIntakeorderMATSummaryLineAdapter().pSetBINFilter(pvQueryTextStr);
-                        return true;
-                }
-
-                return true;
-            }
-
-        });
-
-    }
-
-    private void mSetSearchCloseListener() {
-        //make whole view clickable
-        this.closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                EditText et = findViewById(R.id.search_src_text);
-
-                //Clear the text from EditText view
-                et.setText("");
-                currentInputType = InputType.UNKNOWN;
-                cIntakeorder.currentIntakeOrder.currentBin = null;
-
-                //Clear query
-                recyclerSearchView.setQuery("", false);
-
-            }
-        });
-
-        //query entered
-
-
-    }
-
-    private void mSetStartLineListener() {
-        this.imageViewStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pHandleScan(null, true);
-            }
-        });
     }
 
     private void mNoLinesAvailable(final boolean pvShowBln) {
@@ -719,22 +561,17 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
                 if (pvShowBln) {
 
                     recyclerViewLines.setVisibility(View.INVISIBLE);
-                    recyclerSearchView.setVisibility(View.INVISIBLE);
                     imageButtonCloseOrder.setVisibility(View.INVISIBLE);
-                    imageViewStart.setVisibility(View.INVISIBLE);
 
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                     NothingHereFragment fragment = new NothingHereFragment();
-                    fragmentTransaction.replace(R.id.container, fragment);
+                    fragmentTransaction.replace(R.id.IntakeorderLinesGeneratedcontainer, fragment);
                     fragmentTransaction.commit();
                     return;
                 }
 
                 recyclerViewLines.setVisibility(View.VISIBLE);
-                recyclerSearchView.setVisibility(View.VISIBLE);
                 imageButtonCloseOrder.setVisibility(View.VISIBLE);
-                imageViewStart.setVisibility(View.VISIBLE);
-
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
                     if (fragment instanceof NothingHereFragment) {
@@ -748,6 +585,21 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     }
 
+    private void mRemoveAdapterFromFragment(){
+
+        //remove the item from recyclerview
+        boolean resultBln = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pResetBln();
+        if (! resultBln) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed),"",true,true);
+            return;
+        }
+
+        cUserInterface.pShowSnackbarMessage(this.recyclerViewLines,cAppExtension.activity.getString(R.string.message_line_reset_succesfull), R.raw.headsupsound, true);
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
+
+        this.mFieldsInitialize();
+
+    }
 
 }
 
