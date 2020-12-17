@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ICS.Utils.cText;
@@ -339,6 +340,8 @@ public class cSetting {
 
     //Region Settings
 
+    // GENERIC Settings
+
     public  static boolean REALTIME_BARCODE_CHECK() {
 
         cSetting Setting =  mGetSettingByEnu(settingEnu.REALTIME_BARCODE_CHECK);
@@ -349,8 +352,101 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED);
+        if (Setting == null) {
+            return  false;
+        }
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
+            return  false;
+        }
 
 
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static String GENERIC_ITEM_EXTRA_FIELD1(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD1);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static String GENERIC_ITEM_EXTRA_FIELD2(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD2);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static String GENERIC_ITEM_EXTRA_FIELD3(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD3);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static String GENERIC_ITEM_EXTRA_FIELD4(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD4);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static String GENERIC_ITEM_EXTRA_FIELD5(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD5);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static String GENERIC_ITEM_EXTRA_FIELD6(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD6);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static String GENERIC_ITEM_EXTRA_FIELD7(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD7);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static String GENERIC_ITEM_EXTRA_FIELD8(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD8);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    // PICK Settings
     public static boolean PICK_SORT_FASE_AVAILABLE(){
 
             cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SORT_FASE_AVAILABLE);
@@ -384,16 +480,6 @@ public class cSetting {
     public static boolean PICK_FINISH_PACK_FASE_AVAILABLE(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_FINISH_PACK_FASE_AVAILABLE);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean PICK_QC_FASE_AVAILABLE(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_QC_FASE_AVAILABLE);
         if (Setting == null) {
             return  false;
         }
@@ -503,153 +589,9 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-    public static boolean GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_UNLOCK_BUSY_ORDERS_ALLOWED);
-        if (Setting == null) {
-            return  false;
-        }
-        if (Setting.valueStr.equalsIgnoreCase( "")) {
-            return  false;
-        }
-
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static String GENERIC_ITEM_EXTRA_FIELD1(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD1);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static String GENERIC_ITEM_EXTRA_FIELD2(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD2);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static String GENERIC_ITEM_EXTRA_FIELD3(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD3);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static String GENERIC_ITEM_EXTRA_FIELD4(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD4);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static String GENERIC_ITEM_EXTRA_FIELD5(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD5);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static String GENERIC_ITEM_EXTRA_FIELD6(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD6);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static String GENERIC_ITEM_EXTRA_FIELD7(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD7);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static String GENERIC_ITEM_EXTRA_FIELD8(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD8);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static boolean INV_AMOUNT_MANUAL(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_AMOUNT_MANUAL);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
     public static boolean PICK_PER_SCAN(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_PER_SCAN);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean INV_BARCODE_CHECK(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_BARCODE_CHECK);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static String INV_RESET_PASSWORD(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_RESET_PASSWORD);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static String INV_NEW_WORKFLOWS(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_NEW_WORKFLOWS);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static boolean INV_ADD_EXTRA_LINES(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_ADD_EXTRA_LINES);
         if (Setting == null) {
             return  false;
         }
@@ -677,6 +619,8 @@ public class cSetting {
         return Setting.valueStr;
     }
 
+
+    // RECEIVE Settings
     public static boolean RECEIVE_BARCODE_CHECK(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_BARCODE_CHECK);
@@ -687,14 +631,23 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-    public static String RECEIVE_NEW_WORKFLOWS(){
+    public static List<String> RECEIVE_NEW_WORKFLOWS(){
+
+        List<String> resultObl = new ArrayList();
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_NEW_WORKFLOWS);
         if (Setting == null) {
-            return "";
+            return resultObl;
         }
 
-        return Setting.valueStr;
+        if (!Setting.getValueStr().contains(";")) {
+            resultObl.add(Setting.getValueStr());
+            return resultObl;
+        }
+
+        resultObl = new ArrayList<>(Arrays.asList(Setting.valueStr.split(";")));
+
+        return resultObl ;
     }
 
     public static boolean RECEIVE_AMOUNT_MANUAL_MA(){
@@ -736,176 +689,6 @@ public class cSetting {
 
         return Setting.valueStr;
 
-    }
-
-    public static String MOVE_NEW_WORKFLOWS(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_NEW_WORKFLOWS);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static boolean MOVE_BARCODE_CHECK(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_BARCODE_CHECK);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_MT_TAKE_ALLOW_END(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_MT_TAKE_ALLOW_END);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_AUTO_CREATE_ORDER_MV(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_CREATE_ORDER_MV);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_NO_EXTRA_BINS(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_NO_EXTRA_BINS);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_NO_EXTRA_ITEMS(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_NO_EXTRA_ITEMS);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_WITH_PICTURE(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_WITH_PICTURE_AUTO_OPEN(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE_AUTO_OPEN);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_WITH_PICTURE_PREFETCH(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE_PREFETCH);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_AUTO_ACCEPT_AT_REQUESTED(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_ACCEPT_AT_REQUESTED);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean MOVE_AMOUNT_MANUAL(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AMOUNT_MANUAL);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean RETOUR_BARCODE_CHECK(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_BARCODE_CHECK);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean RETOUR_AMOUNT_MANUAL(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_AMOUNT_MANUAL);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static String RETOUR_NEW_WORKFLOWS(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_NEW_WORKFLOWS);
-        if (Setting == null) {
-            return "";
-        }
-
-        return Setting.valueStr;
-    }
-
-    public static boolean RETOUR_ORDER_BIN_NO_CHECK(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_ORDER_BIN_NO_CHECK);
-        if (Setting == null) {
-            return false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-
-    public static boolean RETOUR_AUTO_CREATE_ORDER_RV(){
-
-        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_AUTO_CREATE_ORDER_RV);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
-    }
-
-    public static boolean RETOUR_VALIDATE_CURRENT_LOCATION(){
-        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_VALIDATE_CURRENT_LOCATION);
-        if (Setting == null) {
-            return  false;
-        }
-
-        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     public static String RECEIVE_STORE_DEVIATIONS_PASSWORD(){
@@ -956,6 +739,218 @@ public class cSetting {
         }
 
         return Setting.valueStr;
+    }
+
+
+    // INVENTORY Settings
+    public static boolean INV_AMOUNT_MANUAL(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_AMOUNT_MANUAL);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean INV_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static String INV_RESET_PASSWORD(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_RESET_PASSWORD);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static List<String>  INV_NEW_WORKFLOWS(){
+
+        List<String> resultObl = new ArrayList<>();
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return resultObl;
+        }
+
+        if (!Setting.getValueStr().contains(";")) {
+            resultObl.add(Setting.getValueStr());
+            return resultObl;
+        }
+
+        resultObl = new ArrayList<>(Arrays.asList(Setting.valueStr.split(";")));
+
+        return resultObl ;
+    }
+
+    public static boolean INV_ADD_EXTRA_LINES(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_ADD_EXTRA_LINES);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+
+    // MOVE Settings
+    public static List<String> MOVE_NEW_WORKFLOWS(){
+
+        List<String> resultObl = new ArrayList<>();
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return resultObl;
+        }
+
+        if (!Setting.getValueStr().contains(";")) {
+            resultObl.add(Setting.getValueStr());
+            return resultObl;
+        }
+
+        resultObl = new ArrayList<>(Arrays.asList(Setting.valueStr.split(";")));
+
+        return resultObl ;
+    }
+
+    public static boolean MOVE_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_MT_TAKE_ALLOW_END(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_MT_TAKE_ALLOW_END);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_AUTO_CREATE_ORDER_MV(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_CREATE_ORDER_MV);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_WITH_PICTURE(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_WITH_PICTURE_AUTO_OPEN(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_WITH_PICTURE_AUTO_OPEN);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_AUTO_ACCEPT_AT_REQUESTED(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_ACCEPT_AT_REQUESTED);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean MOVE_AMOUNT_MANUAL(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AMOUNT_MANUAL);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    // RETURN Settings
+    public static boolean RETOUR_BARCODE_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_BARCODE_CHECK);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean RETOUR_AMOUNT_MANUAL(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_AMOUNT_MANUAL);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static List<String> RETOUR_NEW_WORKFLOWS(){
+
+        List<String> resultObl = new ArrayList<>();
+
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return resultObl;
+        }
+
+        if (!Setting.getValueStr().contains(";")) {
+            resultObl.add(Setting.getValueStr());
+            return resultObl;
+        }
+
+        resultObl = new ArrayList<>(Arrays.asList(Setting.valueStr.split(";")));
+
+        return resultObl ;
+    }
+
+    public static boolean RETOUR_ORDER_BIN_NO_CHECK(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_ORDER_BIN_NO_CHECK);
+        if (Setting == null) {
+            return false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean RETOUR_VALIDATE_CURRENT_LOCATION(){
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_VALIDATE_CURRENT_LOCATION);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
     //End Region Settings

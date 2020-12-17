@@ -1,5 +1,6 @@
 package SSU_WHS.Move.MoveorderLines;
 
+import android.media.Image;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
@@ -31,11 +33,14 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
 
     public static class MoveorderLineViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView textViewArticle;
-        private TextView textViewDescription;
-        private TextView textViewCounted;
-        private TextView textViewBIN;
-        private ImageView imageViewBIN;
+        private final TextView textViewArticle;
+        private final TextView textViewDescription;
+        private final TextView textViewCounted;
+        private final TextView textViewBIN;
+        private final ImageView imageViewDescription;
+        private final ImageView imageViewBIN;
+        private final ImageView imageViewCounted;
+        private final View menuSeparator;
         public RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
 
@@ -66,9 +71,12 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
 
             this.textViewCounted = pvItemView.findViewById(R.id.textViewCounted);
             this.textViewBIN = pvItemView.findViewById(R.id.textViewBIN);
+            this.imageViewDescription = pvItemView.findViewById(R.id.imageViewDescription);
             this.imageViewBIN  = pvItemView.findViewById(R.id.imageViewBIN);
+            this.imageViewCounted = pvItemView.findViewById(R.id.imageViewCounted);
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
             this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
+            this.menuSeparator = pvItemView.findViewById(R.id.menuSeparator);
         }
         //End Region Public Properties
     }
@@ -76,6 +84,7 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
     //Region Private Properties
 
     private final LayoutInflater LayoutInflaterObject;
+
 
     private List<cMoveorderLine> localMoveorderLinesObl;
 
@@ -114,10 +123,15 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
 
         pvHolder.textViewArticle.setText(moveorderLine.getItemNoAndVariantCodeStr());
 
-        pvHolder.textViewDescription.setText(moveorderLine.getDescriptionStr() + " " + moveorderLine.getDescription2Str());
+        pvHolder.textViewDescription.setText(moveorderLine.getDescriptionExtendedStr());
         pvHolder.textViewDescription.setVisibility(View.VISIBLE);
 
-        String quantityToShowStr = "";
+        if (moveorderLine.getItemNoAndVariantCodeStr().equalsIgnoreCase(moveorderLine.getDescriptionExtendedStr())) {
+            pvHolder.textViewDescription.setVisibility(View.GONE);
+            pvHolder.imageViewDescription.setVisibility(View.GONE);
+        }
+
+        String quantityToShowStr;
 
         if (moveorderLine.getActionTypeCodeStr().equalsIgnoreCase(cWarehouseorder.ActionTypeEnu.TAKE.toString())) {
 
@@ -125,15 +139,17 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
             switch (cMoveorder.currentMoveOrder.getOrderTypeStr()) {
                 case "MV":
                     quantityToShowStr = cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl());
+                    pvHolder.textViewCounted.setText(quantityToShowStr);
                     break;
 
 
                 case "MT":
                     quantityToShowStr  =  cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(moveorderLine.getQuantityDbl());
+                    pvHolder.textViewCounted.setText(quantityToShowStr);
                     break;
             }
 
-            pvHolder.textViewCounted.setText(quantityToShowStr);
+
             pvHolder.textViewBIN.setText(moveorderLine.getBinCodeStr());
         }
 
@@ -174,6 +190,30 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
                     pvHolder.textViewBIN.setVisibility(View.VISIBLE);
                     pvHolder.imageViewBIN.setVisibility(View.VISIBLE);
                     pvHolder.textViewBIN.setText(moveorderLine.getBinCodeStr());
+                }
+            }
+
+            if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MI")) {
+                quantityToShowStr = cText.pDoubleToStringStr(moveorderLine.getQuantityHandledDbl());
+
+                if (moveorderLine.isUniqueBln()) {
+                    pvHolder.textViewCounted.setVisibility(View.GONE);
+                    pvHolder.imageViewCounted.setVisibility(View.GONE);
+                } else {
+                    pvHolder.textViewCounted.setText(quantityToShowStr);
+                }
+
+                if (cAppExtension.activity instanceof MoveLinePlaceGeneratedActivity) {
+                    pvHolder.textViewBIN.setVisibility(View.GONE);
+                    pvHolder.imageViewBIN.setVisibility(View.GONE);
+                    pvHolder.menuSeparator.setVisibility(View.GONE);
+                }
+                else
+                {
+                    pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+                    pvHolder.imageViewBIN.setVisibility(View.VISIBLE);
+                    pvHolder.textViewBIN.setText(moveorderLine.getBinCodeStr());
+                    pvHolder.menuSeparator.setVisibility(View.VISIBLE);
                 }
             }
 

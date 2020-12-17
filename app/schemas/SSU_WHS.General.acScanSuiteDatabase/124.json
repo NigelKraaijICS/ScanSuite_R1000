@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 124,
-    "identityHash": "ab38bfe1626cde90550ae06a5891156e",
+    "identityHash": "ef5e94263904a5b4a95e5e2c7dfea271",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -2915,7 +2915,7 @@
       },
       {
         "tableName": "MoveOrder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `Aantal_bins` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `BinCode` TEXT, `ExternalReference` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Move_Amount_manual` TEXT, `Move_Barcode_check` TEXT, `Move_validate_stock` TEXT, `Move_validate_stock_enforce` TEXT, `Move_auto_accept_at_requested` TEXT, `Move_no_extra_bins` TEXT, `Move_no_extra_items` TEXT, `Move_no_extra_pieces` TEXT, `IsProcessingOrParked` INTEGER, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `Aantal_bins` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `BinCode` TEXT, `ExternalReference` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Move_Amount_manual` TEXT, `Move_Barcode_check` TEXT, `Move_validate_stock` TEXT, `Move_validate_stock_enforce` TEXT, `Move_auto_accept_at_requested` TEXT, `Move_no_extra_bins` TEXT, `Move_no_extra_items` TEXT, `Move_no_extra_pieces` TEXT, `Move_with_picture` TEXT, `Move_with_picture_auto_open` TEXT, `IsProcessingOrParked` INTEGER, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
         "fields": [
           {
             "fieldPath": "ordernumber",
@@ -3028,6 +3028,18 @@
           {
             "fieldPath": "moveNoExtraPieces",
             "columnName": "Move_no_extra_pieces",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "moveWithPicture",
+            "columnName": "Move_with_picture",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "moveWithPictureAutoOpen",
+            "columnName": "Move_with_picture_auto_open",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -3563,7 +3575,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ab38bfe1626cde90550ae06a5891156e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ef5e94263904a5b4a95e5e2c7dfea271')"
     ]
   }
 }

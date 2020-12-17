@@ -1,18 +1,14 @@
 package SSU_WHS.Move.MoveOrders;
 
 import android.app.Application;
-
 import androidx.lifecycle.AndroidViewModel;
-
 import java.util.List;
-
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cMoveorderViewModel extends AndroidViewModel {
     //Region Public Properties
-    private cMoveorderRepository Repository;
+    private final cMoveorderRepository Repository;
     //End Region Public Properties
 
     //Region Constructor
@@ -28,17 +24,15 @@ public class cMoveorderViewModel extends AndroidViewModel {
 
     public cWebresult pCreateMoveOrderMVViaWebserviceWrs(String pvDocumentStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateMoveOrderMVViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);}
 
-    public cWebresult pCreateMoveOrderMIViaWebserviceWrs() {return this.Repository.pCreateMoveOrderMIViaWebserviceWrs();}
+    public cWebresult pCreateMoveOrderMIViaWebserviceWrs(String pvDocumentStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateMoveOrderMIViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);}
 
-    public cWebresult pGetMoveordersFromWebserviceWrs(String pvSearchTextStr, String pvMainTypeStr) {return this.Repository.pGetMoveordersFromWebserviceWrs(pvSearchTextStr, pvMainTypeStr);}
+    public cWebresult pGetMoveordersFromWebserviceWrs(String pvSearchTextStr) {return this.Repository.pGetMoveordersFromWebserviceWrs(pvSearchTextStr);}
 
     public List<cMoveorderEntity> pGetMovesWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.Repository.pGetMovesFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 
     public cWebresult pGetLinesFromWebserviceWrs() {return this.Repository.pGetLinesFromWebserviceWrs(); }
 
     public cWebresult pCloseTakeMTViaWebserviceWrs() {return this.Repository.pCloseTakeMTViamWebserviceWrs(); }
-
-    public List<cMoveorderLineEntity> pGetLinesForBinFromDatabaseObl(String pvBinStr) {return Repository.pGetLinesForBinFromDatabaseObl(pvBinStr);}
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebserviceWrs();}
 

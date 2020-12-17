@@ -27,9 +27,6 @@ public class cReceiveorderLineViewModel extends AndroidViewModel {
     public void insert(cReceiveorderLineEntity pvReceiveorderLineEntity) {this.Repository.insert(pvReceiveorderLineEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
-    public boolean pUpdateLocalStatusBln(Integer pvNewStatusInt) {return this.Repository.pUpdateLocalStatusBln(pvNewStatusInt);}
-    public boolean pUpdateQuantityHandledBln(Double pvQuantityHandledDbl) {return this.Repository.pUpdateQuantityHandledBln(pvQuantityHandledDbl);}
-
     public cWebresult pResetReceiveLineViaWebserviceWrs() {return this.Repository.pResetReceiveLineViaWebserviceWrs();}
     public cWebresult pLineHandledViaWebserviceWrs(List<cIntakeorderBarcode> pvBarcodeObl ) {return this.Repository.pReceiveLineHandledViaWebserviceWrs(pvBarcodeObl);}
 

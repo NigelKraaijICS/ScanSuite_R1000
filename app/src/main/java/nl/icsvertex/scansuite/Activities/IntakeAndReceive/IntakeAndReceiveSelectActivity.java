@@ -807,7 +807,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         if (IntakeAndReceiveSelectActivity.currentMainTypeEnu == cWarehouseorder.ReceiveAndStoreMainTypeEnu.Store) {
 
 
-            if (cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.MAS.toString().toUpperCase())) {
+            if (cSetting.RECEIVE_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.MAS.toString().toUpperCase())) {
                 imageViewNewOrder.setVisibility(View.VISIBLE);
                 return;
             }
@@ -817,8 +817,8 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             }
         }
 
-        if (cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.EOS.toString().toUpperCase()) |
-            cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.EOR.toString().toUpperCase()) ) {
+        if (cSetting.RECEIVE_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.EOS.toString().toUpperCase()) |
+            cSetting.RECEIVE_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.EOR.toString().toUpperCase()) ) {
 
             imageViewNewOrder.setVisibility(View.VISIBLE);
         }

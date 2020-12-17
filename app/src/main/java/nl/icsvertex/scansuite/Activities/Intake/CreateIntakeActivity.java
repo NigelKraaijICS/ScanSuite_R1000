@@ -26,10 +26,13 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.R;
@@ -224,6 +227,25 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
 
         String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
         cUserInterface.pCheckAndCloseOpenDialogs();
+
+        //Check if we have scanned a BIN and check if there are not handled linesInt for this BIN
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+
+          cBranchBin branchBin = cUser.currentUser.currentBranch.pGetBinByCode(barcodeWithoutPrefixStr);
+          if (branchBin == null ) {
+              cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_bin_not_valid),barcodeWithoutPrefixStr, true,true);
+              return;
+          }
+
+          this.editTextBin.setText(branchBin.getBinCodeStr());
+
+          //Hide the keyboard
+          cUserInterface.pHideKeyboard();
+
+            //Filter has been set in mHandleBINScan so we are donereturn;
+            return;
+        }
+
         this.editTextDocument.setText(barcodeWithoutPrefixStr);
 
     }
@@ -277,10 +299,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()));
                     cUserInterface.pHideKeyboard();
-
                 }
                 return true;
             }

@@ -18,7 +18,6 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
-import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.R;
 
 public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapter.IntakeorderViewHolder>  {
@@ -126,7 +125,7 @@ public class cIntakeorderAdapter extends RecyclerView.Adapter<cIntakeorderAdapte
         pvHolder.textViewExternalreference.setText(selectedIntakeorder.getExternalReferenceStr());
 
 
-        pvHolder.textViewOrdertype.setText(cWarehouseorder.getWorkflowDescription(selectedIntakeorder.getOrderTypeStr()));
+        pvHolder.textViewOrdertype.setText(cWarehouseorder.pGetWorkflowDescriptionStr(selectedIntakeorder.getOrderTypeStr()));
 
         pvHolder.intakeorderItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

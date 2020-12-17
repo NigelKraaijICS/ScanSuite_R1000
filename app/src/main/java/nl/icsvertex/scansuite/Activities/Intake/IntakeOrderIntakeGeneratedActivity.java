@@ -51,7 +51,6 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineAdapter;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLineRecyclerItemTouchHelper;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
@@ -64,9 +63,6 @@ import static ICS.Utils.cText.pDoubleToStringStr;
 public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implements iICSDefaultActivity, cIntakeorderMATLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     //Region Private Properties
-
-    public  boolean startedWithBINBln = false;
-
     private  int counterMinusHelperInt;
     private  int counterPlusHelperInt;
     private  Handler minusHandler;
@@ -81,9 +77,10 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
     private  TextView toolbarSubtext;
+    private TextView toolbarSubtext2;
 
     private  CardView articleContainer;
-    private ConstraintLayout articleInfoContainer;
+    private  ConstraintLayout articleInfoContainer;
     private  TextView articleDescriptionText;
     private  TextView articleDescription2Text;
     private  TextView articleItemText;
@@ -97,8 +94,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private  ConstraintLayout quantityControlsContainer;
     private  TextView quantityText;
 
-    private  Boolean articleScannedBln = false;
-    private  Boolean binScannedBln = false;
+
     private  Double quantityScannedDbl = 0.0;
     private  List<cIntakeorderBarcode> scannedBarcodesObl;
 
@@ -266,6 +262,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
+        this.toolbarSubtext2 = findViewById(R.id.toolbarSubtext2);
 
         this.articleDescriptionText = findViewById(R.id.articleDescriptionText);
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
@@ -302,8 +299,11 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
             this.toolbarTitle.setText(pvScreenTitleStr);
         }
 
+        this.toolbarSubtext.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+        this.toolbarSubtext2.setText(cIntakeorder.currentIntakeOrder.getBinCodeStr());
         this.toolbarTitle.setSelected(true);
         this.toolbarSubtext.setSelected(true);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -317,7 +317,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         this.counterPlusHelperInt = 0;
         this.counterMinusHelperInt = 0;
-        this.toolbarSubtext.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+
 
         this.mSetArticleInfo();
         this.mSetBinInfo();
@@ -345,7 +345,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
 
         if (cIntakeorder.currentIntakeOrder.currentBin != null) {
-            this.startedWithBINBln = true;
             this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr()));
         }
 
@@ -423,7 +422,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
             return;
         }
 
-        cUserInterface.pShowSnackbarMessage(intakeorderIntakeGeneratedContainer,cAppExtension.activity.getString(R.string.message_unknown_barcode),null,true);
+        cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true,true);
 
     }
 
@@ -544,7 +543,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.articleThumbImageView.setImageBitmap(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.articleImage.imageBitmap());
 
         //Open the image
-        if ((cIntakeorder.currentIntakeOrder.isReceiveWithAutoOpenBln())) {
+        if ((cIntakeorder.currentIntakeOrder.isReceiveWithPictureAutoOpenBln())) {
             this.mShowFullArticleFragment();
         }
 
@@ -627,7 +626,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
-            this.binScannedBln = true;
             cIntakeorder.currentIntakeOrder.currentBin = pvBranchBin;
             this.mFieldsInitialize();
             return result;
@@ -765,7 +763,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         cIntakeorderBarcode.currentIntakeOrderBarcode = pvBarcode;
-        this.articleScannedBln = true;
         this.mShowBarcodeInfo();
 
         this.mTryToChangeQuantity(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
@@ -829,12 +826,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
             return;
         }
 
-        cResult hulpResult = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pSummaryLineBusyRst();
-        if (!hulpResult.resultBln) {
-            cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(), "", true, true);
-            cReceiveorderSummaryLine.currentReceiveorderSummaryLine = null;
-            return;
-        }
 
         this.mFieldsInitialize();
         this.mBarcodeSelected(cIntakeorderBarcode.currentIntakeOrderBarcode);
@@ -1042,17 +1033,13 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = null;
         cIntakeorderMATLine.currentIntakeorderMATLine = null;
         cIntakeorder.currentIntakeOrder.currentBin = null;
-        this.articleScannedBln = false;
-        this.binScannedBln = false;
         this.scannedBarcodesObl = null;
         this.quantityScannedDbl = 0.0;
     }
 
     private void mResetCurrentsForUniqueBarcode() {
-
         cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
         cIntakeorderMATLine.currentIntakeorderMATLine = null;
-        this.articleScannedBln = false;
         this.scannedBarcodesObl = null;
         this.quantityScannedDbl = 0.0;
     }

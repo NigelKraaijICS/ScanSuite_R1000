@@ -533,7 +533,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.articleThumbImageView.setImageBitmap(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.articleImage.imageBitmap());
 
         //Open the image
-        if ((cIntakeorder.currentIntakeOrder.isReceiveWithAutoOpenBln())) {
+        if ((cIntakeorder.currentIntakeOrder.isReceiveWithPictureAutoOpenBln())) {
             this.mShowFullArticleFragment();
         }
 

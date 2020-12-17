@@ -28,7 +28,7 @@ public class cMoveorderLineViewModel extends AndroidViewModel {
     public void deleteAll() {this.Repository.deleteAll();}
 
     public cWebresult pAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
-    public cWebresult pAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan);}
+    public cWebresult pAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan, boolean pvIsUniqueBarcodeBln) {return  this.Repository.pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan, pvIsUniqueBarcodeBln);}
 
     public cWebresult pMoveItemTakeHandledViaWebserviceWrs(List<cMoveorderBarcode> pvScannedBarcodesObl) {return this.Repository.pMoveItemTakeHandledViaWebserviceWrs(pvScannedBarcodesObl);}
     public cWebresult pMoveItemPlaceHandledViaWebserviceWrs(List<cMoveorderBarcode> pvScannedBarcodesObl) {return this.Repository.pMoveItemPlaceHandledViaWebserviceWrs(pvScannedBarcodesObl);}

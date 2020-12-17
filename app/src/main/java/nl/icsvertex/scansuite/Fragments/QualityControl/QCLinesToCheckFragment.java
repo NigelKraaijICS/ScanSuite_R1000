@@ -167,7 +167,7 @@ public class QCLinesToCheckFragment extends Fragment implements iICSDefaultFragm
             //Show nothing there fragment
             FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
             NothingHereFragment fragment = new NothingHereFragment();
-            fragmentTransaction.replace(R.id.recyclerViewQCLinesToCheck, fragment);
+            fragmentTransaction.replace(R.id.fragmentQCLinesToCheck, fragment);
             fragmentTransaction.commit();
 
             //Change tabcounter text

@@ -159,7 +159,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cTranslationEntity.class,
         cCompositeBarcodeEntity.class,
         cCompositeBarcodePropertyEntity.class
-        },version = 124)
+        },version = 125)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {

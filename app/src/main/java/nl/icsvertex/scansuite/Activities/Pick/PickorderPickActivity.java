@@ -254,7 +254,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         if (cPickorder.currentPickOrder.isTransferBln()) {
             this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDestinationAndDescriptionStr() + " " +  cPickorderLine.currentPickOrderLine.getBinCodeStr());
-            return;
         }
         else
         {
@@ -301,10 +300,17 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        // We scanned an ARTICLE, so handle barcide
+        // We scanned an ARTICLE in BIN IS ITEM Modus so handle barcide
         if (cSetting.PICK_BIN_IS_ITEM()) {
             PickorderPickActivity.articleScannedLastBln = false;
             this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
+        }
+
+        //We scannedn an ARTICLE in Single BIN activity
+        if (cPickorder.currentPickOrder.pickorderBarcodeScanned != null) {
+            PickorderPickActivity.articleScannedLastBln = false;
+            this.pHandleScan(cBarcodeScan.pFakeScan(cPickorder.currentPickOrder.pickorderBarcodeScanned.getBarcodeStr()));
+            cPickorder.currentPickOrder.pickorderBarcodeScanned = null;
         }
     }
 
@@ -344,6 +350,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 return;
             }
 
+            this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
             return;
         }
 

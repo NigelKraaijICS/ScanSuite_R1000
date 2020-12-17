@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/IntakeorderLinesGeneratedcontainer"
-    tools:context=".Activities.Intake.IntakeorderMATLinesActivity"
+    android:id="@+id/IntakeorderLinesGeneratedContainer"
+    tools:context=".Activities.Intake.IntakeorderMASLinesActivity"
     style="@style/defaultScreen">
-    <include layout="@layout/toolbar_subtext_default" />
+    <include layout="@layout/toolbar_subtext_expanded_default" />
     <include layout="@layout/default_orderinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

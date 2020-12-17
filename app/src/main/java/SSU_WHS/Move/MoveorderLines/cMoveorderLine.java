@@ -16,6 +16,8 @@ import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveOrders.cMoveorderViewModel;
@@ -48,7 +50,14 @@ public class cMoveorderLine implements Comparable {
     }
 
     public  String getItemNoAndVariantCodeStr(){
-        return   this.getItemNoStr() + " " + this.getVariantCodeStr();
+
+        String resultStr = this.getItemNoStr();
+
+        if (!this.getVariantCodeStr().isEmpty()) {
+            resultStr += " " + this.getVariantCodeStr();
+        }
+
+        return  resultStr;
     }
 
     public String descriptionStr;
@@ -59,6 +68,17 @@ public class cMoveorderLine implements Comparable {
     public String description2Str;
     public String getDescription2Str() {
         return description2Str;
+    }
+
+    public  String getDescriptionExtendedStr(){
+
+        String resultStr = this.getDescriptionStr();
+
+        if (!this.getDescription2Str().isEmpty()) {
+            resultStr += " " + this.getDescription2Str();
+        }
+
+        return  resultStr;
     }
 
     public String binCodeStr;
@@ -201,6 +221,22 @@ public class cMoveorderLine implements Comparable {
 
     }
 
+    public boolean isUniqueBln() {
+
+        if (this.barcodesObl == null || this.barcodesObl.size() == 0) {
+            return  false;
+        }
+
+        for (cMoveorderBarcode moveorderBarcode : this.barcodesObl) {
+            if (moveorderBarcode.getIsUniqueBarcodeBln()) {
+                return  true;
+            }
+        }
+
+        return  false;
+
+    }
+
 
     //Region Public Properties
 
@@ -300,6 +336,23 @@ public class cMoveorderLine implements Comparable {
 
     //End Region Constructor
 
+    public static cMoveorderLine pGetLineByLineNo(int pvLineNoLInt){
+
+        if (cMoveorderLine.allLinesObl == null) {
+            return  null;
+        }
+
+        for (cMoveorderLine moveorderLine : cMoveorderLine.allLinesObl ) {
+
+            if (moveorderLine.getLineNoInt() == pvLineNoLInt) {
+                return  moveorderLine;
+            }
+        }
+
+        return  null;
+
+    }
+
     public boolean pInsertInDatabaseBln() {
 
         if (cMoveorderLine.allLinesObl == null){
@@ -361,6 +414,25 @@ public class cMoveorderLine implements Comparable {
                 return resultRst;
             }
 
+            if (!cMoveorder.currentMoveOrder.pGetBarcodesViaWebserviceBln(true)) {
+                resultRst.resultBln = false;
+                resultRst.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+                return resultRst;
+            }
+
+            if (!cMoveorder.currentMoveOrder.pGetLineBarcodesViaWebserviceBln(true)) {
+                resultRst.resultBln = false;
+                resultRst.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+                return resultRst;
+            }
+
+            if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MI")) {
+                if (!cMoveorder.currentMoveOrder.pMatchBarcodesAndLinesBln()) {
+                    resultRst.resultBln = false;
+                    resultRst.pAddErrorMessage(cAppExtension.context.getString(R.string.error_matching_lines_and_barcodes_failed));
+                    return resultRst;
+                }
+            }
         }
 
         else {

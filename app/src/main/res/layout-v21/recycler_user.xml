@@ -9,14 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatImageView
-            style="@style/imageviewUserButton"
             android:id="@+id/imageViewBinItem"
+            style="@style/imageviewUserButton"
             android:backgroundTint="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
         <TextView
+            android:id="@+id/textViewInitials"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/imageViewBinItem"
@@ -25,7 +26,6 @@
             app:layout_constraintEnd_toEndOf="@id/imageViewBinItem"
             android:textSize="@dimen/textsize_huge"
             android:textColor="@color/colorCommentText"
-            android:id="@+id/textViewInitials"
             android:elevation="@dimen/default_double_elevation"
             />
         <TextView

@@ -11,6 +11,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 
@@ -60,26 +61,22 @@ public class cMoveorderBarcode {
         return this.unitOfMeasure;
     }
 
-    public Double quantityHandled;
-    public Double getQuantityHandled() {
-        return this.quantityHandled;
+    public Double quantityHandledDbl;
+    public Double getQuantityHandledDbl() {
+        return this.quantityHandledDbl;
     }
 
     public  String getBarcodeAndQuantityStr(){
         return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
     }
 
-
     public  String getKeyStr() {
         return  this.getItemNoStr() + "þ" + this.getVariantCodeStr();
     }
 
-
     private cMoveorderBarcodeViewModel getMoveorderBarcodeViewModel () {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderBarcodeViewModel.class);
     }
-
-
 
     //Region Constructor
     public cMoveorderBarcode(JSONObject pvJsonObject) {
@@ -91,7 +88,7 @@ public class cMoveorderBarcode {
         this.variantCode = this.moveorderBarcodeEntity.getVariantCodeStr();
         this.quantityPerUnitOfMeasure = this.moveorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
         this.unitOfMeasure = this.moveorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.moveorderBarcodeEntity.getQuantityHandled();
+        this.quantityHandledDbl = this.moveorderBarcodeEntity.getQuantityHandled();
     }
 
     public cMoveorderBarcode(cArticleBarcode pvArticleBarcode) {
@@ -103,7 +100,7 @@ public class cMoveorderBarcode {
         this.variantCode = pvArticleBarcode.getVariantCodeStr();
         this.quantityPerUnitOfMeasure = pvArticleBarcode.getQuantityPerUnitOfMeasureDbl();
         this.unitOfMeasure = pvArticleBarcode.getUnitOfMeasureStr();
-        this.quantityHandled = (double) 0;
+        this.quantityHandledDbl = (double) 0;
     }
 
     public cMoveorderBarcode(cMoveorderLine pvMoveorderLine, cMoveorderLineBarcode pvMoveorderLineBarcode) {
@@ -115,13 +112,28 @@ public class cMoveorderBarcode {
         this.variantCode = pvMoveorderLine.getVariantCodeStr();
         this.quantityPerUnitOfMeasure = Double.valueOf(1);
         this.unitOfMeasure = "STUK";
-        this.quantityHandled = Double.valueOf(1);
+        this.quantityHandledDbl = Double.valueOf(1);
     }
 
 
     //End Region Constructor
 
+    public static cMoveorderBarcode pGetMoveOrderBarcodeByBarcode(String pvBarcodeStr){
 
+        if (cMoveorderBarcode.allMoveorderBarcodesObl == null) {
+            return  null;
+        }
+
+        for (cMoveorderBarcode moveorderBarcode : cMoveorderBarcode.allMoveorderBarcodesObl ) {
+
+            if (moveorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr) || moveorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeStr)) {
+                return  moveorderBarcode;
+            }
+        }
+
+        return  null;
+
+    }
 
     public static boolean pTruncateTableBln(){
 
@@ -162,5 +174,37 @@ public class cMoveorderBarcode {
 
         return barcodeWithoutCheckDigitStr;
     }
+
+    public boolean pPlacedItemsAvailableBln() {
+
+        if (cMoveorderBarcode.allMoveorderBarcodesObl == null || cMoveorderBarcode.allMoveorderBarcodesObl .size() == 0 ||
+                cMoveorderLineBarcode.allMoveorderLineBarcodesObl == null || cMoveorderLineBarcode.allMoveorderLineBarcodesObl.size() == 0 ||
+                cMoveorderLine.allLinesObl == null ||  cMoveorderLine.allLinesObl.size() == 0 )  {
+            return false;
+        }
+
+        for (cMoveorderLineBarcode moveorderLineBarcode : cMoveorderLineBarcode.allMoveorderLineBarcodesObl) {
+
+            if (moveorderLineBarcode.getBarcodeStr().equalsIgnoreCase(this.getBarcodeStr()) || moveorderLineBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(this.getBarcodeWithoutCheckDigitStr())) {
+
+                cMoveorderLine moveorderLine =   cMoveorderLine.pGetLineByLineNo(moveorderLineBarcode.getLineNoInt());
+                if (moveorderLine == null) {
+                    return  false;
+                }
+
+                if (moveorderLine.getQuantityHandledDbl() > 0 ) {
+                    return  true;
+                }
+                else
+                {
+                    return  false;
+                }
+            }
+
+        }
+
+        return  false;
+    }
+
 
 }

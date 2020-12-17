@@ -1013,7 +1013,7 @@ public class cIntakeorderRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
 
-                String newWorkflowsStr = cSetting.RECEIVE_NEW_WORKFLOWS().toUpperCase();
+                String newWorkflowsStr = cSetting.RECEIVE_NEW_WORKFLOWS().get(0).toUpperCase();
                 newWorkflowsStr = newWorkflowsStr.replace(";;",";");
 
                 if (newWorkflowsStr.endsWith(";")) {

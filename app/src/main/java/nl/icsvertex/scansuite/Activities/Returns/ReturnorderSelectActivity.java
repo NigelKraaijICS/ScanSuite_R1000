@@ -697,7 +697,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mSetNewOrderButton() {
 
-        if (cSetting.RETOUR_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.RVS.toString().toUpperCase()) || cSetting.RETOUR_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.RVR.toString().toUpperCase())  ) {
+        if (cSetting.RETOUR_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.RVS.toString().toUpperCase()) || cSetting.RETOUR_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.RVR.toString().toUpperCase())) {
             this.imageViewNewOrder.setVisibility(View.VISIBLE);
         }
         else {

@@ -44,7 +44,7 @@ public class cMoveorderEntity {
 
     @ColumnInfo(name= cDatabase.BINCODE_NAMESTR)
     public String bincode;
-    public String getBincodeStr() {return this.externalReference;}
+    public String getBincodeStr() {return this.bincode;}
 
     @ColumnInfo(name= cDatabase.EXTERNALREFERENCE_NAMESTR)
     public String externalReference;
@@ -94,6 +94,14 @@ public class cMoveorderEntity {
     public String moveNoExtraPieces;
     public String getMoveNoExtraPiecesStr() {return this.moveNoExtraPieces;}
 
+    @ColumnInfo(name="Move_with_picture")
+    public String moveWithPicture;
+    public String getMoveWithPictureStr() {return this.moveWithPicture;}
+
+    @ColumnInfo(name="Move_with_picture_auto_open")
+    public String moveWithPictureAutoOpen;
+    public String getMoveWithPictureAutoOpenStr() {return this.moveWithPictureAutoOpen;}
+
     @ColumnInfo(name="IsProcessingOrParked")
     public Boolean isprocessingorparked;
     public Boolean getIsProcessingOrParkedStr() {return this.isprocessingorparked;}
@@ -131,6 +139,9 @@ public class cMoveorderEntity {
             this.moveNoExtraBins = pvJsonObject.getString(cDatabase.MOVE_NOEXTRABINS_NAMESTR);
             this.moveNoExtraItems = pvJsonObject.getString(cDatabase.MOVE_NOEXTRAITEMS_NAMESTR);
             this.moveNoExtraPieces = pvJsonObject.getString(cDatabase.MOVE_NOEXTRAPIECES_NAMESTR);
+
+            this.moveWithPicture =   pvJsonObject.getString(cDatabase.MOVEWITHPICTURE_NAMESTR);
+            this.moveWithPictureAutoOpen = pvJsonObject.getString(cDatabase.MOVEWITHPICTURE_AUTO_OPEN_NAMESTR);
 
             this.sourceDocument = pvJsonObject.getString(cDatabase.SOURCEDOCUMENT_NAMESTR);
             this.document = pvJsonObject.getString(cDatabase.DOCUMENT_NAMESTR);

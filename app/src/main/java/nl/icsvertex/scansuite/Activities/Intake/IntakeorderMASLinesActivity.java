@@ -57,6 +57,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
+    private TextView toolbarSubtext2;
 
     private RecyclerView recyclerViewLines;
 
@@ -169,6 +170,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.toolbarSubtext2 = findViewById(R.id.toolbarSubtext2);
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
         this.recyclerViewLines = findViewById(R.id.recyclerViewLines);
@@ -179,6 +181,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
         this.toolbarTitle.setText(pvScreenTitleStr);
+        this.toolbarSubtext2.setText(cIntakeorder.currentIntakeOrder.getBinCodeStr());
         this.toolbarTitle.setSelected(true);
         this.toolbarSubTitle.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -565,8 +568,9 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                     NothingHereFragment fragment = new NothingHereFragment();
-                    fragmentTransaction.replace(R.id.IntakeorderLinesGeneratedcontainer, fragment);
+                    fragmentTransaction.replace(R.id.IntakeorderLinesGeneratedContainer, fragment);
                     fragmentTransaction.commit();
+                  pSetToolBarTitleWithCounters(cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
                     return;
                 }
 

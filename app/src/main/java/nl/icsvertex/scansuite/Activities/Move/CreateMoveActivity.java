@@ -52,6 +52,9 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     private Switch switchCheckBarcodes;
     private Button createMoveButton;
     private Button cancelButton;
+
+    public static cWarehouseorder.MoveMainTypeEnu moveMainTypeEnu;
+
     //End Region private Properties
 
     //Region Constructor
@@ -179,7 +182,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         filterArray[0] = new InputFilter.LengthFilter(50);
         this.editTextDocument.setFilters(filterArray);
 
-       if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
+       if (!cUser.currentUser.currentBranch.isBinMandatoryBln() || cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.MOVE_MV ) {
            this.editTextBin.setVisibility(View.GONE);
        }
        else {
@@ -360,7 +363,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Next && hulpResult.resultAction != null) {
 
             //all Moveorders
-            if (!cMoveorder.pGetMoveOrdersViaWebserviceBln(true, "","")) {
+            if (!cMoveorder.pGetMoveOrdersViaWebserviceBln(true, "")) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_moveorders_failed), "", true, true );
                 return;
             }
@@ -415,17 +418,17 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
         cResult result = null;
 
-        if(cUser.currentUser.currentAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE || cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.MOVE_MV) {
-             result =  cMoveorder.pCreateMoveOrderMVViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
-            if (!result.resultBln) {
-                this.editTextDocument.setText("");
-                this.mStepFailed(result.messagesStr());
-                return  result;
-            }
-        }
+     if (CreateMoveActivity.moveMainTypeEnu == cWarehouseorder.MoveMainTypeEnu.TAKEANDPLACE) {
+         result =  cMoveorder.pCreateMoveOrderMVViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
+         if (!result.resultBln) {
+             this.editTextDocument.setText("");
+             this.mStepFailed(result.messagesStr());
+             return  result;
+         }
+     }
 
-        if(cUser.currentUser.currentAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.MOVE_MI) {
-             result =  cMoveorder.pCreateMoveOrderMIViaWebserviceRst();
+        if (CreateMoveActivity.moveMainTypeEnu == cWarehouseorder.MoveMainTypeEnu.PLACE) {
+            result =  cMoveorder.pCreateMoveOrderMIViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
             if (!result.resultBln) {
                 this.editTextDocument.setText("");
                 this.mStepFailed(result.messagesStr());
@@ -484,6 +487,14 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
             return result;
         }
 
+        if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MI")) {
+            if (!cMoveorder.currentMoveOrder.pMatchBarcodesAndLinesBln()) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_matching_lines_and_barcodes_failed));
+                return result;
+            }
+        }
+
         // Get all comments
         if (!cMoveorder.currentMoveOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -514,8 +525,30 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     private void mShowMoveLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+        Intent intent;
 
-        Intent intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
+        switch ( cMoveorder.currentMoveOrder.getOrderTypeStr()) {
+
+            case "MV":
+                intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
+                break;
+
+            case"MI":
+
+                if (cMoveorder.currentMoveOrder.isGeneratedBln()) {
+                    intent = new Intent(cAppExtension.context, MoveorderLinesPlaceGeneratedActivity.class);
+                }
+                else
+                {
+                    intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
+                }
+                break;
+
+
+            default:
+                throw new IllegalStateException("Unexpected value: " + cMoveorder.currentMoveOrder.getOrderTypeStr());
+        }
+
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
 
     }

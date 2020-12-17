@@ -28,6 +28,8 @@ import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 
 import static ICS.Utils.cText.pAddSingleQuotesStr;
 
@@ -45,16 +47,6 @@ public class cMoveorderRepository {
             this.documentStr = pvDocumentStr;
             this.binCodeStr = pvBinCodeStr;
             this.checkBarcodesBln = pvCheckBarcodesBln;
-        }
-    }
-
-    private static class MoveorderParams {
-        String searchTextStr;
-        String mainTypeStr;
-
-        MoveorderParams(String pvSearchTextStr, String pvMainTypeStr) {
-            this.searchTextStr = pvSearchTextStr;
-            this.mainTypeStr = pvMainTypeStr;
         }
     }
 
@@ -101,15 +93,16 @@ public class cMoveorderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pCreateMoveOrderMIViaWebserviceWrs() {
+    public cWebresult pCreateMoveOrderMIViaWebserviceWrs(String pvDocumentStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {
 
         List<String> resultObl = new ArrayList<>();
-
+        MoveCreateParams moveCreateParams;
+        moveCreateParams = new MoveCreateParams(pvDocumentStr, pvBinCodeStr, pvCheckBarcodesBln);
 
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mCreateMoveOrderMIViaWebserviceAsyncTask().execute().get();
+            webResultWrs = new mCreateMoveOrderMIViaWebserviceAsyncTask().execute(moveCreateParams).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -120,15 +113,13 @@ public class cMoveorderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pGetMoveordersFromWebserviceWrs(String pvSearchTextStr, String pvMainTypeStr) {
+    public cWebresult pGetMoveordersFromWebserviceWrs(String pvSearchTextStr) {
 
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
-        MoveorderParams moveorderParams = new MoveorderParams(pvSearchTextStr, pvMainTypeStr);
-
         try {
-            webResultWrs = new mGetMoveordersFromWebserviceAsyncTask().execute(moveorderParams).get();
+            webResultWrs = new mGetMoveordersFromWebserviceAsyncTask().execute(pvSearchTextStr).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -281,16 +272,6 @@ public class cMoveorderRepository {
             e.printStackTrace();
         }
         return webResultWrs;
-    }
-
-    public List<cMoveorderLineEntity> pGetLinesForBinFromDatabaseObl(String pvBinStr) {
-        List<cMoveorderLineEntity> resultObl = null;
-        try {
-            resultObl = new mGetLinesForBinFromDatabaseAsyncTask(moveorderLineDao).execute(pvBinStr).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return resultObl;
     }
 
     public cWebresult pGetLineBarcodesFromWebserviceWrs() {
@@ -488,7 +469,7 @@ public class cMoveorderRepository {
         }
     }
 
-      private static class mInsertAsyncTask extends AsyncTask<cMoveorderEntity, Void, Void> {
+    private static class mInsertAsyncTask extends AsyncTask<cMoveorderEntity, Void, Void> {
         private iMoveorderDao mAsyncTaskDao;
 
         mInsertAsyncTask(iMoveorderDao dao) {
@@ -585,9 +566,9 @@ public class cMoveorderRepository {
         }
     }
 
-    private static class mCreateMoveOrderMIViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+    private static class mCreateMoveOrderMIViaWebserviceAsyncTask extends AsyncTask<MoveCreateParams, Void, cWebresult> {
         @Override
-        protected cWebresult doInBackground(Void... params) {
+        protected cWebresult doInBackground(MoveCreateParams... params) {
             cWebresult webresult = new cWebresult();
             try {
                 List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
@@ -614,7 +595,7 @@ public class cMoveorderRepository {
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
                 l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT;
-                l_PropertyInfo5Pin.setValue("");
+                l_PropertyInfo5Pin.setValue(params[0].documentStr);
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
@@ -634,12 +615,12 @@ public class cMoveorderRepository {
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
                 l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_MOVEBARCODECHECK;
-                l_PropertyInfo9Pin.setValue(false);
+                l_PropertyInfo9Pin.setValue(params[0].checkBarcodesBln);
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
                 PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
                 l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_MIBATCHTRAKEBIN;
-                l_PropertyInfo10Pin.setValue("");
+                l_PropertyInfo10Pin.setValue(params[0].binCodeStr);
                 l_PropertyInfoObl.add(l_PropertyInfo10Pin);
 
                 PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
@@ -656,9 +637,9 @@ public class cMoveorderRepository {
         }
     }
 
-    private static class mGetMoveordersFromWebserviceAsyncTask extends AsyncTask<MoveorderParams, Void, cWebresult> {
+    private static class mGetMoveordersFromWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override
-        protected cWebresult doInBackground(final MoveorderParams... params) {
+        protected cWebresult doInBackground(final String... params) {
             cWebresult WebresultWrs = new cWebresult();
 
             List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
@@ -675,12 +656,33 @@ public class cMoveorderRepository {
 
             PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
             l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_SEARCHTEXT;
-            l_PropertyInfo3Pin.setValue(params[0].searchTextStr);
+            l_PropertyInfo3Pin.setValue(params[0]);
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+            String mainTypeStr = "";
+
+            switch (MoveorderSelectActivity.currentMainTypeEnu) {
+                case Unknown:
+                    mainTypeStr = "";
+                    break;
+
+                case TAKE:
+                    mainTypeStr = "MO";
+                    break;
+
+                case PLACE:
+                    mainTypeStr = "MI";
+                    break;
+
+                case TAKEANDPLACE:
+                    mainTypeStr = "MV";
+                    break;
+
+            }
 
             PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
             l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_MAINTYPE;
-            l_PropertyInfo4Pin.setValue(params[0].mainTypeStr);
+            l_PropertyInfo4Pin.setValue(mainTypeStr);
             l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
 
@@ -851,15 +853,6 @@ public class cMoveorderRepository {
         }
     }
 
-    private static class mGetLinesForBinFromDatabaseAsyncTask extends AsyncTask<String, Void, List<cMoveorderLineEntity>> {
-        private iMoveorderLineDao mAsyncTaskDao;
-
-        mGetLinesForBinFromDatabaseAsyncTask(iMoveorderLineDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cMoveorderLineEntity> doInBackground(final String... params) {
-            return mAsyncTaskDao.getLinesForBinFromDatabase(params[0]);
-        }
-    }
 
     private static class mCloseTakeMTViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override

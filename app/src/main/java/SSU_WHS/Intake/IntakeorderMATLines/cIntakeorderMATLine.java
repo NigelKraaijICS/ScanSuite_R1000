@@ -293,6 +293,12 @@ public class cIntakeorderMATLine {
                                                                                                   pvIntakeorderBarcode.getBarcodeStr(),
                                                                                                   pvIntakeorderBarcode.getQuantityPerUnitOfMeasureDbl());
             intakeorderMATLineBarcode.pInsertInDatabaseBln();
+
+            if (this.barcodesObl == null) {
+                this.barcodesObl = new ArrayList<>();
+            }
+            this.barcodesObl.add(pvIntakeorderBarcode);
+
             return;
         }
 

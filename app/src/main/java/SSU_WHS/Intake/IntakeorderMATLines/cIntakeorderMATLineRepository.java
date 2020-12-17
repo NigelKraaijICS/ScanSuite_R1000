@@ -144,8 +144,6 @@ public class cIntakeorderMATLineRepository {
         return webResultWrs;
     }
 
-
-
     public cWebresult pMATLineSplitViaWebserviceWrs() {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();

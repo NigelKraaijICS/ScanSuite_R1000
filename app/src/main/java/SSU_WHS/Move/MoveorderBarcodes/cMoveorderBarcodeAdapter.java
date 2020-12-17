@@ -18,6 +18,8 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.R;
@@ -104,7 +106,16 @@ public class cMoveorderBarcodeAdapter extends RecyclerView.Adapter<cMoveorderBar
                 if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
                     MoveLineTakeMTActivity moveLineTakeMTActivity = (MoveLineTakeMTActivity)cAppExtension.activity;
                     moveLineTakeMTActivity.pHandleScan(cBarcodeScan.pFakeScan(moveorderBarcode.getBarcodeStr()));
+                }
+                if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
+                    MoveLinePlaceMTActivity moveLinePlaceMTActivity = (MoveLinePlaceMTActivity)cAppExtension.activity;
+                    moveLinePlaceMTActivity.pHandleScan(cBarcodeScan.pFakeScan(moveorderBarcode.getBarcodeStr()));
+                }
 
+
+                if (cAppExtension.activity instanceof MoveLinePlaceGeneratedActivity) {
+                    MoveLinePlaceGeneratedActivity moveLinePlaceGeneratedActivity = (MoveLinePlaceGeneratedActivity)cAppExtension.activity;
+                    moveLinePlaceGeneratedActivity.pHandleScan(cBarcodeScan.pFakeScan(moveorderBarcode.getBarcodeStr()));
                 }
 
             }
@@ -121,6 +132,18 @@ public class cMoveorderBarcodeAdapter extends RecyclerView.Adapter<cMoveorderBar
         }
 
         if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
+            if (cMoveorderLine.currentMoveOrderLine != null && cMoveorderLine.currentMoveOrderLine.orderBarcodesObl()  != null)
+                return cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() .size();
+            else return 0;
+        }
+
+        if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
+            if (cMoveorderLine.currentMoveOrderLine != null && cMoveorderLine.currentMoveOrderLine.orderBarcodesObl()  != null)
+                return cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() .size();
+            else return 0;
+        }
+
+        if (cAppExtension.activity instanceof MoveLinePlaceGeneratedActivity) {
             if (cMoveorderLine.currentMoveOrderLine != null && cMoveorderLine.currentMoveOrderLine.orderBarcodesObl()  != null)
                 return cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() .size();
             else return 0;

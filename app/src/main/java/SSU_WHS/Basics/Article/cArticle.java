@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -15,7 +14,6 @@ import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.ArticleStock.cArticleStock;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -47,7 +45,7 @@ public class cArticle {
         return description2Str;
     }
 
-    private String itemInfoCodeStr;
+    private final String itemInfoCodeStr;
     public String getItemInfoCodeStr() { return itemInfoCodeStr; }
 
     public String vendorItemNoStr;
@@ -56,33 +54,15 @@ public class cArticle {
     public String vendorItemDescriptionStr;
     public String getItemDescriptionStr() { return vendorItemDescriptionStr; }
 
-    private String component10Str;
+    private final String component10Str;
     public String getComponent10Str() { return component10Str; }
 
-    private Double priceDbl;
+    private final Double priceDbl;
     public Double getPriceDbl() { return priceDbl; }
 
-    private cArticleEntity articleEntity;
+    private final cArticleEntity articleEntity;
     public  List<cArticleBarcode> barcodesObl;
     public  List<cArticleStock> stockObl;
-
-    public List<cArticleStock> sortedStockObl() {
-
-        List<cArticleStock> sortedTakeLinesObl = new ArrayList<>();
-
-        if (this.stockObl == null || this.stockObl.size() == 0) {
-            return  sortedTakeLinesObl;
-        }
-
-        for (cArticleStock articleStock : this.stockObl) {
-            sortedTakeLinesObl.add(articleStock);
-        }
-
-        Collections.sort(sortedTakeLinesObl);
-
-        return  sortedTakeLinesObl;
-
-    }
 
     public cArticleImage articleImage;
     private cArticleViewModel getArticleViewModel() {
@@ -179,10 +159,11 @@ public class cArticle {
                     }
                 }
                 return true;
-            } else {
-                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES);
-                return false;
             }
+            }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES);
+            return false;
         }
 
         return  true;

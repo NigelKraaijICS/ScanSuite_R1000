@@ -109,8 +109,8 @@
     <string name="ordertype_mi">Verplaatsen alleen plaatsen</string>
     <string name="ordertype_mo">Verplaatsen alleen nemen</string>
     <string name="ordertype_mt">Verplaats taak</string>
-    <string name="ordertype_mv">Verplaats</string>
-    <string name="ordertype_mvi">Verplaats item</string>
+    <string name="ordertype_mv">Verplaatsen</string>
+    <string name="ordertype_mvi">Verplaatsen item</string>
     <string name="ordertype_omm">Interne Ontvangst Multi-user</string>
     <string name="ordertype_omom">Interne Ontvangst en Magazijnopslag Multi-user</string>
     <string name="ordertype_omos">Interne Ontvangst en Magazijnopslag Single-user</string>
@@ -727,5 +727,6 @@
     <string name="create">Creeer</string>
     <string name="message_scan_article_or_new_bin">Scan artikel of nieuwe BIN</string>
     <string name="error_matching_lines_and_barcodes_failed">Regels en barcodes koppelen mislukt</string>
+    <string name="choose_workflow">Kies workflow</string>
 
 </resources>

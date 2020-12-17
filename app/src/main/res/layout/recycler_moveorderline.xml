@@ -30,7 +30,7 @@
     </RelativeLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:elevation="1dp"
         android:background="@drawable/menu_row"
         android:id="@+id/view_foreground">
@@ -90,12 +90,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/textViewCounted"
-            app:layout_constraintStart_toEndOf="@id/imageViewCounted"
+            app:layout_constraintStart_toEndOf="@id/imageViewBIN"
             />
         <View
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"
-            app:layout_constraintStart_toStartOf="@id/textViewArticle"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -453,7 +453,7 @@ public class cReturnorderRepository {
                 l_PropertyInfo3Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
-                String newWorkflowsStr = cSetting.RETOUR_NEW_WORKFLOWS().toUpperCase();
+                String newWorkflowsStr = cSetting.RETOUR_NEW_WORKFLOWS().get(0).toUpperCase();
 
                 if (newWorkflowsStr.contains(";")){
                     newWorkflowsStr = newWorkflowsStr.replace("RVR","");

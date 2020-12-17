@@ -383,7 +383,7 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
         cResult resultRst = new cResult();
         resultRst.resultBln = true;
 
-        resultRst = cMoveorder.pCreateMoveOrderMIViaWebserviceRst();
+        resultRst = cMoveorder.pCreateMoveOrderMIViaWebserviceRst("","", false);
         if (!resultRst.resultBln) {
             this.mShowNotSent(cAppExtension.activity.getString(R.string.error_get_moveorders_failed));
             return;

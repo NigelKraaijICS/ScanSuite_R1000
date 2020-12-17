@@ -1292,7 +1292,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityHandled().intValue());
+        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityHandledDbl().intValue());
         bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY,cMoveorder.currentMoveOrder.currentMoveItemVariant.getQuantityTodoPlaceDbl());
         NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
         numberpickerFragment.setArguments(bundle);

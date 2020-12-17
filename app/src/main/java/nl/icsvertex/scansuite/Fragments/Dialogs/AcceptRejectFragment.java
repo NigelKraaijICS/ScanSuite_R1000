@@ -21,12 +21,14 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderLinesPlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
@@ -348,9 +350,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
-
-
-
             MoveLinesPlaceMTActivity moveLinesPlaceMTActivity = (MoveLinesPlaceMTActivity)cAppExtension.activity;
             if (!moveLinesPlaceMTActivity.closeOrderClickedBln) {
                 moveLinesPlaceMTActivity.pLeaveActivity();
@@ -367,6 +366,16 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
             MoveLinePlaceMTActivity moveLinePlaceMTActivity = (MoveLinePlaceMTActivity)cAppExtension.activity;
             moveLinePlaceMTActivity.pAcceptMove();
+        }
+
+        if (cAppExtension.activity instanceof MoveLinePlaceGeneratedActivity) {
+            MoveLinePlaceGeneratedActivity moveLinePlaceGeneratedActivity = (MoveLinePlaceGeneratedActivity)cAppExtension.activity;
+            moveLinePlaceGeneratedActivity.pAcceptMove();
+        }
+
+        if (cAppExtension.activity instanceof MoveorderLinesPlaceGeneratedActivity) {
+            MoveorderLinesPlaceGeneratedActivity moveorderLinesPlaceGeneratedActivity = (MoveorderLinesPlaceGeneratedActivity)cAppExtension.activity;
+            moveorderLinesPlaceGeneratedActivity.pDone();
         }
 
     }
@@ -502,6 +511,17 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             MoveLinePlaceMTActivity moveLinePlaceMTActivity = (MoveLinePlaceMTActivity)cAppExtension.activity;
             moveLinePlaceMTActivity.pCancelMove();
             return;
+        }
+
+        if (cAppExtension.activity instanceof  MoveLinePlaceGeneratedActivity) {
+            MoveLinePlaceGeneratedActivity moveLinePlaceGeneratedActivity = (MoveLinePlaceGeneratedActivity)cAppExtension.activity;
+            moveLinePlaceGeneratedActivity.pCancelMove();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof MoveorderLinesPlaceGeneratedActivity) {
+            MoveorderLinesPlaceGeneratedActivity moveorderLinesPlaceGeneratedActivity = (MoveorderLinesPlaceGeneratedActivity)cAppExtension.activity;
+            moveorderLinesPlaceGeneratedActivity.pLeaveActivity();
         }
 
     }

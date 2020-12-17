@@ -11,7 +11,7 @@
     tools:context=".Activities.Intake.IntakeOrderIntakeActivity"
     android:background="@color/colorBart"
     >
-    <include layout="@layout/toolbar_subtext_default"
+    <include layout="@layout/toolbar_subtext_expanded_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />

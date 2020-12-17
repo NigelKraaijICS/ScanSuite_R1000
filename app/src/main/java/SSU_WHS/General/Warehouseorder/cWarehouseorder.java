@@ -46,6 +46,13 @@ public class cWarehouseorder {
         Store
     }
 
+    public  enum MoveMainTypeEnu {
+        Unknown,
+        TAKE,
+        PLACE,
+        TAKEANDPLACE,
+    }
+
     public enum CommentTypeEnu {
         PICK,
         SORT,
@@ -62,9 +69,12 @@ public class cWarehouseorder {
         BP,
         PA,
         PF,
+        SPV,
         IVS,
         MV,
         MI,
+        MO,
+        MVI,
         RVS,
         RVR,
         MAT,
@@ -208,7 +218,7 @@ public class cWarehouseorder {
         return  resultEnu;
     }
 
-    public static String getWorkflowDescription(String pvWorkflowCodeStr) {
+    public static String pGetWorkflowDescriptionStr(String pvWorkflowCodeStr) {
         String result = "";
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.BC.toString())) {
             result = cAppExtension.context.getString(R.string.ordertype_bc);

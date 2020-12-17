@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,15 +42,21 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder.WorkflowEnu;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveOrders.cMoveorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.WorkflowFragment;
 import nl.icsvertex.scansuite.R;
+
+import static SSU_WHS.General.Warehouseorder.cWarehouseorder.WorkflowEnu.*;
 
 public class MoveorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
@@ -85,6 +92,8 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         return this.moveorderAdapter;
     }
+
+    public static cWarehouseorder.MoveMainTypeEnu currentMainTypeEnu;
 
     // End Region Views
 
@@ -245,7 +254,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     //Region Public Methods
 
-
     public void pFillOrders() {
 
         // Show that we are getting data
@@ -304,6 +312,29 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
+    public void pNewWorkflowSelected(String pvNewWorkflowsStr) {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        cWarehouseorder.MoveMainTypeEnu moveMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.Unknown;
+
+        switch (pvNewWorkflowsStr) {
+            case "MV":
+                moveMainTypeEnu =  cWarehouseorder.MoveMainTypeEnu.TAKEANDPLACE;
+              break;
+            case "MO":
+                moveMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.TAKE;
+                break;
+
+            case "MI":
+                moveMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.PLACE;
+                break;
+        }
+
+
+        mShowCreateMoveActivity(moveMainTypeEnu);
+    }
+
     //End Region Public Methods
 
     // Region Private Methods
@@ -311,7 +342,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     private void mHandleFillOrders(){
 
         //all Moveorders
-        if (!cMoveorder.pGetMoveOrdersViaWebserviceBln(true, "", "")) {
+        if (!cMoveorder.pGetMoveOrdersViaWebserviceBln(true, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_moveorders_failed), "", true, true );
             return;
         }
@@ -362,6 +393,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         switch ( cMoveorder.currentMoveOrder.getOrderTypeStr()) {
             case"MV":
+            case"MI":
                 hulpResult = cMoveorder.currentMoveOrder.pGetOrderDetailsRst();
                 break;
             case"MT":
@@ -386,7 +418,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-
     private  void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cMoveorder.currentMoveOrder.getOrderNumberStr(), true, true );
         cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
@@ -402,9 +433,10 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         Intent intent;
 
         switch ( cMoveorder.currentMoveOrder.getOrderTypeStr()) {
-            case"MV":
+            case "MV":
                 intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
                 break;
+
             case"MT":
 
                 if (cMoveorder.currentMoveOrder.getStatusInt() <= cWarehouseorder.MoveStatusEnu.Move_Take_Wait) {
@@ -416,6 +448,20 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
                     intent = new Intent(cAppExtension.context, MoveLinesPlaceMTActivity.class);
                     break;
                 }
+
+
+
+            case"MI":
+
+                if (cMoveorder.currentMoveOrder.isGeneratedBln()) {
+                    intent = new Intent(cAppExtension.context, MoveorderLinesPlaceGeneratedActivity.class);
+                }
+                else
+                {
+                    intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
+                }
+                break;
+
 
             default:
                 throw new IllegalStateException("Unexpected value: " + cMoveorder.currentMoveOrder.getOrderTypeStr());
@@ -432,10 +478,38 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    private  void mShowCreateMoveActivity() {
+    private  void mShowCreateMoveActivity(cWarehouseorder.MoveMainTypeEnu pvMainTypeEnu) {
+
+        if (pvMainTypeEnu != null) {
+            CreateMoveActivity.moveMainTypeEnu = pvMainTypeEnu;
+        }
+
+        if (MoveorderSelectActivity.currentMainTypeEnu !=  cWarehouseorder.MoveMainTypeEnu.Unknown) {
+            CreateMoveActivity.moveMainTypeEnu = MoveorderSelectActivity.currentMainTypeEnu;
+        }
+        else
+        {
+            if (cSetting.MOVE_NEW_WORKFLOWS().size() > 1) {
+                this.mShowWorklowFragment();
+                return;
+            }
+
+            switch (cSetting.MOVE_NEW_WORKFLOWS().get(0).toUpperCase()) {
+                case  "MV":
+                    CreateMoveActivity.moveMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.TAKEANDPLACE;
+                    break;
+
+                case  "MI":
+                    CreateMoveActivity.moveMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.PLACE;
+                    break;
+
+                case "MO":
+                    CreateMoveActivity.moveMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.TAKE;
+                    break;
+            }
+        }
 
         cUserInterface.pCheckAndCloseOpenDialogs();
-
         Intent intent = new Intent(cAppExtension.context, CreateMoveActivity.class);
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
     }
@@ -498,11 +572,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         this.mSetMoveorderRecycler(filteredMovesObl);
 
-        if (filteredMovesObl.size() == 0) {
-            this.mShowNoOrdersIcon(true);
-        } else {
-            this.mShowNoOrdersIcon(false);
-        }
+        this.mShowNoOrdersIcon(filteredMovesObl.size() == 0);
 
     }
 
@@ -519,12 +589,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mShowHideBottomSheet(true);
-                }
-                else {
-                    mShowHideBottomSheet(false);
-                }
+                mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
     }
@@ -718,13 +783,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return  false;
         }
 
-        //Something went wrong, the order has been deleted, so show comments and refresh
-        //If we got any comments, show them
-        //TODO error
-        //            if (cMoveOrder.currentMoveOrder.pFeedbackCommentObl() != null && cMoveOrder.currentMoveOrder.pFeedbackCommentObl().size() > 0 ) {
-        //                //Process comments from webresult
-        //                MoveorderSelectActivity.mShowCommentsFragment(cMoveOrder.currentMoveOrder.pFeedbackCommentObl(), hulpResult.messagesStr());
-        //            }
         return (hulpResult.activityActionEnu != cWarehouseorder.ActivityActionEnu.Delete) &&
                 (hulpResult.activityActionEnu != cWarehouseorder.ActivityActionEnu.NoStart);
 
@@ -772,7 +830,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mSetNewOrderButton() {
 
-        if (cSetting.MOVE_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.MV.toString().toUpperCase())) {
+        if (cSetting.MOVE_NEW_WORKFLOWS().size() >= 1) {
             this.imageViewNewOrder.setVisibility(View.VISIBLE);
         }
         else {
@@ -784,7 +842,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                mShowCreateMoveActivity();
+                mShowCreateMoveActivity(null);
             }
         });
     }
@@ -796,17 +854,20 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        // We can't create, so don't start create activity
-        if (cSetting.MOVE_NEW_WORKFLOWS().isEmpty()) {
+        if (cSetting.MOVE_NEW_WORKFLOWS().size() == 0) {
             return;
         }
 
-        if (!cSetting.MOVE_AUTO_CREATE_ORDER_MV()) {
-            return;
-        }
+      this.mShowCreateMoveActivity(null);
 
-            this.mShowCreateMoveActivity();
+    }
 
+    private  void mShowWorklowFragment() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        WorkflowFragment workflowFragment = new WorkflowFragment();
+        workflowFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.WORKFLOWFRAGMENT_TAG);
     }
 
     // End No orders icon

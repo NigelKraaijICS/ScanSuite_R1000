@@ -851,6 +851,7 @@
     <string name="message_set_serial_first">Serial empty, please set serial</string>
     <string name="message_barcode_already_scanned_and_unique">Barcode has already been scanned and is unique</string>
     <string name="error_matching_lines_and_barcodes_failed">Matching lines and barcodes failed</string>
+    <string name="choose_workflow">Choose workflow</string>
 
     <!--End Region return-->
 

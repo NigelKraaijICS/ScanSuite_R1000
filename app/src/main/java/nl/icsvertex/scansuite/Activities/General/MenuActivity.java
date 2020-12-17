@@ -452,6 +452,25 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
                 return;
             }
 
+            switch (cUser.currentUser.currentAuthorisation.getAutorisationEnu()) {
+                case MOVE:
+                    MoveorderSelectActivity.currentMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.Unknown;
+                    break;
+
+                case MOVE_MI:
+                case MOVE_MI_SINGLEPIECE:
+                    MoveorderSelectActivity.currentMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.PLACE;
+                    break;
+
+                case MOVE_MO:
+                    MoveorderSelectActivity.currentMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.TAKE;
+                    break;
+
+                case MOVE_MV:
+                    MoveorderSelectActivity.currentMainTypeEnu = cWarehouseorder.MoveMainTypeEnu.TAKEANDPLACE;
+                    break;
+            }
+
             intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
             MoveorderSelectActivity.startedViaMenuBln = true;
 

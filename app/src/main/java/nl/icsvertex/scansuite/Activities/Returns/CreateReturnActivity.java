@@ -209,7 +209,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         }
 
 
-        if (cSetting.RETOUR_NEW_WORKFLOWS().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.RVR.toString())) {
+        if (cSetting.RETOUR_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.RVR.toString())) {
             this.switchMultipleDocuments.setVisibility(View.GONE);
         }
 

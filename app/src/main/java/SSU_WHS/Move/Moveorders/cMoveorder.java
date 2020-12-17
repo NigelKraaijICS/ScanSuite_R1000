@@ -27,6 +27,9 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
@@ -82,6 +85,16 @@ public class cMoveorder {
     private int sourceDocumentInt;
     private int getSourceDocumentInt() {
         return sourceDocumentInt;
+    }
+
+    private boolean moveWithPictureBln;
+    public boolean isMoveWithPictureBln() {
+        return moveWithPictureBln;
+    }
+
+    private boolean moveWithPictureAutoOpenBln;
+    public boolean isMoveWithPictureAutoOpenBln() {
+        return moveWithPictureAutoOpenBln;
     }
 
     private boolean moveAmountManualBln;
@@ -243,6 +256,27 @@ public class cMoveorder {
 
     }
 
+    public  List<cMoveorderLine> placeLineForBinReversedObl(String pvBinCodeStr){
+
+        List<cMoveorderLine> resultObl = new ArrayList<>();
+
+        if (this.placeLinesObl == null || this.placeLinesObl.size() == 0) {
+            return resultObl;
+        }
+
+        for (cMoveorderLine moveorderLine :this.placeLinesObl)
+        {
+            if (moveorderLine.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr)) {
+                resultObl.add((moveorderLine));
+            }
+        }
+
+        Collections.reverse(resultObl);
+
+        return resultObl;
+
+    }
+
     public boolean isPlaceDoneBln(){
 
         for (cMoveItemVariant moveItemVariant : cMoveItemVariant.allMoveItemVariantObl.values()) {
@@ -306,7 +340,12 @@ public class cMoveorder {
         this.moveBarcodeCheckBln = cText.pStringToBooleanBln(this.moveorderEntity.getMoveBarcodeCheckStr(), false);
         this.moveValidateStockBln = cText.pStringToBooleanBln(this.moveorderEntity.getMoveValidateStockStr(), false);
         this.sourceDocumentInt = cText.pStringToIntegerInt(this.moveorderEntity.getSourceDocumentStr()) ;
+
+        this.moveWithPictureBln = cText.pStringToBooleanBln(this.moveorderEntity.getMoveWithPictureStr(),false);
+        this.moveWithPictureAutoOpenBln = cText.pStringToBooleanBln(this.moveorderEntity.getMoveWithPictureAutoOpenStr(),false);
+
     }
+
 
     public cMoveorder(cMoveorderEntity pvMoveorderEntity) {
 
@@ -423,7 +462,7 @@ public class cMoveorder {
         return result;
     }
 
-    public static cResult pCreateMoveOrderMIViaWebserviceRst() {
+    public static cResult pCreateMoveOrderMIViaWebserviceRst(String pvDocumentStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {
 
         cResult result;
         result = new cResult();
@@ -432,7 +471,7 @@ public class cMoveorder {
         cWebresult WebResult;
 
         cMoveorderViewModel moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
-        WebResult = moveorderViewModel.pCreateMoveOrderMIViaWebserviceWrs();
+        WebResult = moveorderViewModel.pCreateMoveOrderMIViaWebserviceWrs(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);
 
         //No result, so something really went wrong
         if (WebResult == null) {
@@ -505,7 +544,8 @@ public class cMoveorder {
         }
         return result;
     }
-    public static boolean pGetMoveOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr, String pvMainTypeStr) {
+
+    public static boolean pGetMoveOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr) {
 
         cWebresult WebResult;
 
@@ -514,7 +554,7 @@ public class cMoveorder {
             cMoveorder.mTruncateTable();
         }
         cMoveorderViewModel moveorderViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
-        WebResult = moveorderViewModel.pGetMoveordersFromWebserviceWrs(pvSearchTextStr, pvMainTypeStr);
+        WebResult = moveorderViewModel.pGetMoveordersFromWebserviceWrs(pvSearchTextStr);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
            if(WebResult.getResultDtt() != null && WebResult.getResultDtt().size() > 0) {
@@ -689,6 +729,13 @@ public class cMoveorder {
             }
         }
 
+        if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase("MI")) {
+            if (!cMoveorder.currentMoveOrder.pMatchBarcodesAndLinesBln()) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_matching_lines_and_barcodes_failed));
+                return result;
+            }
+        }
 
         // Get all comments
         if (!cMoveorder.currentMoveOrder.pGetCommentsViaWebserviceBln(true)) {
@@ -966,6 +1013,36 @@ public class cMoveorder {
         }
 
 
+    }
+
+    public boolean pMatchBarcodesAndLinesBln() {
+
+        if (cMoveorderBarcode.allMoveorderBarcodesObl == null || cMoveorderBarcode.allMoveorderBarcodesObl .size() == 0 ||
+                cMoveorderLineBarcode.allMoveorderLineBarcodesObl == null || cMoveorderLineBarcode.allMoveorderLineBarcodesObl.size() == 0 ||
+                cMoveorderLine.allLinesObl == null ||  cMoveorderLine.allLinesObl.size() == 0 )  {
+            return true;
+        }
+
+        for (cMoveorderLineBarcode moveorderLineBarcode : cMoveorderLineBarcode.allMoveorderLineBarcodesObl) {
+
+            cMoveorderBarcode moveorderBarcode =   cMoveorderBarcode.pGetMoveOrderBarcodeByBarcode(moveorderLineBarcode.getBarcodeStr());
+            if (moveorderBarcode == null) {
+                continue;
+            }
+
+            cMoveorderLine moveorderLine =   cMoveorderLine.pGetLineByLineNo(moveorderLineBarcode.getLineNoInt());
+            if (moveorderLine == null) {
+                continue;
+            }
+
+            if (moveorderLine.barcodesObl == null) {
+                moveorderLine.barcodesObl = new ArrayList<>();
+            }
+
+            moveorderLine.barcodesObl.add(moveorderBarcode);
+        }
+
+        return  true;
     }
 
     public boolean pGetBINSViaWebserviceBln() {
@@ -1269,6 +1346,8 @@ public class cMoveorder {
             return false;
         }
 
+        cArticle.currentArticle = cMoveorder.currentMoveOrder.currentArticle;
+
         //Add article to article object list
         cMoveorder.currentMoveOrder.articleObl.put(cMoveorder.currentMoveOrder.currentArticle.getItemNoAndVariantCodeStr(), cMoveorder.currentMoveOrder.currentArticle);
 
@@ -1276,6 +1355,12 @@ public class cMoveorder {
         //Get barcodes for this article
         if (! cMoveorder.currentMoveOrder.currentArticle.pGetBarcodesViaWebserviceBln(pvBarcodeScan)) {
             return false;
+        }
+
+        Boolean isUniqueBarcodeBln = false;
+
+        if (cArticle.currentArticle.barcodesObl != null && cArticle.currentArticle.barcodesObl.get(0).getUniqueBarcodeBln()) {
+            isUniqueBarcodeBln = true;
         }
 
         if (cMoveorderBarcode.allMoveorderBarcodesObl == null) {
@@ -1287,7 +1372,7 @@ public class cMoveorder {
                articleBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr())) {
 
                 //Then add barcode
-                cWebresult WebResult =  this.getMoveorderLineViewModel().pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan);
+                cWebresult WebResult =  this.getMoveorderLineViewModel().pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan, isUniqueBarcodeBln);
                 if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
                     cMoveorderBarcode moveorderBarcode = new cMoveorderBarcode(WebResult.getResultDtt().get(0));
                     cMoveorderBarcode.allMoveorderBarcodesObl.add(moveorderBarcode);
@@ -1422,7 +1507,6 @@ public class cMoveorder {
         }
     }
 
-
     public boolean pMovePlaceItemHandledBln(List<cMoveorderBarcode> pvScannedBarcodesObl) {
         cWebresult WebResult;
 
@@ -1435,6 +1519,22 @@ public class cMoveorder {
             for ( JSONObject jsonObject : WebResult.getResultDtt()) {
                 cMoveorderLine moveorderLine = new cMoveorderLine(jsonObject);
                 moveorderLine.pInsertInDatabaseBln();
+
+                if (cMoveorder.currentMoveOrder.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.MI.toString())) {
+                    if (moveorderLine.barcodesObl == null) {
+                        moveorderLine.barcodesObl = new ArrayList<>();
+                    }
+
+                    moveorderLine.barcodesObl.addAll(pvScannedBarcodesObl);
+                }
+
+                if (pvScannedBarcodesObl.get(0).getIsUniqueBarcodeBln()) {
+                    cMoveItemVariant moveItemVariant = new cMoveItemVariant(moveorderLine.getItemNoStr(), moveorderLine.getVariantCodeStr());
+                    moveItemVariant.quantityPlacedDbl = 0;
+                    moveItemVariant.quantityTakenDbl = 0;
+                    moveItemVariant.linesObl = new ArrayList<>();
+                    cMoveItemVariant.allMoveItemVariantObl.put(moveorderLine.getKeyStr(),moveItemVariant);
+                }
 
                 //Edit quantity for this ItemVariant
                 Objects.requireNonNull(moveorderLine.moveItemVariant()).quantityPlacedDbl +=  moveorderLine.getQuantityHandledDbl();
@@ -1574,7 +1674,7 @@ public class cMoveorder {
 
             for (cMoveorderBarcode resultBarcode : resultObl) {
                 if (resultBarcode.getBarcodeStr().equalsIgnoreCase(moveorderBarcode.getBarcodeStr())) {
-                    resultBarcode.quantityHandled +=  moveorderBarcode.quantityPerUnitOfMeasure;
+                    resultBarcode.quantityHandledDbl +=  moveorderBarcode.quantityPerUnitOfMeasure;
                     barcodeFoundBln = true;
                 }
             }
@@ -1586,7 +1686,7 @@ public class cMoveorder {
 
             else {
                 //new barcode, so add
-                moveorderBarcode.quantityHandled = moveorderBarcode.quantityPerUnitOfMeasure;
+                moveorderBarcode.quantityHandledDbl = moveorderBarcode.quantityPerUnitOfMeasure;
                 resultObl.add(moveorderBarcode);
             }
 

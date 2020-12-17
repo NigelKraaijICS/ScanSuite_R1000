@@ -408,7 +408,7 @@ public class cPickorder{
     public static cPickorder currentPickOrder;
     public static cPickorder currentCombinedPickOrder;
     public cPickorderBarcode pickorderQCBarcodeScanned;
-
+    public cPickorderBarcode pickorderBarcodeScanned;
     public static int totalPicksInt;
 
 

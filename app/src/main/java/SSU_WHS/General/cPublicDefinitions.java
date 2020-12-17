@@ -9,6 +9,7 @@ public class cPublicDefinitions {
     public static String UPDATE_BASE_URL = "http://ssupdate.icsvertex.nl";
     public static String UPDATE_PACKAGE_NAME = "scansuite.apk";
     public static String INTERFACE_VERSION = "15002";
+    public static String MOVE_MAINTYPE = "MOVE_MAINTYPE";
     public static String NUMBERINTENT_NUMBER = "NUMBERINTENT_NUMBER";
     public static String NUMBERINTENT_EXTRANUMBER = "NUMBERINTENT_EXTRANUMBER";
     public static String NUMBERINTENT_CURRENTQUANTITY = "NUMBERINTENT_CURRENTQUANTITY";
@@ -34,6 +35,7 @@ public class cPublicDefinitions {
     public static String HUGEERROR_EXTRASTRING = "HUGEERROR_EXTRASTRING";
     public static String ORDERDONE_TAG = "ORDERDONE_TAG";
     public static String COMMENTFRAGMENT_TAG = "COMMENTFRAGMENT_TAG";
+    public static String WORKFLOWFRAGMENT_TAG = "WORKFLOWFRAGMENT_TAG";
     public static String BINITEMSFRAGMENT_TAG = "BINITEMSFRAGMENT_TAG";
     public static String ARTICLESTOCKFRAGMENT_TAG = "ARTICLESTOCKFRAGMENT_TAG";
     public static String WORKPLACEFRAGMENT_TAG = "WORKPLACEFRAGMENT_TAG";

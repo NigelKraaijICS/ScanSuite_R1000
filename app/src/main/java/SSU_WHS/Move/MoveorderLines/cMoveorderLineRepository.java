@@ -26,6 +26,17 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cMoveorderLineRepository {
 
+    private static class AddBarcodeParams {
+        cBarcodeScan barcodeScan;
+        Boolean isUniqueBarcodeBln;
+
+        AddBarcodeParams(cBarcodeScan pvBarcodeScan, Boolean pvIsUniqueBarcodeBln) {
+            this.barcodeScan = pvBarcodeScan;
+            this.isUniqueBarcodeBln = pvIsUniqueBarcodeBln;
+        }
+    }
+
+
     //Region Public Properties
     private iMoveorderLineDao moveorderLineDao;
     //End Region Public Properties
@@ -200,12 +211,14 @@ public class cMoveorderLineRepository {
         return webResultWrs;
     }
 
-    public cWebresult pAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {
+    public cWebresult pAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan , boolean pvIsUniquBarcodeBln) {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
+        AddBarcodeParams addBarcodeParams = new AddBarcodeParams(pvBarcodeScan, pvIsUniquBarcodeBln);
+
         try {
-            webResultWrs = new mMoveorderERPBarcodeViaWebserviceAsyncTask().execute(pvBarcodeScan).get();
+            webResultWrs = new mMoveorderERPBarcodeViaWebserviceAsyncTask().execute(addBarcodeParams).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -294,7 +307,7 @@ public class cMoveorderLineRepository {
 
                         SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, moveorderBarcode.getBarcodeStr());
-                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandled());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandledDbl());
                         barcodesHandledList.addSoapObject(soapObject);
                     }
                 }
@@ -381,7 +394,7 @@ public class cMoveorderLineRepository {
                     for (cMoveorderBarcode moveorderBarcode: params[0]) {
                         SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, moveorderBarcode.getBarcodeStr());
-                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandled());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandledDbl());
                         barcodesHandledList.addSoapObject(soapObject);
                     }
                 }
@@ -468,7 +481,7 @@ public class cMoveorderLineRepository {
                     for (cMoveorderBarcode moveorderBarcode: params[0]) {
                         SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, moveorderBarcode.getBarcodeStr());
-                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandled());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandledDbl());
                         barcodesHandledList.addSoapObject(soapObject);
                     }
                 }
@@ -547,7 +560,7 @@ public class cMoveorderLineRepository {
 
                         SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, moveorderBarcode.getBarcodeStr());
-                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandled());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandledDbl());
                         barcodesHandledList.addSoapObject(soapObject);
                     }
                 }
@@ -626,7 +639,7 @@ public class cMoveorderLineRepository {
 
                         SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODEHANDLED_COMPLEX);
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_BARCODE_COMPLEX, moveorderBarcode.getBarcodeStr());
-                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandled());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, moveorderBarcode.getQuantityHandledDbl());
                         barcodesHandledList.addSoapObject(soapObject);
                     }
                 }
@@ -726,9 +739,9 @@ public class cMoveorderLineRepository {
         }
     }
 
-    private static class mMoveorderERPBarcodeViaWebserviceAsyncTask extends AsyncTask<cBarcodeScan, Void, cWebresult> {
+    private static class mMoveorderERPBarcodeViaWebserviceAsyncTask extends AsyncTask<AddBarcodeParams, Void, cWebresult> {
         @Override
-        protected cWebresult doInBackground(cBarcodeScan... params) {
+        protected cWebresult doInBackground(AddBarcodeParams... params) {
             cWebresult webresult = new cWebresult();
             try {
 
@@ -761,7 +774,7 @@ public class cMoveorderLineRepository {
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
                 l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_BARCODE;
-                l_PropertyInfo6Pin.setValue(params[0].getBarcodeOriginalStr());
+                l_PropertyInfo6Pin.setValue(params[0].barcodeScan.getBarcodeOriginalStr());
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
                 PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
@@ -771,7 +784,7 @@ public class cMoveorderLineRepository {
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_ISUNIQUEBARCODE;
-                l_PropertyInfo8Pin.setValue(false);
+                l_PropertyInfo8Pin.setValue(params[0].isUniqueBarcodeBln);
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();

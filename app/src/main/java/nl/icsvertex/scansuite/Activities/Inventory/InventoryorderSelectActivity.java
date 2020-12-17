@@ -809,7 +809,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private void mSetNewOrderButton() {
 
-        if (cSetting.INV_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.IVS.toString().toUpperCase())) {
+        if (cSetting.INV_NEW_WORKFLOWS().contains(cWarehouseorder.WorkflowEnu.IVS.toString().toUpperCase())) {
             imageViewNewOrder.setVisibility(View.VISIBLE);
         }
         else {

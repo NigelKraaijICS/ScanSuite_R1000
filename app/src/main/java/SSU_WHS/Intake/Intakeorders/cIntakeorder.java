@@ -98,9 +98,9 @@ public class cIntakeorder {
         return receiveWithPictureBln;
     }
 
-    private boolean receiveWithAutoOpenBln;
-    public boolean isReceiveWithAutoOpenBln() {
-        return receiveWithAutoOpenBln;
+    private boolean receiveWithPictureAutoOpenBln;
+    public boolean isReceiveWithPictureAutoOpenBln() {
+        return receiveWithPictureAutoOpenBln;
     }
 
     private boolean receiveIntakeEOPackagingIntakeBln;
@@ -214,7 +214,7 @@ public class cIntakeorder {
         this.sourceDocumentInt = this.intakeorderEntity.getSourceDocumentInt();
 
         this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
-        this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
+        this.receiveWithPictureAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
         this.receiveNoExtraBinsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraBinsStr(), false);
         this.receiveNoExtraItemsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraItemsStr(), false);
         this.receiveNoExtraPiecesBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraPiecesStr(), false);
@@ -238,7 +238,7 @@ public class cIntakeorder {
         this.receiveAmountManualEOBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveAmountManualEOStr(), false);
 
         this.receiveWithPictureBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureStr(),false);
-        this.receiveWithAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
+        this.receiveWithPictureAutoOpenBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveWithPictureAutoOpenStr(),false);
         this.receiveStoreAutoAcceptAtRequestedBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveStoreAutoAcceptAtRequestedStr(), false);
         this.receiveNoExtraBinsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraBinsStr(), false);
         this.receiveNoExtraItemsBln = cText.pStringToBooleanBln(this.intakeorderEntity.getReceiveNoExtraItemsStr(), false);

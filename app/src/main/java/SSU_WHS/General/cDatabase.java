@@ -227,6 +227,9 @@ public class cDatabase {
     public static final String MOVE_NOEXTRABINS_NAMESTR = "Move_no_extra_bins";
     public static final String MOVE_NOEXTRAITEMS_NAMESTR = "Move_no_extra_items";
     public static final String MOVE_NOEXTRAPIECES_NAMESTR = "Move_no_extra_pieces";
+    public static final String MOVEWITHPICTURE_NAMESTR = "Move_with_picture";
+    public static final String MOVEWITHPICTURE_AUTO_OPEN_NAMESTR = "Move_with_picture_auto_open";
+    public static final String MOVEWITHPICTURE_PREFETCH_NAMESTR = "Move_with_picture_prefetch";
     //endregion M
 
     //region N

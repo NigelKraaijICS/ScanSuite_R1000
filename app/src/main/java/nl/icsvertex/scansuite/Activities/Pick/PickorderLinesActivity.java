@@ -386,7 +386,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
                 return;
             }
 
-
+            cPickorder.currentPickOrder.pickorderBarcodeScanned = cPickorderBarcode.currentPickorderBarcode;
 
             //we have a line to handle, so start Pick activity
             this.mStartPickActivity();

@@ -22,6 +22,7 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
@@ -29,6 +30,7 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveMISinglepieceActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderLinesPlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickGeneratedActivity;
@@ -377,6 +379,16 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof MoveMISinglepieceActivity){
                         MoveMISinglepieceActivity moveMISinglepieceActivity = (MoveMISinglepieceActivity)cAppExtension.activity;
                         moveMISinglepieceActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof MoveorderLinesPlaceGeneratedActivity){
+                        MoveorderLinesPlaceGeneratedActivity moveorderLinesPlaceGeneratedActivity = (MoveorderLinesPlaceGeneratedActivity)cAppExtension.activity;
+                        moveorderLinesPlaceGeneratedActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof MoveLinePlaceGeneratedActivity){
+                        MoveLinePlaceGeneratedActivity moveLinePlaceGeneratedActivity = (MoveLinePlaceGeneratedActivity)cAppExtension.activity;
+                        moveLinePlaceGeneratedActivity.pHandleScan(barcodeScan);
                     }
 
 

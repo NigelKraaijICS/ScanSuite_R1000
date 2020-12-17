@@ -114,6 +114,10 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
             pvHolder.textViewOrdertype.setText(R.string.ordertype_mt);
             pvHolder.textViewDocument.setText(selectedMoveorder.getExternalReferenceStr());
         }
+        if(selectedMoveorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.MI.toString())) {
+            pvHolder.textViewOrdertype.setText(R.string.ordertype_mi);
+            pvHolder.textViewDocument.setText(selectedMoveorder.getDocumentStr());
+        }
 
         if (selectedMoveorder.getProcessingOrParkedBln()) {
             pvHolder.imageViewIsProcessedOrWait.setVisibility(View.VISIBLE);
