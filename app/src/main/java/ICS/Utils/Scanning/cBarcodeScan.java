@@ -615,6 +615,12 @@ public class cBarcodeScan {
                 barcodeTypeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_PROGLOVE_EXTRABARCODETYPE);
             }
 
+            if (pvIntent.getAction().equalsIgnoreCase(cBarcodeScanDefinitions.BARCODEINTENT_HONEYWELL_ACTION)) {
+                scannedBarcodeStr = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_HONEYWELL_EXTRABARCODE);
+                String honeywellBarcodeType = extras.getString(cBarcodeScanDefinitions.BARCODEINTENT_HONEYWELL_EXTRABARCODETYPE);
+                barcodeTypeStr = cBarcodeScanDefinitions.pGetHoneyWellBarcodeTypeStr(honeywellBarcodeType);
+            }
+
 
         }
 
@@ -657,5 +663,8 @@ public class cBarcodeScan {
     private static String mCleanBarcodeStr(String pvDirtyBarcodeStr) {
         return  pvDirtyBarcodeStr.replaceAll("([\\r\\n\\t])","");
     }
+
+
+
 
 }
