@@ -62,7 +62,9 @@ public class cDatabase {
     public static final String TABLENAME_IDENTIFIERWITHDESTINATION  = "IdentifierWithDestination";
     public static final String TABLENAME_PACKANDSHIPORDER = "PackAndSHipOrder";
     public static final String TABLENAME_PACKANDSHIPORDERLINE = "PackAndShipOrderLine";
-
+    public static final String TABLENAME_PACKANDSHIPSETTING = "PackAndShipSetting";
+    public static final String TABLENAME_PACKANDSHIPBARCODE = "PackAndShipBarcode";
+    public static final String TABLENAME_PACKANDSHIPSHIPMENT = "PackAndShipShipment";
     //endregion Tables
 
     //region localtables
@@ -72,6 +74,8 @@ public class cDatabase {
 
     //region A
     public static final String ACTIONTYPECODE_NAMESTR = "ActionTypeCode";
+    public static final String ACTUALSHIPPINGAGENTCODE_NAMESTR = "ActualShippingAgentCode";
+    public static final String ACTUEALSHIPPINGAGENTSERVICECODE_NAMESTR = "ActualShippingAgentServiceCode";
     public static final String ASSIGNEDUSERID_NAMESTR = "AssignedUserId";
     public static final String AUTHORISATION_NAMESTR = "Autorisatie";
     public static final String ADDRESSCODE_NAMESTR = "Adrescode";
@@ -95,6 +99,7 @@ public class cDatabase {
     public static final String BRANCH_NAMESTR = "Vestiging";
     public static final String BRANCHTYPE_NAMESTR = "Vestigingtype";
     public static final String BRANCHNAME_NAMESTR = "Name";
+    public static final String BILLINGADDRESSCODE_NAMESTR = "BillingAddressCode";
     //endregion B
 
     //region C
@@ -356,11 +361,16 @@ public class cDatabase {
     public static final String RETURNEXTERNAL_NAMESTR = "ReturnExternal";
 
     public static final String RETOURWITHPICTURE_NAMESTR = "Retour_with_picture";
+    public static final String RETURNADDRESSCODE_NAMESTR = "ReturnAddressCode";
+    public static final String RETURNSENDERADDRESSCODE_NAMESTR = "ReturnSenderAddressCode";
+    public static final String RETURNSHIPPINGADDRESSCODE_NAMESTR = "ReturnShippingAddressCode";
     //endregion R
 
     //region S
     public static final String SALESORDER_NAMESTR = "Salesorder";
     public static final String SCANNER_NAMESTR = "Scanner";
+    public static final String SENDERADDRESSCODE_NAMESTR = "SenderAddressCode";
+
     public static final String SETTINGCODE_NAMESTR = "SettingCode";
     public static final String SETTINGVALUE_NAMESTR = "SettingValue";
     public static final String SETTING_NAMESTR = "Instelling";
@@ -382,6 +392,7 @@ public class cDatabase {
     public static final String STREET_NAMESTR = "Straat";
     public static final String SEQUENCE_NAMESTR = "Order";
     public static final String SHIPPINGAGENT_NAMESTR = "Expediteur";
+    public static final String SHIPPINGLABELS_NAMESTR = "ShippingLabels";
     public static final String SERVICE_NAMESTR = "Service";
     public static final String SHIPPINGUNIT_NAMESTR = "Verzendeenheid";
     public static final String SHIPPINGMETHOD_NAMESTR = "Verzendmethode";
@@ -390,6 +401,9 @@ public class cDatabase {
     public static final String SHIPPINGUNITQUANTITYUSED_NAMESTR = "Verzendmethode";
     public static final String SHIPPINGAGENTCODE_NAMESTR = "ShippingAgentCode";
     public static final String SHIPPINGAGENTSERVICECODE_NAMESTR = "ShippingAgentServiceCode";
+    public static final String SHIPPINGADDRESSCODE_NAMESTR = "ShippingAddressCode";
+    public static final String SHIPPINGADDRESSTYPE_NAMESTR = "ShippingAddressType";
+
     public static final String SHOWONTERMINAL_NAMESTR = "ShowOnTerminal";
     public static final String SOURCETYPE_NAMESTR = "SourceType";
     public static final String SORTINGSEQUENCENOTAKE_NAMESTR = "SortingSequenceNo_take";

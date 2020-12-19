@@ -378,6 +378,13 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
         result = new cResult();
         result.resultBln = true;
 
+        //Get all settings for current order, if webservice error then stop
+        if (!cPackAndShipOrder.currentPackAndShipOrder.pGetSettingsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_settings_failed));
+            return result;
+        }
+
         //Get all linesInt for current order, if webservice error then stop
         if (!cPackAndShipOrder.currentPackAndShipOrder.pGetLinesViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -393,7 +400,7 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
         }
 
         // Get all barcodes, if webservice error then stop
-        if (!cPackAndShipOrder.currentPackAndShipOrder.pGetLineBarcodesViaWebserviceBln(true)) {
+        if (!cPackAndShipOrder.currentPackAndShipOrder.pGetShipmentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
             return result;

@@ -6,8 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 
 import java.util.List;
 
-import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrderEntity;
-import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrderRepository;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cPackAndShipOrderViewModel extends AndroidViewModel {
@@ -34,11 +32,14 @@ public class cPackAndShipOrderViewModel extends AndroidViewModel {
 
     public cWebresult pCreatePackAndShipOrderPSMViaWebserviceWrs(String pvDocumentStr) {return this.Repository.pCreatePackAndShipOrderPSMViaWebserviceWrs(pvDocumentStr);}
 
+    public cWebresult pGetSettingsFromWebserviceWrs() {return this.Repository.pGetLinesFromWebserviceWrs(); }
+
+
     public cWebresult pGetLinesFromWebserviceWrs() {return this.Repository.pGetLinesFromWebserviceWrs(); }
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebserviceWrs();}
 
-    public cWebresult pGetLineBarcodesFromWebserviceWrs() {return this.Repository.pGetLineBarcodesFromWebserviceWrs();}
+    public cWebresult pGetShipmentsFromWebserviceWrs() {return this.Repository.pGetShipmentsFromWebserviceWrs();}
 
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
 

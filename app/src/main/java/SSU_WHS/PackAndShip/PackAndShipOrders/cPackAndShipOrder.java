@@ -22,7 +22,10 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
+import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcode;
 import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipOrderLine;
+import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSetting;
+import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -519,7 +522,7 @@ public class cPackAndShipOrder {
         }
 
         // Get all barcodes, if webservice error then stop
-        if (!cPackAndShipOrder.currentPackAndShipOrder.pGetLineBarcodesViaWebserviceBln(true)) {
+        if (!cPackAndShipOrder.currentPackAndShipOrder.pGetShipmentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
             return result;
@@ -538,10 +541,40 @@ public class cPackAndShipOrder {
     }
 
     public boolean pDeleteDetailsBln() {
-//        cMoveorderLine.pTruncateTableBln();
-//        cMoveorderBarcode.pTruncateTableBln();
+        cPackAndShipOrderLine.pTruncateTableBln();
+        cPackAndShipBarcode.pTruncateTableBln();
+        cPackAndShipSetting.pTruncateTableBln();
         cComment.pTruncateTableBln();
         return true;
+    }
+
+    public boolean pGetSettingsViaWebserviceBln(Boolean pvRefreshBln) {
+
+
+        if (pvRefreshBln) {
+            cPackAndShipSetting.allSettingsObl = null;
+            cPackAndShipSetting.pTruncateTableBln();
+        }
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetSettingsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            if (cPackAndShipOrderLine.allLinesObl == null) {
+                cPackAndShipOrderLine.allLinesObl= new ArrayList<>();
+            }
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackAndShipSetting packAndShipSetting = new cPackAndShipSetting(jsonObject);
+                packAndShipSetting.pInsertInDatabaseBln();
+            }
+
+            return  true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET);
+            return false;
+        }
+
+
     }
 
     public boolean pGetLinesViaWebserviceBln(Boolean pvRefreshBln) {
@@ -574,8 +607,29 @@ public class cPackAndShipOrder {
 
     }
 
-    public boolean pGetLineBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
-      return  true;
+    public boolean pGetShipmentsViaWebserviceBln(Boolean pvRefreshBln) {
+        if (pvRefreshBln) {
+            cPackAndShipShipment.allShipmentsObl = null;
+            cPackAndShipShipment.pTruncateTableBln();
+        }
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetShipmentsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            if (cPackAndShipShipment.allShipmentsObl == null) {
+                cPackAndShipShipment.allShipmentsObl= new ArrayList<>();
+            }
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject);
+                packAndShipShipment.pInsertInDatabaseBln();
+            }
+
+            return  true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPSHIPMENTS);
+            return false;
+        }
     }
 
 
@@ -606,7 +660,30 @@ public class cPackAndShipOrder {
 
     public boolean pGetBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
 
-        return  true;
+        if (pvRefreshBln) {
+            cPackAndShipBarcode.allPackAndShipOrderBarcodesObl = null;
+            cPackAndShipBarcode.pTruncateTableBln();
+        }
+
+        cWebresult WebResult =  this.getPackAndShipOrderViewModel().pGetBarcodesFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            if ( cPackAndShipBarcode.allPackAndShipOrderBarcodesObl == null) {
+                cPackAndShipBarcode.allPackAndShipOrderBarcodesObl = new ArrayList<>();
+            }
+
+            for (  JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackAndShipBarcode packAndShipBarcode = new cPackAndShipBarcode(jsonObject);
+                packAndShipBarcode.pInsertInDatabaseBln();
+
+            }
+
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPORDERS);
+            return  false;
+        }
     }
 
     public static List<cPackAndShipOrder> pGetPackAndShipOrdersWithFilterFromDatabasObl() {

@@ -180,6 +180,23 @@ public class cPackAndShipOrderRepository {
         return webResultWrs;
     }
 
+    public cWebresult pGetSettingdFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetSettingsViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     public cWebresult pGetLinesFromWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
@@ -214,13 +231,13 @@ public class cPackAndShipOrderRepository {
         return webResultWrs;
     }
 
-    public cWebresult pGetLineBarcodesFromWebserviceWrs() {
+    public cWebresult pGetShipmentsFromWebserviceWrs() {
 
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
         try {
-            webResultWrs = new mGetLineBarcodesViaWebserviceAsyncTask().execute().get();
+            webResultWrs = new mGetShipmentsViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -476,6 +493,43 @@ public class cPackAndShipOrderRepository {
         }
     }
 
+    private static class mGetSettingsViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(String... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+                l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.INPAKKEN_VERZENDEN.toString());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_SETTINGTYPE;
+                l_PropertyInfo4Pin.setValue("All");
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                    webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+            }
+        }
+
     private static class mGetBarcodesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
@@ -490,10 +544,10 @@ public class cPackAndShipOrderRepository {
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
                 l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
-                l_PropertyInfo2Pin.setValue(cMoveorder.currentMoveOrder.getOrderNumberStr());
+                l_PropertyInfo2Pin.setValue(cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
-                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETMOVEORDERBARCODES, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPBARCODES, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
@@ -503,7 +557,7 @@ public class cPackAndShipOrderRepository {
         }
     }
 
-    private static class mGetLineBarcodesViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+    private static class mGetShipmentsViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(Void... params) {
             cWebresult webresult = new cWebresult();
@@ -517,10 +571,10 @@ public class cPackAndShipOrderRepository {
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
                 l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
-                l_PropertyInfo2Pin.setValue(cMoveorder.currentMoveOrder.getOrderNumberStr());
+                l_PropertyInfo2Pin.setValue(cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr());
                 l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
-                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETMOVEORDERLINEBARCODES, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPSHIPMENTS, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
