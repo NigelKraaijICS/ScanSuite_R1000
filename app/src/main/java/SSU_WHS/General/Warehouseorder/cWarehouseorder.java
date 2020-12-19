@@ -16,7 +16,8 @@ public class cWarehouseorder {
         INVENTARISATIE,
         ONTVANGST,
         VERPLAATS,
-        RETOUR
+        RETOUR,
+        INPAKKEN_VERZENDEN
     }
 
     public enum StepCodeEnu {
@@ -31,7 +32,8 @@ public class cWarehouseorder {
         Receive_InTake,
         Move_Take,
         Move_Place,
-        Retour
+        Retour,
+        PackAndShipShipping
     }
 
     public enum PickOrderTypeEnu {
@@ -52,6 +54,13 @@ public class cWarehouseorder {
         PLACE,
         TAKEANDPLACE,
     }
+
+    public  enum PackAndShipMainTypeEnu {
+        Unknown,
+        SINGLE,
+        MULTI
+    }
+
 
     public enum CommentTypeEnu {
         PICK,
@@ -80,7 +89,9 @@ public class cWarehouseorder {
         MAT,
         MAS,
         EOS,
-        EOR
+        EOR,
+        PS1,
+        PSM
     }
 
     public static class ItemTypeEnu {
@@ -120,6 +131,15 @@ public class cWarehouseorder {
         public static final int Move_Place = 40;
         public static final int Move_Place_Busy = 41;
         public static final int Move_Place_Wait = 42;
+    }
+
+    public static class PackAndShipStatusEnu {
+        public static final int Pack_And_Ship = 10;
+        public static final int Pack_And_Ship_Busy = 11;
+        public static final int Pack_And_Ship_Wait = 12;
+        public static final int Pack_and_ship_Shipping = 40;
+        public static final int Pack_and_ship_Shipping_Busy = 41;
+        public static final int Pack_and_ship_ShippingWacht = 42;
     }
 
     public static class PicklineStatusEnu {

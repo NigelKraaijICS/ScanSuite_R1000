@@ -727,7 +727,9 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
                     fragmentTransaction.replace(R.id.moveorderContainer, fragment);
                     fragmentTransaction.commit();
 
-                    mAutoOpenCreateActivity();
+                    if (cSetting.MOVE_AUTO_CREATE_ORDER()) {
+                        mAutoOpenCreateActivity();
+                    }
                     return;
                 }
 

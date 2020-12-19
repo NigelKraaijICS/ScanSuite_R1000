@@ -97,10 +97,14 @@ public class cAuthorisation {
             case "FINISH_SHIPPING":
                 return  AutorisationEnu.FINISH_SHIPPING;
 
-
             case "QC":
                 return  AutorisationEnu.QC;
 
+            case "PACK_AND_SHIP":
+                return  AutorisationEnu.PACK_AND_SHIP;
+
+            case "PACK_AND_SHIP_MERGE":
+                return  AutorisationEnu.PACK_AND_SHIP_MERGE;
 
             default:
                 return AutorisationEnu.DEMO;
@@ -185,7 +189,9 @@ public class cAuthorisation {
         SORTING,
         SHIPPING,
         FINISH_SHIPPING,
-        QC
+        QC,
+        PACK_AND_SHIP,
+        PACK_AND_SHIP_MERGE
     }
 
     public static String TAG_IMAGE_INTAKE = "TAG_IMAGE_INTAKE";
@@ -214,6 +220,12 @@ public class cAuthorisation {
 
     public static String TAG_IMAGE_MOVE = "TAG_IMAGE_MOVE";
     public static String TAG_TEXT_MOVE = "TAG_TEXT_MOVE";
+
+    public static String TAG_IMAGE_PACK_AND_SHIP = "TAG_IMAGE_PACK_AND_SHIP";
+    public static String TAG_TEXT_PACK_AND_SHIP = "TAG_TEXT_PACK_AND_SHIP";
+
+    public static String TAG_IMAGE_PACK_AND_SHIP_MERGE = "TAG_IMAGE_PACK_AND_SHIP_MERGE";
+    public static String TAG_TEXT_PACK_AND_SHIP_MERGE = "TAG_TEXT_PACK_AND_SHIP_MERGE";
 
     //end region Public Propties
 

@@ -74,6 +74,10 @@ import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcodeEntity;
 import SSU_WHS.Move.MoveorderLineBarcode.iMoveorderLineBarcodeDao;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
 import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
+import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipOrderLineEntity;
+import SSU_WHS.PackAndShip.PackAndShipLines.iPackAndShipOrderLineDao;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrderEntity;
+import SSU_WHS.PackAndShip.PackAndShipOrders.iPackAndShipOrderDao;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePieceEntity;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddressEntity;
 import SSU_WHS.Picken.PickorderAddresses.iPickorderAddressDao;
@@ -158,8 +162,10 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cCustomAuthorisationEntity.class,
         cTranslationEntity.class,
         cCompositeBarcodeEntity.class,
-        cCompositeBarcodePropertyEntity.class
-        },version = 125)
+        cCompositeBarcodePropertyEntity.class,
+        cPackAndShipOrderEntity.class,
+        cPackAndShipOrderLineEntity.class,
+        },version = 129)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -212,6 +218,8 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iPackagingDao packagingDao();
     public  abstract iCustomAuthorisationDao customAuthorisationDao();
     public  abstract iTranslationDao translationDao();
+    public  abstract iPackAndShipOrderDao packAndShipOrderDao();
+    public  abstract iPackAndShipOrderLineDao packAndShipOrderLineDao();
 
     private static acScanSuiteDatabase INSTANCE;
 

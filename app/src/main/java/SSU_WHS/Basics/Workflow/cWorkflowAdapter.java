@@ -16,6 +16,7 @@ import java.util.List;
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cWorkflowAdapter extends RecyclerView.Adapter<cWorkflowAdapter.WorkflowViewHolder>{
@@ -82,6 +83,11 @@ public class cWorkflowAdapter extends RecyclerView.Adapter<cWorkflowAdapter.Work
                     if (cAppExtension.activity instanceof MoveorderSelectActivity) {
                         MoveorderSelectActivity moveorderSelectActivity = (MoveorderSelectActivity)cAppExtension.activity;
                         moveorderSelectActivity.pNewWorkflowSelected(workflowStr);
+                    }
+
+                    if (cAppExtension.activity instanceof PackAndShipSelectActivity) {
+                        PackAndShipSelectActivity packAndShipSelectActivity = (PackAndShipSelectActivity)cAppExtension.activity;
+                        packAndShipSelectActivity.pNewWorkflowSelected(workflowStr);
                     }
 
                 }

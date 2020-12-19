@@ -11,12 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
-import ICS.Utils.cImages;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -185,6 +181,17 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             pvHolder.textViewAuthorisation.setText(R.string.menuitem_selfpick);
             pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_selfpick);
         }
+
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PACK_AND_SHIP) {
+            pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_PACK_AND_SHIP);
+            pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_PACK_AND_SHIP);
+        }
+
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PACK_AND_SHIP_MERGE) {
+            pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_PACK_AND_SHIP_MERGE);
+            pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_PACK_AND_SHIP_MERGE);
+        }
+
     }
 
     private void mSetText(cAuthorisation pvAuthorisation, cAuthorisationAdapter.AuthorisationViewHolder pvHolder){
@@ -195,7 +202,7 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
         }
 
         if (pvAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.EXTERNAL_RETURN) {
-            pvHolder.textViewAuthorisation.setText(R.string.menuitem_external_return);;
+            pvHolder.textViewAuthorisation.setText(R.string.menuitem_external_return);
             return;
         }
 
@@ -285,7 +292,7 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
         }
 
         if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.QC) {
-            pvHolder.textViewAuthorisation.setText(R.string.menuitem_qc);;
+            pvHolder.textViewAuthorisation.setText(R.string.menuitem_qc);
             return;
         }
 
@@ -306,6 +313,16 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
 
         if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.SELFPICK) {
             pvHolder.textViewAuthorisation.setText(R.string.menuitem_selfpick);
+            return;
+        }
+
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PACK_AND_SHIP) {
+            pvHolder.textViewAuthorisation.setText(R.string.menuitem_pack_and_ship);
+            return;
+        }
+
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PACK_AND_SHIP_MERGE) {
+            pvHolder.textViewAuthorisation.setText(R.string.menuitem_pack_and_ship_merge);
             return;
         }
     }
@@ -431,6 +448,15 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_selfpick);
             return;
         }
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PACK_AND_SHIP) {
+            pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_ship);
+            return;
+        }
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.PACK_AND_SHIP_MERGE) {
+            pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_ship);
+            return;
+        }
+
     }
 
 

@@ -728,5 +728,12 @@
     <string name="message_scan_article_or_new_bin">Scan artikel of nieuwe BIN</string>
     <string name="error_matching_lines_and_barcodes_failed">Regels en barcodes koppelen mislukt</string>
     <string name="choose_workflow">Kies workflow</string>
+    <string name="menuitem_pack_and_ship">Inpakken en verzenden</string>
+    <string name="menuitem_pack_and_ship_merge">Inpakken en verzenden samenvoegen</string>
+    <string name="screentitle_packandshiporderselect">Inpakken en verzenden opdrachten</string>
+    <string name="ordertype_ps1">Inpakken en Verzenden enkele zending</string>
+    <string name="ordertype_psm">Inpakken en Verzenden meerdere zendingen</string>
+    <string name="create_pack_and_ship">Creeer Inpakken en Verzenden opdracht</string>
+    <string name="error_get_packandshiporders_failed">Ophalen Inpakken en Verzenden opdrachten mislukt</string>
 
 </resources>

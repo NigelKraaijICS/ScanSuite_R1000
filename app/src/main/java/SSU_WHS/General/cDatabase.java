@@ -60,6 +60,8 @@ public class cDatabase {
     public static final String TABLENAME_PACKAGING = "Packaging";
     public static final String TABLENAME_CUSTOMAUTHORISATIONS = "CustomAuthorisations";
     public static final String TABLENAME_IDENTIFIERWITHDESTINATION  = "IdentifierWithDestination";
+    public static final String TABLENAME_PACKANDSHIPORDER = "PackAndSHipOrder";
+    public static final String TABLENAME_PACKANDSHIPORDERLINE = "PackAndShipOrderLine";
 
     //endregion Tables
 

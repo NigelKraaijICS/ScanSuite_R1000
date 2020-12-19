@@ -134,6 +134,8 @@
     <string name="menuitem_ship">Shipping</string>
     <string name="menuitem_finish_ship">Finish Shipping</string>
     <string name="menuitem_qc">Quality Control</string>
+    <string name="menuitem_pack_and_ship">Pack and Ship</string>
+    <string name="menuitem_pack_and_ship_merge">Pack and Ship Merge</string>
     <!--endregion Menu Items-->
 
     <!--region Order types-->
@@ -169,6 +171,8 @@
     <string name="ordertype_spv">Selfpicking</string>
     <string name="ordertype_unknown">Unknown</string>
     <string name="ordertype_combined">Combined</string>
+    <string name="ordertype_ps1">Pack and Ship Single Shipment</string>
+    <string name="ordertype_psm">Pack and Ship Multi Shipment</string>
     <!--endregion Order types-->
 
     <!--region Login screen-->
@@ -657,10 +661,12 @@
     <!--endregion supervisor-->
 
     <!--region move-->
+    <string name="screentitle_packandshiporderselect">Pack and Ship orders</string>
     <string name="screentitle_moveorderselect">Move orders</string>
     <string name="screentitle_move_mi_singlepiece">Move Place Singlepiece</string>
     <string name="error_get_moveorders_failed">Getting moveorders from server failed</string>
     <string name="error_get_movelines_failed">Getting movelines from server failed</string>
+    <string name="error_get_packandshiporders_failed">Getting pack and ship orders from server failed</string>
     <string name="button_create_move">Create</string>
     <string name="createmove_header_default">Create moveorder</string>
     <string name="createmove_text_default">Create new moveorder?</string>
@@ -764,6 +770,7 @@
     <string name="message_reset_variant_via_webservice_failed">Resetting variant via webservice failed</string>
     <string name="create_pick">Create Pick order</string>
     <string name="create_move">Create Move order</string>
+    <string name="create_pack_and_ship">Create Pack and Ship order</string>
     <string name="tab_moveorderline_take">Take</string>
     <string name="tab_moveorderline_place">Place</string>
     <string name="screentitle_moveline_take">Take article</string>

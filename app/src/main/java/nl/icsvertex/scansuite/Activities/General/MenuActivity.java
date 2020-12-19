@@ -46,6 +46,7 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveMISinglepieceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipSelectActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
@@ -301,8 +302,8 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
 
         final Intent intent;
-        final View clickedImage;
-        final View clickedText;
+         View clickedImage = null;
+         View clickedText = null;
         final ActivityOptionsCompat activityOptions;
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK  ||
@@ -494,7 +495,39 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_MOVE);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
         }
+
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PACK_AND_SHIP ||  cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PACK_AND_SHIP_MERGE){
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pack_and_ship;
+            if (! cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+            switch (cUser.currentUser.currentAuthorisation.getAutorisationEnu()) {
+                case PACK_AND_SHIP:
+                    PackAndShipSelectActivity.currentMainTypeEnu = cWarehouseorder.PackAndShipMainTypeEnu.SINGLE;
+                    clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_PACK_AND_SHIP);
+                    clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_PACK_AND_SHIP);
+                    break;
+
+                case PACK_AND_SHIP_MERGE:
+                    PackAndShipSelectActivity.currentMainTypeEnu = cWarehouseorder.PackAndShipMainTypeEnu.MULTI;
+                    clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_PACK_AND_SHIP_MERGE);
+                    clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_PACK_AND_SHIP_MERGE);
+                    break;
+
+            }
+
+            PackAndShipSelectActivity.startedViaMenuBln = true;
+
+            intent = new Intent(cAppExtension.context, PackAndShipSelectActivity.class);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+
+        }
+
 
     }
 

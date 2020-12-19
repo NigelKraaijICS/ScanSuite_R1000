@@ -158,6 +158,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETMOVEORDERBARCODES = "p_MoveOrderBarcodesGetJsonStr";
     public static String WEBMETHOD_GETMOVEORDERLINEBARCODES = "p_MoveRegelBarcodesGetJsonStr";
     public static String WEBMETHOD_GETMOVEORDERCOMMENTS = "p_MoveOrderCommentsGetJsonStr";
+    public static String WEBMETHOD_GETPACKANDSHIPORDERCOMMENTS = "p_PackAndShipOrderCommentsGetJsonStr";
     public static String WEBMETHOD_GETMOVEORDERS = "p_MoveOrdersGetJsonStr";
     public static String WEBMETHOD_MOVELINERESET = "p_MoveRegelResetJsonStr";
     public static String WEBMETHOD_CREATEMOVEORDERBARCODES = "p_MoveBarcodeCreateJsonStr";
@@ -167,6 +168,10 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_MOVEORDERLINE_HANDLEDPLACEMT = "p_MoveRegelHandledPlaceMTJsonStr";
     public static String WEBMETHOD_MOVEITEM_HANDLED = "p_MoveItemHandledJsonStr";
     public static String WEBMETHOD_MOVEPICKHANDLED = "p_MovePickHandledJsonStr";
+    public static String WEBMETHOD_GETPACKANDSHIPORDERS = "p_PackAndShipOrdersGetJsonStr";
+    public static String WEBMETHOD_PACKANDSHIPORDERCREATE = "p_PackAndShipOrderCreateJsonStr";
+    public static String WEBMETHOD_GETPACKANDSHIPORDERLINES = "p_PackAndShipRegelsGetJsonStr";
+
 
        //endregion Methods
 

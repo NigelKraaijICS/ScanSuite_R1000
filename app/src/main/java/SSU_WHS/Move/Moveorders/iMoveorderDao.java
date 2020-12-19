@@ -24,7 +24,7 @@ public interface iMoveorderDao {
     @Query("SELECT * FROM " + cDatabase.TABLENAME_MOVEORDER)
     List<cMoveorderEntity> getAll();
 
-    @RawQuery(observedEntities = cInventoryorderEntity.class)
+    @RawQuery(observedEntities = cMoveorderEntity.class)
     List<cMoveorderEntity> getFilteredMoveOrders(SupportSQLiteQuery query);
 
 }

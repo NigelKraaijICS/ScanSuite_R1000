@@ -263,6 +263,8 @@ public class cSetting {
         RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY,
         RECEIVE_RESET_PASSWORD,
         RECEIVE_DEVIATIONS_PASSWORD,
+        PACK_AND_SHIP_NEW_WORKFLOWS,
+        PACK_AND_SHIP_AUTO_CREATE_ORDER,
         UNKNOWN
     }
 
@@ -633,7 +635,7 @@ public class cSetting {
 
     public static List<String> RECEIVE_NEW_WORKFLOWS(){
 
-        List<String> resultObl = new ArrayList();
+        List<String> resultObl = new  ArrayList();
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_NEW_WORKFLOWS);
         if (Setting == null) {
@@ -843,9 +845,9 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-    public static boolean MOVE_AUTO_CREATE_ORDER_MV(){
+    public static boolean MOVE_AUTO_CREATE_ORDER(){
 
-        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_CREATE_ORDER_MV);
+        cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_AUTO_CREATE_ORDER);
         if (Setting == null) {
             return  false;
         }
@@ -946,6 +948,37 @@ public class cSetting {
 
     public static boolean RETOUR_VALIDATE_CURRENT_LOCATION(){
         cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_VALIDATE_CURRENT_LOCATION);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    //PACK AND SHIP Settings
+
+    public static List<String> PACK_AND_SHIP_NEW_WORKFLOWS(){
+
+        List<String> resultObl = new ArrayList<>();
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PACK_AND_SHIP_NEW_WORKFLOWS);
+        if (Setting == null) {
+            return resultObl;
+        }
+
+        if (!Setting.getValueStr().contains(";")) {
+            resultObl.add(Setting.getValueStr());
+            return resultObl;
+        }
+
+        resultObl = new ArrayList<>(Arrays.asList(Setting.valueStr.split(";")));
+
+        return resultObl ;
+    }
+
+    public static boolean PACK_AND_SHIP_AUTO_CREATE_ORDER(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PACK_AND_SHIP_AUTO_CREATE_ORDER);
         if (Setting == null) {
             return  false;
         }

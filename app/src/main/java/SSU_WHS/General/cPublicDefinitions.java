@@ -103,6 +103,8 @@ public class cPublicDefinitions {
         RVR,
         RVS,
         SPV,
+        PS1,
+        PSM,
         UNKNOWN
     }
 
