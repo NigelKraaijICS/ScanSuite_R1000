@@ -173,6 +173,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPACKANDSHIPORDERLINES = "p_PackAndShipRegelsGetJsonStr";
     public static String WEBMETHOD_GETPACKANDSHIPBARCODES = "p_PackAndShipOrderBarcodesGetJsonStr";
     public static String WEBMETHOD_GETPACKANDSHIPSHIPMENTS = "p_PackAndShipShipmentsGetJsonStr";
+    public static String WEBMETHOD_GETPACKANDSHIPADDRESSES = "p_PackAndShipOrderAdresGetJsonStr";
 
 
 

@@ -74,6 +74,7 @@ import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcodeEntity;
 import SSU_WHS.Move.MoveorderLineBarcode.iMoveorderLineBarcodeDao;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
 import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
+import SSU_WHS.PackAndShip.PackAndShipAddress.iPackAndShipAddressDao;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcodeEntity;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.iPackAndShipBarcodeDao;
 import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipOrderLineEntity;
@@ -230,6 +231,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iPackAndShipSettingDao packAndShipSettingDao();
     public  abstract iPackAndShipBarcodeDao packAndShipBarcodeDao();
     public  abstract iPackAndShipShipmentDao packAndShipShipmentDao();
+    public  abstract iPackAndShipAddressDao packAndShipAddressDao();
     private static acScanSuiteDatabase INSTANCE;
 
     public static acScanSuiteDatabase pGetDatabase(final Context context) {

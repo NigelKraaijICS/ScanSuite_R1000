@@ -65,6 +65,7 @@ public class cDatabase {
     public static final String TABLENAME_PACKANDSHIPSETTING = "PackAndShipSetting";
     public static final String TABLENAME_PACKANDSHIPBARCODE = "PackAndShipBarcode";
     public static final String TABLENAME_PACKANDSHIPSHIPMENT = "PackAndShipShipment";
+    public static final String TABLENAME_PACKANDSHIPADDRESS = "PackAndShipAddress";
     //endregion Tables
 
     //region localtables
@@ -113,6 +114,7 @@ public class cDatabase {
     public static final String CITY_NAMESTR = "Plaats";
     public static final String COUNTRY_NAMESTR = "Land";
     public static final String CONTAINER_NAMESTR = "Container";
+    public static final String CONTACTPERSON_NAMESTR = "Contactpersoon";
     public static final String CONTAINERTYPE_DUTCH_NAMESTR = "Containersoort";
     //endregion C
 
@@ -151,6 +153,7 @@ public class cDatabase {
     public static final String EXTRAFIELD6_NAMESTR = "ExtraField6";
     public static final String EXTRAFIELD7_NAMESTR = "ExtraField7";
     public static final String EXTRAFIELD8_NAMESTR = "ExtraField8";
+    public static final String EMAIL_NAMESTR = "Email";
     public static final String EMBALLAGE_NAMESTR = "Emballage";
     //endregion E
 
@@ -240,7 +243,7 @@ public class cDatabase {
     //endregion M
 
     //region N
-    public static final String NAME_NAMESTR = "Naam";
+    public static final String NAMEDUTCH_NAMESTR = "Naam";
     public static final String NAMEADDITION_NAMESTR = "Naamtoevoeging";
     public static final String NAMESHORT_NAMESTR = "Naam_kort";
 
@@ -261,6 +264,7 @@ public class cDatabase {
     public static final String PACKAGETYPE_NAMESTR = "PackageType";
     public static final String PACKAGESEQUENCENUMBER_NAMESTR = "PackageSequenceNumber";
     public static final String PACKINGTABLE_NAMESTR = "Packingtable";
+    public static final String PHONE_NAMESTR = "Telefoon";
     public static final String PICKSALESASKWORKPLACE_NAMESTR = "Pick_Sales_ask_workplace";
     public static final String PICKTRANSFERASKWORKPLACE_NAMESTR = "Pick_Transfer_ask_workplace";
     public static final String PICKAUTONEXT_NAMESTR = "Pick_Auto_next";
@@ -322,6 +326,7 @@ public class cDatabase {
 
     //region R
     public static final String RECEIVEDEFAULTBIN_NAMESTR = "Receive_default_bin";
+    public static final String REGION_NAMESTR = "Regio";
     public static final String REJECTPICK_NAMESTR = "RejectPick";
     public static final String RECEIVEINTAKEEOPACKAGINGINTAKE_NAMESTR = "Receive_intake_eo_packaging_intake";
     public static final String RECEIVEINTAKEEOPACKAGINGSHIPPED_NAMESTR = "Receive_intake_eo_packaging_shipped";

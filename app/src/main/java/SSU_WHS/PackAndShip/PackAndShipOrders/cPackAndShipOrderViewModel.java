@@ -41,6 +41,8 @@ public class cPackAndShipOrderViewModel extends AndroidViewModel {
 
     public cWebresult pGetShipmentsFromWebserviceWrs() {return this.Repository.pGetShipmentsFromWebserviceWrs();}
 
+    public cWebresult pGetAddressesFromWebserviceWrs() {return this.Repository.pGetShipmentsFromWebserviceWrs();}
+
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
 
 }

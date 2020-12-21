@@ -632,6 +632,31 @@ public class cPackAndShipOrder {
         }
     }
 
+    public boolean pGetAddressesViaWebserviceBln(Boolean pvRefreshBln) {
+        if (pvRefreshBln) {
+            cPackAndShipShipment.allShipmentsObl = null;
+            cPackAndShipShipment.pTruncateTableBln();
+        }
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetShipmentsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            if (cPackAndShipShipment.allShipmentsObl == null) {
+                cPackAndShipShipment.allShipmentsObl= new ArrayList<>();
+            }
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject);
+                packAndShipShipment.pInsertInDatabaseBln();
+            }
+
+            return  true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPSHIPMENTS);
+            return false;
+        }
+    }
+
 
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
 
@@ -755,7 +780,5 @@ public class cPackAndShipOrder {
     }
 
     //End Region Private Methods
-
-
 
 }

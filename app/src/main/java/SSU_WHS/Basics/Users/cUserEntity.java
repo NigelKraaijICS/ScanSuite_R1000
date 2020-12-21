@@ -20,7 +20,7 @@ public class cUserEntity {
     public String username = "";
     public String getUsernameStr() {return this.username;}
 
-    @ColumnInfo(name= cDatabase.NAME_NAMESTR)
+    @ColumnInfo(name= cDatabase.NAMEDUTCH_NAMESTR)
     public String name = "";
     public String getNameStr() {return this.name;}
 
@@ -34,7 +34,7 @@ public class cUserEntity {
     public cUserEntity(JSONObject pvJsonObject) {
         try {
             this.username = pvJsonObject.getString(cDatabase.USERNAME_NAMESTR);
-            this.name = pvJsonObject.getString(cDatabase.NAME_NAMESTR);
+            this.name = pvJsonObject.getString(cDatabase.NAMEDUTCH_NAMESTR);
 
         } catch (JSONException e) {
             e.printStackTrace();

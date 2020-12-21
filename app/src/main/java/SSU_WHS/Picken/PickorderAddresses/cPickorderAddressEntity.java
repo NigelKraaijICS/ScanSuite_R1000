@@ -26,7 +26,7 @@ import SSU_WHS.General.cDatabase;
             return addrescode;
         }
 
-        @ColumnInfo(name = cDatabase.NAME_NAMESTR)
+        @ColumnInfo(name = cDatabase.NAMEDUTCH_NAMESTR)
         public String name;
         public String getNameStr() {
             return name;
@@ -101,7 +101,7 @@ import SSU_WHS.General.cDatabase;
         public cPickorderAddressEntity(JSONObject pvJsonObject) {
             try {
                 this.addrescode = pvJsonObject.getString(cDatabase.ADDRESSCODE_NAMESTR);
-                this.name = pvJsonObject.getString(cDatabase.NAME_NAMESTR);
+                this.name = pvJsonObject.getString(cDatabase.NAMEDUTCH_NAMESTR);
                 this.nameAddition = pvJsonObject.getString(cDatabase.NAMEADDITION_NAMESTR);
                 this.address = pvJsonObject.getString(cDatabase.ADDRESS_NAMESTR);
                 this.addressAddition = pvJsonObject.getString(cDatabase.ADDRESSADDITION_NAMESTR);
