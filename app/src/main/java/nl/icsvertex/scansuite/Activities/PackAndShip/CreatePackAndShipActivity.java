@@ -385,7 +385,7 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
             return result;
         }
 
-        //Get all linesInt for current order, if webservice error then stop
+        //Get all lines for current order, if webservice error then stop
         if (!cPackAndShipOrder.currentPackAndShipOrder.pGetLinesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_movelines_failed));
@@ -399,24 +399,31 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
             return result;
         }
 
-        // Get all barcodes, if webservice error then stop
+        // Get all shipments, if webservice error then stop
         if (!cPackAndShipOrder.currentPackAndShipOrder.pGetShipmentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
             return result;
         }
 
-        // Get all barcodes, if webservice error then stop
+        // Get all addresses, if webservice error then stop
         if (!cPackAndShipOrder.currentPackAndShipOrder.pGetAddressesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
             return result;
         }
 
-        // Get all barcodes, if webservice error then stop
+        // Get all shipping methods, if webservice error then stop
         if (!cPackAndShipOrder.currentPackAndShipOrder.pGetShippingMethodsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_shipping_methods_failed));
+            return result;
+        }
+
+        // Get all packages, if webservice error then stop
+        if (!cPackAndShipOrder.currentPackAndShipOrder.pGetShippingPackagesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
             return result;
         }
 

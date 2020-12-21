@@ -87,6 +87,8 @@ import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipmentEntity;
 import SSU_WHS.PackAndShip.PackAndShipShipment.iPackAndShipShipmentDao;
 import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethodEntity;
 import SSU_WHS.PackAndShip.PackAndShipShippingMethod.iPackAndShipShippingMethodDao;
+import SSU_WHS.PackAndShip.PackAndShipShippingPackage.cPackAndShipShippingPackageEntity;
+import SSU_WHS.PackAndShip.PackAndShipShippingPackage.iPackAndShipShippingPackageDao;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePieceEntity;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddressEntity;
 import SSU_WHS.Picken.PickorderAddresses.iPickorderAddressDao;
@@ -177,7 +179,8 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackAndShipBarcodeEntity.class,
         cPackAndShipShipmentEntity.class,
         cPackAndShipAddress.class,
-        cPackAndShipShippingMethodEntity.class
+        cPackAndShipShippingMethodEntity.class,
+        cPackAndShipShippingPackageEntity.class
         },version = 129)
 
 
@@ -238,6 +241,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iPackAndShipShipmentDao packAndShipShipmentDao();
     public  abstract iPackAndShipAddressDao packAndShipAddressDao();
     public  abstract iPackAndShipShippingMethodDao packAndShipShippingMethodDao();
+    public  abstract iPackAndShipShippingPackageDao packAndShipShippingPackageDao();
     private static acScanSuiteDatabase INSTANCE;
 
     public static acScanSuiteDatabase pGetDatabase(final Context context) {

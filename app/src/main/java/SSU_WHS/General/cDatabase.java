@@ -67,6 +67,7 @@ public class cDatabase {
     public static final String TABLENAME_PACKANDSHIPSHIPMENT = "PackAndShipShipment";
     public static final String TABLENAME_PACKANDSHIPADDRESS = "PackAndShipAddress";
     public static final String TABLENAME_PACKANDSHIPSHIPPINGMETHOD = "PackAndShipShippingMethod";
+    public static final String TABLENAME_PACKANDSHIPSHIPPINPACKAGE= "PackAndShipShippingPackage";
     //endregion Tables
 
     //region localtables
@@ -262,6 +263,11 @@ public class cDatabase {
     //endregion O
 
     //region P
+
+    public static final String PACKAGECONTAINER_NAMESTR = "PackageContainer";
+    public static final String PACKAGECONTAINERTYPE_NAMESTR = "PackageContainersoort";
+    public static final String PACKAGEITEMCOUNT_NAMESTR = "PackageItemCount";
+    public static final String PACKAGEWEIGHTING_NAMESTR = "PackageWeightInG";
     public static final String PACKAGETYPE_NAMESTR = "PackageType";
     public static final String PACKAGESEQUENCENUMBER_NAMESTR = "PackageSequenceNumber";
     public static final String PACKINGTABLE_NAMESTR = "Packingtable";

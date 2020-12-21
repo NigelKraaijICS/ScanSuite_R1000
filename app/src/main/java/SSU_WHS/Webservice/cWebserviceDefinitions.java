@@ -175,6 +175,9 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPACKANDSHIPSHIPMENTS = "p_PackAndShipShipmentsGetJsonStr";
     public static String WEBMETHOD_GETPACKANDSHIPADDRESSES = "p_PackAndShipOrderAdresGetJsonStr";
     public static String WEBMETHOD_GETPACKANDSHIPSHIPPINGMETHODS = "p_PackAndShipShippingmethodsGetWrs";
+    public static String WEBMETHOD_GETPACKANDSHIPSHIPPINPACKAGES = "p_PackAndShipOrderShippingPackageGetJsonStr";
+
+
 
 
        //endregion Methods

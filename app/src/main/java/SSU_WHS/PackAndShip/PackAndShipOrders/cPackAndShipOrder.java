@@ -28,6 +28,7 @@ import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipOrderLine;
 import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSetting;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
 import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethod;
+import SSU_WHS.PackAndShip.PackAndShipShippingPackage.cPackAndShipShippingPackage;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -733,6 +734,34 @@ public class cPackAndShipOrder {
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPORDERS);
+            return  false;
+        }
+    }
+
+    public boolean pGetShippingPackagesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cPackAndShipShippingPackage.allPackagesObl = null;
+            cPackAndShipShippingPackage.pTruncateTableBln();
+        }
+
+        cWebresult WebResult =  this.getPackAndShipOrderViewModel().pGetShippingPackagesFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            if ( cPackAndShipShippingPackage.allPackagesObl == null) {
+                cPackAndShipShippingPackage.allPackagesObl = new ArrayList<>();
+            }
+
+            for (  JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackAndShipShippingPackage packAndShipShippingPackage = new cPackAndShipShippingPackage(jsonObject);
+                packAndShipShippingPackage.pInsertInDatabaseBln();
+
+            }
+
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPSHIPPINPACKAGES);
             return  false;
         }
     }
