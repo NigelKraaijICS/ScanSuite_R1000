@@ -74,6 +74,7 @@ import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcodeEntity;
 import SSU_WHS.Move.MoveorderLineBarcode.iMoveorderLineBarcodeDao;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
 import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
+import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddress;
 import SSU_WHS.PackAndShip.PackAndShipAddress.iPackAndShipAddressDao;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcodeEntity;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.iPackAndShipBarcodeDao;
@@ -84,6 +85,8 @@ import SSU_WHS.PackAndShip.PackAndShipOrders.iPackAndShipOrderDao;
 import SSU_WHS.PackAndShip.PackAndShipSetting.iPackAndShipSettingDao;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipmentEntity;
 import SSU_WHS.PackAndShip.PackAndShipShipment.iPackAndShipShipmentDao;
+import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethodEntity;
+import SSU_WHS.PackAndShip.PackAndShipShippingMethod.iPackAndShipShippingMethodDao;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePieceEntity;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddressEntity;
 import SSU_WHS.Picken.PickorderAddresses.iPickorderAddressDao;
@@ -172,7 +175,9 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackAndShipOrderEntity.class,
         cPackAndShipOrderLineEntity.class,
         cPackAndShipBarcodeEntity.class,
-        cPackAndShipShipmentEntity.class
+        cPackAndShipShipmentEntity.class,
+        cPackAndShipAddress.class,
+        cPackAndShipShippingMethodEntity.class
         },version = 129)
 
 
@@ -232,6 +237,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iPackAndShipBarcodeDao packAndShipBarcodeDao();
     public  abstract iPackAndShipShipmentDao packAndShipShipmentDao();
     public  abstract iPackAndShipAddressDao packAndShipAddressDao();
+    public  abstract iPackAndShipShippingMethodDao packAndShipShippingMethodDao();
     private static acScanSuiteDatabase INSTANCE;
 
     public static acScanSuiteDatabase pGetDatabase(final Context context) {

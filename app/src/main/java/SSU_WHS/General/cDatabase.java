@@ -66,6 +66,7 @@ public class cDatabase {
     public static final String TABLENAME_PACKANDSHIPBARCODE = "PackAndShipBarcode";
     public static final String TABLENAME_PACKANDSHIPSHIPMENT = "PackAndShipShipment";
     public static final String TABLENAME_PACKANDSHIPADDRESS = "PackAndShipAddress";
+    public static final String TABLENAME_PACKANDSHIPSHIPPINGMETHOD = "PackAndShipShippingMethod";
     //endregion Tables
 
     //region localtables

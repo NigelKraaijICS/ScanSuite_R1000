@@ -859,6 +859,7 @@
     <string name="message_barcode_already_scanned_and_unique">Barcode has already been scanned and is unique</string>
     <string name="error_matching_lines_and_barcodes_failed">Matching lines and barcodes failed</string>
     <string name="choose_workflow">Choose workflow</string>
+    <string name="error_get_shipping_methods_failed">Get Shipping Methods failed</string>
 
     <!--End Region return-->
 

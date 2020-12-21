@@ -735,5 +735,6 @@
     <string name="ordertype_psm">Inpakken en Verzenden meerdere zendingen</string>
     <string name="create_pack_and_ship">Creeer Inpakken en Verzenden opdracht</string>
     <string name="error_get_packandshiporders_failed">Ophalen Inpakken en Verzenden opdrachten mislukt</string>
+    <string name="error_get_shipping_methods_failed">Ophalen verzendmethoden mislukt</string>
 
 </resources>

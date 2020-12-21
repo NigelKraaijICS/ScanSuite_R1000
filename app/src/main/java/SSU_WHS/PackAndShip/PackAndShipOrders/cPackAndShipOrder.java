@@ -22,10 +22,12 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
+import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddress;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcode;
 import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipOrderLine;
 import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSetting;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
+import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethod;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -634,29 +636,53 @@ public class cPackAndShipOrder {
 
     public boolean pGetAddressesViaWebserviceBln(Boolean pvRefreshBln) {
         if (pvRefreshBln) {
-            cPackAndShipShipment.allShipmentsObl = null;
-            cPackAndShipShipment.pTruncateTableBln();
+            cPackAndShipAddress.allAddressesObl = null;
+            cPackAndShipAddress.pTruncateTableBln();
         }
-        cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetShipmentsFromWebserviceWrs();
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetAddressesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
-            if (cPackAndShipShipment.allShipmentsObl == null) {
-                cPackAndShipShipment.allShipmentsObl= new ArrayList<>();
+            if (cPackAndShipAddress.allAddressesObl== null) {
+                cPackAndShipAddress.allAddressesObl =  new ArrayList<>();
             }
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject);
+                cPackAndShipAddress packAndShipAddress = new cPackAndShipAddress(jsonObject);
+                packAndShipAddress.pInsertInDatabaseBln();
+            }
+
+            return  true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPADDRESSES);
+            return false;
+        }
+    }
+
+    public boolean pGetShippingMethodsViaWebserviceBln(Boolean pvRefreshBln) {
+        if (pvRefreshBln) {
+            cPackAndShipShippingMethod.allShippingMethodsObl = null;
+            cPackAndShipShippingMethod.pTruncateTableBln();
+        }
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetShippingMethodsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            if (cPackAndShipShippingMethod.allShippingMethodsObl == null) {
+                cPackAndShipShippingMethod.allShippingMethodsObl= new ArrayList<>();
+            }
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackAndShipShippingMethod packAndShipShipment = new cPackAndShipShippingMethod(jsonObject);
                 packAndShipShipment.pInsertInDatabaseBln();
             }
 
             return  true;
 
         } else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPSHIPMENTS);
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPSHIPPINGMETHODS);
             return false;
         }
     }
-
 
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
 

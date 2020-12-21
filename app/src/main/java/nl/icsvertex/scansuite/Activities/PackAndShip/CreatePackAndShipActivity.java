@@ -413,6 +413,13 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
             return result;
         }
 
+        // Get all barcodes, if webservice error then stop
+        if (!cPackAndShipOrder.currentPackAndShipOrder.pGetShippingMethodsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_shipping_methods_failed));
+            return result;
+        }
+
         // Get all comments
         if (!cPackAndShipOrder.currentPackAndShipOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
