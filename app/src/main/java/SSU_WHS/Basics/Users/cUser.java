@@ -83,15 +83,15 @@ public class cUser {
       }
 
       for (cAuthorisation authorisation : this.autorisationObl) {
-
           if (authorisation.getAuthorisationStr().toUpperCase().contains("MERGE")) {
-              continue;
+
+              if (!authorisation.getAuthorisationStr().equalsIgnoreCase("PACK_AND_SHIP_MERGE")) {
+                  continue;
+              }
           }
 
          this.autorisationWithoutMergeCachedObl.add(authorisation);
-
       }
-
       return   this.autorisationWithoutMergeCachedObl;
 
 

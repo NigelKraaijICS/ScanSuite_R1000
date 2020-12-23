@@ -472,7 +472,7 @@ public class cIntakeorderMATLineRepository {
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_HANDLEDTIMESTAMP;
-                l_PropertyInfo8Pin.setValue((cDateAndTime.pGetCurrentDateTimeForWebserviceStr()));
+                l_PropertyInfo8Pin.setValue(cDateAndTime.pGetCurrentDateTimeForWebserviceStr());
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 SoapObject barcodesHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODESLIST);

@@ -32,6 +32,10 @@ public class cPackAndShipOrderViewModel extends AndroidViewModel {
 
     public cWebresult pCreatePackAndShipOrderPSMViaWebserviceWrs(String pvDocumentStr) {return this.Repository.pCreatePackAndShipOrderPSMViaWebserviceWrs(pvDocumentStr);}
 
+    public cWebresult pHandledViaWebserviceWrs() {return this.Repository.pHandledViaWebserviceWrs(); }
+
+    public cWebresult pDeleteViaWebserviceWrs() {return this.Repository.pDeleteViaWebserviceWrs(); }
+
     public cWebresult pGetSettingsFromWebserviceWrs() {return this.Repository.pGetSettingsFromWebserviceWrs(); }
 
     public cWebresult pGetLinesFromWebserviceWrs() {return this.Repository.pGetLinesFromWebserviceWrs(); }
@@ -46,7 +50,13 @@ public class cPackAndShipOrderViewModel extends AndroidViewModel {
 
     public cWebresult pGetShippingPackagesFromWebserviceWrs() {return this.Repository.pGetShippingPackagesFromWebserviceWrs();}
 
+    public cWebresult pGetDocumentAndDetailsViaWebserviceWrs(String pvDocumentStr) {return this.Repository.pGetDocumentAndDetailsViaWebserviceWrs(pvDocumentStr);}
+
+    public cWebresult pAddShipmentViaWebserviceWrs( ) {return this.Repository.pAddShipmentViaWebserviceWrs();}
 
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
+
+    public Boolean pUpdateWorkplaceViaWebserviceBln() {return this.Repository.pUpdateWorkplaceViaWebserviceBln();}
+
 
 }

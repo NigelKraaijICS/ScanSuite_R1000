@@ -27,6 +27,7 @@ import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Users.cUserAdapter;
+import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.ScannerLogon.cScannerLogon;
 import nl.icsvertex.scansuite.BuildConfig;
@@ -202,6 +203,12 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
         // Branch is known, so set current branch of current user
         cUser.currentUser.currentBranch = pvBranch;
+
+        if (!cWorkplace.pGetWorkplacesViaWebserviceBln())  {
+           cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_workplaces_not_available),"",true,true);
+           return;
+        }
+
         this.mStartMenuActivity();
     }
 

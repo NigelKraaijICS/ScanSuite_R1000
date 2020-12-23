@@ -662,6 +662,8 @@
 
     <!--region move-->
     <string name="screentitle_packandshiporderselect">Pack and Ship orders</string>
+    <string name="screentitle_packandship_single">Pack and Ship Single</string>
+    <string name="screentitle_packandship_multi">Pack and Ship Multi</string>
     <string name="screentitle_moveorderselect">Move orders</string>
     <string name="screentitle_move_mi_singlepiece">Move Place Singlepiece</string>
     <string name="error_get_moveorders_failed">Getting moveorders from server failed</string>
@@ -860,6 +862,12 @@
     <string name="error_matching_lines_and_barcodes_failed">Matching lines and barcodes failed</string>
     <string name="choose_workflow">Choose workflow</string>
     <string name="error_get_shipping_methods_failed">Get Shipping Methods failed</string>
+    <string name="scan_document">Scan document</string>
+    <string name="scan_next_document_to_close_current">Scan next document to close current or press OK</string>
+    <string name="message_shipment_not_send">Shipment not send</string>
+    <string name="message_shipment_send">Shipment  send</string>
+    <string name="message_shipment_incomplete">Shipment incomplete</string>
+    <string name="message_workplaces_not_available">Workplaces not available</string>
 
     <!--End Region return-->
 

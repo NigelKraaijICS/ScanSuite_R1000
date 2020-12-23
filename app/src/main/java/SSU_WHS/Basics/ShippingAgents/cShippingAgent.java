@@ -17,7 +17,7 @@ public class cShippingAgent {
 
     //region Public Properties
     private String shippingAgentStr;
-    public String getShippintAgentStr() {
+    public String getShippingAgentStr() {
         return shippingAgentStr;
     }
 
@@ -65,6 +65,56 @@ public class cShippingAgent {
        //End Region Constructor
 
     //Region Public Methods
+
+    public static cShippingAgent pGetShippingAgentByCodeStr(String pvShippingAgentCodeStr){
+
+         if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0 ) {
+             return  null;
+         }
+
+         for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl) {
+
+             if (shippingAgent.getShippingAgentStr().equalsIgnoreCase(pvShippingAgentCodeStr)) {
+                 return shippingAgent;
+             }
+         }
+
+         return  null;
+
+    }
+
+    public static cShippingAgent pGetShippingAgentByDescriptionStr(String pvShippingAgentCodeDescriptionStr){
+
+        if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0 ) {
+            return  null;
+        }
+
+        for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl) {
+
+            if (shippingAgent.getDescriptionStr().equalsIgnoreCase(pvShippingAgentCodeDescriptionStr)) {
+                return shippingAgent;
+            }
+        }
+
+        return  null;
+    }
+
+    public  cShippingAgentService pGetShippingAgentServiceByDescriptionStr(String pvShippingAgentServiceCodeDescriptionStr){
+
+        if (this.shippingAgentServicesObl() == null || this.shippingAgentServicesObl().size() == 0 ) {
+            return  null;
+        }
+
+        for (cShippingAgentService shippingAgentService : this.shippingAgentServicesObl()) {
+
+            if (shippingAgentService.getDescriptionStr().equalsIgnoreCase(pvShippingAgentServiceCodeDescriptionStr)) {
+                return shippingAgentService;
+            }
+        }
+
+        return  null;
+    }
+
     public boolean pInsertInDatabaseBln() {
         this.getShippingAgentViewModel().insert(this.shippingAgentEntity);
 

@@ -24,6 +24,6 @@ public interface iPackAndShipSettingDao {
     void deleteAll();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_PACKANDSHIPSETTING)
-    List<cPackAndShipOrderLineEntity> getAll();
+    List<cPackAndShipSettingEntity> getAll();
 
 }

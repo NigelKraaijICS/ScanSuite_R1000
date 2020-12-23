@@ -4,8 +4,12 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
+import java.util.List;
+
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSettingEntity;
 import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSettingRepository;
+import SSU_WHS.Webservice.cWebresult;
 
 public class cPackAndShipShipmentViewModel extends AndroidViewModel {
     //Region Public Properties
@@ -24,7 +28,8 @@ public class cPackAndShipShipmentViewModel extends AndroidViewModel {
     public void delete(cPackAndShipShipmentEntity pvPackAndShipShipmentEntity) {this.Repository.delete(pvPackAndShipShipmentEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
-
+    public cWebresult pHandledViaWebserviceWrs() {return this.Repository.pHandledViaWebserviceWrs(); }
+    public cWebresult pShipViaWebserviceWrs(List<cShippingAgentServiceShippingUnit> pvShippingUnitsObl) {return this.Repository.pShipViaWebserviceWrs(pvShippingUnitsObl); }
 
 }
 

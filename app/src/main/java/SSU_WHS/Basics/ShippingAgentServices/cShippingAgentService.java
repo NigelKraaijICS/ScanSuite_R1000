@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -141,6 +142,25 @@ public class cShippingAgentService {
         }
         return null;
     }
+
+    public static cShippingAgentService pGetShippingAgentServiceByCodeStr(String pvShippingAgentCodeStr, String pvShippingAgentServiceStr){
+
+        if (cShippingAgentService.allShippingAgentServicesObl == null || cShippingAgentService.allShippingAgentServicesObl.size() == 0 ) {
+            return  null;
+        }
+
+        for (cShippingAgentService shippingAgentService : cShippingAgentService.allShippingAgentServicesObl) {
+
+            if (shippingAgentService.getShippingAgentStr().equalsIgnoreCase(pvShippingAgentCodeStr) && (shippingAgentService.getServiceStr().equalsIgnoreCase(pvShippingAgentServiceStr))) {
+                return shippingAgentService;
+            }
+        }
+
+        return  null;
+
+    }
+
+
 
     //End Region Public Methods
 }

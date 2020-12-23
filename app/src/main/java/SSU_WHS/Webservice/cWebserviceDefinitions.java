@@ -174,10 +174,16 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPACKANDSHIPBARCODES = "p_PackAndShipOrderBarcodesGetJsonStr";
     public static String WEBMETHOD_GETPACKANDSHIPSHIPMENTS = "p_PackAndShipShipmentsGetJsonStr";
     public static String WEBMETHOD_GETPACKANDSHIPADDRESSES = "p_PackAndShipOrderAdresGetJsonStr";
-    public static String WEBMETHOD_GETPACKANDSHIPSHIPPINGMETHODS = "p_PackAndShipShippingmethodsGetWrs";
+    public static String WEBMETHOD_GETPACKANDSHIPSHIPPINGMETHODS = "p_PackAndShipOrderShippingmethodGetJsonStr";
     public static String WEBMETHOD_GETPACKANDSHIPSHIPPINPACKAGES = "p_PackAndShipOrderShippingPackageGetJsonStr";
+    public static String WEBMETHOD_GETSOURCEDOCUMENTSHIPPINGDATA = "p_SourceDocShippingDataGetJsonStr";
+    public static String WEBMETHOD_CREATEPACKANDSHIPSHIPMENT = "p_PackAndShipOrderCreateShipmentJsonStr";
+    public static String WEBMETHOD_PACKANDSHIPSHIPMENTSHIPPED= "p_PackAndShipShipmentShippedJsonStr";
+    public static String WEBMETHOD_PACKANDSHIPSHIPMENTHANDLED = "p_PackAndShipShipmentHandledJsonStr";
+    public static String WEBMETHOD_PACKANDSHIPHANDLED = "p_PackAndShipOrderHandledJsonStr";
+    public static String WEBMETHOD_PACKANDSHIPDELETE = "p_PackAndShipVervallenJsonStr";
 
-
+    public static String WEBMETHOD_PACKANDSHIPUPDATE = "p_PackAndShipOrderUpdateJsonStr";
 
 
        //endregion Methods
@@ -197,6 +203,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_ORDERNUMBERMERGED = "pv_OpdrachtnummerMergedStr";
     public static String WEBPROPERTY_ORDERNUMBERTOADD = "pv_OpdrachtnummerToAddStr";
     public static String WEBPROPERTY_ORDERNUMBERTOREMOVE = "pv_OpdrachtnummerToRemoveStr";
+    public static String WEBPROPERTY_SOURCEDOCUMENT = "pv_SourceDocumentStr";
     public static String WEBPROPERTY_SOURCENO = "pv_SourceNoStr";
     public static String WEBPROPERTY_INCLUDEIMAGE = "pv_IncludeImageBln";
     public static String WEBPROPERTY_SETTINGTYPE = "pv_SettingTypeEnu";
@@ -251,6 +258,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_BINCODEHANDLED = "pv_BincodeHandledStr";
     public static String WEBPROPERTY_STOCKOWNER = "pv_StockOwnerStr";
     public static String WEBPROPERTY_WORKFLOW = "pv_WorkflowStr";
+    public static String WEBPROPERTY_SHIPMENT = "pv_ShipmentStr";
     public static String WEBPROPERTY_DOCUMENT = "pv_DocumentStr";
     public static String WEBPROPERTY_DOCUMENT2= "pv_Document2Str";
     public static String WEBPROPERTY_EXTERNALREFERENCE = "pv_ExternalReferenceStr";

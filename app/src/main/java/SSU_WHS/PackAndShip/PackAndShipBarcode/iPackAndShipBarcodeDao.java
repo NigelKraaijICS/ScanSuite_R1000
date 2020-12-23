@@ -24,6 +24,6 @@ public interface iPackAndShipBarcodeDao {
     void deleteAll();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_PACKANDSHIPBARCODE)
-    List<cPackAndShipOrderLineEntity> getAll();
+    List<cPackAndShipBarcodeEntity> getAll();
 
 }

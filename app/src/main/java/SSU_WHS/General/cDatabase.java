@@ -81,12 +81,19 @@ public class cDatabase {
     public static final String ACTUEALSHIPPINGAGENTSERVICECODE_NAMESTR = "ActualShippingAgentServiceCode";
     public static final String ASSIGNEDUSERID_NAMESTR = "AssignedUserId";
     public static final String AUTHORISATION_NAMESTR = "Autorisatie";
-    public static final String ADDRESSCODE_NAMESTR = "Adrescode";
-    public static final String ADDRESS_NAMESTR = "Adres";
+    public static final String ADDRESCODE_NAMESTR = "Adrescode";
+    public static final String ADDRESSCODE_NAMESTR = "AddressCode";
+    public static final String ADDRESSNAME_NAMESTR = "AddressName";
+    public static final String ADDRESSTYPE_NAMESTR = "AddressType";
+    public static final String ADDRESSNAMEREMARK_NAMESTR = "AddressNameRemark";
+    public static final String ADDRES_NAMESTR = "Adres";
+    public static final String ADDRESS_NAMESTR = "Address";
+    public static final String ADDRESSREMARK_NAMESTR = "AddressRemark";
     public static final String ADDRESSADDITION_NAMESTR = "Adrestoevoeging";
     public static final String ADDRESSNUMBER_NAMESTR = "Huisnummer";
     public static final String ADDRESSNUMBERADDITION_NAMESTR = "Huisnummertoevoeging";
     public static final String AUTHORISATIONBASE_NAMESTR = "Autorisatie_basis";
+    public static final String AREA_NAMESTR = "Area";
     //endregion A
 
     //region B
@@ -113,9 +120,12 @@ public class cDatabase {
     public static final String COMMENTTEXT_NAMESTR = "CommentText";
     public static final String COMPONENT10_NAMESTR = "Component10";
     public static final String CURRENTUSERID_NAMESTR = "CurrentUserId";
-    public static final String CITY_NAMESTR = "Plaats";
-    public static final String COUNTRY_NAMESTR = "Land";
+    public static final String CITY_NAMESTR = "City";
+    public static final String CITYNL_NAMESTR = "Plaats";
+    public static final String COUNTRY_NAMESTR = "Country";
+    public static final String COUNTRYNL_NAMESTR = "Land";
     public static final String CONTAINER_NAMESTR = "Container";
+    public static final String CONTACTNAME_NAMESTR = "ContactName";
     public static final String CONTACTPERSON_NAMESTR = "Contactpersoon";
     public static final String CONTAINERTYPE_DUTCH_NAMESTR = "Containersoort";
     //endregion C
@@ -174,6 +184,10 @@ public class cDatabase {
     //region H
     public static final String HANDLEDTIMESTAMP_NAMESTR = "HandledTimestamp";
     public static final String HANDLEDTIMESTAMPTAKENOTEXPORTED_NAMESTR = "HandledTimestamp_take_not_exported";
+    public static final String HOUSENUMBER_NAMESTR = "HouseNumber";
+    public static final String HOUSENUMBERCOMPLEMENTED_NAMESTR = "HouseNumberComplemented";
+    public static final String HOUSENUMBEREXTENSION_NAMESTR = "HouseNumberExtension";
+    public static final String HOUSENUMBEREXTENSIONCOMPLEMENTED_NAMESTR = "HouseNumberExtensionComplemented";
     //endregion H
 
 
@@ -212,6 +226,7 @@ public class cDatabase {
     public static final String LAYOUTVALUE_NAMESTR = "Layout";
     public static final String LICENSE_NAMESTR = "License";
     public static final String LICENSE_NL_NAMESTR = "Licentie";
+    public static final String LINE_NAMESTR = "Line";
     public static final String LINES_NAMESTR = "Lines";
     public static final String LINENO_NAMESTR = "LineNo";
     public static final String LINENOTAKE_NAMESTR = "LineNoTake";
@@ -271,7 +286,8 @@ public class cDatabase {
     public static final String PACKAGETYPE_NAMESTR = "PackageType";
     public static final String PACKAGESEQUENCENUMBER_NAMESTR = "PackageSequenceNumber";
     public static final String PACKINGTABLE_NAMESTR = "Packingtable";
-    public static final String PHONE_NAMESTR = "Telefoon";
+    public static final String PHONE_NAMESTR = "PhoneNumber";
+    public static final String PHONENL_NAMESTR = "Telefoon";
     public static final String PICKSALESASKWORKPLACE_NAMESTR = "Pick_Sales_ask_workplace";
     public static final String PICKTRANSFERASKWORKPLACE_NAMESTR = "Pick_Transfer_ask_workplace";
     public static final String PICKAUTONEXT_NAMESTR = "Pick_Auto_next";
@@ -299,7 +315,8 @@ public class cDatabase {
     public static final String PROPERTYDUTCH_NAMESTR = "Propertie";
     public static final String PROPERTYSDUTCH_NAMESTR = "Properties";
     public static final String PROPERTYGROUP_NAMESTR = "Propertiegroep";
-
+    public static final String ADDRESSES_NAMESTR = "Addresses";
+    public static final String SHIPPINGMETHODS_NAMESTR = "ShippingMethods";
     public static final String COMPOSITEBARCODE_NAMESTR = "Composite_barcode";
     public static final String COMPOSITEBARCODETYPE_NAMESTR = "Compositebarcode_type";
     public static final String FIELDSEPERATOR_NAMESTR = "Field_separator";
@@ -401,7 +418,9 @@ public class cDatabase {
     public static final String STORAGEBINCODE_NAMESTR = "StorageBinCode";
     public static final String STOREBINCODE_NAMESTR = "StoreBinCode";
     public static final String STORESOURCEORDER_NAMESTR = "StoreSourceOpdracht";
-    public static final String STREET_NAMESTR = "Straat";
+    public static final String STREETNL_NAMESTR = "Straat";
+    public static final String STREET_NAMESTR = "Street";
+    public static final String STREETCOMPLEMENTERD_NAMESTR = "StreetComplemented";
     public static final String SEQUENCE_NAMESTR = "Order";
     public static final String SHIPPINGAGENT_NAMESTR = "Expediteur";
     public static final String SHIPPINGLABELS_NAMESTR = "ShippingLabels";
@@ -456,7 +475,8 @@ public class cDatabase {
     //endregion W
 
     //region Z
-    public static final String ZIPCODE_NAMESTR = "Postcode";
+    public static final String ZIPCODENL_NAMESTR = "Postcode";
+    public static final String ZIPCODE_NAMESTR = "Zipcode";
     public static final String ZONE_NAMESTR = "Zone";
 
 

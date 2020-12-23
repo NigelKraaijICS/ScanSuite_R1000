@@ -265,7 +265,6 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
 
     }
 
-
     private void mHandleCreateOrder(String pvDocumentstr ){
 
         cResult hulpResult;
@@ -325,7 +324,7 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
             @Override
             public void run() {
                 // If everything went well, then start Lines Activity
-                mShowPackAndShipLinesActivity();
+                mShowPackAndShipActivity();
             }
         });
 
@@ -454,14 +453,23 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
-    private void mShowPackAndShipLinesActivity() {
+    private void mShowPackAndShipActivity() {
+
+        Intent   intent = null;
+
+        if (cPackAndShipOrder.currentPackAndShipOrder.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PS1.toString())) {
+            intent =  new Intent(cAppExtension.context, PackAndShipSingleActivity.class);
+        }
+
+        if (cPackAndShipOrder.currentPackAndShipOrder.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PSM.toString())) {
+            intent = new Intent(cAppExtension.context, PackAndShipSelectActivity.class);
+        }
 
         cUserInterface.pCheckAndCloseOpenDialogs();
-        Intent   intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
-
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
 
     }
+
 
     //End Region Private Methods
 

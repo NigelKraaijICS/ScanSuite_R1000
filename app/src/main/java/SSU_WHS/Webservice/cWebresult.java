@@ -60,6 +60,19 @@ public class cWebresult {
     {
         return vResultObl;
     }
+    public  String getResultStr() {
+
+        String resultStr = "";
+
+        if (this.getResultObl() != null && this.getResultObl().size()  > 0 ) {
+            for (String resultLoopStr : this.getResultObl()) {
+                resultStr += resultLoopStr + " ";
+            }
+         }
+
+        return  resultStr;
+
+    }
     public void setResultObl (List<String> pv_ResultObl)
     {
         vResultObl = pv_ResultObl;

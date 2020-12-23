@@ -88,26 +88,48 @@ public class cPackAndShipShipmentEntity {
 
     }
 
-    public cPackAndShipShipmentEntity(JSONObject pvJsonObject) {
+    public cPackAndShipShipmentEntity(JSONObject pvJsonObject, boolean pvViaDocumentBln) {
         try {
 
-            this.sourceNoStr = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
-            this.shippingLabelsStr = pvJsonObject.getString(cDatabase.SHIPPINGLABELS_NAMESTR);
-            this.shippingAgentCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGAGENTCODE_NAMESTR);
-            this.shippingAgentServiceCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR);
-            this.actualShippingAgentCodeStr = pvJsonObject.getString(cDatabase.ACTUALSHIPPINGAGENTCODE_NAMESTR);
-            this.actualShippingAgentServiceCodeStr = pvJsonObject.getString(cDatabase.ACTUEALSHIPPINGAGENTSERVICECODE_NAMESTR);
-            this.shippingAddressTypeStr = pvJsonObject.getString(cDatabase.SHIPPINGADDRESSTYPE_NAMESTR);
-            this.shippingAddressCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGADDRESSCODE_NAMESTR);
-            this.deliveryAddressTypeStr = pvJsonObject.getString(cDatabase.DELIVERYADDRESSTYPE_NAMESTR);
-            this.deliveryAddressCodeStr = pvJsonObject.getString(cDatabase.DELIVERYADDRESSCODE_NAMESTR);
-            this.senderAddressCodeStr = pvJsonObject.getString(cDatabase.SENDERADDRESSCODE_NAMESTR);
-            this.returnAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNADDRESSCODE_NAMESTR);
-            this.returnSenderAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNSENDERADDRESSCODE_NAMESTR);
-            this.returnShippingAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNSHIPPINGADDRESSCODE_NAMESTR);
-            this.billingAddressCodeStr =  pvJsonObject.getString(cDatabase.BILLINGADDRESSCODE_NAMESTR);
-            this.statusShippingInt = pvJsonObject.getInt(cDatabase.STATUSSHIPPING_NAMESTR);
-            this.statusPackingInt = pvJsonObject.getInt(cDatabase.STATUSPACKING_NAMESTR);
+            if (!pvViaDocumentBln) {
+                this.sourceNoStr = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
+                this.shippingLabelsStr = pvJsonObject.getString(cDatabase.SHIPPINGLABELS_NAMESTR);
+                this.shippingAgentCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGAGENTCODE_NAMESTR);
+                this.shippingAgentServiceCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR);
+                this.actualShippingAgentCodeStr =  pvJsonObject.getString(cDatabase.ACTUALSHIPPINGAGENTCODE_NAMESTR);
+                this.actualShippingAgentServiceCodeStr = pvJsonObject.getString(cDatabase.ACTUEALSHIPPINGAGENTSERVICECODE_NAMESTR);
+                this.shippingAddressTypeStr = pvJsonObject.getString(cDatabase.SHIPPINGADDRESSTYPE_NAMESTR);
+                this.shippingAddressCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGADDRESSCODE_NAMESTR);
+                this.deliveryAddressTypeStr = pvJsonObject.getString(cDatabase.DELIVERYADDRESSTYPE_NAMESTR);
+                this.deliveryAddressCodeStr = pvJsonObject.getString(cDatabase.DELIVERYADDRESSCODE_NAMESTR);
+                this.senderAddressCodeStr = pvJsonObject.getString(cDatabase.SENDERADDRESSCODE_NAMESTR);
+                this.returnAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNADDRESSCODE_NAMESTR);
+                this.returnSenderAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNSENDERADDRESSCODE_NAMESTR);
+                this.returnShippingAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNSHIPPINGADDRESSCODE_NAMESTR);
+                this.billingAddressCodeStr =  pvJsonObject.getString(cDatabase.BILLINGADDRESSCODE_NAMESTR);
+                this.statusShippingInt = pvJsonObject.getInt(cDatabase.STATUSSHIPPING_NAMESTR);
+                this.statusPackingInt = pvJsonObject.getInt(cDatabase.STATUSPACKING_NAMESTR);
+            }
+            else
+            {
+                this.sourceNoStr = pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
+                this.shippingLabelsStr = pvJsonObject.getString(cDatabase.SHIPPINGLABELS_NAMESTR);
+                this.shippingAgentCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGAGENTCODE_NAMESTR);
+                this.shippingAgentServiceCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGAGENTSERVICECODE_NAMESTR);
+                this.actualShippingAgentCodeStr ="";
+                this.actualShippingAgentServiceCodeStr = "";
+                this.shippingAddressTypeStr = pvJsonObject.getString(cDatabase.SHIPPINGADDRESSTYPE_NAMESTR);
+                this.shippingAddressCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGADDRESSCODE_NAMESTR);
+                this.deliveryAddressTypeStr = pvJsonObject.getString(cDatabase.DELIVERYADDRESSTYPE_NAMESTR);
+                this.deliveryAddressCodeStr = pvJsonObject.getString(cDatabase.DELIVERYADDRESSCODE_NAMESTR);
+                this.senderAddressCodeStr = pvJsonObject.getString(cDatabase.SENDERADDRESSCODE_NAMESTR);
+                this.returnAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNADDRESSCODE_NAMESTR);
+                this.returnSenderAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNSENDERADDRESSCODE_NAMESTR);
+                this.returnShippingAddressCodeStr = pvJsonObject.getString(cDatabase.RETURNSHIPPINGADDRESSCODE_NAMESTR);
+                this.billingAddressCodeStr =  pvJsonObject.getString(cDatabase.BILLINGADDRESSCODE_NAMESTR);
+                this.statusShippingInt =0;
+                this.statusPackingInt = 0;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

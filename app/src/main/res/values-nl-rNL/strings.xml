@@ -736,5 +736,13 @@
     <string name="create_pack_and_ship">Creeer Inpakken en Verzenden opdracht</string>
     <string name="error_get_packandshiporders_failed">Ophalen Inpakken en Verzenden opdrachten mislukt</string>
     <string name="error_get_shipping_methods_failed">Ophalen verzendmethoden mislukt</string>
+    <string name="screentitle_packandship_single">Inpakken en Verzenden</string>
+    <string name="scan_document">Scan document</string>
+    <string name="scan_next_document_to_close_current">Scan volgende document om huidige te sluiten, of druk op OK</string>
+    <string name="message_shipment_not_send">Document niet verzonden</string>
+    <string name="message_shipment_send">Shipment send</string>
+    <string name="screentitle_packandship_multi">Inpakken en Verzenden Multi</string>
+    <string name="message_shipment_incomplete">Zending incompleet</string>
+    <string name="message_workplaces_not_available">Werkplekken niet beschikbaar</string>
 
 </resources>

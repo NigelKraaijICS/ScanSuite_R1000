@@ -9,7 +9,6 @@ import androidx.room.Query;
 import java.util.List;
 
 import SSU_WHS.General.cDatabase;
-import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddressEntity;
 
 @Dao
 public interface iPackAndShipShippingPackageDao {
@@ -24,6 +23,6 @@ public interface iPackAndShipShippingPackageDao {
     void deleteAll();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_PACKANDSHIPSHIPPINPACKAGE)
-    List<cPackAndShipAddressEntity> getAll();
+    List<cPackAndShipShippingPackageEntity> getAll();
 
 }

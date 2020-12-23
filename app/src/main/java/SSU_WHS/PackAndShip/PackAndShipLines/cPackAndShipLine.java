@@ -7,23 +7,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cResult;
-import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.ArticleImages.cArticleImage;
-import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
-import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
-import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLineViewModel;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
-import nl.icsvertex.scansuite.R;
 
-public class cPackAndShipOrderLine {
+public class cPackAndShipLine {
 
     public String actionTypeCodeStr;
     public String getActionTypeCodeStr() { return actionTypeCodeStr; }
@@ -110,8 +96,8 @@ public class cPackAndShipOrderLine {
 
     private cPackAndShipOrderLineEntity packAndShipOrderLineEntity;
 
-    public static List<cPackAndShipOrderLine> allLinesObl;
-    public static cPackAndShipOrderLine currentMoveOrderLine;
+    public static List<cPackAndShipLine> allLinesObl;
+    public static cPackAndShipLine currentMoveOrderLine;
 
     private cPackAndShipOrderLineViewModel getPackAndShipOrderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPackAndShipOrderLineViewModel.class);
@@ -124,7 +110,7 @@ public class cPackAndShipOrderLine {
     //End Region Public Properties
 
     //Region Constructor
-    public cPackAndShipOrderLine(JSONObject pvJsonObject) {
+    public cPackAndShipLine(JSONObject pvJsonObject) {
         this.packAndShipOrderLineEntity = new cPackAndShipOrderLineEntity(pvJsonObject);
 
         this.actionTypeCodeStr = this.packAndShipOrderLineEntity.getActiontypecodeStr();
@@ -144,13 +130,13 @@ public class cPackAndShipOrderLine {
 
     //End Region Constructor
 
-    public static cPackAndShipOrderLine pGetLineByLineNo(int pvLineNoLInt){
+    public static cPackAndShipLine pGetLineByLineNo(int pvLineNoLInt){
 
-        if (cPackAndShipOrderLine.allLinesObl == null) {
+        if (cPackAndShipLine.allLinesObl == null) {
             return  null;
         }
 
-        for (cPackAndShipOrderLine packAndShipOrderLine : cPackAndShipOrderLine.allLinesObl ) {
+        for (cPackAndShipLine packAndShipOrderLine : cPackAndShipLine.allLinesObl ) {
 
             if (packAndShipOrderLine.getLineNoInt() == pvLineNoLInt) {
                 return  packAndShipOrderLine;
@@ -163,10 +149,10 @@ public class cPackAndShipOrderLine {
 
     public boolean pInsertInDatabaseBln() {
 
-        if (cPackAndShipOrderLine.allLinesObl == null){
-            cPackAndShipOrderLine.allLinesObl = new ArrayList<>();
+        if (cPackAndShipLine.allLinesObl == null){
+            cPackAndShipLine.allLinesObl = new ArrayList<>();
         }
-        cPackAndShipOrderLine.allLinesObl.add(this);
+        cPackAndShipLine.allLinesObl.add(this);
         return  true;
     }
 

@@ -46,7 +46,7 @@ public class cPackAndShipShippingPackageEntity {
         return this.packageItemCountInt;
     }
 
-    @ColumnInfo(name = cDatabase.PACKAGEITEMCOUNT_NAMESTR)
+    @ColumnInfo(name = cDatabase.PACKAGEWEIGHTING_NAMESTR)
     public int packageWeightInGInt;
     public int getPackageWeightInGInt() {
         return this.packageWeightInGInt;

@@ -75,6 +75,7 @@ import SSU_WHS.Move.MoveorderLineBarcode.iMoveorderLineBarcodeDao;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
 import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
 import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddress;
+import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddressEntity;
 import SSU_WHS.PackAndShip.PackAndShipAddress.iPackAndShipAddressDao;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcodeEntity;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.iPackAndShipBarcodeDao;
@@ -82,6 +83,7 @@ import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipOrderLineEntity;
 import SSU_WHS.PackAndShip.PackAndShipLines.iPackAndShipOrderLineDao;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrderEntity;
 import SSU_WHS.PackAndShip.PackAndShipOrders.iPackAndShipOrderDao;
+import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSettingEntity;
 import SSU_WHS.PackAndShip.PackAndShipSetting.iPackAndShipSettingDao;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipmentEntity;
 import SSU_WHS.PackAndShip.PackAndShipShipment.iPackAndShipShipmentDao;
@@ -178,10 +180,11 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackAndShipOrderLineEntity.class,
         cPackAndShipBarcodeEntity.class,
         cPackAndShipShipmentEntity.class,
-        cPackAndShipAddress.class,
+        cPackAndShipAddressEntity.class,
+        cPackAndShipSettingEntity.class,
         cPackAndShipShippingMethodEntity.class,
         cPackAndShipShippingPackageEntity.class
-        },version = 129)
+        },version = 136)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {

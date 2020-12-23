@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,9 +15,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -46,7 +43,6 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkflowFragment;
@@ -359,7 +355,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
     private void mHandlePackAndShipOrderSelected(){
 
-        cResult hulpResult = new cResult();
+        cResult hulpResult;
 
         //Try to lock the pack and ship order
         if (!this.mTryToLockOrderBln()) {
@@ -385,7 +381,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
             @Override
             public void run() {
                 // If everything went well, then start Lines Activity
-                mShowPackAndShipLinesActivity();
+                mShowPackAndShipActivity();
             }
         });
 
@@ -399,26 +395,26 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
         cPackAndShipOrder.currentPackAndShipOrder = null;
     }
 
-    private void mShowPackAndShipLinesActivity() {
+    private void mShowPackAndShipActivity() {
 
-        cUserInterface.pCheckAndCloseOpenDialogs();
+        Intent   intent = null;
 
-        final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
-        Intent intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
-
-
-        if (container != null) {
-            View clickedOrder = container.findViewWithTag(cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr());
-            ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
-            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-            return;
+        if (cPackAndShipOrder.currentPackAndShipOrder.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PS1.toString())) {
+            intent =  new Intent(cAppExtension.context, PackAndShipSingleActivity.class);
         }
 
+        if (cPackAndShipOrder.currentPackAndShipOrder.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PSM.toString())) {
+            intent = new Intent(cAppExtension.context, PackAndShipSelectActivity.class);
+        }
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
 
     }
 
     private  void mShowCreatePackAndShipActivity(cWarehouseorder.PackAndShipMainTypeEnu pvPackAndShipMainTypeEnu) {
+
+        Intent intent = null;
 
         if (pvPackAndShipMainTypeEnu != null) {
             CreatePackAndShipActivity.packAndShipMainTypeEnu = pvPackAndShipMainTypeEnu;
@@ -426,6 +422,18 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
         if (PackAndShipSelectActivity.currentMainTypeEnu !=  cWarehouseorder.PackAndShipMainTypeEnu.Unknown) {
             CreatePackAndShipActivity.packAndShipMainTypeEnu = PackAndShipSelectActivity.currentMainTypeEnu;
+
+
+            if (CreatePackAndShipActivity.packAndShipMainTypeEnu == cWarehouseorder.PackAndShipMainTypeEnu.SINGLE){
+                CreatePackAndShipActivity.packAndShipMainTypeEnu = cWarehouseorder.PackAndShipMainTypeEnu.SINGLE;
+                intent = new Intent(cAppExtension.context, PackAndShipSingleActivity.class);
+            }
+
+            if (CreatePackAndShipActivity.packAndShipMainTypeEnu == cWarehouseorder.PackAndShipMainTypeEnu.MULTI){
+                CreatePackAndShipActivity.packAndShipMainTypeEnu = cWarehouseorder.PackAndShipMainTypeEnu.MULTI;
+                intent = new Intent(cAppExtension.context, PackAndShipMultiActivity.class);
+            }
+
         }
         else
         {
@@ -437,17 +445,18 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
             switch (cSetting.PACK_AND_SHIP_NEW_WORKFLOWS().get(0).toUpperCase()) {
                 case  "PS1":
                     CreatePackAndShipActivity.packAndShipMainTypeEnu = cWarehouseorder.PackAndShipMainTypeEnu.SINGLE;
+                    intent = new Intent(cAppExtension.context, PackAndShipSingleActivity.class);
                     break;
 
                 case  "PSM":
                     CreatePackAndShipActivity.packAndShipMainTypeEnu = cWarehouseorder.PackAndShipMainTypeEnu.MULTI;
+                    intent = new Intent(cAppExtension.context, PackAndShipMultiActivity.class);
                     break;
 
             }
         }
 
         cUserInterface.pCheckAndCloseOpenDialogs();
-        Intent intent = new Intent(cAppExtension.context, CreatePackAndShipActivity.class);
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
     }
 

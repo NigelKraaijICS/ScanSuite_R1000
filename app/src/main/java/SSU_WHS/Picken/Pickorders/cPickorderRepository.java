@@ -21,7 +21,6 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Move.MoveOrders.cMoveorderRepository;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.Shipment.cShipment;
@@ -1101,7 +1100,7 @@ public class cPickorderRepository {
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
                 l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_SHIPPINGAGENT;
-                l_PropertyInfo6Pin.setValue(cShipment.currentShipment.shippingAgent().getShippintAgentStr());
+                l_PropertyInfo6Pin.setValue(cShipment.currentShipment.shippingAgent().getShippingAgentStr());
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
                 PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();

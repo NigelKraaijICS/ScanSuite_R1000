@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import SSU_WHS.General.cDatabase;
 
-    @Entity(tableName = cDatabase.TABLENAME_PICKORDERADDRESS, primaryKeys = {cDatabase.ADDRESSCODE_NAMESTR})
+    @Entity(tableName = cDatabase.TABLENAME_PICKORDERADDRESS, primaryKeys = {cDatabase.ADDRESCODE_NAMESTR})
 
 
 
@@ -20,7 +20,7 @@ import SSU_WHS.General.cDatabase;
         //Region Public Properties
 
         @NonNull
-        @ColumnInfo(name = cDatabase.ADDRESSCODE_NAMESTR)
+        @ColumnInfo(name = cDatabase.ADDRESCODE_NAMESTR)
         public String addrescode = "";
         public String getAddrescodeStr() {
             return addrescode;
@@ -74,13 +74,13 @@ import SSU_WHS.General.cDatabase;
             return zipcode;
         }
 
-        @ColumnInfo(name = cDatabase.CITY_NAMESTR)
+        @ColumnInfo(name = cDatabase.CITYNL_NAMESTR)
         public String city;
         public String getCityStr() {
             return city;
         }
 
-        @ColumnInfo(name = cDatabase.COUNTRY_NAMESTR)
+        @ColumnInfo(name = cDatabase.COUNTRYNL_NAMESTR)
         public String country;
         public String getCountryStr() {
             return country;
@@ -100,7 +100,7 @@ import SSU_WHS.General.cDatabase;
 
         public cPickorderAddressEntity(JSONObject pvJsonObject) {
             try {
-                this.addrescode = pvJsonObject.getString(cDatabase.ADDRESSCODE_NAMESTR);
+                this.addrescode = pvJsonObject.getString(cDatabase.ADDRESCODE_NAMESTR);
                 this.name = pvJsonObject.getString(cDatabase.NAMEDUTCH_NAMESTR);
                 this.nameAddition = pvJsonObject.getString(cDatabase.NAMEADDITION_NAMESTR);
                 this.address = pvJsonObject.getString(cDatabase.ADDRESS_NAMESTR);
@@ -109,8 +109,8 @@ import SSU_WHS.General.cDatabase;
                 this.addressNumber = pvJsonObject.getString(cDatabase.ADDRESSNUMBER_NAMESTR);
                 this.addressNumberAddition = pvJsonObject.getString(cDatabase.ADDRESSNUMBERADDITION_NAMESTR);
                 this.zipcode = pvJsonObject.getString(cDatabase.ZIPCODE_NAMESTR);
-                this.city = pvJsonObject.getString(cDatabase.CITY_NAMESTR);
-                this.country = pvJsonObject.getString(cDatabase.COUNTRY_NAMESTR);
+                this.city = pvJsonObject.getString(cDatabase.CITYNL_NAMESTR);
+                this.country = pvJsonObject.getString(cDatabase.COUNTRYNL_NAMESTR);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

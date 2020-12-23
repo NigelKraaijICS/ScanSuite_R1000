@@ -2,6 +2,8 @@ package SSU_WHS.PackAndShip.PackAndShipOrders;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -16,15 +18,17 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
+import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
-import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
+import SSU_WHS.General.cDatabase;
 import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddress;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcode;
-import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipOrderLine;
+import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipLine;
 import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSetting;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
 import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethod;
@@ -130,9 +134,14 @@ public class cPackAndShipOrder {
     public List<cComment> commentsObl() {
         return cComment.allCommentsObl;
     }
-    public List<cMoveorderBarcode> barcodesObl () {return  cMoveorderBarcode.allMoveorderBarcodesObl;}
-    public List<cMoveorderLine> linesObl () {return  cMoveorderLine.allLinesObl;}
 
+    public List<cPackAndShipAddress> adressesObl () {return  cPackAndShipAddress.allAddressesObl;}
+    public List<cPackAndShipBarcode> barcodesObl () {return  cPackAndShipBarcode.allPackAndShipOrderBarcodesObl;}
+    public List<cPackAndShipLine> linesObl () {return  cPackAndShipLine.allLinesObl;}
+    public List<cPackAndShipSetting> settingObl () {return  cPackAndShipSetting.allSettingsObl;}
+    public List<cPackAndShipShipment> shipmentObl () {return  cPackAndShipShipment.allShipmentsObl;}
+    public List<cPackAndShipShippingMethod> shippingMethodObl () {return  cPackAndShipShippingMethod.allShippingMethodsObl;}
+    public List<cPackAndShipShippingPackage> shippingPackageObl () {return  cPackAndShipShippingPackage.allPackagesObl;}
 
     public static List<cPackAndShipOrder> allPackAndShipOrdersObl;
     public static cPackAndShipOrder currentPackAndShipOrder;
@@ -496,11 +505,86 @@ public class cPackAndShipOrder {
 
     public boolean pLockReleaseViaWebserviceBln() {
 
-        cWebresult Webresult = null;
+        cWebresult Webresult;
 
         Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.INPAKKEN_VERZENDEN.toString(), this.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cWarehouseorder.StepCodeEnu.PackAndShipShipping.toString(), cWarehouseorder.PackAndShipStatusEnu.Pack_And_Ship);
 
         return Objects.requireNonNull(Webresult).getSuccessBln() && Webresult.getResultBln();
+    }
+
+    public boolean pDeleteViaWebserviceBln() {
+
+        cWebresult Webresult;
+
+        Webresult =  this.getPackAndShipOrderViewModel().pDeleteViaWebserviceWrs();
+        if (Webresult.getResultBln() && Webresult.getSuccessBln()) {
+            return  true;
+        }
+      return  false;
+    }
+
+    public cResult pHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult webresult;
+
+        webresult =  this.getPackAndShipOrderViewModel().pHandledViaWebserviceWrs();
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (!webresult.getSuccessBln()) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        if (!webresult.getResultBln() && webresult.getResultLng() > 0 ) {
+
+            Long actionLng = 0L;
+
+            if (webresult.getResultLng() < 10 ) {
+                actionLng = webresult.getResultLng();
+            }
+
+            if (webresult.getResultLng() > 100) {
+                actionLng  = webresult.getResultLng()/100;
+            }
+
+            //Try to convert action long to action enumerate
+            cWarehouseorder.ActivityActionEnu activityActionEnu = cWarehouseorder.pGetActivityActionEnu(actionLng.intValue());
+
+            result.resultBln = false;
+            result.activityActionEnu = activityActionEnu;
+
+            if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+                result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+            }
+
+            cPackAndShipOrder.currentPackAndShipOrder.mGetCommentsViaWebError(webresult.getResultDtt());
+            return result;
+        }
+
+        return  result;
+
+
     }
 
     public cResult pGetOrderDetailsRst(){
@@ -510,10 +594,31 @@ public class cPackAndShipOrder {
         result = new cResult();
         result.resultBln = true;
 
+        //Check all ShippingAgents
+        if (cShippingAgent.allShippingAgentsObl == null || cShippingAgent.allShippingAgentsObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagents_available));
+            return result;
+        }
+
+        //Check all ShippingAgents
+        if (cShippingAgentService.allShippingAgentServicesObl == null || cShippingAgentService.allShippingAgentServicesObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_available));
+            return result;
+        }
+
+        //Check all ShippingAgent Shipping Units
+        if (cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl == null || cShippingAgentServiceShippingUnit.allShippingAgentServiceShippingUnitsObl.size() == 0) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_no_shippingagent_services_units_available));
+            return result;
+        }
+
         //Get all linesInt for current order, if webservice error then stop
         if (!cPackAndShipOrder.currentPackAndShipOrder.pGetLinesViaWebserviceBln(true)) {
             result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_movelines_failed));
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
             return result;
         }
 
@@ -531,7 +636,12 @@ public class cPackAndShipOrder {
             return result;
         }
 
-
+        // Get all barcodes, if webservice error then stop
+        if (!cPackAndShipOrder.currentPackAndShipOrder.pGetAddressesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
+            return result;
+        }
 
         // Get all comments
         if (!cPackAndShipOrder.currentPackAndShipOrder.pGetCommentsViaWebserviceBln(true)) {
@@ -543,8 +653,102 @@ public class cPackAndShipOrder {
         return  result;
     }
 
+    public cResult pGetDocumentAndDetailsRst(String pvDocumentStr){
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetDocumentAndDetailsViaWebserviceWrs(pvDocumentStr);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject, false);
+                packAndShipShipment.pInsertInDatabaseBln();
+                cPackAndShipShipment.currentShipment = packAndShipShipment;
+
+                try {
+                    JSONArray adressesObl    = jsonObject.getJSONArray(cDatabase.ADDRESSES_NAMESTR);
+
+                    for (int i = 0, size = adressesObl.length(); i < size; i++)
+                    {
+                        JSONObject object =adressesObl.getJSONObject(i);
+                        cPackAndShipAddress packAndShipAddress = new cPackAndShipAddress(object, true);
+                        packAndShipAddress.pInsertInDatabaseBln();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    JSONArray shippingMethodsObl    = jsonObject.getJSONArray(cDatabase.SHIPPINGMETHODS_NAMESTR);
+
+                    for (int i = 0, size = shippingMethodsObl.length(); i < size; i++)
+                    {
+                        JSONObject object =shippingMethodsObl.getJSONObject(i);
+                        cPackAndShipShippingMethod packAndShipShippingMethod = new cPackAndShipShippingMethod(object);
+                        packAndShipShippingMethod.pInsertInDatabaseBln();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return  result;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETSOURCEDOCUMENTSHIPPINGDATA);
+            result.resultBln = false;
+            result.pAddErrorMessage(WebResult.getResultStr());
+            return result;
+        }
+    }
+
+    public cResult pAddShipmentViaWebserviceRst() {
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pAddShipmentViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+
+                try {
+                    JSONArray linesObl   = jsonObject.getJSONArray(cDatabase.LINE_NAMESTR);
+
+                    for (int i = 0, size = linesObl.length(); i < size; i++)
+                    {
+                        JSONObject object =linesObl.getJSONObject(i);
+                        cPackAndShipShipment.currentShipment.sourceNoStr = object.getString(cDatabase.SOURCENO_NAMESTR);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return  result;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET);
+            result.resultBln = false;
+            return result;
+        }
+
+
+    }
+
+    public Boolean pUpdateWorkplaceViaWebserviceBln() {
+
+        return  this.getPackAndShipOrderViewModel().pUpdateWorkplaceViaWebserviceBln();
+
+    }
+
     public boolean pDeleteDetailsBln() {
-        cPackAndShipOrderLine.pTruncateTableBln();
+        cPackAndShipLine.pTruncateTableBln();
         cPackAndShipBarcode.pTruncateTableBln();
         cPackAndShipSetting.pTruncateTableBln();
         cComment.pTruncateTableBln();
@@ -561,8 +765,8 @@ public class cPackAndShipOrder {
         cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetSettingsFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
-            if (cPackAndShipOrderLine.allLinesObl == null) {
-                cPackAndShipOrderLine.allLinesObl= new ArrayList<>();
+            if (cPackAndShipLine.allLinesObl == null) {
+                cPackAndShipLine.allLinesObl= new ArrayList<>();
             }
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
@@ -585,18 +789,18 @@ public class cPackAndShipOrder {
 
 
         if (pvRefreshBln) {
-            cPackAndShipOrderLine.allLinesObl = null;
-            cPackAndShipOrderLine.pTruncateTableBln();
+            cPackAndShipLine.allLinesObl = null;
+            cPackAndShipLine.pTruncateTableBln();
         }
         cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetLinesFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
-            if (cPackAndShipOrderLine.allLinesObl == null) {
-                cPackAndShipOrderLine.allLinesObl= new ArrayList<>();
+            if (cPackAndShipLine.allLinesObl == null) {
+                cPackAndShipLine.allLinesObl= new ArrayList<>();
             }
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPackAndShipOrderLine packAndShipOrderLine = new cPackAndShipOrderLine(jsonObject);
+                cPackAndShipLine packAndShipOrderLine = new cPackAndShipLine(jsonObject);
                 packAndShipOrderLine.pInsertInDatabaseBln();
             }
 
@@ -623,8 +827,12 @@ public class cPackAndShipOrder {
             }
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject);
+                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject, true);
                 packAndShipShipment.pInsertInDatabaseBln();
+            }
+
+            if (cPackAndShipOrder.currentPackAndShipOrder.getOrderTypeStr().equalsIgnoreCase("PS1") &&  cPackAndShipShipment.allShipmentsObl.size() ==1) {
+                cPackAndShipShipment.currentShipment = cPackAndShipShipment.allShipmentsObl.get(0);
             }
 
             return  true;
@@ -648,7 +856,7 @@ public class cPackAndShipOrder {
             }
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPackAndShipAddress packAndShipAddress = new cPackAndShipAddress(jsonObject);
+                cPackAndShipAddress packAndShipAddress = new cPackAndShipAddress(jsonObject, false);
                 packAndShipAddress.pInsertInDatabaseBln();
             }
 
@@ -796,16 +1004,16 @@ public class cPackAndShipOrder {
 
     }
 
-    public cMoveorderBarcode pGetOrderBarcode(cBarcodeScan pvBarcodescan) {
+    public cPackAndShipBarcode pGetOrderBarcode(cBarcodeScan pvBarcodescan) {
 
         if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
             return  null;
         }
 
-        for (cMoveorderBarcode moveorderBarcode : this.barcodesObl()) {
+        for (cPackAndShipBarcode packAndShipBarcode : this.barcodesObl()) {
 
-            if (moveorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeFormattedStr()) || moveorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeOriginalStr())) {
-                return  moveorderBarcode;
+            if (packAndShipBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeFormattedStr()) || packAndShipBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodescan.getBarcodeOriginalStr())) {
+                return  packAndShipBarcode;
             }
         }
 

@@ -136,7 +136,7 @@ public class cShipment {
                 for (cShippingAgent shippingAgent : cShippingAgent.allShippingAgentsObl) {
 
 
-                    if (shippingAgent.getShippintAgentStr().equalsIgnoreCase(firstPickLine.getShippingAgentCodeStr())) {
+                    if (shippingAgent.getShippingAgentStr().equalsIgnoreCase(firstPickLine.getShippingAgentCodeStr())) {
                         resultShippingAgent = shippingAgent;
                         return  resultShippingAgent;
                     }

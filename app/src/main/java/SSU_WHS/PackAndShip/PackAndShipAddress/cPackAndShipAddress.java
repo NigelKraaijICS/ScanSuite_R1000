@@ -7,18 +7,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cText;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
-import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcodeEntity;
-import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcodeViewModel;
 
 public class cPackAndShipAddress {
 
     private cPackAndShipAddressEntity packAndShipAddressEntity;
 
     public static List<cPackAndShipAddress> allAddressesObl;
+
     //Region Public Properties
 
     public String addressCodeStr;
@@ -26,9 +22,14 @@ public class cPackAndShipAddress {
         return this.addressCodeStr;
     }
 
-    public String nameStr;
-    public String getNameStr() {
-        return this.nameStr;
+    public String addressNameStr;
+    public String getAddressNameStr() {
+        return this.addressNameStr;
+    }
+
+    public String addressTypeStr;
+    public String getAddressTypeStr() {
+        return this.addressTypeStr;
     }
 
     public String nameAdditionStr;
@@ -38,7 +39,14 @@ public class cPackAndShipAddress {
 
     public String addressStr;
     public String getAddressStr() {
-        return this.addressStr;
+
+        if (!this.addressStr.isEmpty()) {
+            return this.addressStr;
+        }
+        else
+        {
+            return  this.getStreetStr() + " " + this.getAddressNumberInt() + " " + this.getAddressNumberAdditionStr();
+        }
     }
 
     public String addressAdditionStr;
@@ -102,10 +110,11 @@ public class cPackAndShipAddress {
     }
 
     //Region Constructor
-    public cPackAndShipAddress(JSONObject pvJsonObject) {
-        this.packAndShipAddressEntity = new cPackAndShipAddressEntity(pvJsonObject);
+    public cPackAndShipAddress(JSONObject pvJsonObject,  boolean pvViaDocumentBln) {
+        this.packAndShipAddressEntity = new cPackAndShipAddressEntity(pvJsonObject, pvViaDocumentBln);
         this.addressCodeStr = this.packAndShipAddressEntity.getAddressCodeStr();
-        this.nameStr = this.packAndShipAddressEntity.getNameStr();
+        this.addressNameStr = this.packAndShipAddressEntity.getAddressNameStr();
+        this.addressTypeStr =  this.packAndShipAddressEntity.getAddressTypeStr();
         this.nameAdditionStr = this.packAndShipAddressEntity.getNameAdditionStr();
         this.addressStr = this.packAndShipAddressEntity.getAddressStr();
         this.addressAdditionStr = this.packAndShipAddressEntity.getAddressAdditionStr();

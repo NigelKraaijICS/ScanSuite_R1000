@@ -7,8 +7,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cResult;
 import ICS.cAppExtension;
-import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSettingViewModel;
+import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
+import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddress;
+import SSU_WHS.Webservice.cWebresult;
+import nl.icsvertex.scansuite.R;
 
 public class cPackAndShipShipment {
 
@@ -25,8 +32,37 @@ public class cPackAndShipShipment {
         return shippingAgentCodeStr;
     }
 
+    public cShippingAgent shippingAgent() {
+        return   cShippingAgent.pGetShippingAgentByCodeStr(this.getShippingAgentCodeStr());
+    }
+
+    public String getShippingAgentCodeDescriptionStr() {
+
+
+
+        if (this.shippingAgent() != null) {
+            return  shippingAgent().getDescriptionStr();
+        }
+
+        return shippingAgentCodeStr;
+    }
+
     public String shippingAgentServiceCodeStr;
     public String getShippingAgentServiceCodeStr() {
+        return shippingAgentServiceCodeStr;
+    }
+
+    public  cShippingAgentService shippingAgentService() {
+        return  cShippingAgentService.pGetShippingAgentServiceByCodeStr(this.getShippingAgentCodeStr(), this.getShippingAgentServiceCodeStr());
+    }
+
+    public String getShippingAgentServiceCodeDescriptionStr() {
+
+
+        if (this.shippingAgentService() != null) {
+            return  this.shippingAgentService() .getDescriptionStr();
+        }
+
         return shippingAgentServiceCodeStr;
     }
 
@@ -93,7 +129,39 @@ public class cPackAndShipShipment {
         return statusPackingInt;
     }
 
+    public boolean isShippingBln() {
+
+        if (this.getShippingLabelsStr().equalsIgnoreCase("NONE")) {
+            return  false;
+        }
+
+        return  true;
+
+    }
+
+
+
     private cPackAndShipShipmentEntity packAndShipShipmentEntity;
+
+    public cPackAndShipAddress deliveryAddress() {
+
+        if (cPackAndShipAddress.allAddressesObl == null || cPackAndShipAddress.allAddressesObl.size() == 0) {
+            return  null;
+        }
+
+        if ( this.getDeliveryAddressCodeStr() == null ||  getDeliveryAddressCodeStr().isEmpty()) {
+            return cPackAndShipAddress.allAddressesObl.get(0);
+        }
+
+        for (cPackAndShipAddress packAndShipAddress : cPackAndShipAddress.allAddressesObl) {
+            if (packAndShipAddress.getAddressCodeStr().equalsIgnoreCase(this.getDeliveryAddressCodeStr())) {
+                return packAndShipAddress;
+            }
+        }
+
+        return  null;
+
+    }
 
     public static List<cPackAndShipShipment> allShipmentsObl;
     public static cPackAndShipShipment currentShipment;
@@ -109,8 +177,8 @@ public class cPackAndShipShipment {
     //End Region Public Properties
 
     //Region Constructor
-    public cPackAndShipShipment(JSONObject pvJsonObject) {
-        this.packAndShipShipmentEntity = new cPackAndShipShipmentEntity(pvJsonObject);
+    public cPackAndShipShipment(JSONObject pvJsonObject, boolean pvViaDocumentBln) {
+        this.packAndShipShipmentEntity = new cPackAndShipShipmentEntity(pvJsonObject, pvViaDocumentBln);
 
         this.sourceNoStr = this.packAndShipShipmentEntity.getSourceNoStr();
         this.shippingLabelsStr = this.packAndShipShipmentEntity.getShippingLabelsStr();
@@ -150,5 +218,80 @@ public class cPackAndShipShipment {
         packAndShipSettingViewModel.deleteAll();
         return true;
     }
+
+    public cResult pHandledViaWebserviceRst() {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult webresult;
+
+        webresult =  this.getPackAndShipShipmentViewModel().pHandledViaWebserviceWrs();
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (!webresult.getSuccessBln()) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        return  result;
+
+    }
+
+    public cResult pShipViaWebserviceRst( List<cShippingAgentServiceShippingUnit> pvShippingAgentServiceShippingUnitsObl) {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        cWebresult webresult;
+
+        webresult =  this.getPackAndShipShipmentViewModel().pShipViaWebserviceWrs(pvShippingAgentServiceShippingUnitsObl);
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() && webresult.getResultBln()) {
+            result.resultBln = true;
+            return result;
+        }
+
+        //Something really went wrong
+        if (!webresult.getSuccessBln()) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        // We got a succesfull response, but we need to do something with this activity
+        return  result;
+
+    }
+
 
 }
