@@ -939,7 +939,7 @@ public class cIntakeorder {
 
             Boolean isUniqueBarcodeBln = false;
 
-            if (cArticle.currentArticle.barcodesObl != null && cArticle.currentArticle.barcodesObl.get(0).getUniqueBarcodeBln()) {
+            if (cArticle.currentArticle.barcodesObl != null &&  cArticle.currentArticle.barcodesObl.size() > 0 &&  cArticle.currentArticle.barcodesObl.get(0).getUniqueBarcodeBln()) {
                 isUniqueBarcodeBln = true;
             }
 

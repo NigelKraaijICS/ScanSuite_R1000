@@ -39,7 +39,6 @@ import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcode;
 import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipLine;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
@@ -465,9 +464,10 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 selectedShippingAgent = cShippingAgent.pGetShippingAgentByDescriptionStr(shippinAgentSpinner.getSelectedItem().toString());
-                cPackAndShipShipment.currentShipment.shippingAgentCodeStr = selectedShippingAgent.getShippingAgentStr();
-                mShippingAgentChanged();
-
+                if (selectedShippingAgent != null) {
+                    cPackAndShipShipment.currentShipment.shippingAgentCodeStr = selectedShippingAgent.getShippingAgentStr();
+                    mShippingAgentChanged();
+                }
             }
 
             @Override

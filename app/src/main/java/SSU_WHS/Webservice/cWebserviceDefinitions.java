@@ -50,7 +50,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETARTICLEVIAOWNERBARCODE = "p_ArtikelGetViaOwnerBarcodeJsonStr";
     public static String WEBMETHOD_GETARTICLEBARCODES = "p_VestigingArtikelBarcodesGetJsonStr";
 
-    public static String WEBMETHOD_GETUNIQUEBARCODES = "p_ArtikelBarcodesUpdateUniqueGetJsonStr";
+    public static String WEBMETHOD_GETUNIQUEBARCODES = "p_VestigingArtikelBarcodesUpdateUniqueGetJsonStr";
 
 
     public static String WEBMETHOD_GETARTICLESTOCK = "p_ArtikelVoorraadGetJsonStr";

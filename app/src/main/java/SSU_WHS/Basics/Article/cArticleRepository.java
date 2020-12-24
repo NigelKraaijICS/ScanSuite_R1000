@@ -12,8 +12,6 @@ import java.util.concurrent.ExecutionException;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -218,7 +216,7 @@ public class cArticleRepository {
             l_PropertyInfoObl.add(l_PropertyInfo2Pin);
 
             PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
-            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION;
+            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
             l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
             l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
