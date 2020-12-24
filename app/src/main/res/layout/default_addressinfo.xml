@@ -1,5 +1,5 @@
 <androidx.cardview.widget.CardView
-    android:id="@+id/articleContainer"
+    android:id="@+id/addressContainer"
     style="@style/addressContainer"
     app:layout_constraintTop_toBottomOf="@id/sourceNoContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,28 +12,28 @@
         >
         <TextView
             android:id="@+id/addressNameText"
-            style="@style/addressText"
+            style="@style/addressTextPackAndShip"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
         <TextView
             android:id="@+id/addressAddressText"
-            style="@style/addressSmallerText"
+            style="@style/addressSmallerTextPackAndShip"
             app:layout_constraintTop_toBottomOf="@id/addressNameText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
         <TextView
             android:id="@+id/addressZipCodeText"
-            style="@style/addressSmallerText"
+            style="@style/addressSmallerTextPackAndShip"
             app:layout_constraintTop_toBottomOf="@id/addressAddressText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/addressCityText"
             />
         <TextView
             android:id="@+id/addressCityText"
-            style="@style/addressSmallerText"
+            style="@style/addressSmallerTextPackAndShip"
             app:layout_constraintTop_toTopOf="@id/addressZipCodeText"
             app:layout_constraintBottom_toBottomOf="@id/addressZipCodeText"
             app:layout_constraintStart_toEndOf="@id/addressZipCodeText"
@@ -41,7 +41,7 @@
             />
         <TextView
             android:id="@+id/addressCountryText"
-            style="@style/addressSmallerText"
+            style="@style/addressSmallerTextPackAndShip"
             app:layout_constraintTop_toBottomOf="@id/addressZipCodeText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

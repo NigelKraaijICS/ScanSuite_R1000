@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,12 +22,14 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcodeAdapter;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeAdapter;
+import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipOrderBarcodeAdapter;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeAdapter;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
+import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipMultiActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
@@ -42,6 +45,7 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
 
     //Region Private Properties
 
+    private TextView  textViewChooseBarcode;
     private  RecyclerView barcodeRecyclerview;
     private  Button buttonClose;
 
@@ -69,6 +73,13 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
         return  this.moveorderBarcodeAdapter;
     }
 
+    private cPackAndShipOrderBarcodeAdapter packAndShipOrderBarcodeAdapter;
+    private cPackAndShipOrderBarcodeAdapter getPackAndShipOrderBarcodeAdapter(){
+        if (this.packAndShipOrderBarcodeAdapter == null) {
+            this.packAndShipOrderBarcodeAdapter = new cPackAndShipOrderBarcodeAdapter();
+        }
+        return  this.packAndShipOrderBarcodeAdapter;
+    }
 
 
     //End Region Private Properties
@@ -114,6 +125,7 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     public void mFindViews() {
 
         if (getView() != null) {
+            this.textViewChooseBarcode = getView().findViewById(R.id.textViewChooseBarcode);
             this.barcodeRecyclerview = getView().findViewById(R.id.barcodeRecyclerview);
             this.buttonClose = getView().findViewById(R.id.buttonClose);
         }
@@ -122,6 +134,11 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
     @Override
     public void mFieldsInitialize() {
         this.mFillRecyclerView();
+
+        if (cAppExtension.activity instanceof PackAndShipMultiActivity) {
+            this.textViewChooseBarcode.setText(R.string.documents);
+        }
+
     }
 
     @Override
@@ -172,6 +189,10 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
 
         if (cAppExtension.activity instanceof PickorderQCActivity) {
             this.barcodeRecyclerview.setAdapter(this.getPickorderBarcodeAdapter());
+        }
+
+        if (cAppExtension.activity instanceof PackAndShipMultiActivity) {
+            this.barcodeRecyclerview.setAdapter(this.getPackAndShipOrderBarcodeAdapter());
         }
 
 

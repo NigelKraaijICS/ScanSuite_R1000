@@ -388,6 +388,23 @@ public class cPackAndShipOrderRepository {
         return webResultWrs;
     }
 
+    public cWebresult pAddDocumentToCurrentShipmentViaWebserviceWrs(String pvDocumentStr) {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mAddDocumentToCurrentShipmentViaWebserviceAsyncTask().execute(pvDocumentStr).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     public Boolean pUpdateWorkplaceViaWebserviceBln() {
 
         cWebresult webResult;
@@ -990,6 +1007,53 @@ public class cPackAndShipOrderRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_CREATEPACKANDSHIPSHIPMENT, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mAddDocumentToCurrentShipmentViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(String... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_SHIPMENT;
+                l_PropertyInfo4Pin.setValue(cPackAndShipShipment.currentShipment.getSourceNoStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_SOURCEDOCUMENT;
+                l_PropertyInfo5Pin.setValue(params[0]);
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNERID;
+                l_PropertyInfo6Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PACKANDSHIPSHIPMENTADDDOCUMENT, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

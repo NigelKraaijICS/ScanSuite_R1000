@@ -10,24 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cText;
 import ICS.cAppExtension;
-import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
-import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
-import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
-import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPackAndShipOrderBarcodeAdapter extends RecyclerView.Adapter<cPackAndShipOrderBarcodeAdapter.packAndShipBarcodeViewHolder>  {
 
     //Region Public Properties
     public static class packAndShipBarcodeViewHolder extends RecyclerView.ViewHolder{
-        private TextView textViewBarcode;
-        private TextView textViewQuantity;
-        public LinearLayout barcodeItemLinearLayout;
+        private final TextView textViewBarcode;
+        public LinearLayout packAndShipBarcodeLinearLayout;
 
         public packAndShipBarcodeViewHolder(View pvItemView) {
             super(pvItemView);
@@ -37,15 +28,13 @@ public class cPackAndShipOrderBarcodeAdapter extends RecyclerView.Adapter<cPackA
             this.textViewBarcode.setSingleLine(true);
             this.textViewBarcode.setMarqueeRepeatLimit(5);
             this.textViewBarcode.setSelected(true);
-            this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
-            this.barcodeItemLinearLayout = pvItemView.findViewById(R.id.barcodeLinearLayout);
+            this.packAndShipBarcodeLinearLayout = pvItemView.findViewById(R.id.packAndShipBarcodeLinearLayout);
         }
     }
     //End Region Public Properties
 
     //Region Private Properties
     private final LayoutInflater layoutInflaterObject;
-    private static cPackAndShipBarcode packAndShipBarcode;
     //End Region Private Properties
 
     //Region Constructor
@@ -59,7 +48,7 @@ public class cPackAndShipOrderBarcodeAdapter extends RecyclerView.Adapter<cPackA
     @NonNull
     @Override
     public packAndShipBarcodeViewHolder onCreateViewHolder(@NonNull ViewGroup pvParent, int pvViewTypeInt) {
-        View itemView = this.layoutInflaterObject.inflate(R.layout.recycler_barcode, pvParent, false);
+        View itemView = this.layoutInflaterObject.inflate(R.layout.recycler_packandship_barcode, pvParent, false);
         return new packAndShipBarcodeViewHolder(itemView);
     }
 
@@ -70,10 +59,9 @@ public class cPackAndShipOrderBarcodeAdapter extends RecyclerView.Adapter<cPackA
         cPackAndShipBarcode selectedPackAndShipBarcode = cPackAndShipBarcode.allPackAndShipOrderBarcodesObl.get(pvPositionInt);
 
         pvHolder.textViewBarcode.setText(selectedPackAndShipBarcode.getBarcodeStr());
-        pvHolder.textViewQuantity.setVisibility(View.GONE);
 
 
-        pvHolder.barcodeItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+        pvHolder.packAndShipBarcodeLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

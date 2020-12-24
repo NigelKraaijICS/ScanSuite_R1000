@@ -157,7 +157,7 @@ public class InventoryArticleDetailFragment extends DialogFragment implements iI
         this.toolbarImage = requireView().findViewById(R.id.toolbarImage);
         this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
 
-        this.articleContainer = getView().findViewById(R.id.articleContainer);
+        this.articleContainer = getView().findViewById(R.id.addressContainer);
         this.articleInfoContainer = getView().findViewById(R.id.articleInfoContainer);
         this.articleThumbImageView = getView().findViewById(R.id.articleThumbImageView);
 

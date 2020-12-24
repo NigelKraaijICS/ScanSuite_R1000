@@ -52,7 +52,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
-import okhttp3.internal.platform.ConscryptPlatform;
 
 public class SortorderSortActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -224,7 +223,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.textViewAction = findViewById(R.id.textViewAction);
         this.textAdviceLocation = findViewById(R.id.textAdviceLocation);
 
-        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleContainer = findViewById(R.id.addressContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
     }

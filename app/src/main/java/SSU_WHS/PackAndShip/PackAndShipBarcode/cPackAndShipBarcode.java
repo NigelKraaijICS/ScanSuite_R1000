@@ -10,15 +10,10 @@ import java.util.List;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
-import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeEntity;
-import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeViewModel;
-import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 
 public class cPackAndShipBarcode {
 
-    private cPackAndShipBarcodeEntity packAndShipBarcodeEntity;
+    private final cPackAndShipBarcodeEntity packAndShipBarcodeEntity;
 
     public static List<cPackAndShipBarcode> allPackAndShipOrderBarcodesObl;
     //Region Public Properties
@@ -92,38 +87,7 @@ public class cPackAndShipBarcode {
         this.quantityHandledDbl = this.packAndShipBarcodeEntity.getQuantityHandled();
     }
 
-    public cPackAndShipBarcode(cArticleBarcode pvArticleBarcode) {
-        this.packAndShipBarcodeEntity = null;
-        this.barcode = pvArticleBarcode.getBarcodeStr();
-        this.barcodetype = cText.pIntToStringStr(pvArticleBarcode.getBarcodeTypeInt());
-        this.isuniquebarcode = pvArticleBarcode.isUniqueBarcodeBln;
-        this.itemno = pvArticleBarcode.getItemNoStr();
-        this.variantCode = pvArticleBarcode.getVariantCodeStr();
-        this.quantityPerUnitOfMeasure = pvArticleBarcode.getQuantityPerUnitOfMeasureDbl();
-        this.unitOfMeasure = pvArticleBarcode.getUnitOfMeasureStr();
-        this.quantityHandledDbl = (double) 0;
-    }
-
-
-
     //End Region Constructor
-
-    public static cPackAndShipBarcode pGetMoveOrderBarcodeByBarcode(String pvBarcodeStr){
-
-        if (cPackAndShipBarcode.allPackAndShipOrderBarcodesObl == null) {
-            return  null;
-        }
-
-        for (cPackAndShipBarcode packAndShipBarcode : cPackAndShipBarcode.allPackAndShipOrderBarcodesObl ) {
-
-            if (packAndShipBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr) || packAndShipBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeStr)) {
-                return  packAndShipBarcode;
-            }
-        }
-
-        return  null;
-
-    }
 
     public static boolean pTruncateTableBln(){
 

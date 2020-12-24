@@ -744,5 +744,14 @@
     <string name="screentitle_packandship_multi">Inpakken en Verzenden Multi</string>
     <string name="message_shipment_incomplete">Zending incompleet</string>
     <string name="message_workplaces_not_available">Werkplekken niet beschikbaar</string>
+    <string name="number_of_documents">Documenten:</string>
+    <string name="documents">Documenten</string>
+    <string name="scan_next_document_or_close">Scan document voor zelfde adres, of OK om te verzenden</string>
+    <string name="message_no_addresses_to_check">Geen adressen om to controleren</string>
+    <string name="message_address_mismatch">Adres komt niet overeen</string>
+    <string name="message_addressname_mismatch">Ontvanger komt niet overeen</string>
+    <string name="message_zipcode_mismatch">Postcode komt niet overeen</string>
+    <string name="message_city_mismatch">Plaatsnaam komt niet overeen</string>
+    <string name="message_country_mismatch">Land komt niet overeen</string>
 
 </resources>

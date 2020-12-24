@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +27,7 @@ import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
+import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
@@ -34,11 +37,14 @@ import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddress;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcode;
 import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipLine;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanDocumentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
@@ -52,12 +58,13 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
     //Region Private Properties
 
+    private ConstraintLayout packAndShipSingleConstraintLayout;
+
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
 
-    private TextView sourcenoText;
-
+    private CardView addressContainer;
     private TextView addressNameText;
     private TextView addressAddressText;
     private TextView addressZipCodeText;
@@ -174,12 +181,12 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
     @Override
     public void mFindViews() {
 
+        this.packAndShipSingleConstraintLayout = findViewById(R.id.packAndShipSingleConstraintLayout);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
 
-        this.sourcenoText = findViewById(R.id.sourcenoText);
-
+        this.addressContainer = findViewById(R.id.addressContainer);
         this.addressNameText = findViewById(R.id.addressNameText);
         this.addressAddressText = findViewById(R.id.addressAddressText);
         this.addressZipCodeText = findViewById(R.id.addressZipCodeText);
@@ -209,15 +216,17 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
         this.toolbarTitle.setSelected(true);
 
+        String toolBarSubTitleStr = cAppExtension.activity.getString(R.string.novalueyet);
+
         if (cPackAndShipOrder.currentPackAndShipOrder != null) {
-            this.toolbarSubTitle.setText(cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr());
+            toolBarSubTitleStr = cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr();
         }
 
-        else
-        {
-            this.toolbarSubTitle.setText(R.string.novalueyet);
+        if (this.scannedDocumentStr != null && !this.scannedDocumentStr.isEmpty()) {
+            toolBarSubTitleStr += " " + this.scannedDocumentStr;
         }
 
+        this.toolbarSubTitle.setText(toolBarSubTitleStr);
         this.toolbarSubTitle.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -241,11 +250,11 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
             public void run() {
                 mSetToolbar(getResources().getString(R.string.screentitle_packandship_single));
                 mSetActionText();
-                mSetSourceNo();
                 mSetAddress();
                 mSetShippingInfo();
                 mSetShippingUnits();
                 mSetButtons();
+                mCheckEmptyScreen();
             }
         });
     }
@@ -334,7 +343,6 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
     }
 
-
     //End Region Public Methods
 
     private  void mGoBackToSelectActivity() {
@@ -390,26 +398,14 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
     }
 
-    private void mSetSourceNo() {
-
-        if (cPackAndShipShipment.currentShipment == null) {
-            this.sourcenoText.setText(cAppExtension.activity.getString(R.string.novalueyet));
-            return;
-        }
-        this.sourcenoText.setText(this.scannedDocumentStr);
-    }
-
     private void mSetAddress() {
 
         if (cPackAndShipOrder.currentPackAndShipOrder == null || cPackAndShipShipment.currentShipment == null) {
-            this.addressNameText.setText(R.string.novalueyet);
-            this.addressAddressText.setText(R.string.novalueyet);
-            this.addressZipCodeText.setText(R.string.novalueyet);
-            this.addressCityText.setText(R.string.novalueyet);
-            this.addressCountryText.setText(R.string.novalueyet);
+             this.addressContainer.setVisibility(View.INVISIBLE);
             return;
         }
 
+        this.addressContainer.setVisibility(View.VISIBLE);
         this.addressNameText.setText(cPackAndShipShipment.currentShipment.deliveryAddress().getAddressNameStr());
         this.addressAddressText.setText(cPackAndShipShipment.currentShipment.deliveryAddress().getAddressStr());
         this.addressZipCodeText.setText(cPackAndShipShipment.currentShipment .deliveryAddress().getZipcodeStr());
@@ -435,7 +431,7 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
     private void mSetButtons() {
 
 
-        this.imageViewShippingDone.setVisibility(View.GONE);
+        this.imageViewShippingDone.setVisibility(View.INVISIBLE);
 
        if (cPackAndShipShipment.currentShipment == null) {
            return;
@@ -608,7 +604,7 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        hulpRst =   cPackAndShipOrder.currentPackAndShipOrder.pGetDocumentAndDetailsRst(pvBarcodeWithoutPrefixStr);
+        hulpRst =   cPackAndShipOrder.currentPackAndShipOrder.pGetFirstDocumentAndDetailsRst(pvBarcodeWithoutPrefixStr);
         if (!hulpRst.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
             return;
@@ -748,4 +744,36 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
         workplaceFragment.setCancelable(false);
         workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
     }
+
+    private void mCheckEmptyScreen() {
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                cUserInterface.pHideGettingData();
+
+                if (cPackAndShipShipment.currentShipment == null) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    ScanDocumentFragment fragment = new ScanDocumentFragment();
+                    fragmentTransaction.replace(R.id.packAndShipSingleConstraintLayout, fragment);
+                    fragmentTransaction.commit();
+                    actionTextView.setVisibility(View.GONE);
+                    return;
+                }
+
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof ScanDocumentFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                        actionTextView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
+    }
+
 }

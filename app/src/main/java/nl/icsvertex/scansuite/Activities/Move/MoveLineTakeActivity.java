@@ -296,7 +296,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleContainer = findViewById(R.id.addressContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
         this.articleDescriptionText = findViewById(R.id.articleDescriptionText);

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,12 +40,13 @@ import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcode;
 import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipLine;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanDocumentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
 
 public class PackAndShipMultiActivity extends AppCompatActivity implements iICSDefaultActivity {
-
 
     //Region Public Properties
 
@@ -56,8 +58,7 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
 
-    private TextView sourcenoText;
-
+    private CardView addressContainer;
     private TextView addressNameText;
     private TextView addressAddressText;
     private TextView addressZipCodeText;
@@ -68,12 +69,12 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     private Spinner shippinAgentServiceSpinner;
 
     private RecyclerView recyclerUnitsUsed;
-
-    private ImageView imageViewShippingDone;
     private TextView actionTextView;
+    private ImageView imageViewShippingDone;
 
-    private String scannedDocumentStr;
-    private String scannedDocumentToHandleStr;
+    private CardView documentContainerPackAndShip;
+    private TextView documentText;
+    private ImageView imageViewDocuments;
 
     private cShippingAgentServiceShippingUnitAdapter shippingAgentServiceShippingUnitAdapter;
     private cShippingAgentServiceShippingUnitAdapter getShippingAgentServiceShippingUnitAdapter(){
@@ -178,13 +179,16 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
 
-        this.sourcenoText = findViewById(R.id.sourcenoText);
-
+        this.addressContainer = findViewById(R.id.addressContainer);
         this.addressNameText = findViewById(R.id.addressNameText);
         this.addressAddressText = findViewById(R.id.addressAddressText);
         this.addressZipCodeText = findViewById(R.id.addressZipCodeText);
         this.addressCityText = findViewById(R.id.addressCityText);
         this.addressCountryText = findViewById(R.id.addressCountryText);
+
+        this.documentContainerPackAndShip = findViewById(R.id.documentContainerPackAndShip);
+        this.documentText = findViewById(R.id.documentText);
+        this.imageViewDocuments = findViewById(R.id.imageViewDocuments);
 
         this.recyclerUnitsUsed = findViewById(R.id.recyclerUnitsUsed);
         this.actionTextView = findViewById(R.id.actionTextView);
@@ -209,14 +213,17 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
 
         this.toolbarTitle.setSelected(true);
 
+        String toolBarSubTitleStr = cAppExtension.activity.getString(R.string.novalueyet);
+
         if (cPackAndShipOrder.currentPackAndShipOrder != null) {
-            this.toolbarSubTitle.setText(cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr());
+            toolBarSubTitleStr = cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr();
         }
 
-        else
-        {
-            this.toolbarSubTitle.setText(R.string.novalueyet);
+        if (cPackAndShipShipment.currentShipment != null) {
+            toolBarSubTitleStr += " " + cPackAndShipShipment.currentShipment.getSourceNoStr();
         }
+
+        this.toolbarSubTitle.setText(toolBarSubTitleStr);
 
         this.toolbarSubTitle.setSelected(true);
 
@@ -232,20 +239,17 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     @Override
     public void mFieldsInitialize() {
 
-        if (cPackAndShipOrder.currentPackAndShipOrder != null && cPackAndShipOrder.currentPackAndShipOrder.barcodesObl() != null && cPackAndShipOrder.currentPackAndShipOrder.barcodesObl().size() > 0 ) {
-            this.scannedDocumentStr = cPackAndShipOrder.currentPackAndShipOrder.barcodesObl().get(0).getBarcodeStr();
-        }
-
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mSetToolbar(getResources().getString(R.string.screentitle_packandship_multi));
                 mSetActionText();
-                mSetSourceNo();
                 mSetAddress();
                 mSetShippingInfo();
                 mSetShippingUnits();
+                mSetDocumentInfo();
                 mSetButtons();
+                mCheckEmptyScreen();
             }
         });
     }
@@ -255,6 +259,7 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
         this.mSetDocumentDoneListener();
         this.mSetShippingAgentSpinnerListener();
         this.mSetShippingAgentServiceSpinnerListener();
+        this.mSetDocumentsListener();
     }
 
     @Override
@@ -334,22 +339,12 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
 
     }
 
-
     //End Region Public Methods
 
     private  void mGoBackToSelectActivity() {
 
         if (cPackAndShipOrder.currentPackAndShipOrder != null) {
-
-
-            if (cPackAndShipShipment.allShipmentsObl== null || cPackAndShipShipment.allShipmentsObl.size() == 0) {
-                cPackAndShipOrder.currentPackAndShipOrder.pDeleteViaWebserviceBln();
-            }
-            else
-            {
-                cPackAndShipOrder.currentPackAndShipOrder.pLockReleaseViaWebserviceBln();
-            }
-
+            cPackAndShipOrder.currentPackAndShipOrder.pDeleteViaWebserviceBln();
         }
 
         this.mResetCurrents();
@@ -362,7 +357,6 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     }
 
     private void mResetCurrents() {
-        this.scannedDocumentStr = "";
 
         cPackAndShipOrder.currentPackAndShipOrder = null;
         cPackAndShipShipment.currentShipment = null;
@@ -386,30 +380,18 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
             return;
         }
 
-        this.actionTextView.setText(getString(R.string.scan_next_document_to_close_current));
+        this.actionTextView.setText(getString(R.string.scan_next_document_or_close));
 
-    }
-
-    private void mSetSourceNo() {
-
-        if (cPackAndShipShipment.currentShipment == null) {
-            this.sourcenoText.setText(cAppExtension.activity.getString(R.string.novalueyet));
-            return;
-        }
-        this.sourcenoText.setText(this.scannedDocumentStr);
     }
 
     private void mSetAddress() {
 
         if (cPackAndShipOrder.currentPackAndShipOrder == null || cPackAndShipShipment.currentShipment == null) {
-            this.addressNameText.setText(R.string.novalueyet);
-            this.addressAddressText.setText(R.string.novalueyet);
-            this.addressZipCodeText.setText(R.string.novalueyet);
-            this.addressCityText.setText(R.string.novalueyet);
-            this.addressCountryText.setText(R.string.novalueyet);
+              this.addressContainer.setVisibility(View.INVISIBLE);
             return;
         }
 
+        this.addressContainer.setVisibility(View.VISIBLE);
         this.addressNameText.setText(cPackAndShipShipment.currentShipment.deliveryAddress().getAddressNameStr());
         this.addressAddressText.setText(cPackAndShipShipment.currentShipment.deliveryAddress().getAddressStr());
         this.addressZipCodeText.setText(cPackAndShipShipment.currentShipment .deliveryAddress().getZipcodeStr());
@@ -435,7 +417,7 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     private void mSetButtons() {
 
 
-        this.imageViewShippingDone.setVisibility(View.GONE);
+        this.imageViewShippingDone.setVisibility(View.INVISIBLE);
 
         if (cPackAndShipShipment.currentShipment == null) {
             return;
@@ -446,6 +428,20 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
 
         this.imageViewShippingDone.setVisibility(View.VISIBLE);
 
+    }
+
+    private void mSetDocumentsListener() {
+        this.imageViewDocuments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View pvView) {
+
+                if (cPackAndShipBarcode.allPackAndShipOrderBarcodesObl == null || cPackAndShipBarcode.allPackAndShipOrderBarcodesObl.size() == 0) {
+                    return;
+                }
+
+                mShowDocumentSelectFragment();
+            }
+        });
     }
 
     private void mSetDocumentDoneListener() {
@@ -530,13 +526,6 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
 
         //Rebuild activity
         this.mFieldsInitialize();
-
-        if (this.scannedDocumentToHandleStr != null && !this.scannedDocumentToHandleStr .isEmpty()) {
-            //Handle new scan
-            this.pHandleScan(cBarcodeScan.pFakeScan(this.scannedDocumentToHandleStr));
-            this.scannedDocumentToHandleStr = "";
-        }
-
     }
 
     private  void mShowSending() {
@@ -574,55 +563,72 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
 
         cResult hulpRst;
 
-        //We scanned a new barcode and we already have a pack and ship order
-        if (this.scannedDocumentStr != null && !this.scannedDocumentStr.isEmpty() && !this.scannedDocumentStr.equalsIgnoreCase(pvBarcodeWithoutPrefixStr)) {
+        // This is the first document
+        if (cPackAndShipShipment.currentShipment == null) {
+            hulpRst = cPackAndShipOrder.pCreatePackAndShipOrderPSMViaWebserviceRst(pvBarcodeWithoutPrefixStr);
+            if (!hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),pvBarcodeWithoutPrefixStr,true,true);
+                return;
+            }
 
-            this.scannedDocumentToHandleStr = pvBarcodeWithoutPrefixStr;
+            hulpRst  = cPackAndShipOrder.currentPackAndShipOrder.pLockViaWebserviceRst();
+            //Everything was fine, so we are done
+            if (!hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),pvBarcodeWithoutPrefixStr,true,true);
+                return;
+            }
 
-            //Hide getting data
+            hulpRst  = cPackAndShipOrder.currentPackAndShipOrder.pGetOrderDetailsRst();
+            //Everything was fine, so we are done
+            if (!hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),pvBarcodeWithoutPrefixStr,true,true);
+                return;
+            }
+
+            hulpRst =   cPackAndShipOrder.currentPackAndShipOrder.pGetFirstDocumentAndDetailsRst(pvBarcodeWithoutPrefixStr);
+            if (!hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
+                return;
+            }
+
+            hulpRst = cPackAndShipOrder.currentPackAndShipOrder.pAddShipmentViaWebserviceRst();
+            if (!hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(), "", true, true);
+                return;
+            }
+
             cUserInterface.pHideGettingData();
-
-            //Close current order
-            this.pHandleDocumentDone();
-
+            this.mFieldsInitialize();
             return;
         }
 
-        hulpRst = cPackAndShipOrder.pCreatePackAndShipOrderPS1ViaWebserviceRst(pvBarcodeWithoutPrefixStr);
-        if (!hulpRst.resultBln) {
-            cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),pvBarcodeWithoutPrefixStr,true,true);
-            return;
-        }
 
-        hulpRst  = cPackAndShipOrder.currentPackAndShipOrder.pLockViaWebserviceRst();
-        //Everything was fine, so we are done
-        if (!hulpRst.resultBln) {
-            cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),pvBarcodeWithoutPrefixStr,true,true);
-            return;
-        }
-
-        hulpRst  = cPackAndShipOrder.currentPackAndShipOrder.pGetOrderDetailsRst();
-        //Everything was fine, so we are done
-        if (!hulpRst.resultBln) {
-            cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),pvBarcodeWithoutPrefixStr,true,true);
-            return;
-        }
-
-        hulpRst =   cPackAndShipOrder.currentPackAndShipOrder.pGetDocumentAndDetailsRst(pvBarcodeWithoutPrefixStr);
+        hulpRst =   cPackAndShipOrder.currentPackAndShipOrder.pGetNextDocumentAndDetailsRst(pvBarcodeWithoutPrefixStr);
         if (!hulpRst.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
             return;
         }
 
-        hulpRst = cPackAndShipOrder.currentPackAndShipOrder.pAddShipmentViaWebserviceRst();
+        hulpRst = cPackAndShipOrder.currentPackAndShipOrder.pAddDocumentToCurrentShipmentViaWebserviceRst(pvBarcodeWithoutPrefixStr);
         if (!hulpRst.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(), "", true, true);
             return;
         }
 
-        this.scannedDocumentStr = pvBarcodeWithoutPrefixStr;
         cUserInterface.pHideGettingData();
         this.mFieldsInitialize();
+
+    }
+
+    private void mSetDocumentInfo() {
+
+        if (cPackAndShipShipment.currentShipment == null || cPackAndShipBarcode.allPackAndShipOrderBarcodesObl == null || cPackAndShipBarcode.allPackAndShipOrderBarcodesObl.size() == 0) {
+            this.documentContainerPackAndShip.setVisibility(View.GONE);
+            return;
+        }
+
+        this.documentContainerPackAndShip.setVisibility(View.VISIBLE);
+        this.documentText.setText(cAppExtension.activity.getString(R.string.number_of_documents) + " " + cPackAndShipBarcode.allPackAndShipOrderBarcodesObl.size());
 
     }
 
@@ -748,4 +754,41 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
         workplaceFragment.setCancelable(false);
         workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
     }
+
+    private void mShowDocumentSelectFragment() {
+        BarcodeFragment barcodeFragment = new BarcodeFragment();
+        barcodeFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BARCODEPICKERFRAGMENT_TAG);
+    }
+
+    private void mCheckEmptyScreen() {
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                cUserInterface.pHideGettingData();
+
+                if (cPackAndShipShipment.currentShipment == null) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    ScanDocumentFragment fragment = new ScanDocumentFragment();
+                    fragmentTransaction.replace(R.id.packAndShipMultiConstraintLayout, fragment);
+                    fragmentTransaction.commit();
+                    actionTextView.setVisibility(View.GONE);
+                    return;
+                }
+
+                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+                for (Fragment fragment : fragments) {
+                    if (fragment instanceof ScanDocumentFragment) {
+                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                        fragmentTransaction.remove(fragment);
+                        fragmentTransaction.commit();
+                        actionTextView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
+    }
+
 }

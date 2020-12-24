@@ -864,10 +864,19 @@
     <string name="error_get_shipping_methods_failed">Get Shipping Methods failed</string>
     <string name="scan_document">Scan document</string>
     <string name="scan_next_document_to_close_current">Scan next document to close current or press OK</string>
+    <string name="scan_next_document_or_close">Scan next document for same address or press OK to Send</string>
     <string name="message_shipment_not_send">Shipment not send</string>
     <string name="message_shipment_send">Shipment  send</string>
     <string name="message_shipment_incomplete">Shipment incomplete</string>
     <string name="message_workplaces_not_available">Workplaces not available</string>
+    <string name="number_of_documents">Documents:</string>
+    <string name="documents">Documents</string>
+    <string name="message_no_addresses_to_check">No addresses to check</string>
+    <string name="message_address_mismatch">Address mismatch</string>
+    <string name="message_addressname_mismatch">AddressName mismatch</string>
+    <string name="message_zipcode_mismatch">Zipcode mismatch</string>
+    <string name="message_city_mismatch">City mismatch</string>
+    <string name="message_country_mismatch">Country mismatch</string>
 
     <!--End Region return-->
 

@@ -41,14 +41,12 @@ import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLineViewModel;
 import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
-import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
@@ -188,7 +186,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleContainer = findViewById(R.id.addressContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);

@@ -1,0 +1,34 @@
+<androidx.cardview.widget.CardView android:id="@+id/documentContainerPackAndShip"
+    style="@style/articleInfoContainer"
+    app:layout_constraintTop_toBottomOf="@id/addressContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        >
+        <androidx.appcompat.widget.AppCompatImageView
+            style="@style/smallBottomButton"
+            android:id="@+id/imageViewDocuments"
+            app:srcCompat="@drawable/ic_document_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            />
+        <TextView
+            android:id="@+id/documentText"
+            style="@style/defaultinfoText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageViewDocuments"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -223,7 +223,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.textViewAction = findViewById(R.id.textViewAction);
-        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleContainer = findViewById(R.id.addressContainer);
     }
 
     @Override

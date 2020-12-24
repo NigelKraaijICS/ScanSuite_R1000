@@ -321,7 +321,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
         this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
 
-        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleContainer = findViewById(R.id.addressContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
     }

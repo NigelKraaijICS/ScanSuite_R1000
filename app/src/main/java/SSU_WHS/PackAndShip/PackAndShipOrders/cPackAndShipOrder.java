@@ -653,7 +653,7 @@ public class cPackAndShipOrder {
         return  result;
     }
 
-    public cResult pGetDocumentAndDetailsRst(String pvDocumentStr){
+    public cResult pGetFirstDocumentAndDetailsRst(String pvDocumentStr){
 
         cResult result = new cResult();
         result.resultBln = true;
@@ -662,7 +662,7 @@ public class cPackAndShipOrder {
         if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject, false);
+                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject, true);
                 packAndShipShipment.pInsertInDatabaseBln();
                 cPackAndShipShipment.currentShipment = packAndShipShipment;
 
@@ -706,6 +706,47 @@ public class cPackAndShipOrder {
         }
     }
 
+    public cResult pGetNextDocumentAndDetailsRst(String pvDocumentStr) {
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pGetDocumentAndDetailsViaWebserviceWrs(pvDocumentStr);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                try {
+                    JSONArray adressesObl    = jsonObject.getJSONArray(cDatabase.ADDRESSES_NAMESTR);
+
+                    for (int i = 0, size = adressesObl.length(); i < size; i++)
+                    {
+                        JSONObject object =adressesObl.getJSONObject(i);
+                        cPackAndShipAddress packAndShipAddress = new cPackAndShipAddress(object, true);
+
+                        cResult hulpRst = this.pValidateShipmentRst(packAndShipAddress);
+                        if (!hulpRst.resultBln) {
+                            result.resultBln = false;
+                            result.pAddErrorMessage(hulpRst.messagesStr());
+                            return result;
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return result;
+            }
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETSOURCEDOCUMENTSHIPPINGDATA);
+            result.resultBln = false;
+            result.pAddErrorMessage(WebResult.getResultStr());
+            return result;
+        }
+
+        return  result;
+    }
+
     public cResult pAddShipmentViaWebserviceRst() {
 
         cResult result = new cResult();
@@ -723,6 +764,69 @@ public class cPackAndShipOrder {
                     {
                         JSONObject object =linesObl.getJSONObject(i);
                         cPackAndShipShipment.currentShipment.sourceNoStr = object.getString(cDatabase.SOURCENO_NAMESTR);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    JSONArray barcodeObl   = jsonObject.getJSONArray(cDatabase.BARCODE_NAMESTR);
+
+                    for (int i = 0, size = barcodeObl.length(); i < size; i++)
+                    {
+                        JSONObject object =barcodeObl.getJSONObject(i);
+                        cPackAndShipBarcode packAndShipBarcode = new cPackAndShipBarcode(object);
+                        packAndShipBarcode.pInsertInDatabaseBln();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return  result;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET);
+            result.resultBln = false;
+            return result;
+        }
+
+
+    }
+
+    public cResult pAddDocumentToCurrentShipmentViaWebserviceRst(String pvDocumentStr) {
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult = this.getPackAndShipOrderViewModel().pAddDocumentToCurrentShipmentViaWebserviceWrs(pvDocumentStr);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+
+                try {
+                    JSONArray linesObl   = jsonObject.getJSONArray(cDatabase.LINE_NAMESTR);
+
+                    for (int i = 0, size = linesObl.length(); i < size; i++)
+                    {
+                        JSONObject object =linesObl.getJSONObject(i);
+                        cPackAndShipShipment.currentShipment.sourceNoStr = object.getString(cDatabase.SOURCENO_NAMESTR);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    JSONArray barcodeObl   = jsonObject.getJSONArray(cDatabase.BARCODE_NAMESTR);
+
+                    for (int i = 0, size = barcodeObl.length(); i < size; i++)
+                    {
+                        JSONObject object =barcodeObl.getJSONObject(i);
+                        cPackAndShipBarcode packAndShipBarcode = new cPackAndShipBarcode(object);
+                        packAndShipBarcode.pInsertInDatabaseBln();
                     }
 
                 } catch (JSONException e) {
@@ -827,11 +931,11 @@ public class cPackAndShipOrder {
             }
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject, true);
+                cPackAndShipShipment packAndShipShipment = new cPackAndShipShipment(jsonObject, false);
                 packAndShipShipment.pInsertInDatabaseBln();
             }
 
-            if (cPackAndShipOrder.currentPackAndShipOrder.getOrderTypeStr().equalsIgnoreCase("PS1") &&  cPackAndShipShipment.allShipmentsObl.size() ==1) {
+            if (cPackAndShipShipment.allShipmentsObl.size()  > 0) {
                 cPackAndShipShipment.currentShipment = cPackAndShipShipment.allShipmentsObl.get(0);
             }
 
@@ -1018,6 +1122,52 @@ public class cPackAndShipOrder {
         }
 
         return  null;
+
+    }
+
+    public cResult pValidateShipmentRst(cPackAndShipAddress pvPackAndShipAddress) {
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        if (cPackAndShipShipment.currentShipment.deliveryAddress() == null ) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_addresses_to_check));
+            return  result;
+        }
+
+       if (!pvPackAndShipAddress.getAddressNameStr().equalsIgnoreCase(cPackAndShipShipment.currentShipment.deliveryAddress().getAddressNameStr())) {
+           result.resultBln = false;
+           result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_addressname_mismatch));
+           return  result;
+       }
+
+        if (!pvPackAndShipAddress.getAddressStr().equalsIgnoreCase(cPackAndShipShipment.currentShipment.deliveryAddress().getAddressStr())) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_address_mismatch));
+            return  result;
+        }
+
+        if (!pvPackAndShipAddress.getZipcodeStr().equalsIgnoreCase(cPackAndShipShipment.currentShipment.deliveryAddress().getZipcodeStr())) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_zipcode_mismatch));
+            return  result;
+        }
+
+        if (!pvPackAndShipAddress.getCityStr().equalsIgnoreCase(cPackAndShipShipment.currentShipment.deliveryAddress().getCityStr())) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_city_mismatch));
+            return  result;
+        }
+
+        if (!pvPackAndShipAddress.getCountryStr().equalsIgnoreCase(cPackAndShipShipment.currentShipment.deliveryAddress().getCountryStr())) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_country_mismatch));
+            return  result;
+        }
+
+
+        return  result;
 
     }
 

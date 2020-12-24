@@ -149,7 +149,7 @@ public class cPackAndShipShipment {
             return  null;
         }
 
-        if ( this.getDeliveryAddressCodeStr() == null ||  getDeliveryAddressCodeStr().isEmpty()) {
+        if ( this.getDeliveryAddressCodeStr() == null ||  getDeliveryAddressCodeStr().isEmpty() || cPackAndShipAddress.allAddressesObl.size() == 1) {
             return cPackAndShipAddress.allAddressesObl.get(0);
         }
 

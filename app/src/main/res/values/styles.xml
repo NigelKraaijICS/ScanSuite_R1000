@@ -540,7 +540,7 @@
     <style name="addressContainer">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:padding">@dimen/default_half_padding</item>
         <item name="android:elevation" tools:targetApi="lollipop">@dimen/extramenu_card_elevation</item>
         <item name="android:layout_margin">@dimen/extramenu_card_margin</item>
         <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorWhite</item>
@@ -584,6 +584,20 @@
         <item name="android:textSize">@dimen/textsize_normal</item>
         <item name="android:textColor">@color/colorTextLighter</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
+    </style>
+    <style name="addressTextPackAndShip">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorTextDarkest</item>
+        <item name="android:layout_margin">@dimen/default_half_margin</item>
+    </style>
+    <style name="addressSmallerTextPackAndShip">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textColor">@color/colorTextLighter</item>
+        <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="addressTextNoConstraint">
         <item name="android:layout_height">wrap_content</item>

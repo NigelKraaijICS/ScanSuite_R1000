@@ -404,7 +404,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
         }
 
         if (cPackAndShipOrder.currentPackAndShipOrder.getOrderTypeStr().equalsIgnoreCase(cWarehouseorder.WorkflowEnu.PSM.toString())) {
-            intent = new Intent(cAppExtension.context, PackAndShipSelectActivity.class);
+            intent = new Intent(cAppExtension.context, PackAndShipMultiActivity.class);
         }
 
         cUserInterface.pCheckAndCloseOpenDialogs();

@@ -281,7 +281,7 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
 
         this.recyclerScanActions = findViewById(R.id.recyclerScanActions);
 
-        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleContainer = findViewById(R.id.addressContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
     }
 

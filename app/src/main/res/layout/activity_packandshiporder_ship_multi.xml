@@ -4,92 +4,69 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Activities.PackAndShip.PackAndShipSingleActivity"
+    tools:context=".Activities.PackAndShip.PackAndShipMultiActivity"
     android:animateLayoutChanges="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/packAndShipMultiConstraintLayout">
     <include layout="@layout/toolbar_subtext_default" />
-    <include layout="@layout/default_addressinfo" />
-    <include layout="@layout/default_shippinginfo" />
-    <androidx.cardview.widget.CardView
-        android:id="@+id/sourceNoContainer"
-        style="@style/articleInfoContainer"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+    <include layout="@layout/default_addressinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/default_double_padding">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            >
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="@dimen/textsize_enormous"
-                android:layout_height="@dimen/textsize_enormous"
-                app:srcCompat="@drawable/ic_document_black_24dp"
-                android:tint="@color/colorDivider"
-                app:layout_constraintEnd_toStartOf="@id/sourcenoText"
-                app:layout_constraintTop_toTopOf="@id/sourcenoText"
-                app:layout_constraintBottom_toBottomOf="@id/sourcenoText"/>
-            <TextView
-                android:id="@+id/sourcenoText"
-                style="@style/defaultinfoSmallerText"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerBarcodes"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_marginBottom="@dimen/default_margin"
-        app:layout_constraintTop_toBottomOf="@id/shippingInfoContainer"
+        android:layout_margin="@dimen/default_double_margin"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"  />
+    <include layout="@layout/default_documentinfo_packandship"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        app:layout_constraintTop_toBottomOf="@id/addressContainer"
+        app:layout_constraintBottom_toTopOf="@id/shippingAgentContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <include layout="@layout/default_shippingagentinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        app:layout_constraintTop_toBottomOf="@id/documentContainerPackAndShip"
         app:layout_constraintBottom_toTopOf="@id/recyclerUnitsUsed"
-        >
-    </androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerUnitsUsed"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginBottom="@dimen/default_margin"
-        app:layout_constraintTop_toBottomOf="@id/recyclerBarcodes"
+        app:layout_constraintTop_toBottomOf="@id/shippingAgentContainer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/actionTextView"
+        app:layout_constraintBottom_toTopOf="@id/imageViewShippingDone"
         >
     </androidx.recyclerview.widget.RecyclerView>
     <TextView
         android:id="@+id/actionTextView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textsize_big"
-        android:layout_marginTop="@dimen/default_double_margin"
-        android:layout_marginLeft="@dimen/default_double_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/imageViewShippingDone"
+        android:textSize="@dimen/textsize_normal"
+        android:layout_margin="@dimen/default_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageViewShippingDone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imageViewShippingDone"
         android:visibility="gone"
         android:elevation="@dimen/default_elevation"
         />
     <androidx.appcompat.widget.AppCompatImageView
         style="@style/defaultBottomButton"
-        android:id="@+id/imageViewPackaging"
-        app:srcCompat="@drawable/ic_package_black_24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:clickable="true"
-        android:focusable="true"
-        />
-    <androidx.appcompat.widget.AppCompatImageView
-        style="@style/defaultBottomButton"
         android:id="@+id/imageViewShippingDone"
-        app:srcCompat="@drawable/ic_check_black_24dp"
+        app:srcCompat="@drawable/ic_send_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:clickable="true"
         android:focusable="true"
         />
+</androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

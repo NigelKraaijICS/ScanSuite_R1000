@@ -11,8 +11,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,13 +27,10 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
-import ICS.Utils.cRegex;
-import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -47,7 +42,6 @@ import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
@@ -219,7 +213,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.textViewAction = findViewById(R.id.textViewAction);
-        this.articleContainer = findViewById(R.id.articleContainer);
+        this.articleContainer = findViewById(R.id.addressContainer);
     }
 
     @Override
