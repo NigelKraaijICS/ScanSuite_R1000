@@ -103,12 +103,12 @@ import SSU_WHS.General.cDatabase;
                 this.addrescode = pvJsonObject.getString(cDatabase.ADDRESCODE_NAMESTR);
                 this.name = pvJsonObject.getString(cDatabase.NAMEDUTCH_NAMESTR);
                 this.nameAddition = pvJsonObject.getString(cDatabase.NAMEADDITION_NAMESTR);
-                this.address = pvJsonObject.getString(cDatabase.ADDRESS_NAMESTR);
+                this.address = pvJsonObject.getString(cDatabase.ADDRES_NAMESTR);
                 this.addressAddition = pvJsonObject.getString(cDatabase.ADDRESSADDITION_NAMESTR);
-                this.street = pvJsonObject.getString(cDatabase.STREET_NAMESTR);
+                this.street = pvJsonObject.getString(cDatabase.STREETNL_NAMESTR);
                 this.addressNumber = pvJsonObject.getString(cDatabase.ADDRESSNUMBER_NAMESTR);
                 this.addressNumberAddition = pvJsonObject.getString(cDatabase.ADDRESSNUMBERADDITION_NAMESTR);
-                this.zipcode = pvJsonObject.getString(cDatabase.ZIPCODE_NAMESTR);
+                this.zipcode = pvJsonObject.getString(cDatabase.ZIPCODENL_NAMESTR);
                 this.city = pvJsonObject.getString(cDatabase.CITYNL_NAMESTR);
                 this.country = pvJsonObject.getString(cDatabase.COUNTRYNL_NAMESTR);
             } catch (JSONException e) {
