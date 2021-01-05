@@ -182,6 +182,8 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_PACKANDSHIPSHIPMENTHANDLED = "p_PackAndShipShipmentHandledJsonStr";
     public static String WEBMETHOD_PACKANDSHIPHANDLED = "p_PackAndShipOrderHandledJsonStr";
     public static String WEBMETHOD_PACKANDSHIPDELETE = "p_PackAndShipVervallenJsonStr";
+    public static String WEBMETHOD_RECEIVEDELETE = "p_ReceiveVervallenJsonStr";
+
 
     public static String WEBMETHOD_PACKANDSHIPUPDATE = "p_PackAndShipOrderUpdateJsonStr";
     public static String WEBMETHOD_PACKANDSHIPSHIPMENTADDDOCUMENT = "p_PackAndShipShipmentDocumentAddJsonStr";

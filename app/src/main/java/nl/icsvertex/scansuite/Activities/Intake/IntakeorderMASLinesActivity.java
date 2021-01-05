@@ -36,6 +36,8 @@ import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLineAdapter;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLineRecyclerItemTouchHelper;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
+import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
@@ -309,7 +311,20 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     public void pLeaveActivity() {
 
-        cIntakeorder.currentIntakeOrder.pLockReleaseViaWebserviceBln();
+
+        if (cIntakeorder.currentIntakeOrder != null) {
+
+
+            if (cIntakeorder.currentIntakeOrder.summaryMATLinesObl() == null || cIntakeorder.currentIntakeOrder.summaryMATLinesObl().size() == 0) {
+                cIntakeorder.currentIntakeOrder.pDeleteViaWebserviceBln();
+            }
+            else
+            {
+                cIntakeorder.currentIntakeOrder.pLockReleaseViaWebserviceBln();
+            }
+
+        }
+
         this.mStartOrderSelectActivity();
     }
 

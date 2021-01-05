@@ -35,8 +35,10 @@ public class cIntakeorderViewModel  extends AndroidViewModel {
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
 
 
-    public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvCheckBarcodesBln);}
+    public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, String pvBinStr,  boolean pvCheckBarcodesBln) {return this.Repository.pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvBinStr, pvCheckBarcodesBln);}
     public cWebresult pCreateReceiverOderViaWebserviceWrs(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateReceiveOrderViaWebserviceWrs(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);}
+
+    public cWebresult pDeleteViaWebserviceWrs() {return this.Repository.pDeleteViaWebserviceWrs(); }
 
     public List<cIntakeorderEntity> pGetIntakeordersFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.Repository.pGetIntakeordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 

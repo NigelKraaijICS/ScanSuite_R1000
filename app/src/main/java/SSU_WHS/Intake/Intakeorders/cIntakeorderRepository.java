@@ -24,6 +24,8 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.General.cDatabase;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrderRepository;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -43,10 +45,12 @@ public class cIntakeorderRepository {
     private static class IntakeCreateParams {
 
         String documentStr;
+        String binStr;
         boolean checkBarcodesBln;
 
-        IntakeCreateParams(String pvDocumentStr,boolean pvCheckBarcodesBln ) {
+        IntakeCreateParams(String pvDocumentStr,String pvBinStr, boolean pvCheckBarcodesBln ) {
             this.documentStr = pvDocumentStr;
+            this.binStr = pvBinStr;
             this.checkBarcodesBln = pvCheckBarcodesBln;
         }
     }
@@ -390,16 +394,33 @@ public class cIntakeorderRepository {
     }
 
 
-    public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, boolean pvCheckBarcodesBln) {
+    public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, String pvBinStr, boolean pvCheckBarcodesBln) {
 
         List<String> resultObl = new ArrayList<>();
         IntakeCreateParams intakeCreateParams;
-        intakeCreateParams = new IntakeCreateParams(pvDocumentStr, pvCheckBarcodesBln);
+        intakeCreateParams = new IntakeCreateParams(pvDocumentStr,pvBinStr, pvCheckBarcodesBln);
 
         cWebresult webResultWrs = new cWebresult();
 
         try {
             webResultWrs = new mCreateIntakeOrderViaWebserviceAsyncTask().execute(intakeCreateParams).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pDeleteViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new cIntakeorderRepository.mDeleteViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -963,7 +984,7 @@ public class cIntakeorderRepository {
 
                 PropertyInfo l_PropertyInfo11Pin = new PropertyInfo();
                 l_PropertyInfo11Pin.name = cWebserviceDefinitions.WEBPROPERTY_RECEIVEBIN;
-                l_PropertyInfo11Pin.setValue(cUser.currentUser.currentBranch.getReceiveDefaultBinStr());
+                l_PropertyInfo11Pin.setValue(params[0].binStr);
                 l_PropertyInfoObl.add(l_PropertyInfo11Pin);
 
                 PropertyInfo l_PropertyInfo12Pin = new PropertyInfo();
@@ -1071,6 +1092,42 @@ public class cIntakeorderRepository {
                 l_WebresultWrs.setResultBln(false);
             }
             return l_WebresultWrs;
+        }
+    }
+
+    private static class mDeleteViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(String... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
+                l_PropertyInfo4Pin.setValue("");
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_RECEIVEDELETE, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
         }
     }
 

@@ -671,6 +671,18 @@ public class cIntakeorder {
         return Objects.requireNonNull(Webresult).getSuccessBln() && Webresult.getResultBln();
     }
 
+
+    public boolean pDeleteViaWebserviceBln() {
+
+        cWebresult Webresult;
+
+        Webresult =  this.getIntakeorderViewModel().pDeleteViaWebserviceWrs();
+        if (Webresult.getResultBln() && Webresult.getSuccessBln()) {
+            return  true;
+        }
+        return  false;
+    }
+
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
         if (pvRefeshBln) {
             cComment.allCommentsObl = null;
@@ -1077,7 +1089,7 @@ public class cIntakeorder {
 
      }
 
-    public static cResult pCreateIntakeOrderViaWebserviceRst(String pvDocumentStr,boolean pvCheckBarcodesBln) {
+    public static cResult pCreateIntakeOrderViaWebserviceRst(String pvDocumentStr, String pvBinStr, boolean pvCheckBarcodesBln) {
 
 
         cResult result;
@@ -1087,7 +1099,7 @@ public class cIntakeorder {
         cWebresult WebResult;
 
         cIntakeorderViewModel intakeorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
-        WebResult = intakeorderViewModel.pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr,  pvCheckBarcodesBln);
+        WebResult = intakeorderViewModel.pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvBinStr, pvCheckBarcodesBln);
 
         //No result, so something really went wrong
         if (WebResult == null) {

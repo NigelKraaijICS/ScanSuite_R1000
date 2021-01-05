@@ -254,7 +254,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
 
     //Region Private Method
 
-    private  void mCreateOrder(final String pvDocumentStr, final boolean pvCheckBarcodesBln){
+    private  void mCreateOrder(final String pvDocumentStr, final String pvBinStr, final boolean pvCheckBarcodesBln){
 
 
         // Show that we are getting data
@@ -262,7 +262,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
 
         new Thread(new Runnable() {
             public void run() {
-                mHandleCreateOrder(pvDocumentStr,pvCheckBarcodesBln);
+                mHandleCreateOrder(pvDocumentStr,pvBinStr,pvCheckBarcodesBln);
             }
         }).start();
 
@@ -289,6 +289,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
             public void onClick(View pvView) {
                 IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
                 mCreateOrder(editTextDocument.getText().toString().trim(),
+                        editTextBin.getText().toString().trim(),
                         switchCheckBarcodes.isChecked());
             }
         });
@@ -307,11 +308,11 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    private  void mHandleCreateOrder(String pvDocumentstr, boolean pvCheckBarcodesBln ){
+    private  void mHandleCreateOrder(String pvDocumentstr, String pvBinStr,  boolean pvCheckBarcodesBln ){
 
         cResult hulpResult;
 
-        hulpResult = this.mTryToCreateOrderRst(pvDocumentstr,pvCheckBarcodesBln);
+        hulpResult = this.mTryToCreateOrderRst(pvDocumentstr,pvBinStr,pvCheckBarcodesBln);
         if (!hulpResult.resultBln) {
             return;
         }
@@ -371,9 +372,9 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    private  cResult mTryToCreateOrderRst(String pvDocumentstr, boolean pvCheckBarcodesBln){
+    private  cResult mTryToCreateOrderRst(String pvDocumentstr, String pvBinStr, boolean pvCheckBarcodesBln){
 
-        cResult result =  cIntakeorder.pCreateIntakeOrderViaWebserviceRst(pvDocumentstr, pvCheckBarcodesBln);
+        cResult result =  cIntakeorder.pCreateIntakeOrderViaWebserviceRst(pvDocumentstr, pvBinStr, pvCheckBarcodesBln);
         if (!result.resultBln) {
             this.editTextDocument.setText("");
             mStepFailed(result.messagesStr());
