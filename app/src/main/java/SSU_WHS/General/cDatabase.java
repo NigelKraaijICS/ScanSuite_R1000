@@ -27,6 +27,9 @@ public class cDatabase {
     public static final String TABLENAME_COMMENT = "Comment";
     public static final String TABLENAME_AUTHORISATIONS = "Authorisations";
     public static final String TABLENAME_SALESORDERPACKINGTABLE = "SalesOrderPackingTable";
+
+    public static final String TABLENAME_PICKORDERLINES = "Pickorderlines";
+    public static final String TABLENAME_PICKORDERLINEPROPERTY = "PickorderlineProperty";
     public static final String TABLENAME_PICKORDERSETTING = "PickorderSetting";
     public static final String TABLENAME_PICKORDERADDRESS = "PickorderAddress";
     public static final String TABLENAME_SHIPPINGAGENTS = "ShippingAgents";
@@ -312,6 +315,7 @@ public class cDatabase {
     public static final String PRINTDOCUMENTS_NAMESTR = "PrintDocuments";
     public static final String PROCESSINGSEQUENCE_NAMESTR = "ProcessingSequence";
     public static final String PROPERTY_NAMESTR = "Property";
+    public static final String PROPERTYCODE_NAMESTR = "PropertyCode";
     public static final String PROPERTYDUTCH_NAMESTR = "Propertie";
     public static final String PROPERTYSDUTCH_NAMESTR = "Properties";
     public static final String PROPERTYGROUP_NAMESTR = "Propertiegroep";
@@ -457,7 +461,8 @@ public class cDatabase {
     //endregion U
 
     //region V
-    public static final String VALUE_NAMESTR = "Waarde";
+    public static final String VALUE_NAMESTR = "Value";
+    public static final String VALUENL_NAMESTR = "Waarde";
     public static final String VARIANTCODE_NAMESTR = "VariantCode";
     public static final String VENDORITEMNO_NAMESTR = "VendorItemNo";
     public static final String VENDORITEMDESCRIPTION_NAMESTR = "VendorItemDescription";

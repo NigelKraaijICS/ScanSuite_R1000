@@ -9,6 +9,7 @@ import androidx.room.Query;
 import java.util.List;
 
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.General.cDatabase;
 
 @Dao
 public interface iPickorderLineDao {
@@ -20,10 +21,10 @@ public interface iPickorderLineDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(cPickorderLineEntity pickorderLineEntity);
 
-    @Query("DELETE FROM Pickorderlines")
+    @Query("DELETE FROM " + cDatabase.TABLENAME_PICKORDERLINES)
     void deleteAll();
 
-    @Query("SELECT * FROM Pickorderlines")
+    @Query("SELECT * FROM " + cDatabase.TABLENAME_PICKORDERLINES)
     List<cPickorderLineEntity> getAll();
 
    //Quantity's

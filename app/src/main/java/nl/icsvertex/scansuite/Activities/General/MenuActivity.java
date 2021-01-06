@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.crashlytics.*;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -37,13 +38,9 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderSelectActivity;
-import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
-import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
-import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveMISinglepieceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipSelectActivity;
@@ -101,6 +98,10 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
         // Standard methods to initialize the Activity
         this.mActivityInitialize();
+
+        FirebaseCrashlytics.getInstance().setUserId("jostiband");
+
+//        throw new RuntimeException("Test Crash"); // Force a crash
     }
 
     @Override

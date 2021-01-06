@@ -7,131 +7,95 @@ import androidx.room.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cDatabase;
 
-@Entity(tableName="Pickorderlines")
+@Entity(tableName=cDatabase.TABLENAME_PICKORDERLINES)
 public class cPickorderLineEntity {
-
 
     @PrimaryKey(autoGenerate = true)
     public Integer recordid;
     public Integer getRecordidInt() {return this.recordid;}
 
-    @ColumnInfo(name = "LineNo")
+    @ColumnInfo(name = cDatabase.LINENO_NAMESTR )
     public Integer lineno;
     public Integer getLineNoInt() {return this.lineno;}
 
-    @ColumnInfo(name = "ItemNo")
+    @ColumnInfo(name = cDatabase.ITEMNO_NAMESTR)
     public String itemno;
     public String getItemNoStr() {return this.itemno;}
 
-    @ColumnInfo(name = "VariantCode")
+    @ColumnInfo(name = cDatabase.VARIANTCODE_NAMESTR)
     public String variantcode;
     public String getVariantCodeStr() {return this.variantcode;}
 
-    @ColumnInfo(name = "Description")
+    @ColumnInfo(name = cDatabase.DESCRIPTION_NAMESTR)
     public String description;
     public String getDescriptionStr() {return this.description;}
 
-    @ColumnInfo(name = "Description2")
+    @ColumnInfo(name = cDatabase.DESCRIPTION2_NAMESTR)
     public String description2;
     public String getDescription2Str() {return this.description2;}
 
-    @ColumnInfo(name = "BinCode")
+    @ColumnInfo(name = cDatabase.BINCODE_NAMESTR)
     public String bincode;
     public String getBincodeStr() {return this.bincode;}
 
-    @ColumnInfo(name = "Quantity")
+    @ColumnInfo(name = cDatabase.QUANTITY_NAMESTR)
     public Double quantity;
     public Double getQuantityDbl() {return this.quantity;}
 
-    @ColumnInfo(name = "QuantityHandled")
+    @ColumnInfo(name = cDatabase.QUANTITYHANDLED_NAMESTR)
     public Double quantityhandled;
     public Double getQuantityHandledDbl() {return this.quantityhandled;}
 
-    @ColumnInfo(name = "QuantityRejected")
+    @ColumnInfo(name = cDatabase.QUANTITYREJECTED_NAMESTR)
     public Double quantityRejected;
     public Double getQuantityRejected() {return this.quantityRejected;}
 
-
-
-    @ColumnInfo(name = "SourceNo")
+    @ColumnInfo(name =cDatabase.SOURCENO_NAMESTR)
     public String sourceno;
     public String getSourceNoStr() {return this.sourceno;}
 
-    @ColumnInfo(name = "DestinationNo")
+    @ColumnInfo(name = cDatabase.DESTINATIONNO_NAMESTR)
     public String destinationno;
     public String getDestinationNoStr() {return this.destinationno;}
 
-    @ColumnInfo(name = "ProcessingSequence")
+    @ColumnInfo(name = cDatabase.PROCESSINGSEQUENCE_NAMESTR)
     public String processingsequence;
     public String getProcessingSequenceStr() {return this.processingsequence;}
 
-    @ColumnInfo(name = "VendorItemNo")
+    @ColumnInfo(name = cDatabase.VENDORITEMNO_NAMESTR)
     public String vendoritemno;
     public String getVendorItemNoStr() {return this.vendoritemno;}
 
-    @ColumnInfo(name = "VendorItemDescription")
+    @ColumnInfo(name = cDatabase.VENDORITEMDESCRIPTION_NAMESTR)
     public String vendoritemdescription;
     public String getVendorItemDescriptionStr() {return this.vendoritemdescription;}
 
-    @ColumnInfo(name = "Status")
+    @ColumnInfo(name = cDatabase.STATUS_NAMESTR)
     public Integer status;
     public int getStatusInt() {return this.status;}
 
-    @ColumnInfo(name = "StatusShipping")
+    @ColumnInfo(name = cDatabase.STATUSSHIPPING_NAMESTR)
     public Integer statusShipping;
     public int getStatusShippingInt() {return this.statusShipping;}
 
-    @ColumnInfo(name = "StatusPacking")
+    @ColumnInfo(name = cDatabase.STATUSPACKING_NAMESTR)
     public Integer statusPacking;
     public int getStatusPackingInt() {return this.statusPacking;}
 
-    @ColumnInfo(name = "QuantityTaken")
+    @ColumnInfo(name = cDatabase.QUANTITYTAKEN_NAMESTR)
     public double quantitytaken;
     public Double getQuantityTakenDbl() {return this.quantitytaken;}
 
-    @ColumnInfo(name = "TakenTimeStamp")
+    @ColumnInfo(name = cDatabase.TAKENTIMESTAMP_NAMESTR)
     public String takenTimeStamp;
     public String getTakenTimeStampStr() {return this.takenTimeStamp;}
 
-    @ColumnInfo(name = "Localstatus")
+    @ColumnInfo(name = cDatabase.LOCALSTATUS_NAMESTR)
     public int localstatus;
     public int getLocalstatusInt() {return this.localstatus;}
-
-    @ColumnInfo(name = "ExtraField1")
-    public String extrafield1;
-    public String getExtraField1Str() {return this.extrafield1;}
-
-    @ColumnInfo(name = "ExtraField2")
-    public String extrafield2;
-    public String getExtraField2Str() {return this.extrafield2;}
-
-    @ColumnInfo(name = "ExtraField3")
-    public String extrafield3;
-    public String getExtraField3Str() {return this.extrafield3;}
-
-    @ColumnInfo(name = "ExtraField4")
-    public String extrafield4;
-    public String getExtraField4Str() {return this.extrafield4;}
-
-    @ColumnInfo(name = "ExtraField5")
-    public String extrafield5;
-    public String getExtraField5Str() {return this.extrafield5;}
-
-    @ColumnInfo(name = "ExtraField6")
-    public String extrafield6;
-    public String getExtraField6Str() {return this.extrafield6;}
-
-    @ColumnInfo(name = "ExtraField7")
-    public String extrafield7;
-    public String getExtraField7Str() {return this.extrafield7;}
-
-    @ColumnInfo(name = "ExtraField8")
-    public String extrafield8;
-    public String getExtraField8Str() {return this.extrafield8;}
 
     //empty constructor
     public cPickorderLineEntity() {
@@ -186,118 +150,6 @@ public class cPickorderLineEntity {
                         this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
                     }
                 }
-            }
-
-
-            //region extraField1Str
-            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD1().trim().isEmpty()) {
-                try {
-                    this.extrafield1 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD1());
-                }
-                catch (JSONException e) {
-                    this.extrafield1 = "";
-                }
-            }
-            else {
-                this.extrafield1 = "";
-            }
-            //endregion extraField1Str
-
-            //region extraField2Str
-            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD2().trim().isEmpty()) {
-                try {
-                    this.extrafield2 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD2());
-                }
-                catch (JSONException e) {
-                    this.extrafield2 = "";
-                }
-            }
-            else {
-                this.extrafield2 = "";
-            }
-            //endregion extraField2Str
-
-            //region extraField3Str
-            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD3().trim().isEmpty()) {
-                try {
-                    this.extrafield3 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD3());
-                }
-                catch (JSONException e) {
-                    this.extrafield3 = "";
-                }
-            }
-            else {
-                this.extrafield3 = "";
-            }
-            //endregion extraField3Str
-
-            //region extraField4Str
-            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD4().trim().isEmpty()) {
-                try {
-                    this.extrafield4 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD4());
-                }
-                catch (JSONException e) {
-                    this.extrafield4 = "";
-                }
-            }
-            else {
-                this.extrafield4 = "";
-            }
-            //endregion extraField4Str
-
-            //region extraField5Str
-            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD5().trim().isEmpty()) {
-                try {
-                    this.extrafield5 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD5());
-                }
-                catch (JSONException e) {
-                    this.extrafield5 = "";
-                }
-            }
-            else {
-                this.extrafield5 = "";
-            }
-            //endregion extraField5Str
-
-            //region extraField6Str
-            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD6().trim().isEmpty()) {
-                try {
-                    this.extrafield6 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD6());
-                }
-                catch (JSONException e) {
-                    this.extrafield6 = "";
-                }
-            }
-            else {
-                this.extrafield6 = "";
-            }
-            //endregion extraField6Str
-
-            //region extraField7Str
-            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD7().trim().isEmpty()) {
-                try {
-                    this.extrafield7 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD7());
-                }
-                catch (JSONException e) {
-                    this.extrafield7 = "";
-                }
-            }
-            else {
-                this.extrafield7 = "";
-            }
-            //endregion extraField7Str
-
-            //region extraField8Str
-            if (!cSetting.GENERIC_ITEM_EXTRA_FIELD8().trim().isEmpty()) {
-                try {
-                    this.extrafield8 = pvJsonObject.getString(cSetting.GENERIC_ITEM_EXTRA_FIELD8());
-                }
-                catch (JSONException e) {
-                    this.extrafield8 = "";
-                }
-            }
-            else {
-                this.extrafield8 = "";
             }
             //endregion extraField8Str
 

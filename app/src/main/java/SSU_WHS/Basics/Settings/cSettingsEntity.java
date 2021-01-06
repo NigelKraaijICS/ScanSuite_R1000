@@ -19,7 +19,7 @@ public class cSettingsEntity {
     public String name = "";
     public String getNameStr() {return this.name;}
 
-    @ColumnInfo(name= cDatabase.VALUE_NAMESTR)
+    @ColumnInfo(name= cDatabase.VALUENL_NAMESTR)
     public String value;
     public String getValueStr() {return this.value;}
 
@@ -32,7 +32,7 @@ public class cSettingsEntity {
     public cSettingsEntity(JSONObject jsonObject) {
         try {
             this.name = jsonObject.getString(cDatabase.SETTING_NAMESTR);
-            this.value = jsonObject.getString(cDatabase.VALUE_NAMESTR);
+            this.value = jsonObject.getString(cDatabase.VALUENL_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

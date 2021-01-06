@@ -19,10 +19,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
-import org.json.JSONException;
 
 import java.util.concurrent.ExecutionException;
 
@@ -49,11 +48,10 @@ import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
 import SSU_WHS.Basics.Translations.cTranslation;
 import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.ScannerLogon.cScannerLogon;
 import SSU_WHS.Webservice.cWebservice;
-import io.fabric.sdk.android.Fabric;
+
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
 import nl.icsvertex.scansuite.Fragments.Main.DateTimeFragment;
@@ -110,7 +108,12 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         this.mSetSerialNumberIfPossible();
 
         //set Crashlytics, otherwise Firebase wont work
-        Fabric.with(this, new Crashlytics());
+        FirebaseAnalytics.getInstance(this);
+
+
+
+
+
     }
 
     @Override
