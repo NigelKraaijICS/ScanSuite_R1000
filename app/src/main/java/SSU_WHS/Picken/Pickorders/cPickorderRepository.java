@@ -21,6 +21,7 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
+import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyRepository;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.Shipment.cShipment;
@@ -566,8 +567,6 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
-
-
     public List<cPickorderLineEntity> pGetAllLinesFromDatabaseObl() {
 
         List<cPickorderLineEntity> resultObl = null;
@@ -665,7 +664,6 @@ public class cPickorderRepository {
         return resultDbl;
     }
 
-
     //Pick Order details
 
     public cWebresult pGetAddressesFromWebserviceWrs() {
@@ -702,8 +700,6 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
-
-
     public cWebresult pGetBarcodesFromWebservice(){
         ArrayList<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
@@ -726,6 +722,23 @@ public class cPickorderRepository {
 
         try {
             webResultWrs = new mPickorderLineBarcodesGetFromWebserviceAsyncTask().execute(pvActionTypeEnu.toString()).get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetLinePropertysViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetPropertysViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -1613,7 +1626,6 @@ public class cPickorderRepository {
         }
     }
 
-
     private static class mGetPickorderPackagesFromWebserviceTask extends AsyncTask<Void, Void, cWebresult> {
         @Override
         protected cWebresult doInBackground(final Void... params) {
@@ -1704,6 +1716,37 @@ public class cPickorderRepository {
             }
 
             return WebresultWrs;
+        }
+    }
+
+    private static class mGetPropertysViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(String... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+                l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.PICKEN.toString());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
         }
     }
 

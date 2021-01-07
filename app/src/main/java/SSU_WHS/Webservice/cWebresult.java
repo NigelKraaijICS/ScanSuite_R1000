@@ -2,6 +2,8 @@ package SSU_WHS.Webservice;
 
 import android.util.Log;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,13 +94,25 @@ public class cWebresult {
         return vResultDtt;
     }
 
-    public static cWebresult pGetwebresultWrs(String pv_methodNameStr, List<PropertyInfo> pv_PropertyInfoObl) throws JSONException {
+    public static cWebresult pGetwebresultWrs(String pvMethodNameStr, List<PropertyInfo> pvPropertyInfoObl) throws JSONException {
+
+        try {
+            if (pvPropertyInfoObl != null) {
+                FirebaseCrashlytics.getInstance().log("Webmethod: " +  pvMethodNameStr + " PropertyObl: " + pvPropertyInfoObl.toString());
+            }
+            else
+            {
+                FirebaseCrashlytics.getInstance().log("Webmethod: " +  pvMethodNameStr + " NO PARAMETERS");
+            }
+        } catch (Exception e) {
+            return null;
+        }
 
         cWebresult l_WebresultWrs = new cWebresult();
         l_WebresultWrs.vResultDtt = new ArrayList<>();
         l_WebresultWrs.vResultObl = new ArrayList<>();
 
-        SoapObject request = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, pv_methodNameStr);
+        SoapObject request = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, pvMethodNameStr);
 
         URL url;
         boolean isHTTPSBln;
@@ -129,9 +143,9 @@ public class cWebresult {
             return l_WebresultWrs;
         }
 
-        if (pv_PropertyInfoObl != null) {
-            for (int i = 0; i < pv_PropertyInfoObl.size(); i++) {
-                PropertyInfo propertyInfo = pv_PropertyInfoObl.get(i);
+        if (pvPropertyInfoObl != null) {
+            for (int i = 0; i < pvPropertyInfoObl.size(); i++) {
+                PropertyInfo propertyInfo = pvPropertyInfoObl.get(i);
                 request.addProperty(propertyInfo);
             }
         }
@@ -159,12 +173,12 @@ public class cWebresult {
                     public boolean verify(String s, SSLSession sslSession) {
                         return true;
                     }
-                });                httpsTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pv_methodNameStr, envelope);
+                });                httpsTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pvMethodNameStr, envelope);
             }
             else {
                 HttpTransportSE httpTransport = new HttpTransportSE(url.toString());
                 try {
-                    httpTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pv_methodNameStr, envelope);
+                    httpTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pvMethodNameStr, envelope);
                 }
                 catch (Exception e) {
                     l_WebresultWrs.setSuccessBln(false);
@@ -264,7 +278,7 @@ public class cWebresult {
             }
         }
         if (!l_WebresultWrs.getSuccessBln() || !l_WebresultWrs.getResultBln()) {
-            mHandleWeberror(l_WebresultWrs,pv_methodNameStr, pv_PropertyInfoObl);
+            mHandleWeberror(l_WebresultWrs,pvMethodNameStr, pvPropertyInfoObl);
         }
         return l_WebresultWrs;
     }

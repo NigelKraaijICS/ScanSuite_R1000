@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
 
@@ -260,6 +261,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
         //Set the current pickorder
         cPickorder.currentPickOrder = pvPickorder;
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cPickorder.currentPickOrder.getOrderNumberStr());
 
         new Thread(new Runnable() {
             public void run() {
@@ -618,6 +620,13 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         if (!cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true, cWarehouseorder.ActionTypeEnu.PLACE)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
+            return result;
+        }
+
+        // Get all propertys, if webservice error then stop
+        if (!cPickorder.currentPickOrder.pGetLinePropertysViaWebserviceBln(true )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
             return result;
         }
 

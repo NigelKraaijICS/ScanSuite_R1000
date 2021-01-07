@@ -20,6 +20,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.PackAndShip.PackAndShipAddress.cPackAndShipAddress;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcode;
 import SSU_WHS.PackAndShip.PackAndShipLines.cPackAndShipLine;
@@ -589,6 +592,8 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
             cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),pvBarcodeWithoutPrefixStr,true,true);
             return;
         }
+
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr());
 
         hulpRst  = cPackAndShipOrder.currentPackAndShipOrder.pLockViaWebserviceRst();
         //Everything was fine, so we are done

@@ -18,7 +18,7 @@ public class cItemPropertyEntity {
     public String property = "";
     public String getPropertyStr() { return property;}
 
-    @ColumnInfo(name = cDatabase.LAYOUTVALUE_NAMESTR)
+    @ColumnInfo(name = cDatabase.LAYOUT_NAMESTR)
     public String layout;
     public String getLayoutStr() { return layout;}
 
@@ -52,7 +52,7 @@ public class cItemPropertyEntity {
     public cItemPropertyEntity(JSONObject jsonObject) {
         try {
             this.property = jsonObject.getString(cDatabase.PROPERTY_NAMESTR);
-            this.layout = jsonObject.getString(cDatabase.LAYOUTVALUE_NAMESTR);
+            this.layout = jsonObject.getString(cDatabase.LAYOUT_NAMESTR);
             this.omschrijving = jsonObject.getString(cDatabase.OMSCHRIJVING_NAMESTR);
             this.isUnique = jsonObject.getBoolean(cDatabase.ISUNIQUE_NAMESTR);
             this.uniqueness = jsonObject.getString(cDatabase.UNIQUNESS_NAMESTR);

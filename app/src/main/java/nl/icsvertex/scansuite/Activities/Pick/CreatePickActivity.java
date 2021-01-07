@@ -19,6 +19,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
@@ -322,6 +324,8 @@ public class CreatePickActivity extends AppCompatActivity implements iICSDefault
             return;
         }
 
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cPickorder.currentPickOrder.getOrderNumberStr());
+
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -387,10 +391,17 @@ public class CreatePickActivity extends AppCompatActivity implements iICSDefault
             return result;
         }
 
-        // Get all barcodes, if webservice error then stop
+        // Get all propertys, if webservice error then stop
         if (!cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true,cWarehouseorder.ActionTypeEnu.TAKE )) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
+            return result;
+        }
+
+        // Get all barcodes, if webservice error then stop
+        if (!cPickorder.currentPickOrder.pGetLinePropertysViaWebserviceBln(true )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
             return result;
         }
 

@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
@@ -268,6 +270,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         cUserInterface.pShowGettingData();
 
         cReturnorder.currentReturnOrder = pvReturnorder;
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cReturnorder.currentReturnOrder.getOrderNumberStr());
 
         new Thread(new Runnable() {
             public void run() {

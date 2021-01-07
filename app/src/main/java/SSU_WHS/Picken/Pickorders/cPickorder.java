@@ -2,7 +2,6 @@ package SSU_WHS.Picken.Pickorders;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +21,6 @@ import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroupViewModel;
-import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupProperty;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
@@ -33,13 +31,12 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
-import SSU_WHS.Move.MoveOrders.cMoveorderViewModel;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
+import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderSetting.cPickorderSetting;
@@ -1788,6 +1785,31 @@ public class cPickorder{
         }
     }
 
+
+    public boolean pGetLinePropertysViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cPickorderLineProperty.allLinePropertysObl = null;
+            cPickorderLineProperty.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pGetLinePropertysViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPickorderLineProperty pickorderLineProperty = new cPickorderLineProperty(jsonObject);
+                pickorderLineProperty.pInsertInDatabaseBln();
+            }
+
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET);
+            return  false;
+        }
+    }
+
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
 
         if (pvRefeshBln) {
@@ -2171,7 +2193,7 @@ public class cPickorder{
             cPickorderSetting.pTruncateTableBln();
 
         cWebresult WebResult;
-        WebResult =  this.getPickorderViewModel().pGetSetingsFromWebserviceWrs();
+        WebResult =  this.getPickorderViewModel().pGetSettingsFromWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {

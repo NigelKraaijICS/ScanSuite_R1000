@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
 
@@ -302,6 +303,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         //Set the current intakeorder
         cIntakeorder.currentIntakeOrder = pvIntakeorder;
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
         new Thread(new Runnable() {
             public void run() {

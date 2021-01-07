@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
 
@@ -44,6 +45,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorderAdapter;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
@@ -274,6 +276,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         //Set the current inventoryorder
         cInventoryorder.currentInventoryOrder = pvInventoryorder;
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cInventoryorder.currentInventoryOrder.getOrderNumberStr());
 
 
         new Thread(new Runnable() {

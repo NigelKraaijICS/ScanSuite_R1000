@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
 
@@ -263,6 +264,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
         //Set the current pickorder
         cPickorder.currentPickOrder = pvPickorder;
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cPickorder.currentPickOrder.getOrderNumberStr());
 
         new Thread(new Runnable() {
             public void run() {

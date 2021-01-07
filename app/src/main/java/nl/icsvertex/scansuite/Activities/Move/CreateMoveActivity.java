@@ -19,6 +19,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
@@ -411,6 +413,8 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
             this.mStepFailed(hulpResult.messagesStr());
             return;
         }
+
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cMoveorder.currentMoveOrder.getOrderNumberStr());
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override

@@ -13,75 +13,77 @@ import SSU_WHS.Webservice.cWebresult;
 public class cPickorderViewModel extends AndroidViewModel {
 
     //Region Public Properties
-    private cPickorderRepository PickorderRepository;
+    private cPickorderRepository Repository;
     //End Region Public Properties
 
 
     //Region Constructor
     public cPickorderViewModel(Application pvApplication) {
         super(pvApplication);
-        this.PickorderRepository = new cPickorderRepository(pvApplication);
+        this.Repository = new cPickorderRepository(pvApplication);
     }
     //End Region Constructor
 
     //Region Public Methods
-    public void insert(cPickorderEntity pvPickorderEntity) {this.PickorderRepository.insert(pvPickorderEntity);}
-    public void deleteAll() {this.PickorderRepository.deleteAll();}
-    public void pAbortOrder() {this.PickorderRepository.pAbortOrder();}
+    public void insert(cPickorderEntity pvPickorderEntity) {this.Repository.insert(pvPickorderEntity);}
+    public void deleteAll() {this.Repository.deleteAll();}
+    public void pAbortOrder() {this.Repository.pAbortOrder();}
 
-    public cWebresult pGetPickordersFromWebserviceWrs(Boolean pvProcessingOrParkedBln, String pvSearchTextStr) {return this.PickorderRepository.pGetPickordersFromWebserviceWrs(pvProcessingOrParkedBln,pvSearchTextStr);}
-    public cWebresult pGetPickordersNextStepFromWebserviceWrs(String pvUserStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {return this.PickorderRepository.pGetPickorderstPickordersNextStepFromWebserviceWrs(pvUserStr,pvStepCodeEnu,pvSearchTextStr);}
-    public List<cPickorderEntity> pGetPickordersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.PickorderRepository.pGetPickordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
+    public cWebresult pGetPickordersFromWebserviceWrs(Boolean pvProcessingOrParkedBln, String pvSearchTextStr) {return this.Repository.pGetPickordersFromWebserviceWrs(pvProcessingOrParkedBln,pvSearchTextStr);}
+    public cWebresult pGetPickordersNextStepFromWebserviceWrs(String pvUserStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {return this.Repository.pGetPickorderstPickordersNextStepFromWebserviceWrs(pvUserStr,pvStepCodeEnu,pvSearchTextStr);}
+    public List<cPickorderEntity> pGetPickordersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.Repository.pGetPickordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 
-    public cWebresult pPickenHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pPickHandledViaWebserviceBln(pvWorkplaceStr);}
-    public cWebresult pSortHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pSortHandledViaWebserviceBln(pvWorkplaceStr);}
-    public cWebresult pQCHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pQCHandledViaWebserviceBln(pvWorkplaceStr);}
-    public cWebresult pShipHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pShipHandledViaWebserviceWrs(pvWorkplaceStr);}
-    public cWebresult pFinishSinglePiecesHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.PickorderRepository.pFinishSinglePiecesHandledViaWebserviceWrs(pvWorkplaceStr);}
-    public cWebresult pPickorderSourceDocumentShippedViaWebserviceBln() { return this.PickorderRepository.pPickorderSourceDocumentShippedViaWebserviceWrs();}
+    public cWebresult pPickenHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pPickHandledViaWebserviceBln(pvWorkplaceStr);}
+    public cWebresult pSortHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pSortHandledViaWebserviceBln(pvWorkplaceStr);}
+    public cWebresult pQCHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pQCHandledViaWebserviceBln(pvWorkplaceStr);}
+    public cWebresult pShipHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pShipHandledViaWebserviceWrs(pvWorkplaceStr);}
+    public cWebresult pFinishSinglePiecesHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pFinishSinglePiecesHandledViaWebserviceWrs(pvWorkplaceStr);}
+    public cWebresult pPickorderSourceDocumentShippedViaWebserviceBln() { return this.Repository.pPickorderSourceDocumentShippedViaWebserviceWrs();}
 
-    public cWebresult pCreatePickOrderViaWebserviceWrs(String pvDocumentstr,  boolean pvCheckBarcodesBln) {return this.PickorderRepository.pCreatePickOrderViaWebserviceWrs(pvDocumentstr, pvCheckBarcodesBln);}
+    public cWebresult pCreatePickOrderViaWebserviceWrs(String pvDocumentstr,  boolean pvCheckBarcodesBln) {return this.Repository.pCreatePickOrderViaWebserviceWrs(pvDocumentstr, pvCheckBarcodesBln);}
 
-    public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {return this.PickorderRepository.pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);}
-    public Boolean pUpdatePickorderCurrentLocationInDatabaseBln(String pvCurrentLocationStr) {return this.PickorderRepository.pPickorderUpdatCurrentLocationInDatabaseBln(pvCurrentLocationStr);}
-    public boolean pUpdateIsSelectedBln() {return this.PickorderRepository.pPickorderUpdatIsSelectedInDatabaseBln();}
-    public Boolean pPickorderUpdateWorkplaceViaWebserviceBln(String pvWorkplaceStr) {return this.PickorderRepository.pPickorderUpdateWorkplaceViaWebserviceBln(pvWorkplaceStr);}
+    public cWebresult pUpdateCurrentLocationViaWebserviceWrs(String pvCurrentLocationStr) {return this.Repository.pUpdateCurrentLocationViaWebserviceWrs(pvCurrentLocationStr);}
+    public Boolean pUpdatePickorderCurrentLocationInDatabaseBln(String pvCurrentLocationStr) {return this.Repository.pPickorderUpdatCurrentLocationInDatabaseBln(pvCurrentLocationStr);}
+    public boolean pUpdateIsSelectedBln() {return this.Repository.pPickorderUpdatIsSelectedInDatabaseBln();}
+    public Boolean pPickorderUpdateWorkplaceViaWebserviceBln(String pvWorkplaceStr) {return this.Repository.pPickorderUpdateWorkplaceViaWebserviceBln(pvWorkplaceStr);}
 
-    public Double pQuantityNotHandledDbl() {return this.PickorderRepository.pQuantityNotHandledDbl();}
-    public Double pQuantityHandledDbl() {return this.PickorderRepository.pQuantityHandledDbl();}
-    public Double pGetQuantityTotalDbl() {return this.PickorderRepository.pGetTotalQuantityDbl();}
+    public Double pQuantityNotHandledDbl() {return this.Repository.pQuantityNotHandledDbl();}
+    public Double pQuantityHandledDbl() {return this.Repository.pQuantityHandledDbl();}
+    public Double pGetQuantityTotalDbl() {return this.Repository.pGetTotalQuantityDbl();}
 
-    public cWebresult pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu ) {return this.PickorderRepository.pGetLinesFromWebserviceWrs(pvActionTypeEnu);}
-    public List<cPickorderLineEntity> pGetAllLinesFromDatabaseObl(){return  this.PickorderRepository.pGetAllLinesFromDatabaseObl();}
-    public List<cPickorderLineEntity> pGetPickorderLinesToSendFromDatabaseObl(){return  this.PickorderRepository.pGetPickorderLinesToSendFromDatabaseObl();}
-    public List<cPickorderLineEntity> pGetLinesNotHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesNotHandledFromDatabaseObl();}
-    public List<cPickorderLineEntity> pGetLinesNotHandledForBranchFromDatabaseObl(String pvDestinationNoStr){return  this.PickorderRepository.pGetLinesNotHandledForBranchFromDatabaseObl(pvDestinationNoStr);}
-    public List<cPickorderLineEntity> pGetLinesBusyFromDatabaseObl(){return  this.PickorderRepository.pGetLinesBusyFromDatabaseObl();}
-    public List<cPickorderLineEntity> pGetLinesHandledFromDatabaseObl(){return  this.PickorderRepository.pGetLinesHandledFromDatabaseObl();}
+    public cWebresult pGetLinesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu ) {return this.Repository.pGetLinesFromWebserviceWrs(pvActionTypeEnu);}
+    public List<cPickorderLineEntity> pGetAllLinesFromDatabaseObl(){return  this.Repository.pGetAllLinesFromDatabaseObl();}
+    public List<cPickorderLineEntity> pGetPickorderLinesToSendFromDatabaseObl(){return  this.Repository.pGetPickorderLinesToSendFromDatabaseObl();}
+    public List<cPickorderLineEntity> pGetLinesNotHandledFromDatabaseObl(){return  this.Repository.pGetLinesNotHandledFromDatabaseObl();}
+    public List<cPickorderLineEntity> pGetLinesNotHandledForBranchFromDatabaseObl(String pvDestinationNoStr){return  this.Repository.pGetLinesNotHandledForBranchFromDatabaseObl(pvDestinationNoStr);}
+    public List<cPickorderLineEntity> pGetLinesBusyFromDatabaseObl(){return  this.Repository.pGetLinesBusyFromDatabaseObl();}
+    public List<cPickorderLineEntity> pGetLinesHandledFromDatabaseObl(){return  this.Repository.pGetLinesHandledFromDatabaseObl();}
 
-    public cWebresult pGetPackAndShipLinesFromWebserviceWrs( ) {return this.PickorderRepository.pGetPackAndShipLinesFromWebserviceWrs();}
+    public cWebresult pGetPackAndShipLinesFromWebserviceWrs( ) {return this.Repository.pGetPackAndShipLinesFromWebserviceWrs();}
 
-    public cWebresult pGetFinishPackSinglePieceLinesViaWebserviceWrs( ) {return this.PickorderRepository.pGetFinishPackSinglePieceLinesViaWebserviceWrsWrs();}
+    public cWebresult pGetFinishPackSinglePieceLinesViaWebserviceWrs( ) {return this.Repository.pGetFinishPackSinglePieceLinesViaWebserviceWrsWrs();}
 
-    public cWebresult pGetAdressesFromWebserviceWrs() {return this.PickorderRepository.pGetAddressesFromWebserviceWrs();}
+    public cWebresult pGetAdressesFromWebserviceWrs() {return this.Repository.pGetAddressesFromWebserviceWrs();}
 
-    public cWebresult pGetBarcodesFromWebserviceWrs() {return this.PickorderRepository.pGetBarcodesFromWebservice(); }
+    public cWebresult pGetBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebservice(); }
 
-    public cWebresult pGetLineBarcodesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {return this.PickorderRepository.pGetLineBarcodesFromWebservice(pvActionTypeEnu); }
+    public cWebresult pGetLineBarcodesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {return this.Repository.pGetLineBarcodesFromWebservice(pvActionTypeEnu); }
 
-    public cWebresult pGetCommentsFromWebserviceWrs() {return this.PickorderRepository.pGetCommentsFromWebservice(); }
+    public cWebresult pGetLinePropertysViaWebserviceWrs() {return this.Repository.pGetLinePropertysViaWebserviceWrs(); }
 
-    public cWebresult pGetSetingsFromWebserviceWrs() {return this.PickorderRepository.pGetSettingsFromWebserviceWrs();}
+    public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
 
-    public cWebresult pGetPackagesFromWebserviceWrs() {return this.PickorderRepository.pGetPackagesFromWebserviceWrs(); }
+    public cWebresult pGetSettingsFromWebserviceWrs() {return this.Repository.pGetSettingsFromWebserviceWrs();}
 
-    public cWebresult pCreateCombinedPickViaWebserviceWrs( ) {return this.PickorderRepository.pCreateCombinedPickViaWebserviceWrs();}
+    public cWebresult pGetPackagesFromWebserviceWrs() {return this.Repository.pGetPackagesFromWebserviceWrs(); }
 
-    public cWebresult pAddOrderToCombinedPickViaWebserviceWrs( ) {return this.PickorderRepository.pAddOrderToCombinedPickViaWebserviceWrs();}
+    public cWebresult pCreateCombinedPickViaWebserviceWrs( ) {return this.Repository.pCreateCombinedPickViaWebserviceWrs();}
 
-    public cWebresult pRemoveOrderFromCombinedPickViaWebserviceWrs( ) {return this.PickorderRepository.pRemoveOrderFromCombinedPickViaWebserviceWrs();}
+    public cWebresult pAddOrderToCombinedPickViaWebserviceWrs( ) {return this.Repository.pAddOrderToCombinedPickViaWebserviceWrs();}
 
-    public cWebresult pRemoveCombinedPickViaWebserviceWrs( ) {return this.PickorderRepository.pRemoveCombinedPickViaWebserviceWrs();}
+    public cWebresult pRemoveOrderFromCombinedPickViaWebserviceWrs( ) {return this.Repository.pRemoveOrderFromCombinedPickViaWebserviceWrs();}
+
+    public cWebresult pRemoveCombinedPickViaWebserviceWrs( ) {return this.Repository.pRemoveCombinedPickViaWebserviceWrs();}
 
     //End Region Public Methods
 }

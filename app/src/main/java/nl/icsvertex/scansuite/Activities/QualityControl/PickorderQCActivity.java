@@ -179,7 +179,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void mFindViews() {
 
-        this.pickorderQCContainer = findViewById(R.id.pickorderPickContainer);
+        this.pickorderQCContainer = findViewById(R.id.pickorderQCContainer);
 
         this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
@@ -210,9 +210,9 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
+    public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
-        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
         this.toolbarSubtext.setSelected(true);
         Toolbar toolbar = findViewById(R.id.toolbar);

@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import ICS.Utils.cDateAndTime;
@@ -22,8 +21,6 @@ import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
 import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupProperty;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.Pickorders.cPickorder;
@@ -147,46 +144,6 @@ public class cPickorderLine {
     private Integer localStatusInt;
     public Integer getLocalStatusInt() {
         return localStatusInt;
-    }
-
-    private final String extraField1Str;
-    public String getExtraField1Str() {
-        return extraField1Str;
-    }
-
-    private final String extraField2Str;
-    public String getExtraField2Str() {
-        return extraField2Str;
-    }
-
-    private final String extraField3Str;
-    public String getExtraField3Str() {
-        return extraField3Str;
-    }
-
-    private final String extraField4Str;
-    public String getExtraField4Str() {
-        return extraField4Str;
-    }
-
-    private final String extraField5Str;
-    public String getExtraField5Str() {
-        return extraField5Str;
-    }
-
-    private final String extraField6Str;
-    public String getExtraField6Str() {
-        return extraField6Str;
-    }
-
-    private final String extraField7Str;
-    public String getExtraField7Str() {
-        return extraField7Str;
-    }
-
-    private final String extraField8Str;
-    public String getExtraField8Str() {
-        return extraField8Str;
     }
 
     public cArticleImage articleImage;
@@ -342,14 +299,6 @@ public class cPickorderLine {
         }
 
         this.takenTimeStampStr =  this.PickorderLineEntity.getTakenTimeStampStr();
-        this.extraField1Str =  this.PickorderLineEntity.getExtraField1Str();
-        this.extraField2Str = this.PickorderLineEntity.getExtraField2Str();
-        this.extraField3Str =  this.PickorderLineEntity.getExtraField3Str();
-        this.extraField4Str =  this.PickorderLineEntity.getExtraField4Str();
-        this.extraField5Str =  this.PickorderLineEntity.getExtraField5Str();
-        this.extraField6Str =  this.PickorderLineEntity.getExtraField6Str();
-        this.extraField7Str =  this.PickorderLineEntity.getExtraField7Str();
-        this.extraField8Str =  this.PickorderLineEntity.getExtraField8Str();
     }
 
     public cPickorderLine(cPickorderLineEntity pvPickorderLineEntity){
@@ -383,14 +332,6 @@ public class cPickorderLine {
 
         this.quantityTakenDbl =  this.PickorderLineEntity.getQuantityTakenDbl();
         this.takenTimeStampStr =  this.PickorderLineEntity.getTakenTimeStampStr();
-        this.extraField1Str =  this.PickorderLineEntity.getExtraField1Str();
-        this.extraField2Str = this.PickorderLineEntity.getExtraField2Str();
-        this. extraField3Str =  this.PickorderLineEntity.getExtraField3Str();
-        this.extraField4Str =  this.PickorderLineEntity.getExtraField4Str();
-        this.extraField5Str =  this.PickorderLineEntity.getExtraField5Str();
-        this.extraField6Str =  this.PickorderLineEntity.getExtraField6Str();
-        this.extraField7Str =  this.PickorderLineEntity.getExtraField7Str();
-        this.extraField8Str =  this.PickorderLineEntity.getExtraField8Str();
     }
 
     //Region Public Methods

@@ -24,8 +24,10 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.crashlytics.*;
 
+import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -99,9 +101,11 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         // Standard methods to initialize the Activity
         this.mActivityInitialize();
 
-        FirebaseCrashlytics.getInstance().setUserId("jostiband");
+        FirebaseCrashlytics.getInstance().setCustomKey("Device", cDeviceInfo.getSerialnumberStr());
+        FirebaseCrashlytics.getInstance().setCustomKey("Enviroment", cEnvironment.currentEnvironment.getDescriptionStr());
+        FirebaseCrashlytics.getInstance().setCustomKey("Branch", cUser.currentUser.currentBranch.getBranchStr());
+        FirebaseCrashlytics.getInstance().setCustomKey("User", cUser.currentUser.getNameStr());
 
-//        throw new RuntimeException("Test Crash"); // Force a crash
     }
 
     @Override

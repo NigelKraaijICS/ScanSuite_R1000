@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -388,6 +390,8 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
             this.mShowNotSent(cAppExtension.activity.getString(R.string.error_get_moveorders_failed));
             return;
         }
+
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cMoveorder.currentMoveOrder.getOrderNumberStr());
 
         if (!cMoveorder.currentMoveOrder.pAddUnkownBarcodeAndItemVariantBln(cBarcodeScan.pFakeScan(cIdentifierWithDestination.currentIdentifier.getIndentifierStr()))) {
             this.mShowNotSent(cAppExtension.activity.getString(R.string.message_adding_unkown_article_failed));

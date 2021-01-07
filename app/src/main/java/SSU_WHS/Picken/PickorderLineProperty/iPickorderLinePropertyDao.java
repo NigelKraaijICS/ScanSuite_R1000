@@ -27,7 +27,7 @@ public interface iPickorderLinePropertyDao {
     void deleteAll();
 
     @Query("SELECT * FROM " + cDatabase.TABLENAME_PICKORDERLINEPROPERTY)
-    List<cPickorderLineEntity> getAll();
+    List<cPickorderLinePropertyEntity> getAll();
     //Get picklines
 
 

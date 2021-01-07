@@ -753,5 +753,6 @@
     <string name="message_zipcode_mismatch">Postcode komt niet overeen</string>
     <string name="message_city_mismatch">Plaatsnaam komt niet overeen</string>
     <string name="message_country_mismatch">Land komt niet overeen</string>
+    <string name="error_get_line_propertys_failed">Ophalen regel eigenschappen mislukt</string>
 
 </resources>

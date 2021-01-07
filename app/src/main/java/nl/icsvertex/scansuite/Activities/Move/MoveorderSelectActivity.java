@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
 
@@ -49,6 +50,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder.WorkflowEnu;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveOrders.cMoveorderAdapter;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
@@ -303,6 +305,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         //Set the current moveorder
         cMoveorder.currentMoveOrder = pvMoveorder;
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cMoveorder.currentMoveOrder.getOrderNumberStr());
 
         new Thread(new Runnable() {
             public void run() {

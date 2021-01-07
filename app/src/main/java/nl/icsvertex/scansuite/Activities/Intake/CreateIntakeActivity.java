@@ -20,6 +20,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
@@ -34,6 +36,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -361,6 +364,8 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
             this.mStepFailed(hulpResult.messagesStr());
             return;
         }
+
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override

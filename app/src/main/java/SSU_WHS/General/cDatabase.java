@@ -218,6 +218,8 @@ public class cDatabase {
     public static final String INVENTORYWITHPICTURE_AUTO_OPEN_NAMESTR = "Inv_with_picture_auto_open";
     public static final String INVENTORYWITHPICTURE_PREFETCH_NAMESTR = "Inv_with_picture_prefetch";
 
+    public static final String ISINPUT_NAMESTR = "IsInput";
+    public static final String ISREQUIRED_NAMESTR = "Isrequired";
     public static final String ISPROCESSINGORPARKED_NAMESTR = "IsProcessingOrParked";
 
 
@@ -226,7 +228,7 @@ public class cDatabase {
 
     //region L
     public static final String LANGUAGEDUTCH_NAMESTR = "Taal";
-    public static final String LAYOUTVALUE_NAMESTR = "Layout";
+    public static final String LAYOUT_NAMESTR = "Layout";
     public static final String LICENSE_NAMESTR = "License";
     public static final String LICENSE_NL_NAMESTR = "Licentie";
     public static final String LINE_NAMESTR = "Line";
@@ -315,7 +317,7 @@ public class cDatabase {
     public static final String PRINTDOCUMENTS_NAMESTR = "PrintDocuments";
     public static final String PROCESSINGSEQUENCE_NAMESTR = "ProcessingSequence";
     public static final String PROPERTY_NAMESTR = "Property";
-    public static final String PROPERTYCODE_NAMESTR = "PropertyCode";
+    public static final String PROPERTYCODE_NAMESTR = "Propertycode";
     public static final String PROPERTYDUTCH_NAMESTR = "Propertie";
     public static final String PROPERTYSDUTCH_NAMESTR = "Properties";
     public static final String PROPERTYGROUP_NAMESTR = "Propertiegroep";
@@ -404,6 +406,7 @@ public class cDatabase {
     public static final String SCANNER_NAMESTR = "Scanner";
     public static final String SENDERADDRESSCODE_NAMESTR = "SenderAddressCode";
 
+    public static final String SEQUENCENOHANDLED_NAMESTR = "SequenceNoHandled";
     public static final String SETTINGCODE_NAMESTR = "SettingCode";
     public static final String SETTINGVALUE_NAMESTR = "SettingValue";
     public static final String SETTING_NAMESTR = "Instelling";
@@ -463,6 +466,7 @@ public class cDatabase {
     //region V
     public static final String VALUE_NAMESTR = "Value";
     public static final String VALUENL_NAMESTR = "Waarde";
+    public static final String VALUEHANDLED_NAMESTR = "ValueHandled";
     public static final String VARIANTCODE_NAMESTR = "VariantCode";
     public static final String VENDORITEMNO_NAMESTR = "VendorItemNo";
     public static final String VENDORITEMDESCRIPTION_NAMESTR = "VendorItemDescription";

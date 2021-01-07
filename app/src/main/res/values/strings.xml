@@ -571,6 +571,7 @@
     <string name="message_bin_not_added">Bin %1$s was not added</string>
     <string name="screentitle_inventoryordercount">Inventory count</string>
     <string name="error_get_line_barcodes_failed">Getting line barcodes failed</string>
+    <string name="error_get_line_propertys_failed">Getting line propertys failed</string>
     <string name="message_couldnt_create_order">Order could not be created</string>
     <string name="message_add_bin_not_allowed">You are not allowed to add a BIN</string>
     <string name="message_bin_could_not_be_added_via_webservice">Bin could not be added via web service</string>

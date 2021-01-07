@@ -20,6 +20,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
@@ -465,7 +467,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    private  void mCreateOrder(final String pvDocumentStr, final Boolean pvMultipleDocumentsBln, final String pvBincodeStr){
+    private void mCreateOrder(final String pvDocumentStr, final Boolean pvMultipleDocumentsBln, final String pvBincodeStr){
 
         // Show that we are getting data
         cUserInterface.pShowGettingData();
@@ -536,6 +538,8 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
             return;
         }
 
+        FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cReturnorder.currentReturnOrder.getOrderNumberStr());
+
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -598,8 +602,6 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         return true;
 
     }
-
-
 
     private void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
 

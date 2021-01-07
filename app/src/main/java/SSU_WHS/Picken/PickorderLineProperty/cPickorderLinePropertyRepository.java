@@ -11,9 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import ICS.Utils.cDateAndTime;
+import ICS.Utils.cDeviceInfo;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
+import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
+import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipmentRepository;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
@@ -53,7 +58,6 @@ public class cPickorderLinePropertyRepository {
         new cPickorderLinePropertyRepository.deleteAllAsyncTask(this.pickorderLinePropertyDao).execute();
     }
 
-
     //End Region Public Methods
 
     private static class mInsertInDatabaseAsyncTask extends AsyncTask<cPickorderLinePropertyEntity, Void, Void> {
@@ -92,5 +96,7 @@ public class cPickorderLinePropertyRepository {
             return null;
         }
     }
+
+
 
 }

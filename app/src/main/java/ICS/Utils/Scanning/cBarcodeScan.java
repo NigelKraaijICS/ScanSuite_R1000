@@ -7,10 +7,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import java.util.Objects;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
@@ -151,6 +154,8 @@ public class cBarcodeScan {
 
                     //Fill a barcodeStr scan object
                     cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.mGetBarcode(pvIntent);
+
+                    FirebaseCrashlytics.getInstance().setCustomKey("LastScannedBarcode", barcodeScan.getBarcodeOriginalStr());
 
                     //Login
                     if (cAppExtension.activity instanceof LoginActivity) {
@@ -424,6 +429,7 @@ public class cBarcodeScan {
 
                     //Fill a barcodeStr scan object
                     cBarcodeScan barcodeScan = ICS.Utils.Scanning.cBarcodeScan.mGetBarcode(intent);
+                    FirebaseCrashlytics.getInstance().setCustomKey("LastScannedBarcode", barcodeScan.getBarcodeOriginalStr());
 
                     if (cAppExtension.dialogFragment instanceof BranchFragment) {
                         BranchFragment branchFragment = (BranchFragment)cAppExtension.dialogFragment;
@@ -558,8 +564,6 @@ public class cBarcodeScan {
 
         //Attach receiver to context
         cAppExtension.context.registerReceiver(BarcodeFragmentReceiver,BarcodeFragmentIntentFilter);
-
-
 
     }
 

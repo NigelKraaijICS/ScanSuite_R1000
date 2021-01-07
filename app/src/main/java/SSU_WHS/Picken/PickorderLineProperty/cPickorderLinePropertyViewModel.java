@@ -25,4 +25,5 @@ public class cPickorderLinePropertyViewModel extends AndroidViewModel {
     public void deleteAll() {this.Repository.pTruncate();}
     public void delete(cPickorderLinePropertyEntity pvPickorderLinePropertyEntity) {this.Repository.pDelete(pvPickorderLinePropertyEntity);}
 
+
 }

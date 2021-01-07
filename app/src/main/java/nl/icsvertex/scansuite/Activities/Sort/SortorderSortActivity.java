@@ -586,27 +586,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private void mNumberClicked() {
-
-        if (cSetting.PICK_PER_SCAN()) {
-            return;
-        }
-
-        if (cPickorderBarcode.currentPickorderBarcode == null) {
-            cUserInterface.pDoNope(quantityText, false, false);
-            cUserInterface.pShowSnackbarMessage(quantityText, getString(R.string.choose_barcode_first), null, false);
-            return;
-        }
-
-        if (cPickorderBarcode.currentPickorderBarcode.getQuantityHandledDbl() > 1) {
-            cUserInterface.pDoNope(quantityText, true, true);
-            cUserInterface.pShowSnackbarMessage(quantityText, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
-            return;
-        }
-
-        this.mShowNumberPickerFragment();
-    }
-
     private void mShowNumberPickerFragment() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();

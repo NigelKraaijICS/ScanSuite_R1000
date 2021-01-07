@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import SSU_WHS.General.cDatabase;
 
-@Entity(tableName = cDatabase.TABLENAME_BARCODELAYOUTS, primaryKeys = {cDatabase.BARCODELAYOUT_NAMESTR, cDatabase.LAYOUTVALUE_NAMESTR})
+@Entity(tableName = cDatabase.TABLENAME_BARCODELAYOUTS, primaryKeys = {cDatabase.BARCODELAYOUT_NAMESTR, cDatabase.LAYOUT_NAMESTR})
 public class cBarcodeLayoutEntity {
 
     //Region Public Properties
@@ -20,7 +20,7 @@ public class cBarcodeLayoutEntity {
     public String getBarcodelayoutStr() {return barcodelayout;}
 
     @NonNull
-    @ColumnInfo(name = cDatabase.LAYOUTVALUE_NAMESTR)
+    @ColumnInfo(name = cDatabase.LAYOUT_NAMESTR)
     public String layoutvalue = "";
     public String getLayoutValueStr() {return layoutvalue;}
 
@@ -33,7 +33,7 @@ public class cBarcodeLayoutEntity {
     public cBarcodeLayoutEntity(JSONObject jsonObject) {
         try {
             this.barcodelayout = jsonObject.getString(cDatabase.BARCODELAYOUT_NAMESTR);
-            this.layoutvalue = jsonObject.getString(cDatabase.LAYOUTVALUE_NAMESTR);
+            this.layoutvalue = jsonObject.getString(cDatabase.LAYOUT_NAMESTR);
         } catch (JSONException e) {
             e.printStackTrace();
         }

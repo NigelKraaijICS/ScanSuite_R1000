@@ -188,6 +188,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_PACKANDSHIPUPDATE = "p_PackAndShipOrderUpdateJsonStr";
     public static String WEBMETHOD_PACKANDSHIPSHIPMENTADDDOCUMENT = "p_PackAndShipShipmentDocumentAddJsonStr";
 
+    public static String WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET = "p_WarehouseopdrachtLineItemPropertiesGetJsonStr";
 
 
        //endregion Methods
