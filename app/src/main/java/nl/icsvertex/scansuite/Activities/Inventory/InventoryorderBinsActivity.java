@@ -2,7 +2,6 @@ package nl.icsvertex.scansuite.Activities.Inventory;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
-import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
@@ -55,15 +53,19 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     //End Region Public Properties
 
     //Region Private Properties
+
+    private Toolbar toolbar;
+    private  ImageView toolbarImage;
+    private  TextView toolbarTitle;
+    private  TextView toolbarSubTitle;
+
     private  TextView textViewChosenOrder;
     private TextView quantityText;
     private TabLayout inventoryorderBinsTabLayout;
     private cNoSwipeViewPager inventoryorderBinsViewpager;
     private ImageView imageButtonComments;
 
-    private  ImageView toolbarImage;
-    private  TextView toolbarTitle;
-    private  TextView toolbarSubTitle;
+
 
     //End Region Private Properties
 
@@ -91,7 +93,9 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
+        if (cAppExtension.activity instanceof InventoryorderBinsActivity)  {
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
+        }
     }
 
     @Override
@@ -155,11 +159,14 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     @Override
     public void mFindViews() {
 
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+
         this.inventoryorderBinsTabLayout = findViewById(R.id.inventoryorderBinsTabLayout);
         this.inventoryorderBinsViewpager = findViewById(R.id.inventoryorderBinsViewpager);
+
         this.textViewChosenOrder = findViewById(R.id.textViewChosenOrder);
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
         this.quantityText = findViewById(R.id.quantityText);
@@ -171,9 +178,10 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
         this.toolbarSubTitle.setSelected(true);
+
         this.pChangeToolBarSubText(cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetTotalItemCountDbl()) );
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        setSupportActionBar(this.toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -275,7 +283,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
             }
         }
 
-        this.mOpenInventoryCountActivity();
+        this.mStartInventoryBINActivity();
     }
 
     public  void pChangeTabCounterText(String pvTextStr){
@@ -445,7 +453,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
     }
 
-    private  void mOpenInventoryCountActivity() {
+    private  void mStartInventoryBINActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -471,7 +479,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     }
 
     private  void mStartOrderSelectActivity() {
-
+        InventoryorderSelectActivity.startedViaMenuBln = false;
 
         cInventoryorder.currentInventoryOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Inventory, cWarehouseorder.WorkflowInventoryStepEnu.Inventory);
 

@@ -101,6 +101,8 @@ import SSU_WHS.Picken.PickorderLineBarcodes.iPickorderLineBarcodeDao;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyEntity;
 import SSU_WHS.Picken.PickorderLineProperty.iPickorderLinePropertyDao;
+import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueEntity;
+import SSU_WHS.Picken.PickorderLinePropertyValue.iPickorderLinePropertyValueDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.PickorderSetting.cPickorderSettingEntity;
@@ -138,6 +140,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPickorderLineEntity.class,
         cPickorderLineBarcodeEntity.class,
         cPickorderLinePropertyEntity.class,
+        cPickorderLinePropertyValueEntity.class,
         cArticleImageEntity.class,
         cPickorderBarcodeEntity.class,
         cCommentEntity.class,
@@ -187,7 +190,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackAndShipSettingEntity.class,
         cPackAndShipShippingMethodEntity.class,
         cPackAndShipShippingPackageEntity.class
-        },version = 139)
+        },version = 144)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -203,6 +206,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iPickorderLineDao pickorderLineDao();
     public abstract iPickorderLineBarcodeDao pickorderLineBarcodeDao();
     public abstract iPickorderLinePropertyDao pickorderLinePropertyDao();
+    public abstract iPickorderLinePropertyValueDao pickorderLinePropertyValueDao();
     public abstract iArticleImageDao articleImageDao();
     public abstract iPickorderBarcodeDao pickorderBarcodeDao();
     public abstract iCommentDao commentDao();

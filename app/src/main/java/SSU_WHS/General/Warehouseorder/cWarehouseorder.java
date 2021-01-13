@@ -25,6 +25,7 @@ public class cWarehouseorder {
         Pick_Picking,
         Pick_Sorting,
         Pick_PackAndShip,
+        Pick_Storage,
         Finish_Packing,
         Pick_QualityContol,
         Inventory,
@@ -38,7 +39,8 @@ public class cWarehouseorder {
 
     public enum PickOrderTypeEnu {
         PICK,
-        SORT
+        SORT,
+        STORE
     }
 
     public  enum ReceiveAndStoreMainTypeEnu {
@@ -65,6 +67,7 @@ public class cWarehouseorder {
     public enum CommentTypeEnu {
         PICK,
         SORT,
+        STORE,
         SHIP,
         INVENTORY,
         RECEIVE,
@@ -105,6 +108,7 @@ public class cWarehouseorder {
         public static final int PickSorting = 20;
         public static final int PickQualityControl = 30;
         public static final int PickPackAndShip = 40;
+        public static final int PickStorage = 60;
         public static final int PickFinishPacking = 70;
 
     }
@@ -137,9 +141,6 @@ public class cWarehouseorder {
         public static final int Pack_And_Ship = 10;
         public static final int Pack_And_Ship_Busy = 11;
         public static final int Pack_And_Ship_Wait = 12;
-        public static final int Pack_and_ship_Shipping = 40;
-        public static final int Pack_and_ship_Shipping_Busy = 41;
-        public static final int Pack_and_ship_ShippingWacht = 42;
     }
 
     public static class PicklineStatusEnu {
@@ -237,6 +238,9 @@ public class cWarehouseorder {
 
         return  resultEnu;
     }
+
+
+
 
     public static String pGetWorkflowDescriptionStr(String pvWorkflowCodeStr) {
         String result = "";

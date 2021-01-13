@@ -63,6 +63,8 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPICKORDERSHIPMETHODS = "p_PickorderShippingmethodGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINESPACKANDSHIP = "p_PickorderRegelsPackAndShipGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINESFINISHSINGLEPIECE = "p_PickorderRegelsFinishPackSinglePieceGetJsonStr";
+    public static String WEBMETHOD_GETPICKORDERLINESSTORAGE = "p_PickorderRegelsStorageGetJsonStr";
+
 
     public static String WEBMETHOD_CREATEMERGEDPICKORDER = "p_PickorderCreateMergedJsonStr";
     public static String WEBMETHOD_ADDORDERTOMERGEDPICKORDER = "p_PickorderAddToMergedJsonStr";
@@ -72,6 +74,9 @@ public class cWebserviceDefinitions {
 
     public static String WEBMETHOD_GETPICKORDERSHIPPACKAGES = "p_PickorderShippingPackageGetJsonStr";
     public static String WEBMETHOD_PICKORDERSOURCEDOCUMENTSHIPPED = "p_PickorderSourceDocumentShippedJsonStr";
+    public static String WEBMETHOD_PICKORDERSOURCEDOCUMENTSTORED = "p_PickorderEenSourceDocumentOpgeslagenJsonStr";
+
+
     public static String WEBMETHOD_PICKORDERUPDATEWORKPLACE = "p_PickorderUpdateWorkplaceJsonStr";
     public static String WEBMETHOD_GETSORTLOCATIONADVICE = "p_WarehouseopdrachtSortLocationAdviceGetJsonStr";
     public static String WEBMETHOD_GETARTICLEIMAGESMULTIPLE = "p_ArtikelenImageGetJsonStr";
@@ -189,6 +194,8 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_PACKANDSHIPSHIPMENTADDDOCUMENT = "p_PackAndShipShipmentDocumentAddJsonStr";
 
     public static String WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET = "p_WarehouseopdrachtLineItemPropertiesGetJsonStr";
+    public static String WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIEVALUESGET = "p_WarehouseopdrachtLineItemPropertyValuesGetJsonStr";
+
 
 
        //endregion Methods
@@ -262,6 +269,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_BINCODETINY = "pv_BincodeStr";
     public static String WEBPROPERTY_BINCODEHANDLED = "pv_BincodeHandledStr";
     public static String WEBPROPERTY_STOCKOWNER = "pv_StockOwnerStr";
+    public static String WEBPROPERTY_STORAGEBINCODE = "pv_StorageBinCodeStr";
     public static String WEBPROPERTY_WORKFLOW = "pv_WorkflowStr";
     public static String WEBPROPERTY_SHIPMENT = "pv_ShipmentStr";
     public static String WEBPROPERTY_DOCUMENT = "pv_DocumentStr";

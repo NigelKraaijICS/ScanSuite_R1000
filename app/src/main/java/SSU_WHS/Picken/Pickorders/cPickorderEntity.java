@@ -158,7 +158,8 @@ public class cPickorderEntity {
             this.isprocessingorparked = !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickPicking)) &&
                     !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickSorting)) &&
                     !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickQualityControl)) &&
-                    !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip));
+                    !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip)) &&
+                    !this.status.equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowPickStepEnu.PickStorage));
 
             //Settings
 

@@ -31,6 +31,7 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Store.StoreorderLinesActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -231,6 +232,11 @@ public class StepDoneFragment extends DialogFragment implements iICSDefaultFragm
                 if (cAppExtension.activity  instanceof SortorderLinesActivity) {
                     SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
                     sortorderLinesActivity.pStartOrderSelectActivity();
+                }
+
+                if (cAppExtension.activity  instanceof StoreorderLinesActivity) {
+                    StoreorderLinesActivity storeorderLinesActivity = (StoreorderLinesActivity)cAppExtension.activity;
+                    storeorderLinesActivity.pCloseStoreAndDecideNextStep();
                 }
 
                 if (cAppExtension.activity  instanceof ShiporderLinesActivity) {

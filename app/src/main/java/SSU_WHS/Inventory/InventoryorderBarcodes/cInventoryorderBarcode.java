@@ -88,9 +88,15 @@ public class cInventoryorderBarcode {
         return this.unitOfMeasure;
     }
 
-    public Double quantityHandled;
-    public Double getQuantityHandled() {
-        return this.quantityHandled;
+
+
+    public  String getUnitOfMeasureInfoStr(){
+     return    this.getBarcodeAndQuantityStr() + " " + this.getUnitOfMeasureStr();
+    }
+
+    public Double quantityHandledDbl;
+    public Double getQuantityHandledDbl() {
+        return this.quantityHandledDbl;
     }
 
     public  String getBarcodeAndQuantityStr(){
@@ -108,7 +114,7 @@ public class cInventoryorderBarcode {
         this.itemType = this.inventoryorderBarcodeEntity.getItemTypeStr();
         this.quantityPerUnitOfMeasure = this.inventoryorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
         this.unitOfMeasure = this.inventoryorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.inventoryorderBarcodeEntity.getQuantityHandled();
+        this.quantityHandledDbl = this.inventoryorderBarcodeEntity.getQuantityHandled();
     }
 
     public cInventoryorderBarcode(cArticleBarcode pvArticleBarcode) {
@@ -121,7 +127,7 @@ public class cInventoryorderBarcode {
         this.itemType = this.inventoryorderBarcodeEntity.getItemTypeStr();
         this.quantityPerUnitOfMeasure = this.inventoryorderBarcodeEntity.getQuantityPerUnitOfMeasureDbl();
         this.unitOfMeasure = this.inventoryorderBarcodeEntity.getUnitOfMeasureStr();
-        this.quantityHandled = this.inventoryorderBarcodeEntity.getQuantityHandled();
+        this.quantityHandledDbl = this.inventoryorderBarcodeEntity.getQuantityHandled();
 
     }
 

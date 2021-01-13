@@ -57,7 +57,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     private  TextView textViewChosenOrder;
     private  TextView quantityShipordersText;
-    private  ConstraintLayout container;
+    private  ConstraintLayout shiporderLineContainer;
     private  TabLayout shiporderLinesTabLayout;
     private  ViewPager shiporderLinesViewPager;
     private  ImageView imageButtonComments;
@@ -66,6 +66,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     private  TextView toolbarTitle;
 
     public static Fragment currentLineFragment;
+
 
     //End Region Views
 
@@ -119,7 +120,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     public void onBackPressed() {
-       this.mTryToLeaveActivity();
+        this.mTryToLeaveActivity();
     }
 
     //End Region Default Methods
@@ -151,7 +152,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     public void mFindViews() {
-        this.container = findViewById(R.id.container);
+        this.shiporderLineContainer = findViewById(R.id.shiporderLineContainer);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.quantityShipordersText = findViewById(R.id.quantityShipordersText);
@@ -161,11 +162,11 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
     }
 
-     @Override
+    @Override
     public void mSetToolbar(String pvScreenTitle) {
-         this.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
-         this.toolbarTitle.setText(pvScreenTitle);
-         this.toolbarTitle.setSelected(true);
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_ship);
+        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setSelected(true);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -191,7 +192,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         this.shiporderLinesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab pvTab) {
-               shiporderLinesViewPager.setCurrentItem(pvTab.getPosition());
+                shiporderLinesViewPager.setCurrentItem(pvTab.getPosition());
                 mChangeSelectedTab(pvTab);
             }
 
@@ -269,17 +270,19 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         cResult hulpRst;
 
+        cShipment selectedShipment =   cShipment.currentShipment;
+
         //SourceNo button has been pressed, so we already have a current line
         if (pvSourceNoSelectedBln) {
 
             hulpRst = cShipment.currentShipment.pCheckShipmentRst();
             if (!hulpRst.resultBln ){
-                cUserInterface.pShowSnackbarMessage(this.container,hulpRst.messagesStr(),null,true);
+                cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,hulpRst.messagesStr(),null,true);
                 return;
             }
 
             if (cShipment.currentShipment.isHandledBln()) {
-                cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
+                cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
                 return;
             }
 
@@ -316,12 +319,12 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
                     cShipment.currentShipment.shippingAgentService().shippingUnitsObl() == null ||
                     cShipment.currentShipment.shippingAgentService().shippingUnitsObl().size() == 0 ) {
 
-                cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipping_basics_invalid),null,true);
+                cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_shipping_basics_invalid),null,true);
                 return;
             }
 
             if (cShipment.currentShipment.isHandledBln()) {
-                cUserInterface.pShowSnackbarMessage(this.container,(cAppExtension.activity.getString(R.string.message_shipment_already_handled)), null,true);
+                cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,(cAppExtension.activity.getString(R.string.message_shipment_already_handled)), null,true);
                 return;
             }
 
@@ -337,17 +340,18 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         // We did not find a match, so stop
         if (cShipment.currentShipment == null) {
             this.mStepFailed(cAppExtension.context.getString(R.string.message_unknown_barcode));
+            cShipment.currentShipment = selectedShipment;
             return;
         }
 
         hulpRst = cShipment.currentShipment.pCheckShipmentRst();
         if (!hulpRst.resultBln ){
-            cUserInterface.pShowSnackbarMessage(this.container,hulpRst.messagesStr(),null,true);
+            cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,hulpRst.messagesStr(),null,true);
             return;
         }
 
         if (cShipment.currentShipment.isHandledBln()) {
-            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
+            cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
             return;
         }
 
@@ -361,12 +365,12 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         if (pvSourceNoSelectedBln) {
 
             if (cShipment.currentShipment.isCheckedBln()) {
-                cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_checked),null,true);
+                cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_shipment_already_checked),null,true);
                 return;
             }
 
             if (cShipment.currentShipment.isHandledBln()) {
-                cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
+                cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
                 return;
             }
 
@@ -384,13 +388,13 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-              if (cShipment.currentShipment.isCheckedBln()) {
-            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_checked),null,true);
+        if (cShipment.currentShipment.isCheckedBln()) {
+            cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_shipment_already_checked),null,true);
             return;
         }
 
         if (cShipment.currentShipment.isHandledBln()) {
-            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
+            cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_shipment_already_handled),null,true);
             return;
         }
 
@@ -401,12 +405,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     public  void pShipmentSelected(cShipment pvShipment) {
         cShipment.currentShipment = pvShipment;
-
-        //todo: check why we did this?
-//        if (this.currentLineFragment instanceof ShiporderLinesToShipFragment) {
-//            ShiporderLinesToShipFragment shiporderLinesToShipFragment = (ShiporderLinesToShipFragment)this.currentLineFragment;
-//            shiporderLinesToShipFragment.pSetChosenShipment();
-//        }
     }
 
     public  void pShippingDone() {
@@ -425,7 +423,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pPlaySound(R.raw.goodsound, null);
 
-final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_packandshipdone), cAppExtension.activity.getString(R.string.message_close_packandship_fase),false);
+        final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_packandshipdone), cAppExtension.activity.getString(R.string.message_close_packandship_fase),false);
         stepDoneFragment.setCancelable(false);
         stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
@@ -443,14 +441,14 @@ final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.act
         }
 
         if (!cPickorder.currentPickOrder.pUpdateWorkplaceViaWebserviceBln(cWorkplace.currentWorkplace.getWorkplaceStr())) {
-            cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_workplace_not_updated),null, true);
+            cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_workplace_not_updated),null, true);
             return;
         }
 
         //Register barcodeStr receiver, because the workplaceStr fragment has been shown
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
-        cUserInterface.pShowSnackbarMessage(this.container,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);
+        cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);
 
         this.mCheckAllDone();
 
@@ -526,8 +524,7 @@ final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.act
     }
 
     private  void mStepFailed(String pvErrorMessageStr){
-        cUserInterface.pShowSnackbarMessage(this.container,pvErrorMessageStr,null,true);
-        cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
+        cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,pvErrorMessageStr,null,true);
     }
 
     private  void mShowWorkplaceFragment() {
@@ -582,7 +579,7 @@ final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.act
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
-            cUserInterface.pShowSnackbarMessage(this.container,hulpResult.messagesStr(),null,true);
+            cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,hulpResult.messagesStr(),null,true);
             return  false;
         }
 

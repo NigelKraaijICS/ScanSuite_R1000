@@ -13,7 +13,6 @@ import java.util.Objects;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShipLinesActivity;
 import nl.icsvertex.scansuite.Activities.FinishShip.FinishShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
@@ -61,6 +60,8 @@ import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSortActivity;
+import nl.icsvertex.scansuite.Activities.Store.StoreorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Store.StoreorderSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddEnvironmentFragment;
@@ -70,17 +71,18 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.SetBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
-import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
-import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
+import nl.icsvertex.scansuite.Activities.Inventory.CreateInventoryActivity;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryArticleActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 
 public class cBarcodeScan {
 
-    public static String currentActivityContextStr = "";
+    private static String currentActivityContextStr = "";
 
     public static class BarcodeType {
 
@@ -114,7 +116,7 @@ public class cBarcodeScan {
     }
 
     private static IntentFilter BarcodeIntentFilter;
-    private static IntentFilter getBarcodeIntentFilter() {
+    private static void getBarcodeIntentFilter() {
         if (BarcodeIntentFilter == null) {
             BarcodeIntentFilter = new IntentFilter();
             for (String barcodeActionStr : cBarcodeScanDefinitions.getBarcodeActions()) {
@@ -124,11 +126,10 @@ public class cBarcodeScan {
                 BarcodeIntentFilter.addCategory(barcodeCategorieStr);
             }
         }
-        return BarcodeIntentFilter;
     }
 
     private static IntentFilter BarcodeFragmentIntentFilter;
-    private static IntentFilter getBarcodeFragmentIntentFilter() {
+    private static void getBarcodeFragmentIntentFilter() {
         if (BarcodeFragmentIntentFilter == null) {
             BarcodeFragmentIntentFilter = new IntentFilter();
             for (String barcodeActionStr : cBarcodeScanDefinitions.getBarcodeActions()) {
@@ -138,11 +139,10 @@ public class cBarcodeScan {
                 BarcodeFragmentIntentFilter.addCategory(barcodeCategorieStr);
             }
         }
-        return BarcodeFragmentIntentFilter;
     }
 
     private static BroadcastReceiver BarcodeReceiver;
-    private static BroadcastReceiver getBarcodeReceiver() {
+    private static void getBarcodeReceiver() {
         if (BarcodeReceiver == null) {
             BarcodeReceiver = new BroadcastReceiver(){
                 @Override
@@ -250,6 +250,12 @@ public class cBarcodeScan {
                     }
 
                     //Inventory
+                    if (cAppExtension.activity instanceof CreateInventoryActivity) {
+                        CreateInventoryActivity createInventoryActivity = (CreateInventoryActivity)cAppExtension.activity;
+                        createInventoryActivity.pHandleScan(barcodeScan);
+                        return;
+                    }
+
                     if (cAppExtension.activity instanceof InventoryorderSelectActivity){
                         InventoryorderSelectActivity inventoryorderSelectActivity = (InventoryorderSelectActivity)cAppExtension.activity;
                         inventoryorderSelectActivity.pHandleScan(barcodeScan);
@@ -264,6 +270,12 @@ public class cBarcodeScan {
                         InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
                         inventoryorderBinActivity.pHandleScan(barcodeScan, false);
                     }
+                    if (cAppExtension.activity instanceof InventoryArticleActivity) {
+                        InventoryArticleActivity inventoryArticleDetailActivity = (InventoryArticleActivity)cAppExtension.activity;
+                        inventoryArticleDetailActivity.pHandleScan(barcodeScan);
+                        return;
+                    }
+
 
                     //Intake
                     if (cAppExtension.activity instanceof IntakeAndReceiveSelectActivity){
@@ -408,15 +420,24 @@ public class cBarcodeScan {
                         packAndShipMultiActivity.pHandleScan(barcodeScan);
                     }
 
+                    if (cAppExtension.activity instanceof StoreorderSelectActivity){
+                        StoreorderSelectActivity storeorderSelectActivity = (StoreorderSelectActivity)cAppExtension.activity;
+                        storeorderSelectActivity.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.activity instanceof StoreorderLinesActivity){
+                        StoreorderLinesActivity storeorderLinesActivity = (StoreorderLinesActivity)cAppExtension.activity;
+                        storeorderLinesActivity.pHandleScan(barcodeScan, false);
+                    }
+
 
                 }
             };
         }
-        return BarcodeReceiver;
     }
 
     private static BroadcastReceiver BarcodeFragmentReceiver;
-    private static BroadcastReceiver getBarcodeFragmentReceiver() {
+    private static void getBarcodeFragmentReceiver() {
         if (BarcodeFragmentReceiver == null) {
             BarcodeFragmentReceiver = new BroadcastReceiver(){
 
@@ -473,15 +494,15 @@ public class cBarcodeScan {
                         return;
                     }
 
-                    if (cAppExtension.dialogFragment instanceof CreateInventoryFragment) {
-                        CreateInventoryFragment createInventoryFragment = (CreateInventoryFragment)cAppExtension.dialogFragment;
-                        createInventoryFragment.pHandleScan(barcodeScan);
-                        return;
-                    }
-
                     if (cAppExtension.dialogFragment instanceof AddBinFragment) {
                         AddBinFragment addBinFragment = (AddBinFragment)cAppExtension.dialogFragment;
                         addBinFragment.pHandleScan(barcodeScan);
+                        return;
+                    }
+
+                    if (cAppExtension.dialogFragment instanceof SetBinFragment) {
+                        SetBinFragment setBinFragment = (SetBinFragment)cAppExtension.dialogFragment;
+                        setBinFragment.pHandleScan(barcodeScan);
                         return;
                     }
 
@@ -504,12 +525,6 @@ public class cBarcodeScan {
                         return;
                     }
 
-                    if (cAppExtension.dialogFragment instanceof InventoryArticleDetailFragment) {
-                        InventoryArticleDetailFragment inventoryArticleDetailFragment = (InventoryArticleDetailFragment)cAppExtension.dialogFragment;
-                        inventoryArticleDetailFragment.pHandleScan(barcodeScan);
-                        return;
-                    }
-
                     if (cAppExtension.dialogFragment instanceof PasswordFragment) {
                         PasswordFragment passwordFragment = (PasswordFragment)cAppExtension.dialogFragment;
                         passwordFragment.pHandleScan(barcodeScan);
@@ -524,7 +539,6 @@ public class cBarcodeScan {
                 }
             };
         }
-        return BarcodeFragmentReceiver;
     }
 
     public static void pRegisterBarcodeReceiver(String pvClassNameStr){
@@ -665,11 +679,7 @@ public class cBarcodeScan {
         resultBarcodeScan.barcodeOriginalStr = scannedBarcodeStr;
         resultBarcodeScan.barcodeFormattedStr = returnBarcodeStr;
         resultBarcodeScan.barcodeTypeStr = barcodeTypeStr;
-
-        resultBarcodeScan.containsCrlf = false;
-        if (scannedBarcodeStr.contains("\\n")) {
-            resultBarcodeScan.containsCrlf = true;
-        }
+        resultBarcodeScan.containsCrlf = scannedBarcodeStr.contains("\\n");
 
 
 

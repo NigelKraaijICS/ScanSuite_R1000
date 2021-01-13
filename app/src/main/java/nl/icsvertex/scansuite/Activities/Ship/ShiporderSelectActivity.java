@@ -601,8 +601,6 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
-
-
     private  void mShowShipLinesActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();

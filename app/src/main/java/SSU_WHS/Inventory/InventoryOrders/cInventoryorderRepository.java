@@ -20,7 +20,6 @@ import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
-import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
@@ -36,8 +35,18 @@ import static ICS.Utils.cText.pAddSingleQuotesStr;
 
 public class cInventoryorderRepository {
     //Region Public Properties
-    private iInventoryorderDao inventoryorderDao;
-    private iInventoryorderBinDao inventoryorderBinDao;
+    private final iInventoryorderDao inventoryorderDao;
+    private final iInventoryorderBinDao inventoryorderBinDao;
+
+    private static class InventoryCreateParams {
+        String documentStr;
+        boolean checkBarcodesBln;
+
+        InventoryCreateParams(String pvDocumentStr, boolean pvCheckBarcodesBln ) {
+            this.documentStr = pvDocumentStr;
+            this.checkBarcodesBln = pvCheckBarcodesBln;
+        }
+    }
 
     //End Region Public Properties
 
@@ -68,13 +77,15 @@ public class cInventoryorderRepository {
         new mDeleteAllAsyncTask(inventoryorderDao).execute();
     }
 
-    public cWebresult pCreateInventoryOrderViaWebserviceWrs(String pvDocumentStr) {
+    public cWebresult pCreateInventoryOrderViaWebserviceWrs(String pvDocumentStr, boolean pvCheckBarcodesBln) {
 
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
+        InventoryCreateParams inventoryCreateParams = new InventoryCreateParams(pvDocumentStr,pvCheckBarcodesBln);
+
         try {
-            webResultWrs = new mCreateInventoryOrderViaWebserviceAsyncTask().execute(pvDocumentStr).get();
+            webResultWrs = new mCreateInventoryOrderViaWebserviceAsyncTask().execute(inventoryCreateParams).get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -430,7 +441,7 @@ public class cInventoryorderRepository {
 
     //Region Orders
     private static class mInsertAsyncTask extends AsyncTask<cInventoryorderEntity, Void, Void> {
-        private iInventoryorderDao mAsyncTaskDao;
+        private final iInventoryorderDao mAsyncTaskDao;
 
         mInsertAsyncTask(iInventoryorderDao dao) {
             mAsyncTaskDao = dao;
@@ -443,7 +454,7 @@ public class cInventoryorderRepository {
     }
 
     private static class mInsertAllAsyncTask extends AsyncTask<List<cInventoryorderEntity>, Void, Void> {
-        private iInventoryorderDao mAsyncTaskDao;
+        private final iInventoryorderDao mAsyncTaskDao;
 
         mInsertAllAsyncTask(iInventoryorderDao dao) {
             mAsyncTaskDao = dao;
@@ -458,7 +469,7 @@ public class cInventoryorderRepository {
     }
 
     private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private iInventoryorderDao mAsyncTaskDao;
+        private final iInventoryorderDao mAsyncTaskDao;
 
         mDeleteAllAsyncTask(iInventoryorderDao dao) {
             mAsyncTaskDao = dao;
@@ -470,9 +481,9 @@ public class cInventoryorderRepository {
         }
     }
 
-    private static class mCreateInventoryOrderViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+    private static class mCreateInventoryOrderViaWebserviceAsyncTask extends AsyncTask<InventoryCreateParams, Void, cWebresult> {
         @Override
-        protected cWebresult doInBackground(String... params) {
+        protected cWebresult doInBackground(InventoryCreateParams... params) {
             cWebresult l_WebresultWrs = new cWebresult();
             try {
                 List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
@@ -499,7 +510,7 @@ public class cInventoryorderRepository {
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
                 l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_DOCUMENT;
-                l_PropertyInfo5Pin.setValue(params[0]);
+                l_PropertyInfo5Pin.setValue(params[0].documentStr);
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
                 PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
@@ -509,7 +520,7 @@ public class cInventoryorderRepository {
 
                 PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
                 l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_INVENTORYBARCODECHECK;
-                l_PropertyInfo7Pin.setValue(cSetting.INV_BARCODE_CHECK());
+                l_PropertyInfo7Pin.setValue(params[0].checkBarcodesBln);
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
@@ -562,18 +573,8 @@ public class cInventoryorderRepository {
         }
     }
 
-    private static class mGetInventoryordersFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cInventoryorderEntity>> {
-        private iInventoryorderDao mAsyncTaskDao;
-
-        mGetInventoryordersFromDatabaseAsyncTask(iInventoryorderDao dao) { mAsyncTaskDao = dao; }
-        @Override
-        protected List<cInventoryorderEntity> doInBackground(final Void... params) {
-            return mAsyncTaskDao.getInventoryordersFromDatabase();
-        }
-    }
-
     private static class mGetInventoriesFromDatabaseWithFilterAsyncTask extends AsyncTask<SupportSQLiteQuery, Void, List<cInventoryorderEntity>> {
-        private iInventoryorderDao mAsyncTaskDao;
+        private final iInventoryorderDao mAsyncTaskDao;
 
         mGetInventoriesFromDatabaseWithFilterAsyncTask(iInventoryorderDao dao) { mAsyncTaskDao = dao; }
         @Override
@@ -814,7 +815,7 @@ public class cInventoryorderRepository {
     }
 
     private static class mGetInventoryorderBinNotDoneFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cInventoryorderBinEntity>> {
-        private iInventoryorderBinDao mAsyncTaskDao;
+        private final iInventoryorderBinDao mAsyncTaskDao;
         mGetInventoryorderBinNotDoneFromDatabaseAsyncTask(iInventoryorderBinDao dao) {
             mAsyncTaskDao = dao;
         }
@@ -825,7 +826,7 @@ public class cInventoryorderRepository {
     }
 
     private static class mGetInventoryorderBinDoneFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cInventoryorderBinEntity>> {
-        private iInventoryorderBinDao mAsyncTaskDao;
+        private final iInventoryorderBinDao mAsyncTaskDao;
         mGetInventoryorderBinDoneFromDatabaseAsyncTask(iInventoryorderBinDao dao) {
             mAsyncTaskDao = dao;
         }
@@ -836,7 +837,7 @@ public class cInventoryorderRepository {
     }
 
     private static class pGetInventoryorderBinTotalFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<cInventoryorderBinEntity>> {
-        private iInventoryorderBinDao mAsyncTaskDao;
+        private final iInventoryorderBinDao mAsyncTaskDao;
         pGetInventoryorderBinTotalFromDatabaseAsyncTask(iInventoryorderBinDao dao) {
             mAsyncTaskDao = dao;
         }

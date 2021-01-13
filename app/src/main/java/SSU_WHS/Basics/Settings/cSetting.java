@@ -169,6 +169,7 @@ public class cSetting {
         PICK_PACKING_TABLE_IS_BIN,
         PICK_PACKING_TABLE_SCAN_REQUIRED,
         PICK_PACKING_TRANSFER,
+        PICK_STORAGE_AUTO_START,
         PICK_PER_SCAN,
         PICK_PICK_PV_VKO_EACH_PIECE,
         PICK_PICK_TO_CONTAINER,
@@ -489,6 +490,18 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean PICK_STORE_FASE_AVAILABLE(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_STORE_FASE_AVAILABLE);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+
+
     public static boolean PICK_SHIPPING_SALES(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SHIPPING_SALES);
@@ -580,6 +593,22 @@ public class cSetting {
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
+
+    public static Boolean PICK_STORAGE_AUTO_START(){
+
+        cSetting Setting =  mGetSettingByEnu(settingEnu.PICK_STORAGE_AUTO_START);
+        if (Setting == null) {
+            return  false;
+        }
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
+            return  null;
+        }
+
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+
 
     public static boolean PICK_BARCODE_CHECK(){
 
@@ -745,6 +774,17 @@ public class cSetting {
 
 
     // INVENTORY Settings
+
+    public static boolean INV_AUTO_CREATE_ORDER(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.INV_AUTO_CREATE_ORDER);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
     public static boolean INV_AMOUNT_MANUAL(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.INV_AMOUNT_MANUAL);

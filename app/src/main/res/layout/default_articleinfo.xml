@@ -1,4 +1,4 @@
-<androidx.cardview.widget.CardView android:id="@+id/addressContainer"
+<androidx.cardview.widget.CardView android:id="@+id/articleContainer"
     style="@style/articleInfoContainer"
     app:layout_constraintTop_toBottomOf="@id/toolbar"
     android:layout_width="match_parent"

@@ -181,7 +181,7 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
 
-        this.addressContainer = findViewById(R.id.addressContainer);
+        this.addressContainer = findViewById(R.id.articleContainer);
         this.addressNameText = findViewById(R.id.addressNameText);
         this.addressAddressText = findViewById(R.id.addressAddressText);
         this.addressZipCodeText = findViewById(R.id.addressZipCodeText);

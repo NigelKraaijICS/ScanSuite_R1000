@@ -220,7 +220,7 @@ public class cUser {
         boolean shippingAddedBln = false;
         boolean finishShippingAddedBln = false;
         boolean sortingAddedBln = false;
-
+        boolean storingAddedBln = false;
 
         cWebresult WebResult;
         cAuthorisationViewModel authorisationViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cAuthorisationViewModel.class);
@@ -260,6 +260,14 @@ public class cUser {
                           this.autorisationObl.add(authorisationShipping);
                           shippingAddedBln = true;
                       }
+                    }
+
+                    if (cSetting.PICK_STORE_FASE_AVAILABLE()) {
+                        cAuthorisation authorisationStoring = new cAuthorisation(cAuthorisation.AutorisationEnu.STORAGE.toString(), this.autorisationObl.size() *10 + 10 );
+                        if (!storingAddedBln) {
+                            this.autorisationObl.add(authorisationStoring);
+                            storingAddedBln = true;
+                        }
                     }
 
                     if (cSetting.PICK_FINISH_PACK_FASE_AVAILABLE()) {

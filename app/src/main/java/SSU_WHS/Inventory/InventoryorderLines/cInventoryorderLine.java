@@ -19,6 +19,7 @@ import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipMultiActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderLine {
@@ -228,9 +229,13 @@ public class cInventoryorderLine {
         return true;
     }
 
-    public cInventoryorderLineBarcode pAddLineBarcode(String pvBarcodeStr, Double pvQuantityDbl) {
+    public cInventoryorderLineBarcode pAddLineBarcode(String pvBarcodeStr, Double pvQuantityDbl, boolean pvSkipQuantityBln) {
 
         cInventoryorderLineBarcode inventoryorderLineBarcode = new cInventoryorderLineBarcode((long) this.getLineNoInt(),pvBarcodeStr,pvQuantityDbl);
+
+        if (pvSkipQuantityBln){
+            inventoryorderLineBarcode.quantityHandledDbl = 0;
+        }
 
         if (cInventoryorderLineBarcode.allLineBarcodesObl == null){
             cInventoryorderLineBarcode.allLineBarcodesObl = new ArrayList<>();

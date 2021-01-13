@@ -108,7 +108,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         this.mSetSerialNumberIfPossible();
 
 //        //set Crashlytics, otherwise Firebase wont work
-//        FirebaseAnalytics.getInstance(this);
+        FirebaseAnalytics.getInstance(this);
 
     }
 

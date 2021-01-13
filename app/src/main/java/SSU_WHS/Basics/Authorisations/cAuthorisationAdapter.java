@@ -152,6 +152,11 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_SHIP);
         }
 
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.STORAGE) {
+            pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_STORE);
+            pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_STORE);
+        }
+
         if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.FINISH_SHIPPING) {
             pvHolder.imageViewAuthorisation.setTag(cAuthorisation.TAG_IMAGE_FINISH_SHIP);
             pvHolder.textViewAuthorisation.setTag(cAuthorisation.TAG_TEXT_FINSIH_SHIP);
@@ -286,6 +291,11 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
             return;
         }
 
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.STORAGE) {
+            pvHolder.textViewAuthorisation.setText(R.string.menuitem_store);
+            return;
+        }
+
         if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.FINISH_SHIPPING) {
             pvHolder.textViewAuthorisation.setText(R.string.menuitem_finish_ship);
             return;
@@ -416,6 +426,11 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
 
         if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.SHIPPING) {
             pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_ship);
+            return;
+        }
+
+        if (pvAuthorisation.getAutorisationEnu() ==  cAuthorisation.AutorisationEnu.STORAGE) {
+            pvHolder.imageViewAuthorisation.setImageResource(R.drawable.ic_menu_intake_om);
             return;
         }
 

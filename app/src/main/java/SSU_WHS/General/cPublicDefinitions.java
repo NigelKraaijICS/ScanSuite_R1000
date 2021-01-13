@@ -15,6 +15,7 @@ public class cPublicDefinitions {
     public static String NUMBERINTENT_CURRENTQUANTITY = "NUMBERINTENT_CURRENTQUANTITY";
     public static String NUMBERINTENT_MAXQUANTITY = "NUMBERINTENT_MAXQUANTITY";
     public static String KEY_COMMENTHEADER = "KEY_COMMENTHEADER";
+    public static String SETBIN_TAG = "SETBIN_TAG";
     public static String ADDBIN_TAG = "ADDBIN_TAG";
     public static String SETSERIAL_TAG = "SETSERIAL_TAG";
     public static String ADDARTICLE_TAG = "ADDARTICLE_TAG";

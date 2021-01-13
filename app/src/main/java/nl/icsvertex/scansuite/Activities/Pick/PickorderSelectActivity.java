@@ -37,7 +37,6 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
@@ -60,7 +59,6 @@ import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
-import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.R;
 
 public class PickorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
@@ -582,6 +580,13 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         if (!cPickorder.currentPickOrder.pGetLinePropertysViaWebserviceBln(true )) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!cPickorder.currentPickOrder.pGetLinePropertyValuesViaWebserviceBln(true )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
             return result;
         }
 

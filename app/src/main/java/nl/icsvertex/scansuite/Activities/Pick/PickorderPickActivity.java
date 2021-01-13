@@ -95,8 +95,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  TextView textViewAction;
 
-
-
     //End Region Private Properties
 
     //Region Default Methods
@@ -223,7 +221,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.textViewAction = findViewById(R.id.textViewAction);
-        this.articleContainer = findViewById(R.id.addressContainer);
+        this.articleContainer = findViewById(R.id.articleContainer);
     }
 
     @Override
@@ -253,11 +251,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
         if (cPickorder.currentPickOrder.isTransferBln()) {
-            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getDestinationAndDescriptionStr() + " " +  cPickorderLine.currentPickOrderLine.getBinCodeStr());
+            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getTransferToolbarDescriptionStr());
         }
         else
         {
-            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getSourceNoStr() + " " +  cPickorderLine.currentPickOrderLine.getBinCodeStr());
+            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getToolbarDescriptionStr());
         }
 
         this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
@@ -284,6 +282,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.mShowSortingInstruction();
 
         this.mCheckLineDone();
+        this.mHideArticleInfo();
     }
 
     @Override
@@ -610,13 +609,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
-
-
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangePickedQuantity(false, true,pvQuantityDbl);
-        } else {
-            this.mTryToChangePickedQuantity(true, true,pvQuantityDbl);
-        }
+        this.mTryToChangePickedQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
 
     }
 
@@ -937,14 +930,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 if (PickorderPickActivity.articleScannedLastBln && incompleteBln) {
                     this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
                     this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
-                    return;
-                }
-
-                //Not complete and pickcart/salesorder last scanned so we have to scan an article, set the instruction
-                if (PickorderPickActivity.articleScannedLastBln && incompleteBln) {
-                    this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-                    this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
-                    this.imageButtonDone.setVisibility(View.VISIBLE);
                     return;
                 }
 
@@ -1307,15 +1292,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     //Dialogs and Activitys
 
-//    private void mSetArticleInfoButtonListener() {
-//        this.imageButtonArticleInfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mShowArticleInfoFragment();
-//            }
-//        });
-//    }
-
     private  void mShowFullArticleFragment() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
@@ -1426,7 +1402,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     //Region Number Broadcaster
 
-    private Runnable mMinusAction = new Runnable() {
+    private final Runnable mMinusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonMinus.performClick();
@@ -1446,7 +1422,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
     };
 
-    private Runnable mPlusAction = new Runnable() {
+    private final Runnable mPlusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonPlus.performClick();
@@ -1466,7 +1442,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
     };
 
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int numberChosenInt = 0;

@@ -18,6 +18,7 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Store.StoreorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -46,6 +47,9 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
         if (cAppExtension.context instanceof ShiporderSelectActivity) {
             setPreferencesFromResource(R.xml.pick_filter, rootKey);
         }
+        if (cAppExtension.context instanceof StoreorderSelectActivity) {
+            setPreferencesFromResource(R.xml.pick_filter, rootKey);
+        }
 
         if (cAppExtension.context instanceof InventoryorderSelectActivity) {
             setPreferencesFromResource(R.xml.standard_filter, rootKey);
@@ -66,6 +70,8 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
         if (cAppExtension.context instanceof PackAndShipSelectActivity) {
             setPreferencesFromResource(R.xml.standard_filter, rootKey);
         }
+
+
     }
 
     @Override

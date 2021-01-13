@@ -132,6 +132,7 @@
     <string name="menuitem_selfpick">Picking done by client</string>
     <string name="menuitem_sort">Sorting</string>
     <string name="menuitem_ship">Shipping</string>
+    <string name="menuitem_store">Store weborders</string>
     <string name="menuitem_finish_ship">Finish Shipping</string>
     <string name="menuitem_qc">Quality Control</string>
     <string name="menuitem_pack_and_ship">Pack and Ship</string>
@@ -231,6 +232,11 @@
     <string name="error_no_more_articles_to_sort">There are no more articles to sort</string>
     <!--endregion Sortorder Lines-->
 
+    <!--region Storeorder Lines-->
+    <string name="screentitle_storeorderlines">Store lines</string>
+    <string name="error_no_more_sourcedocuments_to_sort">There are no more sourcedocuments to store</string>
+    <!--endregion Sortorder Lines-->
+
     <!--region Sortorder Lines-->
     <string name="screentitle_qclines">QC lines</string>
     <string name="screentitle_qcorders">QC orders</string>
@@ -262,6 +268,7 @@
 
     <!--region Sortorderselect-->
     <string name="screentitle_sortorderselect">Sortorders</string>
+    <string name="screentitle_storeorderselect">Store orders</string>
     <!--endregion Screens-->
 
     <!--region filter Pickorder Lines-->
@@ -360,6 +367,8 @@
     <string name="packing_table">Packing table</string>
     <string name="tab_sortorderline_tosort">To sort</string>
     <string name="tab_sortorderline_sorted">Sorted</string>
+    <string name="tab_sortorderline_tostore">To store</string>
+    <string name="tab_sortorderline_stored">Stored</string>
     <string name="tab_qcorderline_tocheck">To check</string>
     <string name="tab_qcorderline_checked">Checked</string>
     <string name="sortorder_nothing_selected">Select a line first</string>
@@ -485,6 +494,7 @@
     <string name="error_couldnt_release_lock_order">Couln\'t release order lock</string>
     <string name="error_get_barcodes_failed">Getting barcodes failed</string>
     <string name="error_getting_sort_lines_failed">Could not get sort lines</string>
+    <string name="error_getting_store_lines_failed">Could not get store lines</string>
     <string name="error_get_adresses_failed">Getting adresses failed</string>
     <string name="error_get_comments_failed">Getting comments failed</string>
     <string name="error_get_settings_failed">Getting settings failed</string>
@@ -561,17 +571,21 @@
     <string name="hint_input_bin">Scan or type BIN</string>
     <string name="hint_set_serial">Type serial</string>
     <string name="hint_add_bin">Scan or type new bin</string>
+    <string name="hint_storage_bin">Scan or type storage bin</string>
     <string name="hint_add_packingslip">Packingslip</string>
     <string name="add_bin_header_default">Add bin</string>
+    <string name="set_bin_header_default">Set bin</string>
     <string name="scan_bin_header_default">Scan BIN</string>
     <string name="set_serial_header_default">Set serial</string>
     <string name="button_add_bin">Add bin</string>
+    <string name="button_set_bin">Set bin</string>
     <string name="button_set">Set</string>
     <string name="message_bin_added">Bin %1$s was added</string>
     <string name="message_bin_not_added">Bin %1$s was not added</string>
     <string name="screentitle_inventoryordercount">Inventory count</string>
     <string name="error_get_line_barcodes_failed">Getting line barcodes failed</string>
     <string name="error_get_line_propertys_failed">Getting line propertys failed</string>
+    <string name="error_get_line_property_values_failed">Getting line property values failed</string>
     <string name="message_couldnt_create_order">Order could not be created</string>
     <string name="message_add_bin_not_allowed">You are not allowed to add a BIN</string>
     <string name="message_bin_could_not_be_added_via_webservice">Bin could not be added via web service</string>
@@ -773,6 +787,7 @@
     <string name="message_reset_variant_via_webservice_failed">Resetting variant via webservice failed</string>
     <string name="create_pick">Create Pick order</string>
     <string name="create_move">Create Move order</string>
+    <string name="create_inventory">Create Inventory</string>
     <string name="create_pack_and_ship">Create Pack and Ship order</string>
     <string name="tab_moveorderline_take">Take</string>
     <string name="tab_moveorderline_place">Place</string>
@@ -834,8 +849,10 @@
     <string name="message_pick_done">Picking done?</string>
     <string name="message_close_pick_fase">Would you like to finish picking?</string>
 
+    <string name="message_store_done">Store done?</string>
     <string name="message_sort_done">Sorting done?</string>
     <string name="message_close_sort_fase">Would you like to finish sorting?</string>
+    <string name="message_close_store_fase">Would you like to finish storing?</string>
 
     <string name="message_qcdone">Quality Control  done?</string>
     <string name="message_close_qc_fase">Would you like to finish quality control?</string>
@@ -878,6 +895,8 @@
     <string name="message_zipcode_mismatch">Zipcode mismatch</string>
     <string name="message_city_mismatch">City mismatch</string>
     <string name="message_country_mismatch">Country mismatch</string>
+    <string name="error_unknow_storement">Weborder to store can\'t be found</string>
+    <string name="message_bin_cant_be_used_for_storage">This BIN can\'t be used for storage</string>
 
     <!--End Region return-->
 

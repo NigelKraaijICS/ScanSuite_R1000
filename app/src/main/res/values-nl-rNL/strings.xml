@@ -754,5 +754,21 @@
     <string name="message_city_mismatch">Plaatsnaam komt niet overeen</string>
     <string name="message_country_mismatch">Land komt niet overeen</string>
     <string name="error_get_line_propertys_failed">Ophalen regel eigenschappen mislukt</string>
+    <string name="error_get_line_property_values_failed">Ophalen regel eigenschap waardes mislukt</string>
+    <string name="create_inventory">Creeer Inventarisatie</string>
+    <string name="screentitle_storeorderlines">Opslag regels</string>
+    <string name="error_no_more_sourcedocuments_to_sort">Geen documenten meer om op te slaan</string>
+    <string name="tab_sortorderline_tostore">Op te slaan</string>
+    <string name="tab_sortorderline_stored">Opgeslagen</string>
+    <string name="screentitle_storeorderselect">Opslag opdrachten</string>
+    <string name="error_getting_store_lines_failed">Opslagregels kunnen niet opgehaald worden</string>
+    <string name="menuitem_store">Opslaan weborders</string>
+    <string name="button_set_bin">Bepaal BIN</string>
+    <string name="hint_storage_bin">Scan of type opslag BIN</string>
+    <string name="set_bin_header_default">Bepaal BIN</string>
+    <string name="error_unknow_storement">Geen weborder gevonden met deze barcode</string>
+    <string name="message_bin_cant_be_used_for_storage">Deze BIN is niet geschikt voor opslag</string>
+    <string name="message_close_store_fase">Wilt u het opslaan afronden?</string>
+    <string name="message_store_done">Opslaan afronden?</string>
 
 </resources>

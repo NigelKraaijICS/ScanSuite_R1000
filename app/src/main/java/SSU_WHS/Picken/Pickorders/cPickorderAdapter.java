@@ -27,6 +27,7 @@ import nl.icsvertex.scansuite.Activities.FinishShip.FinishShiporderSelectActivit
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Store.StoreorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.PickorderViewHolder>  {
@@ -292,6 +293,11 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
                 if (cAppExtension.activity instanceof FinishShiporderSelectActivity) {
                     FinishShiporderSelectActivity finishShiporderSelectActivity = (FinishShiporderSelectActivity)cAppExtension.activity;
                     finishShiporderSelectActivity.pFinishShiporderSelected(selectedPickorder);
+                }
+
+                if (cAppExtension.activity instanceof StoreorderSelectActivity) {
+                    StoreorderSelectActivity storeorderSelectActivity = (StoreorderSelectActivity)cAppExtension.activity;
+                    storeorderSelectActivity.pStoreorderSelected(selectedPickorder);
                 }
 
             }

@@ -30,6 +30,7 @@ public class cDatabase {
 
     public static final String TABLENAME_PICKORDERLINES = "Pickorderlines";
     public static final String TABLENAME_PICKORDERLINEPROPERTY = "PickorderlineProperty";
+    public static final String TABLENAME_PICKORDERLINEPROPERTYVALUE = "PickorderlinePropertyValue";
     public static final String TABLENAME_PICKORDERSETTING = "PickorderSetting";
     public static final String TABLENAME_PICKORDERADDRESS = "PickorderAddress";
     public static final String TABLENAME_SHIPPINGAGENTS = "ShippingAgents";
@@ -242,6 +243,9 @@ public class cDatabase {
 
     //region M
     public static final String MOVEDEFAULTBIN_NAMESTR = "Move_default_bin";
+    public static final String PICKDEFAULTSTORAGEBIN = "Pick_default_storage_bin";
+
+
 
     public static final String MOVEAMOUNTMANUAL_NAMESTR = "Move_Amount_manual";
     public static final String MOVEBARCODECHECK_NAMESTR = "Move_Barcode_check";

@@ -6,33 +6,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Activities.Inventory.InventoryorderBinActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container"
+        android:id="@+id/inventoryOrderBINContainer"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         >
         <include layout="@layout/toolbar_subtext_default"/>
-        <include layout="@layout/default_bininfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewInventoryorderLines"
+            style="@style/defaultRecyclerView"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintBottom_toTopOf="@+id/buttonContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             />
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/inventoryorderContainer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/binContainer"
-            app:layout_constraintBottom_toTopOf="@id/buttonContainer"
-            >
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewInventoryorderLines"
-                style="@style/defaultRecyclerView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonContainer"
             android:background="@color/colorDefaultbackground"
@@ -50,7 +36,7 @@
                 />
             <androidx.appcompat.widget.AppCompatImageView
                 style="@style/defaultBottomButton"
-                android:id="@+id/imageViewNewOrder"
+                android:id="@+id/imageViewCloseBIN"
                 app:srcCompat="@drawable/ic_check_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

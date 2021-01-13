@@ -94,6 +94,9 @@ public class cAuthorisation {
             case "SHIPPING":
                 return  AutorisationEnu.SHIPPING;
 
+            case "STORAGE":
+                return  AutorisationEnu.STORAGE;
+
             case "FINISH_SHIPPING":
                 return  AutorisationEnu.FINISH_SHIPPING;
 
@@ -187,6 +190,7 @@ public class cAuthorisation {
         SELFPICK,
         // Generated
         SORTING,
+        STORAGE,
         SHIPPING,
         FINISH_SHIPPING,
         QC,
@@ -208,6 +212,9 @@ public class cAuthorisation {
 
     public static String TAG_IMAGE_SHIP = "TAG_IMAGE_SHIP";
     public static String TAG_TEXT_SHIP = "TAG_TEXT_SHIP";
+
+    public static String TAG_IMAGE_STORE = "TAG_IMAGE_STORE";
+    public static String TAG_TEXT_STORE = "TAG_TEXT_STORE";
 
     public static String TAG_IMAGE_FINISH_SHIP = "TAG_IMAGE_FINISH_SHIP";
     public static String TAG_TEXT_FINSIH_SHIP = "TAG_TEXT_FINISH_SHIP";

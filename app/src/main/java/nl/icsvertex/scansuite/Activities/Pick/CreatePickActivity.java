@@ -398,10 +398,17 @@ public class CreatePickActivity extends AppCompatActivity implements iICSDefault
             return result;
         }
 
-        // Get all barcodes, if webservice error then stop
+        // Get all propertys, if webservice error then stop
         if (!cPickorder.currentPickOrder.pGetLinePropertysViaWebserviceBln(true )) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!cPickorder.currentPickOrder.pGetLinePropertyValuesViaWebserviceBln(true )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
             return result;
         }
 

@@ -205,7 +205,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
 
         this.textViewAction = findViewById(R.id.textViewAction);
 
-        this.articleContainer = findViewById(R.id.addressContainer);
+        this.articleContainer = findViewById(R.id.articleContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
     }
 

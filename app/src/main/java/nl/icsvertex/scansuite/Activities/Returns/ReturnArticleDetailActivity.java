@@ -186,7 +186,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-        this.articleContainer = findViewById(R.id.addressContainer);
+        this.articleContainer = findViewById(R.id.articleContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);

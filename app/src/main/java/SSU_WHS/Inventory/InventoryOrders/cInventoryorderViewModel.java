@@ -30,7 +30,7 @@ public class cInventoryorderViewModel extends AndroidViewModel {
 
     public void deleteAll() {this.Repository.deleteAll();}
 
-    public cWebresult pCreateInventoryOrderViaWebserviceWrs(String pvDocumentStr) {return this.Repository.pCreateInventoryOrderViaWebserviceWrs(pvDocumentStr);}
+    public cWebresult pCreateInventoryOrderViaWebserviceWrs(String pvDocumentStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateInventoryOrderViaWebserviceWrs(pvDocumentStr, pvCheckBarcodesBln);}
 
     public cWebresult pGetInventoryordersFromWebserviceWrs(String pvSearchTextStr) {return this.Repository.pGetInventoryordersFromWebserviceWrs(pvSearchTextStr);}
 

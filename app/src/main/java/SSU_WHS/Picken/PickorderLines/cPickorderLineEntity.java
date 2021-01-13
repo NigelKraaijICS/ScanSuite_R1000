@@ -41,6 +41,10 @@ public class cPickorderLineEntity {
     public String bincode;
     public String getBincodeStr() {return this.bincode;}
 
+    @ColumnInfo(name = cDatabase.STORAGEBINCODE_NAMESTR)
+    public String storageBincode;
+    public String getStorageBincode() {return this.storageBincode;}
+
     @ColumnInfo(name = cDatabase.QUANTITY_NAMESTR)
     public Double quantity;
     public Double getQuantityDbl() {return this.quantity;}
@@ -112,6 +116,14 @@ public class cPickorderLineEntity {
             this.description2 = pvJsonObject.getString(cDatabase.DESCRIPTION2_NAMESTR);
             this.bincode = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
 
+
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.STORE.toString())) {
+                this.storageBincode = pvJsonObject.getString(cDatabase.STORAGEBINCODE_NAMESTR);
+            }
+            else
+            {
+                this.storageBincode = "";
+            }
             this.quantity = pvJsonObject.getDouble(cDatabase.QUANTITY_NAMESTR);
             this.quantityhandled = pvJsonObject.getDouble(cDatabase.QUANTITYHANDLED_NAMESTR);
             this.quantityRejected = pvJsonObject.getDouble(cDatabase.QUANTITYREJECTED_NAMESTR);
@@ -131,8 +143,15 @@ public class cPickorderLineEntity {
             this.vendoritemdescription = pvJsonObject.getString(cDatabase.VENDORITEMDESCRIPTION_NAMESTR);
 
             this.status = pvJsonObject.getInt(cDatabase.STATUS_NAMESTR);
-            this.statusShipping = pvJsonObject.getInt(cDatabase.STATUSSHIPPING_NAMESTR);
-            this.statusPacking = pvJsonObject.getInt(cDatabase.STATUSPACKING_NAMESTR);
+
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.STORE.toString())) {
+                this.statusShipping =  cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
+                this.statusPacking = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
+            }
+            else {
+                this.statusShipping = pvJsonObject.getInt(cDatabase.STATUSSHIPPING_NAMESTR);
+                this.statusPacking = pvJsonObject.getInt(cDatabase.STATUSPACKING_NAMESTR);
+            }
 
             this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW;
 
@@ -151,6 +170,15 @@ public class cPickorderLineEntity {
                     }
                 }
             }
+
+            if (pvPickOrderTypeStr.equalsIgnoreCase(cWarehouseorder.PickOrderTypeEnu.STORE.toString())) {
+                if (this.status == cWarehouseorder.PicklineStatusEnu.DONE) {
+                    if (Double.compare(this.getQuantityHandledDbl(),this.getQuantityDbl()) == 0) {
+                        this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
+                    }
+                }
+            }
+
             //endregion extraField8Str
 
         } catch (JSONException e) {

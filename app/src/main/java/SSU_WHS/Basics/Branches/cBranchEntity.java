@@ -44,6 +44,10 @@ public class cBranchEntity {
     public String movedefaultbin;
     public String getMovedefaultbinStr() {return this.movedefaultbin;}
 
+    @ColumnInfo(name=cDatabase.PICKDEFAULTSTORAGEBIN)
+    public String pickDefaultStorageBinStr;
+    public String getPickDefaultStorageBinStr() {return this.pickDefaultStorageBinStr;}
+
     //End Region Public Properies
 
     //Region Constructor
@@ -60,6 +64,7 @@ public class cBranchEntity {
             this.receivedefaultbin = jsonObject.getString(cDatabase.RECEIVEDEFAULTBIN_NAMESTR);
             this.returndefaultbin = jsonObject.getString(cDatabase.RETURNDEFAULTBIN_NAMESTR);
             this.movedefaultbin = jsonObject.getString(cDatabase.MOVEDEFAULTBIN_NAMESTR);
+            this.pickDefaultStorageBinStr = jsonObject.getString(cDatabase.PICKDEFAULTSTORAGEBIN);
         } catch (JSONException e) {
             e.printStackTrace();
         }

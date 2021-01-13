@@ -213,7 +213,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.textViewAction = findViewById(R.id.textViewAction);
-        this.articleContainer = findViewById(R.id.addressContainer);
+        this.articleContainer = findViewById(R.id.articleContainer);
     }
 
     @Override

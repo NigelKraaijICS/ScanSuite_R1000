@@ -21,6 +21,7 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcodeAdapter;
+import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryOrderBarcodeAdapter;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeAdapter;
 import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipOrderBarcodeAdapter;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcodeAdapter;
@@ -33,6 +34,7 @@ import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipMultiActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryArticleActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -80,6 +82,15 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
         }
         return  this.packAndShipOrderBarcodeAdapter;
     }
+
+    private cInventoryOrderBarcodeAdapter inventoryOrderBarcodeAdapter;
+    private cInventoryOrderBarcodeAdapter getInventoryOrderBarcodeAdapter(){
+        if (this.inventoryOrderBarcodeAdapter == null) {
+            this.inventoryOrderBarcodeAdapter = new cInventoryOrderBarcodeAdapter();
+        }
+        return  this.inventoryOrderBarcodeAdapter;
+    }
+
 
 
     //End Region Private Properties
@@ -195,6 +206,9 @@ public class BarcodeFragment extends DialogFragment implements iICSDefaultFragme
             this.barcodeRecyclerview.setAdapter(this.getPackAndShipOrderBarcodeAdapter());
         }
 
+        if (cAppExtension.activity instanceof InventoryArticleActivity) {
+                this.barcodeRecyclerview.setAdapter(this.getInventoryOrderBarcodeAdapter());
+        }
 
         this.barcodeRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }

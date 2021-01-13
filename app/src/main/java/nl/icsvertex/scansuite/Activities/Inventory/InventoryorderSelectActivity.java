@@ -45,13 +45,11 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorderAdapter;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.BuildConfig;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
-import nl.icsvertex.scansuite.Fragments.Inventory.CreateInventoryFragment;
 import nl.icsvertex.scansuite.R;
 
 
@@ -76,6 +74,8 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     private  ImageView imageViewNewOrder;
     private  ConstraintLayout constraintFilterOrders;
     private  BottomSheetBehavior bottomSheetBehavior;
+
+    public static boolean startedViaMenuBln;
 
     private cInventoryorderAdapter inventoryorderAdapter;
     private cInventoryorderAdapter getInventoryorderAdapter() {
@@ -287,20 +287,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     }
 
-    public  void pCreateOrder(final String pvDocumentStr){
-
-
-        // Show that we are getting data
-        cUserInterface.pShowGettingData();
-
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCreateOrder(pvDocumentStr);
-            }
-        }).start();
-
-    }
-
     //End Region Public Methods
 
     // Region Private Methods
@@ -318,7 +304,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         //Delete the detail, so we can get them from the webservice
         cInventoryorder.currentInventoryOrder.pDeleteDetails();
 
-        hulpResult = this.mGetOrderDetailsRst();
+        hulpResult = cInventoryorder.currentInventoryOrder.pGetOrderDetailsRst();
         if (!hulpResult.resultBln ) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -332,54 +318,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
                 mShowInventoryorderBinsActivity();
             }
         });
-
-    }
-
-    private  void mHandleCreateOrder(String pvDocumentstr){
-
-        cResult hulpResult;
-
-        //Try to create the order
-        if (!this.mTryToCreateOrderBln(pvDocumentstr)) {
-            this.pFillOrders();
-            return;
-        }
-
-        //Try to lock the order
-        if (!this.mTryToLockOrderBln()) {
-            this.pFillOrders();
-            return;
-        }
-
-        //Delete the detail, so we can get them from the webservice
-        cInventoryorder.currentInventoryOrder.pDeleteDetails();
-
-        hulpResult = this.mGetOrderDetailsRst();
-        if (!hulpResult.resultBln) {
-            this.mStepFailed(hulpResult.messagesStr());
-            this.pFillOrders();
-            return;
-        }
-
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowInventoryorderBinsActivity();
-            }
-        });
-
-    }
-
-    private  boolean mTryToCreateOrderBln(String pvDocumentstr){
-
-        Boolean resultBln =  cInventoryorder.pCreateInventoryOrderViaWebserviceBln(pvDocumentstr);
-        if (!resultBln) {
-            mStepFailed(cAppExtension.activity.getString(R.string.message_couldnt_create_order));
-            return  false;
-        }
-
-        return true;
 
     }
 
@@ -452,64 +390,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         });
     }
 
-    private cResult mGetOrderDetailsRst(){
 
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all bins for current order, if webservice error then stop
-        if (!cInventoryorder.currentInventoryOrder.pGetBinsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_bins_failed));
-            return result;
-        }
-
-        //Get all linesInt for current order, if size = 0 or webservice error then stop
-        if (!cInventoryorder.currentInventoryOrder.pGetLinesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
-            return result;
-        }
-
-        //Get all linesInt for current order, if size = 0 or webservice error then stop
-        if (!cInventoryorder.currentInventoryOrder.pGetPossibleBinsViaWebserviceBln()) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_possible_bins_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cInventoryorder.currentInventoryOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-
-        //Get all barcodes
-        if (!cInventoryorder.currentInventoryOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-
-        //Get all inventorylinebarcodes
-        if (!cInventoryorder.currentInventoryOrder.pGetLineBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
-            return result;
-        }
-
-        // Get all article images, only if neccesary
-        if (!cInventoryorder.currentInventoryOrder.pGetArticleImagesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_article_images_failed));
-            return result;
-        }
-
-        return  result;
-    }
 
     // End Region Private Methods
 
@@ -570,11 +451,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         this.mSetInventoryorderRecycler(filteredInventoryOrdersObl);
 
-        if (filteredInventoryOrdersObl.size() == 0) {
-            mShowNoOrdersIcon(true);
-        } else {
-            mShowNoOrdersIcon(false);
-        }
+        mShowNoOrdersIcon(filteredInventoryOrdersObl.size() == 0);
 
     }
 
@@ -591,12 +468,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mShowHideBottomSheet(true);
-                }
-                else {
-                    mShowHideBottomSheet(false);
-                }
+                mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
     }
@@ -736,7 +608,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                mShowCreateInventoryFragment();
+                mShowCreateInventoryActivity();
             }
         });
     }
@@ -770,6 +642,10 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
                     NoOrdersFragment fragment = new NoOrdersFragment();
                     fragmentTransaction.replace(R.id.inventoryorderContainer, fragment);
                     fragmentTransaction.commit();
+
+                    if (cSetting.INV_AUTO_CREATE_ORDER()) {
+                        mAutoOpenCreateActivity();
+                    }
                     return;
                 }
 
@@ -826,10 +702,10 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         cInventoryorder.currentInventoryOrder = null;
     }
 
-    private void mShowCreateInventoryFragment() {
-        final CreateInventoryFragment createInventoryFragment = new CreateInventoryFragment(true);
-        createInventoryFragment.setCancelable(false);
-        createInventoryFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
+    private void mShowCreateInventoryActivity() {
+        Intent intent = new Intent(cAppExtension.context, CreateInventoryActivity.class);
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
     }
 
     private  void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
@@ -896,6 +772,21 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             subtitleStr = cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryOrdersObl(false).size()) + " " + cAppExtension.activity.getString(R.string.inventory_orders);
         }
         this.toolbarSubTitle.setText(subtitleStr);
+    }
+
+    private void mAutoOpenCreateActivity(){
+
+        // We returned in this form, so don't start create activity
+        if (!InventoryorderSelectActivity.startedViaMenuBln) {
+            return;
+        }
+
+        if (cSetting.INV_NEW_WORKFLOWS().size() == 0) {
+            return;
+        }
+
+        this.mShowCreateInventoryActivity();
+
     }
 
     // End No orders icon

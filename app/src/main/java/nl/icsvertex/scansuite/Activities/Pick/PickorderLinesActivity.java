@@ -44,6 +44,7 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Store.StoreorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
@@ -125,6 +126,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         super.onStop();
         finish();
     }
+
 
     //End Region Default Methods
 
@@ -615,6 +617,12 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
+        if (cPickorder.currentPickOrder.isStorableBln()) {
+            this.mStoreNextStep();
+            return;
+        }
+
+
         if (cPickorder.currentPickOrder.isSortableBln()) {
             this.mSortNextStep();
             return;
@@ -858,6 +866,33 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
+    private  void mStoreNextStep(){
+
+        //If activity bin is not required, then don't show the fragment
+        if ( cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 ) {
+            this.mStartOrderSelectActivity();
+            return;
+        }
+
+        // If setting is not defined, then ask user
+        if (cSetting.PICK_STORAGE_AUTO_START() == null) {
+            this.mAskSort();
+            return;
+        }
+
+        // If settings is false, then go back to order select
+        if (!cSetting.PICK_STORAGE_AUTO_START()) {
+            this.mStartOrderSelectActivity();
+            return;
+        }
+
+        // If settings is true, then go  to sort
+        if (cSetting.PICK_STORAGE_AUTO_START()) {
+            this.mStartStoreActivity();
+        }
+
+    }
+
     private  void mSortNextStep(){
 
         //If activity bin is not required, then don't show the fragment
@@ -952,6 +987,44 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             }
         }).start();
 
+    }
+
+    private  void mStartStoreActivity() {
+
+        cUserInterface.pShowGettingData();
+
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleStartStoreActivity();
+            }
+        }).start();
+
+    }
+
+    private  void mHandleStartStoreActivity(){
+
+        //Clear workplaceStr, so you have to select it in the next step
+        cWorkplace.currentWorkplace = null;
+
+        //Try to lock the pickorder
+        if (!cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Picking, cWarehouseorder.WorkflowPickStepEnu.PickStorage).resultBln) {
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_lock_order),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickStorage);
+            return;
+        }
+
+        //Get sort linesInt
+        if (!cPickorder.currentPickOrder.pGetStorageLinesViaWebserviceBln(true)) {
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_getting_sort_lines_failed),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickStorage);
+            return;
+        }
+
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            public void run() {
+                //Show Sort Activity
+                Intent intent = new Intent(cAppExtension.context, StoreorderLinesActivity.class);
+                cAppExtension.activity.startActivity(intent);
+            }
+        });
     }
 
     private  void mHandleStartSortActivity(){

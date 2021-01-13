@@ -72,6 +72,11 @@ public class cPickorderLine {
         return binCodeStr;
     }
 
+    private String storageBinCodeStr;
+    public String getStorageBinCodeStr() {
+        return storageBinCodeStr;
+    }
+
     private Double quantityDbl;
     public Double getQuantityDbl() {
         return quantityDbl;
@@ -148,6 +153,7 @@ public class cPickorderLine {
 
     public cArticleImage articleImage;
 
+
     public  String getDestinationAndDescriptionStr(){
 
        String resultStr ;
@@ -163,7 +169,14 @@ public class cPickorderLine {
         }
 
         return  resultStr;
+    }
 
+    public  String getTransferToolbarDescriptionStr(){
+        return  this.getDestinationAndDescriptionStr() + " " +  this.getBinCodeStr();
+    }
+
+    public  String getToolbarDescriptionStr(){
+        return  this.getSourceNoStr() + " " +  this.getBinCodeStr();
     }
 
     private final cPickorderLineEntity PickorderLineEntity;
@@ -256,13 +269,17 @@ public class cPickorderLine {
         this.descriptionStr = this.PickorderLineEntity.getDescriptionStr();
         this.description2Str = this.PickorderLineEntity.getDescription2Str();
         this.binCodeStr= this.PickorderLineEntity.getBincodeStr();
-
+        this.storageBinCodeStr = this.PickorderLineEntity.getStorageBincode();
 
         if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.PICK  ) {
             this.quantityDbl = this.PickorderLineEntity.getQuantityDbl();
         }
 
         if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.SORT ) {
+            this.quantityDbl = this.PickorderLineEntity.getQuantityTakenDbl();
+        }
+
+        if (pvPickOrderTypeEnu == cWarehouseorder.PickOrderTypeEnu.STORE ) {
             this.quantityDbl = this.PickorderLineEntity.getQuantityTakenDbl();
         }
 

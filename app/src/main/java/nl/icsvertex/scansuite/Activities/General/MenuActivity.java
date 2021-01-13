@@ -50,6 +50,7 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
+import nl.icsvertex.scansuite.Activities.Store.StoreorderSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
@@ -382,6 +383,24 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             return;
         }
 
+        if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.STORAGE) {
+
+            cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
+
+            if (!  cLicense.pGetLicenseViaWebserviceBln()) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                return;
+            }
+
+
+            intent = new Intent(cAppExtension.context, StoreorderSelectActivity.class);
+            clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_STORE);
+            clickedText = container.findViewWithTag(cAuthorisation.TAG_TEXT_STORE);
+            activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
+            ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            return;
+        }
+
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.INVENTORY) {
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Inventory;
@@ -391,6 +410,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             }
 
             intent = new Intent(cAppExtension.context, InventoryorderSelectActivity.class);
+            InventoryorderSelectActivity.startedViaMenuBln = true;
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_INVENTORY);
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_INVENTORY);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));

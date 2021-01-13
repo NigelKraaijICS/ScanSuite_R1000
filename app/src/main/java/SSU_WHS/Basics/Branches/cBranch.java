@@ -49,6 +49,11 @@ public class cBranch {
         return   receiveDefaultBinStr;
     }
 
+    private String pickDefaultStorageBinStr;
+    public String getPickDefaultStorageBinStr(){
+        return pickDefaultStorageBinStr;
+    }
+
     private String moveDefaultBinStr;
     public String getMoveDefaultBinStr(){
         return   moveDefaultBinStr;
@@ -90,6 +95,7 @@ public class cBranch {
         this.returnDefaultBinStr = branchEntity.getReturndefaultbinStr();
         this.receiveDefaultBinStr = branchEntity.getReceivedefaultbinStr();
         this.moveDefaultBinStr = branchEntity.getMovedefaultbinStr();
+        this.pickDefaultStorageBinStr = branchEntity.getPickDefaultStorageBinStr();
         this.binMandatoryBln = cText.pStringToBooleanBln(branchEntity.getBinmandatoryStr(),false) ;
 
     }

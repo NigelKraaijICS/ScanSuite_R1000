@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -44,7 +43,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
-import nl.icsvertex.scansuite.Fragments.Inventory.InventoryArticleDetailFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryorderBinActivity extends AppCompatActivity implements iICSDefaultActivity,cInventoryorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -55,16 +53,19 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     //End Region Public Properties
 
+
     //Region Private Properties
-    private TextView binText;
-    private ImageView imageBin;
+
+    private Toolbar toolbar;
     private ImageView toolbarImage;
-    private ImageView imageBinDone;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
+
     private RecyclerView recyclerViewInventoryorderLines;
 
     private  ImageView imageAddArticle;
+    private ImageView imageViewCloseBIN;
+
     private  int positionSwiped;
 
     private  cInventoryorderAdapter inventoryorderAdapter;
@@ -113,7 +114,10 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     @Override
     protected void onPause() {
         super.onPause();
-        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
+
+        if (cAppExtension.activity instanceof InventoryorderBinActivity ) {
+            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
+        }
     }
 
     @Override
@@ -164,7 +168,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     }
 
-
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -197,14 +200,15 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     @Override
     public void mFindViews() {
+
+        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
-        this.binText = findViewById(R.id.binText);
-        this.imageBin = findViewById(R.id.imageBin);
-        this.imageBinDone = findViewById(R.id.imageViewNewOrder);
+
         this.recyclerViewInventoryorderLines = findViewById(R.id.recyclerViewInventoryorderLines);
         this.imageAddArticle = findViewById(R.id.imageAddArticle);
+        this.imageViewCloseBIN = findViewById(R.id.imageViewCloseBIN);
     }
 
     @Override
@@ -212,9 +216,15 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         this.toolbarImage.setImageResource(R.drawable.ic_menu_inventory);
         this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
+
+        if (cInventoryorderBin.currentInventoryOrderBin != null) {
+            this.toolbarSubTitle.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
+        }
+
         this.toolbarSubTitle.setSelected(true);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+
+        setSupportActionBar(this.toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -223,20 +233,16 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     @Override
     public void mFieldsInitialize() {
-        ViewCompat.setTransitionName(this.imageBin, cPublicDefinitions.VIEW_CHOSEN_BIN_IMAGE);
-        ViewCompat.setTransitionName(this.binText, cPublicDefinitions.VIEW_CHOSEN_BIN);
-        this.binText.setText(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cInventoryorderLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewInventoryorderLines);
-
     }
 
     @Override
     public void mSetListeners() {
         this.mSetToolbarTitleListeners();
         this.mSetAddArticleListener();
-        this.mSetDoneListeners();
+        this.mSetBINDoneListeners();
     }
 
     @Override
@@ -271,6 +277,11 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     public  void pFillLines() {
 
+        if (cInventoryorderBin.currentInventoryOrderBin == null) {
+            this.mShowNoLinesIcon(true);
+            return;
+        }
+
         List<cInventoryorderLine> hulpObl = cInventoryorder.currentInventoryOrder.pGetLinesForBinObl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
         if (hulpObl.size() == 0) {
             this.mShowNoLinesIcon(true);
@@ -282,19 +293,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     }
 
-    public  void pLineHandled() {
-
-        //We returned here, so we are not busy anymore
-        InventoryorderBinActivity.busyBln = false;
-
-        //Reset currents
-        cInventoryorderLine.currentInventoryOrderLine = null;
-        cInventoryorderBarcode.currentInventoryOrderBarcode = null;
-        cInventoryorderLineBarcode.currentInventoryorderLineBarcode = null;
-
-        //Fill lines of BIN
-        this.pFillLines();
-
+    public  void pHandleAddArticleFragmentDismissed(){
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     public void pCloseBin(){
@@ -318,14 +318,9 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     }
 
-    public void pHandleAddArticleFragmentDismissed(){
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
-    }
-
     public  void pAcceptRejectDialogDismissed() {
-        mStartBinsActivity();
+       this. mStartBinsActivity();
     }
-
 
     public void pPasswordSuccess() {
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
@@ -343,7 +338,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     //Region Private Methods
 
     private  void mHandleScan(final cBarcodeScan pvBarcodeScan, boolean pvIsArticleBln){
-
 
         boolean binCheckedBln = false;
 
@@ -484,9 +478,9 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         });
     }
 
-    private void mSetDoneListeners() {
+    private void mSetBINDoneListeners() {
 
-        this.imageBinDone.setOnClickListener(new View.OnClickListener() {
+        this.imageViewCloseBIN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mTryToLeaveActivity();
@@ -532,14 +526,14 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         //Add quantityDbl of the current barcodeStr
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
-        cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandled += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
         //Make line barcodeStr the current line barcodeStr
         cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl().get(0);
 
 
         //Open the line, so we can edit it
-        this.mShowArticleDetailFragment();
+        this.mShowArticleActivity();
 
     }
 
@@ -561,14 +555,14 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         //Add quantityDbl of the current barcodeStr
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
-        cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandled += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
         //Make line barcodeStr the current line barcodeStr
         cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl().get(0);
 
 
         //Open the line, so we can edit it
-        this.mShowArticleDetailFragment();
+        this.mShowArticleActivity();
 
     }
 
@@ -634,7 +628,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         } else {
 
             //This is a new barcodeStr, so add it
-            cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl(), false);
 
             //Make added line the current line
             cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.pGetLineBarcodeByScannedBarcode(cBarcodeScan.pFakeScan(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr()));
@@ -644,14 +638,13 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
 
         //Open the line (found or created), so we can edit it
-        this.mShowArticleDetailFragment();
+        this.mShowArticleActivity();
     }
 
-    private  void mShowArticleDetailFragment() {
-
-        InventoryArticleDetailFragment articleDetailFragment = new InventoryArticleDetailFragment();
-        articleDetailFragment.setCancelable(false);
-        articleDetailFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLEDETAILFRAGMENT_TAG);
+    private  void mShowArticleActivity() {
+        Intent intent = new Intent(cAppExtension.context, InventoryArticleActivity.class);
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
     }
 
     private  void mStepFailed(String pvErrorMessageStr , String scannedBarcode){
@@ -667,7 +660,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
                 cUserInterface.pHideGettingData();
 
                 mSetToolBarTitleWithCounters();
-                imageBinDone.setVisibility(View.INVISIBLE);
+                imageViewCloseBIN.setVisibility(View.INVISIBLE);
 
                 if (pvShowBln) {
 
@@ -675,13 +668,13 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
                     NothingHereFragment fragment = new NothingHereFragment();
-                    fragmentTransaction.replace(R.id.inventoryorderContainer, fragment);
+                    fragmentTransaction.replace(R.id.inventoryOrderBINContainer, fragment);
                     fragmentTransaction.commit();
                     return;
                 }
 
                 recyclerViewInventoryorderLines.setVisibility(View.VISIBLE);
-                imageBinDone.setVisibility(View.VISIBLE);
+                imageViewCloseBIN.setVisibility(View.VISIBLE);
 
                 List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
                 for (Fragment fragment : fragments) {
@@ -696,6 +689,11 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetToolBarTitleWithCounters(){
+
+        if (cInventoryorderBin.currentInventoryOrderBin == null) {
+            return;
+        }
+
         String toolBarStr = cAppExtension.activity.getString(R.string.items) + ' ' +  cText.pDoubleToStringStr(cInventoryorder.currentInventoryOrder.pGetItemCountForBinDbl(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr()));
         this.toolbarSubTitle.setText(toolBarStr);
     }

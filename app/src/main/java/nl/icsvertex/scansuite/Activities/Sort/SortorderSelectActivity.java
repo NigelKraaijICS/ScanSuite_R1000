@@ -630,6 +630,13 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
             return result;
         }
 
+        // Get all property values, if webservice error then stop
+        if (!cPickorder.currentPickOrder.pGetLinePropertyValuesViaWebserviceBln(true )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
+            return result;
+        }
+
         // Get all article images, only if neccesary
         if (!cPickorder.currentPickOrder.pGetArticleImagesViaWebserviceBln(true)) {
             result.resultBln = false;

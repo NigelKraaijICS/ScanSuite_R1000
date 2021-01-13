@@ -41,7 +41,6 @@ public class SortorderLinesToSortFragment extends Fragment implements iICSDefaul
     private  ConstraintLayout showDetailsView;
     private  ConstraintLayout orderDoneView;
     private  RecyclerView recyclerViewSortorderLinesTosort;
-
     private cPickorderLineAdapter pickorderLineAdapter;
     private cPickorderLineAdapter getPickorderLineAdapter(){
         if (this.pickorderLineAdapter == null) {

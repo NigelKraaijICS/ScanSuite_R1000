@@ -33,12 +33,14 @@ public class cPickorderViewModel extends AndroidViewModel {
     public cWebresult pGetPickordersNextStepFromWebserviceWrs(String pvUserStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu, String pvSearchTextStr) {return this.Repository.pGetPickorderstPickordersNextStepFromWebserviceWrs(pvUserStr,pvStepCodeEnu,pvSearchTextStr);}
     public List<cPickorderEntity> pGetPickordersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.Repository.pGetPickordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 
-    public cWebresult pPickenHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pPickHandledViaWebserviceBln(pvWorkplaceStr);}
+    public cWebresult pPickingHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pPickHandledViaWebserviceBln(pvWorkplaceStr);}
+    public cWebresult pStoreHandledViaWebserviceWrs() { return this.Repository.pStoreHandledViaWebserviceBln();}
     public cWebresult pSortHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pSortHandledViaWebserviceBln(pvWorkplaceStr);}
     public cWebresult pQCHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pQCHandledViaWebserviceBln(pvWorkplaceStr);}
     public cWebresult pShipHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pShipHandledViaWebserviceWrs(pvWorkplaceStr);}
     public cWebresult pFinishSinglePiecesHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pFinishSinglePiecesHandledViaWebserviceWrs(pvWorkplaceStr);}
     public cWebresult pPickorderSourceDocumentShippedViaWebserviceBln() { return this.Repository.pPickorderSourceDocumentShippedViaWebserviceWrs();}
+    public cWebresult pPickorderSourceDocumentStoredViaWebserviceBln() { return this.Repository.pPickorderSourceDocumentStoredViaWebserviceWrs();}
 
     public cWebresult pCreatePickOrderViaWebserviceWrs(String pvDocumentstr,  boolean pvCheckBarcodesBln) {return this.Repository.pCreatePickOrderViaWebserviceWrs(pvDocumentstr, pvCheckBarcodesBln);}
 
@@ -59,6 +61,8 @@ public class cPickorderViewModel extends AndroidViewModel {
     public List<cPickorderLineEntity> pGetLinesBusyFromDatabaseObl(){return  this.Repository.pGetLinesBusyFromDatabaseObl();}
     public List<cPickorderLineEntity> pGetLinesHandledFromDatabaseObl(){return  this.Repository.pGetLinesHandledFromDatabaseObl();}
 
+    public cWebresult pGetStorageLinesFromWebserviceWrs() {return this.Repository.pGetStorageLinesFromWebserviceWrs();}
+
     public cWebresult pGetPackAndShipLinesFromWebserviceWrs( ) {return this.Repository.pGetPackAndShipLinesFromWebserviceWrs();}
 
     public cWebresult pGetFinishPackSinglePieceLinesViaWebserviceWrs( ) {return this.Repository.pGetFinishPackSinglePieceLinesViaWebserviceWrsWrs();}
@@ -70,6 +74,8 @@ public class cPickorderViewModel extends AndroidViewModel {
     public cWebresult pGetLineBarcodesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {return this.Repository.pGetLineBarcodesFromWebservice(pvActionTypeEnu); }
 
     public cWebresult pGetLinePropertysViaWebserviceWrs() {return this.Repository.pGetLinePropertysViaWebserviceWrs(); }
+
+    public cWebresult pGetLinePropertyValuesViaWebserviceWrs() {return this.Repository.pGetLinePropertyValuesViaWebserviceWrs(); }
 
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
 
