@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModelProvider;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ICS.cAppExtension;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcodeViewModel;
+import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 
 public class cPickorderLineProperty {
 
@@ -39,6 +41,24 @@ public class cPickorderLineProperty {
     private cPickorderLinePropertyEntity pickorderLinePropertyEntity;
 
     public static ArrayList<cPickorderLineProperty> allLinePropertysObl;
+
+    public List<cPickorderLinePropertyValue> propertyValueObl() {
+
+        List<cPickorderLinePropertyValue> resultObl = new ArrayList<>();
+
+        if (cPickorderLinePropertyValue.allLinePropertysValuesObl == null || cPickorderLinePropertyValue.allLinePropertysValuesObl.size() == 0)  {
+            return  resultObl;
+        }
+
+        for (cPickorderLinePropertyValue pickorderLinePropertyValue : cPickorderLinePropertyValue.allLinePropertysValuesObl) {
+            if (pickorderLinePropertyValue.getLineNoInt() == this.getLineNoInt()) {
+                resultObl.add(pickorderLinePropertyValue);
+            }
+        }
+
+        return  resultObl;
+
+    }
 
     private cPickorderLinePropertyViewModel getPickorderLinePropertyViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLinePropertyViewModel.class);

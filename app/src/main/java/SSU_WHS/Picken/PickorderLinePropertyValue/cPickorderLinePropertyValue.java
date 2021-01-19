@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyEntity;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyViewModel;
 
@@ -18,6 +19,22 @@ public class cPickorderLinePropertyValue {
 
     private String propertyCodeStr;
     public String getPropertyCodeStr() {return propertyCodeStr;}
+
+    public cItemProperty getItemProperty() {
+
+        if (this.getPropertyCodeStr().isEmpty() || cItemProperty.allItemPropertiesObl == null || cItemProperty.allItemPropertiesObl.size() == 0) {
+            return  null;
+        }
+
+        for (cItemProperty itemProperty :  cItemProperty.allItemPropertiesObl) {
+            if (itemProperty.getPropertyStr().equalsIgnoreCase(this.getPropertyCodeStr())) {
+                return  itemProperty;
+            }
+        }
+
+        return  null;
+
+    }
 
     private String valueStr;
     public String getValueStr() {return valueStr;}

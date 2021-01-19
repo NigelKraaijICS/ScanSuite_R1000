@@ -1,7 +1,5 @@
 package SSU_WHS.Basics.ArticleStock;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
-import SSU_WHS.Basics.BinItem.cBinItem;
 import SSU_WHS.Basics.Branches.cBranch;
 import nl.icsvertex.scansuite.R;
 
@@ -30,8 +24,8 @@ public class cArticleStockAdapter extends RecyclerView.Adapter<cArticleStockAdap
 
         public LinearLayout itemStockItemLinearLayout;
 
-        private TextView textviewBinCode;
-        private TextView textViewQuantity;
+        private final TextView textviewBinCode;
+        private final TextView textViewQuantity;
         private ImageView imageViewBinItemPositive;
         private ImageView imageViewBinItemNegative;
 
@@ -39,10 +33,19 @@ public class cArticleStockAdapter extends RecyclerView.Adapter<cArticleStockAdap
             super(itemView);
 
             this.itemStockItemLinearLayout = itemView.findViewById(R.id.itemStockItemLinearLayout);
-            this.textViewQuantity = itemView.findViewById(R.id.textViewQuanitity);
+            this.textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
             this.textviewBinCode = itemView.findViewById(R.id.textviewBinCode);
-            this.imageViewBinItemPositive = itemView.findViewById(R.id.imageViewBinItemPositive);
-            this.imageViewBinItemNegative = itemView.findViewById(R.id.imageViewBinItemNegative);
+            this.textviewBinCode.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            this.textviewBinCode.setSingleLine(true);
+            this.textviewBinCode.setMarqueeRepeatLimit(5);
+            this.textviewBinCode.setSelected(true);
+
+            try{
+                this.imageViewBinItemPositive = itemView.findViewById(R.id.imageViewBinItemPositive);
+                this.imageViewBinItemNegative = itemView.findViewById(R.id.imageViewBinItemNegative);
+            }
+            catch(Exception ignored){
+            }
         }
     }
 
@@ -57,7 +60,7 @@ public class cArticleStockAdapter extends RecyclerView.Adapter<cArticleStockAdap
 
     //Region Private Properties
     private final LayoutInflater LayoutInflaterObject;
-    private  boolean tinyModusBln = false;
+    private final boolean tinyModusBln;
 
     //End Region Private Propertoes
 
@@ -94,14 +97,16 @@ public class cArticleStockAdapter extends RecyclerView.Adapter<cArticleStockAdap
             }
             holder.textViewQuantity.setText(cText.pDoubleToStringStr(articleStock.getQuantityDbl()));
 
-            if (articleStock.getQuantityDbl() > 0) {
-                holder.imageViewBinItemPositive.setVisibility(View.VISIBLE);
-                holder.imageViewBinItemNegative.setVisibility(View.INVISIBLE);
-            }
-            else
-            {
-                holder.imageViewBinItemPositive.setVisibility(View.INVISIBLE);
-                holder.imageViewBinItemNegative.setVisibility(View.VISIBLE);
+            if (this.tinyModusBln) {
+                if (articleStock.getQuantityDbl() > 0) {
+                    holder.imageViewBinItemPositive.setVisibility(View.VISIBLE);
+                    holder.imageViewBinItemNegative.setVisibility(View.INVISIBLE);
+                }
+                else
+                {
+                    holder.imageViewBinItemPositive.setVisibility(View.INVISIBLE);
+                    holder.imageViewBinItemNegative.setVisibility(View.VISIBLE);
+                }
             }
 
             holder.itemStockItemLinearLayout.setOnClickListener(new View.OnClickListener() {

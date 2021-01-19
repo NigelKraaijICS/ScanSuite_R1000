@@ -26,14 +26,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
         <TextView
-            style="@style/userNameSmallText"
-            android:id="@+id/textviewBinCode"
-            app:layout_constraintStart_toEndOf="@id/imageViewBinItemPositive"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/imageViewBinItemPositive"
@@ -42,9 +34,18 @@
             app:layout_constraintEnd_toEndOf="@id/imageViewBinItemPositive"
             android:textSize="@dimen/textsize_small"
             android:textColor="@color/colorCommentText"
-            android:id="@+id/textViewQuanitity"
+            android:id="@+id/textViewQuantity"
             android:elevation="@dimen/default_double_elevation"
             />
+        <TextView
+            style="@style/userNameSmallText"
+            android:id="@+id/textviewBinCode"
+            app:layout_constraintStart_toEndOf="@id/imageViewBinItemPositive"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
         <View
             android:id="@+id/menuSeparator"
             style="@style/menuSeparator"

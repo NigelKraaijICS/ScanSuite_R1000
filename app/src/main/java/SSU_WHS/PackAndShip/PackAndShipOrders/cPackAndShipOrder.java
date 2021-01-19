@@ -789,6 +789,7 @@ public class cPackAndShipOrder {
 
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET);
+            result.pAddErrorMessage(WebResult.getResultObl().get(0));
             result.resultBln = false;
             return result;
         }

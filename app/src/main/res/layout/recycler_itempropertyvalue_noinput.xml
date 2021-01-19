@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemPropertyValueNoInputItemLinearLayout"
+    style="@style/userRecyclerLinearLayout"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            style="@style/imageviewUserButton"
+            android:id="@+id/imageViewBackground"
+            app:srcCompat="@drawable/ic_chat_blue_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="visible"
+            />
+        <TextView
+            style="@style/defaultRecyclerBINText"
+            android:id="@+id/itemPropertyTextView"
+            app:layout_constraintStart_toEndOf="@id/imageViewBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imageViewBackground"
+            android:layout_marginLeft="@dimen/default_double_margin"
+            />
+        <TextView
+            style="@style/userNameText"
+            android:id="@+id/itemPropertyValueTextView"
+            app:layout_constraintStart_toEndOf="@id/imageViewBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/itemPropertyTextView"
+            />
+        <View
+            android:id="@+id/menuSeparator"
+            style="@style/menuSeparator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

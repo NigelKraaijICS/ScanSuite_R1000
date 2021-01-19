@@ -10,19 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
+        android:layout_marginBottom="@dimen/default_margin"
         >
-        <ImageView
-            android:id="@+id/articleThumbImageView"
-            style="@style/articleThumbImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/articleimage_thumb_description"
-            />
         <TextView
             android:id="@+id/articleDescriptionText"
             style="@style/articleDescriptionText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/articleThumbImageView"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
@@ -30,14 +24,14 @@
             style="@style/articleDescriptionText"
             app:layout_constraintTop_toBottomOf="@id/articleDescriptionText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/articleThumbImageView"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
             />
         <TextView
             android:id="@+id/articleItemText"
             style="@style/articleItemText"
             app:layout_constraintTop_toBottomOf="@id/articleDescription2Text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/articleThumbImageView"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
             />
         <TextView
             android:id="@+id/articleBarcodeText"
@@ -45,13 +39,41 @@
             app:layout_constraintTop_toBottomOf="@id/articleItemText"
             app:layout_constraintStart_toStartOf="parent"
             />
-        <androidx.appcompat.widget.AppCompatImageButton
-            style="@style/smallButton"
-            android:id="@+id/imageButtonBarcode"
-            app:srcCompat="@drawable/ic_barcodescan_black_24dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/imageAndButtonsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingBottom="@dimen/default_padding">
+        <ImageView
+            android:id="@+id/articleThumbImageView"
+            style="@style/articleThumbImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/articleimage_thumb_description"
             />
+            <androidx.appcompat.widget.AppCompatImageButton
+                style="@style/smallButton"
+                android:id="@+id/imageButtonNoInputPropertys"
+                app:srcCompat="@drawable/ic_chat_blue_24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/articleThumbImageView"
+                app:layout_constraintBottom_toTopOf="@id/imageButtonBarcode"
+                android:visibility="invisible"
+                android:layout_margin="@dimen/default_margin"
+                />
+            <androidx.appcompat.widget.AppCompatImageButton
+                style="@style/smallButton"
+                android:id="@+id/imageButtonBarcode"
+                app:srcCompat="@drawable/ic_barcodescan_black_24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageButtonNoInputPropertys"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/articleInfoContainer"
             android:layout_width="match_parent"
@@ -60,5 +82,4 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
             />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

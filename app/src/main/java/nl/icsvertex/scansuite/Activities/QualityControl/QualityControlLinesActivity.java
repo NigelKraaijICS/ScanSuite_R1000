@@ -279,8 +279,8 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     private void mTryToLeaveActivity(){
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(cAppExtension.context);
-        alertDialog.setTitle(R.string.message_sure_leave_screen_title);
-        alertDialog.setMessage(getString(R.string.message_sure_leave_screen_text));
+        alertDialog.setTitle(R.string.message_sure_leave_qc_screen_title);
+        alertDialog.setMessage(getString(R.string.message_sure_leave_qc_screen_text));
         alertDialog.setCancelable(true);
 
         //If we don't want to leave then we are done

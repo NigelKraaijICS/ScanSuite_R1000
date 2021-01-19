@@ -770,5 +770,10 @@
     <string name="message_bin_cant_be_used_for_storage">Deze BIN is niet geschikt voor opslag</string>
     <string name="message_close_store_fase">Wilt u het opslaan afronden?</string>
     <string name="message_store_done">Opslaan afronden?</string>
+    <string name="message_sure_leave_pick_screen_title">Pick verlaten?</string>
+    <string name="message_sure_leave_pick_screen_text">Weet u zeker dat u deze pick wilt verlaten?\n\nU gaat terug naar het pick opdrachten overzicht</string>
+    <string name="message_sure_leave_qc_screen_title">Kwaliteitscontrole verlaten?</string>
+    <string name="message_sure_leave_qc_screen_text">Weet u zeker dat u deze kwaliteitscontrole wilt verlaten? \\n\\nu gaat terug naar het kwaliteitscontrole order selectie scherm</string>
+    <string name="screentitle_itemproperty_no_input">Weergave artikel eigenschap</string>
 
 </resources>

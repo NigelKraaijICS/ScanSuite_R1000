@@ -154,13 +154,28 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
+
+        if (pvMenuItem.getItemId() == android.R.id.home) {
+            this.pLeaveActivity();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(pvMenuItem);
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.pLeaveActivity();
+    }
+
+    @Override
     public void onSwiped(RecyclerView.ViewHolder pvViewHolder, int pvDirectionInt, int pvPositionInt) {
 
         if (!(pvViewHolder instanceof cReceiverorderSummaryLineAdapter.ReceiverorderLineViewHolder)) {
             return;
         }
 
-        //todo: look at correct objectlist
         cReceiveorderSummaryLine.currentReceiveorderSummaryLine = this.linesToShowObl.get(pvPositionInt);
 
         //do we need an adult for this?
@@ -284,21 +299,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         this.mShowComments();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
-        if (pvMenuItem.getItemId() == android.R.id.home) {
-            this.pLeaveActivity();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(pvMenuItem);
-    }
-
-    @Override
-    public void onBackPressed() {
-        this.pLeaveActivity();
-    }
 
     //End Region iICSDefaultActivity defaults
 

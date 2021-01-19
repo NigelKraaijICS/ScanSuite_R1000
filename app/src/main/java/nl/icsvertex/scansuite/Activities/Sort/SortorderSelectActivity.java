@@ -341,7 +341,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
         }
 
-        hulpResult = this.mGetOrderDetailsRst();
+        hulpResult = cPickorder.currentPickOrder.pGetSortDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -602,83 +602,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
-    private cResult mGetOrderDetailsRst(){
 
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all PLACE linesInt for current order, if size = 0 or webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true, cWarehouseorder.PickOrderTypeEnu.SORT)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
-            return result;
-        }
-
-        //Get all PLACE linesInt for current order, if size = 0 or webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true, cWarehouseorder.ActionTypeEnu.PLACE)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
-            return result;
-        }
-
-        // Get all propertys, if webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetLinePropertysViaWebserviceBln(true )) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
-            return result;
-        }
-
-        // Get all property values, if webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetLinePropertyValuesViaWebserviceBln(true )) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
-            return result;
-        }
-
-        // Get all article images, only if neccesary
-        if (!cPickorder.currentPickOrder.pGetArticleImagesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_article_images_failed));
-            return result;
-        }
-
-        // Get all barcodes, if size =0 or webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-
-        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
-        if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-
-        if (!cPickorder.currentPickOrder.pGetSortingDetailsBln()) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_sorting_detals_failed));
-            return result;
-        }
-
-        if (!cPickorder.currentPickOrder.pGetPropertyLineDataViaWebserviceBln()) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_property_line_data_failed));
-            return result;
-        }
-
-        return  result;
-    }
 
     private void mShowSortLinesActivity() {
 

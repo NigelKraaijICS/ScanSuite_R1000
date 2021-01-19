@@ -23,6 +23,7 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
+import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Webservice.cWebresult;
@@ -153,7 +154,6 @@ public class cPickorderLine {
 
     public cArticleImage articleImage;
 
-
     public  String getDestinationAndDescriptionStr(){
 
        String resultStr ;
@@ -177,6 +177,80 @@ public class cPickorderLine {
 
     public  String getToolbarDescriptionStr(){
         return  this.getSourceNoStr() + " " +  this.getBinCodeStr();
+    }
+
+    private  List<cPickorderLineProperty> pickorderLinePropertyCachedObl;
+    public List<cPickorderLineProperty> pickorderLinePropertyObl() {
+
+        if (this.pickorderLinePropertyCachedObl != null) {
+            return  this.pickorderLinePropertyCachedObl;
+        }
+
+        this. pickorderLinePropertyCachedObl = new ArrayList<>();
+
+        if (cPickorder.currentPickOrder.linePropertysObl() == null || cPickorder.currentPickOrder.linePropertysObl().size() == 0) {
+            return  this.pickorderLinePropertyCachedObl;
+        }
+
+       for (cPickorderLineProperty pickorderLineProperty :cPickorder.currentPickOrder.linePropertysObl() ) {
+           if (pickorderLineProperty.getLineNoInt().equals(this.getLineNoInt())) {
+               this.pickorderLinePropertyCachedObl.add(pickorderLineProperty);
+           }
+       }
+
+       return  this.pickorderLinePropertyCachedObl;
+
+    }
+
+    private  List<cPickorderLineProperty> pickorderLinePropertyNoInputCachedObl;
+    public List<cPickorderLineProperty> pickorderLinePropertyNoInputObl() {
+
+        if (this.pickorderLinePropertyNoInputCachedObl != null) {
+            return  this.pickorderLinePropertyNoInputCachedObl;
+        }
+
+        this. pickorderLinePropertyNoInputCachedObl = new ArrayList<>();
+
+        if (this.pickorderLinePropertyObl() == null || this.pickorderLinePropertyObl().size() == 0) {
+            return  this.pickorderLinePropertyNoInputCachedObl;
+        }
+
+        for (cPickorderLineProperty pickorderLineProperty :this.pickorderLinePropertyObl()) {
+            if (!pickorderLineProperty.getIsInputBln() &&  !pickorderLineProperty.getIsRequiredBln()) {
+                this.pickorderLinePropertyNoInputCachedObl.add(pickorderLineProperty);
+            }
+        }
+
+        return  this.pickorderLinePropertyNoInputCachedObl;
+    }
+
+    private  List<cPickorderLineProperty> pickorderLinePropertyInputCachedObl;
+    public List<cPickorderLineProperty> pickorderLinePropertyInputObl() {
+
+        if (this.pickorderLinePropertyInputCachedObl != null) {
+            return  this.pickorderLinePropertyNoInputCachedObl;
+        }
+
+        this. pickorderLinePropertyInputCachedObl = new ArrayList<>();
+
+        if (this.pickorderLinePropertyObl() == null || this.pickorderLinePropertyObl().size() == 0) {
+            return  this.pickorderLinePropertyInputCachedObl;
+        }
+
+        for (cPickorderLineProperty pickorderLineProperty :this.pickorderLinePropertyObl()) {
+            if (pickorderLineProperty.getIsInputBln() &&  pickorderLineProperty.getIsRequiredBln()) {
+                this.pickorderLinePropertyInputCachedObl.add(pickorderLineProperty);
+            }
+        }
+
+        return  this.pickorderLinePropertyInputCachedObl;
+    }
+
+    public  boolean hasPropertysBln() {
+        if (this.pickorderLinePropertyObl().size() == 0) {
+            return  false;
+        }
+        return  true;
     }
 
     private final cPickorderLineEntity PickorderLineEntity;
@@ -254,8 +328,6 @@ public class cPickorderLine {
     private cPickorderLineViewModel getPickorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLineViewModel.class);
     }
-
-
 
     //End Region Public Properties
 

@@ -194,6 +194,7 @@
 
     <!--region Inventory-->
     <string name="screentitle_inventory">Inventory</string>
+    <string name="screentitle_itemproperty_no_input">Item Property No Input</string>
     <!--endregion Inventory-->
 
     <!--region PickorderSelect-->
@@ -222,9 +223,13 @@
 
     <!--region Leave screen-->
     <string name="message_sure_leave_screen_text">Do you really want to leave this screen?</string>
+    <string name="message_sure_leave_pick_screen_text">Do you really want to leave this pick? \n\nYou will go back to pick order select</string>
+    <string name="message_sure_leave_qc_screen_text">Do you really want to leave this quality control? \n\nYou will go back to quality control order select</string>
     <string name="message_sure_leave_screen_positive">Leave</string>
     <string name="message_sure_leave_screen_negative">Stay</string>
     <string name="message_sure_leave_screen_title">Leave this screen?</string>
+    <string name="message_sure_leave_pick_screen_title">Leave this pick?</string>
+    <string name="message_sure_leave_qc_screen_title">Leave this quality control?</string>
     <!--endregion Leave screen-->
 
     <!--region Sortorder Lines-->

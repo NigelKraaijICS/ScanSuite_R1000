@@ -318,7 +318,7 @@ public class CreatePickActivity extends AppCompatActivity implements iICSDefault
         //Delete the detail, so we can get them from the webservice
         cPickorder.currentPickOrder.pDeleteDetailsBln();
 
-        hulpResult = this.mGetOrderDetailsRst();
+        hulpResult = cPickorder.currentPickOrder.pGetSelfpickDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -370,57 +370,7 @@ public class CreatePickActivity extends AppCompatActivity implements iICSDefault
 
     }
 
-    private cResult mGetOrderDetailsRst(){
 
-        cResult result;
-
-        result = new cResult();
-        result.resultBln = true;
-
-        //Get all linesInt for current order, if webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true, cWarehouseorder.PickOrderTypeEnu.PICK)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
-            return result;
-        }
-
-        // Get all barcodes, if webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetBarcodesViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
-            return result;
-        }
-
-        // Get all propertys, if webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetLineBarcodesViaWebserviceBln(true,cWarehouseorder.ActionTypeEnu.TAKE )) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
-            return result;
-        }
-
-        // Get all propertys, if webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetLinePropertysViaWebserviceBln(true )) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
-            return result;
-        }
-
-        // Get all property values, if webservice error then stop
-        if (!cPickorder.currentPickOrder.pGetLinePropertyValuesViaWebserviceBln(true )) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
-            return result;
-        }
-
-        // Get all comments
-        if (!cPickorder.currentPickOrder.pGetCommentsViaWebserviceBln(true)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
-            return result;
-        }
-
-        return  result;
-    }
 
     private void mStepFailed(String pvErrorMessageStr){
 

@@ -253,11 +253,11 @@ public class cPickorder{
 
         if (isPackAndShipNeededLocalBln != null) {
             return isPackAndShipNeededLocalBln;
-         }
+        }
 
         if (this.pQuantityHandledDbl() == 0) {
             isPackAndShipNeededLocalBln = false;
-             return  isPackAndShipNeededLocalBln;
+            return  isPackAndShipNeededLocalBln;
         }
 
         if (this.linesObl() == null || this.linesObl().size() == 0 ) {
@@ -267,7 +267,7 @@ public class cPickorder{
 
         for (cPickorderLine pickorderLine : this.linesObl()) {
             if (pickorderLine.getStatusShippingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded ||
-                pickorderLine.getStatuPackingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded) {
+                    pickorderLine.getStatuPackingInt() != cWarehouseorder.PackingAndShippingStatusEnu.NotNeeded) {
                 isPackAndShipNeededLocalBln = true;
                 return  isPackAndShipNeededLocalBln;
             }
@@ -412,15 +412,15 @@ public class cPickorder{
     public cPickorderBarcode pickorderBarcodeScanned;
     public static int totalPicksInt;
 
-
     public List<cPickorderLine> linesObl(){
         return  cPickorderLine.allLinesObl;
     }
     public List<cShipment> shipmentObl(){ return  cShipment.allShipmentsObl; }
     public List<cStorement> storementObl(){ return  cStorement.allStorementsObl; }
     public List<cPickorderAddress> adressesObl(){
-     return  cPickorderAddress.allAdressesObl ;
+        return  cPickorderAddress.allAdressesObl ;
     }
+
     private List<cPickorderSetting> settingsObl(){
         return  cPickorderSetting.allSettingObl  ;
     }
@@ -430,6 +430,8 @@ public class cPickorder{
     public List<cPickorderBarcode> barcodesObl() {
         return  cPickorderBarcode.allBarcodesObl;
     }
+    public List<cPickorderLineProperty> linePropertysObl() { return  cPickorderLineProperty.allLinePropertysObl; }
+    public List<cPickorderLinePropertyValue> linePropertyValueObl() { return  cPickorderLinePropertyValue.allLinePropertysValuesObl; }
     public List<cComment> commentsObl(){
         return  cComment.allCommentsObl;
     }
@@ -704,11 +706,11 @@ public class cPickorder{
         }
 
         Webresult = this.getWarehouseorderViewModel().pLockWarehouseopdrachtViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),
-                                                                                                        this.getOrderNumberStr(),
-                                                                                                        cDeviceInfo.getSerialnumberStr(),
-                                                                                                        pvStepCodeEnu.toString(),
-                                                                                                        pvWorkFlowStepInt,
-                                                                                                        ignoreBusyBln);
+                this.getOrderNumberStr(),
+                cDeviceInfo.getSerialnumberStr(),
+                pvStepCodeEnu.toString(),
+                pvWorkFlowStepInt,
+                ignoreBusyBln);
 
         //No result, so something really went wrong
         if (Webresult == null) {
@@ -734,7 +736,7 @@ public class cPickorder{
 
         //Check if this activity is meant for a different user
         if (!Webresult.getResultBln()&& Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-            Webresult.getResultObl().size() >= 2 && Webresult.getResultObl().get(0).equalsIgnoreCase("invalid_user_not_assigned")) {
+                Webresult.getResultObl().size() >= 2 && Webresult.getResultObl().get(0).equalsIgnoreCase("invalid_user_not_assigned")) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_meant_for_other_user)) + " " + Webresult.getResultObl().get(1) );
@@ -743,7 +745,7 @@ public class cPickorder{
 
         //Check if this activity is meant for a different user
         if (!Webresult.getResultBln() && Webresult.getResultLng() <= 0 && Webresult.getResultObl() != null &&
-            Webresult.getResultObl().size() > 0 && !Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
+                Webresult.getResultObl().size() > 0 && !Webresult.getResultObl().get(0).equalsIgnoreCase(cUser.currentUser.getUsernameStr())) {
             result.resultBln = false;
             result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
             result.pAddErrorMessage(cAppExtension.context.getString((R.string.message_another_user_already_started)) + " " + Webresult.getResultObl().get(0) );
@@ -782,6 +784,221 @@ public class cPickorder{
         Webresult = this.getWarehouseorderViewModel().pLockReleaseWarehouseorderViaWebserviceWrs(cWarehouseorder.OrderTypeEnu.PICKEN.toString(),this.getOrderNumberStr(),cDeviceInfo.getSerialnumberStr(),pvStepCodeEnu.toString(), pvWorkFlowStepInt);
 
         return Webresult.getSuccessBln() && Webresult.getResultBln();
+    }
+
+    public cResult pGetPickDetailsRst(){
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all TAKE linesInt for current order, if size = 0 or webservice error then stop
+        if (!this.pGetLinesViaWebserviceBln(true, cWarehouseorder.PickOrderTypeEnu.PICK)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
+            return result;
+        }
+
+        //Get TAKE line barcodes for current order
+        if (!this.mGetLineBarcodesViaWebserviceBln( cWarehouseorder.ActionTypeEnu.TAKE)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
+            return result;
+        }
+
+        //Get TAKE line barcodes for current order
+        if (!this.mGetLineBarcodesViaWebserviceBln(cWarehouseorder.ActionTypeEnu.TAKE)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
+            return result;
+        }
+
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLinePropertysViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!this.mGetLinePropertyValuesViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
+            return result;
+        }
+
+        // Get all article images, only if neccesary
+        if (!this.mGetArticleImagesViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_article_images_failed));
+            return result;
+        }
+
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!this.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
+        if (!this.pGetAdressesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!this.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        if (!this.mGetSortingDetailsBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_sorting_detals_failed));
+            return result;
+        }
+
+        if (!this.pGetPropertyLineDataViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_property_line_data_failed));
+            return result;
+        }
+
+        return  result;
+    }
+
+    public cResult pGetSortDetailsRst(){
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all PLACE linesInt for current order, if size = 0 or webservice error then stop
+        if (!this.pGetLinesViaWebserviceBln(true, cWarehouseorder.PickOrderTypeEnu.SORT)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
+            return result;
+        }
+
+        //Get all PLACE linesInt for current order, if size = 0 or webservice error then stop
+        if (!this.mGetLineBarcodesViaWebserviceBln(cWarehouseorder.ActionTypeEnu.PLACE)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_linebarcodes_failed));
+            return result;
+        }
+
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLinePropertysViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!this.mGetLinePropertyValuesViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
+            return result;
+        }
+
+        // Get all article images, only if neccesary
+        if (!this.mGetArticleImagesViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_article_images_failed));
+            return result;
+        }
+
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!this.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
+        if (!this.pGetAdressesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_adresses_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!this.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        if (!this.mGetSortingDetailsBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_sorting_detals_failed));
+            return result;
+        }
+
+        if (!this.pGetPropertyLineDataViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_property_line_data_failed));
+            return result;
+        }
+
+        return  result;
+    }
+
+    public cResult pGetSelfpickDetailsRst(){
+
+        cResult result;
+
+        result = new cResult();
+        result.resultBln = true;
+
+        //Get all linesInt for current order, if webservice error then stop
+        if (!this.pGetLinesViaWebserviceBln(true, cWarehouseorder.PickOrderTypeEnu.PICK)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_lines_failed));
+            return result;
+        }
+
+        // Get all barcodes, if webservice error then stop
+        if (!this.pGetBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLineBarcodesViaWebserviceBln(cWarehouseorder.ActionTypeEnu.TAKE )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
+            return result;
+        }
+
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLinePropertysViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!this.mGetLinePropertyValuesViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
+            return result;
+        }
+
+        // Get all comments
+        if (!this.pGetCommentsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        return  result;
     }
 
     public cResult pGetShipmentDetailsRst() {
@@ -1284,7 +1501,7 @@ public class cPickorder{
             }
         }
 
-       return  null;
+        return  null;
 
     }
 
@@ -1513,14 +1730,9 @@ public class cPickorder{
         result = new cResult();
         result.resultBln = true;
 
-        String workplaceStr = "";
         int actionInt;
 
         cWebresult webresult;
-
-        if (cWorkplace.currentWorkplace != null) {
-            workplaceStr = cWorkplace.currentWorkplace.getWorkplaceStr();
-        }
 
         webresult =  this.getPickorderViewModel().pStoreHandledViaWebserviceWrs();
 
@@ -1808,59 +2020,6 @@ public class cPickorder{
         }
     }
 
-    public boolean pGetArticleImagesViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (!this.isPickWithPictureBln() || !this.isPickPickWithPicturePrefetchBln()) {
-            return  true;
-        }
-
-        if (pvRefreshBln) {
-            cArticleImage.allImages = null;
-            cArticleImage.pTruncateTableBln();
-        }
-
-        if (this.imagesObl()  != null) {
-            return  true;
-        }
-
-        if (this.linesObl() == null || this.linesObl().size() == 0) {
-            return  false;
-        }
-
-        List<String> itemNoAndVariantCodeObl;
-        itemNoAndVariantCodeObl = new ArrayList<>();
-
-        for (cPickorderLine pickorderLine : this.linesObl()) {
-            String itemNoAndVariantCodeStr = pickorderLine.getItemNoStr() + ";" + pickorderLine.getVariantCodeStr();
-
-            if (!itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr)) {
-                itemNoAndVariantCodeObl.add(itemNoAndVariantCodeStr);
-            }
-        }
-
-        cWebresult WebResult;
-        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
-        WebResult = articleImageViewModel.pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            cArticleImage.allImages = new ArrayList<>();
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cArticleImage articleImage = new cArticleImage(jsonObject);
-
-                if (!cArticleImage.allImages.contains(articleImage)) {
-                    articleImage.pInsertInDatabaseBln();
-                    cArticleImage.allImages.add((articleImage));
-                }
-            }
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
-            return  false;
-        }
-    }
-
     public boolean pGetPropertyLineDataViaWebserviceBln() {
 
         //If there are no property groups we are done
@@ -1935,100 +2094,20 @@ public class cPickorder{
                 pickorderBarcode.pInsertInDatabaseBln();
             }
 
-          if (!this.isGeneratedOrderBln()) {
-              return cPickorderBarcode.allBarcodesObl.size() != 0;
-          }
-          else
-          {
-              if (cPickorderBarcode.allBarcodesObl == null ){
-                  cPickorderBarcode.allBarcodesObl = new ArrayList<>();
-
-              }
-              return  true;
-          }
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERBARCODES);
-            return  false;
-        }
-    }
-
-    public boolean pGetLineBarcodesViaWebserviceBln(Boolean pvRefreshBln,cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {
-
-        if (pvRefreshBln) {
-            cPickorderLineBarcode.allLineBarcodesObl = null;
-            cPickorderLineBarcode.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-        WebResult =  this.getPickorderViewModel().pGetLineBarcodesFromWebserviceWrs(pvActionTypeEnu);
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-
-                cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(jsonObject);
-                pickorderLineBarcode.pInsertInDatabaseBln();
+            if (!this.isGeneratedOrderBln()) {
+                return cPickorderBarcode.allBarcodesObl.size() != 0;
             }
+            else
+            {
+                if (cPickorderBarcode.allBarcodesObl == null ){
+                    cPickorderBarcode.allBarcodesObl = new ArrayList<>();
 
-            if (this.isGeneratedOrderBln()) {
-                if (cPickorderLineBarcode.allLineBarcodesObl == null) {
-                    cPickorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
                 }
+                return  true;
             }
-
-                  return  true;
-
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERBARCODES);
-            return  false;
-        }
-    }
-
-    public boolean pGetLinePropertysViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cPickorderLineProperty.allLinePropertysObl = null;
-            cPickorderLineProperty.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-        WebResult =  this.getPickorderViewModel().pGetLinePropertysViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPickorderLineProperty pickorderLineProperty = new cPickorderLineProperty(jsonObject);
-                pickorderLineProperty.pInsertInDatabaseBln();
-            }
-
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET);
-            return  false;
-        }
-    }
-
-    public boolean pGetLinePropertyValuesViaWebserviceBln(Boolean pvRefreshBln) {
-
-        if (pvRefreshBln) {
-            cPickorderLinePropertyValue.allLinePropertysValuesObl = null;
-            cPickorderLinePropertyValue.pTruncateTableBln();
-        }
-
-        cWebresult WebResult;
-        WebResult =  this.getPickorderViewModel().pGetLinePropertyValuesViaWebserviceWrs();
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
-
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPickorderLinePropertyValue pickorderLinePropertyValue = new cPickorderLinePropertyValue(jsonObject);
-                pickorderLinePropertyValue.pInsertInDatabaseBln();
-            }
-
-            return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIEVALUESGET);
             return  false;
         }
     }
@@ -2080,33 +2159,6 @@ public class cPickorder{
         }
     }
 
-    public boolean pGetSortingDetailsBln(){
-
-        if (!this.isPVBln() && !this.isBPBln()){
-                return  true;
-        }
-
-        for (cPickorderLine pickorderLine : this.linesObl()) {
-
-
-            if (pickorderLine.processingSequenceStr.isEmpty()) {
-                continue;
-            }
-
-            if (pickorderLine.processingSequenceStr.equalsIgnoreCase(pickorderLine.getSourceNoStr())) {
-                continue;
-            }
-
-            cSalesOrderPackingTable salesOrderPackingTable = new cSalesOrderPackingTable(pickorderLine.getSourceNoStr(),pickorderLine.processingSequenceStr);
-            salesOrderPackingTable.pInsertInDatabaseBln();
-
-        }
-
-
-        return  true;
-
-    }
-
     public cPickorderLine pGetLineNotHandledByBarcode(String pvScannedBarcodeStr) {
 
         if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
@@ -2137,7 +2189,7 @@ public class cPickorder{
 
         for (cPickorderLine pickorderLine : hulpObl) {
             if (pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeWithBarcode.getItemNoStr()) &&
-               pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeWithBarcode.getVariantcodeStr()))) {
+                    pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeWithBarcode.getVariantcodeStr()))) {
 
                 if (pickorderLine.getQuantityHandledDbl() >0 ) {
                     busyLinesObl.add(pickorderLine);
@@ -2225,15 +2277,15 @@ public class cPickorder{
 
             }
             else
-                {
+            {
 
-                    if (!this.mAddOrderToCombinedOrderViaWebserviceBln()) {
-                        result.resultBln = false;
-                        result.pAddErrorMessage(cAppExtension.activity.getString(R.string.couldnt_create_combined_order));
-                        return result;
-                    }
-
+                if (!this.mAddOrderToCombinedOrderViaWebserviceBln()) {
+                    result.resultBln = false;
+                    result.pAddErrorMessage(cAppExtension.activity.getString(R.string.couldnt_create_combined_order));
+                    return result;
                 }
+
+            }
             return  result;
         }
 
@@ -2327,6 +2379,160 @@ public class cPickorder{
 
     //Region Private Methods
 
+    private boolean mGetLineBarcodesViaWebserviceBln(cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {
+
+        cPickorderLineBarcode.allLineBarcodesObl = null;
+        cPickorderLineBarcode.pTruncateTableBln();
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pGetLineBarcodesFromWebserviceWrs(pvActionTypeEnu);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+
+                cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(jsonObject);
+                pickorderLineBarcode.pInsertInDatabaseBln();
+            }
+
+            if (this.isGeneratedOrderBln()) {
+                if (cPickorderLineBarcode.allLineBarcodesObl == null) {
+                    cPickorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
+                }
+            }
+
+            return  true;
+
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERBARCODES);
+            return  false;
+        }
+    }
+
+    private boolean mGetLinePropertysViaWebserviceBln() {
+
+        cPickorderLineProperty.allLinePropertysObl = null;
+        cPickorderLineProperty.pTruncateTableBln();
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pGetLinePropertysViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPickorderLineProperty pickorderLineProperty = new cPickorderLineProperty(jsonObject);
+                pickorderLineProperty.pInsertInDatabaseBln();
+            }
+
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET);
+            return  false;
+        }
+    }
+
+    private boolean mGetLinePropertyValuesViaWebserviceBln() {
+
+
+        cPickorderLinePropertyValue.allLinePropertysValuesObl = null;
+        cPickorderLinePropertyValue.pTruncateTableBln();
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pGetLinePropertyValuesViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPickorderLinePropertyValue pickorderLinePropertyValue = new cPickorderLinePropertyValue(jsonObject);
+                pickorderLinePropertyValue.pInsertInDatabaseBln();
+            }
+
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIEVALUESGET);
+            return  false;
+        }
+    }
+
+    private boolean mGetSortingDetailsBln(){
+
+        if (!this.isPVBln() && !this.isBPBln()){
+            return  true;
+        }
+
+        for (cPickorderLine pickorderLine : this.linesObl()) {
+
+
+            if (pickorderLine.processingSequenceStr.isEmpty()) {
+                continue;
+            }
+
+            if (pickorderLine.processingSequenceStr.equalsIgnoreCase(pickorderLine.getSourceNoStr())) {
+                continue;
+            }
+
+            cSalesOrderPackingTable salesOrderPackingTable = new cSalesOrderPackingTable(pickorderLine.getSourceNoStr(),pickorderLine.processingSequenceStr);
+            salesOrderPackingTable.pInsertInDatabaseBln();
+
+        }
+
+
+        return  true;
+
+    }
+
+    private boolean mGetArticleImagesViaWebserviceBln() {
+
+        if (!this.isPickWithPictureBln() || !this.isPickPickWithPicturePrefetchBln()) {
+            return  true;
+        }
+
+        cArticleImage.allImages = null;
+        cArticleImage.pTruncateTableBln();
+
+
+        if (this.imagesObl()  != null) {
+            return  true;
+        }
+
+        if (this.linesObl() == null || this.linesObl().size() == 0) {
+            return  false;
+        }
+
+        List<String> itemNoAndVariantCodeObl;
+        itemNoAndVariantCodeObl = new ArrayList<>();
+
+        for (cPickorderLine pickorderLine : this.linesObl()) {
+            String itemNoAndVariantCodeStr = pickorderLine.getItemNoStr() + ";" + pickorderLine.getVariantCodeStr();
+
+            if (!itemNoAndVariantCodeObl.contains(itemNoAndVariantCodeStr)) {
+                itemNoAndVariantCodeObl.add(itemNoAndVariantCodeStr);
+            }
+        }
+
+        cWebresult WebResult;
+        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+        WebResult = articleImageViewModel.pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            cArticleImage.allImages = new ArrayList<>();
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cArticleImage articleImage = new cArticleImage(jsonObject);
+
+                if (!cArticleImage.allImages.contains(articleImage)) {
+                    articleImage.pInsertInDatabaseBln();
+                    cArticleImage.allImages.add((articleImage));
+                }
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
+            return  false;
+        }
+    }
+
     private void mGetCommentsViaWebError(List<JSONObject> pvResultDtt) {
 
         cComment.allCommentsObl = new ArrayList<>();
@@ -2412,8 +2618,8 @@ public class cPickorder{
 
     private boolean mGetSettingsViaWebserviceBln() {
 
-            cPickorderSetting.allSettingObl = null;
-            cPickorderSetting.pTruncateTableBln();
+        cPickorderSetting.allSettingObl = null;
+        cPickorderSetting.pTruncateTableBln();
 
         cWebresult WebResult;
         WebResult =  this.getPickorderViewModel().pGetSettingsFromWebserviceWrs();
@@ -2434,7 +2640,7 @@ public class cPickorder{
     private boolean mGetFinishPackSinglePieceLinesViaWebserviceBln() {
 
 
-            cPickorderLinePackAndShip.allPackAndShipLinesObl = null;
+        cPickorderLinePackAndShip.allPackAndShipLinesObl = null;
 
 
         cWebresult WebResult;
