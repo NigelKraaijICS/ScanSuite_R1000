@@ -270,14 +270,12 @@ public class cReturnorder {
             returnorder.pInsertInDatabaseBln();
             cReturnorder.currentReturnOrder = returnorder;
 
-            return result;
-
 
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RETURNORDERCREATE);
             result.resultBln = false;
-            return result;
         }
+        return result;
     }
 
     public static boolean pGetReturnOrdersViaWebserviceBln(Boolean pvRefreshBln, String pvSearchTextStr) {

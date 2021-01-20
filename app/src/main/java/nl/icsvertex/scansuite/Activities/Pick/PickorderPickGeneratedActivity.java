@@ -80,6 +80,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     private  TextView quantityRequiredText;
     private  ImageView articleThumbImageView;
     private  ImageView imageButtonBarcode;
+    private ImageView imageButtonNoInputPropertys;
 
     private  AppCompatImageButton imageButtonMinus;
     private  AppCompatImageButton imageButtonPlus;
@@ -207,6 +208,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
         this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
 
         this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
@@ -268,6 +270,9 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
 
         this.mCheckLineDone();
+
+        this.imageButtonNoInputPropertys.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -466,9 +471,11 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         //If pick with picture is false, then hide image view
         if (cPickorderLine.currentPickOrderLine == null || !cPickorder.currentPickOrder.isPickWithPictureBln()) {
             this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
-            this.articleThumbImageView.setVisibility(View.INVISIBLE);
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
+
+        this.articleThumbImageView.setVisibility(View.VISIBLE);
 
         //If picture is not in cache (via webservice) then show no image
         if (!cPickorderLine.currentPickOrderLine.pGetArticleImageBln()) {
@@ -504,7 +511,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         }
 
         if (!cSetting.PICK_SELECTEREN_BARCODE()) {
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         } else {
             this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
@@ -535,14 +542,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     }
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
-
-
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangePickedQuantity(false, true,pvQuantityDbl);
-        } else {
-            this.mTryToChangePickedQuantity(true, true,pvQuantityDbl);
-        }
-
+        this.mTryToChangePickedQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
     }
 
     private  void mTryToChangePickedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
@@ -673,14 +673,6 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
                 if ( incompleteBln) {
                     this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
                     this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
-                    return;
-                }
-
-                //Not complete and pickcart/salesorder last scanned so we have to scan an article, set the instruction
-                if ( incompleteBln) {
-                    this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-                    this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
-                    this.imageButtonDone.setVisibility(View.VISIBLE);
                     return;
                 }
 

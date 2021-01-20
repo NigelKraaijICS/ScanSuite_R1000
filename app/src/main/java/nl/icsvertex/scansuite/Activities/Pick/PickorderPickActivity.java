@@ -42,7 +42,6 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
-import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
@@ -51,12 +50,11 @@ import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
-import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyNoInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
@@ -424,7 +422,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     //Views
 
-
     private void mSetArticleImageListener() {
         this.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -518,8 +515,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
         this.quantityText.setText(cText.pDoubleToStringStr(quantityDbl));
-
-
     }
 
     private  void mShowArticleImage() {
@@ -557,7 +552,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private  void mShowNoInputPropertyInfo() {
 
        if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
-           this.imageButtonNoInputPropertys.setVisibility(View.INVISIBLE);
+           this.imageButtonNoInputPropertys.setVisibility(View.GONE);
        }
        else {
            this.imageButtonNoInputPropertys.setVisibility(View.VISIBLE);
@@ -868,9 +863,102 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mBarcodeSelected(cPickorderBarcode pvBarcode) {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         cPickorderBarcode.currentPickorderBarcode = pvBarcode;
+
+        if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl() != null && cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().size() > 0 ) {
+            mShowItemPropertyInputFragment();
+            return;
+        }
+
         this.mShowBarcodeInfo();
         this.mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
     }
@@ -968,14 +1056,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                     this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
                     return;
                 }
-
-                //We have to scan a processingsequence to complete the line, so we are not ready
-                if (PickorderPickActivity.articleScannedLastBln && !incompleteBln) {
-                    this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-                    this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
-                    return;
-                }
-                //We are complete, so we are done, will be detected later
             }
 
             //We can scan all articles first and then pickcart/salesorder, so set this as the instruction
@@ -1203,7 +1283,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         if (recordForBarcode != null) {
 
             if (!recordForBarcode.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr())) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_location_already_assigned), "", true, true);
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_pickcartbox_already_assigned), "", true, true);
                 return false;
             }
         }
@@ -1416,7 +1496,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mShowOverpickNotAllowed(){
-        this.quantityText.setText(quantityRequiredText.getText());
         cUserInterface.pShowSnackbarMessage(textViewAction , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
         cUserInterface.pDoNope(quantityText, true, true);
         cUserInterface.pDoNope(quantityRequiredText, false, false);
@@ -1433,7 +1512,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         constraintSetSpace.clone(pickorderPickContainer);
         constraintSetSpace.connect(articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
         constraintSetSpace.applyTo(pickorderPickContainer);
-
     }
 
     private  void mShowNoInputPropertys(){
@@ -1461,6 +1539,27 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pPlaySound(R.raw.message, 0);
 
         PickorderPickActivity.noInputPropertysShown = true;
+    }
+
+    private  void mShowItemPropertyInputFragment() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        List<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl = new ArrayList<>();
+
+        for (cPickorderLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl()) {
+            if (inputPickorderLineProperty.propertyValueObl() == null ||inputPickorderLineProperty.propertyValueObl().size() == 0) {
+                pickorderLinePropertyValuesObl.add(new cPickorderLinePropertyValue(inputPickorderLineProperty));
+            }
+            else
+            {
+                pickorderLinePropertyValuesObl.addAll(inputPickorderLineProperty.propertyValueObl());
+            }
+        }
+
+        ItemPropertyInputFragment itemPropertyInputFragment = new ItemPropertyInputFragment(pickorderLinePropertyValuesObl);
+        itemPropertyInputFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.ITEMPROPERTYVALUEINPUTFRAGMENT_TAG);
+        cUserInterface.pPlaySound(R.raw.message, 0);
     }
 
     //Region Number Broadcaster

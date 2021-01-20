@@ -44,34 +44,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:paddingBottom="@dimen/default_padding">
-        <ImageView
-            android:id="@+id/articleThumbImageView"
-            style="@style/articleThumbImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/articleimage_thumb_description"
-            />
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/articleThumbImageView"
+                style="@style/articleThumbImageView"
+                android:contentDescription="@string/articleimage_thumb_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
             <androidx.appcompat.widget.AppCompatImageButton
-                style="@style/smallButton"
                 android:id="@+id/imageButtonNoInputPropertys"
-                app:srcCompat="@drawable/ic_chat_blue_24dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/articleThumbImageView"
-                app:layout_constraintBottom_toTopOf="@id/imageButtonBarcode"
-                android:visibility="invisible"
-                android:layout_margin="@dimen/default_margin"
-                />
-            <androidx.appcompat.widget.AppCompatImageButton
                 style="@style/smallButton"
-                android:id="@+id/imageButtonBarcode"
-                app:srcCompat="@drawable/ic_barcodescan_black_24dp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/imageButtonBarcode"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/articleThumbImageView"
+                app:srcCompat="@drawable/ic_chat_blue_24dp" />
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/imageButtonBarcode"
+                style="@style/smallButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imageButtonNoInputPropertys"
-                />
+                app:srcCompat="@drawable/ic_barcodescan_black_24dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout

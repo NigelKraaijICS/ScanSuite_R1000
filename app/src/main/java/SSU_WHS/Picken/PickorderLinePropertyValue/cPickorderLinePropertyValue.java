@@ -8,8 +8,10 @@ import java.util.ArrayList;
 
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
+import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyEntity;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyViewModel;
+import nl.icsvertex.scansuite.R;
 
 public class cPickorderLinePropertyValue {
 
@@ -42,6 +44,9 @@ public class cPickorderLinePropertyValue {
     private int sortingSequenceNoInt;
     public  int getSortingSequenceNoInt(){return sortingSequenceNoInt;}
 
+    public double quanitityDbl;
+    public double getQuanitityDbl() {return quanitityDbl;}
+
     private cPickorderLinePropertyValueEntity pickorderLinePropertyValueEntity;
 
     public static ArrayList<cPickorderLinePropertyValue> allLinePropertysValuesObl;
@@ -56,9 +61,27 @@ public class cPickorderLinePropertyValue {
         this.propertyCodeStr = this.pickorderLinePropertyValueEntity.getPropertyCodeStr();
         this.valueStr = this.pickorderLinePropertyValueEntity.getValueStr();
         this.sortingSequenceNoInt = this.pickorderLinePropertyValueEntity.getSortingSequenceNoInt();
+        this.quanitityDbl = 0;
     }
 
+    public cPickorderLinePropertyValue(cPickorderLineProperty pvPickorderLineProperty) {
+        this.pickorderLinePropertyValueEntity = null;
 
+        this.lineNoInt = 0;
+        this.propertyCodeStr = pvPickorderLineProperty.getPropertyCodeStr();
+        this.valueStr = cAppExtension.activity.getString(R.string.novalueyet);
+        this.sortingSequenceNoInt = 0;
+        this.quanitityDbl = 0;
+    }
+
+    public cPickorderLinePropertyValue(int pvLineNoInt, String pvPropertyCodeStr, String pvValueStr) {
+        this.pickorderLinePropertyValueEntity = null;
+        this.lineNoInt = pvLineNoInt;
+        this.propertyCodeStr = pvPropertyCodeStr;
+        this.valueStr = pvValueStr;
+        this.sortingSequenceNoInt = 10000;
+        this.quanitityDbl = 1;
+    }
 
     public boolean pInsertInDatabaseBln() {
         this.getPickorderLinePropertyValueViewModel().insert(this.pickorderLinePropertyValueEntity);

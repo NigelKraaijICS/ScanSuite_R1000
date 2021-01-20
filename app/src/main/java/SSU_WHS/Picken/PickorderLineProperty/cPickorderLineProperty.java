@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcodeViewModel;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 
@@ -19,6 +20,22 @@ public class cPickorderLineProperty {
 
     private String propertyCodeStr;
     public String getPropertyCodeStr() {return propertyCodeStr;}
+
+    public cItemProperty getItemProperty() {
+
+        if (this.getPropertyCodeStr().isEmpty() || cItemProperty.allItemPropertiesObl == null || cItemProperty.allItemPropertiesObl.size() == 0) {
+            return  null;
+        }
+
+        for (cItemProperty itemProperty :  cItemProperty.allItemPropertiesObl) {
+            if (itemProperty.getPropertyStr().equalsIgnoreCase(this.getPropertyCodeStr())) {
+                return  itemProperty;
+            }
+        }
+
+        return  null;
+
+    }
 
     private Integer sequenceNoHandledInt;
     public Integer getSequenceNoHandledInt() {return sequenceNoHandledInt;}
@@ -40,6 +57,7 @@ public class cPickorderLineProperty {
 
     private cPickorderLinePropertyEntity pickorderLinePropertyEntity;
 
+    public  static cPickorderLineProperty currentPickorderLineProperty;
     public static ArrayList<cPickorderLineProperty> allLinePropertysObl;
 
     public List<cPickorderLinePropertyValue> propertyValueObl() {
@@ -51,7 +69,7 @@ public class cPickorderLineProperty {
         }
 
         for (cPickorderLinePropertyValue pickorderLinePropertyValue : cPickorderLinePropertyValue.allLinePropertysValuesObl) {
-            if (pickorderLinePropertyValue.getLineNoInt() == this.getLineNoInt()) {
+            if (pickorderLinePropertyValue.getLineNoInt() == this.getLineNoInt() && pickorderLinePropertyValue.getPropertyCodeStr().equalsIgnoreCase(this.getPropertyCodeStr())) {
                 resultObl.add(pickorderLinePropertyValue);
             }
         }
@@ -76,8 +94,6 @@ public class cPickorderLineProperty {
         this.valueHandledStr = this.pickorderLinePropertyEntity.getValueHandledStr();
     }
 
-
-
     public boolean pInsertInDatabaseBln() {
         this.getPickorderLinePropertyViewModel().insert(this.pickorderLinePropertyEntity);
 
@@ -86,6 +102,20 @@ public class cPickorderLineProperty {
         }
         cPickorderLineProperty.allLinePropertysObl.add(this);
         return true;
+    }
+
+    public void pValueAdded(String pvValueStr) {
+
+        //Try to find value with same value
+        for (cPickorderLinePropertyValue pickorderLinePropertyValue : this.propertyValueObl()) {
+            if (pickorderLinePropertyValue.getValueStr().equalsIgnoreCase(pvValueStr)) {
+                pickorderLinePropertyValue.quanitityDbl += 1;
+                return;
+            }
+        }
+
+        //Add a new value
+        cPickorderLinePropertyValue.allLinePropertysValuesObl.add(new cPickorderLinePropertyValue(this.getLineNoInt(), this.getPropertyCodeStr(),pvValueStr));
     }
 
     public boolean pDeleteFromDatabaseBln() {

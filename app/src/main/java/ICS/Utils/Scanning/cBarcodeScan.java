@@ -69,6 +69,8 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyInputFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyNoInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SetBinFragment;
@@ -534,6 +536,11 @@ public class cBarcodeScan {
                     if (cAppExtension.dialogFragment instanceof ReasonFragment) {
                         ReasonFragment reasonFragment = (ReasonFragment)cAppExtension.dialogFragment;
                         reasonFragment.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.dialogFragment instanceof ItemPropertyInputFragment) {
+                        ItemPropertyInputFragment itemPropertyInputFragment = (ItemPropertyInputFragment)cAppExtension.dialogFragment;
+                        itemPropertyInputFragment.pHandleScan(barcodeScan);
                     }
 
                 }

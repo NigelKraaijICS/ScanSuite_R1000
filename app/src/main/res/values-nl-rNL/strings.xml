@@ -276,7 +276,7 @@
     <string name="succes_scannerlogon">Scanner is ingelogd</string>
     <string name="webservice_error_header">Oeps!</string>
     <string name="webservice_error_text">Er is iets mis gegaan</string>
-    <string name="message_location_already_assigned">Deze locatie is al toegewezen aan een andere verkooporder</string>
+    <string name="message_pickcartbox_already_assigned">Dit bakje is al toegewezen aan een andere verkooporder</string>
     <string name="message_salesorder_assigned_different_location">Deze verkooporder is al toegewezen aan %1$s </string>
     <string name="message_scan_pickcart_or_salesorder">Scan pickcart of verkooporder</string>
     <string name="message_wrong_sourceno">Verkeerd sourcenummer</string>
@@ -775,5 +775,8 @@
     <string name="message_sure_leave_qc_screen_title">Kwaliteitscontrole verlaten?</string>
     <string name="message_sure_leave_qc_screen_text">Weet u zeker dat u deze kwaliteitscontrole wilt verlaten? \\n\\nu gaat terug naar het kwaliteitscontrole order selectie scherm</string>
     <string name="screentitle_itemproperty_no_input">Weergave artikel eigenschap</string>
-
+    <string name="screentitle_itemproperty_input">Artikel eigenschap ingeven</string>
+    <string name="message_please_enter_a">Geef het volgende in</string>
+    <string name="message_and_a">en een</string>
+    <string name="confirm">Bevestig</string>
 </resources>

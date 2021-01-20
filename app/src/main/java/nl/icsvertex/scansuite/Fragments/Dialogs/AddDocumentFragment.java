@@ -172,13 +172,12 @@ public class AddDocumentFragment extends DialogFragment implements iICSDefaultFr
                 //has prefix, is bin
                 this.editTextAddDocument.setText(cRegex.pStripRegexPrefixStr(pvScannedBarcodeStr));
                 this.addDocumentButton.callOnClick();
-                return;
             }
             else {
                 //has prefix, isn't bin
                 cUserInterface.pDoNope(this.editTextAddDocument, true, true);
-                return;
             }
+            return;
         }
 
         //no prefix, fine

@@ -200,13 +200,12 @@ public class SetBinFragment extends DialogFragment implements iICSDefaultFragmen
                 //has prefix, is bin
                 this.editTextSetBin.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
                 this.setBinButton.callOnClick();
-                return;
             }
             else {
                 //has prefix, isn't bin
                 cUserInterface.pDoNope(this.editTextSetBin, true, true);
-                return;
             }
+            return;
         }
 
         //no prefix, fine

@@ -764,6 +764,17 @@
         <item name="android:background">@drawable/button_pill</item>
         <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
     </style>
+    <style name="pillButtonPrimary">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:layout_margin">@dimen/default_margin</item>
+        <item name="android:layout_marginBottom">@dimen/default_double_margin</item>
+        <item name="android:background">@drawable/button_pill_primary</item>
+        <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_double_elevation</item>
+    </style>
     <style name="numPad">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>

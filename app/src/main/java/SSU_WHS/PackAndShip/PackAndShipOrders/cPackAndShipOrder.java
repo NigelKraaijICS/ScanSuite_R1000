@@ -696,14 +696,13 @@ public class cPackAndShipOrder {
                     e.printStackTrace();
                 }
             }
-            return  result;
 
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETSOURCEDOCUMENTSHIPPINGDATA);
             result.resultBln = false;
             result.pAddErrorMessage(WebResult.getResultStr());
-            return result;
         }
+        return  result;
     }
 
     public cResult pGetNextDocumentAndDetailsRst(String pvDocumentStr) {
@@ -785,14 +784,12 @@ public class cPackAndShipOrder {
                 }
             }
 
-            return  result;
-
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET);
             result.pAddErrorMessage(WebResult.getResultObl().get(0));
             result.resultBln = false;
-            return result;
         }
+        return  result;
 
 
     }
@@ -835,13 +832,11 @@ public class cPackAndShipOrder {
                 }
             }
 
-            return  result;
-
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTSETTINGSGET);
             result.resultBln = false;
-            return result;
         }
+        return  result;
 
 
     }

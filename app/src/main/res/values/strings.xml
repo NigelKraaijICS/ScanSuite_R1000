@@ -194,6 +194,7 @@
 
     <!--region Inventory-->
     <string name="screentitle_inventory">Inventory</string>
+    <string name="screentitle_itemproperty_input">Item Property Input</string>
     <string name="screentitle_itemproperty_no_input">Item Property No Input</string>
     <!--endregion Inventory-->
 
@@ -215,6 +216,7 @@
 
     <string name="tab_to_select">To select</string>
 
+    <string name="confirm">Confirm</string>
     <string name="im_at">I\'m at</string>
     <string name="scan_bincode">Scan BIN</string>
     <string name="scan_article_or_bincode">Scan article or BIN</string>
@@ -437,13 +439,13 @@
     <string name="getting_data_text">please wait</string>
     <string name="scan_pickcart_or_salesorder">Scan pickcart or salesorder</string>
     <string name="message_scan_pickcart_or_salesorder">Scan pick cart or salesorder</string>
-    <string name="message_location_already_assigned">This location is already assigned to a different salesorder</string>
+    <string name="message_pickcartbox_already_assigned">This pickcartbox is already assigned to a different salesorder</string>
     <string name="message_salesorder_assigned_different_location">This salesorder is already assigned to %1$s</string>
     <string name="message_wrong_sourceno">Wrong source number</string>
     <string name="message_unknown_pickcartbox">Unknown pickcartbox</string>
     <string name="message_unknown_salesorder">Unknown salesorder</string>
     <string name="message_unknown_order">Unknown order</string>
-    <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>
+    <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>s
     <string name="message_wrong_pickcartbox">Wrong pickcartbox</string>
     <string name="number_cannot_be_lower">Number can not be lower than required number</string>
     <string name="number_cannot_be_higher">Number can not be higher than required number</string>
@@ -864,7 +866,7 @@
 
     <string name="message_packandshipdone">Ship fase done?</string>
     <string name="message_close_packandship_fase">Would you like to finish ship fase?</string>
-    <string name="message_no_lines_for_this_bin_and_article">No lines availabe for this BIN and article</string>
+    <string name="message_no_lines_for_this_bin_and_article">No lines available for this BIN and article</string>
     <string name="message_line_reset_succesfull">Line has been reset</string>
     <string name="message_close_place">Close PLACE?</string>
     <string name="message_close_place_text">Do you really want to close PLACE?</string>
@@ -902,6 +904,8 @@
     <string name="message_country_mismatch">Country mismatch</string>
     <string name="error_unknow_storement">Weborder to store can\'t be found</string>
     <string name="message_bin_cant_be_used_for_storage">This BIN can\'t be used for storage</string>
+    <string name="message_please_enter_a">"Please enter a "</string>
+    <string name="message_and_a">and a</string>
 
     <!--End Region return-->
 

@@ -203,9 +203,9 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager layoutmanager = (LinearLayoutManager)recyclerView.getLayoutManager();
+                assert layoutmanager != null;
+                int itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
                 if (dy < 0) {
-                    assert layoutmanager != null;
-                    int itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
 
                     if(itemPosition==0){
                         //cUserInterface.showToastMessage(thisContext, "Show", null);
@@ -223,8 +223,6 @@ public class SortorderLinesSortedFragment extends Fragment implements iICSDefaul
                     }
 
                 } else {
-                    assert layoutmanager != null;
-                    int itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
 
                     if(itemPosition>1){// your *second item your recyclerview
                         // Start the animation

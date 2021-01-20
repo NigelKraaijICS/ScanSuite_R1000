@@ -324,12 +324,11 @@ public class cBranch {
                 return  branchBin;
             }
 
-            return  null;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSELOCATIONS);
-            return  null;
         }
+        return  null;
     }
     //End Region Private Methods
 }

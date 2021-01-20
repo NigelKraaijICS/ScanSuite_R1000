@@ -149,14 +149,13 @@ public class cInventoryorderBin {
             this.statusInt = cWarehouseorder.InventoryBinStatusEnu.New;
             this.pUpdateStatusAndTimeStampInDatabase();
 
-            return  result;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET);
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_bin_via_webservice_failed));
-            return  result;
         }
+        return  result;
 
     }
 

@@ -86,6 +86,7 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
     private  TextView articleBarcodeText;
     private  ImageView articleThumbImageView;
     private  ImageView imageButtonBarcode;
+    private ImageView imageButtonNoInputPropertys;
 
     private  CardView binContainer;
     private TextView binText;
@@ -275,6 +276,8 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
 
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
         this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
+
         this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
@@ -328,6 +331,8 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
 
         this.mHideArticleInfo();
         this.mSetScanlineConstraints();
+
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
 
     }
 
@@ -515,12 +520,15 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
 
     private  void mShowArticleImage() {
 
-        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
 
         //If pick with picture is false, then hide image view
         if (!cMoveorder.currentMoveOrder.isMoveWithPictureBln()) {
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
+        this.articleThumbImageView.setVisibility(View.VISIBLE);
+        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+
 
         if (cMoveorderLine.currentMoveOrderLine == null){
             this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
@@ -556,14 +564,14 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
         if (cMoveorderLine.currentMoveOrderLine == null) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
             return;
         }
 
         if (!cSetting.MOVE_AMOUNT_MANUAL()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         }
         else {
             this.imageButtonMinus.setVisibility(View.VISIBLE);

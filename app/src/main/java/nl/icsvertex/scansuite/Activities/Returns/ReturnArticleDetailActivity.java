@@ -85,12 +85,11 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     private TextView reasonText;
     private ImageButton imageButtonReason;
 
-
-
     private AppCompatImageButton imageButtonMinus;
     private AppCompatImageButton imageButtonPlus;
     private ImageView imageButtonDone;
 
+    private ImageView imageButtonNoInputPropertys;
     private ImageButton imageButtonBarcode;
 
     private cReturnorderLineViewModel getReturnorderLineViewModel() {
@@ -208,7 +207,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
-
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
     }
 
     @Override
@@ -230,7 +229,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     public void mFieldsInitialize() {
 
         if (!cSetting.RETOUR_AMOUNT_MANUAL()) {
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
         } else {
@@ -247,7 +246,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.articleItemText.setText(cReturnorderLine.currentReturnOrderLine.getItemNoAndVariantCodeStr());
 
         if (cReturnorderBarcode.currentReturnOrderBarcode != null) {
-            this.articleBarcodeText.setText(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeAndQuantityStr() + " " +  cReturnorderBarcode.currentReturnOrderBarcode.getUnitOfMeasureStr());
+            this.articleBarcodeText.setText(cReturnorderBarcode.currentReturnOrderBarcode.getBarcodeAndQuantityAndUnitOfMeasureStr());
         } else {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.message_unknown_barcode));
         }
@@ -279,9 +278,9 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.quantityText.setCursorVisible(false);
 
         this.mShowArticleImage();
-        this.mShowOrHideGenericExtraFields();
 
         this.articleInfoContainer.setVisibility(View.GONE);
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
     }
 
     @Override
@@ -384,12 +383,11 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
             if (branchReason != null) {
                 cBranchReason.currentBranchReason = branchReason;
                 this.pSetReason();
-                return;
             }
             else {
                 cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_reason_unknown), null);
-                return;
             }
+            return;
         }
 
         if (isArticleBln) {
@@ -670,12 +668,11 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
             //Change quantityDbl in activuty
             if (cReturnorderLine.currentReturnOrderLine.getQuantitytakeDbl() == 0.0 ){
                 newQuantityStr = cText.pDoubleToStringStr(cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl());
-                this.quantityText.setText(newQuantityStr);
             }
             else {
                 newQuantityStr = cText.pDoubleToStringStr(cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl()) + "/" + cText.pDoubleToStringStr(cReturnorderLine.currentReturnOrderLine.getQuantitytakeDbl());
-                this.quantityText.setText(newQuantityStr);
             }
+            this.quantityText.setText(newQuantityStr);
             return;
         }
 
@@ -719,25 +716,27 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
             if (cReturnorderLine.currentReturnOrderLine.getQuantitytakeDbl() == 0.0 ){
                 newQuantityStr = cText.pDoubleToStringStr(cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl());
-                this.quantityText.setText(newQuantityStr);
             }
             else {
                 newQuantityStr = cText.pDoubleToStringStr(cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl()) + "/" + cText.pDoubleToStringStr(cReturnorderLine.currentReturnOrderLine.getQuantitytakeDbl());
-                this.quantityText.setText(newQuantityStr);
             }
+            this.quantityText.setText(newQuantityStr);
 
         }
     }
 
     private  void mShowArticleImage() {
 
-        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
 
         //If pick with picture is false, then hide image view
         if (!cReturnorder.currentReturnOrder.isReturnWithPictureBln()) {
-            this.articleThumbImageView.setVisibility(View.INVISIBLE);
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
+
+        this.articleThumbImageView.setVisibility(View.VISIBLE);
+        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+
 
         //If picture is not in cache (via webservice) then show no image
         if (!cReturnorderLine.currentReturnOrderLine.pGetArticleImageBln()) {
@@ -755,10 +754,6 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
         //Show the image
         this.articleThumbImageView.setImageBitmap(cReturnorderLine.currentReturnOrderLine.articleImage.imageBitmap());
-
-    }
-
-    private  void mShowOrHideGenericExtraFields() {
 
     }
 

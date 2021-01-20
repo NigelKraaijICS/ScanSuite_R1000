@@ -84,6 +84,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
     private ImageView articleThumbImageView;
 
     private ImageView imageButtonBarcode;
+    private ImageView imageButtonNoInputPropertys;
 
     private CardView binContainer;
     private TextView binText;
@@ -144,19 +145,8 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
             return true;
         }
 
-        if (cMoveorder.currentMoveOrder.currentBranchBin != null) {
-            pvMenu.findItem(R.id.item_bin_stock).setVisible(true);
-        }
-        else {
-            pvMenu.findItem(R.id.item_bin_stock).setVisible(false);
-        }
-
-        if (cMoveorder.currentMoveOrder.currentArticle != null) {
-            pvMenu.findItem(R.id.item_article_stock).setVisible(true);
-        }
-        else {
-            pvMenu.findItem(R.id.item_article_stock).setVisible(false);
-        }
+        pvMenu.findItem(R.id.item_bin_stock).setVisible(cMoveorder.currentMoveOrder.currentBranchBin != null);
+        pvMenu.findItem(R.id.item_article_stock).setVisible(cMoveorder.currentMoveOrder.currentArticle != null);
 
         return super.onPrepareOptionsMenu(pvMenu);
     }
@@ -314,7 +304,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
-
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
         this.textViewAction = findViewById(R.id.textViewAction);
 
         this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
@@ -359,7 +349,10 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         this.mSetInstructions();
 
         this.mHideArticleInfo();
+
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
     }
+
 
     @Override
     public void mInitScreen() {
@@ -490,14 +483,14 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
     private void mShowArticleImage() {
 
-        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
-
         //If pick with picture is false, then hide image view
         if (!cSetting.MOVE_WITH_PICTURE()) {
-            this.articleThumbImageView.setVisibility(View.INVISIBLE);
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
 
+        this.articleThumbImageView.setVisibility(View.VISIBLE);
+        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
 
 
         //If picture is not in cache (via webservice) then show no image
@@ -529,14 +522,14 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         if (cMoveorder.currentMoveOrder.currentMoveorderBarcode == null) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
             return;
         }
 
         if (!cSetting.MOVE_AMOUNT_MANUAL()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         } else {
             this.imageButtonMinus.setVisibility(View.VISIBLE);
             this.imageButtonPlus.setVisibility(View.VISIBLE);
@@ -857,12 +850,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
 
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangeQuantity(false, true,pvQuantityDbl);
-        }
-        else {
-            this.mTryToChangeQuantity(true, true,pvQuantityDbl);
-        }
+        this.mTryToChangeQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
 
     }
 
@@ -1285,7 +1273,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
     //Region Number Broadcaster
 
-    private Runnable mMinusAction = new Runnable() {
+    private final Runnable mMinusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonMinus.performClick();
@@ -1305,7 +1293,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         }
     };
 
-    private Runnable mPlusAction = new Runnable() {
+    private final Runnable mPlusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonPlus.performClick();
@@ -1325,7 +1313,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         }
     };
 
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int numberChosenInt = 0;

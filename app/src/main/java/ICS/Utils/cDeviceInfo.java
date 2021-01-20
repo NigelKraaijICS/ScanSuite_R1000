@@ -58,17 +58,15 @@ public class cDeviceInfo {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             if (ActivityCompat.checkSelfPermission(cAppExtension.context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return Build.getSerial();
             }
-
-            return Build.getSerial();
         }
         else
         {
             return Build.SERIAL;
         }
 
-
-
+        return  "";
     }
 
 
@@ -107,8 +105,6 @@ public class cDeviceInfo {
         return Build.VERSION.RELEASE;
     }
 
-    public static String getConfiguration ( ) { return ""; }
-
     public static String getIpAddress () {
         WifiManager wm = (WifiManager) cAppExtension.context.getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip;
@@ -140,12 +136,8 @@ public class cDeviceInfo {
         int code = Build.VERSION.SDK_INT;
 
         switch (code) {
-            case 0: {
-                return cAppExtension.context.getString(R.string.android_no_codename);
-            }
-            case 1: {
-                return cAppExtension.context.getString(R.string.android_no_codename);
-            }
+            case 0:
+            case 1:
             case 2: {
                 return cAppExtension.context.getString(R.string.android_no_codename);
             }
@@ -155,72 +147,48 @@ public class cDeviceInfo {
             case 4: {
                 return "Donut";
             }
-            case 5: {
-                return "Eclair";
-            }
-            case 6: {
-                return "Eclair";
-            }
+            case 5:
+            case 6:
             case 7: {
                 return "Eclair";
             }
             case 8: {
                 return "Froyo";
             }
-            case 9: {
-                return "Gingerbread";
-            }
+            case 9:
             case 10: {
                 return "Gingerbread";
             }
-            case 11: {
-                return "Honeycomb";
-            }
-            case 12: {
-                return "Honeycomb";
-            }
+            case 11:
+            case 12:
             case 13: {
                 return "Honeycomb";
             }
-            case 14: {
-                return "Ice Cream Sandwich";
-            }
+            case 14:
             case 15: {
                 return "Ice Cream Sandwich";
             }
-            case 16: {
-                return "Jelly Bean";
-            }
-            case 17: {
-                return "Jelly Bean";
-            }
+            case 16:
+            case 17:
             case 18: {
                 return "Jelly Bean";
             }
-            case 19: {
-                return "KitKat";
-            }
+            case 19:
             case 20: {
                 return "KitKat";
             }
-            case 21: {
-                return "Lollipop";
-            }
+            case 21:
             case 22: {
                 return "Lollipop";
             }
             case 23: {
                 return "Marshmallow";
             }
-            case 24: {
-                return "Nougat";
-            }
+            case 24:
             case 25: {
                 return "Nougat";
             }
-            case 26: {
-                return "Oreo";
-            }
+            case 26:
             case 27: {
                 return "Oreo";
             }
@@ -261,14 +229,10 @@ public class cDeviceInfo {
 
         if (batteryStatus != null) {
             status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-            boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                    status == BatteryManager.BATTERY_STATUS_FULL;
 
             // How are we charging?
-            int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-            boolean usbCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_USB;
-            boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
-            return isCharging;
+            return status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL;
         }
 
         return  false;
@@ -279,7 +243,7 @@ public class cDeviceInfo {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = cAppExtension.context.registerReceiver(null, ifilter);
         // Are we charging / charged?
-        int status = 0;
+        int status;
         if (batteryStatus != null) {
             status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
             boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||

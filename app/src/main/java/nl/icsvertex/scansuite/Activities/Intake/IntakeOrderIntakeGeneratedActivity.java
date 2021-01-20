@@ -87,6 +87,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private  TextView articleBarcodeText;
     private  ImageView articleThumbImageView;
     private  ImageView imageButtonBarcode;
+    private ImageView imageButtonNoInputPropertys;
 
     private  CardView binContainer;
     private TextView binText;
@@ -276,6 +277,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.quantityText = findViewById(R.id.quantityText);
 
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
         this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
         this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
@@ -325,12 +327,13 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         this.mEnablePlusMinusAndBarcodeSelectViews();
         this.mShowArticleImage();
-        this.mShowOrHideGenericExtraFields();
         this.mShowBarcodeInfo();
         this.mShowLines();
 
         this.mHideArticleInfo();
         this.mSetScanlineConstraints();
+
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
 
     }
 
@@ -487,10 +490,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerScanActions);
     }
 
-    private  void mShowOrHideGenericExtraFields() {
-
-    }
-
     private  void mShowBarcodeInfo() {
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
@@ -513,12 +512,15 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
     private  void mShowArticleImage() {
 
-        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
-
         //If pick with picture is false, then hide image view
         if (!cIntakeorder.currentIntakeOrder.isReceiveWithPictureBln()) {
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
+
+        this.articleThumbImageView.setVisibility(View.VISIBLE);
+        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null){
             this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
@@ -554,14 +556,14 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
             return;
         }
 
         if (!cSetting.RECEIVE_AMOUNT_MANUAL_MA()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         }
         else {
             this.imageButtonMinus.setVisibility(View.VISIBLE);

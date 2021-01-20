@@ -180,7 +180,7 @@ public class cPickorderLine {
     }
 
     private  List<cPickorderLineProperty> pickorderLinePropertyCachedObl;
-    public List<cPickorderLineProperty> pickorderLinePropertyObl() {
+    private List<cPickorderLineProperty> pickorderLinePropertyObl() {
 
         if (this.pickorderLinePropertyCachedObl != null) {
             return  this.pickorderLinePropertyCachedObl;
@@ -224,33 +224,27 @@ public class cPickorderLine {
         return  this.pickorderLinePropertyNoInputCachedObl;
     }
 
-    private  List<cPickorderLineProperty> pickorderLinePropertyInputCachedObl;
     public List<cPickorderLineProperty> pickorderLinePropertyInputObl() {
 
-        if (this.pickorderLinePropertyInputCachedObl != null) {
-            return  this.pickorderLinePropertyNoInputCachedObl;
-        }
 
-        this. pickorderLinePropertyInputCachedObl = new ArrayList<>();
+
+        List<cPickorderLineProperty> resultObl = new ArrayList<>();
 
         if (this.pickorderLinePropertyObl() == null || this.pickorderLinePropertyObl().size() == 0) {
-            return  this.pickorderLinePropertyInputCachedObl;
+            return  resultObl;
         }
 
         for (cPickorderLineProperty pickorderLineProperty :this.pickorderLinePropertyObl()) {
             if (pickorderLineProperty.getIsInputBln() &&  pickorderLineProperty.getIsRequiredBln()) {
-                this.pickorderLinePropertyInputCachedObl.add(pickorderLineProperty);
+                resultObl.add(pickorderLineProperty);
             }
         }
 
-        return  this.pickorderLinePropertyInputCachedObl;
+        return  resultObl;
     }
 
     public  boolean hasPropertysBln() {
-        if (this.pickorderLinePropertyObl().size() == 0) {
-            return  false;
-        }
-        return  true;
+        return this.pickorderLinePropertyObl().size() != 0;
     }
 
     private final cPickorderLineEntity PickorderLineEntity;

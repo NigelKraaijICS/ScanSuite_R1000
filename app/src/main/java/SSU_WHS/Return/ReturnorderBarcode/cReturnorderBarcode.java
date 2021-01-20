@@ -64,6 +64,12 @@ public class cReturnorderBarcode {
       return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
     }
 
+    public String getBarcodeAndQuantityAndUnitOfMeasureStr(){
+        return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")"  + " " +  this.getUnitOfMeasureStr();
+    }
+
+
+
     private cReturnorderBarcodeViewModel getReturnorderBarcodeViewModel(){
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderBarcodeViewModel.class);
     }

@@ -336,14 +336,13 @@ public class cInventoryorderLine {
             this.quantityHandledDbl = 0.0;
             this.pUpdateQuantityInDatabase();
 
-            return  result;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_INVENTORYLINERESET);
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed));
-            return  result;
         }
+        return  result;
     }
 
 

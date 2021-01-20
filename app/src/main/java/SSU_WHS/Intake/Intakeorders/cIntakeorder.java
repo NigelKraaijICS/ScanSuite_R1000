@@ -1077,17 +1077,13 @@ public class cIntakeorder {
             cIntakeorder.currentIntakeOrder = intakeorder;
 
 
-
-            return result;
-
-
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RECEIVECREATE);
             result.resultBln = false;
-            return result;
         }
+        return result;
 
-     }
+    }
 
     public static cResult pCreateIntakeOrderViaWebserviceRst(String pvDocumentStr, String pvBinStr, boolean pvCheckBarcodesBln) {
 

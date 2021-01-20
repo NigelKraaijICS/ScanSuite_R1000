@@ -68,6 +68,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     private  int counterMinusHelperInt;
     private  int counterPlusHelperInt;
+
     private  Handler minusHandler;
     private  Handler plusHandler;
     private  AppCompatImageButton imageButtonMinus;
@@ -81,7 +82,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private  TextView toolbarTitle;
     private  TextView toolbarSubtext;
 
-
     private  CardView articleContainer;
     private ConstraintLayout articleInfoContainer;
 
@@ -92,19 +92,17 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     private  ImageView articleThumbImageView;
     private  ImageView imageButtonBarcode;
+    private ImageView imageButtonNoInputPropertys;
 
     private  EditText quantityText;
     private  TextView quantityRequiredText;
 
-
     private  TextView sourcenoText;
-
     private  TextView binCodeText;
 
     private  Double quantityScannedDbl = 0.0;
     private  List<cIntakeorderBarcode> scannedBarcodesObl;
     private  RecyclerView recyclerScanActions;
-
 
     private cReceiverorderSummaryLineAdapter receiverorderSummaryLineAdapter;
     private cReceiverorderSummaryLineAdapter getReceiverorderSummaryLineAdapter(){
@@ -288,6 +286,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.recyclerScanActions = findViewById(R.id.recyclerScanActions);
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
 
     }
 
@@ -326,6 +325,8 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.mShowBarcodeInfo();
         this.mShowLines();
         this.mHideArticleInfo();
+
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
 
     }
 
@@ -499,7 +500,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         }
 
         if (cIntakeorderBarcode.currentIntakeOrderBarcode!= null) {
-            this.articleBarcodeText.setText(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeAndQuantityStr() + " " + cIntakeorderBarcode.currentIntakeOrderBarcode.getUnitOfMeasureStr() );
+            this.articleBarcodeText.setText(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeAndQuantityAndUnitOfMeasureStr());
         } else {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
         }
@@ -511,9 +512,11 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
         //If pick with picture is false, then hide image view
         if (!cIntakeorder.currentIntakeOrder.isReceiveWithPictureBln()) {
-            this.articleThumbImageView.setVisibility(View.INVISIBLE);
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
+
+        this.articleThumbImageView.setVisibility(View.VISIBLE);
 
         //If picture is not in cache (via webservice) then show no image
         if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pGetArticleImageBln()) {
@@ -544,7 +547,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine== null) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
             this.imageButtonDone.setVisibility(View.INVISIBLE);
             return;
         }
@@ -554,7 +557,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         if (!cSetting.RECEIVE_AMOUNT_MANUAL_MA()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         } else {
             this.imageButtonMinus.setVisibility(View.VISIBLE);
             this.imageButtonPlus.setVisibility(View.VISIBLE);
@@ -676,14 +679,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     }
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
-
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangeQuantityBln(false, true,pvQuantityDbl);
-        }
-        else {
-            this.mTryToChangeQuantityBln(true, true,pvQuantityDbl);
-        }
-
+        this.mTryToChangeQuantityBln(pvQuantityDbl != 0, true,pvQuantityDbl);
     }
 
     private  boolean mTryToChangeQuantityBln(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {

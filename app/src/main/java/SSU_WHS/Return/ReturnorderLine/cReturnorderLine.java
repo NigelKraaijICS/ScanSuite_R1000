@@ -368,14 +368,13 @@ public class cReturnorderLine {
                 cReturnorderDocument.currentReturnOrderDocument.returnorderLineObl.remove(cReturnorderLine.currentReturnOrderLine);
             }
             cBranchReason.currentBranchReason = null;
-            return  result;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RETURNLINERESET);
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed));
-            return  result;
         }
+        return  result;
     }
 
     public cResult pResetDocumentRst(){
@@ -401,14 +400,13 @@ public class cReturnorderLine {
                 cReturnorderLine.currentReturnOrderLine.lineBarcodesObl.clear();
             }
 
-            return  result;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RETURNLINERESET);
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed));
-            return  result;
         }
+        return  result;
     }
 
     public static void pCheckIfLineIsAlreadyInUse () {

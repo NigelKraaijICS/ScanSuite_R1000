@@ -306,15 +306,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
             if (ReceiveLinesActivity.packagingClickedBln) {
                 receiveLinesActivity.pPackaging();
-                this.dismiss();
-                return;
             }
 
             else {
                 receiveLinesActivity.pAddUnknownScan(ReceiveLinesActivity.barcodeScanToHandle);
-                this.dismiss();
-                return;
             }
+            this.dismiss();
+            return;
 
         }
 

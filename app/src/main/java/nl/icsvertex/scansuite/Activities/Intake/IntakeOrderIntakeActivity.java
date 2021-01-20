@@ -92,6 +92,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private  TextView articleItemText;
     private  TextView articleBarcodeText;
     private  ImageView articleThumbImageView;
+
+    private  ImageView imageButtonNoInputPropertys;
     private  ImageView imageButtonBarcode;
 
     private  CardView binContainer;
@@ -318,13 +320,12 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.containerContainer = findViewById(R.id.containerContainer);
         this.containerText = findViewById(R.id.containerText);
 
-
-
         this.quantityText = findViewById(R.id.quantityText);
         this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
 
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
         this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
         this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
@@ -369,13 +370,11 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         this.mEnablePlusMinusAndBarcodeSelectViews();
         this.mShowArticleImage();
-        this.mShowOrHideGenericExtraFields();
         this.mShowBarcodeInfo();
         this.mShowLines();
-
         this.mHideArticleInfo();
 
-
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
     }
 
     @Override
@@ -585,10 +584,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerScanActions);
     }
 
-    private  void mShowOrHideGenericExtraFields() {
-
-    }
-
     private  void mShowBarcodeInfo() {
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
@@ -615,7 +610,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         //If pick with picture is false, then hide image view
         if (!cIntakeorder.currentIntakeOrder.isReceiveWithPictureBln()) {
-            this.articleThumbImageView.setVisibility(View.INVISIBLE);
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
 
@@ -649,7 +644,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
             this.imageButtonBarcode.setVisibility(View.INVISIBLE);
-            this.imageButtonDone.setVisibility(View.INVISIBLE);
+            this.imageButtonDone.setVisibility(View.GONE);
             return;
         }
 
@@ -658,7 +653,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         if (!cSetting.RECEIVE_AMOUNT_MANUAL_MA()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         }
         else {
             this.imageButtonMinus.setVisibility(View.VISIBLE);
@@ -760,12 +755,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private void mHandleQuantityChosen(double pvQuantityDbl) {
 
 
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangeQuantity(false, true,pvQuantityDbl);
-        }
-        else {
-            this.mTryToChangeQuantity(true, true,pvQuantityDbl);
-        }
+        this.mTryToChangeQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
 
     }
 

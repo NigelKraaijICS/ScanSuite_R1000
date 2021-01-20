@@ -128,12 +128,11 @@ public class cArticle {
 
                 return article;
             }
-            return null;
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEVIAOWNERBARCODE);
-            return null;
         }
+        return null;
     }
 
     public boolean pGetBarcodesViaWebserviceBln(cBarcodeScan pvBarcodeScan) {

@@ -70,16 +70,16 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     private  TextView quantityText;
     private  TextView quantityRequiredText;
 
+    private ImageView articleThumbImageView;
     private  ImageView imageButtonBarcode;
-
+    private ImageView  imageButtonNoInputPropertys;
 
     private  AppCompatImageButton imageButtonMinus;
     private  AppCompatImageButton imageButtonPlus;
     private  AppCompatImageButton imageButtonDone;
     private  TextView textViewAction;
 
-
-    private  CardView articleContainer;
+    private CardView articleContainer;
     private ConstraintLayout articleInfoContainer;
 
     //End Region Private Properties
@@ -203,6 +203,9 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
+        this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
+
         this.textViewAction = findViewById(R.id.textViewAction);
 
         this.articleContainer = findViewById(R.id.articleContainer);
@@ -251,6 +254,9 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         this.mCheckLineDone();
         this.mHideArticleInfo();
 
+        this.articleThumbImageView.setVisibility(View.GONE);
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -262,7 +268,6 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         if (cPickorder.currentPickOrder.pickorderQCBarcodeScanned != null) {
             this.pHandleScan(cBarcodeScan.pFakeScan(cPickorder.currentPickOrder.pickorderQCBarcodeScanned.getBarcodeStr()));
             cPickorder.currentPickOrder.pickorderQCBarcodeScanned =null;
-            return;
         }
 
 
@@ -375,7 +380,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
         }
 
         if (!cSetting.PICK_SELECTEREN_BARCODE()) {
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         } else {
             this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
@@ -406,14 +411,7 @@ public class PickorderQCActivity extends AppCompatActivity implements iICSDefaul
     }
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
-
-
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangePickedQuantity(false, true,pvQuantityDbl);
-        } else {
-            this.mTryToChangePickedQuantity(true, true,pvQuantityDbl);
-        }
-
+        this.mTryToChangePickedQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
     }
 
     private void mTryToChangePickedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {

@@ -39,8 +39,8 @@ public class cPickorderRepository {
 
     //End Region Public Properties
 
-    private iPickorderDao pickorderDao;
-    private iPickorderLineDao pickorderLineDao;
+    private final iPickorderDao pickorderDao;
+    private final iPickorderLineDao pickorderLineDao;
 
     private static class PickorderStepHandledParams {
         String userStr;
@@ -160,7 +160,7 @@ public class cPickorderRepository {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
-        String mainTypeStr;
+        String mainTypeStr = "";
 
         PickorderLocalParams pickorderLocalParams;
 
@@ -168,7 +168,6 @@ public class cPickorderRepository {
         switch (cUser.currentUser.currentAuthorisation.getAutorisationEnu()){
 
             case PICK:
-                mainTypeStr = "";
                 break;
 
             case PICK_PF:
@@ -702,7 +701,7 @@ public class cPickorderRepository {
         }
 
         if (resultDbl== null) {
-            resultDbl = Double.valueOf(0);
+            resultDbl = (double) 0;
         }
 
         return resultDbl;
@@ -975,7 +974,7 @@ public class cPickorderRepository {
     //Region Private Methods
 
     private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private iPickorderDao mAsyncTaskDao;
+        private final iPickorderDao mAsyncTaskDao;
 
         mDeleteAllAsyncTask(iPickorderDao dao) {
             mAsyncTaskDao = dao;
@@ -988,7 +987,7 @@ public class cPickorderRepository {
     }
 
     private static class mInsertAsyncTask extends AsyncTask<cPickorderEntity, Void, Void> {
-        private iPickorderDao mAsyncTaskDao;
+        private final iPickorderDao mAsyncTaskDao;
 
         mInsertAsyncTask(iPickorderDao dao) {
             mAsyncTaskDao = dao;

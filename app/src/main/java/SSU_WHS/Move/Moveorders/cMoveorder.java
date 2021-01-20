@@ -160,9 +160,7 @@ public class cMoveorder {
             return  sortedTakeLinesObl;
         }
 
-        for (cMoveorderLine moveorderLine : this.placeLinesObl) {
-            sortedTakeLinesObl.add(moveorderLine);
-        }
+        sortedTakeLinesObl.addAll(this.placeLinesObl);
 
         Collections.sort(sortedTakeLinesObl);
 
@@ -1357,7 +1355,7 @@ public class cMoveorder {
             return false;
         }
 
-        Boolean isUniqueBarcodeBln = false;
+        boolean isUniqueBarcodeBln = false;
 
         if (cArticle.currentArticle.barcodesObl != null && cArticle.currentArticle.barcodesObl.get(0).getUniqueBarcodeBln()) {
             isUniqueBarcodeBln = true;
@@ -1378,7 +1376,6 @@ public class cMoveorder {
                     cMoveorderBarcode.allMoveorderBarcodesObl.add(moveorderBarcode);
                     cMoveorder.currentMoveOrder.currentMoveorderBarcode= moveorderBarcode;
                 }
-
             }
         }
 

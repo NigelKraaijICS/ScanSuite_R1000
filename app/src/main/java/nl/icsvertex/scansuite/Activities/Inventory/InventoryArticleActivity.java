@@ -81,6 +81,7 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
 
     private  ImageView imageButtonDone;
     private  ImageButton imageButtonBarcode;
+    private ImageView imageButtonNoInputPropertys;
 
     //End Region Private Properties
 
@@ -195,6 +196,7 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
         this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
         this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
     }
@@ -220,7 +222,7 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     public void mFieldsInitialize() {
 
         if (!cInventoryorder.currentInventoryOrder.isInvAmountManualBln()) {
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         } else {
             this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
@@ -246,6 +248,7 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
         this.mShowBarcodeInfo();
         this.mHideArticleInfo();
 
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
     }
 
     @Override
@@ -285,21 +288,12 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
         //Check if the scanned value belongs to this line
         if (! cInventoryorder.currentInventoryOrder.pCheckBarcodeWithLineBarcodesBln(pvBarcodeScan)) {
 
+            //Keep the scan, so BIN activity can handle it
+            InventoryorderBinActivity.barcodeScanToHandle = pvBarcodeScan;
+
             //Close this activity, we are done with the current article
             this.mHandleDone();
-
-            if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-
-                cAppExtension.activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
-                        inventoryorderBinActivity.pHandleScan(pvBarcodeScan, true);
-                    }
-                });
-                return;
-            }
-
+           return;
         }
 
         this.mShowBarcodeInfo();

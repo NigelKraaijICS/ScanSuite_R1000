@@ -50,7 +50,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     //Region Public Properties
     public static Fragment currentLineFragment;
     public static Boolean busyBln =false;
-
+    public static cBarcodeScan barcodeScanToHandle;
     //End Region Public Properties
 
 
@@ -248,6 +248,13 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     @Override
     public void mInitScreen() {
         this.pFillLines();
+
+        if (InventoryorderBinActivity.barcodeScanToHandle != null) {
+            this.pHandleScan(InventoryorderBinActivity.barcodeScanToHandle,false);
+            InventoryorderBinActivity.barcodeScanToHandle = null;
+            return;
+        }
+
     }
 
     //End Region iICSDefaultActivity defaults

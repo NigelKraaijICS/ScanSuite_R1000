@@ -238,13 +238,12 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
                     //has prefix, is bin
                     this.editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
                     this.setLocationButton.callOnClick();
-                    return;
                 }
                 else {
                     //has prefix, isn't bin
                     cUserInterface.pDoNope(this.editTextCurrentLocation, true, true);
-                    return;
                 }
+                return;
             }
 
             if (cAppExtension.activity instanceof ReturnorderDocumentActivity ) {

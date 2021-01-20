@@ -80,6 +80,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     private TextView toolbarSubtext;
     private TextView toolbarSubtext2;
 
+    private ImageView articleThumbImageView;
     private TextView articleDescriptionText;
     private TextView articleDescription2Text;
     private TextView articleItemText;
@@ -87,13 +88,11 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     private TextView quantityText;
     private TextView quantityRequiredText;
-    private ImageView articleThumbImageView;
     private ImageView imageButtonBarcode;
-
+    private ImageView imageButtonNoInputPropertys;
 
     private TextView textViewAction;
     private TextView textAdviceLocation;
-
     private AppCompatImageButton imageButtonMinus;
     private AppCompatImageButton imageButtonPlus;
     private AppCompatImageButton imageButtonDone;
@@ -216,6 +215,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.quantityRequiredText = findViewById(R.id.quantityRequiredText);
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
         this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
 
         this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
@@ -280,6 +280,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         this.mSetAdviceLocation();
         this.mShowBarcodeInfo();
         this.mShowOrHideGenericExtraFields();
+
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
 
     }
 
@@ -420,7 +422,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         if (recordForBarcode != null) {
 
             if (!recordForBarcode.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr())) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_location_already_assigned), "", true, true);
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_pickcartbox_already_assigned), "", true, true);
                 return false;
             }
         }
@@ -731,12 +733,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     }
 
     public void mHandleQuantityChosen(int pvQuantityDbl) {
-
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangeSortedQuantity(false, true,pvQuantityDbl);
-        } else {
-            this.mTryToChangeSortedQuantity(true, true,pvQuantityDbl);
-        }
+        this.mTryToChangeSortedQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
     }
 
     private  void mSendLine() {
@@ -830,9 +827,12 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
         //If pick with picture is false, then hide image view
         if (!cPickorder.currentPickOrder.isPickWithPictureBln()) {
-            this.articleThumbImageView.setVisibility(View.INVISIBLE);
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
+
+
+        this.articleThumbImageView.setVisibility(View.VISIBLE);
 
         //If picture is not in cache (via webservice) then show no image
         if (!cPickorderLine.currentPickOrderLine.pGetArticleImageBln()) {
@@ -934,7 +934,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         }
 
         if (!cSetting.PICK_SELECTEREN_BARCODE()) {
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         } else {
             this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }

@@ -11,13 +11,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -29,7 +30,6 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
-import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -42,7 +42,7 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
     private TextView toolbarTitle;
 
     private  EditText editTextDocument;
-    private Switch checkBarcodesSwitch;
+    private SwitchMaterial checkBarcodesSwitch;
     private  Button createButton;
     private  Button cancelButton;
     //End Region private Properties
@@ -178,7 +178,7 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                cAppExtension.dialogFragment.dismiss();
+              mStartOrderSelectActivity();
             }
         });
     }

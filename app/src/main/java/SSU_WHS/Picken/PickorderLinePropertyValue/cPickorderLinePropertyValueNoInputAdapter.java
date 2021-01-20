@@ -8,26 +8,24 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.General.Comments.cComment;
 import nl.icsvertex.scansuite.R;
 
-public class cPickorderLinePropertyAdapter extends RecyclerView.Adapter<cPickorderLinePropertyAdapter.commentViewHolder>{
+public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adapter<cPickorderLinePropertyValueNoInputAdapter.ItempropertyValueNoInputViewHolder>{
 
-    public class commentViewHolder extends RecyclerView.ViewHolder{
+    public class ItempropertyValueNoInputViewHolder extends RecyclerView.ViewHolder{
 
         private TextView itemPropertyTextView;
         private TextView itemPropertyValueTextView;
         public LinearLayout itemPropertyValueNoInputItemLinearLayout;
 
-        public commentViewHolder(View itemView) {
+        public ItempropertyValueNoInputViewHolder(View itemView) {
             super(itemView);
             this.itemPropertyTextView = itemView.findViewById(R.id.itemPropertyTextView);
             this.itemPropertyValueTextView = itemView.findViewById(R.id.itemPropertyValueTextView);
@@ -41,27 +39,28 @@ public class cPickorderLinePropertyAdapter extends RecyclerView.Adapter<cPickord
     //End Region Private Properties
 
     //Region Constructor
-    public cPickorderLinePropertyAdapter() {
+    public cPickorderLinePropertyValueNoInputAdapter() {
         this.layoutInflaterObject = LayoutInflater.from(cAppExtension.context);
     }
     //End Region Constructor
 
+    @NonNull
     @Override
-    public commentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = this.layoutInflaterObject.inflate(R.layout.recycler_itempropertyvalue_noinput, parent, false);
-        return new commentViewHolder(itemView);
+    public ItempropertyValueNoInputViewHolder onCreateViewHolder(@NonNull ViewGroup pvParentViewGroup, int pvViewTypeInt) {
+        View itemView = this.layoutInflaterObject.inflate(R.layout.recycler_itempropertyvalue_noinput, pvParentViewGroup, false);
+        return new ItempropertyValueNoInputViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(commentViewHolder holder, int pvPosition) {
+    public void onBindViewHolder(@NonNull ItempropertyValueNoInputViewHolder pvHolderObj, int pvPositionInt) {
 
         if (this.localItemPropertyValueObl != null || this.localItemPropertyValueObl.size() > 0) {
-            final cPickorderLinePropertyValue pickorderLinePropertyValue = this.localItemPropertyValueObl.get(pvPosition);
+            final cPickorderLinePropertyValue pickorderLinePropertyValue = this.localItemPropertyValueObl.get(pvPositionInt);
 
-            holder.itemPropertyTextView.setText(pickorderLinePropertyValue.getItemProperty().getOmschrijvingStr());
-            holder.itemPropertyValueTextView.setText(pickorderLinePropertyValue.getValueStr());
+            pvHolderObj.itemPropertyTextView.setText(pickorderLinePropertyValue.getItemProperty().getOmschrijvingStr());
+            pvHolderObj.itemPropertyValueTextView.setText(pickorderLinePropertyValue.getValueStr());
 
-            holder.itemPropertyValueTextView.setOnClickListener(new View.OnClickListener() {
+            pvHolderObj.itemPropertyValueTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.bounce);

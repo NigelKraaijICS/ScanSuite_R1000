@@ -90,6 +90,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
     private TextView articleBarcodeText;
     private ImageView articleThumbImageView;
 
+    private ImageView imageButtonNoInputPropertys;
     private ImageView imageButtonBarcode;
     private CardView binContainer;
     private TextView binText;
@@ -191,18 +192,8 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
             return true;
         }
 
-        if (cMoveorder.currentMoveOrder.currentBranchBin != null) {
-            this.item_bin_stock .setVisible(true);
-        }
-        else {
-            this.item_bin_stock .setVisible(false);
-        }
-        if (cMoveorder.currentMoveOrder.currentArticle != null) {
-            this.item_article_stock.setVisible(true);
-        }
-        else {
-            this.item_article_stock.setVisible(false);
-        }
+        this.item_bin_stock .setVisible(cMoveorder.currentMoveOrder.currentBranchBin != null);
+        this.item_article_stock.setVisible(cMoveorder.currentMoveOrder.currentArticle != null);
 
         return super.onPrepareOptionsMenu(pvMenu);
     }
@@ -316,6 +307,8 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
+
         this.textViewAction = findViewById(R.id.textViewAction);
 
         this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
@@ -362,6 +355,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         this.mSetInstructions();
         this.mHideArticleInfo();
 
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
     }
 
     @Override
@@ -551,15 +545,15 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
 
     private void mShowArticleImage() {
 
-        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
 
         //If pick with picture is false, then hide image view
         if (!cSetting.MOVE_WITH_PICTURE()) {
-            this.articleThumbImageView.setVisibility(View.INVISIBLE);
+            this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
 
-
+        this.articleThumbImageView.setVisibility(View.VISIBLE);
+        this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
 
         //If picture is not in cache (via webservice) then show no image
         if (cMoveorder.currentMoveOrder.currentArticle == null ||  cMoveorder.currentMoveOrder.currentArticle .pGetArticleImageBln()) {
@@ -590,14 +584,14 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         if (cMoveorder.currentMoveOrder.currentMoveorderBarcode == null) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
             return;
         }
 
         if (!cSetting.MOVE_AMOUNT_MANUAL()) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
-            this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+            this.imageButtonBarcode.setVisibility(View.GONE);
         } else {
             this.imageButtonMinus.setVisibility(View.VISIBLE);
             this.imageButtonPlus.setVisibility(View.VISIBLE);
@@ -910,12 +904,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
 
-        if (pvQuantityDbl == 0) {
-            this.mTryToChangeQuantity(false, true,pvQuantityDbl);
-        }
-        else {
-            this.mTryToChangeQuantity(true, true,pvQuantityDbl);
-        }
+        this.mTryToChangeQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
 
     }
 

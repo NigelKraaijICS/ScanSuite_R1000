@@ -88,6 +88,12 @@ public class cIntakeorderBarcode {
         return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")";
     }
 
+    public  String getBarcodeAndQuantityAndUnitOfMeasureStr(){
+        return  this.getBarcodeStr() + " (" + this.getQuantityPerUnitOfMeasureDbl().intValue() + ")"      + " " + this.getUnitOfMeasureStr();
+    }
+
+
+
     private cIntakeorderBarcodeViewModel getIntakeorderBarcodeViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderBarcodeViewModel.class);
     }

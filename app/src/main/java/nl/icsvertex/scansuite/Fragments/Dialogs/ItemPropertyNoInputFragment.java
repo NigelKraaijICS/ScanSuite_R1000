@@ -22,7 +22,7 @@ import java.util.Objects;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyAdapter;
+import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueNoInputAdapter;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import nl.icsvertex.scansuite.R;
 
@@ -38,10 +38,10 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
     private  List<cPickorderLinePropertyValue> localItemPropertyValueObl;
 
 
-    private cPickorderLinePropertyAdapter pickorderLinePropertyAdapter;
-    private cPickorderLinePropertyAdapter getPickorderLinePropertyAdapter(){
+    private cPickorderLinePropertyValueNoInputAdapter pickorderLinePropertyAdapter;
+    private cPickorderLinePropertyValueNoInputAdapter getPickorderLinePropertyAdapter(){
         if (this.pickorderLinePropertyAdapter == null) {
-            this.pickorderLinePropertyAdapter = new cPickorderLinePropertyAdapter();
+            this.pickorderLinePropertyAdapter = new cPickorderLinePropertyValueNoInputAdapter();
         }
 
         return  pickorderLinePropertyAdapter;
@@ -94,7 +94,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mSetToolbar();
-        this.mSetCommentRecycler();
+        this.mSetItemPropertyValueRecycler();
     }
 
     @Override
@@ -189,8 +189,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
     }
 
 
-    private void mSetCommentRecycler() {
-
+    private void mSetItemPropertyValueRecycler() {
         this.itemPropertyRecyclerview.setHasFixedSize(false);
         this.itemPropertyRecyclerview.setAdapter(this.getPickorderLinePropertyAdapter());
         this.itemPropertyRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
