@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/imageViewStart"
         />
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchDeviations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

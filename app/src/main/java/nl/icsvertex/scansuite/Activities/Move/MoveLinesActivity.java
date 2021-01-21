@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
@@ -60,7 +61,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     private ConstraintLayout quickHelpContainer;
     private TextView quickhelpText;
     private ImageView quickhelpIcon;
-    private Switch switchTodo;
+    private SwitchCompat switchTodo;
 
     private ImageView imageButtonCloseOrder;
     public boolean closeOrderClickedBln = false;

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
@@ -54,7 +55,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     private EditText editTextDocument;
     private EditText editTextPackingslip;
     private EditText editTextBin;
-    private Switch switchCheckBarcodes;
+    private SwitchCompat switchCheckBarcodes;
     private  Button createReceiveButton;
     private  Button cancelButton;
     //End Region private Properties

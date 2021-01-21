@@ -522,7 +522,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         if (!this.startedWithBINBln) {
             //We are done
             this.mSendLine();
-            return;
 
         }
 

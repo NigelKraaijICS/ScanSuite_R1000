@@ -216,6 +216,7 @@
 
     <string name="tab_to_select">To select</string>
 
+    <string name="use_darkmode">Use dark mode</string>
     <string name="confirm">Confirm</string>
     <string name="im_at">I\'m at</string>
     <string name="scan_bincode">Scan BIN</string>
@@ -302,6 +303,7 @@
     <string name="filter_orderlines_nobodys_orders_summary">Orders that are not assigned to anyone</string>
     <string name="filter_orderlines_nobodys_orders_key" translatable="false">FILTERORDERLINES_NOBODYSORDERS</string>
     <string name="shared_preference_serial_key" translatable="false">SHARED_PREFRENCE_SERIAL</string>
+    <string name="shared_preference_dark_mode" translatable="false">SHARED_PREFRENCE_DARKMODE</string>
     <string name="filter_orderlines_apply_key" translatable="false">FILTERORDERLINES_APPLY</string>
     <string name="filter_orderlines_apply">Click or swipe down to apply</string>
 

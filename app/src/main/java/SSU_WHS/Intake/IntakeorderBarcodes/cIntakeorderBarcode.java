@@ -124,9 +124,16 @@ public class cIntakeorderBarcode {
     }
 
     public cIntakeorderBarcode(cIntakeorderBarcode pvBarcodeToCopyObj) {
+        this.intakeorderBarcodeEntity = null;
         this.barcodeStr = pvBarcodeToCopyObj.getBarcodeStr();
+        this.barcodetypeStr = "";
+        this.isUniqueBarcodeBln = false;
         this.itemNoStr = pvBarcodeToCopyObj.getItemNoStr();
         this.variantCodeStr = pvBarcodeToCopyObj.getVariantCodeStr();
+        this.quantityPerUnitOfMeasureDbl = 1d;
+        this.unitOfMeasureStr = "";
+        this.quantityHandledDbl = 0d;
+
     }
 
     public cIntakeorderBarcode() {

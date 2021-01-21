@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -107,7 +108,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         //Try to set the serialnumber
         this.mSetSerialNumberIfPossible();
 
-//        //set Crashlytics, otherwise Firebase wont work
+        //Set darmode
+        this.pChangeDarkModus();
+
+         //set Crashlytics, otherwise Firebase wont work
         FirebaseAnalytics.getInstance(this);
 
     }
@@ -163,6 +167,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
             }
         }
     }
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -274,6 +279,17 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         if (this.mGetBasicDataBln()) {
             this.mStartLoginActivity();
         }
+    }
+
+    public void pChangeDarkModus() {
+
+        if (cSharedPreferences.getDarkModusBln()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            return;
+        }
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
     }
 
     public  void pSetChosenEnvironment() {

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -76,7 +77,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     private RecyclerView recyclerViewLines;
     private List<cReceiveorderSummaryLine> linesToShowObl;
 
-    private Switch switchDeviations;
+    private SwitchCompat switchDeviations;
     public Boolean showDefectsBln = false;
 
     private ImageView imageAddArticle;

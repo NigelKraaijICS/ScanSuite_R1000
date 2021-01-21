@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -67,7 +68,7 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
     private ImageView closeButton;
     private RecyclerView recyclerViewLines;
 
-    private Switch switchDeviations;
+    private SwitchCompat switchDeviations;
 
     public enum InputType {
         UNKNOWN,

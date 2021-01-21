@@ -12,27 +12,27 @@ import static android.content.Context.MODE_PRIVATE;
 public class cSharedPreferences {
 
     public static Boolean userFilterBln(){
-       return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key), false);
+       return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key), false);
     }
 
     public static Boolean showProcessedWaitBln(){
-        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_processing_key), false);
+        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_processing_key), false);
     }
 
     public static Boolean showSingleArticlesBln(){
-        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_singlearticles_key), false);
+        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_singlearticles_key), false);
     }
 
     public static Boolean showAssignedToMeBln(){
-        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_my_orders_key), false);
+        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_my_orders_key), false);
     }
 
     public static Boolean showAssignedToOthersBln(){
-        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_their_orders_key), false);
+        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_their_orders_key), false);
     }
 
     public static Boolean showNotAssignedBln(){
-        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_nobodys_orders_key), false);
+        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_nobodys_orders_key), false);
     }
 
     public static String getSerialNumerStr(){
@@ -41,6 +41,26 @@ public class cSharedPreferences {
 
     public static void  setSerialNumerStr(String pvSerialStr){
         mSetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_serial_key),pvSerialStr);
+    }
+
+    public static void  setDarkModusBln(Boolean pvDarkModus){
+
+        String darkmodusStr = "false";
+
+//        if (pvDarkModus) {
+//            darkmodusStr = "true";
+//        }
+
+        mSetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_dark_mode), darkmodusStr);
+    }
+
+    public static boolean getDarkModusBln(){
+
+        return false;
+
+//        String darkModusBln = cSharedPreferences.mGetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_dark_mode),"false");
+//
+//        return cText.pStringToBooleanBln(darkModusBln,false);
     }
 
     private static SharedPreferences gSharedPreferences;
@@ -53,7 +73,7 @@ public class cSharedPreferences {
     }
 
 
-    private static Boolean mGetDefaultSharedPreferenceBoolean(String pv_KeyStr, Boolean pvDefaultValueStr) {
+    private static Boolean mGetSharedPreferenceBoolean(String pv_KeyStr, Boolean pvDefaultValueStr) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
         return sharedPreferences.getBoolean(pv_KeyStr, pvDefaultValueStr);
     }
@@ -65,6 +85,12 @@ public class cSharedPreferences {
     public static void mSetSharedPreferenceString(String pvKeyStr, String pvValueStr) {
         SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
         editor.putString(pvKeyStr, pvValueStr);
+        editor.apply();
+    }
+
+    public static void mSetSharedPreferenceBoolean(String pvKeyStr, boolean pvValueBln) {
+        SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
+        editor.putBoolean(pvKeyStr, pvValueBln);
         editor.apply();
     }
 }

@@ -23,7 +23,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcodeViewModel;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
@@ -36,49 +35,49 @@ import nl.icsvertex.scansuite.R;
 
 public class cReturnorder {
 
-    private String ordernumberStr;
+    private final String ordernumberStr;
     public String getOrderNumberStr() {return this.ordernumberStr;}
 
-    private String ordertypeStr;
+    private final String ordertypeStr;
     public String getOrderTypeStr() {return this.ordertypeStr;}
 
-    private String assignedUserIdStr;
+    private final String assignedUserIdStr;
     public String getAssignedUserIdStr() {return this.assignedUserIdStr;}
 
-    private String currentUserIdStr;
+    private final String currentUserIdStr;
     public String getCurrentUserIdStr() {return this.currentUserIdStr;}
 
-    private Integer statusInt;
+    private final Integer statusInt;
     public Integer getStatusInt() {return this.statusInt;}
 
-    private String binCodeStr;
+    private final String binCodeStr;
     public String getBinCodeStr() {return  this.binCodeStr;}
 
     private String currentLocationStr;
     public  String  getCurrentLocationStr(){return  currentLocationStr;}
 
-    private String externalReferenceStr;
+    private final String externalReferenceStr;
     public String getExternalReferenceStr() {return this.externalReferenceStr;}
 
-    private Boolean retourMultiDocumentBln;
+    private final Boolean retourMultiDocumentBln;
     public Boolean getRetourMultiDocumentBln(){return this.retourMultiDocumentBln;}
 
-    private int sourceDocumentInt;
+    private final int sourceDocumentInt;
     private int getSourceDocumentInt() { return sourceDocumentInt; }
 
-    private String documentStr;
+    private final String documentStr;
     public String getDocumentStr() {return this.documentStr;}
 
-    private String reasonStr;
+    private final String reasonStr;
     public String getReasonStr() {return this.reasonStr;}
 
-    private boolean returnWithPictureBln;
+    private final boolean returnWithPictureBln;
     public boolean isReturnWithPictureBln() {
         return returnWithPictureBln;
     }
 
 
-    private boolean retourOrderBINNoCheckBln;
+    private final boolean retourOrderBINNoCheckBln;
     public  boolean getRetourOrderBINNoCheckBln() { return  retourOrderBINNoCheckBln;}
 
     public int unknownVariantCounterInt = 0;
@@ -86,7 +85,7 @@ public class cReturnorder {
         return unknownVariantCounterInt;
     }
 
-    private boolean retourMultiDocument;
+    private final boolean retourMultiDocument;
     public boolean isRetourMultiDocument(){return this.retourMultiDocument;}
 
     public static String getNumberOfOrdersStr(){
@@ -105,18 +104,10 @@ public class cReturnorder {
         return cText.pIntToStringStr(this.pGetCountForSourceDocumentInt(cReturnorderDocument.currentReturnOrderDocument));
     }
 
-    private cReturnorderEntity returnorderEntity;
+    private final cReturnorderEntity returnorderEntity;
 
     public Boolean isGeneratedBln() {
         return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.Generated;
-    }
-
-    public Boolean isERPOrderBln() {
-        return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.PurchaseOrderReturn;
-    }
-
-    public Boolean isBasedOnPickBln() {
-        return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.PurchaseOrder;
     }
 
     private List<cComment> commentsObl() {
@@ -301,12 +292,10 @@ public class cReturnorder {
         }
     }
 
-    public boolean pDocumentsViaWebserviceBln(Boolean pvRefreshBln) {
+    private boolean mDocumentsViaWebserviceBln() {
 
-        if (pvRefreshBln) {
             cReturnorderLine.allLinesObl = null;
             cReturnorderDocument.allReturnorderDocumentObl = null;
-        }
 
         cReturnorderBarcode returnorderBarcode;
 
@@ -471,7 +460,7 @@ public class cReturnorder {
         }
 
         // Get all comments
-        if (!cReturnorder.currentReturnOrder.pGetCommentsViaWebserviceBln(true)) {
+        if (!cReturnorder.currentReturnOrder.mGetCommentsViaWebserviceBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;
@@ -483,19 +472,19 @@ public class cReturnorder {
             return result;
         }
         //Get all ReturnHandledlines
-        if (!cReturnorder.currentReturnOrder.pGetHandledLinesViaWebserviceBln(true)){
+        if (!cReturnorder.currentReturnOrder.mGetHandledLinesViaWebserviceBln()){
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnorderlines_failed));
             return result;
         }
 
         //Get all Returnlinebarcodes
-        if (!cReturnorder.currentReturnOrder.pGetLineBarcodesViaWebserviceBln(true)) {
+        if (!cReturnorder.currentReturnOrder.pGetLineBarcodesViaWebserviceBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_barcodes_failed));
             return result;
         }
-        if(!cReturnorder.currentReturnOrder.pDocumentsViaWebserviceBln(true)){
+        if(!cReturnorder.currentReturnOrder.mDocumentsViaWebserviceBln()){
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_returnordersdocuments_failed));
             return result;
@@ -758,12 +747,10 @@ public class cReturnorder {
         return  null;
     }
 
-    public boolean pGetHandledLinesViaWebserviceBln(Boolean pvRefreshBln) {
+    private boolean mGetHandledLinesViaWebserviceBln() {
 
-        if (pvRefreshBln) {
             cReturnorderLine.allLinesObl = null;
             cReturnorderLine.pTruncateTableBln();
-        }
 
         cWebresult WebResult;
 
@@ -787,13 +774,13 @@ public class cReturnorder {
         }
     }
 
-    public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
+    private boolean mGetCommentsViaWebserviceBln() {
 
-        if (pvRefeshBln) {
+
             cComment.allCommentsObl = null;
             cComment.pTruncateTableBln();
             cComment.commentsShownBln = false;
-        }
+
 
         cWebresult webresult =  this.getReturnorderViewModel().pGetCommentsFromWebserviceWrs();
         if (webresult.getResultBln() && webresult.getSuccessBln()) {
@@ -842,12 +829,11 @@ public class cReturnorder {
         }
     }
 
-    public boolean pGetLineBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
+    private boolean pGetLineBarcodesViaWebserviceBln() {
 
-        if (pvRefreshBln) {
             cReturnorderLineBarcode.allLineBarcodesObl = null;
             cReturnorderLineBarcode.pTruncateTableBln();
-        }
+
 
         cReturnorderLineBarcode.allLineBarcodesObl = new ArrayList<>();
         cWebresult WebResult = this.getReturnorderViewModel().pGetLineBarcodesFromWebserviceWrs();
@@ -1132,7 +1118,7 @@ public class cReturnorder {
 
     private void mSetDocumentStatus(){
 
-        Integer quantityInt;
+        int quantityInt;
         Integer quantityHandledInt;
 
         if (cReturnorderDocument.allReturnorderDocumentObl == null){

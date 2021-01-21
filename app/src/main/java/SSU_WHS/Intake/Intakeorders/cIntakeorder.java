@@ -677,13 +677,10 @@ public class cIntakeorder {
         cWebresult Webresult;
 
         Webresult =  this.getIntakeorderViewModel().pDeleteViaWebserviceWrs();
-        if (Webresult.getResultBln() && Webresult.getSuccessBln()) {
-            return  true;
-        }
-        return  false;
+        return Webresult.getResultBln() && Webresult.getSuccessBln();
     }
 
-    public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
+    private boolean mGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
         if (pvRefeshBln) {
             cComment.allCommentsObl = null;
             cComment.pTruncateTableBln();
@@ -708,7 +705,7 @@ public class cIntakeorder {
         }
     }
 
-    public boolean pMatchBarcodesAndLinesBln() {
+    private boolean mMatchBarcodesAndLinesBln() {
 
       if (cIntakeorderBarcode.allBarcodesObl == null || cIntakeorderBarcode.allBarcodesObl.size() == 0 ||
          cIntakeorderMATLineBarcode.allMATLineBarcodesObl == null || cIntakeorderMATLineBarcode.allMATLineBarcodesObl.size() == 0 ||
@@ -949,7 +946,7 @@ public class cIntakeorder {
                 return  false;
             }
 
-            Boolean isUniqueBarcodeBln = false;
+            boolean isUniqueBarcodeBln = false;
 
             if (cArticle.currentArticle.barcodesObl != null &&  cArticle.currentArticle.barcodesObl.size() > 0 &&  cArticle.currentArticle.barcodesObl.get(0).getUniqueBarcodeBln()) {
                 isUniqueBarcodeBln = true;
@@ -1237,7 +1234,7 @@ public class cIntakeorder {
         }
 
         // Get all comments
-        if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
+        if (!cIntakeorder.currentIntakeOrder.mGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;
@@ -1262,7 +1259,7 @@ public class cIntakeorder {
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cReceiveorderLine receiveorderLine = new cReceiveorderLine(jsonObject);
 
-                if (receiveorderLine.getHandledTimeStampStr() == "null" && cIntakeorder.currentIntakeOrder.isGenerated()) {
+                if (receiveorderLine.getHandledTimeStampStr().equalsIgnoreCase("null") && cIntakeorder.currentIntakeOrder.isGenerated()) {
                     continue;
                 }
 
@@ -1385,14 +1382,14 @@ public class cIntakeorder {
             return result;
         }
 
-        if (!cIntakeorder.currentIntakeOrder.pMatchBarcodesAndLinesBln()) {
+        if (!cIntakeorder.currentIntakeOrder.mMatchBarcodesAndLinesBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_matching_lines_and_barcodes_failed));
             return result;
         }
 
         // Get all comments
-        if (!cIntakeorder.currentIntakeOrder.pGetCommentsViaWebserviceBln(true)) {
+        if (!cIntakeorder.currentIntakeOrder.mGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
             return result;

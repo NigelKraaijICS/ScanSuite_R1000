@@ -517,10 +517,7 @@ public class cPackAndShipOrder {
         cWebresult Webresult;
 
         Webresult =  this.getPackAndShipOrderViewModel().pDeleteViaWebserviceWrs();
-        if (Webresult.getResultBln() && Webresult.getSuccessBln()) {
-            return  true;
-        }
-      return  false;
+        return Webresult.getResultBln() && Webresult.getSuccessBln();
     }
 
     public cResult pHandledViaWebserviceRst() {
@@ -722,7 +719,7 @@ public class cPackAndShipOrder {
                         JSONObject object =adressesObl.getJSONObject(i);
                         cPackAndShipAddress packAndShipAddress = new cPackAndShipAddress(object, true);
 
-                        cResult hulpRst = this.pValidateShipmentRst(packAndShipAddress);
+                        cResult hulpRst = this.mValidateShipmentRst(packAndShipAddress);
                         if (!hulpRst.resultBln) {
                             result.resultBln = false;
                             result.pAddErrorMessage(hulpRst.messagesStr());
@@ -1121,7 +1118,7 @@ public class cPackAndShipOrder {
 
     }
 
-    public cResult pValidateShipmentRst(cPackAndShipAddress pvPackAndShipAddress) {
+    private cResult mValidateShipmentRst(cPackAndShipAddress pvPackAndShipAddress) {
 
         cResult result = new cResult();
         result.resultBln = true;

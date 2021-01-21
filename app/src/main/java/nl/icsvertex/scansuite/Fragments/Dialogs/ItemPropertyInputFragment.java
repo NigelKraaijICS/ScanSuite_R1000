@@ -206,7 +206,6 @@ public class ItemPropertyInputFragment extends DialogFragment implements iICSDef
             cPickorderLineProperty.currentPickorderLineProperty.pValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
             this.localItemPropertyValueObl = cPickorderLineProperty.currentPickorderLineProperty.propertyValueObl();
             this.mSetItemPropertyValueRecycler();
-            return;
         }
 
     }

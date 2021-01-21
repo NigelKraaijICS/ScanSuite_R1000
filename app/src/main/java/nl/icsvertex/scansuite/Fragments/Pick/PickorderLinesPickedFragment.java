@@ -10,6 +10,7 @@ import android.widget.Switch;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -40,7 +41,7 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
 
     private RecyclerView recyclerViewPickorderLinesPicked;
     private SearchView recyclerSearchView;
-    private Switch switchDefects;
+    private SwitchCompat switchDefects;
     private ConstraintLayout abortOrderView;
 
     private List<cPickorderLine> localLinesObl;

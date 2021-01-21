@@ -33,7 +33,7 @@
         android:clickable="true"
         android:focusable="true"
         >
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchDefects"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

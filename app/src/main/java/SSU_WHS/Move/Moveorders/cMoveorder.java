@@ -141,9 +141,7 @@ public class cMoveorder {
             return  sortedTakeLinesObl;
         }
 
-        for (cMoveorderLine moveorderLine : this.takeLinesObl) {
-            sortedTakeLinesObl.add(moveorderLine);
-        }
+        sortedTakeLinesObl.addAll(this.takeLinesObl);
 
         Collections.sort(sortedTakeLinesObl);
 

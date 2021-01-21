@@ -71,22 +71,24 @@
         app:layout_constraintTop_toTopOf="@id/textViewWebserviceLabel"
         app:layout_constraintEnd_toEndOf="parent"
         />
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonMySettings"
-        style="@style/pillButton"
-        android:text="@string/mysettings"
-        app:layout_constraintTop_toBottomOf="@id/textViewWebservice"
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/checkDarkModus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        android:defaultValue="false"
+        android:key="@string/check_receive_barcodes_switch"
+        android:text="@string/use_darkmode"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        />
+        tools:layout_editor_absoluteY="194dp"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintTop_toBottomOf="@id/textViewWebservice"/>
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iconFreepik"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_freepik"
-        app:layout_constraintTop_toBottomOf="@id/buttonMySettings"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkDarkModus"
         app:layout_constraintStart_toStartOf="parent"/>
     <TextView
         style="@style/textFormLabel"

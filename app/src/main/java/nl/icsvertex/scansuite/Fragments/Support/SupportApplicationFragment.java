@@ -7,25 +7,26 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
-
-import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cDeviceInfo;
+import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import ICS.Utils.cUpdate;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Webservice.cWebservice;
-import nl.icsvertex.scansuite.Fragments.Dialogs.BasicsFragment;
+import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -44,7 +45,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
     private  TextView textViewApplicationLastUpdate;
     private  ImageButton updateImageButton;
     private  ImageButton testWebserviceImageButton;
-    private  Button buttonMySettings;
+    private SwitchCompat checkDarkModus;
 
     //End Region Private Properties
 
@@ -66,6 +67,8 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         // Inflate the layout for this fragment
         return pvLayoutInflater.inflate(R.layout.fragment_support_application, pvViewGroup, false);
     }
+
+
 
     @Override
 
@@ -110,9 +113,9 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
             this.textViewWebservice = getView().findViewById(R.id.textViewWebservice);
             this.updateImageButton = getView().findViewById(R.id.updateImageButton);
             this.testWebserviceImageButton = getView().findViewById(R.id.testWebserviceImageButton);
-            this.buttonMySettings = getView().findViewById(R.id.buttonMySettings);
             this.textViewApplicationInstalled = getView().findViewById(R.id.textViewApplicationInstalled);
             this.textViewApplicationLastUpdate = getView().findViewById(R.id.textViewApplicationLastUpdate);
+            this.checkDarkModus = getView().findViewById(R.id.checkDarkModus);
         }
     }
 
@@ -130,6 +133,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         this.mSetUpdateListener();
         this.mTestWebserviceListener();
         this.mWebserviceURLLongClickListener();
+        this.mSetDarkModusListener();
     }
 
     //End Region iICSDefaultFragment defaults
@@ -143,11 +147,19 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
                 cUpdate.mUpdateBln(updateImageButton ,"");
             }
         });
+    }
 
-        this.buttonMySettings.setOnClickListener(new View.OnClickListener() {
+    private void mSetDarkModusListener() {
+        this.checkDarkModus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                mShowSettings();
+            public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
+
+                cSharedPreferences.setDarkModusBln(checkDarkModus.isChecked());
+
+                if (cAppExtension.activity instanceof  MainDefaultActivity) {
+                    MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+                    mainDefaultActivity.pChangeDarkModus();
+                }
             }
         });
     }
@@ -183,10 +195,6 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         });
     }
 
-    private void mShowSettings() {
-        BasicsFragment basicsFragment = new BasicsFragment();
-        basicsFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), cPublicDefinitions.SETTINGSFRAGMENT_TAG);
-    }
 
     //End Region private Methods
 

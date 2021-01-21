@@ -651,7 +651,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
             //Determine the new amount
             if (pvAmountFixedBln) {
-                newQuantityDbl = cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl = pvAmountDbl;;
+                newQuantityDbl = cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl = pvAmountDbl;
             } else {
                 newQuantityDbl = cReturnorderLine.currentReturnOrderLine.quantityHandledTakeDbl + pvAmountDbl;
             }
@@ -941,7 +941,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     }
 
-    private  void mShowExtrasNotAllowed(){ ;
+    private  void mShowExtrasNotAllowed(){
         cUserInterface.pShowSnackbarMessage(quantityText , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
         cUserInterface.pDoNope(quantityText, true, true);
     }

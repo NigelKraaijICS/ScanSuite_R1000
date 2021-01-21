@@ -109,7 +109,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginLeft="@dimen/default_margin"
             >
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchTodo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

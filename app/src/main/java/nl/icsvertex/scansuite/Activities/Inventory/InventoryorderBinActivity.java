@@ -252,7 +252,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         if (InventoryorderBinActivity.barcodeScanToHandle != null) {
             this.pHandleScan(InventoryorderBinActivity.barcodeScanToHandle,false);
             InventoryorderBinActivity.barcodeScanToHandle = null;
-            return;
         }
 
     }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
@@ -64,8 +65,8 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     private Button createReturnButton;
     private Button cancelButton;
 
-    private Switch switchMultipleDocuments;
-    private Switch switchReason;
+    private SwitchCompat switchMultipleDocuments;
+    private SwitchCompat switchReason;
     private ImageView imageReason;
     //End Region private Properties
 
