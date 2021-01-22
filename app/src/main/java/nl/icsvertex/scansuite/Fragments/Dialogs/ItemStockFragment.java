@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,7 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private TextView textViewItem;
+    private Button buttonOk;
 
     //End Region Private Properties
 
@@ -106,6 +108,7 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
         if (getView() != null) {
             this.textViewItem = getView().findViewById(R.id.textViewItem);
             this.stockRecyclerview = getView().findViewById(R.id.stockRecyclerview);
+            this.buttonOk = getView().findViewById(R.id.buttonOk);
         }
     }
 
@@ -118,7 +121,7 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
 
     @Override
     public void mSetListeners() {
-
+        this.mSetCloseListener();
     }
 
     //End Region iICSDefaultFragment methods
@@ -181,6 +184,15 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
         });
     }
 
+    private void mSetCloseListener() {
+        this.buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+
+            }
+        });
+    }
 
     //End Region Private Methods
 

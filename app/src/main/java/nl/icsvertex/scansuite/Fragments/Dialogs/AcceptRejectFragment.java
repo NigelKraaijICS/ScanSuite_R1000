@@ -30,6 +30,7 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderLinesPlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
@@ -58,11 +59,11 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
     private  TextView textReject;
     private  TextView textAccept;
 
-    private String  titleStr;
-    private String  messageStr;
-    private String  acceptStr;
-    private String rejectStr;
-    private boolean ignoreAcceptBln;
+    private final String  titleStr;
+    private final String  messageStr;
+    private final String  acceptStr;
+    private final String rejectStr;
+    private final boolean ignoreAcceptBln;
 
     //End Region Private Properties
 
@@ -150,6 +151,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
                     pickorderPickActivity.pAcceptRejectDialogDismissed();
                 }
 
+
                 if (cAppExtension.activity instanceof ReturnorderDocumentActivity){
                     ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
                     returnorderDocumentActivity.pHandleFragmentDismissed();
@@ -220,6 +222,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof  PickorderPickActivity) {
             PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
             pickorderPickActivity.pAcceptPick(ignoreAcceptBln);
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
+            PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
+            pickorderLineItemPropertyInputActvity.pHandled();
             this.dismiss();
             return;
         }

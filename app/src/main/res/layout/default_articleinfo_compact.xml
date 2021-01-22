@@ -13,52 +13,47 @@
         android:layout_marginBottom="@dimen/default_margin"
         >
         <TextView
-            android:id="@+id/articleDescriptionText"
-            style="@style/articleDescriptionText"
+            android:id="@+id/articleDescriptionCompactText"
+            style="@style/articleDescriptionSmallText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/quantityContainer"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
-            android:id="@+id/articleDescription2Text"
-            style="@style/articleDescriptionText"
-            app:layout_constraintTop_toBottomOf="@id/articleDescriptionText"
+            android:id="@+id/articleDescription2CompactText"
+            style="@style/articleDescriptionSmallText"
+            app:layout_constraintTop_toBottomOf="@id/articleDescriptionCompactText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/quantityContainer"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
             />
         <TextView
-            android:id="@+id/articleItemText"
-            style="@style/articleItemText"
-            app:layout_constraintTop_toBottomOf="@id/articleDescription2Text"
+            android:id="@+id/articleItemCompactText"
+            style="@style/articleItemSmallText"
+            app:layout_constraintTop_toBottomOf="@id/articleDescription2CompactText"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/quantityContainer"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
             />
         <TextView
-            android:id="@+id/articleBarcodeText"
-            style="@style/articleBarcodeText"
-            app:layout_constraintTop_toBottomOf="@id/articleItemText"
+            android:id="@+id/articleBarcodeCompactText"
+            style="@style/articleBarcodeSmallText"
+            app:layout_constraintTop_toBottomOf="@id/articleItemCompactText"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
             />
         <androidx.constraintlayout.widget.ConstraintLayout
-            style="@style/pillButton"
-            android:id="@+id/quantityContainer"
+            android:id="@+id/imageAndButtonsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:backgroundTint="@color/colorPrimary"
-            >
+            android:layout_margin="@dimen/default_margin">
             <TextView
-                android:id="@+id/textViewQuantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/textsize_big"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/quantityCompactText"
+                style="@style/enormousQuantityText"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

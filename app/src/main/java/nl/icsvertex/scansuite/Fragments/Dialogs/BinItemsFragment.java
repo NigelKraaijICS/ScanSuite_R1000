@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,7 +49,8 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
     }
 
     private String binCodeStr;
-    TextView textViewBIN;
+    private TextView textViewBIN;
+    private Button buttonOk;
 
     //End Region Private Properties
 
@@ -110,7 +112,7 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
         if (getView() != null) {
             this.textViewBIN = getView().findViewById(R.id.textViewBIN);
             this.binRecyclerview = getView().findViewById(R.id.binRecyclerview);
-
+            this.buttonOk = getView().findViewById(R.id.buttonOk);
         }
 
     }
@@ -124,7 +126,7 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
 
     @Override
     public void mSetListeners() {
-
+        this.mSetCloseListener();
     }
 
     //End Region iICSDefaultFragment methods
@@ -172,6 +174,16 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
                         fragmentTransaction.commit();
                     }
                 }
+            }
+        });
+    }
+
+    private void mSetCloseListener() {
+        this.buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                   dismiss();
+
             }
         });
     }

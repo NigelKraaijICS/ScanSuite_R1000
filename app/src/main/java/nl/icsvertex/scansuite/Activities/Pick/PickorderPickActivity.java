@@ -54,7 +54,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyNoInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
@@ -863,93 +862,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mBarcodeSelected(cPickorderBarcode pvBarcode) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         cPickorderBarcode.currentPickorderBarcode = pvBarcode;
@@ -1545,7 +1457,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        List<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl = new ArrayList<>();
+        ArrayList<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl = new ArrayList<>();
 
         for (cPickorderLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl()) {
             if (inputPickorderLineProperty.propertyValueObl() == null ||inputPickorderLineProperty.propertyValueObl().size() == 0) {
@@ -1557,9 +1469,14 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             }
         }
 
-        ItemPropertyInputFragment itemPropertyInputFragment = new ItemPropertyInputFragment(pickorderLinePropertyValuesObl);
-        itemPropertyInputFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.ITEMPROPERTYVALUEINPUTFRAGMENT_TAG);
-        cUserInterface.pPlaySound(R.raw.message, 0);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("pickorderLinePropertyValuesObl", pickorderLinePropertyValuesObl);
+        Intent intent = new Intent(cAppExtension.context, PickorderLineItemPropertyInputActvity.class);
+        intent.putExtras(bundle);
+
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
+
     }
 
     //Region Number Broadcaster

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
@@ -127,6 +126,22 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         finish();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
+
+        if (pvMenuItem.getItemId() == android.R.id.home) {
+            mTryToLeaveActivity();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(pvMenuItem);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mTryToLeaveActivity();
+    }
+
 
     //End Region Default Methods
 
@@ -211,21 +226,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
-
-        if (pvMenuItem.getItemId() == android.R.id.home) {
-            mTryToLeaveActivity();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(pvMenuItem);
-    }
-
-    @Override
-    public void onBackPressed() {
-        mTryToLeaveActivity();
-    }
 
     //End Region iICSDefaultActivity defaults
 

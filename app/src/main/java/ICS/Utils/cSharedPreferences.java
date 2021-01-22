@@ -44,23 +44,11 @@ public class cSharedPreferences {
     }
 
     public static void  setDarkModusBln(Boolean pvDarkModus){
-
-        String darkmodusStr = "false";
-
-//        if (pvDarkModus) {
-//            darkmodusStr = "true";
-//        }
-
-        mSetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_dark_mode), darkmodusStr);
+        mSetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.shared_preference_dark_mode), pvDarkModus);
     }
 
     public static boolean getDarkModusBln(){
-
-        return false;
-
-//        String darkModusBln = cSharedPreferences.mGetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_dark_mode),"false");
-//
-//        return cText.pStringToBooleanBln(darkModusBln,false);
+ return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.shared_preference_dark_mode),false);
     }
 
     private static SharedPreferences gSharedPreferences;
@@ -73,9 +61,15 @@ public class cSharedPreferences {
     }
 
 
-    private static Boolean mGetSharedPreferenceBoolean(String pv_KeyStr, Boolean pvDefaultValueStr) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
-        return sharedPreferences.getBoolean(pv_KeyStr, pvDefaultValueStr);
+    private static Boolean mGetSharedPreferenceBoolean(String pv_KeyStr, Boolean pvDefaultValueBln) {
+        //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
+        return cSharedPreferences.getSharedPreferences().getBoolean(pv_KeyStr, pvDefaultValueBln);
+    }
+
+    public static void mSetSharedPreferenceBoolean(String pvKeyStr, boolean pvValueBln) {
+        SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
+        editor.putBoolean(pvKeyStr, pvValueBln);
+        editor.apply();
     }
 
     private static String mGetSharedPreferenceString(String pvKeyStr, String pvDefaultValueStr) {
@@ -88,9 +82,5 @@ public class cSharedPreferences {
         editor.apply();
     }
 
-    public static void mSetSharedPreferenceBoolean(String pvKeyStr, boolean pvValueBln) {
-        SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
-        editor.putBoolean(pvKeyStr, pvValueBln);
-        editor.apply();
-    }
+
 }

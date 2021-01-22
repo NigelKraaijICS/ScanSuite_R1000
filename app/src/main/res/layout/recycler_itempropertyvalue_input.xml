@@ -76,6 +76,24 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_begin="198dp" />
             <androidx.appcompat.widget.AppCompatImageButton
+                style="@style/smallButton.Zerobutton"
+                android:id="@+id/imageButtonZero"
+                app:srcCompat="@drawable/ic_close_black_24dp"
+                android:layout_marginEnd="@dimen/zerobutton_marginright"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <androidx.appcompat.widget.AppCompatImageButton
+                style="@style/smallButton.Zerobutton"
+                android:id="@+id/imageButtonManual"
+                app:srcCompat="@drawable/ic_numeric_black_24dp"
+                android:layout_marginEnd="@dimen/zerobutton_marginright"
+                app:layout_constraintEnd_toStartOf="@id/imageButtonMinus"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <androidx.appcompat.widget.AppCompatImageButton
                 style="@style/smallButton"
                 android:id="@+id/imageButtonMinus"
                 app:srcCompat="@drawable/ic_remove_black_24dp"
@@ -88,16 +106,6 @@
                 app:srcCompat="@drawable/ic_add_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                />
-            <androidx.appcompat.widget.AppCompatImageButton
-                style="@style/smallButton.Zerobutton"
-                android:id="@+id/imageButtonZero"
-                app:srcCompat="@drawable/ic_close_black_24dp"
-                android:layout_marginEnd="@dimen/zerobutton_marginright"
-                app:layout_constraintEnd_toStartOf="@id/imageButtonMinus"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

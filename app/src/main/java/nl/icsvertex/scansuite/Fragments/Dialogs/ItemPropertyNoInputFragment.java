@@ -22,8 +22,9 @@ import java.util.Objects;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueNoInputAdapter;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
+import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueNoInputAdapter;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.R;
 
 public class ItemPropertyNoInputFragment extends DialogFragment implements iICSDefaultFragment {
@@ -31,6 +32,11 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
    //Region Private Properties
    private  ImageView toolbarImage;
    private  TextView toolbarTitle;
+
+    private TextView articleDescriptionCompactText;
+    private TextView articleDescription2CompactText;
+    private TextView articleItemCompactText;
+    private TextView articleBarcodeCompactText;
 
     private  RecyclerView itemPropertyRecyclerview;
     private  Button buttonOK;
@@ -103,6 +109,11 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
             this.toolbarImage = getView().findViewById(R.id.toolbarImage);
             this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
 
+            this.articleDescriptionCompactText = getView().findViewById(R.id.articleDescriptionCompactText);
+            this.articleDescription2CompactText = getView().findViewById(R.id.articleDescription2CompactText);
+            this.articleItemCompactText = getView().findViewById(R.id.articleItemCompactText);
+            this.articleBarcodeCompactText = getView().findViewById(R.id.articleBarcodeCompactText);
+
             this.itemPropertyRecyclerview = getView().findViewById(R.id.itemPropertyRecyclerview);
             this.buttonOK = getView().findViewById(R.id.buttonOK);
         }
@@ -111,9 +122,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
 
     @Override
     public void mFieldsInitialize() {
-
-
-
+        this.mSetArticleInfo();
     }
 
     @Override
@@ -185,9 +194,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
                 this.itemPropertyRecyclerview.smoothScrollToPosition(this.getPickorderLinePropertyAdapter().getItemCount() -1 );
             }
         }
-
     }
-
 
     private void mSetItemPropertyValueRecycler() {
         this.itemPropertyRecyclerview.setHasFixedSize(false);
@@ -195,6 +202,14 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
         this.itemPropertyRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         this.getPickorderLinePropertyAdapter().pFillData(this.localItemPropertyValueObl);
     }
+    private void  mSetArticleInfo(){
+
+        this.articleDescriptionCompactText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+        this.articleDescription2CompactText.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
+        this.articleItemCompactText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
+        this.articleBarcodeCompactText.setVisibility(View.GONE);
+    }
+
     //End Region Private Methods
 
 

@@ -82,6 +82,21 @@ public class BarcodeInfoActivity extends AppCompatActivity implements iICSDefaul
         this.mLeaveActivity();
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() ==  android.R.id.home) {
+            this.mLeaveActivity();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+
+    }
+
+
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -149,17 +164,6 @@ public class BarcodeInfoActivity extends AppCompatActivity implements iICSDefaul
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() ==  android.R.id.home) {
-            this.mLeaveActivity();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-
-    }
 
     //End Region iICSDefaultActivity defaults
 
@@ -229,7 +233,7 @@ public class BarcodeInfoActivity extends AppCompatActivity implements iICSDefaul
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        Intent intent = new Intent(cAppExtension.context, MainDefaultActivity.class);
+        Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
 

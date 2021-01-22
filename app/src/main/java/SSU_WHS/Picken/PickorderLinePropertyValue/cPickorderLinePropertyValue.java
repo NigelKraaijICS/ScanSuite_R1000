@@ -1,5 +1,9 @@
 package SSU_WHS.Picken.PickorderLinePropertyValue;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
@@ -8,15 +12,37 @@ import java.util.ArrayList;
 
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
+import SSU_WHS.General.cDatabase;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyEntity;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyViewModel;
 import nl.icsvertex.scansuite.R;
 
-public class cPickorderLinePropertyValue {
+public class cPickorderLinePropertyValue implements Parcelable {
 
     //Public Properties
     private int lineNoInt;
+
+    protected cPickorderLinePropertyValue(Parcel in) {
+        lineNoInt = in.readInt();
+        propertyCodeStr = in.readString();
+        valueStr = in.readString();
+        sortingSequenceNoInt = in.readInt();
+        quanitityDbl = in.readDouble();
+    }
+
+    public static final Creator<cPickorderLinePropertyValue> CREATOR = new Creator<cPickorderLinePropertyValue>() {
+        @Override
+        public cPickorderLinePropertyValue createFromParcel(Parcel in) {
+            return new cPickorderLinePropertyValue(in);
+        }
+
+        @Override
+        public cPickorderLinePropertyValue[] newArray(int size) {
+            return new cPickorderLinePropertyValue[size];
+        }
+    };
+
     public int getLineNoInt() {return lineNoInt;}
 
     private String propertyCodeStr;
@@ -49,6 +75,7 @@ public class cPickorderLinePropertyValue {
 
     private cPickorderLinePropertyValueEntity pickorderLinePropertyValueEntity;
 
+    public static cPickorderLinePropertyValue currentPickorderLinePropertyValue;
     public static ArrayList<cPickorderLinePropertyValue> allLinePropertysValuesObl;
 
     private cPickorderLinePropertyValueViewModel getPickorderLinePropertyValueViewModel() {
@@ -108,4 +135,23 @@ public class cPickorderLinePropertyValue {
         return true;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        Bundle bundle = new Bundle();
+
+        // insert the key value pairs to the bundle
+        bundle.putInt(cDatabase.LINENO_NAMESTR, lineNoInt);
+        bundle.putString(cDatabase.PROPERTYCODE_NAMESTR, propertyCodeStr);
+        bundle.putString(cDatabase.VALUE_NAMESTR, valueStr);
+        bundle.putInt(cDatabase.SORTINGSEQUENCENO_NAMESTR, sortingSequenceNoInt);
+        bundle.putDouble(cDatabase.QUANTITY_NAMESTR, quanitityDbl);
+        // write the key value pairs to the parcel
+        dest.writeBundle(bundle);
+
+    }
 }

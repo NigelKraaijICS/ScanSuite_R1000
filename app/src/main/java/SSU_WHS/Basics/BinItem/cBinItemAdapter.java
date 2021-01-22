@@ -18,9 +18,9 @@ public class cBinItemAdapter extends RecyclerView.Adapter<cBinItemAdapter.BinIte
 
     //Region Public Properties
     public static class BinItemViewHolder extends RecyclerView.ViewHolder{
-        private TextView textViewItemNo;
-        private TextView textViewVariantCode;
-        private TextView textViewQuantity;
+        private final TextView textViewItemNo;
+        private final TextView textViewVariantCode;
+        private final TextView textViewQuantity;
         public LinearLayout binItemItemLinearLayout;
 
         public BinItemViewHolder(View itemView) {
@@ -37,7 +37,7 @@ public class cBinItemAdapter extends RecyclerView.Adapter<cBinItemAdapter.BinIte
 
             this.textViewVariantCode = itemView.findViewById(R.id.textViewVariantCode);
 
-            this.textViewQuantity = itemView.findViewById(R.id.textViewQuanitity);
+            this.textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
         }
     }
 

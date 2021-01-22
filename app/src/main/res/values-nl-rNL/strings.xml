@@ -780,4 +780,6 @@
     <string name="message_and_a">en een</string>
     <string name="confirm">Bevestig</string>
     <string name="use_darkmode">Gebruik donkere modus</string>
+    <string name="quantity_asked">Aantal gevraagd:</string>
+    <string name="quantity_handled">Aantal ingegeven:</string>
 </resources>

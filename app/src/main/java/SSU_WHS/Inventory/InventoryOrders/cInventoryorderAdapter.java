@@ -103,9 +103,20 @@ public class cInventoryorderAdapter  extends RecyclerView.Adapter<cInventoryorde
         }
 
         pvHolder.textViewOrdernumber.setText(selectedInventoryorder.getOrderNumberStr());
+
         pvHolder.textViewOrdernumber.setTag(selectedInventoryorder.getOrderNumberStr());
-        pvHolder.textViewDocument.setText(selectedInventoryorder.getDocumentStr());
-        pvHolder.textViewDocument.setTag(selectedInventoryorder.getDocumentStr());
+
+
+        if (!selectedInventoryorder.getDocumentStr().isEmpty()) {
+            pvHolder.textViewDocument.setText(selectedInventoryorder.getDocumentStr());
+            pvHolder.textViewDocument.setTag(selectedInventoryorder.getDocumentStr());
+        }
+        else
+        {
+            pvHolder.textViewDocument.setText(selectedInventoryorder.getExternalReferenceStr());
+            pvHolder.textViewDocument.setTag(selectedInventoryorder.getExternalReferenceStr());
+        }
+
         pvHolder.textViewQuantityTotal.setText(Integer.toString(selectedInventoryorder.getNumberOfBinsInt()));
 
         if(selectedInventoryorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.IVM.toString())) {
