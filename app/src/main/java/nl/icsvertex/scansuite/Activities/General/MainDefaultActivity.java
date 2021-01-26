@@ -135,7 +135,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -283,17 +282,12 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     }
 
     public void pChangeDarkModus() {
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
                 if (cSharedPreferences.getDarkModusBln()) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     return;
                 }
 
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
-        });
     }
 
     public  void pSetChosenEnvironment() {

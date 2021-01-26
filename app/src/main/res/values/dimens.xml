@@ -9,6 +9,7 @@
     <dimen name="default_double_padding">16dp</dimen>
     <dimen name="default_half_margin">4dp</dimen>
     <dimen name="default_half_padding">4dp</dimen>
+    <dimen name="default_quarter_padding">2dp</dimen>
     <dimen name="default_quarter_margin">2dp</dimen>
 
     <dimen name="default_halfelevation">2dp</dimen>

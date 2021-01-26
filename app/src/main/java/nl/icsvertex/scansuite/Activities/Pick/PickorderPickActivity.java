@@ -64,7 +64,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private static boolean articleScannedLastBln;
     private static boolean destionationScannedBln;
-    private static boolean noInputPropertysShown;
+    private static boolean noInputPropertysShownBln;
+    public static boolean handledViaPropertysBln;
 
     private int pickCounterMinusHelperInt;
     private int pickCounterPlusHelperInt;
@@ -299,6 +300,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
+        if (PickorderPickActivity.handledViaPropertysBln) {
+            this.mHandlePickDoneClick();
+            return;
+        }
+
         PickorderPickActivity.destionationScannedBln = cPickorder.currentPickOrder.destionationBranch() != null;
 
         //We scanned a BIN, so nu current barcodeStr known
@@ -315,6 +321,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
             this.mShowNoInputPropertys();
         }
+
 
         //We scannedn an ARTICLE in Single BIN activity
         if (cPickorder.currentPickOrder.pickorderBarcodeScanned != null) {
@@ -435,7 +442,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.imageButtonNoInputPropertys.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PickorderPickActivity.noInputPropertysShown = false;
+                PickorderPickActivity.noInputPropertysShownBln = false;
                 mShowNoInputPropertys();
             }
         });
@@ -867,7 +874,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cPickorderBarcode.currentPickorderBarcode = pvBarcode;
 
         if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl() != null && cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().size() > 0 ) {
-            mShowItemPropertyInputFragment();
+            mShowItemPropertyInputActivity();
             return;
         }
 
@@ -1127,10 +1134,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        //Check if we picked less then asked, if so then show dialog
-        if (!cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl()) ) {
-            this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
-            return;
+        if (!PickorderPickActivity.handledViaPropertysBln) {
+            //Check if we picked less then asked, if so then show dialog
+            if (!cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl()) ) {
+                this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+                return;
+            }
         }
 
         //All is done
@@ -1156,6 +1165,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mPickDone() {
+
+        PickorderPickActivity.handledViaPropertysBln = false;
 
         this.mSendPickorderLine();
         this.mGetNextPickLineForCurrentBin();
@@ -1297,7 +1308,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                     return;
                 }
 
-
                 mTryToChangePickedQuantity(false, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
             }
         });
@@ -1321,14 +1331,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     //Dialogs and Activitys
 
     private  void mShowFullArticleFragment() {
-
         cUserInterface.pCheckAndCloseOpenDialogs();
-
         ArticleFullViewFragment articleFullViewFragment = new ArticleFullViewFragment();
         articleFullViewFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLEFULL_TAG);
-
-
-
     }
 
     private  void mShowUnderPickDialog(String pvRejectStr,String pvAcceptStr) {
@@ -1428,7 +1433,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mShowNoInputPropertys(){
 
-        if (PickorderPickActivity.noInputPropertysShown || !cPickorderLine.currentPickOrderLine.hasPropertysBln()|| cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
+        if (PickorderPickActivity.noInputPropertysShownBln || !cPickorderLine.currentPickOrderLine.hasPropertysBln()|| cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
             return;
         }
 
@@ -1450,10 +1455,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         itemPropertyNoInputFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.ITEMPROPERTYVALUENOINPUTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
 
-        PickorderPickActivity.noInputPropertysShown = true;
+        PickorderPickActivity.noInputPropertysShownBln = true;
     }
 
-    private  void mShowItemPropertyInputFragment() {
+    private  void mShowItemPropertyInputActivity() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 

@@ -37,21 +37,21 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
     public static class PickorderViewHolder extends RecyclerView.ViewHolder{
 
 
-        private RelativeLayout checkboxRelativelayout;
-        private ImageView imageCircle;
-        private ImageView imageCheck;
+        private final RelativeLayout checkboxRelativelayout;
+        private final ImageView imageCircle;
+        private final ImageView imageCheck;
 
-        private TextView textViewOrdernumber;
-        private TextView textViewOrderUser;
-        private TextView textViewOrdertype;
-        private TextView  textViewExternalreference;
-        private TextView textViewCurrentLocation;
-        private TextView textViewQuantityTotal;
-        private ImageView imageCurrentLocation;
-        private ImageView imageViewIsSingleArticle;
-        private ImageView imageViewIsProcessedOrWait;
-        private ImageView imageViewUser;
-        private ImageView imageChevronDown;
+        private final TextView textViewOrdernumber;
+        private final TextView textViewOrderUser;
+        private final TextView textViewOrdertype;
+        private final TextView  textViewExternalreference;
+        private final TextView textViewCurrentLocation;
+        private final TextView textViewQuantityTotal;
+        private final ImageView imageCurrentLocation;
+        private final ImageView imageViewIsSingleArticle;
+        private final ImageView imageViewIsProcessedOrWait;
+        private final ImageView imageViewUser;
+        private final ImageView imageChevronDown;
 
         public LinearLayout pickorderItemLinearLayout;
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#fda702</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#fda702</color>
+    <color name="colorNeutral">#cccccc</color>
+    <color name="colorWhite">#231f20</color>
+
+    <color name="colorDelete">#fa315b</color>
+    <color name="colorBart">#59595c</color>
+    <color name="colorAction">#d9edff</color>
+    <color name="colorActive">#fda702</color>
+    <color name="colorDefaultbackground">#59595c</color>
+
+    <color name="colorLogoRed">#fda702</color>
+    <color name="colorGreen">#228B22</color>
+    <color name="colorError">#d2232a</color>
+    <color name="colorSelected">#fda702</color>
+
+    <color name="colorTextDarkest">#b1b1b1</color>
+    <color name="colorTextDarker">#7e7e81</color>
+    <color name="colorTextDefault">#59595c</color>
+    <color name="colorTextLighter">#231f20</color>
+    <color name="colorTextLightest">#000000</color>
+
+    <color name="colorDivider">#cccccc</color>
+    <color name="colorRecyclerImage">#cccccc</color>
+    <color name="colorMenuButton">#f6f6e5</color>
+
+    <color name="colorDesert">#FFB84D</color>
+    <color name="colorDesertGrey">#cccccc</color>
+    <color name="colorSky">#00ffea</color>
+
+    <color name="colorShimmer">#FFB84D</color>
+
+    <!--region order statusInt indicators-->
+    <color name="colorOrderStatusAssignedUser">#fb36d4</color>
+    <!--endregion order statusInt indicators-->
+    <color name="colorCommentText">#ffffff</color>
+    <color name="colorQuickhelpText">#ffffff</color>
+    <color name="colorQuickhelpRipple">#3F51B5</color>
+</resources>

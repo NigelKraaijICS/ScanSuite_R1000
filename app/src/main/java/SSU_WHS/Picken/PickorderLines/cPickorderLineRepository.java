@@ -15,6 +15,8 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
+import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
+import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
@@ -109,6 +111,22 @@ public class cPickorderLineRepository {
 
         try {
             webResultWrs = new mPickorderLineHandledViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pPickLinePropertysHandledViaWebserviceWrs() {
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mPickorderLinePropertiesHandledViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -343,6 +361,65 @@ public class cPickorderLineRepository {
         }
     }
 
+    private static class mPickorderLinePropertiesHandledViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+                l_PropertyInfo2Pin.setValue((cWarehouseorder.OrderTypeEnu.PICKEN.toString().toUpperCase()));
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo3Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo4Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENO;
+                l_PropertyInfo5Pin.setValue(cPickorderLine.currentPickOrderLine.getLineNoInt());
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                SoapObject propertysHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
+
+                //Only loop through handled barcodes, of there are any
+                if (cPickorderLineProperty.currentPickorderLineProperty.propertyValueObl() != null) {
+                    for (cPickorderLinePropertyValue pickorderLinePropertyValue: cPickorderLineProperty.currentPickorderLineProperty.propertyValueObl()) {
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTYHANDLED_COMPLEX);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, pickorderLinePropertyValue.getPropertyCodeStr());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED, pickorderLinePropertyValue.getSortingSequenceNoInt());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, pickorderLinePropertyValue.getValueStr());
+                        propertysHandledList.addSoapObject(soapObject);
+                    }
+                }
+
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
+                l_PropertyInfo6Pin.setValue(propertysHandledList);
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_PROPERTIES_HANDLED, l_PropertyInfoObl);
+
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
 
 
     private static class mPickorderLineSortedViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {

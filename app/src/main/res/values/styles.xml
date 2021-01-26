@@ -327,7 +327,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_margin">@dimen/recycleritem_margin</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:background">?android:attr/selectable</item>
     </style>
     <style name="pickorderRecyclerOrdernumberText">
         <item name="android:layout_width">0dp</item>

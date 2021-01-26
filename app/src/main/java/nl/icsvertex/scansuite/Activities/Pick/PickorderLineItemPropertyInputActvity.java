@@ -258,7 +258,8 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     }
 
     public  void pHandled() {
-
+        PickorderPickActivity.handledViaPropertysBln = true;
+        this.mGoBackToPickActivity();
     }
 
     public  void pRefreshActivity(){
@@ -458,6 +459,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }
+
 
     //End Region Private Methods
 }

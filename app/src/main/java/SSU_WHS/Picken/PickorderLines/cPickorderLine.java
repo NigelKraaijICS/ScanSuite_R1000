@@ -652,6 +652,15 @@ public class cPickorderLine {
     public boolean pHandledBln() {
 
         cWebresult WebResult;
+
+        if (this.pickorderLinePropertyInputObl() != null && this.pickorderLinePropertyInputObl() .size() > 0)  {
+            WebResult = this.getPickorderLineViewModel().pPickLinePropertysHandledViaWebserviceWrs();
+            if (!WebResult.getResultBln() || !WebResult.getSuccessBln()){
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_PROPERTIES_HANDLED);
+                return  false;
+            }
+        }
+
         WebResult =  this.getPickorderLineViewModel().pPickLineHandledViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
