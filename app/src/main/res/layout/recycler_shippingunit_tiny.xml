@@ -16,7 +16,7 @@
             app:layout_constraintTop_toTopOf="parent">
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
-            android:id="@+id/imageViewShippingUnit"
+            android:id="@+id/imageViewPropertyType"
             app:srcCompat="@drawable/ic_bag"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +25,7 @@
         <TextView
             style="@style/userNameText"
             android:id="@+id/textViewDescription"
-            app:layout_constraintStart_toEndOf="@id/imageViewShippingUnit"
+            app:layout_constraintStart_toEndOf="@id/imageViewPropertyType"
             app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
             app:layout_constraintTop_toTopOf="parent"
             />

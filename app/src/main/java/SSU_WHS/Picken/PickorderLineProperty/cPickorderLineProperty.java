@@ -9,7 +9,6 @@ import java.util.List;
 
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
-import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcodeViewModel;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 
 public class cPickorderLineProperty {
@@ -109,7 +108,7 @@ public class cPickorderLineProperty {
         //Try to find value with same value
         for (cPickorderLinePropertyValue pickorderLinePropertyValue : this.propertyValueObl()) {
             if (pickorderLinePropertyValue.getValueStr().equalsIgnoreCase(pvValueStr)) {
-                pickorderLinePropertyValue.quanitityDbl += 1;
+                pickorderLinePropertyValue.quantityDbl += 1;
                 return;
             }
         }

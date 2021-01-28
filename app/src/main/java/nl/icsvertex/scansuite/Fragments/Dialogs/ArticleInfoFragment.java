@@ -77,12 +77,6 @@ public class ArticleInfoFragment extends Fragment implements iICSDefaultFragment
     @Override
     public void onResume() {
         super.onResume();
-//        cAppExtension.dialogFragment = this;
-//
-//        int width = getResources().getDisplayMetrics().widthPixels;
-//        int height = getResources().getDisplayMetrics().heightPixels - getResources().getDimensionPixelSize(R.dimen.default_double_margin);
-//
-//        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
     }
 
     @Override
@@ -108,7 +102,7 @@ public class ArticleInfoFragment extends Fragment implements iICSDefaultFragment
 
     @Override
     public void mSetListeners() {
-//        this.mDismissListener();
+
     }
 
     //End Region Default Methods
@@ -121,15 +115,6 @@ public class ArticleInfoFragment extends Fragment implements iICSDefaultFragment
     private void mSetToolbar() {
 
     }
-
-//    private void mDismissListener() {
-//         requireView().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                      dismiss();
-//            }
-//        });
-//    }
 
     private void mBuildAndFillTabs() {
         ArrayList<Fragment> fragments = new ArrayList<>();
@@ -163,7 +148,6 @@ public class ArticleInfoFragment extends Fragment implements iICSDefaultFragment
             }
 
         }
-
 
         ArticleInfoPagerAdapter articleInfoPagerAdapter = new ArticleInfoPagerAdapter(this.getChildFragmentManager(),  fragments);
         this.articleInfoViewpager.setAdapter(articleInfoPagerAdapter);

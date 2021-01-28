@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pickorderlineItemPropertyInputContainer"
     tools:context=".Activities.Pick.PickorderLineItemPropertyInputActvity"
-    style="@style/defaultScreen">
+    style="@style/defaultScreen"
+    android:background="@color/colorBart">
     <include layout="@layout/toolbar_default" />
     <include layout="@layout/default_articleinfo_compact"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/default_margin"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         />
     <androidx.recyclerview.widget.RecyclerView
@@ -20,7 +22,7 @@
         app:layout_constraintTop_toBottomOf="@id/articleInfoCompactContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/buttonCancel"
+        app:layout_constraintBottom_toTopOf="@id/imageButtonDone"
         />
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/imageButtonDone"

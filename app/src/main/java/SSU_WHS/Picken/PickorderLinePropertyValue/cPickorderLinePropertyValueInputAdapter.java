@@ -27,6 +27,7 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
 
     public static class commentViewHolder extends RecyclerView.ViewHolder{
 
+        private AppCompatImageView imageViewPropertyType;
         private final TextView textViewDescription;
         private final TextView textViewValue;
         private TextView textViewQuantityUsed;
@@ -42,6 +43,8 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
 
         public commentViewHolder(View pvView) {
             super(pvView);
+
+            this.imageViewPropertyType =  pvView.findViewById(R.id.imageViewPropertyType);
 
             this.textViewDescription = pvView.findViewById(R.id.textViewDescription);
             this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -95,11 +98,32 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
 
             final cPickorderLinePropertyValue pickorderLinePropertyValue = this.localItemPropertyValueObl.get(pvPositionInt);
 
+
+            switch (pickorderLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase()) {
+
+                case "BOOLEAN":
+                    pvHolder.imageViewPropertyType.setImageResource(R.drawable.ic_check_black_24dp);
+                    break;
+
+                case "DECIMAL":
+                    pvHolder.imageViewPropertyType.setImageResource(R.drawable.ic_counter_black_24dp);
+                    break;
+
+                case "TEXT" :
+                case "CODE":
+                    pvHolder.imageViewPropertyType.setImageResource(R.drawable.ic_text_black_24dp);
+                    break;
+
+                case "DATE":
+                    pvHolder.imageViewPropertyType.setImageResource(R.drawable.ic_calendar_black_24dp);
+                    break;
+            }
+
             pvHolder.textViewDescription.setText(pickorderLinePropertyValue.getItemProperty().getOmschrijvingStr());
             pvHolder.textViewValue.setText(pickorderLinePropertyValue.getValueStr());
-            pvHolder.textViewQuantityUsed.setText(cText.pDoubleToStringStr(pickorderLinePropertyValue.getQuanitityDbl()));
+            pvHolder.textViewQuantityUsed.setText(cText.pDoubleToStringStr(pickorderLinePropertyValue.getQuantityDbl()));
 
-            if (pickorderLinePropertyValue.getQuanitityDbl() == 0 ) {
+            if (pickorderLinePropertyValue.getQuantityDbl() == 0 ) {
                 pvHolder.imageChevronDown.setVisibility(View.GONE);
             }
 
@@ -108,7 +132,6 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
 
                 if (pickorderLineItemPropertyInputActvity.getQuantityAvailable() == 0) {
                     pvHolder.imageButtonPlus.setVisibility(View.INVISIBLE);
-                    pvHolder.imageButtonManual.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -121,7 +144,7 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                 @Override
                 public void onClick(final View view) {
 
-                    if (pickorderLinePropertyValue.getQuanitityDbl() == 0) {
+                    if (pickorderLinePropertyValue.getQuantityDbl() == 0) {
                         return;
                     }
 
@@ -172,7 +195,7 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                     int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
                     int newQuantity;
                     newQuantity = currentQuantity + 1;
-                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quanitityDbl = newQuantity;
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = newQuantity;
 
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
@@ -191,7 +214,7 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
 
                     int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
                     int newQuantity = currentQuantity - 1;
-                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quanitityDbl = newQuantity;
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = newQuantity;
 
                     final PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity;
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
@@ -211,16 +234,13 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                 public void onClick(View view) {
 
                     cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
-
-                    int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
-                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quanitityDbl = currentQuantity - 1;
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = 0;
 
                     final PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity;
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                         pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         pickorderLineItemPropertyInputActvity.pDeleteValueFromRecyler();
                         pickorderLineItemPropertyInputActvity.pRefreshActivity();
-                        pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity(false, true, 0);
                     }
                 }
             });
@@ -232,11 +252,24 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                     cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
 
                     int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
-                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quanitityDbl = currentQuantity - 1;
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = 0;
 
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         pickorderLineItemPropertyInputActvity.pShowNumericInputFragment();
+                    }
+                }
+            });
+
+            pvHolder.imageViewPropertyType.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
+
+                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
+                        PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
+                        pickorderLineItemPropertyInputActvity.pShowTextInputFragment();
                     }
                 }
             });

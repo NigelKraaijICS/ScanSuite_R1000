@@ -782,4 +782,5 @@
     <string name="use_darkmode">Gebruik donkere modus</string>
     <string name="quantity_asked">Aantal gevraagd:</string>
     <string name="quantity_handled">Aantal ingegeven:</string>
+    <string name="message_please_enter">Geef een %1$s in</string>
 </resources>

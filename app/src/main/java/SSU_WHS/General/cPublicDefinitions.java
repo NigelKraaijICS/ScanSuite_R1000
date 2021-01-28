@@ -71,6 +71,7 @@ public class cPublicDefinitions {
     public  static final String VIEW_CHOSEN_DOCUMENT_IMAGE = "VIEW_CHOSEN_DOCUMENT_IMAGE";
     public  static final String VIEW_CHOSEN_DOCUMENT = "VIEW_CHOSEN_DOCUMENT";
     public static final int ACTIVITY_WIFI_SETTINGS = 1;
+    public static final String ITEMPROPERTYINPUTTEXTFRAGMENT_TAG = "ITEMPROPERTYINPUTTEXTFRAGMENT_TAG";
 
     public static String PROGLOVE_CONNECT_ACTION = "com.proglove.api.CONNECT";
 

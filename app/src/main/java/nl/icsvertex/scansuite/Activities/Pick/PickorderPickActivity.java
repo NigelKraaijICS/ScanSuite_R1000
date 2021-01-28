@@ -320,6 +320,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             PickorderPickActivity.articleScannedLastBln = false;
             this.pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
             this.mShowNoInputPropertys();
+            return;
         }
 
 
@@ -1020,9 +1021,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         if (!cPickorder.currentPickOrder.isPickAutoNextBln()) {
             cPickorderLine.currentPickOrderLine = null;
             PickorderPickActivity.articleScannedLastBln = false;
+            PickorderPickActivity.noInputPropertysShownBln = false;
             this.mGoBackToLinesActivity();
             return;
         }
+
+
 
         //check if there is a next line for this BIN
         cPickorderLine nextLine = cPickorder.currentPickOrder.pGetNextLineToHandleForBin(cPickorderLine.currentPickOrderLine.getBinCodeStr());
@@ -1032,6 +1036,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //Clear current barcodeStr and reset defaults
             cPickorderLine.currentPickOrderLine = null;
             PickorderPickActivity.articleScannedLastBln = false;
+            PickorderPickActivity.noInputPropertysShownBln = false;
             this.mGoBackToLinesActivity();
             return;
         }
@@ -1057,12 +1062,15 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pPlaySound(R.raw.message, null);
 
         //Clear current barcodeStr and reset defaults
+        PickorderPickActivity.noInputPropertysShownBln = false;
         cPickorderBarcode.currentPickorderBarcode = null;
         PickorderPickActivity.articleScannedLastBln = false;
 
         if (cPickorder.currentPickOrder.destionationBranch() == null) {
             PickorderPickActivity.destionationScannedBln = false;
         }
+
+       this.mShowNoInputPropertys();
 
         //Show animation and initialize fields
         Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.shrink_and_fade);
@@ -1388,6 +1396,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         Intent intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
         PickorderLinesActivity.startedViaOrderSelectBln = false;
+        PickorderPickActivity.noInputPropertysShownBln = false;
 
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
@@ -1474,11 +1483,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             }
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("pickorderLinePropertyValuesObl", pickorderLinePropertyValuesObl);
-        Intent intent = new Intent(cAppExtension.context, PickorderLineItemPropertyInputActvity.class);
-        intent.putExtras(bundle);
 
+        Intent intent = new Intent(cAppExtension.context, PickorderLineItemPropertyInputActvity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
 

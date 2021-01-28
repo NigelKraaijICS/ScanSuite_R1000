@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -21,12 +23,14 @@ public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adap
 
     public class ItempropertyValueNoInputViewHolder extends RecyclerView.ViewHolder{
 
+        private AppCompatImageView imageViewPropertyType;
         private TextView itemPropertyTextView;
         private TextView itemPropertyValueTextView;
         public LinearLayout itemPropertyValueNoInputItemLinearLayout;
 
         public ItempropertyValueNoInputViewHolder(View itemView) {
             super(itemView);
+            this.imageViewPropertyType = itemView.findViewById(R.id.imageViewPropertyType);
             this.itemPropertyTextView = itemView.findViewById(R.id.itemPropertyTextView);
             this.itemPropertyValueTextView = itemView.findViewById(R.id.itemPropertyValueTextView);
             this.itemPropertyValueNoInputItemLinearLayout = itemView.findViewById(R.id.itemPropertyValueNoInputItemLinearLayout);
@@ -59,6 +63,26 @@ public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adap
 
             pvHolderObj.itemPropertyTextView.setText(pickorderLinePropertyValue.getItemProperty().getOmschrijvingStr());
             pvHolderObj.itemPropertyValueTextView.setText(pickorderLinePropertyValue.getValueStr());
+
+            switch (pickorderLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase()) {
+
+                case "BOOLEAN":
+                    pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_check_black_24dp);
+                    break;
+
+                case "DECIMAL":
+                    pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_counter_black_24dp);
+                    break;
+
+                case "TEXT" :
+                case "CODE":
+                    pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_text_black_24dp);
+                    break;
+
+                case "DATE":
+                    pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_calendar_black_24dp);
+                    break;
+            }
 
             pvHolderObj.itemPropertyValueTextView.setOnClickListener(new View.OnClickListener() {
                 @Override

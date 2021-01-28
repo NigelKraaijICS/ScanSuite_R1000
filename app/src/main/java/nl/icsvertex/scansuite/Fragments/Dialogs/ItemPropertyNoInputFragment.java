@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +34,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
    private  ImageView toolbarImage;
    private  TextView toolbarTitle;
 
+    private AppCompatImageButton imageButtonNoInputPropertys;
     private TextView articleDescriptionCompactText;
     private TextView articleDescription2CompactText;
     private TextView articleItemCompactText;
@@ -109,6 +111,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
             this.toolbarImage = getView().findViewById(R.id.toolbarImage);
             this.toolbarTitle = getView().findViewById(R.id.toolbarTitle);
 
+            this.imageButtonNoInputPropertys = getView().findViewById(R.id.imageButtonNoInputPropertys);
             this.articleDescriptionCompactText = getView().findViewById(R.id.articleDescriptionCompactText);
             this.articleDescription2CompactText = getView().findViewById(R.id.articleDescription2CompactText);
             this.articleItemCompactText = getView().findViewById(R.id.articleItemCompactText);
@@ -208,6 +211,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
         this.articleDescription2CompactText.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
         this.articleItemCompactText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
         this.articleBarcodeCompactText.setVisibility(View.GONE);
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
     }
 
     //End Region Private Methods

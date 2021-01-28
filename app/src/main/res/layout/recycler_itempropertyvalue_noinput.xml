@@ -10,25 +10,26 @@
         android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatImageView
             style="@style/imageviewUserButton"
-            android:id="@+id/imageViewBackground"
+            android:id="@+id/imageViewPropertyType"
             app:srcCompat="@drawable/ic_chat_blue_24dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="visible"
+            android:tint="@color/colorPrimary"
             />
         <TextView
             style="@style/defaultRecyclerBINText"
             android:id="@+id/itemPropertyTextView"
-            app:layout_constraintStart_toEndOf="@id/imageViewBackground"
+            app:layout_constraintStart_toEndOf="@id/imageViewPropertyType"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/imageViewBackground"
+            app:layout_constraintTop_toTopOf="@id/imageViewPropertyType"
             android:layout_marginLeft="@dimen/default_double_margin"
             />
         <TextView
             style="@style/userNameText"
             android:id="@+id/itemPropertyValueTextView"
-            app:layout_constraintStart_toEndOf="@id/imageViewBackground"
+            app:layout_constraintStart_toEndOf="@id/imageViewPropertyType"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/itemPropertyTextView"
             />

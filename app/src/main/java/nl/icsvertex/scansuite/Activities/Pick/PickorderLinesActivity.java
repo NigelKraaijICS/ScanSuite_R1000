@@ -353,16 +353,18 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
             String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
 
+            cPickorderLine pickorderLineMatched = cPickorder.currentPickOrder.pGetLineNotHandledByBarcode(pvBarcodeScan);
+
             // Article always had BIN, so ARTICLE is EQUAL to BIN
-            cPickorderLine.currentPickOrderLine = cPickorder.currentPickOrder.pGetLineNotHandledByBarcode(barcodewithoutPrefix);
-            if (cPickorderLine.currentPickOrderLine == null) {
+            if (pickorderLineMatched== null) {
                 this.mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
                 return;
             }
 
+            cPickorderLine.currentPickOrderLine = pickorderLineMatched;
+
             cPickorderBarcode.currentPickorderBarcode = cPickorderBarcode.pGetPickbarcodeViaBarcode(pvBarcodeScan);
             if (cPickorderBarcode.currentPickorderBarcode == null) {
-                cPickorderLine.currentPickOrderLine = null;
                 this.mDoUnknownScan(cAppExtension.context.getString(R.string.nothing_more_todo_for_article), barcodewithoutPrefix);
                 return;
             }
@@ -370,7 +372,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
             if (!hulpResult.resultBln) {
                 this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
-                cPickorderLine.currentPickOrderLine = null;
                 return;
             }
 

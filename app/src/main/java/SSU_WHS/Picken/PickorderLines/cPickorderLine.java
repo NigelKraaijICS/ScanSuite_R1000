@@ -24,6 +24,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
+import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Webservice.cWebresult;
@@ -226,8 +227,6 @@ public class cPickorderLine {
 
     public List<cPickorderLineProperty> pickorderLinePropertyInputObl() {
 
-
-
         List<cPickorderLineProperty> resultObl = new ArrayList<>();
 
         if (this.pickorderLinePropertyObl() == null || this.pickorderLinePropertyObl().size() == 0) {
@@ -241,6 +240,18 @@ public class cPickorderLine {
         }
 
         return  resultObl;
+    }
+
+    public  List<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl() {
+
+        List<cPickorderLinePropertyValue> resultObl = new ArrayList<>();
+
+        for (cPickorderLineProperty inputPickorderLineProperty : this.pickorderLinePropertyInputObl()) {
+                resultObl.addAll(inputPickorderLineProperty.propertyValueObl());
+        }
+
+        return  resultObl;
+
     }
 
     public  boolean hasPropertysBln() {
@@ -535,8 +546,21 @@ public class cPickorderLine {
             this.pUpdateProcessingSequenceBln("");
         }
 
-        return  true;
+        List<cPickorderLinePropertyValue> linesToDeleteObl = new ArrayList<>();
 
+        if (cPickorderLinePropertyValue.allLinePropertysValuesObl != null) {
+            for (cPickorderLinePropertyValue pickorderLinePropertyValue : cPickorderLinePropertyValue.allLinePropertysValuesObl) {
+                if (pickorderLinePropertyValue.getLineNoInt() == this.getLineNoInt() && pickorderLinePropertyValue.getPickorderLineProperty().getIsRequiredBln() && pickorderLinePropertyValue.getPickorderLineProperty().getIsInputBln()) {
+                    linesToDeleteObl.add(pickorderLinePropertyValue);
+                }
+            }
+
+            for (cPickorderLinePropertyValue pickorderLinePropertyValueToDelete : linesToDeleteObl) {
+                cPickorderLinePropertyValue.allLinePropertysValuesObl.remove(pickorderLinePropertyValueToDelete);
+            }
+        }
+
+        return  true;
 
     }
 

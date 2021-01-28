@@ -1,17 +1,21 @@
 package nl.icsvertex.scansuite.Activities.Pick;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +37,8 @@ import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueInputAdapter;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyNoInputFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyTextInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -42,6 +48,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
    private  ImageView toolbarImage;
    private  TextView toolbarTitle;
 
+    private AppCompatImageButton imageButtonNoInputPropertys;
    private TextView articleDescriptionCompactText;
    private TextView articleDescription2CompactText;
    private TextView articleItemCompactText;
@@ -49,19 +56,38 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
    private TextView quantityCompactText;
 
     private  RecyclerView itemPropertyRecyclerview;
-    private  Button imageButtonDone;
-    private  List<cPickorderLinePropertyValue> localItemPropertyValueObl;
+    private AppCompatImageButton imageButtonDone;
+
+    private  List<cPickorderLinePropertyValue> localItemPropertyValueObl (){
+
+        List<cPickorderLinePropertyValue> resultObl = new ArrayList<>();
+
+        //
+        if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl() != null && cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl() .size() > 0 ) {
+            resultObl = cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl();
+            return resultObl;
+        }
+
+
+        for (cPickorderLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl()) {
+            resultObl.add(new cPickorderLinePropertyValue(inputPickorderLineProperty));
+        }
+
+
+        return resultObl;
+
+    }
 
     public double getQuantityHandledDbl(){
 
         double quantityDbl = 0;
 
-        if (this.localItemPropertyValueObl == null || this.localItemPropertyValueObl.size() == 0) {
+        if (this.localItemPropertyValueObl() == null || this.localItemPropertyValueObl().size() == 0) {
             return quantityDbl;
         }
 
-        for (cPickorderLinePropertyValue pickorderLinePropertyValue : this.localItemPropertyValueObl ) {
-            quantityDbl += pickorderLinePropertyValue.getQuanitityDbl();
+        for (cPickorderLinePropertyValue pickorderLinePropertyValue : this.localItemPropertyValueObl() ) {
+            quantityDbl += pickorderLinePropertyValue.getQuantityDbl();
         }
 
         return  quantityDbl;
@@ -98,10 +124,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_pickorderlineitemproperty_input);
-
-        Bundle extras = getIntent().getExtras();
-        this.localItemPropertyValueObl  = extras.getParcelableArrayList("pickorderLinePropertyValuesObl");
-
         this.mActivityInitialize();
     }
 
@@ -116,6 +138,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     @Override
     protected void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedReceiver();
         cUserInterface.pEnableScanner();
@@ -124,12 +147,19 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     @Override
     protected void onPause() {
         try {
+            LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
             cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
             cConnection.pUnregisterWifiChangedReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
     }
 
     @Override
@@ -189,6 +219,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             this.toolbarImage = findViewById(R.id.toolbarImage);
             this.toolbarTitle = findViewById(R.id.toolbarTitle);
 
+            this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
             this.articleDescriptionCompactText = findViewById(R.id.articleDescriptionCompactText);
             this.articleDescription2CompactText = findViewById(R.id.articleDescription2CompactText);
             this.articleItemCompactText = findViewById(R.id.articleItemCompactText);
@@ -205,7 +236,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -216,14 +246,19 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     @Override
     public void mFieldsInitialize() {
+        this.mSetItemPropertyValueRecycler();
         this.mSetArticleInfo();
         this.mSetQuantityText();
         this.mShowHideOKButton();
+
+
+
     }
 
     @Override
     public void mSetListeners() {
         this.mSetHeaderListener();
+        this.mSetNoInputPropertyListener();
         this.mSetCloseListener();
     }
 
@@ -236,7 +271,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     //Region Public Methods
 
-    public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
         if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().size() == 1) {
             cPickorderLineProperty.currentPickorderLineProperty = cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().get(0);
@@ -252,35 +287,33 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             }
 
             cPickorderLineProperty.currentPickorderLineProperty.pValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
-            this.localItemPropertyValueObl = cPickorderLineProperty.currentPickorderLineProperty.propertyValueObl();
+            this.pTryToChangePickedQuantity(true,false,1);
             this.pRefreshActivity();
         }
     }
 
-    public  void pHandled() {
+    public void pHandled() {
         PickorderPickActivity.handledViaPropertysBln = true;
         this.mGoBackToPickActivity();
     }
 
-    public  void pRefreshActivity(){
+    public void pRefreshActivity(){
         this.mSetItemPropertyValueRecycler();
         this.mSetQuantityText();
         this.mShowHideOKButton();
     }
 
     public void pDeleteValueFromRecyler() {
-        this.localItemPropertyValueObl.remove(cPickorderLinePropertyValue.currentPickorderLinePropertyValue);
-
-        if (this.localItemPropertyValueObl.size() == 0 ) {
-            cPickorderLinePropertyValue pickorderLinePropertyValue  =  new cPickorderLinePropertyValue(cPickorderLineProperty.currentPickorderLineProperty);
-            this.localItemPropertyValueObl.add(pickorderLinePropertyValue);
-        }
-
+        cPickorderLinePropertyValue.allLinePropertysValuesObl.remove(cPickorderLinePropertyValue.currentPickorderLinePropertyValue);
         cPickorderLinePropertyValue.currentPickorderLinePropertyValue = null;
     }
 
     public void pShowNumericInputFragment() {
-        mShowNumberFragment();
+        mShowNumberPickerFragment();
+    }
+
+    public void pShowTextInputFragment() {
+        mShowTextInputFragment();
     }
 
     //End Region Public Methods
@@ -336,7 +369,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         this.itemPropertyRecyclerview.setHasFixedSize(false);
         this.itemPropertyRecyclerview.setAdapter(this.getPickorderLinePropertyValueInputAdapter());
         this.itemPropertyRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        this.getPickorderLinePropertyValueInputAdapter().pFillData(this.localItemPropertyValueObl);
+        this.getPickorderLinePropertyValueInputAdapter().pFillData(this.localItemPropertyValueObl());
     }
 
     private void mSetArticleInfo(){
@@ -344,17 +377,24 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         this.articleDescription2CompactText.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
         this.articleItemCompactText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
         this.articleBarcodeCompactText.setText(cPickorderBarcode.currentPickorderBarcode.getBarcodeAndQuantityStr());
+
+        if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
+            this.imageButtonNoInputPropertys.setVisibility(View.GONE);
+        }
+        else {
+            this.imageButtonNoInputPropertys.setVisibility(View.VISIBLE);
+        }
     }
 
     private  void mSetQuantityText() {
-        String quantityStr = cText.pDoubleToStringStr(this.getQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl());
+        String quantityStr =   (int)this.getQuantityHandledDbl() + "/" +  cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl());
         this.quantityCompactText.setText(quantityStr);
     }
 
     private  void mShowHideOKButton() {
 
         if (this.getQuantityHandledDbl() == 0) {
-            this.imageButtonDone.setVisibility(View.GONE);
+            this.imageButtonDone.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -402,6 +442,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
                     }
                 }
                 newQuantityDbl = pvAmountDbl;
+                cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = newQuantityDbl;
             } else {
                 newQuantityDbl = cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() + pvAmountDbl;
             }
@@ -441,16 +482,33 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     }
 
-    private void mShowNumberFragment() {
+    private void mShowNumberPickerFragment() {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, (int) cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getQuanitityDbl());
-        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, this.getQuantityAvailable());
+        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, (int) cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getQuantityDbl());
+
+
+        double maxQuantity;
+
+        if (this.getQuantityAvailable() > cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getQuantityDbl() ) {
+            maxQuantity = this.getQuantityAvailable();
+        }
+        else
+        {
+            maxQuantity = cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getQuantityDbl();
+        }
+        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, maxQuantity);
         NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
         numberpickerFragment.setArguments(bundle);
         numberpickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.NUMBERFRAGMENT_TAG);
+    }
+
+    private void mShowTextInputFragment() {
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment();
+        itemPropertyTextInputFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTTEXTFRAGMENT_TAG);
     }
 
     private  void mGoBackToPickActivity() {
@@ -460,6 +518,48 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         cAppExtension.activity.finish();
     }
 
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int numberChosenInt = 0;
+            Bundle extras = intent.getExtras();
+
+            if (extras != null) {
+                numberChosenInt = extras.getInt(cPublicDefinitions.NUMBERINTENT_EXTRANUMBER);
+            }
+            mHandleQuantityChosen(numberChosenInt);
+        }
+    };
+
+    private void mHandleQuantityChosen(double pvQuantityDbl) {
+        this.pTryToChangePickedQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
+        this.pRefreshActivity();
+    }
+
+
+    private void mSetNoInputPropertyListener() {
+        this.imageButtonNoInputPropertys.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mShowItemPropertyNoInputFragment();
+            }
+        });
+    }
+
+    private  void mShowItemPropertyNoInputFragment() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        List<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl = new ArrayList<>();
+
+        for (cPickorderLineProperty pickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl()) {
+            pickorderLinePropertyValuesObl.addAll(pickorderLineProperty.propertyValueObl());
+        }
+
+        ItemPropertyNoInputFragment itemPropertyNoInputFragment = new ItemPropertyNoInputFragment(pickorderLinePropertyValuesObl);
+        itemPropertyNoInputFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.ITEMPROPERTYVALUENOINPUTFRAGMENT_TAG);
+        cUserInterface.pPlaySound(R.raw.message, 0);
+    }
 
     //End Region Private Methods
 }

@@ -48,7 +48,7 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
             this.primaryContent = pvView.findViewById(R.id.primaryContent);
             this.secondaryContent = pvView.findViewById(R.id.secondaryContent);
             this.secondaryContent.setVisibility(View.GONE);
-            this.imageViewShippingUnit = pvView.findViewById(R.id.imageViewShippingUnit);
+            this.imageViewShippingUnit = pvView.findViewById(R.id.imageViewPropertyType);
             this.textViewDescription = pvView.findViewById(R.id.textViewDescription);
             this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             this.textViewDescription.setSingleLine(true);

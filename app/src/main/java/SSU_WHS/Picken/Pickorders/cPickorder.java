@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
@@ -2159,7 +2160,7 @@ public class cPickorder{
         }
     }
 
-    public cPickorderLine pGetLineNotHandledByBarcode(String pvScannedBarcodeStr) {
+    public cPickorderLine pGetLineNotHandledByBarcode(cBarcodeScan pvBarcodeScan) {
 
         if (this.barcodesObl() == null || this.barcodesObl().size() == 0)  {
             return  null;
@@ -2170,10 +2171,15 @@ public class cPickorder{
             return  null;
         }
 
+        String barcodeToMatchStr = pvBarcodeScan.getBarcodeOriginalStr();
+        if (pvBarcodeScan.getBarcodeTypeStr().toUpperCase().contains("EAN") && pvBarcodeScan.getBarcodeOriginalStr().length() == 13 ) {
+            barcodeToMatchStr = pvBarcodeScan.getBarcodeFormattedStr();
+        }
+
         cPickorderBarcode pickorderBarcodeWithBarcode = null;
 
         for (cPickorderBarcode pickorderBarcode : this.barcodesObl()) {
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvScannedBarcodeStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvScannedBarcodeStr)){
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(barcodeToMatchStr) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(barcodeToMatchStr)){
                 pickorderBarcodeWithBarcode = pickorderBarcode;
                 break;
             }

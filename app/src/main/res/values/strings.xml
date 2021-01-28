@@ -907,6 +907,7 @@
     <string name="error_unknow_storement">Weborder to store can\'t be found</string>
     <string name="message_bin_cant_be_used_for_storage">This BIN can\'t be used for storage</string>
     <string name="message_please_enter_a">"Please enter a "</string>
+    <string name="message_please_enter">"Please enter a %1$s"</string>
     <string name="message_and_a">and a</string>
     <string name="quantity_asked">Quantity asked:</string>
     <string name="quantity_handled">Quantity handled:</string>

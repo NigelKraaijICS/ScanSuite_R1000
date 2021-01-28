@@ -1236,7 +1236,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     //Region Number Broadcaster
 
-    private Runnable mMinusAction = new Runnable() {
+    private final Runnable mMinusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonMinus.performClick();
@@ -1256,7 +1256,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         }
     };
 
-    private Runnable mPlusAction = new Runnable() {
+    private final Runnable mPlusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonPlus.performClick();
@@ -1276,7 +1276,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         }
     };
 
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int numberChosenInt = 0;
