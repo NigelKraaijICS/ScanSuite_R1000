@@ -292,6 +292,12 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     public  void pIntakeorderSelected(cIntakeorder pvIntakeorder) {
 
+        if (pvIntakeorder.getOrderTypeStr().equalsIgnoreCase("EOM") || pvIntakeorder.getOrderTypeStr().equalsIgnoreCase("EOM")) {
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.multi_user_assignments_not_supported_in_android), R.raw.badsound);
+            cUserInterface.pCheckAndCloseOpenDialogs();
+            return;
+        }
+
         if (!mCheckOrderIsLockableBln(pvIntakeorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
             cUserInterface.pCheckAndCloseOpenDialogs();

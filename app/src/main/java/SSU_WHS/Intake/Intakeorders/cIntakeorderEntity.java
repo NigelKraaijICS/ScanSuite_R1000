@@ -167,6 +167,7 @@ public class cIntakeorderEntity {
                     break;
 
                 case "MAT":
+                case "MAM":
                 case "MAS":
                     this.isprocessingorparked = !cText.pIntToStringStr(this.getStatusInt()).equalsIgnoreCase(cText.pIntToStringStr(cWarehouseorder.WorkflowReceiveStoreStepEnu.Receive_Store));
                     this.receiveIntakeEOPackagingIntake = "false";

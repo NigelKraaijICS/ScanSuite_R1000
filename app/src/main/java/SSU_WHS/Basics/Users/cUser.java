@@ -16,17 +16,16 @@ import SSU_WHS.Basics.Branches.cBranchViewModel;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
-import nl.icsvertex.scansuite.BuildConfig;
 
 public class cUser {
 
     //region Public Properties
-    private String usernameStr;
+    private final String usernameStr;
     public String getUsernameStr() {
         return usernameStr;
     }
 
-    private String nameStr;
+    private final String nameStr;
     public String getNameStr() {
         return nameStr;
     }
@@ -64,22 +63,22 @@ public class cUser {
 
     }
 
-    private cUserEntity userEntity;
+    private final cUserEntity userEntity;
     public ArrayList<cBranch> branchesObl;
 
     public ArrayList<cAuthorisation> autorisationObl;
 
-    private ArrayList<cAuthorisation> autorisationWithoutMergeCachedObl;
-    public ArrayList<cAuthorisation> autorisationWithoutMergeObl() {
+    private ArrayList<cAuthorisation> autorisationWithoutMergeAndCloseCachedObl;
+    public ArrayList<cAuthorisation> autorisationWithoutMergeAndCloseObl() {
 
-      if (this.autorisationWithoutMergeCachedObl != null) {
-          return  this.autorisationWithoutMergeCachedObl;
+      if (this.autorisationWithoutMergeAndCloseCachedObl != null) {
+          return  this.autorisationWithoutMergeAndCloseCachedObl;
       }
 
-        this.autorisationWithoutMergeCachedObl = new ArrayList<>();
+        this.autorisationWithoutMergeAndCloseCachedObl = new ArrayList<>();
 
       if (autorisationObl == null || autorisationObl.size() == 0) {
-          return  this.autorisationWithoutMergeCachedObl;
+          return  this.autorisationWithoutMergeAndCloseCachedObl;
       }
 
       for (cAuthorisation authorisation : this.autorisationObl) {
@@ -89,10 +88,14 @@ public class cUser {
                   continue;
               }
           }
+          if (authorisation.getAuthorisationStr().toUpperCase().contains("CLOSE")) {
+              continue;
+          }
 
-         this.autorisationWithoutMergeCachedObl.add(authorisation);
+
+         this.autorisationWithoutMergeAndCloseCachedObl.add(authorisation);
       }
-      return   this.autorisationWithoutMergeCachedObl;
+      return   this.autorisationWithoutMergeAndCloseCachedObl;
 
 
     }

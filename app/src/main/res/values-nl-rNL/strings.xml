@@ -783,4 +783,5 @@
     <string name="quantity_asked">Aantal gevraagd:</string>
     <string name="quantity_handled">Aantal ingegeven:</string>
     <string name="message_please_enter">Geef een %1$s in</string>
+    <string name="multi_user_assignments_not_supported_in_android">Multi user opdrachten worden (momenteel) niet ondersteund in Android</string>
 </resources>

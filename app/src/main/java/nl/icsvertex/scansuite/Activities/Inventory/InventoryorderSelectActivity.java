@@ -265,6 +265,12 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     public  void pInventoryorderSelected(cInventoryorder pvInventoryorder) {
 
+        if (pvInventoryorder.getOrderTypeStr().equalsIgnoreCase("IVM")) {
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.multi_user_assignments_not_supported_in_android), R.raw.badsound);
+            cUserInterface.pCheckAndCloseOpenDialogs();
+            return;
+        }
+
         if (!mCheckOrderIsLockableBln(pvInventoryorder)) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
             cUserInterface.pCheckAndCloseOpenDialogs();

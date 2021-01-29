@@ -67,8 +67,8 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
 
     @Override
     public void onBindViewHolder(@NonNull cAuthorisationAdapter.AuthorisationViewHolder pvHolder, int pvPositionInt) {
-        if (cUser.currentUser.autorisationWithoutMergeObl() != null) {
-            final cAuthorisation authorisation = cUser.currentUser.autorisationWithoutMergeObl().get(pvPositionInt);
+        if (cUser.currentUser.autorisationWithoutMergeAndCloseObl() != null) {
+            final cAuthorisation authorisation = cUser.currentUser.autorisationWithoutMergeAndCloseObl().get(pvPositionInt);
 
             this.mSetText(authorisation, pvHolder);
             this.mSetImage(authorisation, pvHolder);
@@ -89,8 +89,8 @@ public class cAuthorisationAdapter extends RecyclerView.Adapter<cAuthorisationAd
 
     @Override
     public int getItemCount () {
-        if (cUser.currentUser.autorisationWithoutMergeObl() != null)
-            return cUser.currentUser.autorisationWithoutMergeObl().size();
+        if (cUser.currentUser.autorisationWithoutMergeAndCloseObl() != null)
+            return cUser.currentUser.autorisationWithoutMergeAndCloseObl().size();
         else return 0;
     }
 

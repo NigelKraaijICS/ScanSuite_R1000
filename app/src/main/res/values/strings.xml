@@ -911,6 +911,7 @@
     <string name="message_and_a">and a</string>
     <string name="quantity_asked">Quantity asked:</string>
     <string name="quantity_handled">Quantity handled:</string>
+    <string name="multi_user_assignments_not_supported_in_android">Multi user assignments not supported in Android (at the moment)</string>
     <!--End Region return-->
 
     <!--Region plurals-->

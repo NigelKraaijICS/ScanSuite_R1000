@@ -378,15 +378,16 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             //Set last selected index
             cPickorder.currentPickOrder.lastSelectedIndexInt = cPickorder.currentPickOrder.pGetIndexOfNotHandledLineInt(cPickorderLine.currentPickOrderLine);
 
-            if (cPickorderLine.currentPickOrderLine.getQuantityDbl() == 1 && cPickorder.currentPickOrder.isSingleBinBln() && !cPickorder.currentPickOrder.isPickAutoNextBln()) {
+            if (cPickorderLine.currentPickOrderLine.getQuantityDbl() == 1) {
+                if (cSetting.PICK_BIN_IS_ITEM() || cPickorder.currentPickOrder.isSingleBinBln() && !cPickorder.currentPickOrder.isPickAutoNextBln()) {
+                    //Add barcode
+                    cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
 
-                //Add barcode
-                cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
-
-                //Update orderline info (quantityDbl, timestamp, localStatusInt)
-                cPickorderLine.currentPickOrderLine.pHandledIndatabase();
-                this.mSendPickorderLine();
-                return;
+                    //Update orderline info (quantityDbl, timestamp, localStatusInt)
+                    cPickorderLine.currentPickOrderLine.pHandledIndatabase();
+                    this.mSendPickorderLine();
+                    return;
+                }
             }
 
             cPickorder.currentPickOrder.pickorderBarcodeScanned = cPickorderBarcode.currentPickorderBarcode;
