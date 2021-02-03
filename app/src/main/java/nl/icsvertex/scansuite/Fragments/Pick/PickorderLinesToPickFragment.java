@@ -197,12 +197,12 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
         this.currentLocationView.requestLayout();
     }
 
-    public  void pSetSelectedIndexInt(final int pvIndexInt) {
+    public  void pSetSelectedIndexInt() {
 
         new Handler().postDelayed(new Runnable() {
                 @Override
                public void run() {
-                    recyclerViewPickorderLinesTopick.scrollToPosition(pvIndexInt);
+                    recyclerViewPickorderLinesTopick.scrollToPosition(cPickorder.currentPickOrder.lastSelectedIndexInt);
                 }
            },1);
 

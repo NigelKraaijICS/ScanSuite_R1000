@@ -255,7 +255,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.pickCounterPlusHelperInt = 0;
         this.pickCounterMinusHelperInt = 0;
 
-
+        if (cPickorderLine.currentPickOrderLine == null) {
+            return;
+        }
 
         this.mEnablePlusMinusAndBarcodeSelectViews();
         this.mShowArticleImage();
@@ -519,7 +521,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
         if (cPickorderBarcode.currentPickorderBarcode == null) {
-            this.articleBarcodeText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 

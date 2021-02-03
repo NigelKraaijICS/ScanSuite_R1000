@@ -106,6 +106,17 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
     public void onAttachedToRecyclerView(@NonNull RecyclerView pvRecyclerView) {
         this.thisRecyclerView = pvRecyclerView;
         super.onAttachedToRecyclerView( this.thisRecyclerView);
+
+        if (cPickorder.currentPickOrder.getLastSelectedIndexInt() > this.localPickorderLinesObl.size() -1 ) {
+            cPickorder.currentPickOrder.lastSelectedIndexInt = this.localPickorderLinesObl.size() -1 ;
+        }
+
+        //Select the first one, or selected index
+            if (PickorderLinesActivity.currentLineFragment instanceof  PickorderLinesToPickFragment) {
+                PickorderLinesToPickFragment pickorderLinesToPickFragment = (PickorderLinesToPickFragment)PickorderLinesActivity.currentLineFragment;
+                pickorderLinesToPickFragment.pSetSelectedIndexInt();
+            }
+
     }
 
     @Override
@@ -133,14 +144,14 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
         //Pick recyclers
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
-           quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
             pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
             pvHolder.textViewBIN.setVisibility(View.VISIBLE);
             pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
-           quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
             pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
             pvHolder.textViewBIN.setVisibility(View.VISIBLE);
 
@@ -157,7 +168,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTotal) {
-           quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
+            quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
             pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
             pvHolder.textViewBIN.setVisibility(View.VISIBLE);
             pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
@@ -263,21 +274,13 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         });
         //End On Click Listener
 
-        if (cPickorder.currentPickOrder.getLastSelectedIndexInt() > this.localPickorderLinesObl.size() -1 ) {
-            cPickorder.currentPickOrder.lastSelectedIndexInt = 0;
-        }
-
         //Select the first one, or selected index
         if (pvPositionInt == cPickorder.currentPickOrder.getLastSelectedIndexInt() && cAppExtension.activity instanceof  PickorderLinesActivity &&  thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
             pvHolder.pickorderLineItemFrameLayout.performClick();
-
-            if (PickorderLinesActivity.currentLineFragment instanceof  PickorderLinesToPickFragment) {
-                PickorderLinesToPickFragment pickorderLinesToPickFragment = (PickorderLinesToPickFragment)PickorderLinesActivity.currentLineFragment;
-                pickorderLinesToPickFragment.pSetSelectedIndexInt(pvPositionInt);
-            }
-
         }
     }
+
+
 
     @Override
     public int getItemCount () {
