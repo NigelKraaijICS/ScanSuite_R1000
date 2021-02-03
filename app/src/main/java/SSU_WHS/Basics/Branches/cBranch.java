@@ -73,7 +73,7 @@ public class cBranch {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cBranchViewModel.class);
     }
 
-    private static List<cBranch> allBranchesObl;
+    public static List<cBranch> allBranchesObl;
     public  List<cBranchBin> receiveBinsObl;
 
     public  static  boolean BranchesAvailableBln;

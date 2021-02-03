@@ -700,7 +700,7 @@
     <string name="message_print_failed">Printen mislukt</string>
     <string name="screentitle_barcodeinfo">Barcode info</string>
     <string name="barcode_info">Barcode info</string>
-    <string name="novalueyet">\???</string>
+    <string name="novalueyet">\---</string>
     <string name="none">geen</string>
     <string name="enter_BIN">BIN ingeven</string>
     <string name="message_identifier_unknown">Identifier onbekend</string>
@@ -784,4 +784,5 @@
     <string name="quantity_handled">Aantal ingegeven:</string>
     <string name="message_please_enter">Geef een %1$s in</string>
     <string name="multi_user_assignments_not_supported_in_android">Multi user opdrachten worden (momenteel) niet ondersteund in Android</string>
+    <string name="message_select_a_destination">Selecteer een vestiging...</string>
 </resources>

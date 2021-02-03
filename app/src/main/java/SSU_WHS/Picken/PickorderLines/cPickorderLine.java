@@ -109,6 +109,24 @@ public class cPickorderLine {
         return destinationNoStr;
     }
 
+    public String getDestinationDescriptionStr() {
+
+        String resultStr = "";
+
+        if (this.getDestinationNoStr().isEmpty()) {
+            return resultStr;
+        }
+
+        for (cBranch branch : cBranch.allBranchesObl) {
+            if (branch.getBranchStr().equalsIgnoreCase(this.getDestinationNoStr())) {
+                return branch.getBranchNameStr();
+            }
+        }
+
+        return  resultStr;
+
+    }
+
     public String processingSequenceStr;
     public String getProcessingSequenceStr() {
         return processingSequenceStr;

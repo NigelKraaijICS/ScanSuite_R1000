@@ -170,7 +170,7 @@ public class cPickorderLineFinishSinglePiece {
                 for  (cPickorderLineFinishSinglePiece  pickorderLineFinishSinglePiece : cPickorderLineFinishSinglePiece.linesToShipObl()) {
 
                     //We found a match on ItemNo and VariantCode
-                    if (pickorderLineFinishSinglePiece.getItemNoStr().equalsIgnoreCase(pickorderBarcode.getItemNoStr()) && pickorderLineFinishSinglePiece.getVariantCodeStr().equalsIgnoreCase(pickorderBarcode.getVariantcodeStr())) {
+                    if (pickorderLineFinishSinglePiece.getItemNoStr().equalsIgnoreCase(pickorderBarcode.getItemNoStr()) && pickorderLineFinishSinglePiece.getVariantCodeStr().equalsIgnoreCase(pickorderBarcode.getVariantCodeStr())) {
 
                         //Get Shipment by SourceNo
                         return  pickorderLineFinishSinglePiece;

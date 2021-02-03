@@ -10,6 +10,7 @@ import java.util.List;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 
 public class cPickorderBarcode {
 
@@ -49,7 +50,11 @@ public class cPickorderBarcode {
     public String getItemNoStr() {return itemNoStr;}
 
     private String variantcodeStr;
-    public String getVariantcodeStr() {return variantcodeStr;}
+    public String getVariantCodeStr() {return variantcodeStr;}
+
+    public  String getItemNoAndVariantCodeStr(){
+        return   this.getItemNoStr() + " " + this.getVariantCodeStr();
+    }
 
     private Double quantityPerUnitOfMeasureDbl;
     public Double getQuantityPerUnitOfMeasureDbl() {return quantityPerUnitOfMeasureDbl;}
@@ -80,6 +85,18 @@ public class cPickorderBarcode {
         this.quantityPerUnitOfMeasureDbl =  cText.pStringToDoubleDbl(this.pickorderBarcodeEntity.getQuantityperunitofmeasureStr());
         this.quantityHandledDbl =  cText.pStringToDoubleDbl(this.pickorderBarcodeEntity.getQuantityhandledStr());
     }
+
+    public cPickorderBarcode(cArticleBarcode pvArticleBarcode) {
+        this.pickorderBarcodeEntity = null;
+        this.barcodeStr = pvArticleBarcode.getBarcodeStr();
+        this.barcodetypeStr = cText.pIntToStringStr(pvArticleBarcode.getBarcodeTypeInt());
+        this.isUniqueBarcodeBln = pvArticleBarcode.isUniqueBarcodeBln;
+        this.itemNoStr = pvArticleBarcode.getItemNoStr();
+        this.variantcodeStr = pvArticleBarcode.getVariantCodeStr();
+        this.quantityPerUnitOfMeasureDbl = pvArticleBarcode.getQuantityPerUnitOfMeasureDbl();
+        this.quantityHandledDbl = (double) 0;
+    }
+
     //Region Public Methods
 
     public boolean pInsertInDatabaseBln() {
@@ -131,7 +148,7 @@ public class cPickorderBarcode {
         List <cPickorderBarcode> resultObl = null;
 
         for (cPickorderBarcode pickorderBarcode : cPickorderBarcode.allBarcodesObl) {
-            if (pickorderBarcode.getVariantcodeStr().equalsIgnoreCase(pvVariantcode) && pickorderBarcode.getItemNoStr().equalsIgnoreCase(pvItemNo)){
+            if (pickorderBarcode.getVariantCodeStr().equalsIgnoreCase(pvVariantcode) && pickorderBarcode.getItemNoStr().equalsIgnoreCase(pvItemNo)){
                 if (resultObl == null ){
                     resultObl = new ArrayList<>();
                 }

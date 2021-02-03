@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cDeviceInfo;
@@ -16,6 +18,7 @@ import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
@@ -32,6 +35,7 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -440,6 +444,8 @@ public class cPickorder{
         return  cSalesOrderPackingTable.allSalesOrderPackingTabelsObl;
     }
 
+    public cArticle currentArticle;
+    public SortedMap<String, cArticle> articleObl;
     public  LinkedHashMap<Integer, List<JSONObject>>  itemProperyDataObl;
 
     //End region Public Properties
@@ -2083,6 +2089,10 @@ public class cPickorder{
             cPickorderBarcode.pTruncateTableBln();
         }
 
+        if (this.articleObl == null) {
+            this.articleObl = new TreeMap<>();
+        }
+
         cWebresult WebResult;
         WebResult =  this.getPickorderViewModel().pGetBarcodesFromWebserviceWrs();
 
@@ -2093,8 +2103,13 @@ public class cPickorder{
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cPickorderBarcode pickorderBarcode = new cPickorderBarcode(jsonObject);
                 pickorderBarcode.pInsertInDatabaseBln();
-            }
 
+                if (!cPickorder.currentPickOrder.articleObl.containsKey(pickorderBarcode.getItemNoAndVariantCodeStr())) {
+                    cArticle article = new cArticle(jsonObject);
+                    article.descriptionStr = pickorderBarcode.getBarcodeStr();
+                    this.articleObl.put(pickorderBarcode.getItemNoAndVariantCodeStr(), article);
+                }
+            }
             if (!this.isGeneratedOrderBln()) {
                 return cPickorderBarcode.allBarcodesObl.size() != 0;
             }
@@ -2195,7 +2210,7 @@ public class cPickorder{
 
         for (cPickorderLine pickorderLine : hulpObl) {
             if (pickorderLine.getItemNoStr().equalsIgnoreCase(pickorderBarcodeWithBarcode.getItemNoStr()) &&
-                    pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeWithBarcode.getVariantcodeStr()))) {
+                    pickorderLine.getVariantCodeStr().equalsIgnoreCase((pickorderBarcodeWithBarcode.getVariantCodeStr()))) {
 
                 if (pickorderLine.getQuantityHandledDbl() >0 ) {
                     busyLinesObl.add(pickorderLine);

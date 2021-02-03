@@ -27,7 +27,7 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
 
     public static class commentViewHolder extends RecyclerView.ViewHolder{
 
-        private AppCompatImageView imageViewPropertyType;
+        private final AppCompatImageView imageViewPropertyType;
         private final TextView textViewDescription;
         private final TextView textViewValue;
         private TextView textViewQuantityUsed;
@@ -234,11 +234,20 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                 public void onClick(View view) {
 
                     cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
-                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = 0;
 
                     final PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity;
+
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                         pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
+
+                        double countDbl = cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl;
+
+                        while (countDbl > 0) {
+                            pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity(false, false,1);
+                            cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl --;
+                            countDbl--;
+                        }
+
                         pickorderLineItemPropertyInputActvity.pDeleteValueFromRecyler();
                         pickorderLineItemPropertyInputActvity.pRefreshActivity();
                     }
@@ -250,8 +259,6 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                 public void onClick(View view) {
 
                     cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
-
-                    int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
                     cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = 0;
 
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {

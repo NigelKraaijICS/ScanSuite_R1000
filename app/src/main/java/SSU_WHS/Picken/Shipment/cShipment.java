@@ -287,7 +287,7 @@ public class cShipment {
                   }
 
                   //We found a match on ItemNo and VariantCode
-                  if (pickorderLinePackAndShip.getItemNoStr().equalsIgnoreCase(pickorderBarcode.getItemNoStr()) && pickorderLinePackAndShip.getVariantCodeStr().equalsIgnoreCase(pickorderBarcode.getVariantcodeStr())) {
+                  if (pickorderLinePackAndShip.getItemNoStr().equalsIgnoreCase(pickorderBarcode.getItemNoStr()) && pickorderLinePackAndShip.getVariantCodeStr().equalsIgnoreCase(pickorderBarcode.getVariantCodeStr())) {
 
                       //Get Shipment by SourceNo
                       return  cShipment.pGetShipment(pickorderLinePackAndShip.getSourceNoStr());
@@ -422,7 +422,7 @@ public class cShipment {
 
         for (cPickorderLinePackAndShip pickorderLinePackAndShip : this.linesToCheckObl()) {
             if (pickorderLinePackAndShip.getItemNoStr().equalsIgnoreCase(cPickorder.currentPickOrder.pickorderQCBarcodeScanned .getItemNoStr()) &&
-                    pickorderLinePackAndShip.getVariantCodeStr().equalsIgnoreCase((cPickorder.currentPickOrder.pickorderQCBarcodeScanned .getVariantcodeStr()))) {
+                    pickorderLinePackAndShip.getVariantCodeStr().equalsIgnoreCase((cPickorder.currentPickOrder.pickorderQCBarcodeScanned .getVariantCodeStr()))) {
                     return  pickorderLinePackAndShip;
             }
         }

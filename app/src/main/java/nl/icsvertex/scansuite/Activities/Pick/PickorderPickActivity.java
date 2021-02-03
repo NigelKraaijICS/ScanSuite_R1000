@@ -255,37 +255,13 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.pickCounterPlusHelperInt = 0;
         this.pickCounterMinusHelperInt = 0;
 
-        if (cPickorderLine.currentPickOrderLine == null) {
-            return;
-        }
 
-        if (cPickorder.currentPickOrder.isTransferBln()) {
-            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getTransferToolbarDescriptionStr());
-        }
-        else
-        {
-            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getToolbarDescriptionStr());
-        }
-
-        this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
-        this.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-
-        if (cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
-            this.articleDescription2Text.setVisibility(View.GONE);
-        }
-        else
-        {
-            this.articleDescription2Text.setVisibility(View.VISIBLE);
-        }
-
-        this.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
-
-        this.quantityRequiredText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
 
         this.mEnablePlusMinusAndBarcodeSelectViews();
         this.mShowArticleImage();
         this.mShowOrHideGenericExtraFields();
 
+        this.mShowArticleInfo();
         this.mShowBarcodeInfo();
         this.mShowQuantityInfo();
         this.mShowSortingInstruction();
@@ -473,10 +449,23 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mShowOrHideGenericExtraFields() {
 
-        //Get article info via the web service
-        cArticle.currentArticle  = new cArticle(cPickorderLine.currentPickOrderLine.getItemNoStr(), cPickorderLine.currentPickOrderLine.getVariantCodeStr());
+        boolean hideArticleInfoContainer = false;
 
-        if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
+        if (cPickorderLine.currentPickOrderLine == null) {
+            hideArticleInfoContainer = true;
+        }
+        else
+        {
+            //Get article info via the web service
+            cArticle.currentArticle  = new cArticle(cPickorderLine.currentPickOrderLine.getItemNoStr(), cPickorderLine.currentPickOrderLine.getVariantCodeStr());
+
+            if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
+                hideArticleInfoContainer = true;
+            }
+
+        }
+
+      if (hideArticleInfoContainer) {
             this.articleInfoContainer.setVisibility(View.GONE);
             ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             newCardViewLayoutParams.setMargins(15,15,15,15);
@@ -486,7 +475,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             constraintSetSpace.clone(pickorderPickContainer);
             constraintSetSpace.connect(articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
             constraintSetSpace.applyTo(pickorderPickContainer);
-        }
+      }
         else{
             this.articleInfoContainer.setVisibility(View.VISIBLE);
 
@@ -496,22 +485,55 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
     }
 
+    private  void mShowArticleInfo() {
+
+        if (cPickorderLine.currentPickOrderLine == null) {
+            this.articleDescriptionText.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleDescription2Text .setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleItemText.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            return;
+        }
+
+        this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+        this.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
+        this.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
+
+        if (cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
+            this.articleDescription2Text.setVisibility(View.GONE);
+        }
+        else
+        {
+            this.articleDescription2Text.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     private  void mShowBarcodeInfo() {
 
-        if (cPickorderBarcode.currentPickorderBarcode == null) {
-            if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
+        if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
                 cPickorderBarcode.currentPickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(0);
-            }
         }
-
-        if (cPickorderBarcode.currentPickorderBarcode != null) {
-            this.articleBarcodeText.setText(cPickorderBarcode.currentPickorderBarcode.getBarcodeAndQuantityStr());
-        } else {
+        else
+        {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
         }
+
+        if (cPickorderBarcode.currentPickorderBarcode == null) {
+            this.articleBarcodeText.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            return;
+        }
+
+        this.articleBarcodeText.setText(cPickorderBarcode.currentPickorderBarcode.getBarcodeAndQuantityStr());
+
     }
 
     private void mShowQuantityInfo(){
+
+        if (cPickorderLine.currentPickOrderLine == null) {
+            this.quantityText.setVisibility(View.INVISIBLE);
+            this.quantityRequiredText.setVisibility(View.INVISIBLE);
+            return;
+        }
 
         double quantityDbl = 0;
 
@@ -522,6 +544,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
         this.quantityText.setText(cText.pDoubleToStringStr(quantityDbl));
+        this.quantityRequiredText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
     }
 
     private  void mShowArticleImage() {
@@ -529,6 +552,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //If pick with picture is false, then hide image view
         if (!cPickorder.currentPickOrder.isPickWithPictureBln()) {
             this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
+            this.articleThumbImageView.setVisibility(View.GONE);
+            return;
+        }
+
+        if (cPickorderLine.currentPickOrderLine == null) {
             this.articleThumbImageView.setVisibility(View.GONE);
             return;
         }
@@ -879,6 +907,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
+        this.mShowArticleInfo();
         this.mShowBarcodeInfo();
         this.mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
     }
@@ -1278,7 +1307,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
                 }
 
                 PickorderPickActivity.articleScannedLastBln = true;
-                mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
+                pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
             }
         });
     }
@@ -1468,26 +1497,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mShowItemPropertyInputActivity() {
-
         cUserInterface.pCheckAndCloseOpenDialogs();
-
-        ArrayList<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl = new ArrayList<>();
-
-        for (cPickorderLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl()) {
-            if (inputPickorderLineProperty.propertyValueObl() == null ||inputPickorderLineProperty.propertyValueObl().size() == 0) {
-                pickorderLinePropertyValuesObl.add(new cPickorderLinePropertyValue(inputPickorderLineProperty));
-            }
-            else
-            {
-                pickorderLinePropertyValuesObl.addAll(inputPickorderLineProperty.propertyValueObl());
-            }
-        }
-
-
         Intent intent = new Intent(cAppExtension.context, PickorderLineItemPropertyInputActvity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
-
     }
 
     //Region Number Broadcaster
