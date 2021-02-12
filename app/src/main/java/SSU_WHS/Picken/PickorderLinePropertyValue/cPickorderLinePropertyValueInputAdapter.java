@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
@@ -127,12 +128,9 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                 pvHolder.imageChevronDown.setVisibility(View.GONE);
             }
 
-            if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
-                PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
-
-                if (pickorderLineItemPropertyInputActvity.getQuantityAvailable() == 0) {
-                    pvHolder.imageButtonPlus.setVisibility(View.INVISIBLE);
-                }
+            if (pickorderLinePropertyValue.getItemProperty().getUniqueBln() && pickorderLinePropertyValue.getQuantityDbl() > 0 ) {
+                pvHolder.imageButtonPlus.setVisibility(View.INVISIBLE);
+                pvHolder.imageButtonManual.setVisibility(View.INVISIBLE);
             }
 
             if (pickorderLinePropertyValue == cPickorderLinePropertyValue.currentPickorderLinePropertyValue) {
@@ -192,15 +190,10 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
 
                     cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
 
-                    int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
-                    int newQuantity;
-                    newQuantity = currentQuantity + 1;
-                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = newQuantity;
-
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
                         pickorderLineItemPropertyInputActvity.pRefreshActivity();
-                        pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity(true, false,1);
+                        pickorderLineItemPropertyInputActvity.pHandleScan(cBarcodeScan.pFakeScan(cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getValueStr()));
                     }
 
                 }

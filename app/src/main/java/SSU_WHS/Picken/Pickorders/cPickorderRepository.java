@@ -353,6 +353,26 @@ public class cPickorderRepository {
         }
     }
 
+    public cWebresult pPickGeneratedHandledViaWebserviceBln(String pvShipBinStr) {
+
+        cWebresult webResult;
+
+        PickorderStepHandledParams pickorderStepHandledParams;
+        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvShipBinStr, cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
+
+        try {
+
+            webResult = new mPickorderGeneratedHandledAsyncTask().execute(pickorderStepHandledParams).get();
+            return  webResult;
+        }
+
+        catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return  null;
+
+        }
+    }
+
     public cWebresult pStoreHandledViaWebserviceBln() {
 
         cWebresult webResult;
@@ -1150,6 +1170,57 @@ public class cPickorderRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERSTEPHANDLED, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mPickorderGeneratedHandledAsyncTask extends AsyncTask<PickorderStepHandledParams, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(PickorderStepHandledParams... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(params[0].userStr);
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(params[0].branchStr);
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(params[0].orderNumberStr);
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNER;
+                l_PropertyInfo4Pin.setValue(params[0].deviceStr);
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
+                l_PropertyInfo5Pin.name = cWebserviceDefinitions.WEBPROPERTY_WORKFLOWSTEPCODESTR;
+                l_PropertyInfo5Pin.setValue(params[0].workflowStepcodeStr);
+                l_PropertyInfoObl.add(l_PropertyInfo5Pin);
+
+                PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
+                l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_SHIPBINSTR;
+                l_PropertyInfo8Pin.setValue(params[0].workPlaceStr);
+                l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
+                PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
+                l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_CULTURE;
+                l_PropertyInfo9Pin.setValue(params[0].cultureStr);
+                l_PropertyInfoObl.add(l_PropertyInfo9Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERHANDLEDGENERATED, l_PropertyInfoObl);
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);
                 webresult.setResultBln(false);

@@ -6,12 +6,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
+import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupProperty;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import nl.icsvertex.scansuite.R;
 
-public class cPickorderLinePropertyValue{
+public class cPickorderLinePropertyValue implements Comparable{
 
     //Public Properties
     private int lineNoInt;
@@ -124,4 +126,10 @@ public class cPickorderLinePropertyValue{
         return true;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        int compareint = cText.pDoubleToInt(((cPickorderLinePropertyValue)o).getQuantityDbl());
+        return compareint- cText.pDoubleToInt(this.getQuantityDbl());
+
+    }
 }

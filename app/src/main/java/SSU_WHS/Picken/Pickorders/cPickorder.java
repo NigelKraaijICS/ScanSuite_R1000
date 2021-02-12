@@ -19,6 +19,7 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
@@ -36,6 +37,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -45,6 +47,7 @@ import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineViewModel;
 import SSU_WHS.Picken.PickorderSetting.cPickorderSetting;
 import SSU_WHS.Picken.PickorderShipPackages.cPickorderShipPackage;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
@@ -358,6 +361,10 @@ public class cPickorder{
 
     private cPickorderViewModel getPickorderViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
+    }
+
+    private cPickorderLineViewModel getPickorderLineViewModel() {
+        return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderLineViewModel.class);
     }
 
     public static List<cPickorder> allPickordersObl;
@@ -1731,6 +1738,73 @@ public class cPickorder{
 
     }
 
+    public cResult pPickGeneratedFaseHandledViaWebserviceRst(String pvShipBinStr) {
+
+        cResult result;
+        result = new cResult();
+        result.resultBln = true;
+
+        int actionInt;
+
+        cWebresult webresult;
+
+
+        webresult =  this.getPickorderViewModel().pPickingGeneratedHandledViaWebserviceWrs(pvShipBinStr);
+
+
+        //No result, so something really went wrong
+        if (webresult == null) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Something really went wrong
+        if (!webresult.getSuccessBln()) {
+            result.resultBln = false;
+            result.activityActionEnu = cWarehouseorder.ActivityActionEnu.Unknown;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_couldnt_handle_step));
+            return result;
+        }
+
+        //Get next action of webresult
+        if (webresult.getResultLng() > 100) {
+            actionInt  = (int) (webresult.getResultLng()/100);
+        }
+        else
+        {
+            if (webresult.getResultLng() < 10) {
+                actionInt = webresult.getResultLng().intValue();
+            }
+            else{
+                actionInt = -1;
+            }
+        }
+
+        //Convert int to action
+        result.activityActionEnu= cWarehouseorder.pGetActivityActionEnu(actionInt);
+
+        //Everything was fine, so we are done
+        if (webresult.getSuccessBln() && webresult.getResultBln() && result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown) {
+            cPickorder.currentPickOrder.statusInt = webresult.getResultLng().intValue();
+            result.resultBln = true;
+            return result;
+        }
+
+        // We have an action to perform
+        result.resultBln = false;
+
+        if (result.activityActionEnu == cWarehouseorder.ActivityActionEnu.Hold) {
+            result.pAddErrorMessage(cAppExtension.context.getString((R.string.hold_the_order)));
+        }
+
+        this.mGetCommentsViaWebError(webresult.getResultDtt());
+        return  result;
+
+
+    }
+
     public cResult pStoreFaseHandledViaWebserviceRst() {
 
         cResult result;
@@ -2394,6 +2468,55 @@ public class cPickorder{
             result.resultBln = false;
         }
         return result;
+    }
+
+    public boolean pAddERPBarcodeBln(cBarcodeScan pvBarcodeScan) {
+
+        //Get article info via the web service
+        cPickorder.currentPickOrder.currentArticle  = cArticle.pGetArticleByBarcodeViaWebservice(pvBarcodeScan);
+
+        //We failed to get the article
+        if ( cPickorder.currentPickOrder.currentArticle == null) {
+            return false;
+        }
+
+        cArticle.currentArticle = cPickorder.currentPickOrder.currentArticle;
+
+        //Add article to article object list
+        cPickorder.currentPickOrder.articleObl.put(cPickorder.currentPickOrder.currentArticle.getItemNoAndVariantCodeStr(), cPickorder.currentPickOrder.currentArticle);
+
+
+        //Get barcodes for this article
+        if (! cPickorder.currentPickOrder.currentArticle.pGetBarcodesViaWebserviceBln(pvBarcodeScan)) {
+            return false;
+        }
+
+        boolean isUniqueBarcodeBln = false;
+
+        if (cArticle.currentArticle.barcodesObl != null && cArticle.currentArticle.barcodesObl.get(0).getUniqueBarcodeBln()) {
+            isUniqueBarcodeBln = true;
+        }
+
+        if (cPickorderBarcode.allBarcodesObl == null) {
+            cPickorderBarcode.allBarcodesObl= new ArrayList<>();
+        }
+
+        for (cArticleBarcode articleBarcode :  cPickorder.currentPickOrder.currentArticle.barcodesObl) {
+            if (articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
+                    articleBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr())) {
+
+                //Then add barcode
+                cWebresult WebResult =  this.getPickorderLineViewModel().pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan, isUniqueBarcodeBln);
+                if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
+                    cPickorderBarcode pickorderBarcode = new cPickorderBarcode(WebResult.getResultDtt().get(0));
+                    cPickorderBarcode.allBarcodesObl.add(pickorderBarcode);
+                    cPickorderBarcode.currentPickorderBarcode= pickorderBarcode;
+                }
+            }
+        }
+
+
+        return  true;
     }
 
     //End Region Public Methods

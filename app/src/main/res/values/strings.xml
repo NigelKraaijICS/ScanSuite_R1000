@@ -913,6 +913,9 @@
     <string name="quantity_handled">Quantity handled:</string>
     <string name="multi_user_assignments_not_supported_in_android">Multi user assignments not supported in Android (at the moment)</string>
     <string name="message_select_a_destination">Select a destination...</string>
+    <string name="message_itempropery_value_already_used">Value already used</string>
+    <string name="message_itempropery_value_wrong">Value wrong</string>
+    <string name="addedorhandled">added/handled</string>
     <!--End Region return-->
 
     <!--Region plurals-->

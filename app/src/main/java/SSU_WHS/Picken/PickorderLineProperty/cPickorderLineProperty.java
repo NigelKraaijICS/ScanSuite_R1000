@@ -7,9 +7,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.Utils.cResult;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
+import nl.icsvertex.scansuite.R;
 
 public class cPickorderLineProperty {
 
@@ -115,6 +117,43 @@ public class cPickorderLineProperty {
 
         //Add a new value
         cPickorderLinePropertyValue.allLinePropertysValuesObl.add(new cPickorderLinePropertyValue(this.getLineNoInt(), this.getPropertyCodeStr(),pvValueStr));
+    }
+
+    public cResult pCheckScanForUniquePropertyRst(String pvPropertyValueStr) {
+
+        cResult resultRst = new cResult();
+        resultRst.resultBln = true;
+
+        if (!this.getItemProperty().getUniqueBln() || this.propertyValueObl() == null ||this.propertyValueObl().size() ==0 ) {
+            resultRst.resultBln = true;
+            return  resultRst;
+        }
+
+
+
+        for (cPickorderLinePropertyValue pickorderLinePropertyValue : this.propertyValueObl()) {
+
+            if (pickorderLinePropertyValue.getValueStr().equalsIgnoreCase(pvPropertyValueStr)) {
+
+                // We have a match, and this hasn't been scanned already
+                if (pickorderLinePropertyValue.getQuantityDbl() == 0) {
+                    resultRst.resultBln = true;
+                    return  resultRst;
+                }
+                else
+                {
+                    resultRst.resultBln = false;
+                    resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_itempropery_value_already_used));
+                    return  resultRst;
+                }
+            }
+        }
+
+        resultRst.resultBln = false;
+        resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_itempropery_value_wrong));
+        return  resultRst;
+
+
     }
 
     public boolean pDeleteFromDatabaseBln() {

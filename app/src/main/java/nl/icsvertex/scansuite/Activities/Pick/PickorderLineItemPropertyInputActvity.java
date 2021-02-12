@@ -20,12 +20,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
 import ICS.Utils.cRegex;
+import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -48,7 +50,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
    private  ImageView toolbarImage;
    private  TextView toolbarTitle;
 
-    private AppCompatImageButton imageButtonNoInputPropertys;
+   private AppCompatImageButton imageButtonNoInputPropertys;
    private TextView articleDescriptionCompactText;
    private TextView articleDescription2CompactText;
    private TextView articleItemCompactText;
@@ -62,9 +64,14 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
         List<cPickorderLinePropertyValue> resultObl = new ArrayList<>();
 
-        //
         if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl() != null && cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl() .size() > 0 ) {
             resultObl = cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl();
+
+            if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().get(0).getItemProperty().getUniqueBln()) {
+                Collections.sort(resultObl);
+                Collections.reverse(resultObl);
+            }
+
             return resultObl;
         }
 
@@ -72,7 +79,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         for (cPickorderLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl()) {
             resultObl.add(new cPickorderLinePropertyValue(inputPickorderLineProperty));
         }
-
 
         return resultObl;
 
@@ -286,7 +292,15 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
                 return;
             }
 
+            //Check unique values if needed
+            cResult hulpRst = cPickorderLineProperty.currentPickorderLineProperty.pCheckScanForUniquePropertyRst(pvBarcodeScan.getBarcodeOriginalStr());
+            if (!hulpRst.resultBln) {
+                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true, true);
+                return;
+            }
+
             cPickorderLineProperty.currentPickorderLineProperty.pValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
+            cUserInterface.pShowSnackbarMessage(this.itemPropertyRecyclerview, pvBarcodeScan.getBarcodeOriginalStr() + " "  + cAppExtension.activity.getString(R.string.addedorhandled),R.raw.headsupsound,false);
             this.pTryToChangePickedQuantity(true,false,1);
             this.pRefreshActivity();
         }

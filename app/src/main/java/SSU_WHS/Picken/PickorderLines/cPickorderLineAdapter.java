@@ -186,6 +186,15 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
         }
 
+        //Pick Generated Recycler
+        if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesGenerated) {
+            quantityToShowStr  = cText.pDoubleToStringStr(currentPickorderLine.getQuantityHandledDbl());
+            pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
+            pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
+            pvHolder.textViewSourceNo.setVisibility(View.GONE);
+        }
+
         //Sort Recyclers
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
             quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();

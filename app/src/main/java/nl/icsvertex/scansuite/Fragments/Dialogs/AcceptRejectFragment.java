@@ -34,6 +34,7 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActv
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderPickGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
@@ -247,6 +248,11 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             return;
         }
 
+        if (cAppExtension.activity instanceof PickorderPickGeneratedActivity) {
+            PickorderPickGeneratedActivity pickorderPickGeneratedActivity = (PickorderPickGeneratedActivity)cAppExtension.activity;
+            pickorderPickGeneratedActivity.pAcceptPick(true);
+        }
+
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
             InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
             inventoryorderBinActivity.pCloseBin();
@@ -411,6 +417,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof PickorderQCActivity) {
             PickorderQCActivity pickorderQCActivity = (PickorderQCActivity)cAppExtension.activity;
             pickorderQCActivity.pCancelQC();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof PickorderPickGeneratedActivity) {
+            PickorderPickGeneratedActivity pickorderPickGeneratedActivity = (PickorderPickGeneratedActivity)cAppExtension.activity;
+            pickorderPickGeneratedActivity.pCancelPick();
             this.dismiss();
             return;
         }

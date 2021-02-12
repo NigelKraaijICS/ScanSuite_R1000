@@ -78,6 +78,18 @@ public class cArticle {
         this.articleEntity = new cArticleEntity(pvJsonObject);
         this.itemNoStr = this.articleEntity.getItemnoStr();
         this.variantCodeStr =  this.articleEntity.getVariantCodeStr();
+
+        if (this.articleEntity.getDescriptionStr() == null) {
+            this.descriptionStr = "";
+            this.description2Str = "";
+            this.itemInfoCodeStr = "";
+            this.vendorItemNoStr = "";
+            this.vendorItemDescriptionStr = "";
+            this.component10Str = "";
+            this.priceDbl = (double) 0;
+            return;
+        }
+
         this.descriptionStr = this.articleEntity.getDescriptionStr();
         this.description2Str = this.articleEntity.getDescription2Str();
         this.itemInfoCodeStr = this.articleEntity.getItemInfoCodeStr();

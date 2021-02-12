@@ -233,7 +233,7 @@ public class cConnection {
 
                     if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
                         PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
-                        pickorderLinesGeneratedActivity.pCheckAllDone();
+                        pickorderLinesGeneratedActivity.pCloseOrder();
                     }
 
 

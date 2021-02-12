@@ -40,7 +40,7 @@ public class cPickorderLine {
         return recordIDInt;
     }
 
-    private final Integer lineNoInt;
+    private Integer lineNoInt;
     public Integer getLineNoInt() {
         return lineNoInt;
     }
@@ -109,23 +109,6 @@ public class cPickorderLine {
         return destinationNoStr;
     }
 
-    public String getDestinationDescriptionStr() {
-
-        String resultStr = "";
-
-        if (this.getDestinationNoStr().isEmpty()) {
-            return resultStr;
-        }
-
-        for (cBranch branch : cBranch.allBranchesObl) {
-            if (branch.getBranchStr().equalsIgnoreCase(this.getDestinationNoStr())) {
-                return branch.getBranchNameStr();
-            }
-        }
-
-        return  resultStr;
-
-    }
 
     public String processingSequenceStr;
     public String getProcessingSequenceStr() {
@@ -446,6 +429,35 @@ public class cPickorderLine {
         this.takenTimeStampStr =  this.PickorderLineEntity.getTakenTimeStampStr();
     }
 
+    public cPickorderLine(String pvDestinationStr, double pvQuantityHandledDbl){
+        this.PickorderLineEntity = null;
+        this.recordIDInt = 0;
+        this.lineNoInt = 0;
+        this.itemNoStr = cPickorder.currentPickOrder.currentArticle.getItemNoStr();
+        this.variantCodeStr = cPickorder.currentPickOrder.currentArticle.getVariantCodeStr();
+        this.descriptionStr = cPickorder.currentPickOrder.currentArticle.getDescriptionStr();
+        this.description2Str = cPickorder.currentPickOrder.currentArticle.getDescription2Str();
+        this.binCodeStr= cPickorder.currentPickOrder.currentBranchBin.getBinCodeStr();
+
+        this.quantityDbl = (double) 0;
+        this.quantityHandledDbl = pvQuantityHandledDbl;
+        this.quantityRejectedDbl =(double) 0;
+
+        this.sourceNoStr = "";
+        this.destinationNoStr = pvDestinationStr;
+
+        this.processingSequenceStr = "";
+
+        this.vendorItemNo =  "";
+        this.vendorItemDescriptionStr =   "";
+
+        this.statusInt = cWarehouseorder.PicklineStatusEnu.DONE;
+        this.localStatusInt = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT;
+
+        this.quantityTakenDbl =  (double) 0;
+        this.takenTimeStampStr =  cDateAndTime.pGetCurrentDateTimeForWebserviceStr();
+    }
+
     //Region Public Methods
 
     public static boolean pTruncateTableBln(){
@@ -713,6 +725,28 @@ public class cPickorderLine {
             return  false;
         }
     }
+
+    public cResult pGeneratedLineHandledRst(List<cPickorderBarcode> pvScannedBarcodeObl) {
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        cWebresult WebResult;
+
+        WebResult =  this.getPickorderLineViewModel().pPickLineGeneratedHandledViaWebserviceWrs(pvScannedBarcodeObl);
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            this.lineNoInt = WebResult.getResultLng().intValue();
+           this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
+           return  result;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_HANDLED);
+            result.resultBln = false;
+            result.pAddErrorMessage(WebResult.getResultStr());
+            return  result;
+        }
+    }
+
 
     public boolean pSortedBln() {
 

@@ -785,4 +785,7 @@
     <string name="message_please_enter">Geef een %1$s in</string>
     <string name="multi_user_assignments_not_supported_in_android">Multi user opdrachten worden (momenteel) niet ondersteund in Android</string>
     <string name="message_select_a_destination">Selecteer een vestiging...</string>
+    <string name="message_itempropery_value_already_used">"Deze heb je al gehad"</string>
+    <string name="message_itempropery_value_wrong">Deze waarde is niet toegestaan</string>
+    <string name="addedorhandled">toegevoegd/afgehandeld</string>
 </resources>

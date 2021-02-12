@@ -59,7 +59,7 @@ public class cPickorderBarcode {
     private Double quantityPerUnitOfMeasureDbl;
     public Double getQuantityPerUnitOfMeasureDbl() {return quantityPerUnitOfMeasureDbl;}
 
-    private Double quantityHandledDbl;
+    public Double quantityHandledDbl;
     public Double getQuantityHandledDbl() {return quantityHandledDbl;}
 
     public  String getBarcodeAndQuantityStr(){

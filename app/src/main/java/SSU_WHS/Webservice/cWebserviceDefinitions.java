@@ -45,6 +45,10 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_UPDATECURRENTORDERLOCATION = "p_PickOrderUpdateCurrentOrderLocationJsonStr";
     public static String WEBMETHOD_GETPICKORDERSSEQUELSTEP = "p_PickordersVervolgstapGetJsonStr";
     public static String WEBMETHOD_PICKORDERLINE_PROPERTIES_HANDLED = "p_WarehouseopdrachtLinePropertiesHandledJsonStr";
+    public static String WEBMETHOD_PICKORDERLINEGENERATEDTAKEHANDLED = "p_PickorderTakeItemJsonStr";
+    public static String WEBMETHOD_PICKORDERITEMVARIANTCREATE = "p_PickorderItemVariantCreateJsonStr";
+    public static String WEBMETHOD_PICKORDERHANDLEDGENERATED = "p_PickorderOrderHandledGeneratedJsonStr";
+
 
     public static String WEBMETHOD_GETLOCATIONARTICLEVIAOWNERBARCODE = "p_VestigingArtikelGetViaOwnerBarcodeJsonStr";
     public static String WEBMETHOD_GETARTICLEVIAOWNERBARCODE = "p_ArtikelGetViaOwnerBarcodeJsonStr";
@@ -135,7 +139,7 @@ public class cWebserviceDefinitions {
 
 
     public static String WEBMETHOD_GETRECEIVEBINS = "p_MagazijnlocatieReceiveGetJsonStr";
-
+    public static String WEBMETHOD_GETSHIPBINS = "p_MagazijnlocatieShipGetJsonStr";
 
     public static String WEBMETHOD_RETURNORDERSGET = "p_RetourOrdersGetJsonStr";
     public static String WEBMETHOD_RETURNLINESGET = "p_RetourOrderItemInTakeGetJsonStr";
@@ -157,6 +161,8 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_MOVEHANDLED = "p_MoveOrderHandledJsonStr";
     public static String WEBMETHOD_MOVEORDERCREATE = "p_MoveOrderCreateJsonStr";
     public static String WEBMETHOD_PICKORDERCREATE = "p_PickorderCreateJsonStr";
+    public static String WEBMETHOD_PICKORDERBARCODECREATE = "p_PickorderBarcodeCreateJsonStr";
+
 
 
     public static String WEBMETHOD_GETMOVEORDERLINES = "p_MoveRegelsGetJsonStr";
@@ -232,11 +238,13 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_ORDERTYPE = "pv_OpdrachtsoortStr";
     public static String WEBPROPERTY_WORKFLOWSTEPSTR = "pv_WorkflowStapStr";
     public static String WEBPROPERTY_WORKFLOWSTEPINT = "pv_WorkflowStapInt";
+    public static String WEBPROPERTY_SHIPBINSTR = "pv_ShipBinCodeStr";
     public static String WEBPROPERTY_WORKFLOWSTEPCODESTR = "pv_WorkflowStapcodeStr";
     public static String WEBPROPERTY_IGNOREBUSY = "pv_IgnoreBezigBln";
     public static String WEBPROPERTY_BINSUBSET = "pv_BinSubsetObl";
     public static String WEBPROPERTY_OWNER = "pv_OwnerStr";
     public static String WEBPROPERTY_ITEMNO = "pv_ItemNoStr";
+    public static String WEBPROPERTY_DESTINATIONNO = "pv_DestinationNoStr";
     public static String WEBPROPERTY_VARIANTCODE = "pv_VariantCodeStr";
     public static String WEBPROPERTY_VARIANTCODETINY = "pv_VariantcodeStr";
     public static String WEBPROPERTY_REFRESH = "Pv_RefreshBln";

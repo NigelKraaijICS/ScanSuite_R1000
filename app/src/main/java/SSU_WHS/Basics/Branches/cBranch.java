@@ -12,6 +12,7 @@ import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.Basics.Workplaces.cWorkplaceViewModel;
@@ -75,6 +76,7 @@ public class cBranch {
 
     public static List<cBranch> allBranchesObl;
     public  List<cBranchBin> receiveBinsObl;
+    public  List<cBranchBin> shipBinsObl;
 
     public  static  boolean BranchesAvailableBln;
 
@@ -150,6 +152,29 @@ public class cBranch {
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cBranchBin branchBin = new cBranchBin(jsonObject);
                 this.receiveBinsObl.add(branchBin);
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETBRANCHES);
+            return  false;
+        }
+    }
+
+    public boolean pGetShipBinsViaWebserviceBln() {
+
+        if (this.shipBinsObl != null) {
+            return  true;
+        }
+
+        cWebresult WebResult;
+        WebResult =  this.getBranchViewModel().pGetShipBinsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            this.shipBinsObl = new ArrayList<>();
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cBranchBin branchBin = new cBranchBin(jsonObject);
+                this.shipBinsObl.add(branchBin);
             }
             return  true;
         }
@@ -290,6 +315,23 @@ public class cBranch {
 
         }
         return false;
+    }
+
+
+    public static cBranch pGetBranchByDescriptionStr(String pvScannedBranchStr){
+
+        if (cBranch.allBranchesObl == null || cBranch.allBranchesObl.size() == 0 ) {
+            return  null;
+        }
+
+        for (cBranch branch : cBranch.allBranchesObl) {
+
+            if (branch.getBranchNameStr().equalsIgnoreCase(pvScannedBranchStr)) {
+                return branch;
+            }
+        }
+
+        return  null;
     }
 
     public cBranchReason pGetReasonByName(String pvReasonStr){

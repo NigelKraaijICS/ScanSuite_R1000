@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -34,18 +35,12 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Basics.BranchBin.cBranchBin;
-import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
-import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
-import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.Pickorders.cPickorder;
@@ -60,7 +55,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
 
-public class PickorderLinesGeneratedActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class PickorderLinesGeneratedActivity extends AppCompatActivity implements iICSDefaultActivity,  SwipeRefreshLayout.OnRefreshListener  {
 
     //Region Public Properties
 
@@ -78,7 +73,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     private TextView toolbarTitle;
     private  TextView toolbarSubtext;
 
-    private RecyclerView recyclerViewPickorderLinesPicked;
+    private RecyclerView recyclerViewPickorderLinesGenerated;
 
     private ImageView imageButtonCloseOrder;
 
@@ -142,6 +137,11 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         finish();
     }
 
+    @Override
+    public void onRefresh() {
+        this.pFillLines();
+    }
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -180,7 +180,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
         this.quantityPickordersText = findViewById(R.id.quantityPickordersText);
-        this.recyclerViewPickorderLinesPicked = findViewById(R.id.recyclerViewPickorderLinesPicked);
+        this.recyclerViewPickorderLinesGenerated = findViewById(R.id.recyclerViewPickorderLinesGenerated);
 
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
@@ -206,8 +206,9 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
     @Override
     public void mFieldsInitialize() {
-        this.mFillRecycler();
-        this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
+
+        this.pFillLines();
+
     }
 
     @Override
@@ -290,7 +291,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
     }
 
-    public void pCheckAllDone() {
+    public void pCloseOrder() {
 
         //All lines are done
 
@@ -303,11 +304,6 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         // Show close button, so user can close the order manually
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
 
-        // If not everything is sent, then leave
-        if (!this.mCheckAndSentLinesBln()) {
-            return;
-        }
-
         if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0) {
             // Show order done fragment
             this.mShowPickDoneFragment(false);
@@ -317,7 +313,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         // If there is no next step, then we are done
         if (!cPickorder.currentPickOrder.isPackAndShipNeededBln() && !cPickorder.currentPickOrder.isBPBln() && !cPickorder.currentPickOrder.isBCBln()) {
             if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
-                    !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+             !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
 
                 // Show pick done fragment
                 this.mShowPickDoneFragment(false);
@@ -426,6 +422,19 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
     }
 
+    public  void pFillLines() {
+
+        // Show that we are getting data
+        cUserInterface.pShowGettingData();
+
+        new Thread(new Runnable() {
+            public void run() {
+                mHandleFillLines();
+            }
+        }).start();
+
+    }
+
     //End Region Public Methods
 
     //Region Private Methods
@@ -435,24 +444,33 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     }
 
     private void mFillRecycler() {
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-        if (cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl().size() == 0) {
-            this.mNoLinesAvailable(true);
-            return;
-        }
+                if (cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl().size() == 0) {
+                    mNoLinesAvailable(true);
+                    return;
+                }
 
-        this.mNoLinesAvailable(false);
+                mNoLinesAvailable(false);
 
+                getPickorderLineAdapter().pFillData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl());
+                recyclerViewPickorderLinesGenerated.setHasFixedSize(false);
+                recyclerViewPickorderLinesGenerated.setAdapter(getPickorderLineAdapter());
+                recyclerViewPickorderLinesGenerated.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+                recyclerViewPickorderLinesGenerated.setVisibility(View.VISIBLE);
 
-        this.getPickorderLineAdapter().pFillData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl());
-        this.recyclerViewPickorderLinesPicked.setHasFixedSize(false);
-        this.recyclerViewPickorderLinesPicked.setAdapter(this.getPickorderLineAdapter());
-        this.recyclerViewPickorderLinesPicked.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-        this.recyclerViewPickorderLinesPicked.setVisibility(View.VISIBLE);
-
-        this.mChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
-
-
+                mChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()));
+                if (cPickorder.currentPickOrder.linesObl().size() > 0) {
+                    imageButtonCloseOrder.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    imageButtonCloseOrder.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     private void mNoLinesAvailable(Boolean pvEnabledBln) {
@@ -469,7 +487,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
             return;
         }
 
-        this.recyclerViewPickorderLinesPicked.setVisibility(View.INVISIBLE);
+        this.recyclerViewPickorderLinesGenerated.setVisibility(View.INVISIBLE);
 
         FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
         NothingHereFragment fragment = new NothingHereFragment();
@@ -477,6 +495,30 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         fragmentTransaction.commit();
 
         this.mChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityTotalDbl()));
+    }
+
+    private  void mHandleFillLines(){
+
+
+        cResult hulpResult;
+
+            //Delete the detail, so we can get them from the webservice
+        if (!cPickorder.currentPickOrder.pDeleteDetailsBln()) {
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_delete_details));
+            return;
+        }
+
+        hulpResult =  cPickorder.currentPickOrder.pGetPickDetailsRst();
+        if (!hulpResult.resultBln) {
+            this.mStepFailed(hulpResult.messagesStr());
+            return;
+        }
+
+        cUserInterface.pHideGettingData();
+
+        this.mFillRecycler();
+
+
     }
 
     //End Region Public Methods
@@ -489,7 +531,17 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         hulpResult = new cResult();
         hulpResult.resultBln = false;
 
-        hulpResult = cPickorder.currentPickOrder.pPickFaseHandledViaWebserviceRst();
+        if (!cUser.currentUser.currentBranch.pGetShipBinsViaWebserviceBln()) {
+            return false;
+        }
+
+        String shipBinStr = "";
+
+        if (cUser.currentUser.currentBranch.shipBinsObl != null&& cUser.currentUser.currentBranch.shipBinsObl.size() > 0) {
+            shipBinStr = cUser.currentUser.currentBranch.shipBinsObl.get(0).getBinCodeStr();
+        }
+
+        hulpResult = cPickorder.currentPickOrder.pPickGeneratedFaseHandledViaWebserviceRst(shipBinStr);
 
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
@@ -553,7 +605,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              pCheckAllDone();
+              pCloseOrder();
 
             }
         });
@@ -603,55 +655,6 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
-    private  Boolean mCheckAndSentLinesBln() {
-
-        final List<cPickorderLine> linesToSendObl = cPickorder.currentPickOrder.pGetLinesToSendFromDatabaseObl();
-
-        // If there is nothing to send, then we are done
-        if (linesToSendObl.size() == 0 ) {
-            return  true;
-        }
-
-        this.mShowSending();
-
-
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Callable<Boolean> callableBln = new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
-
-                // Try to send each line, if one failes then stop
-                for (cPickorderLine pickorderLine : linesToSendObl) {
-
-                    //Set the current line
-                    cPickorderLine.currentPickOrderLine = pickorderLine;
-
-                    //Try to send the line
-                   cPickorderLine.currentPickOrderLine .pHandledBln();
-
-                }
-                return  true;
-            }
-        };
-
-
-        try {
-            Future<Boolean> callableResultBln = executorService.submit(callableBln);
-            Boolean hulpBln = callableResultBln.get();
-
-            if (!hulpBln) {
-                    mShowNotSent();
-                 return false;
-            }
-            this.mShowSent();
-            return  true;
-        }
-        catch (InterruptedException | ExecutionException ignored) {
-        }
-      return  false;
-
-
-    }
 
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
@@ -960,6 +963,11 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         return true;
 
+    }
+
+    private void mStepFailed(String pvErrorMessageStr){
+        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
+        cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
     //End Region Private Methods

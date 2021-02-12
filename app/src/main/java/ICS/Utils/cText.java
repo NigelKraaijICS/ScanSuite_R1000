@@ -202,6 +202,31 @@ public class cText {
         return  resultStr;
     }
 
+
+    public static int pDoubleToInt(Double pvInputDbl) {
+
+
+        //Convert the double to a big decimal
+        BigDecimal bigDecimal = new BigDecimal(String.valueOf(pvInputDbl));
+
+        //Seperate the integer value
+        int intValue = bigDecimal.intValue();
+
+        //Seperate decimals and covert them to a double
+        Double decimalDbl= cText.pStringToDoubleDbl(bigDecimal.subtract(new BigDecimal(intValue)).toPlainString());
+
+        //If we have no decimals bigger then zero, return the number without decimals
+        if (decimalDbl <= 0.00) {
+            return  0;
+        }
+
+        //We have decimals bigger then zero, so return number with two decimals
+        DecimalFormat df = new DecimalFormat("0.00##");
+        String resultStr = df.format(pvInputDbl);
+
+        return  cText.pStringToIntegerInt(resultStr);
+    }
+
     public static String pIntToStringStr(int pvInputInt) {
         return Integer.toString(pvInputInt);
     }

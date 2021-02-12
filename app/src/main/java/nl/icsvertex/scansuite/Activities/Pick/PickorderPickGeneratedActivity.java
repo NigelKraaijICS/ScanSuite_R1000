@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -24,7 +25,6 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
@@ -33,33 +33,34 @@ import java.util.List;
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cConnection;
+import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
+import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
-import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
 
+import static ICS.Utils.cText.pDoubleToStringStr;
+
 public class PickorderPickGeneratedActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Private Properties
-    private static boolean destionationScannedBln;
 
     private int pickCounterMinusHelperInt;
     private int pickCounterPlusHelperInt;
@@ -67,7 +68,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     private Handler minusHandler;
     private Handler plusHandler;
 
-    private  ConstraintLayout pickorderPickContainer;
+    private  ConstraintLayout pickorderPickGeneratedContainer;
 
     private  CardView articleContainer;
     private ConstraintLayout articleInfoContainer;
@@ -96,6 +97,12 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     private  AppCompatImageButton imageButtonDone;
 
     private  TextView textViewAction;
+
+    private cArticleStock articleStock = null;
+    private Double quantityScannedDbl = 0.0;
+    private List<cPickorderBarcode> scannedBarcodesObl;
+
+    private cBranch  scannedBranch;
 
     //End Region Private Properties
 
@@ -153,7 +160,13 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            this.mShowAcceptFragment();
+            if (this.quantityScannedDbl > 0) {
+                mShowAcceptFragment();
+                return true;
+            }
+
+            pCancelPick();
+
             return true;
         }
 
@@ -163,7 +176,13 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        mShowAcceptFragment();
+
+        if (this.quantityScannedDbl > 0) {
+            mShowAcceptFragment();
+            return;
+        }
+
+        pCancelPick();
     }
 
     //End Region Default Methods
@@ -196,7 +215,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     @Override
     public void mFindViews() {
 
-        this.pickorderPickContainer = findViewById(R.id.pickorderPickContainer);
+        this.pickorderPickGeneratedContainer = findViewById(R.id.pickorderPickGeneratedContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
         this.articleContainer = findViewById(R.id.articleContainer);
 
@@ -226,9 +245,9 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
+    public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick_pf);
-        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
         this.toolbarSubtext.setSelected(true);
         this.toolbarSubtext.setText(cPickorder.currentPickOrder.currentBranchBin.getBinCodeStr());
@@ -256,7 +275,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         this.mFillDestinationSpinner();
         this.mShowQuantityInfo();
         this.mEnablePlusMinusAndBarcodeSelectViews();
-        this.mCheckLineDone();
+        this.mSetInstructions();
     }
 
     @Override
@@ -277,6 +296,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         this.mSetPlusListener();
         this.mSetMinusListener();
+        this.mSetDestinationSpinnerListener();
         this.mSetDoneListener();
 
     }
@@ -291,33 +311,22 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         //If we scan a branch reset current branch
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.LOCATION)) {
-            cPickorder.currentPickOrder.scannedBranch  = null;
-        }
-
-//        //If we still need a destination scan, make sure we scan this first
-//        if (cPickorder.currentPickOrder.scannedBranch  == null && cPickorder.currentPickOrder.isPFBln() ) {
-//            cResult hulpRst = this.mCheckDestionationRst(pvBarcodeScan);
-//            if (! hulpRst.resultBln) {
-//                cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"", true, true);
-//            }
-//
-//            //If we scanned, refresh to pick fragment and leave this void
-//            if (PickorderLinesActivity.currentLineFragment instanceof PickorderLinesToPickFragment) {
-//                PickorderLinesToPickFragment pickorderLinesToPickFragment = (PickorderLinesToPickFragment)PickorderLinesActivity.currentLineFragment;
-//                pickorderLinesToPickFragment.pBranchScanned();
-//                return;
-//            }
-//        }
-
-
-        //If we still need a destination scan, make sure we scan this first
-        if (!this.mFindBarcodeInLineBarcodes(pvBarcodeScan)) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+            cResult hulpRst = this.mHandleDestinationScanRst(pvBarcodeScan);
+            if (! hulpRst.resultBln) {
+                cUserInterface.pShowSnackbarMessage(this.pickorderPickGeneratedContainer,hulpRst.messagesStr(),null,true);
+                this.mSetInstructions();
+                this.mFieldsInitialize();
+            }
             return;
         }
 
-        //If we found the barcodeStr, currentbarcode is alreay filled, so make this selected
-        this.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
+        //Scan must be an article, so handle the scan
+        cResult hulpRst = this.mHandleArticleScanRst(pvBarcodeScan);
+        if (! hulpRst.resultBln) {
+            cUserInterface.pShowSnackbarMessage(this.pickorderPickGeneratedContainer,hulpRst.messagesStr(),null,true);
+            this.mSetInstructions();
+            this.mFieldsInitialize();
+        }
 
     }
 
@@ -327,14 +336,12 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
             cUserInterface.pDoBoing(this.textViewAction);
             return;
         }
+
         cPickorderLine.currentPickOrderLine.pHandledIndatabase();
         this.mPickDone();
     }
 
-
     public  void pCancelPick() {
-
-        cPickorderLine.currentPickOrderLine.pCancelIndatabase();
         this.mGoBackToLinesActivity();
     }
 
@@ -364,15 +371,15 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
             @Override
             public void onClick(View pvView) {
 
-                if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
+                if (cPickorder.currentPickOrder.currentArticle.barcodesObl == null || cPickorder.currentPickOrder.currentArticle.barcodesObl.size() == 0) {
                     return;
                 }
 
                 mEnablePlusMinusAndBarcodeSelectViews();
 
                 //If we only have one barcodeStr, then automatticaly select that barcodeStr
-                if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
-                    pHandleScan(cBarcodeScan.pFakeScan(cPickorderLine.currentPickOrderLine.barcodesObl.get(0).getBarcodeStr()));
+                if (cPickorder.currentPickOrder.currentArticle.barcodesObl.size() == 1) {
+                    pHandleScan(cBarcodeScan.pFakeScan(cPickorder.currentPickOrder.currentArticle.barcodesObl.get(0).getBarcodeStr()));
                     return;
                 }
 
@@ -381,20 +388,46 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         });
     }
 
+    private void mSetDestinationSpinnerListener() {
+
+        this.destinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                if (destinationSpinner.getSelectedItem().toString().equalsIgnoreCase(cAppExtension.activity.getString(R.string.message_select_a_destination))) {
+                    scannedBranch = null;
+                    return;
+                }
+
+                scannedBranch = cBranch.pGetBranchByDescriptionStr(destinationSpinner.getSelectedItem().toString());
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                scannedBranch = null;
+            }
+
+        });
+    }
+
     private  void mShowOrHideArticleInfoContainer() {
 
         boolean hideArticleInfoContainerBln = false;
 
-        if (cPickorderLine.currentPickOrderLine == null) {
+        if (cPickorder.currentPickOrder.currentArticle == null) {
             hideArticleInfoContainerBln =true;
         }
         else
         {
             //Get article info via the web service
-            cArticle.currentArticle  = new cArticle(cPickorderLine.currentPickOrderLine.getItemNoStr(), cPickorderLine.currentPickOrderLine.getVariantCodeStr());
-            if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
+            cArticle.currentArticle  = new cArticle(cPickorder.currentPickOrder.currentArticle.getItemNoStr(), cPickorder.currentPickOrder.currentArticle.getVariantCodeStr());
                 hideArticleInfoContainerBln =true;
-            }
+
+                //todo: something with itempropertys
+//            if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
+//                hideArticleInfoContainerBln =true;
+//            }
         }
 
         if (hideArticleInfoContainerBln) {
@@ -404,46 +437,48 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
             this.articleContainer.setLayoutParams(newCardViewLayoutParams);
 
             ConstraintSet constraintSetSpace = new ConstraintSet();
-            constraintSetSpace.clone(pickorderPickContainer);
+            constraintSetSpace.clone(pickorderPickGeneratedContainer);
             constraintSetSpace.connect(articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
-            constraintSetSpace.applyTo(pickorderPickContainer);
+            constraintSetSpace.applyTo(pickorderPickGeneratedContainer);
             return;
         }
 
         this.articleInfoContainer.setVisibility(View.VISIBLE);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.articleInfoContainer, new ArticleInfoFragment(cPickorderLine.currentPickOrderLine.itemProperyDataObl()));
-        transaction.commit();
+
+        //todo: something with itempropertys
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.articleInfoContainer, new ArticleInfoFragment(cPickorderLine.currentPickOrderLine.itemProperyDataObl()));
+//        transaction.commit();
     }
 
     private  void mShowArticleInfo() {
 
-        if (cPickorderLine.currentPickOrderLine == null) {
+        if (cPickorder.currentPickOrder.currentArticle == null) {
             this.articleDescriptionText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             this.articleDescription2Text.setText(cAppExtension.activity.getString(R.string.novalueyet));
             this.articleItemText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 
-        this.articleDescriptionText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
-        this.articleDescription2Text.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-        this.articleItemText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
+        this.articleDescriptionText.setText(cPickorder.currentPickOrder.currentArticle.getDescriptionStr());
+        this.articleDescription2Text.setText(cPickorder.currentPickOrder.currentArticle.getDescription2Str());
+        this.articleItemText.setText(cPickorder.currentPickOrder.currentArticle.getItemNoAndVariantCodeStr());
 
-        if (cPickorderLine.currentPickOrderLine.getDescription2Str().isEmpty()) {
+        if (cPickorder.currentPickOrder.currentArticle.getDescription2Str().isEmpty()) {
             this.articleDescription2Text.setVisibility(View.GONE);
         }
     }
 
     private  void mShowBarcodeInfo() {
 
-        if (cPickorderLine.currentPickOrderLine == null) {
+        if (cPickorder.currentPickOrder.currentArticle == null) {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.novalueyet));
             return;
         }
 
         if (cPickorderBarcode.currentPickorderBarcode == null) {
-            if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
-                cPickorderBarcode.currentPickorderBarcode = cPickorderLine.currentPickOrderLine.barcodesObl.get(0);
+            if (cPickorder.currentPickOrder.currentArticle.barcodesObl.size() == 1) {
+                cPickorderBarcode.currentPickorderBarcode =  new cPickorderBarcode(cPickorder.currentPickOrder.currentArticle.barcodesObl.get(0)) ;
             }
         }
 
@@ -456,37 +491,34 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     private  void mShowNoInputPropertyInfo() {
 
-        if (cPickorderLine.currentPickOrderLine == null) {
+        if (cPickorder.currentPickOrder.currentArticle == null) {
             this.imageButtonNoInputPropertys.setVisibility(View.GONE);
             return;
         }
 
-        if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
-            this.imageButtonNoInputPropertys.setVisibility(View.GONE);
-        }
-        else {
-            this.imageButtonNoInputPropertys.setVisibility(View.VISIBLE);
-        }
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
+
+        //todo: something with propertys
+//        if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
+//            this.imageButtonNoInputPropertys.setVisibility(View.GONE);
+//        }
+//        else {
+//            this.imageButtonNoInputPropertys.setVisibility(View.VISIBLE);
+//        }
     }
 
     private void mShowQuantityInfo(){
 
-        double quantityDbl = 0;
-
-        if (cPickorderLine.currentPickOrderLine == null) {
+        if (cPickorder.currentPickOrder.currentArticle == null) {
             this.quantityText.setVisibility(View.INVISIBLE);
             this.quantityRequiredText.setVisibility(View.INVISIBLE);
             this.imageButtonDone.setVisibility(View.INVISIBLE);
             return;
         }
 
-        if (cPickorderLine.currentPickOrderLine.handledBarcodesObl().size() > 0) {
-            for (cPickorderLineBarcode pickorderLineBarcode : cPickorderLine.currentPickOrderLine.handledBarcodesObl())
-
-                quantityDbl += pickorderLineBarcode.getQuantityhandledDbl();
-        }
-
-        this.quantityText.setText(cText.pDoubleToStringStr(quantityDbl));
+        this.quantityText.setVisibility(View.VISIBLE);
+        this.imageButtonDone.setVisibility(View.VISIBLE);
+        this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
 
 
     }
@@ -494,7 +526,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     private  void mShowArticleImage() {
 
         //If pick with picture is false, then hide image view
-        if (cPickorderLine.currentPickOrderLine == null || !cPickorder.currentPickOrder.isPickWithPictureBln()) {
+        if (cPickorder.currentPickOrder.currentArticle == null || !cPickorder.currentPickOrder.isPickWithPictureBln()) {
             this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
             this.articleThumbImageView.setVisibility(View.GONE);
             return;
@@ -503,21 +535,21 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         this.articleThumbImageView.setVisibility(View.VISIBLE);
 
         //If picture is not in cache (via webservice) then show no image
-        if (!cPickorderLine.currentPickOrderLine.pGetArticleImageBln()) {
+        if (!cPickorder.currentPickOrder.currentArticle.pGetArticleImageBln()) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
             this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
             return;
         }
 
         //If picture is in cache but can't be converted, then show no image
-        if (cPickorderLine.currentPickOrderLine.articleImage == null || cPickorderLine.currentPickOrderLine.articleImage.imageBitmap() == null) {
+        if (cPickorder.currentPickOrder.currentArticle.articleImage == null || cPickorder.currentPickOrder.currentArticle.articleImage.imageBitmap() == null) {
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.could_not_get_article_image), null);
             this.articleThumbImageView.setImageDrawable(ContextCompat.getDrawable(cAppExtension.context, R.drawable.ic_no_image_lightgrey_24dp));
             return;
         }
 
         //Show the image
-        this.articleThumbImageView.setImageBitmap(cPickorderLine.currentPickOrderLine.articleImage.imageBitmap());
+        this.articleThumbImageView.setImageBitmap(cPickorder.currentPickOrder.currentArticle.articleImage.imageBitmap());
 
         //Open the image
         if ((cPickorder.currentPickOrder.isPickWithPictureAutoOpenBln())) {
@@ -527,7 +559,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     private  void mEnablePlusMinusAndBarcodeSelectViews() {
 
-        if (cPickorderLine.currentPickOrderLine == null) {
+        if (cPickorder.currentPickOrder.currentArticle== null) {
             this.imageButtonMinus.setVisibility(View.INVISIBLE);
             this.imageButtonPlus.setVisibility(View.INVISIBLE);
             this.imageButtonBarcode.setVisibility(View.INVISIBLE);
@@ -560,13 +592,13 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         if (cPickorderBarcode.currentPickorderBarcode == null) {
             cUserInterface.pDoNope(quantityText, false, false);
-            cUserInterface.pShowSnackbarMessage(pickorderPickContainer, getString(R.string.choose_barcode_first), null, false);
+            cUserInterface.pShowSnackbarMessage(pickorderPickGeneratedContainer, getString(R.string.choose_barcode_first), null, false);
             return;
         }
 
         if (cPickorderBarcode.currentPickorderBarcode.getQuantityHandledDbl() > 1) {
             cUserInterface.pDoNope(quantityText, true, true);
-            cUserInterface.pShowSnackbarMessage(pickorderPickContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
+            cUserInterface.pShowSnackbarMessage(pickorderPickGeneratedContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
             return;
         }
 
@@ -580,54 +612,33 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     private  void mTryToChangePickedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
 
         double newQuantityDbl;
-        List<cPickorderLineBarcode>  hulpObl;
+
         if (pvIsPositiveBln) {
 
             //Determine the new amount
             if (pvAmountFixedBln) {
-
-                //Check if we already have barcodes and clear them
-                if (cPickorderLine.currentPickOrderLine.handledBarcodesObl().size() > 0 ) {
-
-                    hulpObl = new ArrayList<>(cPickorderLine.currentPickOrderLine.handledBarcodesObl());
-
-                    for (cPickorderLineBarcode pickorderLineBarcode : hulpObl) {
-                        pickorderLineBarcode.pDeleteFromDatabaseBln();
-                    }
-                }
-
                 newQuantityDbl = pvAmountDbl;
             } else {
-                newQuantityDbl = cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() + pvAmountDbl;
+                newQuantityDbl = this.quantityScannedDbl + pvAmountDbl;
             }
 
             //Check if we would exceed amount, then show message
-            if (newQuantityDbl > cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
+            if (newQuantityDbl > this.articleStock.getQuantityDbl()) {
                 this.mShowOverpickNotAllowed();
-
-                if (cPickorderLine.currentPickOrderLine.getQuantityDbl() > 0) {
-                    return;
-                }
                 return;
             }
 
             //Set the new quantityDbl and show in Activity
-            cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
-            this.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
+            this.quantityScannedDbl = newQuantityDbl;
+            this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
 
             //Add or update line barcodeStr
-            cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(pvAmountDbl);
-
-            //Update orderline info (quantityDbl, timestamp, localStatusInt)
-            cPickorderLine.currentPickOrderLine.pHandledIndatabase();
-
-            //Check if this line is done
-            this.mCheckLineDone();
-            return;
+           this.mAddOrUpdateScannedBarcode(pvAmountDbl);
+           return;
         }
 
         //negative
-        if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() == 0 ) {
+        if (this.quantityScannedDbl == 0 ) {
             cUserInterface.pDoNope(quantityText, true, true);
             return;
         }
@@ -637,124 +648,25 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         if (pvAmountFixedBln) {
             newQuantityDbl = pvAmountDbl;
         }else {
-            newQuantityDbl= cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() - pvAmountDbl;
+            newQuantityDbl= this.quantityScannedDbl - pvAmountDbl;
         }
 
         if (newQuantityDbl <= 0) {
-            cPickorderLine.currentPickOrderLine.quantityHandledDbl = 0.0;
+            this.quantityScannedDbl = 0.0;
         }else {
             //Set the new quantityDbl and show in Activity
-            cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
+            this.quantityScannedDbl = newQuantityDbl;
         }
 
-        this.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
+        this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
         this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
 
         //Remove or update line barcodeStr
-        cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcode();
+        this.mRemoveOrUpdateScannedBarcode();
 
-    }
-
-    private  void mBarcodeSelected(cPickorderBarcode pvBarcode) {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        cPickorderBarcode.currentPickorderBarcode = pvBarcode;
-        this.mShowBarcodeInfo();
-        this.mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
     }
 
     // Lines, Barcodes, Packing Tables and destionation
-
-    private  boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
-
-        if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
-            return false;
-        }
-
-        for (cPickorderBarcode pickorderBarcode : cPickorderLine.currentPickOrderLine.barcodesObl) {
-
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
-                cPickorderBarcode.currentPickorderBarcode = pickorderBarcode;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private  void mCheckLineDone() {
-
-        if (cPickorderLine.currentPickOrderLine == null) {
-            return;
-        }
-
-        //Start with defaults
-        boolean incompleteBln = false;
-        this.imageButtonDone.setVisibility(View.VISIBLE);
-        this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_article));
-
-
-        //Check if quantityDbl is sufficient
-        if (cPickorderLine.currentPickOrderLine.quantityHandledDbl < cPickorderLine.currentPickOrderLine.getQuantityDbl()) {
-            this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-            incompleteBln = true;
-        }
-
-        //PV
-        if (cPickorder.currentPickOrder.isPVBln()) {
-            //We have to scan a pickcart/salesorder after each article scan
-            if (cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
-
-                //Not complete and article last scanned so we have to scan a pickcart/salesorder, set the instruction
-                if ( incompleteBln) {
-                    this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-                    this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
-                    return;
-                }
-
-                //We have to scan a processingsequence to complete the line, so we are not ready
-                if ( !incompleteBln) {
-                    this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-                    this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
-                    return;
-                }
-                //We are complete, so we are done, will be detected later
-            }
-
-            //We can scan all articles first and then pickcart/salesorder, so set this as the instruction
-            if (incompleteBln && cPickorderLine.currentPickOrderLine.getProcessingSequenceStr().isEmpty()) {
-                this.textViewAction.setText(cAppExtension.context.getString(R.string.scan_article_or_salesorder_or_pickcartbox));
-                return;
-            }
-
-            // We reached the quantityDbl, but still have to scan the pickcart/salesorder, so set the instruction
-            if (cPickorderLine.currentPickOrderLine.getProcessingSequenceStr().isEmpty()) {
-                this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-                this.textViewAction.setText(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder));
-                this.imageButtonDone.setVisibility(View.INVISIBLE);
-                return;
-            }
-
-            //We picked less then required, and we have a processing sequence so we are done anyway
-            if (incompleteBln && !cPickorderLine.currentPickOrderLine.getProcessingSequenceStr().isEmpty() && !cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() ) {
-                incompleteBln = false;
-            }
-
-        }
-
-        //If we are incomplete, we are done here
-        if (incompleteBln)  {
-            return;
-        }
-
-        if (!cSetting.PICK_AUTO_ACCEPT()) {
-            this.imageButtonDone.setVisibility(View.VISIBLE);
-            this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
-            return;
-        }
-
-        this.mPickDone();
-    }
 
     private  void mSendPickorderLine() {
 
@@ -762,30 +674,43 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         if (!cConnection.isInternetConnectedBln()) {
             //could not send line, let user know but answer succes so user can go to next line
             cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), null);
-            cPickorderLine.currentPickOrderLine.pErrorSending();
             return;
         }
 
 
-        if (!cPickorderLine.currentPickOrderLine.pHandledBln()) {
+        cResult hulpRst;
+        List<cPickorderBarcode> sortedBarcodeList = this.mSortBarcodeList(this.scannedBarcodesObl);
+
+        //Create new line to send
+        cPickorderLine.currentPickOrderLine = new cPickorderLine(this.scannedBranch.getBranchStr(), this.quantityScannedDbl);
+
+        hulpRst = cPickorderLine.currentPickOrderLine.pGeneratedLineHandledRst(sortedBarcodeList);
+        if (!hulpRst.resultBln) {
             //could not send line, let user know but answer succes so user can go to next line
-            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line), null);
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line) + " " + hulpRst.messagesStr(), null);
             cPickorderLine.currentPickOrderLine.pErrorSending();
+            return;
         }
 
+        cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_line_send), R.raw.headsupsound);
+        this.mResetCurrents();
+        this.mFieldsInitialize();
     }
 
     private void mHandlePickDoneClick() {
 
-        //Check if we picked less then asked, if so then show dialog
-        if (!cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl()) ) {
-            this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+        if (this.scannedBranch == null) {
+            cUserInterface.pShowSnackbarMessage(pickorderPickGeneratedContainer, cAppExtension.activity.getString(R.string.message_select_a_destination),null,true );
+            return;
+        }
+
+        if (this.quantityScannedDbl == 0) {
+            cUserInterface.pShowSnackbarMessage(pickorderPickGeneratedContainer, cAppExtension.activity.getString(R.string.message_scan_article_first),null,true );
             return;
         }
 
         //All is done
         this.mPickDone();
-
     }
 
     private  void mPickDone() {
@@ -898,45 +823,10 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     //Dialogs and Activitys
 
-//    private void mSetArticleInfoButtonListener() {
-//        this.imageButtonArticleInfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mShowArticleInfoFragment();
-//            }
-//        });
-//    }
-
     private  void mShowFullArticleFragment() {
-
         cUserInterface.pCheckAndCloseOpenDialogs();
-
         ArticleFullViewFragment articleFullViewFragment = new ArticleFullViewFragment();
         articleFullViewFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLEFULL_TAG);
-
-
-
-    }
-
-    private  void mShowUnderPickDialog(String pvRejectStr,String pvAcceptStr) {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_underpick_header),
-                cAppExtension.activity.getString(R.string.message_underpick_text,
-                        cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()),
-                        cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl())),
-                pvRejectStr,
-                pvAcceptStr ,
-                false);
-        acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
-        });
     }
 
     private void mShowAcceptFragment(){
@@ -962,15 +852,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     }
 
     private  void mGoBackToLinesActivity() {
-
-        //Reset current branch
-        if (cPickorder.currentPickOrder.destionationBranch() == null) {
-            cPickorder.currentPickOrder.scannedBranch =  null;
-        }
-
-        Intent intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
-        PickorderLinesActivity.startedViaOrderSelectBln = false;
-
+        this.mResetCurrents();
+        Intent intent = new Intent(cAppExtension.context, PickorderLinesGeneratedActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }
@@ -985,8 +868,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().intValue());
-        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, cPickorderLine.currentPickOrderLine.getQuantityDbl().intValue());
+        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY,this.quantityScannedDbl.intValue());
+        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY,this.articleStock.getQuantityDbl().intValue());
 
         NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
         numberpickerFragment.setArguments(bundle);
@@ -1023,15 +906,14 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.destinationSpinner.setAdapter(adapter);
 
-        if (cPickorderLine.currentPickOrderLine == null || cPickorderLine.currentPickOrderLine.getDestinationNoStr().isEmpty()) {
+        if (this.scannedBranch == null) {
             return;
         }
 
-        this.destinationSpinner.setSelection(adapter.getPosition(cPickorderLine.currentPickOrderLine.getDestinationDescriptionStr()));
-
+        this.destinationSpinner.setSelection(adapter.getPosition(this.scannedBranch.getBranchNameStr()));
     }
 
-    private cResult mHandleScanRst(cBarcodeScan pvBarcodeScan){
+    private cResult mHandleArticleScanRst(cBarcodeScan pvBarcodeScan){
 
         cResult result = new cResult();
         result.resultBln = true;
@@ -1091,22 +973,40 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     }
 
+    private cResult mHandleDestinationScanRst(cBarcodeScan pvBarcodeScan) {
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        this.scannedBranch = null;
+
+        cResult hulpRst = this.mCheckDestionationRst(pvBarcodeScan);
+        if (! hulpRst.resultBln) {
+            result.resultBln = false;
+            result.pAddErrorMessage(hulpRst.messagesStr());
+            return result;
+        }
+
+        this.mFillDestinationSpinner();
+        return result;
+    }
+
     private void mArticleBarcodeScanned() {
 
         cResult result;
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-//        result = this.mGetArticleStockForBINRst();
-//        if (!result.resultBln) {
-//            this.mStepFailed(result.messagesStr());
-//            this.imageButtonDone.setVisibility(View.INVISIBLE);
-//            result.resultBln = false;
-//            return;
-//        }
-//
-//        this.mShowBarcodeInfo();
-//        this.mTryToChangeQuantity(true, false, cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityPerUnitOfMeasureDbl());
+        result = this.mGetArticleStockForBINRst();
+        if (!result.resultBln) {
+            this.mStepFailed(result.messagesStr());
+            this.imageButtonDone.setVisibility(View.INVISIBLE);
+            result.resultBln = false;
+            return;
+        }
+
+        this.mShowBarcodeInfo();
+        this.mTryToChangeQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
     }
 
     private cResult mGetArticleStockForBINRst(){
@@ -1114,30 +1014,30 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         cResult result = new cResult();
         result.resultBln = true;
 
-        if (!cMoveorder.currentMoveOrder.isMoveValidateStockBln() || cMoveorder.currentMoveOrder.currentBranchBin == null || cMoveorder.currentMoveOrder.currentArticle == null) {
+        if ( cPickorder.currentPickOrder.currentBranchBin == null || cPickorder.currentPickOrder.currentArticle == null) {
             this.quantityRequiredText.setVisibility(View.GONE);
             return result;
         }
 
-//        if ( this.articleStock != null) {
-//            return  result;
-//        }
-//
-//        this.quantityRequiredText.setVisibility(View.VISIBLE);
-//
-//
-//        cUserInterface.pShowGettingData();
-//
-//        this.articleStock = cMoveorder.currentMoveOrder.currentArticle.pGetStockForBINViaWebservice(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
-//        if (articleStock == null) {
-//            this.quantityRequiredText.setVisibility(View.GONE);
-//            result.resultBln = false;
-//            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
-//            return result;
-//        }
-//
-//        this.quantityRequiredText.setText(cText.pDoubleToStringStr(articleStock.getQuantityDbl()));
-//        cUserInterface.pHideGettingData();
+        if ( this.articleStock != null) {
+            return  result;
+        }
+
+        this.quantityRequiredText.setVisibility(View.VISIBLE);
+
+
+        cUserInterface.pShowGettingData();
+
+        this.articleStock = cPickorder.currentPickOrder.currentArticle.pGetStockForBINViaWebservice(cPickorder.currentPickOrder.currentBranchBin.getBinCodeStr());
+        if (articleStock == null) {
+            this.quantityRequiredText.setVisibility(View.GONE);
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
+            return result;
+        }
+
+        this.quantityRequiredText.setText(cText.pDoubleToStringStr(articleStock.getQuantityDbl()));
+        cUserInterface.pHideGettingData();
         return  result;
     }
 
@@ -1154,14 +1054,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         cResult result = new cResult();
         result.resultBln = true;
 
-//        //We can add a line, but we don't check with the ERP, so add line and open it
-//        if (!cMoveorder.currentMoveOrder.isMoveBarcodeCheckBln()) {
-//            result = this.mAddUnkownArticleRst(pvBarcodeScan);
-//            return result;
-//        }
-//
-//        //We can add a line, and we need to check with the ERP, so check, add and open it
-//        result = this.mAddERPArticleRst(pvBarcodeScan);
+        //We can add a line, and we need to check with the ERP, so check, add and open it
+        result = this.mAddERPArticleRst(pvBarcodeScan);
         return  result;
     }
 
@@ -1206,9 +1100,63 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     }
 
+    private  cResult mCheckDestionationRst(cBarcodeScan pvBarcodeScan) {
+
+        cResult resultRst = new cResult();
+        resultRst.resultBln = true;
+
+        String barcodewithoutPrefix = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
+
+        for (cBranch branch : cBranch.allBranchesObl) {
+            if (branch.getBranchStr().equalsIgnoreCase(barcodewithoutPrefix)) {
+                this.scannedBranch = branch;
+                return resultRst;
+            }
+        }
+
+        resultRst.resultBln = false;
+        resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.destination_invalid));
+        return resultRst;
+
+    }
+
+    private void mResetCurrents(){
+        cPickorderLine.currentPickOrderLine = null;
+        cPickorder.currentPickOrder.currentArticle = null;
+        cArticle.currentArticle = null;
+        this.scannedBarcodesObl = null;
+        this.quantityScannedDbl = (double) 0;
+        this.articleStock = null;
+    }
+
+    private  List<cPickorderBarcode> mSortBarcodeList(List<cPickorderBarcode> pvUnsortedBarcodeObl) {
+
+        List<cPickorderBarcode> resultList = new ArrayList<>();
+
+        boolean barcodeFoundBln = false;
+
+        for (cPickorderBarcode pickorderBarcode : pvUnsortedBarcodeObl) {
+            for (cPickorderBarcode resultBarcode : resultList) {
+                if (resultBarcode.getBarcodeStr().equalsIgnoreCase(pickorderBarcode.getBarcodeStr())) {
+                    resultBarcode.quantityHandledDbl +=  pickorderBarcode.getQuantityPerUnitOfMeasureDbl();
+                    barcodeFoundBln = true;
+                }
+            }
+            if (barcodeFoundBln) {
+                barcodeFoundBln = false;
+            }
+            else {
+                //new barcode, so add
+                pickorderBarcode.quantityHandledDbl = pickorderBarcode.getQuantityPerUnitOfMeasureDbl();
+                resultList.add(pickorderBarcode);
+            }
+        }
+        return resultList;
+    }
+
     //Region Number Broadcaster
 
-    private Runnable mMinusAction = new Runnable() {
+    private final Runnable mMinusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonMinus.performClick();
@@ -1228,7 +1176,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         }
     };
 
-    private Runnable mPlusAction = new Runnable() {
+    private final Runnable mPlusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonPlus.performClick();
@@ -1248,7 +1196,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         }
     };
 
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int numberChosenInt = 0;
@@ -1270,6 +1218,226 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         this.plusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
         this.pickCounterPlusHelperInt += 1;
     }
+
+    private void mStepFailed(String pvErrorMessageStr) {
+        cUserInterface.pDoExplodingScreen(pvErrorMessageStr, "", true, true);
+    }
+
+    private void mTryToChangeQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
+
+        double newQuantityDbl;
+
+
+        if ( this.scannedBarcodesObl == null) {
+            this.scannedBarcodesObl = new ArrayList<>();
+        }
+
+        if (pvIsPositiveBln) {
+
+            //Determine the new amount
+            if (pvAmountFixedBln) {
+                newQuantityDbl = pvAmountDbl;
+
+                //Check if we would exceed amount stock available, then show message
+                if (this.articleStock != null &&  newQuantityDbl > this.articleStock.getQuantityDbl()) {
+                    this.mShowExtraPiecesNotAllowed();
+                    return;
+                }
+
+                //Clear the barcodeStr list and refill it
+                this.scannedBarcodesObl.clear();
+                int countInt = 0;
+                do{
+                    countInt += 1;
+                    //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
+                    this.scannedBarcodesObl.add(cPickorderBarcode.currentPickorderBarcode);
+                }
+                while(countInt < newQuantityDbl);
+
+                //Update activity and Check if this line is done
+                this.quantityScannedDbl = newQuantityDbl;
+                this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
+                this.mFieldsInitialize();
+                return;
+
+
+            } else {
+                newQuantityDbl = this.quantityScannedDbl + pvAmountDbl;
+            }
+
+            //Check if we would exceed amount stock available, then show message
+            if (this.articleStock != null &&  newQuantityDbl > this.articleStock.getQuantityDbl()) {
+                this.mShowExtraPiecesNotAllowed();
+                return;
+            }
+
+            //Set the new quantityDbl and show in Activity
+            this.quantityScannedDbl = newQuantityDbl;
+            this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl));
+
+            //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
+            this.scannedBarcodesObl.add(cPickorderBarcode.currentPickorderBarcode);
+
+            //Check if this line is done
+            this.mFieldsInitialize();
+            return;
+        }
+
+        //negative
+
+        //Check if value already is zero
+        if ( this.quantityScannedDbl < 1 ) {
+
+            //If we have a decimal, correct it to zero
+            if (this.quantityScannedDbl > 0 ) {
+                pvAmountDbl = 0;
+                pvAmountFixedBln = true;
+
+            } else {
+                cUserInterface.pDoNope(this.quantityText, true, true);
+                return;
+            }
+        }
+
+        if (pvAmountDbl < 0) {
+            cUserInterface.pDoNope(this.quantityText, true, true);
+            return;
+        }
+
+        //Determine the new amount
+        if (pvAmountFixedBln) {
+            newQuantityDbl = pvAmountDbl;
+
+            //Clear the barcodeStr list and refill it
+            this.scannedBarcodesObl.clear();
+            int countInt = 0;
+            do{
+                countInt += 1;
+                //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
+                this.scannedBarcodesObl.add(cPickorderBarcode.currentPickorderBarcode);
+            }while(countInt < newQuantityDbl);
+
+            //Set the new quantityDbl and show in Activity
+            this.quantityScannedDbl = newQuantityDbl;
+            this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl));
+            return;
+
+
+        }else {
+            //Remove the last barcodeStr in the list
+            this.scannedBarcodesObl.remove( this.scannedBarcodesObl.size()-1);
+            newQuantityDbl= this.quantityScannedDbl - pvAmountDbl;
+        }
+
+        if (newQuantityDbl <= 0) {
+            this.quantityScannedDbl = (double) 0;
+        }else {
+            //Set the new quantityDbl and show in Activity
+            this.quantityScannedDbl = newQuantityDbl;
+        }
+
+        this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl));
+        this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+    }
+
+    private cResult mAddERPArticleRst (cBarcodeScan pvBarcodeScan){
+
+        cResult result = new cResult();
+        result.resultBln = true;
+
+        cUserInterface.pShowGettingData();
+
+        //Add the barcodeStr via the webservice
+        if (!cPickorder.currentPickOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_barcode_unknown_ERP,pvBarcodeScan.barcodeOriginalStr));
+            cUserInterface.pHideGettingData();
+            return result;
+        }
+        //Refresh the activity
+        this.mFieldsInitialize();
+        cUserInterface.pHideGettingData();
+        return  result;
+    }
+
+    private void mShowExtraPiecesNotAllowed(){
+        this.quantityText.setText(this.quantityRequiredText.getText());
+        cUserInterface.pShowSnackbarMessage(this.pickorderPickGeneratedContainer, cAppExtension.context.getString(R.string.number_cannot_be_higher_than_stock), null, false);
+        cUserInterface.pDoNope(this.quantityText, true, true);
+        cUserInterface.pDoNope(this.quantityRequiredText, false, false);
+    }
+
+    private void mSetInstructions() {
+
+        cResult result =  new cResult();
+        result.resultBln = true;
+
+        //Start with complete
+        this.imageButtonDone.setVisibility(View.VISIBLE);
+
+        //If we don't have a current barcode, you can't close the line
+        if (cPickorder.currentPickOrder.currentArticle == null) {
+            this.textViewAction.setText(cAppExtension.activity.getString(R.string.message_scan_article));
+            this.imageButtonDone.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        this.textViewAction.setText(cAppExtension.activity.getString(R.string.message_scan_article_or_close_line));
+        this.imageButtonDone.setVisibility(View.VISIBLE);
+        this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+    }
+
+    private void mAddOrUpdateScannedBarcode(Double pvAmountDbl){
+
+        boolean addBarcodeBln = false;
+
+        //If there are no line barcodes, then simply add this one
+        if (this.scannedBarcodesObl == null || this.scannedBarcodesObl.size() == 0) {
+            addBarcodeBln = true;
+        }
+
+        if (!addBarcodeBln) {
+            for (cPickorderBarcode pickorderBarcode : this.scannedBarcodesObl  ) {
+
+                if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
+                    pickorderBarcode.quantityHandledDbl += pvAmountDbl;
+                    return;
+                }
+            }
+        }
+
+        cPickorderBarcode.currentPickorderBarcode.quantityHandledDbl = pvAmountDbl;
+
+        if (this.scannedBarcodesObl == null) {
+            this.scannedBarcodesObl = new ArrayList<>();
+        }
+        this.scannedBarcodesObl.add(cPickorderBarcode.currentPickorderBarcode);
+
+    }
+
+    private void mRemoveOrUpdateScannedBarcode(){
+
+        //If there are no line barcodes, this should not be possible
+        if (this.scannedBarcodesObl == null || this.scannedBarcodesObl.size() == 0) {
+            return;
+        }
+
+        for (cPickorderBarcode pickorderBarcode : this.scannedBarcodesObl  ) {
+
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
+
+                pickorderBarcode.quantityHandledDbl -= cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl();
+
+                if (pickorderBarcode.getQuantityHandledDbl() > 0) {
+                    return;
+                }
+
+                this.scannedBarcodesObl.remove(pickorderBarcode);
+                return;
+            }
+        }
+    }
+
 
     //End Region Number Broadcaster
 
