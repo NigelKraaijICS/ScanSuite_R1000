@@ -501,7 +501,7 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
     private  void mShowBarcodeInfo() {
 
         if (cMoveorderLine .currentMoveOrderLine == null) {
-            this.articleBarcodeText.setText("???");
+            this.articleBarcodeText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 

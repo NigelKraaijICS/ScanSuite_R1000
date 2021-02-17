@@ -25,6 +25,8 @@ import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
 import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrderRepository;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -162,7 +164,7 @@ public class cMoveorderRepository {
 
         return webResultWrs;
     }
-
+    
     public List<cMoveorderEntity> pGetMovesFromDatabaseWithFilterObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {
 
         List<cMoveorderEntity> ResultObl = null;
@@ -852,7 +854,6 @@ public class cMoveorderRepository {
             return WebresultWrs;
         }
     }
-
 
     private static class mCloseTakeMTViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
         @Override

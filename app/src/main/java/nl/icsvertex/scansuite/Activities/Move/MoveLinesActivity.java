@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -283,7 +282,14 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     public void pLeaveActivity(){
 
-        cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
+        if (cMoveorder.currentMoveOrder.linesObl() == null || cMoveorder.currentMoveOrder.linesObl().size() == 0 ) {
+            cMoveorder.currentMoveOrder.pHandledViaWebserviceRst();
+        }
+        else
+        {
+            cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
+        }
+
         this.mStartOrderSelectActivity();
 
     }

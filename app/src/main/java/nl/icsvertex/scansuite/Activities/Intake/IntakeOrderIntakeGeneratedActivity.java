@@ -493,7 +493,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private  void mShowBarcodeInfo() {
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
-            this.articleBarcodeText.setText("???");
+            this.articleBarcodeText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 

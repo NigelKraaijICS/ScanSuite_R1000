@@ -2,12 +2,13 @@ package nl.icsvertex.scansuite.Activities.Intake;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -422,7 +423,8 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
         }
 
 
-
+        this.closeButton.callOnClick();
+        this.currentInputType = InputType.ARTICLE;
         this.recyclerSearchView.setQuery(searchStr, true);
         this.recyclerSearchView.callOnClick();
 
@@ -687,45 +689,6 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
             public void onScrollStateChanged(@NonNull RecyclerView pvRecyclerView, int pvNewStateInt) {
                 super.onScrollStateChanged(pvRecyclerView, pvNewStateInt);
             }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutmanager = (LinearLayoutManager)recyclerView.getLayoutManager();
-                if (dy < 0) {
-
-                    int itemPosition = 0;
-                    if (layoutmanager != null) {
-                        itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
-                    }
-
-                    if(itemPosition==0){
-                        // Prepare the View for the animation
-                        recyclerSearchView.setVisibility(View.VISIBLE);
-                        recyclerSearchView.setAlpha(0.0f);
-
-                        // Start the animation
-                        recyclerSearchView.animate()
-                                .translationY(0)
-                                .alpha(1.0f)
-                                .setListener(null);
-
-                    }
-
-                } else {
-
-                    int itemPosition = 0;
-                    if (layoutmanager != null) {
-                        itemPosition = layoutmanager.findFirstCompletelyVisibleItemPosition();
-                    }
-
-                    if(itemPosition>1){// your *second item your recyclerview
-                        // Start the animation
-                        recyclerSearchView.setVisibility(View.GONE);
-                    }
-
-                }
-            }
         });
     }
 
@@ -744,16 +707,10 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
             }
         });
 
-        //query entered
+//        query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String pvString) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String pvQueryTextStr) {
-
+            public boolean onQueryTextSubmit(String pvQueryTextStr) {
                 switch (currentInputType) {
                     case UNKNOWN:
                         getIntakeorderMATSummaryLineAdapter().pSetFilter(pvQueryTextStr, false);
@@ -771,6 +728,10 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
                 return  true;
             }
 
+            @Override
+            public boolean onQueryTextChange(String pvQueryTextStr) {
+             return  true;
+            }
         });
 
     }
@@ -780,15 +741,19 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
         this.closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                EditText et = findViewById(R.id.search_src_text);
-
-                //Clear the text from EditText view
-                et.setText("");
+                recyclerSearchView.setQuery("",false);
+                recyclerSearchView.setIconified(true);
                 currentInputType = InputType.UNKNOWN;
                 cIntakeorder.currentIntakeOrder.currentBin = null;
 
-                //Clear query
-                recyclerSearchView.setQuery("", false);
+                if (switchDeviations.isChecked()) {
+                    cIntakeorder.currentIntakeOrder.showDeviationsBln = true;
+                    getIntakeorderMATSummaryLineAdapter().pShowDeviations();
+                }
+                else {
+                    cIntakeorder.currentIntakeOrder.showDeviationsBln = false;
+                    getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
+                }
 
             }
         });

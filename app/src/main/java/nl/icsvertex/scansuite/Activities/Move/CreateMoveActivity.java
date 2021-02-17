@@ -10,7 +10,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -199,6 +198,10 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
        else {
            this.mSetBin();
        }
+
+       if (cSetting.MOVE_NEW_WORKFLOWS().size() == 1 && cSetting.MOVE_NEW_WORKFLOWS().get(0).equalsIgnoreCase(cAuthorisation.AutorisationEnu.MOVE_MV.toString())) {
+            this.editTextBin.setVisibility(View.GONE);
+        }
 
         if (!cUser.currentUser.currentBranch.getMoveDefaultBinStr().isEmpty()) {
             this.editTextBin.setText(cUser.currentUser.currentBranch.getMoveDefaultBinStr());

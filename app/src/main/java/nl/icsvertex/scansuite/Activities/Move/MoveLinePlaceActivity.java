@@ -535,7 +535,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
     private void mShowBarcodeInfo() {
 
         if (cMoveorder.currentMoveOrder.currentMoveorderBarcode == null) {
-            this.articleBarcodeText.setText("???");
+            this.articleBarcodeText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 
@@ -1292,9 +1292,9 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
     private void mSetArticleInfo(){
 
         if (cMoveorder.currentMoveOrder.currentArticle == null) {
-            this.articleDescriptionText.setText("???");
-            this.articleDescription2Text.setText("???");
-            this.articleItemText.setText("???");
+            this.articleDescriptionText.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleDescription2Text.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleItemText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 

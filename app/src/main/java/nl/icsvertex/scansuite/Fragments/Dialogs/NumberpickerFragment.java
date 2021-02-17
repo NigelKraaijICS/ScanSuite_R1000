@@ -124,6 +124,7 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
         this.doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                quantityNumberPicker.clearFocus();
                 Intent intent = new Intent(cPublicDefinitions.NUMBERINTENT_NUMBER);
                 intent.putExtra(cPublicDefinitions.NUMBERINTENT_EXTRANUMBER, quantityNumberPicker.getValue());
                 LocalBroadcastManager.getInstance(cAppExtension.context).sendBroadcast(intent);

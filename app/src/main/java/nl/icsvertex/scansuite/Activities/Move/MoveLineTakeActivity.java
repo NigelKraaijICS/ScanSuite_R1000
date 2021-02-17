@@ -31,6 +31,11 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -49,6 +54,7 @@ import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
@@ -473,7 +479,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
     private void mShowBarcodeInfo() {
 
         if (cMoveorder.currentMoveOrder.currentMoveorderBarcode == null) {
-            this.articleBarcodeText.setText("???");
+            this.articleBarcodeText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 
@@ -733,20 +739,46 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
     }
 
-    private cResult mAddERPArticleRst (cBarcodeScan pvBarcodeScan){
+    private cResult mAddERPArticleRst (final cBarcodeScan pvBarcodeScan){
 
         cResult result = new cResult();
         result.resultBln = true;
 
-        cUserInterface.pShowGettingData();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Callable<cResult>  hulpRst = new Callable<cResult>() {
+            @Override
+            public cResult call() {
+                cResult resultTje;
+                cUserInterface.pShowGettingData();
+                boolean localBln = cMoveorder.currentMoveOrder.pAddERPBarcodeBln(pvBarcodeScan);
+                if (!localBln) {
+                    resultTje = new cResult();
+                    resultTje.resultBln = false;
+                     cUserInterface.pHideGettingData();
+                    return resultTje;
+                }
+                resultTje = new cResult();
+                 cUserInterface.pHideGettingData();
+                resultTje.resultBln = true;
+                return  resultTje;
 
-        //Add the barcodeStr via the webservice
-        if (!cMoveorder.currentMoveOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_barcode_unknown_ERP,pvBarcodeScan.barcodeOriginalStr));
-            cUserInterface.pHideGettingData();
-            return result;
+            }
+        };
+
+        try {
+            Future<cResult> callableResultBln = executorService.submit((Callable<cResult>) hulpRst);
+            result = callableResultBln.get();
+
+            if (!result.resultBln) {
+                quantityRequiredText.setVisibility(View.GONE);
+                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_barcode_unknown_ERP,pvBarcodeScan.barcodeOriginalStr));
+                 cUserInterface.pHideGettingData();
+                return  result;
+            }
         }
+        catch (InterruptedException | ExecutionException ignored) {
+        }
+
         //Refresh the activity
         this.mFieldsInitialize();
         cUserInterface.pHideGettingData();
@@ -760,6 +792,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         //Clear currents, except for current BIN
         cMoveorder.currentMoveOrder.currentMoveorderBarcode = null;
         cMoveorder.currentMoveOrder.currentArticle = null;
+        articleStock = null;
         this.quantityScannedDbl = (double) 0;
         this.scannedBarcodesObl = null;
 
@@ -783,19 +816,45 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
         this.quantityRequiredText.setVisibility(View.VISIBLE);
 
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Callable<cResult>  hulpRst = new Callable<cResult>() {
+            @Override
+            public cResult call() {
+                cResult resultTje;
+                cUserInterface.pShowGettingData();
+                articleStock = cMoveorder.currentMoveOrder.currentArticle.pGetStockForBINViaWebservice(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
+                if (articleStock == null) {
+                    resultTje = new cResult();
+                    resultTje.resultBln = false;
+                      cUserInterface.pHideGettingData();
+                    return resultTje;
+                }
+                resultTje = new cResult();
+                 cUserInterface.pHideGettingData();
+                resultTje.resultBln = true;
+                return  resultTje;
 
-        cUserInterface.pShowGettingData();
+            }
+        };
 
-        this.articleStock = cMoveorder.currentMoveOrder.currentArticle.pGetStockForBINViaWebservice(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
-        if (articleStock == null) {
-            this.quantityRequiredText.setVisibility(View.GONE);
-            result.resultBln = false;
-            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
-            return result;
+
+        try {
+            Future<cResult> callableResultBln = executorService.submit((Callable<cResult>) hulpRst);
+            result = callableResultBln.get();
+
+            if (!result.resultBln) {
+                quantityRequiredText.setVisibility(View.GONE);
+                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
+                cUserInterface.pHideGettingData();
+                return  result;
+            }
+        }
+        catch (InterruptedException | ExecutionException ignored) {
         }
 
+
         this.quantityRequiredText.setText(cText.pDoubleToStringStr(articleStock.getQuantityDbl()));
-        cUserInterface.pHideGettingData();
+         cUserInterface.pHideGettingData();
         return  result;
     }
 
@@ -1234,15 +1293,22 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
     private void mSetArticleInfo(){
 
         if (cMoveorder.currentMoveOrder.currentArticle == null) {
-            this.articleDescriptionText.setText("???");
-            this.articleDescription2Text.setText("???");
-            this.articleItemText.setText("???");
-
+            this.articleDescriptionText.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleDescription2Text.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleItemText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
         this.articleDescriptionText.setText(cMoveorder.currentMoveOrder.currentArticle.getDescriptionStr());
         this.articleDescription2Text.setText(cMoveorder.currentMoveOrder.currentArticle.getDescription2Str());
         this.articleItemText.setText(cMoveorder.currentMoveOrder.currentArticle.getItemNoAndVariantCodeStr());
+
+        if (cMoveorder.currentMoveOrder.currentArticle.getDescription2Str().isEmpty()) {
+            this.articleDescription2Text.setVisibility(View.GONE);
+        }
+        else
+        {
+            this.articleDescription2Text.setVisibility(View.VISIBLE);
+        }
     }
 
     private void mSetQuantityInfo(){

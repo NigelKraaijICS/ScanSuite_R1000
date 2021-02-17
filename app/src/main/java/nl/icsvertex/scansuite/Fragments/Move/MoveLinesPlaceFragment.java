@@ -285,6 +285,7 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
                 hulpResult = this.mHandleBINScanRst(pvBarcodeScan);
                 if (! hulpResult.resultBln) {
                     this.mStepFailed(hulpResult.messagesStr(),pvBarcodeScan.getBarcodeOriginalStr());
+                    this.busyBln = false;
                     return;
                 }
 
@@ -300,6 +301,7 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
             hulpResult = this.mHandleBINScanRst(pvBarcodeScan);
             if (! hulpResult.resultBln) {
                 this.mStepFailed(hulpResult.messagesStr(),pvBarcodeScan.getBarcodeOriginalStr());
+                this.busyBln = false;
                 return;
             }
 
@@ -313,6 +315,7 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
             hulpResult = this.mHandleArticleScanRst(pvBarcodeScan);
             if (! hulpResult.resultBln) {
                 this.mStepFailed(hulpResult.messagesStr(),pvBarcodeScan.getBarcodeOriginalStr());
+                this.busyBln = false;
                 return;
             }
             return;
@@ -465,6 +468,11 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
 
     private void mStepFailed(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
+
+        if (cAppExtension.activity instanceof  MoveLinesActivity) {
+            MoveLinesActivity moveLinesActivity = (MoveLinesActivity)cAppExtension.activity;
+            moveLinesActivity.currentLineFragment = this;
+        }
     }
 
     private void mRemoveAdapterFromFragment() {

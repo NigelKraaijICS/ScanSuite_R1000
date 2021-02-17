@@ -304,6 +304,12 @@ public class MoveLinesTakeFragment extends Fragment implements iICSDefaultFragme
 
     private void mStepFailed(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
+
+        if (cAppExtension.activity instanceof  MoveLinesActivity) {
+            MoveLinesActivity moveLinesActivity = (MoveLinesActivity)cAppExtension.activity;
+            moveLinesActivity.currentLineFragment = this;
+        }
+
     }
 
     private void mNoLinesAvailable(Boolean pvEnabledBln) {

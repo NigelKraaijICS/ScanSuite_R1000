@@ -586,7 +586,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private  void mShowBarcodeInfo() {
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
-            this.articleBarcodeText.setText("???");
+            this.articleBarcodeText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 
@@ -1141,7 +1141,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl().intValue());
+        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY,  cText.pStringToIntegerInt(this.quantityText.getText().toString()));
 
         if (cIntakeorder.currentIntakeOrder.getReceiveStoreAutoAcceptAtRequestedBln()) {
             bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl().intValue());
@@ -1158,9 +1158,9 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private void mSetArticleInfo(){
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
-            this.articleDescriptionText.setText("???");
-            this.articleDescription2Text.setText("???");
-            this.articleItemText.setText("???");
+            this.articleDescriptionText.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleDescription2Text.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleItemText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
         this.articleDescriptionText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr());
@@ -1177,7 +1177,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
             this.quantityText.setText("0");
-            this.quantityRequiredText.setText("???");
+            this.quantityRequiredText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 

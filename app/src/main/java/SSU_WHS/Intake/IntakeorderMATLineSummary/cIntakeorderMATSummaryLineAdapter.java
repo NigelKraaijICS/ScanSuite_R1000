@@ -313,8 +313,6 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
     private List<cIntakeorderMATSummaryLine> mGetFilteredListObl(String pvQueryTextStr) {
         List<cIntakeorderMATSummaryLine> resultObl = new ArrayList<>();
 
-        StringBuilder variantCodeStr = new StringBuilder();
-        int loopInt = 0;
 
         if (this.localIntakeorderMATSummaryLinesObl == null || this.localIntakeorderMATSummaryLinesObl.size() == 0) {
             return resultObl;
@@ -324,36 +322,11 @@ public class cIntakeorderMATSummaryLineAdapter extends RecyclerView.Adapter<cInt
             return cIntakeorder.currentIntakeOrder.summaryMATLinesObl();
         }
 
-        String[] fieldsObl = pvQueryTextStr.split(" ");
-        if (fieldsObl.length <= 0) {
-            return resultObl;
-        }
-
-        for (String loopStr : fieldsObl) {
-
-            if (loopInt == 0) {
-                loopInt += 1;
-                continue;
-            }
-
-            variantCodeStr.append(loopStr);
-            loopInt += 1;
-        }
-
         for (cIntakeorderMATSummaryLine intakeorderMATSummaryLine :this.localIntakeorderMATSummaryLinesObl){
-
-            if (!intakeorderMATSummaryLine.getItemNoStr().equalsIgnoreCase(fieldsObl[0])) {
+            if (!intakeorderMATSummaryLine.getItemNoAndVariantCodeStr().toUpperCase().contains(pvQueryTextStr.toUpperCase())) {
                 continue;
             }
-
-            if (variantCodeStr.length() > 0) {
-                if (!intakeorderMATSummaryLine.getVariantCodeStr().equalsIgnoreCase(variantCodeStr.toString())) {
-                    continue;
-                }
-            }
-
             resultObl.add(intakeorderMATSummaryLine);
-
         }
 
         return resultObl;

@@ -489,7 +489,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private  void mShowBarcodeInfo() {
 
         if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine== null) {
-            this.articleBarcodeText.setText("???");
+            this.articleBarcodeText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
 
@@ -1106,9 +1106,9 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private  void mSetArticleInfo(){
 
         if ( cReceiveorderSummaryLine.currentReceiveorderSummaryLine == null) {
-            this.articleDescriptionText.setText("???");
-            this.articleDescription2Text.setText("???");
-            this.articleItemText.setText("???");
+            this.articleDescriptionText.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleDescription2Text.setText(cAppExtension.activity.getString(R.string.novalueyet));
+            this.articleItemText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             return;
         }
             this.articleDescriptionText.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getDescriptionStr());

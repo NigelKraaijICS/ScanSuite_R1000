@@ -18,6 +18,7 @@ import ICS.Utils.cDateAndTime;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
+import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.Users.cUser;
@@ -30,6 +31,7 @@ import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinEntity;
 import SSU_WHS.Inventory.InventoryorderBins.iInventoryorderBinDao;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.R;
 
 import static ICS.Utils.cText.pAddSingleQuotesStr;
 

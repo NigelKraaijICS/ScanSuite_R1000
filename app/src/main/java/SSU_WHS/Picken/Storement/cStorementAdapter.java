@@ -112,7 +112,7 @@ public class cStorementAdapter extends RecyclerView.Adapter<cStorementAdapter.St
         pvHolder.textViewQuantity.setText(cText.pIntToStringStr(storement.getQuantityDbl().intValue()));
 
         if (storement.getBinCodeStr().isEmpty()) {
-            pvHolder.textViewBinCode.setText("???");
+            pvHolder.textViewBinCode.setText(cAppExtension.activity.getString(R.string.novalueyet));
         }
         else
         {
