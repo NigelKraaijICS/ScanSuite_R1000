@@ -96,7 +96,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private  ImageView imageButtonNoInputPropertys;
     private  ImageView imageButtonBarcode;
 
-    private  CardView binContainer;
     private  TextView quantityText;
     private  TextView quantityRequiredText;
     private  TextView sourcenoText;
@@ -314,7 +313,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
 
-        this.binContainer = findViewById(R.id.binContainer);
         this.sourcenoText = findViewById(R.id.sourcenoText);
 
         this.containerContainer = findViewById(R.id.containerContainer);
@@ -363,7 +361,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.toolbarSubtext.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
         this.mSetArticleInfo();
-        this.mSetBinInfo();
         this.mSetSourceNoInfo();
         this.mSetContainerInfo();
         this.mSetQuantityInfo();
@@ -1034,7 +1031,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
                 }
                 return false;
             }
-
         });
 
         this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
@@ -1167,10 +1163,20 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.articleDescription2Text.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str());
         this.articleItemText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getItemNoAndVariantCodeStr());
 
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str().isEmpty()) {
+            this.articleDescription2Text.setVisibility(View.GONE);
+        }
+        else
+        {
+            this.articleDescription2Text.setVisibility(View.VISIBLE);
+        }
+
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getItemNoAndVariantCodeStr().equalsIgnoreCase(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr())){
             this.articleDescriptionText.setVisibility(View.GONE);
             this.articleDescription2Text.setVisibility(View.GONE);
         }
+
+
     }
 
     private void mSetQuantityInfo(){
@@ -1188,10 +1194,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             this.quantityRequiredText.setVisibility(View.GONE);
         }
 
-    }
-
-    private void mSetBinInfo(){
-        this.binContainer.setVisibility(View.GONE);
     }
 
     private void mSetSourceNoInfo(){

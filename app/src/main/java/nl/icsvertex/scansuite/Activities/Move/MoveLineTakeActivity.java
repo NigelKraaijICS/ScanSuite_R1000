@@ -1283,7 +1283,16 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
         Bundle bundle = new Bundle();
         bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityHandledDbl().intValue());
-        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY,99999);
+
+
+        if (this.articleStock == null) {
+            bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY,99999);
+        }
+        else
+        {
+            bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY,this.articleStock.getQuantityDbl());
+        }
+
         NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
         numberpickerFragment.setArguments(bundle);
 

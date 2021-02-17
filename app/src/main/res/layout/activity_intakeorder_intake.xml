@@ -8,10 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     >
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/intakeorderIntakeContainer"
     android:layout_width="match_parent"
     android:translationZ="2dp"
@@ -19,76 +16,46 @@
     tools:context=".Activities.Intake.IntakeOrderIntakeActivity"
     android:background="@color/colorBart"
     >
-    <include layout="@layout/toolbar_subtext_default" />
-    <include layout="@layout/default_articleinfo" />
-    <include layout="@layout/default_bininfo" />
-    <include layout="@layout/default_sourcenoinfo" />
-    <include layout="@layout/default_containerinfo" />
-    <TextView
-        android:id="@+id/quantityText"
-        style="@style/quantityText"
-        app:layout_constraintTop_toBottomOf="@id/binContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-    <TextView
-        android:id="@+id/quantityRequiredText"
-        style="@style/quantityRequiredText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/quantityText"
-        />
-    <androidx.appcompat.widget.AppCompatImageButton
-        style="@style/countButton"
-        android:id="@+id/imageButtonMinus"
-        app:srcCompat="@drawable/ic_remove_black_24dp"
-        app:layout_constraintEnd_toStartOf="@id/numberLeftBarrier"
-        app:layout_constraintTop_toTopOf="@id/quantityText"
-        />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        style="@style/countButton"
-        android:id="@+id/imageButtonPlus"
-        app:srcCompat="@drawable/ic_add_black_24dp"
-        app:layout_constraintStart_toEndOf="@id/numberRightBarrier"
-        app:layout_constraintTop_toTopOf="@id/quantityText"
-        />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/numberRightBarrier"
-        android:layout_width="wrap_content"
+    <include layout="@layout/toolbar_subtext_default"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:barrierDirection="end"
-        app:constraint_referenced_ids="quantityText,quantityRequiredText"/>
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/numberLeftBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="start"
-        app:constraint_referenced_ids="quantityText,quantityRequiredText"/>
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/numberAndButtonBottomBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="quantityRequiredText,imageButtonPlus,imageButtonMinus"/>
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <include layout="@layout/default_articleinfo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/default_margin"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/sourceNoContainer"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerScanActions"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_margin="@dimen/default_margin"
         android:elevation="@dimen/default_elevation"
-        app:layout_constraintTop_toBottomOf="@id/containerContainer"
+        app:layout_constraintTop_toBottomOf="@id/articleContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/imageButtonDone"
+        app:layout_constraintBottom_toTopOf="@id/sourceNoContainer"
         >
     </androidx.recyclerview.widget.RecyclerView>
+    <include layout="@layout/default_sourcenoinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        app:layout_constraintBottom_toTopOf="@id/containerContainer" />
+    <include layout="@layout/default_containerinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        app:layout_constraintBottom_toTopOf="@id/quantityControlsContainer" />
+    <include layout="@layout/default_quantity_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        app:layout_constraintBottom_toTopOf="@id/imageButtonDone"
+        />
     <androidx.appcompat.widget.AppCompatImageButton
         style="@style/defaultBottomButton"
         android:id="@+id/imageButtonDone"
