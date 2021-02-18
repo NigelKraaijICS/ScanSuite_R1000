@@ -364,7 +364,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
                     @Override
                     public void run() {
                         InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
-                        inventoryorderBinsActivity.pHandleScan(pvBarcodeScan);
+                        inventoryorderBinsActivity.pHandleScan(pvBarcodeScan, false);
                     }
                 });
 
@@ -395,7 +395,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
                 @Override
                 public void run() {
                     InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
-                    inventoryorderBinsActivity.pHandleScan(pvBarcodeScan);
+                    inventoryorderBinsActivity.pHandleScan(pvBarcodeScan, false);
                 }
             });
 

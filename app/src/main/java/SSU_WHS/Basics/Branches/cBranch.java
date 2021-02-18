@@ -12,7 +12,6 @@ import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
-import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.Basics.Workplaces.cWorkplaceViewModel;
@@ -22,45 +21,45 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 public class cBranch {
 
     //Region Public Properties
-    private String branchStr;
+    private final String branchStr;
     public String getBranchStr() {
         return branchStr;
     }
 
-    private String branchTypeStr;
+    private final String branchTypeStr;
     public String getBranchTypeStr() {
         return branchTypeStr;
     }
 
-    private String branchNameStr;
+    private final String branchNameStr;
     public String getBranchNameStr() {
         return branchNameStr;
     }
 
-    private boolean binMandatoryBln;
+    private final boolean binMandatoryBln;
     public  boolean isBinMandatoryBln() {return  binMandatoryBln;}
 
-    private String returnDefaultBinStr;
+    private final String returnDefaultBinStr;
     public String getReturnDefaultBinStr(){
         return   returnDefaultBinStr;
     }
 
-    private String receiveDefaultBinStr;
+    private final String receiveDefaultBinStr;
     public String getReceiveDefaultBinStr(){
         return   receiveDefaultBinStr;
     }
 
-    private String pickDefaultStorageBinStr;
+    private final String pickDefaultStorageBinStr;
     public String getPickDefaultStorageBinStr(){
         return pickDefaultStorageBinStr;
     }
 
-    private String moveDefaultBinStr;
+    private final String moveDefaultBinStr;
     public String getMoveDefaultBinStr(){
         return   moveDefaultBinStr;
     }
 
-    private cBranchEntity branchEntity;
+    private final cBranchEntity branchEntity;
 
     public ArrayList<cWorkplace>  workplacesObl() {
         return  cWorkplace.allWorkplacesObl;
@@ -235,6 +234,16 @@ public class cBranch {
                     return  branchBin;
                 }
             }
+        }
+
+        if (!this.isBinMandatoryBln()) {
+            cBranchBin branchBin = new cBranchBin(pvBinCodeStr);
+            if (this.binsObl == null) {
+                this.binsObl = new ArrayList<>();
+            }
+
+            this.binsObl.add(branchBin);
+            return  branchBin;
         }
 
         return   this.mGetBinViaWebservice(pvBinCodeStr);

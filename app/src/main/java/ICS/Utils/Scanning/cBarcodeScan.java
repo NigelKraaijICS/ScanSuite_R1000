@@ -264,7 +264,7 @@ public class cBarcodeScan {
 
                     if (cAppExtension.activity instanceof InventoryorderBinsActivity){
                         InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
-                        inventoryorderBinsActivity.pHandleScan(barcodeScan);
+                        inventoryorderBinsActivity.pHandleScan(barcodeScan, false);
                     }
 
                     if (cAppExtension.activity instanceof InventoryorderBinActivity){

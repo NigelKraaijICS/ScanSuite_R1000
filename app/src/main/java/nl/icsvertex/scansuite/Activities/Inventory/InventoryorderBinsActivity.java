@@ -238,7 +238,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     //Region Public Methods
 
-    public  void pHandleScan(final cBarcodeScan pvBarcodeScan) {
+    public  void pHandleScan(final cBarcodeScan pvBarcodeScan, final boolean pvManualInputBln) {
 
         //Close open Dialogs
         cUserInterface.pCheckAndCloseOpenDialogs();
@@ -248,7 +248,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         new Thread(new Runnable() {
             public void run() {
-                mHandleScan(pvBarcodeScan);
+                mHandleScan(pvBarcodeScan, pvManualInputBln);
             }
         }).start();
 
@@ -357,12 +357,15 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
     }
 
-    private   void mHandleScan(cBarcodeScan pvBarcodeScan){
+    private   void mHandleScan(cBarcodeScan pvBarcodeScan, boolean pvManualInputBln){
 
         //Only BIN scans are allowed
-        if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
-            mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_location), pvBarcodeScan.getBarcodeOriginalStr());
-            return;
+
+        if (!pvManualInputBln) {
+            if (!cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+                mDoUnknownScan(cAppExtension.context.getString(R.string.error_unknown_location), pvBarcodeScan.getBarcodeOriginalStr());
+                return;
+            }
         }
 
         //Strip the prefix if thats neccesary
