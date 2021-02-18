@@ -313,6 +313,10 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
 
             //Determine the new amount
             if (pvAmountFixedBln) {
+
+                cInventoryorderLineBarcode.pDeleteAllOtherLinesForBarcode(cInventoryorderLine.currentInventoryOrderLine.getLineNoInt(),
+                                                                          cInventoryorderLineBarcode.currentInventoryorderLineBarcode.getBarcodeStr() );
+
                 cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl = pvAmountDbl;
                 cInventoryorderLineBarcode.currentInventoryorderLineBarcode.quantityHandledDbl =  pvAmountDbl;
             } else {

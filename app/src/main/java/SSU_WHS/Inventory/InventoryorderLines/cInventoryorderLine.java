@@ -19,7 +19,6 @@ import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
-import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipMultiActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cInventoryorderLine {
@@ -71,105 +70,61 @@ public class cInventoryorderLine {
     }
 
     //Region Public Properties
-    private int lineNoInt;
+    private final int lineNoInt;
     public int getLineNoInt() {
         return lineNoInt;
     }
 
-    private String itemNoStr;
+    private final String itemNoStr;
     public String getItemNoStr() {
         return itemNoStr;
     }
 
-    private String variantCodeStr;
+    private final String variantCodeStr;
     public String getVariantCodeStr() {
         return variantCodeStr;
     }
 
-    private String descriptionStr;
+    private final String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    private String description2Str;
+    private final String description2Str;
     public String getDescription2Str() {
         return description2Str;
     }
 
-    private String binCodeStr;
+    private final String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
     }
 
-    private Double quantityDbl;
+    private final Double quantityDbl;
     public Double getQuantityDbl() {
         return quantityDbl;
     }
 
-    private String vendorItemNoStr;
+    private final String vendorItemNoStr;
     public String getVendorItemNoStr() { return vendorItemNoStr; }
 
-    private String vendorItemDescriptionStr;
+    private final String vendorItemDescriptionStr;
     public String getVendorItemDescriptionStr() { return vendorItemDescriptionStr; }
 
-    private int statusInt;
+    private final int statusInt;
     public int getStatusInt() { return statusInt; }
 
-    private String handeledTimeStampStr;
+    private final String handeledTimeStampStr;
     public String getHandeledTimeStampStr() { return handeledTimeStampStr; }
 
     public Double quantityHandledDbl;
     public Double getQuantityHandledDbl() { return quantityHandledDbl; }
 
-    private Double quantityHandledAllScannersDbl;
+    private final Double quantityHandledAllScannersDbl;
     public Double getQuantityHandledAllScannersDbl() { return quantityHandledAllScannersDbl; }
 
-    private String extraField1Str;
-    public String getExtraField1Str() {
-        return extraField1Str;
-    }
-
-    private String extraField2Str;
-    public String getExtraField2Str() {
-        return extraField2Str;
-    }
-
-    private String extraField3Str;
-    public String getExtraField3Str() {
-        return extraField3Str;
-    }
-
-    private String extraField4Str;
-    public String getExtraField4Str() {
-        return extraField4Str;
-    }
-
-    private String extraField5Str;
-    public String getExtraField5Str() {
-        return extraField5Str;
-    }
-
-    private String extraField6Str;
-    public String getExtraField6Str() {
-        return extraField6Str;
-    }
-
-    private String extraField7Str;
-    public String getExtraField7Str() {
-        return extraField7Str;
-    }
-
-    private String extraField8Str;
-    public String getExtraField8Str() {
-        return extraField8Str;
-    }
-
     public String getItemNoAndVariantCodeStr(){
-        return  this.getItemNoStr() + " " + this.getVariantCodeStr();
-    }
-
-    public String getVendorItemNoAndVendorDescriptionStr(){
-        return  this.getVendorItemNoStr() + " " + this.getVendorItemDescriptionStr();
+        return  this.getItemNoStr() + "~"  + this.getVariantCodeStr();
     }
 
     public cArticleImage articleImage;
@@ -192,14 +147,6 @@ public class cInventoryorderLine {
         this.handeledTimeStampStr = this.inventoryorderLineEntity.getHandledtimestampStr();
         this.quantityHandledDbl = this.inventoryorderLineEntity.getQuantityHandledDbl();
         this.quantityHandledAllScannersDbl = this.inventoryorderLineEntity.getQuantityHandledAllScannersDbl();
-        this.extraField1Str =  this.inventoryorderLineEntity.getExtraField1Str();
-        this.extraField2Str = this.inventoryorderLineEntity.getExtraField2Str();
-        this.extraField3Str =  this.inventoryorderLineEntity.getExtraField3Str();
-        this.extraField4Str =  this.inventoryorderLineEntity.getExtraField4Str();
-        this.extraField5Str =  this.inventoryorderLineEntity.getExtraField5Str();
-        this.extraField6Str =  this.inventoryorderLineEntity.getExtraField6Str();
-        this.extraField7Str =  this.inventoryorderLineEntity.getExtraField7Str();
-        this.extraField8Str =  this.inventoryorderLineEntity.getExtraField8Str();
     }
 
     //End Region Constructor

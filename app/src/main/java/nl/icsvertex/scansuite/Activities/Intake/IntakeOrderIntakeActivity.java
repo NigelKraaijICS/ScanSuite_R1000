@@ -186,8 +186,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     @Override
     public boolean onPrepareOptionsMenu(Menu pvMenu) {
-        invalidateOptionsMenu();
 
+//        invalidateOptionsMenu();
 
         MenuItem item_enter_bin = pvMenu.findItem(R.id.item_enter_bin);
         item_enter_bin.setVisible(true);

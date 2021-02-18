@@ -63,6 +63,18 @@ public class cInventoryorderLineBarcode {
         return  true;
     }
 
+    public static void pDeleteAllOtherLinesForBarcode(int pvLineNoInt, String pvBarcodeStr) {
+
+        List<cInventoryorderLineBarcode> inventoryorderLineBarcodesObl = new ArrayList<>();
+        inventoryorderLineBarcodesObl.addAll(cInventoryorderLineBarcode.allLineBarcodesObl);
+
+        for (cInventoryorderLineBarcode inventoryorderLineBarcode : inventoryorderLineBarcodesObl) {
+            if (inventoryorderLineBarcode.getLineNoLng().intValue() == (pvLineNoInt) && !inventoryorderLineBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeStr)) {
+                inventoryorderLineBarcode.pDeleteFromDatabaseBln();
+            }
+        }
+    }
+
     public static  void pInsertAllInDatabase(List<cInventoryorderLineBarcodeEntity> pvInventoryorderLineBarcodeEntities ) {
         cInventoryorderLineBarcodeViewModel inventoryorderLineBarcodeViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderLineBarcodeViewModel.class);
         inventoryorderLineBarcodeViewModel.insertAll (pvInventoryorderLineBarcodeEntities);
