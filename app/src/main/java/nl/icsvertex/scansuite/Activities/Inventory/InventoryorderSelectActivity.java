@@ -38,6 +38,7 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Licenses.cLicense;
@@ -282,6 +283,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         //Set the current inventoryorder
         cInventoryorder.currentInventoryOrder = pvInventoryorder;
+        cUser.currentUser.currentStockOwner = cStockOwner.pGetStockOwnerByCodeStr(cInventoryorder.currentInventoryOrder.getStockownerStr());
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cInventoryorder.currentInventoryOrder.getOrderNumberStr());
 
 

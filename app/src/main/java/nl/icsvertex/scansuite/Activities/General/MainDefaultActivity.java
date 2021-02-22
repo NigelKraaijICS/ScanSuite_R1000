@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 
@@ -48,6 +47,7 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Translations.cTranslation;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
@@ -379,6 +379,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
 
         if (!cCustomAuthorisation.pGetCustomAutorisationsViaWebserviceBln(true)) {
+            return false;
+        }
+
+        if (!cStockOwner.pStockOwnerViaWebserviceBln(true)){
             return false;
         }
 

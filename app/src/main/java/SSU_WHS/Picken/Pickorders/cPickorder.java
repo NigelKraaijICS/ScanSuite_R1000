@@ -36,7 +36,7 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
@@ -135,6 +135,11 @@ public class cPickorder{
     private final String assignedUserIdStr;
     public String getAssignedUserIdStr() {
         return assignedUserIdStr;
+    }
+
+    private String stockownerStr;
+    public String getStockownerStr() {
+        return stockownerStr;
     }
 
     private final String currentUserIdStr;
@@ -463,6 +468,7 @@ public class cPickorder{
         this.pickorderEntity = new cPickorderEntity(pvJsonObject);
         this.orderNumberStr = this.pickorderEntity.getOrdernumberStr();
         this.orderTypeStr = this.pickorderEntity.getOrderTypeStr();
+        this.stockownerStr = this.pickorderEntity.getStockOwnerStr();
         this.quantityTotalInt =cText.pStringToIntegerInt(this.pickorderEntity.getQuantityTotalStr());
         this.singleArticleOrdersBln = cText.pStringToBooleanBln(this.pickorderEntity.getSingleArticleOrdersStr(),false) ;
         this.pickSalesAskWorkplaceBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickSalesAskWorkplaceStr(),false) ;
@@ -490,6 +496,7 @@ public class cPickorder{
         this.pickorderEntity = pvPickorderEntity;
         this.orderNumberStr = this.pickorderEntity.getOrdernumberStr();
         this.orderTypeStr = this.pickorderEntity.getOrderTypeStr();
+        this.stockownerStr = this.pickorderEntity.getStockOwnerStr();
 
         this.quantityTotalInt =cText.pStringToIntegerInt(this.pickorderEntity.getQuantityTotalStr());
         this.singleArticleOrdersBln = cText.pStringToBooleanBln(this.pickorderEntity.getSingleArticleOrdersStr(),false) ;

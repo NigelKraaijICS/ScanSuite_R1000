@@ -40,6 +40,8 @@ import SSU_WHS.Basics.ShippingAgents.cShippingAgentEntity;
 import SSU_WHS.Basics.ShippingAgents.iShippingAgentDao;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentServiceShipMethodEntity;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.iShippingAgentServiceShipMethodDao;
+import SSU_WHS.Basics.StockOwner.cStockOwnerEntity;
+import SSU_WHS.Basics.StockOwner.iStockOwnerDao;
 import SSU_WHS.Basics.Translations.cTranslationEntity;
 import SSU_WHS.Basics.Translations.iTranslationDao;
 import SSU_WHS.Basics.Users.cUserEntity;
@@ -66,8 +68,8 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEn
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.iInventoryorderLineBarcodeDao;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
 import SSU_WHS.Inventory.InventoryorderLines.iInventoryorderLineDao;
-import SSU_WHS.Move.MoveOrders.cMoveorderEntity;
-import SSU_WHS.Move.MoveOrders.iMoveorderDao;
+import SSU_WHS.Move.Moveorders.cMoveorderEntity;
+import SSU_WHS.Move.Moveorders.iMoveorderDao;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeEntity;
 import SSU_WHS.Move.MoveorderBarcodes.iMoveorderBarcodeDao;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcodeEntity;
@@ -188,8 +190,9 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackAndShipAddressEntity.class,
         cPackAndShipSettingEntity.class,
         cPackAndShipShippingMethodEntity.class,
-        cPackAndShipShippingPackageEntity.class
-        },version = 145)
+        cPackAndShipShippingPackageEntity.class,
+        cStockOwnerEntity.class,
+        },version = 148)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -252,6 +255,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iPackAndShipAddressDao packAndShipAddressDao();
     public  abstract iPackAndShipShippingMethodDao packAndShipShippingMethodDao();
     public  abstract iPackAndShipShippingPackageDao packAndShipShippingPackageDao();
+    public  abstract iStockOwnerDao stockOwnerDao();
     private static acScanSuiteDatabase INSTANCE;
 
     public static acScanSuiteDatabase pGetDatabase(final Context context) {

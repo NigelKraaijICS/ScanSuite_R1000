@@ -1,4 +1,4 @@
-package SSU_WHS.Move.MoveOrders;
+package SSU_WHS.Move.Moveorders;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -516,7 +516,11 @@ public class cMoveorderRepository {
 
                 PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
                 l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
-                l_PropertyInfo3Pin.setValue("");
+                if (cUser.currentUser.currentStockOwner != null){
+                    l_PropertyInfo3Pin.setValue(cUser.currentUser.currentStockOwner.getStockownerStr());
+                } else {
+                    l_PropertyInfo3Pin.setValue("");
+                }
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
@@ -587,7 +591,11 @@ public class cMoveorderRepository {
 
                 PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
                 l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
-                l_PropertyInfo3Pin.setValue("");
+                if (cUser.currentUser.currentStockOwner != null){
+                    l_PropertyInfo3Pin.setValue(cUser.currentUser.currentStockOwner.getStockownerStr());
+                } else {
+                    l_PropertyInfo3Pin.setValue("");
+                }
                 l_PropertyInfoObl.add(l_PropertyInfo3Pin);
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();

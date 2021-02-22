@@ -136,6 +136,22 @@ public class cBranchRepository {
         }
         return webResultWrs;
     }
+    public cWebresult pGetAuthorizedStockOwnerFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mAuthorizedStockOwnerFromWebserviceGetAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
 
 
     public void pInsert(cBranchEntity branchEntity) {
@@ -318,6 +334,35 @@ public class cBranchRepository {
 
             try {
                 WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSEREASONS, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
+        }
+    }
+
+    private static class mAuthorizedStockOwnerFromWebserviceGetAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(final Void... params) {
+            cWebresult WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_USER;
+            l_PropertyInfo2Pin.setValue(cUser.currentUser.getUsernameStr());
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            try {
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETSTOCKOWNERFORUSER, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);

@@ -14,6 +14,7 @@ import SSU_WHS.Basics.Authorisations.cAuthorisationViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Branches.cBranchViewModel;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -114,6 +115,8 @@ public class cUser {
 
     public  cBranch currentBranch;
     public  cAuthorisation currentAuthorisation;
+    public cStockOwner currentStockOwner;
+
 
     private cUserViewModel getUserViewModel () {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cUserViewModel.class);

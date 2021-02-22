@@ -2,6 +2,7 @@ package SSU_WHS.Basics.Branches;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -10,12 +11,15 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.AuthorizedStockOwners.cAuthorizedStockOwner;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.Basics.Workplaces.cWorkplaceViewModel;
+import SSU_WHS.General.cDatabase;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -68,7 +72,7 @@ public class cBranch {
     }
     public ArrayList<cBranchBin>  binsObl;
     public ArrayList<cBranchReason>  returnReasonObl;
-
+    public ArrayList<cStockOwner> stockOwnerObl;
 
     private cBranchViewModel getBranchViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cBranchViewModel.class);
@@ -313,6 +317,28 @@ public class cBranch {
             }
             return  true;
 
+        }
+        return false;
+    }
+    public boolean pGetAuthorizedStockOwnerBln(Boolean pvRefreshBln) {
+        if (pvRefreshBln){
+            this.stockOwnerObl = null;
+            this.stockOwnerObl = new ArrayList<>();
+        }
+        cWebresult WebResult;
+        WebResult =  this.getBranchViewModel().pGetAuthorizedStockOwnerFromWebserviceWrs();
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+            if (this.stockOwnerObl == null){
+                this.stockOwnerObl = new ArrayList<>();
+            }
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+
+                cAuthorizedStockOwner authorizedStockOwner = new cAuthorizedStockOwner(jsonObject);
+                cStockOwner stockOwner = cStockOwner.pGetStockOwnerByCodeStr(authorizedStockOwner.getStockownerStr());
+                    this.stockOwnerObl.add(stockOwner);
+            }
+            return  true;
         }
         return false;
     }

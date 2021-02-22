@@ -58,6 +58,11 @@ public class cIntakeorder {
     private String externalReferenceStr;
     public String getExternalReferenceStr() {return this.externalReferenceStr;}
 
+    private String stockownerStr;
+    public String getStockownerStr() {
+        return stockownerStr;
+    }
+
     private String documentStr;
     public  String getDocumentStr(){ return this.documentStr;
     }
@@ -198,6 +203,7 @@ public class cIntakeorder {
         this.assignedUserIdStr = this.intakeorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.intakeorderEntity.getCurrentUserIdStr();
 
+        this.stockownerStr = this.intakeorderEntity.getStockOwnerStr();
         this.statusInt = this.intakeorderEntity.getStatusInt();
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();
@@ -230,6 +236,7 @@ public class cIntakeorder {
 
         this.assignedUserIdStr = this.intakeorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.intakeorderEntity.getCurrentUserIdStr();
+        this.stockownerStr = this.intakeorderEntity.getStockOwnerStr();
         this.statusInt = this.intakeorderEntity.getStatusInt();
         this.binCodeStr = this.intakeorderEntity.getBinCodeStr();
         this.externalReferenceStr = this.intakeorderEntity.getExternalReferenceStr();

@@ -8,9 +8,12 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -23,6 +26,9 @@ import androidx.core.view.ViewCompat;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
@@ -32,6 +38,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
@@ -53,6 +60,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
+    private Spinner spinner;
     private EditText editTextDocument;
     private EditText editTextBin;
     private SwitchCompat switchCheckBarcodes;
@@ -155,6 +163,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     public void mFindViews() {
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.spinner = findViewById(R.id.stockownerSpinner);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         this.editTextDocument = findViewById(R.id.editTextDocument);
         this.editTextBin = findViewById(R.id.editTextBin);
@@ -195,6 +204,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         filterArray[0] = new InputFilter.LengthFilter(50);
         this.editTextDocument.setFilters(filterArray);
 
+        this.mShowStockOwnerSpinner();
         if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
             this.editTextBin.setVisibility(View.GONE);
         }
@@ -216,6 +226,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         this.mSetCreateListener();
         this.mSetCancelListener();
         this.mSetEditorActionListener();
+        this.mSetStockOwnerSpinnerListener();
     }
 
     @Override
@@ -451,6 +462,63 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
                 this.editTextBin.setText(cUser.currentUser.currentBranch.receiveBinsObl.get(0).getBinCodeStr());
             }
         }
+    }
+    private void mShowStockOwnerSpinner() {
+
+        if (cStockOwner.allStockOwnerObl  == null || cStockOwner.allStockOwnerObl.size() == 0) {
+            this.spinner.setVisibility(View.GONE);
+            return;
+        }
+
+        this.spinner.setVisibility(View.VISIBLE);
+        this.spinner.setVisibility(View.VISIBLE);
+
+        this.mFillStockOwnerSpinner();
+    }
+    private void mFillStockOwnerSpinner() {
+
+        if (cStockOwner.allStockOwnerObl == null ||  cStockOwner.allStockOwnerObl.size() <= 0 ) {
+            return;
+        }
+
+        List<String> stockOwnerObl = new ArrayList<>();
+
+        if (cUser.currentUser.currentBranch.stockOwnerObl.size() >= 1) {
+            for (cStockOwner stockOwner :cUser.currentUser.currentBranch.stockOwnerObl ) {
+                stockOwnerObl.add(stockOwner.getDescriptionStr());
+            }
+        }
+        else
+        {
+            for (cStockOwner stockOwner :cStockOwner.allStockOwnerObl ) {
+                stockOwnerObl.add(stockOwner.getDescriptionStr());
+            }
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(cAppExtension.context,
+                android.R.layout.simple_spinner_dropdown_item,
+                stockOwnerObl);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        this.spinner.setAdapter(adapter);
+        if (cUser.currentUser.currentStockOwner != null)
+        { this.spinner.setSelection(adapter.getPosition(cUser.currentUser.currentStockOwner.getDescriptionStr()));}
+    }
+    private void mSetStockOwnerSpinnerListener() {
+
+        this.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                cUser.currentUser.currentStockOwner = cStockOwner.pGetStockOwnerByDescriptionStr(spinner.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
     }
 
     //End Region Private Methods
