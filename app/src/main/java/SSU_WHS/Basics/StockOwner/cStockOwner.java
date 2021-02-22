@@ -25,6 +25,7 @@ public class cStockOwner {
     }
 
     private cStockOwnerEntity stockOwnerEntity;
+    
 
     private  cStockOwnerViewModel getStockOwnerViewModel(){
         return  new ViewModelProvider(cAppExtension.fragmentActivity).get(cStockOwnerViewModel.class);
