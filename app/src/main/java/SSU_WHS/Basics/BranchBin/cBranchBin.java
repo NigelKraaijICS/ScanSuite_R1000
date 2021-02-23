@@ -2,6 +2,8 @@ package SSU_WHS.Basics.BranchBin;
 
 import org.json.JSONObject;
 
+import SSU_WHS.Basics.Users.cUser;
+
 public class cBranchBin {
 
     //Region Public Properties
@@ -50,6 +52,16 @@ public class cBranchBin {
         this.binTypeStr = this.branchBinEntity.getBinTypeStr();
         this.useForStorageBln = this.branchBinEntity.getUseForStorageBln();
         this.useForReturnSalesBln = this.branchBinEntity.getUseForReturnSalesBln();
+    }
+
+    public cBranchBin(String pvBinCodeStr) {
+        this.branchBinEntity =null;
+        this.branchStr = cUser.currentUser.currentBranch.getBranchStr();
+        this.binCodeStr =  pvBinCodeStr;
+        this.zoneStr = "";
+        this.binTypeStr = "";
+        this.useForStorageBln = false;
+        this.useForReturnSalesBln =false;
     }
 
     //End Region Constructor

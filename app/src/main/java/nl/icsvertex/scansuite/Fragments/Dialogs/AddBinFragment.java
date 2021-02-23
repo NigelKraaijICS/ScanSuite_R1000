@@ -148,7 +148,7 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
                 if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
 
                     InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
-                    inventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(editTextAddBin.getText().toString()));
+                    inventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(editTextAddBin.getText().toString()), true);
                     inventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
                     cAppExtension.dialogFragment.dismiss();
                 }
