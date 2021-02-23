@@ -78,6 +78,7 @@ public class cBranch {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cBranchViewModel.class);
     }
 
+
     public static List<cBranch> allBranchesObl;
     public  List<cBranchBin> receiveBinsObl;
     public  List<cBranchBin> shipBinsObl;
@@ -337,6 +338,7 @@ public class cBranch {
                 cAuthorizedStockOwner authorizedStockOwner = new cAuthorizedStockOwner(jsonObject);
                 cStockOwner stockOwner = cStockOwner.pGetStockOwnerByCodeStr(authorizedStockOwner.getStockownerStr());
                     this.stockOwnerObl.add(stockOwner);
+                    
             }
             return  true;
         }
