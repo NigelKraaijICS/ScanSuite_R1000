@@ -17,6 +17,7 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
@@ -287,6 +288,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             this.dismiss();
             return;
         }
+        if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity) {
+            IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
+            intakeOrderIntakeGeneratedActivity.pAcceptStore();
+            this.dismiss();
+            return;
+        }
+
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
             ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
@@ -457,6 +465,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof IntakeorderMASLinesActivity) {
             IntakeorderMASLinesActivity intakeorderMASLinesActivity = (IntakeorderMASLinesActivity)cAppExtension.activity;
             intakeorderMASLinesActivity.pLeaveActivity();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity) {
+            IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
+            intakeOrderIntakeGeneratedActivity.pCancelStore();
             this.dismiss();
             return;
         }

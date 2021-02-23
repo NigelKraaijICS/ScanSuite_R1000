@@ -290,7 +290,6 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
             return;
         }
 
-        //Check if we have scanned an ARTICLE and check if there are not handled linesInt for this ARTICLE
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
             this.mDoUnknownScan(cAppExtension.activity.getString(R.string.error_article_scan_not_allowed), pvBarcodeScan.getBarcodeOriginalStr());
         }
@@ -544,6 +543,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
         if (cIntakeorder.currentIntakeOrder.isGenerated()) {
             intent = new Intent(cAppExtension.context, IntakeOrderIntakeGeneratedActivity.class);
+            IntakeOrderIntakeGeneratedActivity.binScanToHandleStr = cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr();
         }
         else
         {
@@ -585,7 +585,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
                     NothingHereFragment fragment = new NothingHereFragment();
                     fragmentTransaction.replace(R.id.IntakeorderLinesGeneratedContainer, fragment);
                     fragmentTransaction.commit();
-                  pSetToolBarTitleWithCounters(cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
+                    pSetToolBarTitleWithCounters(cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
                     return;
                 }
 
@@ -621,5 +621,3 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     }
 
 }
-
-
