@@ -36,8 +36,6 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
-import SSU_WHS.Move.Moveorders.cMoveorder;
-import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;

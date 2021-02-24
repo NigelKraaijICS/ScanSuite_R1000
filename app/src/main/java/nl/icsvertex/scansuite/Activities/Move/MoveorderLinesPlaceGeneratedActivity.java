@@ -32,7 +32,7 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 
-import SSU_WHS.Move.Moveorders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineAdapter;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineRecyclerItemTouchHelper;

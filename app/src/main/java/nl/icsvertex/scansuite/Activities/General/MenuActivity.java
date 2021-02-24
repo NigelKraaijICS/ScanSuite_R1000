@@ -277,12 +277,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             return;
         }
 
-        if (! cUser.currentUser.currentBranch.pGetAuthorizedStockOwnerBln(MenuActivity.refreshBln)) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_stockowner_failed), cUser.currentUser.currentBranch.getBranchNameStr(), true, true );
-            this.mStopShimmering();
-            return;
-        }
-
         if (cUser.currentUser.currentBranch.workplacesObl().size() == 0 && cSetting.PICK_SALES_ASK_WORKPLACE()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_no_workplaces_available), cUser.currentUser.currentBranch.getBranchNameStr(), true, true );
             this.mStopShimmering();

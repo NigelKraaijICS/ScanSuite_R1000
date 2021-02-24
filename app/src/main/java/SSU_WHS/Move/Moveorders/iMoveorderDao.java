@@ -1,4 +1,4 @@
-package SSU_WHS.Move.Moveorders;
+package SSU_WHS.Move.MoveOrders;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

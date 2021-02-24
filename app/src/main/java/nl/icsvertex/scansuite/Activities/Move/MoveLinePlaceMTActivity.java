@@ -43,7 +43,7 @@ import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.Moveorders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
@@ -137,19 +137,9 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
             return true;
         }
 
-        if (cMoveorder.currentMoveOrder.currentBranchBin != null) {
-            pvMenu.findItem(R.id.item_bin_stock).setVisible(true);
-        }
-        else {
-            pvMenu.findItem(R.id.item_bin_stock).setVisible(false);
-        }
+        pvMenu.findItem(R.id.item_bin_stock).setVisible(cMoveorder.currentMoveOrder.currentBranchBin != null);
 
-        if (cMoveorder.currentMoveOrder.currentArticle != null) {
-            pvMenu.findItem(R.id.item_article_stock).setVisible(true);
-        }
-        else {
-            pvMenu.findItem(R.id.item_article_stock).setVisible(false);
-        }
+        pvMenu.findItem(R.id.item_article_stock).setVisible(cMoveorder.currentMoveOrder.currentArticle != null);
 
         return super.onPrepareOptionsMenu(pvMenu);
     }
@@ -1090,7 +1080,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
 
     //Region Number Broadcaster
 
-    private Runnable mMinusAction = new Runnable() {
+    private final Runnable mMinusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonMinus.performClick();
@@ -1110,7 +1100,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
         }
     };
 
-    private Runnable mPlusAction = new Runnable() {
+    private final Runnable mPlusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonPlus.performClick();
@@ -1130,7 +1120,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
         }
     };
 
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int numberChosenInt = 0;

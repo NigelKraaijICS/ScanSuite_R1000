@@ -18,7 +18,7 @@ import SSU_WHS.Basics.IdentifierWithDestination.cIdentifierWithDestination;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Move.Moveorders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
@@ -38,7 +38,7 @@ public class cMoveorderLineRepository {
 
 
     //Region Public Properties
-    private iMoveorderLineDao moveorderLineDao;
+    private final iMoveorderLineDao moveorderLineDao;
     //End Region Public Properties
 
     //Region Constructor
@@ -154,7 +154,7 @@ public class cMoveorderLineRepository {
     //Region Private Methods
 
     private static class mInsertAsyncTask extends AsyncTask<cMoveorderLineEntity, Void, Void> {
-        private iMoveorderLineDao mAsyncTaskDao;
+        private final iMoveorderLineDao mAsyncTaskDao;
 
         mInsertAsyncTask(iMoveorderLineDao dao) {
             mAsyncTaskDao = dao;
@@ -168,7 +168,7 @@ public class cMoveorderLineRepository {
     }
 
     private static class mDeleteAsyncTask extends AsyncTask<cMoveorderLineEntity, Void, Void> {
-        private iMoveorderLineDao mAsyncTaskDao;
+        private final iMoveorderLineDao mAsyncTaskDao;
 
         mDeleteAsyncTask(iMoveorderLineDao dao) {
             mAsyncTaskDao = dao;
@@ -182,7 +182,7 @@ public class cMoveorderLineRepository {
     }
 
     private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private iMoveorderLineDao mAsyncTaskDao;
+        private final iMoveorderLineDao mAsyncTaskDao;
 
         mDeleteAllAsyncTask(iMoveorderLineDao dao) {
             mAsyncTaskDao = dao;

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 147,
-    "identityHash": "4a5080a69494fec263c23ad1360dd195",
+    "identityHash": "88ec81a0aa0cc0d8799758cd10ffd086",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -4252,7 +4252,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "Stockowner",
+        "tableName": "StockOwner",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`StockOwner` TEXT NOT NULL, `Omschrijving` TEXT, PRIMARY KEY(`StockOwner`))",
         "fields": [
           {
@@ -4276,12 +4276,38 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "AutorizedStockOwner",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`StockOwner` TEXT NOT NULL, `Vestiging` TEXT, PRIMARY KEY(`StockOwner`))",
+        "fields": [
+          {
+            "fieldPath": "stockownerStr",
+            "columnName": "StockOwner",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "vestigingStr",
+            "columnName": "Vestiging",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "StockOwner"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4a5080a69494fec263c23ad1360dd195')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88ec81a0aa0cc0d8799758cd10ffd086')"
     ]
   }
 }

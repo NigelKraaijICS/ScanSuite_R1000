@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 145,
-    "identityHash": "0f4af1f93178f6a14d1b1e38bf05872a",
+    "identityHash": "34224d66f7058b1131f47f64197a76c3",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -4238,12 +4238,64 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "StockOwner",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`StockOwner` TEXT NOT NULL, `Omschrijving` TEXT, PRIMARY KEY(`StockOwner`))",
+        "fields": [
+          {
+            "fieldPath": "stockownerStr",
+            "columnName": "StockOwner",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descriptionStr",
+            "columnName": "Omschrijving",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "StockOwner"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "AutorizedStockOwner",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`StockOwner` TEXT NOT NULL, `Vestiging` TEXT, PRIMARY KEY(`StockOwner`))",
+        "fields": [
+          {
+            "fieldPath": "stockownerStr",
+            "columnName": "StockOwner",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "vestigingStr",
+            "columnName": "Vestiging",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "StockOwner"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0f4af1f93178f6a14d1b1e38bf05872a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '34224d66f7058b1131f47f64197a76c3')"
     ]
   }
 }

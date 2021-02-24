@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 146,
-    "identityHash": "34224d66f7058b1131f47f64197a76c3",
+    "identityHash": "88ec81a0aa0cc0d8799758cd10ffd086",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -2397,7 +2397,7 @@
       },
       {
         "tableName": "Returnorder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `BinCode` TEXT, `CurrentLocation` TEXT, `ExternalReference` TEXT, `Retour_Amount_manual` INTEGER, `Retour_Barcode_check` INTEGER, `Retour_multi_document` INTEGER, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Reason` TEXT, `Retour_with_picture` INTEGER, `Retour_Order_bin_no_check` INTEGER, `IsProcessingOrParked` INTEGER, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `StockOwner` TEXT, `Status` TEXT, `BinCode` TEXT, `CurrentLocation` TEXT, `ExternalReference` TEXT, `Retour_Amount_manual` INTEGER, `Retour_Barcode_check` INTEGER, `Retour_multi_document` INTEGER, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Reason` TEXT, `Retour_with_picture` INTEGER, `Retour_Order_bin_no_check` INTEGER, `IsProcessingOrParked` INTEGER, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
         "fields": [
           {
             "fieldPath": "ordernumberStr",
@@ -2420,6 +2420,12 @@
           {
             "fieldPath": "currentUserIdStr",
             "columnName": "CurrentUserId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stockownerStr",
+            "columnName": "StockOwner",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -2943,7 +2949,7 @@
       },
       {
         "tableName": "MoveOrder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `Aantal_bins` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `BinCode` TEXT, `ExternalReference` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Move_Amount_manual` TEXT, `Move_Barcode_check` TEXT, `Move_validate_stock` TEXT, `Move_validate_stock_enforce` TEXT, `Move_auto_accept_at_requested` TEXT, `Move_no_extra_bins` TEXT, `Move_no_extra_items` TEXT, `Move_no_extra_pieces` TEXT, `Move_with_picture` TEXT, `Move_with_picture_auto_open` TEXT, `IsProcessingOrParked` INTEGER, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Opdrachtnummer` TEXT NOT NULL, `Opdrachttype` TEXT, `Aantal_bins` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `BinCode` TEXT, `StockOwner` TEXT, `ExternalReference` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Move_Amount_manual` TEXT, `Move_Barcode_check` TEXT, `Move_validate_stock` TEXT, `Move_validate_stock_enforce` TEXT, `Move_auto_accept_at_requested` TEXT, `Move_no_extra_bins` TEXT, `Move_no_extra_items` TEXT, `Move_no_extra_pieces` TEXT, `Move_with_picture` TEXT, `Move_with_picture_auto_open` TEXT, `IsProcessingOrParked` INTEGER, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Opdrachtnummer`))",
         "fields": [
           {
             "fieldPath": "ordernumber",
@@ -2984,6 +2990,12 @@
           {
             "fieldPath": "bincode",
             "columnName": "BinCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stockownerStr",
+            "columnName": "StockOwner",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -4295,7 +4307,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '34224d66f7058b1131f47f64197a76c3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88ec81a0aa0cc0d8799758cd10ffd086')"
     ]
   }
 }

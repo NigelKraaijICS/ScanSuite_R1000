@@ -24,5 +24,4 @@ public class cPackAndShipBarcodeViewModel extends AndroidViewModel {
     public void insert(cPackAndShipBarcodeEntity pvPackAndShipBarcodeEntity) {this.Repository.insert(pvPackAndShipBarcodeEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
-    public cWebresult pCreateBarcodeViaWebserviceWrs() {return this.Repository.pCreateBarcodeViaWebserviceWrs();}
 }

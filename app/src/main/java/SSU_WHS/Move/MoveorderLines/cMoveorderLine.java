@@ -7,24 +7,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import ICS.Utils.cResult;
-import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
-import SSU_WHS.Move.Moveorders.cMoveorder;
-import SSU_WHS.Move.Moveorders.cMoveorderViewModel;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
-import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
-import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;

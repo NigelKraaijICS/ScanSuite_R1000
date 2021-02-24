@@ -16,7 +16,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
-import SSU_WHS.Move.Moveorders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
@@ -26,13 +26,13 @@ import nl.icsvertex.scansuite.R;
 
 public class cMoveorderBarcodeAdapter extends RecyclerView.Adapter<cMoveorderBarcodeAdapter.moveorderBarcodeViewHolder>  {
 
-    cArticleBarcode articleBarcode = null;
-    cMoveorderBarcode moveorderBarcode = null;
+    private cArticleBarcode articleBarcode = null;
+    private cMoveorderBarcode moveorderBarcode = null;
 
     //Region Public Properties
     public static class moveorderBarcodeViewHolder extends RecyclerView.ViewHolder{
-        private TextView textViewBarcode;
-        private TextView textViewQuantity;
+        private final TextView textViewBarcode;
+        private final TextView textViewQuantity;
         public LinearLayout barcodeItemLinearLayout;
 
         public moveorderBarcodeViewHolder(View pvItemView) {

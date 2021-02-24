@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,22 +43,16 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder.WorkflowEnu;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.Moveorders.cMoveorder;
-import SSU_WHS.Move.Moveorders.cMoveorderAdapter;
-import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkflowFragment;
 import nl.icsvertex.scansuite.R;
-
-import static SSU_WHS.General.Warehouseorder.cWarehouseorder.WorkflowEnu.*;
 
 public class MoveorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
@@ -363,7 +356,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
                 //Fill and show recycler
 
                 cMoveorder.allMoveordersObl = cMoveorder.pGetMovesWithFilterFromDatabasObl();
-                if (cMoveorder.allMoveordersObl == null || cMoveorder.allMoveordersObl.size() == 0) {
+                if (cMoveorder.allMoveordersObl.size() == 0) {
                     mShowNoOrdersIcon( true);
                     cUserInterface.pHideGettingData();
                     return;

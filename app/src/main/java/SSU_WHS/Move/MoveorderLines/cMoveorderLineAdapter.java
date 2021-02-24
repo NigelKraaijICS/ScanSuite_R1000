@@ -1,6 +1,5 @@
 package SSU_WHS.Move.MoveorderLines;
 
-import android.media.Image;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +17,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
-import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
-import SSU_WHS.Move.Moveorders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;

@@ -3,24 +3,11 @@ package SSU_WHS.PackAndShip.PackAndShipAddress;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.ksoap2.serialization.PropertyInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Move.Moveorders.cMoveorder;
-import SSU_WHS.PackAndShip.PackAndShipBarcode.cPackAndShipBarcodeEntity;
-import SSU_WHS.PackAndShip.PackAndShipBarcode.iPackAndShipBarcodeDao;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cPackAndShipAddressRepository {
     //Region Public Properties
-    private iPackAndShipAddressDao packAndShipAddressDao;
+    private final iPackAndShipAddressDao packAndShipAddressDao;
     //End Region Public Properties
 
     //Region Constructor
@@ -42,7 +29,7 @@ public class cPackAndShipAddressRepository {
     }
 
     private static class mInsertAsyncTask extends AsyncTask<cPackAndShipAddressEntity, Void, Void> {
-        private iPackAndShipAddressDao mAsyncTaskDao;
+        private final iPackAndShipAddressDao mAsyncTaskDao;
 
         mInsertAsyncTask(iPackAndShipAddressDao dao) {
             mAsyncTaskDao = dao;
@@ -56,7 +43,7 @@ public class cPackAndShipAddressRepository {
     }
 
     private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private iPackAndShipAddressDao mAsyncTaskDao;
+        private final iPackAndShipAddressDao mAsyncTaskDao;
 
         mDeleteAllAsyncTask(iPackAndShipAddressDao dao) {
             mAsyncTaskDao = dao;

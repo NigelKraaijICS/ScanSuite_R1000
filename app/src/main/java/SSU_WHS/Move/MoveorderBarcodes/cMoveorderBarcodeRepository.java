@@ -12,13 +12,13 @@ import java.util.concurrent.ExecutionException;
 
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Move.Moveorders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cMoveorderBarcodeRepository {
     //Region Public Properties
-    private iMoveorderBarcodeDao moveorderBarcodeDao;
+    private final iMoveorderBarcodeDao moveorderBarcodeDao;
     //End Region Public Properties
 
     //Region Constructor
@@ -40,7 +40,7 @@ public class cMoveorderBarcodeRepository {
     }
 
     private static class mInsertAsyncTask extends AsyncTask<cMoveorderBarcodeEntity, Void, Void> {
-        private iMoveorderBarcodeDao mAsyncTaskDao;
+        private final iMoveorderBarcodeDao mAsyncTaskDao;
 
         mInsertAsyncTask(iMoveorderBarcodeDao dao) {
             mAsyncTaskDao = dao;
@@ -54,7 +54,7 @@ public class cMoveorderBarcodeRepository {
     }
 
     private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private iMoveorderBarcodeDao mAsyncTaskDao;
+        private final iMoveorderBarcodeDao mAsyncTaskDao;
 
         mDeleteAllAsyncTask(iMoveorderBarcodeDao dao) {
             mAsyncTaskDao = dao;

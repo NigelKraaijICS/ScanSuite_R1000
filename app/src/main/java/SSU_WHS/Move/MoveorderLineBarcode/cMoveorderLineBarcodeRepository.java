@@ -3,33 +3,12 @@ package SSU_WHS.Move.MoveorderLineBarcode;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cDateAndTime;
-import ICS.Utils.cDeviceInfo;
-import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Move.Moveorders.cMoveorder;
-import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
-import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebservice;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cMoveorderLineBarcodeRepository {
 
     //Region Public Properties
-    private iMoveorderLineBarcodeDao moveorderLineBarcodeDao;
+    private final iMoveorderLineBarcodeDao moveorderLineBarcodeDao;
     //End Region Public Properties
 
     //Region Constructor
@@ -60,7 +39,7 @@ public class cMoveorderLineBarcodeRepository {
     //Region Private Methods
 
     private static class mInsertAsyncTask extends AsyncTask<cMoveorderLineBarcodeEntity, Void, Void> {
-        private iMoveorderLineBarcodeDao mAsyncTaskDao;
+        private final iMoveorderLineBarcodeDao mAsyncTaskDao;
 
         mInsertAsyncTask(iMoveorderLineBarcodeDao dao) {
             mAsyncTaskDao = dao;
@@ -74,7 +53,7 @@ public class cMoveorderLineBarcodeRepository {
     }
 
     private static class mDeleteAsyncTask extends AsyncTask<cMoveorderLineBarcodeEntity, Void, Void> {
-        private iMoveorderLineBarcodeDao mAsyncTaskDao;
+        private final iMoveorderLineBarcodeDao mAsyncTaskDao;
 
         mDeleteAsyncTask(iMoveorderLineBarcodeDao dao) {
             mAsyncTaskDao = dao;
@@ -88,7 +67,7 @@ public class cMoveorderLineBarcodeRepository {
     }
 
     private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private iMoveorderLineBarcodeDao mAsyncTaskDao;
+        private final iMoveorderLineBarcodeDao mAsyncTaskDao;
 
         mDeleteAllAsyncTask(iMoveorderLineBarcodeDao dao) {
             mAsyncTaskDao = dao;

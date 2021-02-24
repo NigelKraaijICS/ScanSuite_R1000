@@ -2,37 +2,15 @@ package SSU_WHS.PackAndShip.PackAndShipLines;
 
 import android.app.Application;
 import android.os.AsyncTask;
-
-import org.json.JSONException;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import ICS.Utils.Scanning.cBarcodeScan;
-import ICS.Utils.cDateAndTime;
-import ICS.Utils.cDeviceInfo;
-import SSU_WHS.Basics.IdentifierWithDestination.cIdentifierWithDestination;
-import SSU_WHS.Basics.Users.cUser;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Move.Moveorders.cMoveorder;
-import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
-import SSU_WHS.Move.MoveorderLines.cMoveorderLineEntity;
-import SSU_WHS.Move.MoveorderLines.iMoveorderLineDao;
-import SSU_WHS.Webservice.cWebresult;
-import SSU_WHS.Webservice.cWebservice;
-import SSU_WHS.Webservice.cWebserviceDefinitions;
+
 
 public class cPackAndShipOrderLineRepository {
 
 
 
     //Region Public Properties
-    private iPackAndShipOrderLineDao packAndShipOrderLineDao;
+    private final iPackAndShipOrderLineDao packAndShipOrderLineDao;
     //End Region Public Properties
 
     //Region Constructor
@@ -62,7 +40,7 @@ public class cPackAndShipOrderLineRepository {
     //Region Private Methods
 
     private static class mInsertAsyncTask extends AsyncTask<cPackAndShipOrderLineEntity, Void, Void> {
-        private iPackAndShipOrderLineDao mAsyncTaskDao;
+        private final iPackAndShipOrderLineDao mAsyncTaskDao;
 
         mInsertAsyncTask(iPackAndShipOrderLineDao dao) {
             mAsyncTaskDao = dao;
@@ -76,7 +54,7 @@ public class cPackAndShipOrderLineRepository {
     }
 
     private static class mDeleteAsyncTask extends AsyncTask<cPackAndShipOrderLineEntity, Void, Void> {
-        private iPackAndShipOrderLineDao mAsyncTaskDao;
+        private final iPackAndShipOrderLineDao mAsyncTaskDao;
 
         mDeleteAsyncTask(iPackAndShipOrderLineDao dao) {
             mAsyncTaskDao = dao;
@@ -90,7 +68,7 @@ public class cPackAndShipOrderLineRepository {
     }
 
     private static class mDeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private iPackAndShipOrderLineDao mAsyncTaskDao;
+        private final iPackAndShipOrderLineDao mAsyncTaskDao;
 
         mDeleteAllAsyncTask(iPackAndShipOrderLineDao dao) {
             mAsyncTaskDao = dao;

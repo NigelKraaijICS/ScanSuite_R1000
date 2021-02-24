@@ -45,7 +45,7 @@ import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.Moveorders.cMoveorder;
+import SSU_WHS.Move.MoveOrders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineAdapter;
@@ -878,7 +878,7 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
      //ScanActions
      private void mFillRecycler(List<cMoveorderLine> pvDataObl) {
 
-        if (pvDataObl == null | pvDataObl.size() == 0) {
+        if (pvDataObl == null | Objects.requireNonNull(pvDataObl).size() == 0) {
             this.imageButtonDone.setVisibility(View.INVISIBLE);
         }
         else
