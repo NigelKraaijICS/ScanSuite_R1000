@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 
@@ -381,6 +380,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
 
         if (!cCustomAuthorisation.pGetCustomAutorisationsViaWebserviceBln(true)) {
+            return false;
+        }
+
+        if (!cStockOwner.pStockOwnerViaWebserviceBln(true)){
             return false;
         }
 

@@ -47,6 +47,11 @@ public class cReturnorder {
     private final String currentUserIdStr;
     public String getCurrentUserIdStr() {return this.currentUserIdStr;}
 
+    private String stockownerStr;
+    public String getStockownerStr() {
+        return stockownerStr;
+    }
+
     private final Integer statusInt;
     public Integer getStatusInt() {return this.statusInt;}
 
@@ -144,6 +149,7 @@ public class cReturnorder {
         this.ordernumberStr =this.returnorderEntity.getOrdernumberStr();
         this.ordertypeStr = this.returnorderEntity.getOrderTypeStr();
         this.assignedUserIdStr = this.returnorderEntity.getAssignedUserIdStr();
+        this.stockownerStr= this.returnorderEntity.getStockownerStr();
         this.currentUserIdStr = this.returnorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.returnorderEntity.getStatusStr());
         this.binCodeStr = this.returnorderEntity.getBincodeStr();
@@ -165,6 +171,7 @@ public class cReturnorder {
         this.ordernumberStr =this.returnorderEntity.getOrdernumberStr();
         this.ordertypeStr = this.returnorderEntity.getOrderTypeStr();
         this.assignedUserIdStr = this.returnorderEntity.getAssignedUserIdStr();
+        this.stockownerStr= this.returnorderEntity.getStockownerStr();
         this.currentUserIdStr = this.returnorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.returnorderEntity.getStatusStr());
         this.binCodeStr = this.returnorderEntity.getBincodeStr();

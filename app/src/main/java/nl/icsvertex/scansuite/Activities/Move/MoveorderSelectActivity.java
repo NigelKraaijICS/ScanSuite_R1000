@@ -42,14 +42,15 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder.WorkflowEnu;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
-import SSU_WHS.Move.MoveOrders.cMoveorderAdapter;
+import SSU_WHS.Move.Moveorders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorderAdapter;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
@@ -305,6 +306,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         //Set the current moveorder
         cMoveorder.currentMoveOrder = pvMoveorder;
+        cUser.currentUser.currentStockOwner = cStockOwner.pGetStockOwnerByCodeStr( cMoveorder.currentMoveOrder.getStockownerStr());
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cMoveorder.currentMoveOrder.getOrderNumberStr());
 
         new Thread(new Runnable() {

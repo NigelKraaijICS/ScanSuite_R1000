@@ -22,6 +22,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETBINARTICLES = "p_MagazijnlocatieArtikelenGetJsonStr";
     public static String WEBMETHOD_GETBRANCHES = "p_VestigingGetJsonStr";
     public static String WEBMETHOD_GETBRANCHESFORUSER = "p_GebruikerVestigingenGetJsonStr";
+    public static String WEBMETHOD_GETSTOCKOWNERFORUSER = "p_GebruikerVestigingenStockOwnersGetJsonStr";
     public static String WEBMETHOD_GETPROCESSINGORPARKEDORDERS = "p_PickordersInBehandlingOfInWachtJsonStr";
     public static String WEBMETHOD_GETPICKORDERS = "p_PickordersGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINES = "p_PickorderRegelsGetJsonStr";
@@ -198,6 +199,8 @@ public class cWebserviceDefinitions {
 
     public static String WEBMETHOD_PACKANDSHIPUPDATE = "p_PackAndShipOrderUpdateJsonStr";
     public static String WEBMETHOD_PACKANDSHIPSHIPMENTADDDOCUMENT = "p_PackAndShipShipmentDocumentAddJsonStr";
+
+    public static String WEBMETHOD_STOCKOWNERGET = "p_StockOwnerGetJsonStr";
 
     public static String WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET = "p_WarehouseopdrachtLineItemPropertiesGetJsonStr";
     public static String WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIEVALUESGET = "p_WarehouseopdrachtLineItemPropertyValuesGetJsonStr";

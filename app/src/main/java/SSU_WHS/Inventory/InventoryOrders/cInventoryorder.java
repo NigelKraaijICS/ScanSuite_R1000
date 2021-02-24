@@ -65,6 +65,11 @@ public class cInventoryorder {
         return currentUserIdStr;
     }
 
+    private String stockownerStr;
+    public String getStockownerStr() {
+        return stockownerStr;
+    }
+
     private final int statusInt;
     public int getStatusInt() {
         return statusInt;
@@ -180,7 +185,9 @@ public class cInventoryorder {
         this.numberOfBinsInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getNumberofBinsStr());
         this.assignedUserIdStr = this.inventoryorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.inventoryorderEntity.getCurrentUserIdStr();
+        this.stockownerStr = this.inventoryorderEntity.getStockOwnerStr();
         this.statusInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getStatusStr());
+
 
         this.invAmountManualBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvAmountManualStr(), false);
         this.invBarcodeCheckBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvBarcodeCheckStr(), false);
@@ -203,6 +210,7 @@ public class cInventoryorder {
         this.numberOfBinsInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getNumberofBinsStr());
         this.assignedUserIdStr = this.inventoryorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.inventoryorderEntity.getCurrentUserIdStr();
+        this.stockownerStr = this.inventoryorderEntity.getStockOwnerStr();
         this.statusInt = cText.pStringToIntegerInt(this.inventoryorderEntity.getStatusStr());
 
         this.invAmountManualBln = cText.pStringToBooleanBln(this.inventoryorderEntity.getInvAmountManualStr(), false);

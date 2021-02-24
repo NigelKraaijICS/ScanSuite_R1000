@@ -41,6 +41,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -309,6 +310,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         //Set the current intakeorder
         cIntakeorder.currentIntakeOrder = pvIntakeorder;
+        cUser.currentUser.currentStockOwner = cStockOwner.pGetStockOwnerByCodeStr(cIntakeorder.currentIntakeOrder.getStockownerStr());
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
         new Thread(new Runnable() {

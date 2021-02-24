@@ -1,4 +1,4 @@
-package SSU_WHS.Move.MoveOrders;
+package SSU_WHS.Move.Moveorders;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -45,6 +45,10 @@ public class cMoveorderEntity {
     @ColumnInfo(name= cDatabase.BINCODE_NAMESTR)
     public String bincode;
     public String getBincodeStr() {return this.bincode;}
+
+    @ColumnInfo(name=cDatabase.STOCKOWNER_NAMESTR)
+    public String stockownerStr = "";
+    public String getStockownerStr() {return this.stockownerStr;}
 
     @ColumnInfo(name= cDatabase.EXTERNALREFERENCE_NAMESTR)
     public String externalReference;
@@ -128,6 +132,7 @@ public class cMoveorderEntity {
             this.status = pvJsonObject.getString(cDatabase.STATUS_NAMESTR);
 
             this.bincode = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
+            this.stockownerStr = pvJsonObject.getString(cDatabase.STOCKOWNER_NAMESTR);
             this.externalReference = pvJsonObject.getString(cDatabase.EXTERNALREFERENCE_NAMESTR);
 
             this.moveAmountManual = pvJsonObject.getString(cDatabase.MOVEAMOUNTMANUAL_NAMESTR);

@@ -295,6 +295,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             this.dismiss();
             return;
         }
+        if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity) {
+            IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
+            intakeOrderIntakeGeneratedActivity.pAcceptStore();
+            this.dismiss();
+            return;
+        }
+
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
             ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
@@ -472,6 +479,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof IntakeorderMASLinesActivity) {
             IntakeorderMASLinesActivity intakeorderMASLinesActivity = (IntakeorderMASLinesActivity)cAppExtension.activity;
             intakeorderMASLinesActivity.pLeaveActivity();
+            this.dismiss();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity) {
+            IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
+            intakeOrderIntakeGeneratedActivity.pCancelStore();
             this.dismiss();
             return;
         }

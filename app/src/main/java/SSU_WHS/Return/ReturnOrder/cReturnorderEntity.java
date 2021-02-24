@@ -35,6 +35,10 @@ public class cReturnorderEntity {
     public String currentUserIdStr;
     public String getCurrentUserIdStr() {return this.currentUserIdStr;}
 
+    @ColumnInfo(name=cDatabase.STOCKOWNER_NAMESTR)
+    public String stockownerStr = "";
+    public String getStockownerStr() {return this.stockownerStr;}
+
     @ColumnInfo(name= cDatabase.STATUS_NAMESTR)
     public String statusStr;
     public String getStatusStr() {return this.statusStr;}
@@ -108,6 +112,7 @@ public class cReturnorderEntity {
             this.ordertypeStr = pvJsonObject.getString(cDatabase.ORDERTYPE_NAMESTR);
             this.assignedUserIdStr = pvJsonObject.getString(cDatabase.ASSIGNEDUSERID_NAMESTR);
             this.currentUserIdStr = pvJsonObject.getString(cDatabase.CURRENTUSERID_NAMESTR);
+            this.stockownerStr = pvJsonObject.getString(cDatabase.STOCKOWNER_NAMESTR);
             this.statusStr = pvJsonObject.getString(cDatabase.STATUS_NAMESTR);
             this.bincodeStr = pvJsonObject.getString(cDatabase.BINCODE_NAMESTR);
             this.currentLocationStr = pvJsonObject.getString(cDatabase.CURRENTLOCATION_NAMESTR);

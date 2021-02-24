@@ -334,6 +334,7 @@
     <string name="error_get_lines_failed">Regels van server ophalen mislukt</string>
     <string name="error_get_pickorders_failed">Orders van server ophalen mislukt</string>
     <string name="error_get_workplaces_failed">Werkplekken ophalen mislukt</string>
+    <string name="error_get_stockowner_failed">Ophalen toegestane eigenaren mislukt</string>
     <string name="error_getting_sort_lines_failed">Sorteerregels ophalen mislukt</string>
     <string name="error_inserting_salesorderpackingtable">VKO paktafel toevoegen mislukt</string>
     <string name="error_no_autorisations_available">Geen autorisaties beschikbaar voor deze gebruiker</string>
@@ -475,6 +476,7 @@
     <string name="label_application_installed">Geinstalleerd op</string>
     <string name="message_bin_not_allowed">Locatie scans niet toegestaan</string>
     <string name="hint_document_receive">Document</string>
+    <string name="hint_stockowner">Eigenaar</string>
     <string name="message_close_now">Nu sluiten</string>
     <string name="message_finish_later">Later afmaken</string>
     <string name="message_no_lines_for_this_barcode">Geen regels beschikbaar voor deze barcode</string>
@@ -538,6 +540,7 @@
     <string name="message_remove_return_order">Retour verwijderen mislukt</string>
     <string name="message_scan_return_bin">Scan retour locatie</string>
     <string name="message_scan_return_document">Scan retour document</string>
+    <string name="message_select_stockowner">Selecteer een Eigenaar</string>
     <string name="multiple_documents">Meerdere documenten</string>
     <string name="create_return">Aanmaken retour</string>
     <string name="createreturn_text_default">Nieuw retour creëren</string>

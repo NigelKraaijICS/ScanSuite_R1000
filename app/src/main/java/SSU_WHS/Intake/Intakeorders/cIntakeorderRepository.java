@@ -949,7 +949,11 @@ public class cIntakeorderRepository {
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
                 l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
-                l_PropertyInfo4Pin.setValue("");
+                if (cUser.currentUser.currentStockOwner != null){
+                    l_PropertyInfo4Pin.setValue(cUser.currentUser.currentStockOwner.getStockownerStr());
+                } else {
+                    l_PropertyInfo4Pin.setValue("");
+                }
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 PropertyInfo l_PropertyInfo5Pin = new PropertyInfo();
@@ -1030,7 +1034,11 @@ public class cIntakeorderRepository {
 
                 PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
                 l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_STOCKOWNER;
-                l_PropertyInfo4Pin.setValue("");
+                if (cUser.currentUser.currentStockOwner != null){
+                    l_PropertyInfo4Pin.setValue(cUser.currentUser.currentStockOwner.getStockownerStr());
+                } else {
+                    l_PropertyInfo4Pin.setValue("");
+                }
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
 

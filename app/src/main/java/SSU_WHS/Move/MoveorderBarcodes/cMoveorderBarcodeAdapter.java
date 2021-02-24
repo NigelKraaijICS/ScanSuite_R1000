@@ -16,7 +16,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;

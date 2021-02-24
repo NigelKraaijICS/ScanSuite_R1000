@@ -1,4 +1,4 @@
-package SSU_WHS.Move.MoveOrders;
+package SSU_WHS.Move.Moveorders;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -27,9 +27,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
-import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
-import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
-import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
@@ -71,6 +68,9 @@ public class cMoveorder {
     public String getBinCodeStr() {
         return binCodeStr;
     }
+
+    public  String stockownerStr;
+    public  String getStockownerStr(){return stockownerStr;}
 
     private String documentStr;
     public String getDocumentStr() {
@@ -329,6 +329,7 @@ public class cMoveorder {
         this.currentUserIdStr = this.moveorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.moveorderEntity.getStatusStr());
         this.binCodeStr = this.moveorderEntity.getBincodeStr();
+        this.stockownerStr = this.moveorderEntity.getStockownerStr();
         this.externalReferenceStr = this.moveorderEntity.getExternalReferenceStr();
         this.documentStr = this.moveorderEntity.getDocumentStr();
 
@@ -353,6 +354,7 @@ public class cMoveorder {
         this.currentUserIdStr = this.moveorderEntity.getCurrentUserIdStr();
         this.statusInt = cText.pStringToIntegerInt(this.moveorderEntity.getStatusStr());
         this.binCodeStr = this.moveorderEntity.getBincodeStr();
+        this.stockownerStr = this.moveorderEntity.getStockownerStr();
         this.externalReferenceStr = this.moveorderEntity.getExternalReferenceStr();
         this.documentStr = this.moveorderEntity.getDocumentStr();
 

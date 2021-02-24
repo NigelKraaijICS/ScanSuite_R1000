@@ -585,7 +585,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
                     NothingHereFragment fragment = new NothingHereFragment();
                     fragmentTransaction.replace(R.id.IntakeorderLinesGeneratedContainer, fragment);
                     fragmentTransaction.commit();
-                  pSetToolBarTitleWithCounters(cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
+                    pSetToolBarTitleWithCounters(cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
                     return;
                 }
 
@@ -621,5 +621,3 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     }
 
 }
-
-

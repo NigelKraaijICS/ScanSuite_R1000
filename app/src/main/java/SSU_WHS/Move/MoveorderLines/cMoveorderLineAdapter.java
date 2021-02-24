@@ -19,7 +19,7 @@ import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
