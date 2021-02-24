@@ -135,7 +135,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_RECEIVEHANDLED = "p_ReceiveInTakeOrderHandledJsonStr";
     public static String WEBMETHOD_PACKAGINGHANDLED = "p_WarehouseopdrachtEmballageUpdateJsonStr";
     public static String WEBMETHOD_PACKAGINGGET = "p_WarehouseopdrachtEmballageGetJsonStr";
-
+    public static String WEBMETHOD_STOCKOWNERGET = "p_StockOwnerGetJsonStr";
 
 
     public static String WEBMETHOD_GETRECEIVEBINS = "p_MagazijnlocatieReceiveGetJsonStr";

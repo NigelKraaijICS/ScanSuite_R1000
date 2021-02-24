@@ -6,6 +6,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/createPickContainer">
     <include layout="@layout/toolbar_subtext_default"/>
+    <Spinner
+        android:id="@+id/stockownerSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:hint="@string/hint_stockowner"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="@dimen/default_elevation"
+        >
+    </Spinner>
     <EditText
         android:id="@+id/editTextDocument"
         style="@style/createReceiveDocument"
@@ -17,7 +31,7 @@
         android:cursorVisible="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/stockownerSpinner" />
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/checkBarcodesSwitch"
         android:layout_width="wrap_content"

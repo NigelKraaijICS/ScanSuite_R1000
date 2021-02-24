@@ -2,6 +2,7 @@ package SSU_WHS.Basics.Branches;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -10,56 +11,60 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.AuthorizedStockOwners.cAuthorizedStockOwner;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.BranchReason.cBranchReason;
+import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.Basics.Workplaces.cWorkplaceViewModel;
+import SSU_WHS.General.cDatabase;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cBranch {
 
     //Region Public Properties
-    private final String branchStr;
+    private String branchStr;
     public String getBranchStr() {
         return branchStr;
     }
 
-    private final String branchTypeStr;
+    private String branchTypeStr;
     public String getBranchTypeStr() {
         return branchTypeStr;
     }
 
-    private final String branchNameStr;
+    private String branchNameStr;
     public String getBranchNameStr() {
         return branchNameStr;
     }
 
-    private final boolean binMandatoryBln;
+    private boolean binMandatoryBln;
     public  boolean isBinMandatoryBln() {return  binMandatoryBln;}
 
-    private final String returnDefaultBinStr;
+    private String returnDefaultBinStr;
     public String getReturnDefaultBinStr(){
         return   returnDefaultBinStr;
     }
 
-    private final String receiveDefaultBinStr;
+    private String receiveDefaultBinStr;
     public String getReceiveDefaultBinStr(){
         return   receiveDefaultBinStr;
     }
 
-    private final String pickDefaultStorageBinStr;
+    private String pickDefaultStorageBinStr;
     public String getPickDefaultStorageBinStr(){
         return pickDefaultStorageBinStr;
     }
 
-    private final String moveDefaultBinStr;
+    private String moveDefaultBinStr;
     public String getMoveDefaultBinStr(){
         return   moveDefaultBinStr;
     }
 
-    private final cBranchEntity branchEntity;
+    private cBranchEntity branchEntity;
 
     public ArrayList<cWorkplace>  workplacesObl() {
         return  cWorkplace.allWorkplacesObl;
@@ -68,6 +73,9 @@ public class cBranch {
     public ArrayList<cBranchBin>  binsObl;
     public ArrayList<cBranchReason>  returnReasonObl;
 
+    public List<cStockOwner> stockOwnerObl() {
+        return  cStockOwner.allStockOwnerObl;
+    };
 
     private cBranchViewModel getBranchViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cBranchViewModel.class);
@@ -79,7 +87,7 @@ public class cBranch {
 
     public  static  boolean BranchesAvailableBln;
 
-       public enum brachTypeEnum {
+    public enum brachTypeEnum {
         INTRANSIT,
         STORE,
         UNKNOWN,
@@ -236,16 +244,6 @@ public class cBranch {
             }
         }
 
-        if (!this.isBinMandatoryBln()) {
-            cBranchBin branchBin = new cBranchBin(pvBinCodeStr);
-            if (this.binsObl == null) {
-                this.binsObl = new ArrayList<>();
-            }
-
-            this.binsObl.add(branchBin);
-            return  branchBin;
-        }
-
         return   this.mGetBinViaWebservice(pvBinCodeStr);
     }
 
@@ -325,7 +323,6 @@ public class cBranch {
         }
         return false;
     }
-
 
     public static cBranch pGetBranchByDescriptionStr(String pvScannedBranchStr){
 

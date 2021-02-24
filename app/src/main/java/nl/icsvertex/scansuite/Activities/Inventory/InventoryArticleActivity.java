@@ -417,9 +417,18 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
         }
 
         if (cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl() > 1) {
-            cUserInterface.pDoNope(this.quantityText, true, true);
-            cUserInterface.pShowSnackbarMessage(this.inventoryArticleDetailContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
-            return;
+
+            //Try to switch to another barcode for the same article, so the user doesn't have to manually
+            cInventoryorderBarcode inventoryorderBarcode = cInventoryorderBarcode.getSingleQuantityBarcodeForItemAndVariant(cInventoryorderBarcode.currentInventoryOrderBarcode);
+            if (inventoryorderBarcode != null) {
+                cInventoryorderBarcode.currentInventoryOrderBarcode = inventoryorderBarcode;
+            }
+            else
+            {
+                cUserInterface.pDoNope(this.quantityText, true, true);
+                cUserInterface.pShowSnackbarMessage(this.inventoryArticleDetailContainer, getString(R.string.manual_input_only_barcodenumber_bigger1), null, false);
+                return;
+            }
         }
 
         this.mShowNumberPickerFragment();

@@ -917,7 +917,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
 
-        if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
+
+
+        if (cPickorderLine.currentPickOrderLine == null || cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
             return false;
         }
 

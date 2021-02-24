@@ -322,7 +322,7 @@ public class cBarcodeScan {
 
                     if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity){
                         IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
-                        intakeOrderIntakeGeneratedActivity.pHandleScan(barcodeScan);
+                        intakeOrderIntakeGeneratedActivity.pHandleScan(barcodeScan, false);
                     }
 
                     //Return

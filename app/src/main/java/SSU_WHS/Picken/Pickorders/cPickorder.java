@@ -530,6 +530,23 @@ public class cPickorder{
 
     }
 
+    public static  cPickorder pGetPackAndShipOrderByCurrentLocationStr(String pvCurrentLocationStr) {
+
+        if (cPickorder.allPickordersObl == null) {
+            return null;
+        }
+
+        for (cPickorder pickorder : cPickorder.allPickordersObl) {
+
+            if (pickorder.getCurrentLocationStr().equalsIgnoreCase(pvCurrentLocationStr)) {
+                return  pickorder;
+            }
+        }
+
+        return  null;
+
+    }
+
     public static void pUnselectAllOrders() {
 
         if (cPickorder.allPickordersObl != null) {

@@ -140,15 +140,12 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
 
     //End Region Public Methods
 
-    public  void pSetChosenShipment(){
-
-        if (cSetting.PICK_SELECTEREN_BARCODE()){
-            ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
-            shiporderLinesActivity.pHandleScan(null,true);
-        }
-    }
-
     //Region Private Methods
+
+    public void pGetData() {
+        List<cShipment> notHandledShipmentsObl = cPickorder.currentPickOrder.pGetNotHandledShipmentsObl();
+        this.mFillRecycler(notHandledShipmentsObl);
+    }
 
     private void setQuickHelpListener() {
         this.quickhelpContainer.setOnClickListener(new View.OnClickListener() {
@@ -163,12 +160,6 @@ public class ShiporderLinesToShipFragment extends Fragment implements iICSDefaul
                 }
             }
         });
-    }
-
-
-    public void pGetData() {
-        List<cShipment> notHandledShipmentsObl = cPickorder.currentPickOrder.pGetNotHandledShipmentsObl();
-        this.mFillRecycler(notHandledShipmentsObl);
     }
 
     private void mFillRecycler(List<cShipment> pvDataObl) {

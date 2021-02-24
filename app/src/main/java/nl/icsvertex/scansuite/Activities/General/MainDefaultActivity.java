@@ -48,6 +48,7 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentShipMethod;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Translations.cTranslation;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
@@ -329,7 +330,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                 cCompositeBarcode.compositeBarcodesAvailableBln &&
                 cScanner.scannersAvailableBln &&
                 cCustomAuthorisation.customAutorisationsAvailableBln &&
-                cTranslation.translationsAvailableBln;
+                cTranslation.translationsAvailableBln &&
+                cStockOwner.stockOwnersAvailableBln;
     }
 
     private boolean mGetBasicDataBln() throws ExecutionException {
@@ -383,6 +385,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
 
         if (!cTranslation.pGetTranslationsViaWebserviceBln()) {
+            return false;
+        }
+
+        if (!cStockOwner.pStockOwnerViaWebserviceBln(true)) {
             return false;
         }
 

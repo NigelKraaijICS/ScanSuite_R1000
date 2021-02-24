@@ -10,6 +10,7 @@ import SSU_WHS.Basics.ArticleImages.cArticleImageEntity;
 import SSU_WHS.Basics.ArticleImages.iArticleImageDao;
 import SSU_WHS.Basics.Authorisations.cAuthorisationEntity;
 import SSU_WHS.Basics.Authorisations.iAuthorisationDao;
+import SSU_WHS.Basics.AuthorizedStockOwners.cAuthorizedStockOwnerEntity;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayoutEntity;
 import SSU_WHS.Basics.BarcodeLayouts.iBarcodeLayoutDao;
 import SSU_WHS.Basics.Branches.cBranchEntity;
@@ -40,6 +41,8 @@ import SSU_WHS.Basics.ShippingAgents.cShippingAgentEntity;
 import SSU_WHS.Basics.ShippingAgents.iShippingAgentDao;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.cShippingAgentServiceShipMethodEntity;
 import SSU_WHS.Basics.ShippingAgentsServiceShipMethods.iShippingAgentServiceShipMethodDao;
+import SSU_WHS.Basics.StockOwner.cStockOwnerEntity;
+import SSU_WHS.Basics.StockOwner.iStockOwnerDao;
 import SSU_WHS.Basics.Translations.cTranslationEntity;
 import SSU_WHS.Basics.Translations.iTranslationDao;
 import SSU_WHS.Basics.Users.cUserEntity;
@@ -188,8 +191,10 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackAndShipAddressEntity.class,
         cPackAndShipSettingEntity.class,
         cPackAndShipShippingMethodEntity.class,
-        cPackAndShipShippingPackageEntity.class
-        },version = 145)
+        cPackAndShipShippingPackageEntity.class,
+        cStockOwnerEntity.class,
+        cAuthorizedStockOwnerEntity.class,
+        },version = 146)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -252,6 +257,8 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iPackAndShipAddressDao packAndShipAddressDao();
     public  abstract iPackAndShipShippingMethodDao packAndShipShippingMethodDao();
     public  abstract iPackAndShipShippingPackageDao packAndShipShippingPackageDao();
+    public  abstract iStockOwnerDao stockOwnerDao();
+
     private static acScanSuiteDatabase INSTANCE;
 
     public static acScanSuiteDatabase pGetDatabase(final Context context) {

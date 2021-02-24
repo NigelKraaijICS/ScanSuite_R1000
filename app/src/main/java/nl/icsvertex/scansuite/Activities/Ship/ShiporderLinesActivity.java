@@ -35,6 +35,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
+import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
@@ -266,6 +267,65 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         }
     }
 
+    public  void pShipmentSelected(cShipment pvShipment) {
+        cShipment.currentShipment = pvShipment;
+    }
+
+    public  void pShippingDone() {
+
+        //Try to close
+        if (!this.mTryToCloseOrderBln()){
+            return;
+        }
+
+        //Go back to order select activity
+        this.mStartOrderSelectActivity();
+
+    }
+
+    public void pShowOrderDoneFragment() {
+
+        cUserInterface.pPlaySound(R.raw.goodsound, null);
+
+        final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_packandshipdone), cAppExtension.activity.getString(R.string.message_close_packandship_fase),false);
+        stepDoneFragment.setCancelable(false);
+        stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
+    }
+
+    public  void pWorkplaceSelected(){
+
+
+        List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+        for (Fragment fragment : fragments) {
+            if (fragment instanceof WorkplaceFragment) {
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                fragmentTransaction.remove(fragment);
+                fragmentTransaction.commit();
+            }
+        }
+
+        if (!cPickorder.currentPickOrder.pUpdateWorkplaceViaWebserviceBln(cWorkplace.currentWorkplace.getWorkplaceStr())) {
+            cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_workplace_not_updated),null, true);
+            return;
+        }
+
+        //Register barcodeStr receiver, because the workplaceStr fragment has been shown
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
+
+        cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);
+
+       if (ShiporderLinesActivity.currentLineFragment instanceof  ShiporderLinesToShipFragment) {
+           ShiporderLinesToShipFragment shiporderLinesToShipFragment = (ShiporderLinesToShipFragment)ShiporderLinesActivity.currentLineFragment ;
+           shiporderLinesToShipFragment.pGetData();
+       }
+
+        this.mCheckAllDone();
+
+
+    }
+
+    //End Region Public Methods
+
     private void mHandleStartShip(cBarcodeScan pvBarcodeScan, Boolean pvSourceNoSelectedBln){
 
         cResult hulpRst;
@@ -402,60 +462,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         this.mStartQCLinesActivity();
 
     }
-
-    public  void pShipmentSelected(cShipment pvShipment) {
-        cShipment.currentShipment = pvShipment;
-    }
-
-    public  void pShippingDone() {
-
-        //Try to close
-        if (!this.mTryToCloseOrderBln()){
-            return;
-        }
-
-        //Go back to order select activity
-        this.mStartOrderSelectActivity();
-
-    }
-
-    public void pShowOrderDoneFragment() {
-
-        cUserInterface.pPlaySound(R.raw.goodsound, null);
-
-        final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_packandshipdone), cAppExtension.activity.getString(R.string.message_close_packandship_fase),false);
-        stepDoneFragment.setCancelable(false);
-        stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
-    }
-
-    public  void pWorkplaceSelected(){
-
-
-        List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-        for (Fragment fragment : fragments) {
-            if (fragment instanceof WorkplaceFragment) {
-                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                fragmentTransaction.remove(fragment);
-                fragmentTransaction.commit();
-            }
-        }
-
-        if (!cPickorder.currentPickOrder.pUpdateWorkplaceViaWebserviceBln(cWorkplace.currentWorkplace.getWorkplaceStr())) {
-            cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_workplace_not_updated),null, true);
-            return;
-        }
-
-        //Register barcodeStr receiver, because the workplaceStr fragment has been shown
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
-
-        cUserInterface.pShowSnackbarMessage(this.shiporderLineContainer,cAppExtension.activity.getString(R.string.message_workplace_selected) + ' ' + cWorkplace.currentWorkplace.getWorkplaceStr() ,R.raw.headsupsound,false);
-
-        this.mCheckAllDone();
-
-
-    }
-
-    //End Region Public Methods
 
     private void mCheckAllDone() {
 

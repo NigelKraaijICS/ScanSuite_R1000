@@ -16,6 +16,7 @@ import java.util.List;
 
 import ICS.Utils.cText;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.R;
@@ -124,7 +125,13 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Ship
             if (cAppExtension.activity instanceof ShiporderLinesActivity) {
                 ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
                 shiporderLinesActivity.pShipmentSelected(shipment);
+
+                if (localShipmentsObl.size() == 1 && cWorkplace.currentWorkplace != null) {
+                    shiporderLinesActivity.pHandleScan(null,true);
+                }
+
             }
+
         }
 
 

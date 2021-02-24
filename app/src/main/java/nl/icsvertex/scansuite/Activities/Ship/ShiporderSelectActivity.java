@@ -277,6 +277,13 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
+        //Try to find a pickorder with the current location and open it
+        cPickorder pickorder =  cPickorder.pGetPackAndShipOrderByCurrentLocationStr(pvBarcodeScan.getBarcodeOriginalStr());
+        if (pickorder != null) {
+            this.pShiporderSelected(pickorder);
+            return;
+        }
+
         //Set filter with scanned barcodeStr if there is no prefix
         if (!cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
             //no prefix, fine

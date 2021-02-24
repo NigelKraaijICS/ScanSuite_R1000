@@ -24,7 +24,7 @@ public class cInventoryorderBarcode {
 
     //Region Public Properties
 
-    private String barcode;
+    private final String barcode;
     public String getBarcodeStr() {
         return this.barcode;
     }
@@ -53,37 +53,37 @@ public class cInventoryorderBarcode {
         return barcodeWithoutCheckDigitStr;
     }
 
-    private String barcodetype;
+    private final String barcodetype;
     public String getBarcodeTypeStr() {
         return this.barcodetype;
     }
 
-    private Boolean isuniquebarcode;
+    private final Boolean isuniquebarcode;
     public Boolean getIsUniqueBarcodeBln() {
         return this.isuniquebarcode;
     }
 
-    private String itemno;
+    private final String itemno;
     public String getItemNoStr() {
         return this.itemno;
     }
 
-    private String variantCode;
+    private final String variantCode;
     public String getVariantCodeStr() {
         return this.variantCode;
     }
 
-    private String itemType;
+    private final String itemType;
     public String getItemTypeStr() {
         return this.itemType;
     }
 
-    private Double quantityPerUnitOfMeasure;
+    private final Double quantityPerUnitOfMeasure;
     public Double getQuantityPerUnitOfMeasureDbl() {
         return this.quantityPerUnitOfMeasure;
     }
 
-    private String unitOfMeasure;
+    private final String unitOfMeasure;
     public String getUnitOfMeasureStr() {
         return this.unitOfMeasure;
     }
@@ -154,6 +154,24 @@ public class cInventoryorderBarcode {
     public static void pInsertAllInDatabase(List<cInventoryorderBarcodeEntity> inventoryorderBarcodeEntities ) {
         cInventoryorderBarcodeViewModel inventoryorderBarcodeViewModel  = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderBarcodeViewModel.class);
         inventoryorderBarcodeViewModel.insertAll (inventoryorderBarcodeEntities);
+    }
+
+    public static cInventoryorderBarcode getSingleQuantityBarcodeForItemAndVariant(cInventoryorderBarcode pvInventoryorderBarcode) {
+
+        if (currentInventoryOrderBarcode.allInventoryorderBarcodesObl == null || cInventoryorderBarcode.allInventoryorderBarcodesObl.size() == 0) {
+            return  null;
+        }
+
+        for (cInventoryorderBarcode inventoryorderBarcode :currentInventoryOrderBarcode.allInventoryorderBarcodesObl) {
+            if (inventoryorderBarcode.getItemNoStr().equalsIgnoreCase(pvInventoryorderBarcode.getItemNoStr()) &&
+                inventoryorderBarcode.getVariantCodeStr().equalsIgnoreCase(pvInventoryorderBarcode.getVariantCodeStr()) &&
+                inventoryorderBarcode.getQuantityPerUnitOfMeasureDbl() == 1) {
+                return  inventoryorderBarcode;
+            }
+        }
+
+        return  null;
+
     }
 
 }

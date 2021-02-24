@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/default_margin"
+        app:layout_constraintStart_toStartOf="@id/binContainer"
         app:layout_constraintTop_toBottomOf="@id/binContainer"
         app:layout_constraintBottom_toTopOf="@id/quantityControlsContainer"/>
 
@@ -31,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_double_margin"
-        app:layout_constraintBottom_toTopOf="@id/recyclerScanActions"
+        app:layout_constraintTop_toBottomOf="@id/articleContainer"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerScanActions"

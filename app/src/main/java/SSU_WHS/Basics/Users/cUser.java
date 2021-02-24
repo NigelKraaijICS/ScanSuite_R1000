@@ -14,6 +14,7 @@ import SSU_WHS.Basics.Authorisations.cAuthorisationViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Branches.cBranchViewModel;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -71,31 +72,31 @@ public class cUser {
     private ArrayList<cAuthorisation> autorisationWithoutMergeAndCloseCachedObl;
     public ArrayList<cAuthorisation> autorisationWithoutMergeAndCloseObl() {
 
-      if (this.autorisationWithoutMergeAndCloseCachedObl != null) {
-          return  this.autorisationWithoutMergeAndCloseCachedObl;
-      }
+        if (this.autorisationWithoutMergeAndCloseCachedObl != null) {
+            return  this.autorisationWithoutMergeAndCloseCachedObl;
+        }
 
         this.autorisationWithoutMergeAndCloseCachedObl = new ArrayList<>();
 
-      if (autorisationObl == null || autorisationObl.size() == 0) {
-          return  this.autorisationWithoutMergeAndCloseCachedObl;
-      }
+        if (autorisationObl == null || autorisationObl.size() == 0) {
+            return  this.autorisationWithoutMergeAndCloseCachedObl;
+        }
 
-      for (cAuthorisation authorisation : this.autorisationObl) {
-          if (authorisation.getAuthorisationStr().toUpperCase().contains("MERGE")) {
+        for (cAuthorisation authorisation : this.autorisationObl) {
+            if (authorisation.getAuthorisationStr().toUpperCase().contains("MERGE")) {
 
-              if (!authorisation.getAuthorisationStr().equalsIgnoreCase("PACK_AND_SHIP_MERGE")) {
-                  continue;
-              }
-          }
-          if (authorisation.getAuthorisationStr().toUpperCase().contains("CLOSE")) {
-              continue;
-          }
+                if (!authorisation.getAuthorisationStr().equalsIgnoreCase("PACK_AND_SHIP_MERGE")) {
+                    continue;
+                }
+            }
+            if (authorisation.getAuthorisationStr().toUpperCase().contains("CLOSE")) {
+                continue;
+            }
 
 
-         this.autorisationWithoutMergeAndCloseCachedObl.add(authorisation);
-      }
-      return   this.autorisationWithoutMergeAndCloseCachedObl;
+            this.autorisationWithoutMergeAndCloseCachedObl.add(authorisation);
+        }
+        return   this.autorisationWithoutMergeAndCloseCachedObl;
 
 
     }
@@ -114,6 +115,8 @@ public class cUser {
 
     public  cBranch currentBranch;
     public  cAuthorisation currentAuthorisation;
+    public cStockOwner currentStockOwner;
+
 
     private cUserViewModel getUserViewModel () {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cUserViewModel.class);
@@ -125,8 +128,8 @@ public class cUser {
 
     //end region Public Properties
 
-     //Region Constructor
-     private cUser(JSONObject pvJsonObject) {
+    //Region Constructor
+    private cUser(JSONObject pvJsonObject) {
         this.userEntity = new cUserEntity(pvJsonObject);
         this.usernameStr = userEntity.getUsernameStr();
         this.nameStr = userEntity.getNameStr();
@@ -163,7 +166,7 @@ public class cUser {
             }
             return false;
         }
-                }
+    }
 
     public boolean pGetBranchesBln() {
 
@@ -203,7 +206,7 @@ public class cUser {
                 cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETBRANCHESFORUSER);
                 return  false;
             }
-                   }
+        }
         return false;
     }
 
@@ -244,7 +247,7 @@ public class cUser {
                 this.autorisationObl.add((authorisation));
 
                 if (authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK ||
-                    authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PV) {
+                        authorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.PICK_PV) {
                     if (cSetting.PICK_SORT_FASE_AVAILABLE()) {
 
                         cAuthorisation authorisationSorting = new cAuthorisation(cAuthorisation.AutorisationEnu.SORTING.toString(), this.autorisationObl.size() *10 + 10 );
@@ -259,10 +262,10 @@ public class cUser {
                     if (cSetting.PICK_PACK_AND_SHIP_FASE_AVAILABLE()) {
                         cAuthorisation authorisationShipping = new cAuthorisation(cAuthorisation.AutorisationEnu.SHIPPING.toString(), this.autorisationObl.size() *10 + 10 );
 
-                      if (!shippingAddedBln) {
-                          this.autorisationObl.add(authorisationShipping);
-                          shippingAddedBln = true;
-                      }
+                        if (!shippingAddedBln) {
+                            this.autorisationObl.add(authorisationShipping);
+                            shippingAddedBln = true;
+                        }
                     }
 
                     if (cSetting.PICK_STORE_FASE_AVAILABLE()) {
@@ -336,10 +339,10 @@ public class cUser {
     }
 
     public static boolean pTruncateTableBln(){
-         cUserViewModel userViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cUserViewModel.class);
+        cUserViewModel userViewModel =   new ViewModelProvider(cAppExtension.fragmentActivity).get(cUserViewModel.class);
         userViewModel.deleteAll();
         return true;
-            }
+    }
 
     public static boolean pGetUsersViaWebserviceBln(Boolean pvRefreshBln) {
 

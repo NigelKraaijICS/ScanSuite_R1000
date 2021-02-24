@@ -174,55 +174,37 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
             public void onClick(View view) {
 
 
+                if (editTextCurrentLocation.getText().toString().trim().isEmpty() || cBarcodeLayout.pCheckBarcodeWithLayoutBln(editTextCurrentLocation.getText().toString(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+                    cUserInterface.pDoNope(editTextCurrentLocation, true, true);
+                    return;
+                }
+
                 if (cAppExtension.activity instanceof  PickorderLinesActivity) {
 
                     PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
-
-                    if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
-                        cUserInterface.pDoNope(editTextCurrentLocation, true, true);
-                    }
-                    else {
                         dismiss();
                         pickorderLinesActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
                     }
-                }
 
 
                 if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
-
-                    PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
-
-                    if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
-                        cUserInterface.pDoNope(editTextCurrentLocation, true, true);
-                    }
-                    else {
+                        PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
                         dismiss();
                         pickorderLinesGeneratedActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
-                    }
                 }
 
                 if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
 
                     ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
-
-                    if (editTextCurrentLocation.getText().toString().trim().isEmpty()) {
-                        cUserInterface.pDoNope(editTextCurrentLocation, true, true);
-                    }
-                    else {
                         dismiss();
                         returnorderDocumentActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
                     }
-                }
-
             }
         });
     }
 
 
     public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
-
-
-
 
 
         //Has prefix, so check if this is a BIN
@@ -252,6 +234,11 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
                 this.setLocationButton.callOnClick();
                 return;
             }
+        }
+
+        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+            cUserInterface.pDoNope(this.editTextCurrentLocation, true, true);
+            return;
         }
 
             //no prefix, fine

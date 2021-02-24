@@ -109,6 +109,8 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         return  this.intakeorderMATLineAdapter;
     }
 
+    public  static String binScanToHandleStr;
+
     //End Region Private Properties
 
     //Region Default Methods
@@ -332,6 +334,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         this.mHideArticleInfo();
         this.mSetScanlineConstraints();
+        this.mShowDoneButton();
 
         this.imageButtonNoInputPropertys.setVisibility(View.GONE);
 
@@ -343,12 +346,13 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         //Raise quantity with scanned barcodeStr, if we started this activity with a scan
         if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned != null) {
-            this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
+            this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()), false);
             cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned =null;
         }
 
-        if (cIntakeorder.currentIntakeOrder.currentBin != null) {
-            this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.currentBin.getBinCodeStr()));
+        if (IntakeOrderIntakeGeneratedActivity.binScanToHandleStr != null && !IntakeOrderIntakeGeneratedActivity.binScanToHandleStr.isEmpty()) {
+            this.pHandleScan(cBarcodeScan.pFakeScan(IntakeOrderIntakeGeneratedActivity.binScanToHandleStr), true);
+            IntakeOrderIntakeGeneratedActivity.binScanToHandleStr = null;
         }
 
     }
@@ -375,7 +379,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
     //Region Public Methods
 
-    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
+    public void pHandleScan(cBarcodeScan pvBarcodeScan, boolean pvIsBinBln) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
@@ -403,7 +407,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         }
 
         //Check if we have scanned a BIN and check if there are not handled linesInt for this BIN
-        if (!binCheckedBln && cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
+        if (pvIsBinBln || !binCheckedBln && cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
             //First check if this is a BIN
             cBranchBin branchBin =  cUser.currentUser.currentBranch.pGetBinByCode(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
             hulpRst = this.mHandleBINScanRst(branchBin);
@@ -422,6 +426,8 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
                 cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true,true);
                 return;
             }
+
+            this.mFieldsInitialize();
             return;
         }
 
@@ -429,7 +435,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
     }
 
-    private  void mAcceptStore() {
+    public  void pAcceptStore() {
 
         if (this.quantityScannedDbl == 0 ) {
             this.mResetCurrents();
@@ -440,6 +446,11 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         //We are done
         this.mSendLine(null);
 
+    }
+
+    public  void pCancelStore() {
+        this.mResetCurrents();
+        this.mGoBackToLinesActivity();
     }
 
     //End Region Public Methods
@@ -474,7 +485,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
                 //If we only have one barcodeStr, then automatticaly select that barcodeStr
                 if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().size() == 1) {
-                    pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(0).getBarcodeStr()));
+                    pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(0).getBarcodeStr()), false);
                     return;
                 }
 
@@ -508,6 +519,17 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         } else {
             this.articleBarcodeText.setText(cAppExtension.context.getString(R.string.mutiple_barcodes_posible));
         }
+    }
+
+    private void mShowDoneButton(){
+
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
+            this.imageButtonDone.setVisibility(View.GONE);
+            return;
+        }
+
+        this.imageButtonDone.setVisibility(View.VISIBLE);
+        this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
     }
 
     private  void mShowArticleImage() {
@@ -581,7 +603,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         ConstraintSet constraintSetSpace = new ConstraintSet();
         constraintSetSpace.clone(this.intakeorderIntakeGeneratedContainer);
-        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, binContainer.getId(), ConstraintSet.BOTTOM);
         constraintSetSpace.applyTo(this.intakeorderIntakeGeneratedContainer);
 
     }
@@ -593,6 +615,11 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         cResult result = new cResult();
         result.resultBln = true;
 
+
+        if (cIntakeorderBarcode.currentIntakeOrderBarcode != null && pvBarcodeScan.getBarcodeOriginalStr().equalsIgnoreCase(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeStr())) {
+            this.mBarcodeSelected(cIntakeorderBarcode.currentIntakeOrderBarcode);
+            return result;
+        }
 
         //Check if this is a barcodeStr we already know
         cIntakeorderBarcode.currentIntakeOrderBarcode = cIntakeorder.currentIntakeOrder.pGetOrderBarcode(pvBarcodeScan);
@@ -612,7 +639,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         //Set the scanned barcodeStr, so we can raise quantity in next activity
         cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cIntakeorderBarcode.currentIntakeOrderBarcode;
-
 
         return result;
     }
@@ -789,6 +815,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
         //We can add a line, and we need to check with the ERP, so check, add and open it
         this.mAddERPArticle(pvBarcodeScan);
+        this.mFieldsInitialize();
         cUserInterface.pHideGettingData();
 
 
@@ -874,15 +901,6 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
      //ScanActions
      private void mFillRecycler(List<cIntakeorderMATLine> pvDataObl) {
-
-        if (pvDataObl == null | pvDataObl.size() == 0) {
-            this.imageButtonDone.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            this.imageButtonDone.setVisibility(View.VISIBLE);
-            this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
-        }
          this.getIntakeorderMATLineAdapter().pFillData(pvDataObl);
          this.recyclerScanActions.setHasFixedSize(false);
          this.recyclerScanActions.setAdapter(this.getIntakeorderMATLineAdapter());
@@ -894,7 +912,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
         this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               mAcceptStore();
+               pAcceptStore();
             }
         });
     }
@@ -933,7 +951,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
                     cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
                     return;
                 }
-                pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeStr()));
+                pHandleScan(cBarcodeScan.pFakeScan(cIntakeorderBarcode.currentIntakeOrderBarcode.getBarcodeStr()), false);
             }
         });
     }
@@ -1073,7 +1091,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private void mSetArticleInfo(){
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
-            this.articleContainer.setVisibility(View.GONE);
+            this.articleContainer.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -1090,8 +1108,8 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
 
     private void mSetQuantityInfo(){
 
-        if (this.quantityScannedDbl == 0) {
-            this.quantityControlsContainer.setVisibility(View.GONE);
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
+            this.quantityControlsContainer.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -1103,7 +1121,7 @@ public class IntakeOrderIntakeGeneratedActivity extends AppCompatActivity implem
     private void mSetBinInfo(){
 
         if (cIntakeorder.currentIntakeOrder.currentBin == null) {
-            this.binContainer.setVisibility(View.GONE);
+            this.binContainer.setVisibility(View.INVISIBLE);
             return;
         }
 
