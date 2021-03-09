@@ -37,7 +37,7 @@
         android:focusable="true"
         >
         <TextView
-            android:id="@+id/textViewImAt"
+            android:id="@+id/textViewConfirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/confirm"
@@ -53,8 +53,8 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/textsize_big"
             android:textColor="@color/colorWhite"
-            app:layout_constraintStart_toStartOf="@id/textViewImAt"
-            app:layout_constraintTop_toBottomOf="@id/textViewImAt"
+            app:layout_constraintStart_toStartOf="@id/textViewConfirm"
+            app:layout_constraintTop_toBottomOf="@id/textViewConfirm"
             android:paddingRight="@dimen/default_double_padding"
             android:paddingEnd="@dimen/default_double_padding"/>
         <androidx.appcompat.widget.AppCompatImageView

@@ -44,6 +44,7 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
@@ -270,7 +271,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.mShowNoInputPropertyInfo();
 
         this.mCheckLineDone();
-        this.mHideArticleInfo();
     }
 
     @Override
@@ -336,6 +336,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
+
+
         if (!cPickorder.currentPickOrder.isPABln()) {
             PickorderPickActivity.destionationScannedBln = true;
         }
@@ -357,10 +359,26 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             return;
         }
 
-        if (!this.mFindBarcodeInLineBarcodes(pvBarcodeScan)) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
-            return;
-        }
+        //Check if there are composite barcodes for this line that matcht the scan
+       List<cPickorderCompositeBarcode> compositeBarcodesMatchedObl =   cPickorderLine.currentPickOrderLine.pFindCompositeBarcodeForLine(pvBarcodeScan);
+
+        // No Matches
+       if  (compositeBarcodesMatchedObl.size() == 0) {
+
+           //Just look for a normal barcode with the scan
+           if (!cPickorderLine.currentPickOrderLine.pFindBarcodeViaBarcodeInLineBarcodes(pvBarcodeScan)) {
+               cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+               return;
+           }
+       }
+        else
+       {
+           if (! cPickorderLine.currentPickOrderLine.pFindBarcodeViaCompositeBarcodeInLineBarcodes(compositeBarcodesMatchedObl,pvBarcodeScan.getBarcodeOriginalStr())) {
+               cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+               return;
+           }
+
+       }
 
         //If we found the barcodeStr, currentbarcode is alreay filled, so make this selected
         this.mBarcodeSelected(cPickorderBarcode.currentPickorderBarcode);
@@ -468,15 +486,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
       if (hideArticleInfoContainer) {
-            this.articleInfoContainer.setVisibility(View.GONE);
-            ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            newCardViewLayoutParams.setMargins(15,15,15,15);
-            this.articleContainer.setLayoutParams(newCardViewLayoutParams);
-
-            ConstraintSet constraintSetSpace = new ConstraintSet();
-            constraintSetSpace.clone(pickorderPickContainer);
-            constraintSetSpace.connect(articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
-            constraintSetSpace.applyTo(pickorderPickContainer);
+            this.mHideArticleInfo();
       }
         else{
             this.articleInfoContainer.setVisibility(View.VISIBLE);
@@ -880,7 +890,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //We can scan article multiple times
         if (!PickorderPickActivity.articleScannedLastBln || !cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln() ) {
 
-            if (!this.mFindBarcodeInLineBarcodes(pvBarcodeScan)) {
+            if (!cPickorderLine.currentPickOrderLine.pFindBarcodeViaBarcodeInLineBarcodes(pvBarcodeScan)) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
                 return;
             }
@@ -914,24 +924,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     // Lines, Barcodes, Packing Tables and destionation
-
-    private  boolean mFindBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
-
-
-
-        if (cPickorderLine.currentPickOrderLine == null || cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
-            return false;
-        }
-
-        for (cPickorderBarcode pickorderBarcode : cPickorderLine.currentPickOrderLine.barcodesObl) {
-
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
-                cPickorderBarcode.currentPickorderBarcode = pickorderBarcode;
-                return true;
-            }
-        }
-        return false;
-    }
 
     private  cResult mCheckDestionationRst(cBarcodeScan pvBarcodeScan) {
 

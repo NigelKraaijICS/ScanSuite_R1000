@@ -188,7 +188,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         this.item_article_stock = pvMenu.findItem(R.id.item_article_stock);
         this.item_article_stock .setVisible(false);
 
-        if (!cMoveorder.currentMoveOrder.isMoveValidateStockBln())  {
+        if (cMoveorder.currentMoveOrder == null || !cMoveorder.currentMoveOrder.isMoveValidateStockBln())  {
             return true;
         }
 

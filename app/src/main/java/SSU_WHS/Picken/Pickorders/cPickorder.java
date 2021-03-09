@@ -39,6 +39,7 @@ import SSU_WHS.General.cDatabase;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
@@ -444,6 +445,9 @@ public class cPickorder{
     }
     public List<cPickorderBarcode> barcodesObl() {
         return  cPickorderBarcode.allBarcodesObl;
+    }
+    public List<cPickorderCompositeBarcode> compositeBarcodesObl() {
+        return  cPickorderCompositeBarcode.allCompositeBarcodesObl;
     }
     public List<cPickorderLineProperty> linePropertysObl() { return  cPickorderLineProperty.allLinePropertysObl; }
     public List<cPickorderLinePropertyValue> linePropertyValueObl() { return  cPickorderLinePropertyValue.allLinePropertysValuesObl; }
@@ -878,6 +882,13 @@ public class cPickorder{
             return result;
         }
 
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!this.pGetCompositeBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_composite_barcodes_failed));
+            return result;
+        }
+
         // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
         if (!this.pGetAdressesViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -956,6 +967,13 @@ public class cPickorder{
             return result;
         }
 
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!this.pGetCompositeBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_composite_barcodes_failed));
+            return result;
+        }
+
         // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
         if (!this.pGetAdressesViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -1003,6 +1021,13 @@ public class cPickorder{
         if (!this.pGetBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!this.pGetCompositeBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_composite_barcodes_failed));
             return result;
         }
 
@@ -1086,6 +1111,13 @@ public class cPickorder{
             return result;
         }
 
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!this.pGetCompositeBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_composite_barcodes_failed));
+            return result;
+        }
+
         // Get all packages
         if (!this.pGetShippingPackagedViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -1137,6 +1169,13 @@ public class cPickorder{
         if (!this.pGetBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_barcodes_failed));
+            return result;
+        }
+
+        // Get all barcodes, if size =0 or webservice error then stop
+        if (!this.pGetCompositeBarcodesViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_composite_barcodes_failed));
             return result;
         }
 
@@ -2224,6 +2263,32 @@ public class cPickorder{
         }
     }
 
+    public boolean pGetCompositeBarcodesViaWebserviceBln(Boolean pvRefreshBln) {
+
+        if (pvRefreshBln) {
+            cPickorderCompositeBarcode.allCompositeBarcodesObl = null;
+            cPickorderCompositeBarcode.pTruncateTableBln();
+        }
+
+        cWebresult WebResult;
+        WebResult =  this.getPickorderViewModel().pGetCompositeBarcodesFromWebserviceWrs();
+
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPickorderCompositeBarcode pickorderCompositeBarcode = new cPickorderCompositeBarcode(jsonObject);
+                pickorderCompositeBarcode.pInsertInDatabaseBln();
+
+            }
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSEORDERCOMPOSITEBARCODES);
+            return  false;
+        }
+
+        return  true;
+    }
+
     public boolean pGetCommentsViaWebserviceBln(Boolean pvRefeshBln) {
 
         if (pvRefeshBln) {
@@ -2386,22 +2451,20 @@ public class cPickorder{
             //This is the first pickorder that we selected, so create a combined pick from this
             if (cPickorder.pickorderSelectedObl().size() == 1) {
 
-                if (!this.mCreateCombinedOrderViaWebserviceBln()) {
+                cResult hulpRst = mCreateCombinedOrderViaWebserviceRst();
+                if (!hulpRst.resultBln) {
                     result.resultBln = false;
-                    result.pAddErrorMessage(cAppExtension.activity.getString(R.string.couldnt_create_combined_order));
+                    result.pAddErrorMessage(cAppExtension.activity.getString(R.string.couldnt_create_combined_order) + " " + hulpRst.messagesStr());
                     return result;
                 }
-
             }
             else
             {
-
                 if (!this.mAddOrderToCombinedOrderViaWebserviceBln()) {
                     result.resultBln = false;
                     result.pAddErrorMessage(cAppExtension.activity.getString(R.string.couldnt_create_combined_order));
                     return result;
                 }
-
             }
             return  result;
         }
@@ -2715,7 +2778,10 @@ public class cPickorder{
         pickorderViewModel.deleteAll();
     }
 
-    private boolean mCreateCombinedOrderViaWebserviceBln() {
+    private cResult mCreateCombinedOrderViaWebserviceRst() {
+
+        cResult result = new cResult();
+        result.resultBln = true;
 
         cWebresult WebResult;
         WebResult =  this.getPickorderViewModel().pCreateCombinedPickViaWebserviceWrs();
@@ -2727,12 +2793,14 @@ public class cPickorder{
                 break;
             }
 
-            return true;
+            return result;
 
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
-            return  false;
+            result.resultBln = false;
+            result.pAddErrorMessage(WebResult.getResultStr());
+            return  result;
         }
     }
 

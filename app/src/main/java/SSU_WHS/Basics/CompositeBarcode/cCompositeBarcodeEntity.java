@@ -50,7 +50,7 @@ public class cCompositeBarcodeEntity {
 
     public cCompositeBarcodeEntity(JSONObject jsonObject) {
         try {
-            this.compositeBarcodeStr = jsonObject.getString(cDatabase.COMPOSITEBARCODE_NAMESTR);
+            this.compositeBarcodeStr = jsonObject.getString(cDatabase.COMPOSITEBARCODESPLITTED_NAMESTR);
             this.compositeBarcodeTypeStr = jsonObject.getString(cDatabase.COMPOSITEBARCODETYPE_NAMESTR);
             this.descriptionStr = jsonObject.getString(cDatabase.DESCRIPTION_NAMESTR);
             this.fieldSeperatorStr = jsonObject.getString(cDatabase.FIELDSEPERATOR_NAMESTR);

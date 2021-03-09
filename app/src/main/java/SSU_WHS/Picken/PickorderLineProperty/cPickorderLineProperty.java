@@ -115,6 +115,10 @@ public class cPickorderLineProperty {
             }
         }
 
+        if (cPickorderLinePropertyValue.allLinePropertysValuesObl == null) {
+            cPickorderLinePropertyValue.allLinePropertysValuesObl = new ArrayList<>();
+        }
+
         //Add a new value
         cPickorderLinePropertyValue.allLinePropertysValuesObl.add(new cPickorderLinePropertyValue(this.getLineNoInt(), this.getPropertyCodeStr(),pvValueStr));
     }
@@ -149,10 +153,8 @@ public class cPickorderLineProperty {
             }
         }
 
-        resultRst.resultBln = false;
-        resultRst.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_itempropery_value_wrong));
+        resultRst.resultBln = true;
         return  resultRst;
-
 
     }
 

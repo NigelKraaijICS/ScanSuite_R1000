@@ -503,6 +503,7 @@
     <string name="error_get_article_images_failed">Getting article images failed</string>
     <string name="error_couldnt_release_lock_order">Couln\'t release order lock</string>
     <string name="error_get_barcodes_failed">Getting barcodes failed</string>
+    <string name="error_get_composite_barcodes_failed">Getting composite barcodes failed</string>
     <string name="error_getting_sort_lines_failed">Could not get sort lines</string>
     <string name="error_getting_store_lines_failed">Could not get store lines</string>
     <string name="error_get_adresses_failed">Getting adresses failed</string>
@@ -919,6 +920,7 @@
     <string name="message_itempropery_value_already_used">Value already used</string>
     <string name="message_itempropery_value_wrong">Value wrong</string>
     <string name="addedorhandled">added/handled</string>
+    <string name="message_property_unknown">Property unknown</string>
     <!--End Region return-->
 
     <!--Region plurals-->

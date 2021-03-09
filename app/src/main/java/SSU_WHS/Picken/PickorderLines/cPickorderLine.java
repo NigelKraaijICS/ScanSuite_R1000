@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
+import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cDateAndTime;
 import ICS.Utils.cResult;
 import ICS.Weberror.cWeberror;
@@ -22,6 +23,7 @@ import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupProperty;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
@@ -253,6 +255,10 @@ public class cPickorderLine {
 
         return  resultObl;
 
+    }
+
+    public List<cPickorderCompositeBarcode> pickorderCompositeBarcodeObl() {
+        return cPickorderCompositeBarcode.pGetPickorderCompositeBarcodesViaVariantAndItemNoObl(this.getItemNoStr(), this.getVariantCodeStr());
     }
 
     public  boolean hasPropertysBln() {
@@ -854,6 +860,73 @@ public class cPickorderLine {
     //End Region Public Methods
 
     //Region Private Methods
+
+    public   boolean pFindBarcodeViaBarcodeInLineBarcodes(cBarcodeScan pvBarcodeScan) {
+
+        if (this.barcodesObl == null || this.barcodesObl.size() == 0) {
+            return false;
+        }
+
+        for (cPickorderBarcode pickorderBarcode : this.barcodesObl) {
+
+            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) || pickorderBarcode.getBarcodeWithoutCheckDigitStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeFormattedStr())) {
+                cPickorderBarcode.currentPickorderBarcode = pickorderBarcode;
+                return true;
+            }
+        }
+        return  false;
+
+    }
+
+
+        public List<cPickorderCompositeBarcode> pFindCompositeBarcodeForLine(cBarcodeScan pvBarcodeScan) {
+
+        List<cPickorderCompositeBarcode> resultObl = new ArrayList<>();
+
+        if (this.pickorderCompositeBarcodeObl() == null || this.pickorderCompositeBarcodeObl().size() == 0) {
+            return resultObl;
+        }
+
+        for (cPickorderCompositeBarcode pickorderCompositeBarcode : this.pickorderCompositeBarcodeObl()) {
+
+            if (pickorderCompositeBarcode.compositeBarcode() == null) {
+                continue;
+            }
+
+            if (pickorderCompositeBarcode.compositeBarcode().getCompositeBarcodeTypeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeTypeStr())) {
+                resultObl.add(pickorderCompositeBarcode);
+            }
+
+        }
+        return resultObl;
+    }
+
+    public   boolean pFindBarcodeViaCompositeBarcodeInLineBarcodes(List<cPickorderCompositeBarcode> pvPickorderCompositeBarcodeObl, String pvBarcodeStr) {
+
+        if (this.barcodesObl == null || this.barcodesObl.size() == 0) {
+            return false;
+        }
+
+        for (cPickorderCompositeBarcode pickorderCompositeBarcode : pvPickorderCompositeBarcodeObl) {
+
+            pickorderCompositeBarcode.KeysAndValuesObl =pickorderCompositeBarcode.compositeBarcode().pGetBarcodeKeysAndValuesObl(pvBarcodeStr);
+            String barcodeStr =  pickorderCompositeBarcode.KeysAndValuesObl.get("ARTICLE");
+
+
+            if (barcodeStr != null && !barcodeStr.isEmpty()) {
+                for (cPickorderBarcode pickorderBarcode : this.barcodesObl) {
+
+                    if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(barcodeStr)) {
+                        cPickorderBarcode.currentPickorderBarcode = pickorderBarcode;
+                        cPickorderCompositeBarcode.currentCompositePickorderBarcode = pickorderCompositeBarcode;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 
     private boolean mUpdateLocalStatusBln(Integer pvNewStatusInt) {
 

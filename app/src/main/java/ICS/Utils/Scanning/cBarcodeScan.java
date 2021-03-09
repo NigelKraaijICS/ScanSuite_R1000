@@ -662,9 +662,6 @@ public class cBarcodeScan {
 
         assert scannedBarcodeStr != null;
 
-
-
-
         scannedBarcodeStr = mCleanBarcodeStr(scannedBarcodeStr);
         returnBarcodeStr =  mCleanBarcodeStr(scannedBarcodeStr) ;
 
@@ -679,6 +676,10 @@ public class cBarcodeScan {
             if (returnBarcodeStr.length() == 8) {
                 returnBarcodeStr = returnBarcodeStr.substring(0,8);
             }
+        }
+
+        if (barcodeTypeStr.contains("GS1")) {
+            barcodeTypeStr = "GS1-128";
         }
 
         resultBarcodeScan = new cBarcodeScan();

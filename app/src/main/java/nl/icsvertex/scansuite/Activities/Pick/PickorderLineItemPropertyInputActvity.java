@@ -33,6 +33,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
@@ -271,6 +272,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     @Override
     public void mInitScreen() {
 
+        if ( cPickorderCompositeBarcode.currentCompositePickorderBarcode != null) {
+            this.mHandleCompositeData();
+        }
     }
 
     //End Regioni ICSDefaultFragment methods
@@ -281,6 +285,24 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
         if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().size() == 1) {
             cPickorderLineProperty.currentPickorderLineProperty = cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().get(0);
+
+            if (cPickorderLineProperty.currentPickorderLineProperty.getItemProperty()== null ) {
+                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_property_unknown),"",true, true);
+                return;
+            }
+
+
+            //Check if we scanned (another) composite barcode and handle it
+            List<cPickorderCompositeBarcode> compositeBarcodesMatchedObl =   cPickorderLine.currentPickOrderLine.pFindCompositeBarcodeForLine(pvBarcodeScan);
+            if  (compositeBarcodesMatchedObl.size() > 0) {
+                if (!cPickorderLine.currentPickOrderLine.pFindBarcodeViaCompositeBarcodeInLineBarcodes(compositeBarcodesMatchedObl, pvBarcodeScan.getBarcodeOriginalStr())) {
+                    cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line),"",true, true);
+                }
+                else{
+                    this.mHandleCompositeData();
+                }
+                return;
+            }
 
             if (!cRegex.pCheckRegexBln( cPickorderLineProperty.currentPickorderLineProperty.getItemProperty().getLayoutStr(),pvBarcodeScan.getBarcodeOriginalStr())) {
                 cUserInterface.pShowSnackbarMessage(this.itemPropertyRecyclerview,cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line),R.raw.badsound, true);
@@ -574,6 +596,27 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         itemPropertyNoInputFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.ITEMPROPERTYVALUENOINPUTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
     }
+
+    private void mHandleCompositeData(){
+
+        if (cPickorderCompositeBarcode.currentCompositePickorderBarcode == null || cPickorderCompositeBarcode.currentCompositePickorderBarcode.KeysAndValuesObl == null || cPickorderCompositeBarcode.currentCompositePickorderBarcode.KeysAndValuesObl.size() == 0 ) {
+            return;
+        }
+
+        for (cPickorderLineProperty pickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl() ) {
+            String barcodeStr = cPickorderCompositeBarcode.currentCompositePickorderBarcode.KeysAndValuesObl.get(pickorderLineProperty.getPropertyCodeStr());
+
+            if (barcodeStr != null && !barcodeStr.isEmpty()) {
+                this.pHandleScan(cBarcodeScan.pFakeScan(barcodeStr));
+            }
+        }
+
+        cPickorderCompositeBarcode.currentCompositePickorderBarcode = null;
+
+
+    }
+
+
 
     //End Region Private Methods
 }

@@ -68,7 +68,6 @@
                 app:layout_constraintTop_toBottomOf="@id/imageButtonNoInputPropertys"
                 app:srcCompat="@drawable/ic_barcodescan_black_24dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/articleInfoContainer"
             android:layout_width="match_parent"
@@ -77,4 +76,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
             />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>

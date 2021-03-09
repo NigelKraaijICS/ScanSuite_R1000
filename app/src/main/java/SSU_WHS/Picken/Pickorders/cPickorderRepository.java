@@ -779,6 +779,22 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
+    public cWebresult pGetCompositeBarcodesFromWebservice(){
+        ArrayList<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mPickorderCompsoiteBarcodesGetFromWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     public cWebresult pGetLineBarcodesFromWebservice(cWarehouseorder.ActionTypeEnu pvActionTypeEnu){
         ArrayList<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
@@ -1893,6 +1909,40 @@ public class cPickorderRepository {
 
             try{
                 WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERBARCODES, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
+        }
+    }
+
+    private static class mPickorderCompsoiteBarcodesGetFromWebserviceAsyncTask extends AsyncTask <Void, Void, cWebresult>{
+        @Override
+        protected cWebresult doInBackground(final Void... params){
+            cWebresult WebresultWrs = new cWebresult();
+
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+            l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.PICKEN.toString().toUpperCase());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+            l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+            l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+            l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+            try{
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETWAREHOUSEORDERCOMPOSITEBARCODES, l_PropertyInfoObl);
             } catch (JSONException e) {
                 WebresultWrs.setResultBln(false);
                 WebresultWrs.setSuccessBln(false);

@@ -791,4 +791,6 @@
     <string name="message_itempropery_value_already_used">"Deze heb je al gehad"</string>
     <string name="message_itempropery_value_wrong">Deze waarde is niet toegestaan</string>
     <string name="addedorhandled">toegevoegd/afgehandeld</string>
+    <string name="error_get_composite_barcodes_failed">Ophalen samengestelde barcodes mislukt</string>
+    <string name="message_property_unknown">Eigenschap onbekend</string>
 </resources>

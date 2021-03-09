@@ -107,6 +107,10 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         this.thisRecyclerView = pvRecyclerView;
         super.onAttachedToRecyclerView( this.thisRecyclerView);
 
+        if (this.localPickorderLinesObl == null) {
+            return;
+        }
+
         if (cPickorder.currentPickOrder.getLastSelectedIndexInt() > this.localPickorderLinesObl.size() -1 ) {
             cPickorder.currentPickOrder.lastSelectedIndexInt = this.localPickorderLinesObl.size() -1 ;
         }
@@ -144,10 +148,10 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
 
         //Pick recyclers
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
-            quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
+            quantityToShowStr  = cText.pIntToStringStr(currentPickorderLine.getQuantityDbl().intValue());
             pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
             pvHolder.textViewBIN.setVisibility(View.VISIBLE);
-            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
+            pvHolder.imageSendStatus.setVisibility(View.GONE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
@@ -171,7 +175,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
             quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
             pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
             pvHolder.textViewBIN.setVisibility(View.VISIBLE);
-            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
+            pvHolder.imageSendStatus.setVisibility(View.GONE);
 
             if (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_NOTSENT || (currentPickorderLine.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_ERROR_SENDING)) {
                 pvHolder.imageSendStatus.setVisibility(View.VISIBLE);
@@ -191,7 +195,7 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
             quantityToShowStr  = cText.pDoubleToStringStr(currentPickorderLine.getQuantityHandledDbl());
             pvHolder.textViewBIN.setText(currentPickorderLine.getBinCodeStr());
             pvHolder.textViewBIN.setVisibility(View.VISIBLE);
-            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
+            pvHolder.imageSendStatus.setVisibility(View.GONE);
             pvHolder.textViewSourceNo.setVisibility(View.GONE);
         }
 
@@ -211,6 +215,10 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
             quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
             pvHolder.textViewBIN.setText("");
+            pvHolder.textViewBIN.setVisibility(View.GONE);
+        }
+
+        if (currentPickorderLine.getBinCodeStr().isEmpty()) {
             pvHolder.textViewBIN.setVisibility(View.GONE);
         }
 

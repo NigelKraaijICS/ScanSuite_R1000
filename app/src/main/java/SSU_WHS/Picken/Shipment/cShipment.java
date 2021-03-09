@@ -307,7 +307,7 @@ public class cShipment {
         cWebresult webresult =  this.getPickorderViewModel().pPickorderSourceDocumentShippedViaWebserviceBln();
 
         //If something went wrong, show this and rest statusses
-        if (! webresult.getResultBln()) {
+        if (! webresult.getResultBln() || !webresult.getSuccessBln()) {
 
             result.resultBln = false;
 

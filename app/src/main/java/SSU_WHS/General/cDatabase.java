@@ -19,6 +19,7 @@ public class cDatabase {
     public static final String TABLENAME_COMPOSITEBARCODE = "CompositeBarcode";
     public static final String TABLENAME_COMPOSITEBARCODEPROPERTY = "CompositeBarcodeProperty";
     public static final String TABLENAME_PICKORDERBARCODE = "PickorderBarcode";
+    public static final String TABLENAME_PICKORDERCOMPOSITEBARCODE = "PickorderCompositeBarcode";
     public static final String TABLENAME_PICKORDERLINEBARCODE = "PickorderLineBarcode";
     public static final String TABLENAME_ARTICLEIMAGE = "ArticleImage";
     public static final String TABLENAME_ARTICLE = "Article" ;
@@ -121,6 +122,7 @@ public class cDatabase {
     //endregion B
 
     //region C
+    public static final String COMPOSITEBARCODE_NAMESTR = "CompositeBarcode";
     public static final String COMMENTLINENO_NAMESTR = "CommentLineNo";
     public static final String CURRENTLOCATION_NAMESTR = "CurrentLocation";
     public static final String COMMENT_NAMESTR = "Comment";
@@ -331,7 +333,7 @@ public class cDatabase {
     public static final String PROPERTYGROUP_NAMESTR = "Propertiegroep";
     public static final String ADDRESSES_NAMESTR = "Addresses";
     public static final String SHIPPINGMETHODS_NAMESTR = "ShippingMethods";
-    public static final String COMPOSITEBARCODE_NAMESTR = "Composite_barcode";
+    public static final String COMPOSITEBARCODESPLITTED_NAMESTR = "Composite_barcode";
     public static final String COMPOSITEBARCODETYPE_NAMESTR = "Compositebarcode_type";
     public static final String FIELDSEPERATOR_NAMESTR = "Field_separator";
     public static final String LAYOUTREGEX_NAMESTR = "Layout_regex";

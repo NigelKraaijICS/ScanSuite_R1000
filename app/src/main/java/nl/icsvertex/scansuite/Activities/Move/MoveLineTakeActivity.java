@@ -226,7 +226,6 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
             e.printStackTrace();
         }
         LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
-        cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         super.onPause();
     }
 

@@ -193,6 +193,13 @@ public class PickorderLinesToPickFragment extends  Fragment  implements iICSDefa
     }
 
     public  void pSetChosenBinCode( ) {
+
+        if (cPickorderLine.currentPickOrderLine.getBinCodeStr().isEmpty()) {
+            this.textViewSelectedBin.setVisibility(View.GONE);
+            this.currentLocationView.requestLayout();
+            return;
+        }
+
         this.textViewSelectedBin.setText(cPickorderLine.currentPickOrderLine.getBinCodeStr(),TextView.BufferType.SPANNABLE);
         this.currentLocationView.requestLayout();
     }

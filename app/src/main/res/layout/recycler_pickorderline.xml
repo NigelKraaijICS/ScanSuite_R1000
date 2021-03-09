@@ -42,12 +42,6 @@
             style="@style/defaultRecyclerBINText"
             android:id="@+id/textViewBIN"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/textViewQuantity"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-        <TextView
-            style="@style/defaultLineRecyclerQuantityText"
-            android:id="@+id/textViewQuantity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
@@ -55,22 +49,8 @@
             style="@style/defaultRecyclerOrdernumberText"
             android:id="@+id/textViewDescription"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
             app:layout_constraintTop_toBottomOf="@id/textViewBIN"
-            />
-        <TextView
-            style="@style/defaultRecyclerSourcenoText"
-            android:id="@+id/textViewSourceNo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
-            app:layout_constraintTop_toBottomOf="@id/textViewDescription"
-            />
-        <TextView
-            style="@style/defaultRecyclerDestinationText"
-            android:id="@+id/textViewDestination"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
-            app:layout_constraintTop_toBottomOf="@id/textViewSourceNo"
             />
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageSendStatus"
@@ -78,6 +58,26 @@
             app:srcCompat="@drawable/ic_ordertype_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textViewSourceNo"
+            />
+        <TextView
+            style="@style/defaultRecyclerSourcenoText"
+            android:id="@+id/textViewSourceNo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textViewQuantity"
+            app:layout_constraintTop_toBottomOf="@id/textViewDescription"
+            />
+        <TextView
+            style="@style/biggerLineRecyclerQuantityText"
+            android:id="@+id/textViewQuantity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/textViewSourceNo"
+            />
+        <TextView
+            style="@style/defaultRecyclerDestinationText"
+            android:id="@+id/textViewDestination"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imageSendStatus"
+            app:layout_constraintTop_toBottomOf="@id/textViewSourceNo"
             />
         <View
             android:id="@+id/menuSeparator"

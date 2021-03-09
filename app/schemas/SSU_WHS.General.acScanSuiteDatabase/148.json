@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 148,
-    "identityHash": "4a5080a69494fec263c23ad1360dd195",
+    "identityHash": "4e526e6ace58c56fa73687ddce964717",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -816,6 +816,46 @@
           "columnNames": [
             "Barcode",
             "BarCodeType",
+            "ItemNo",
+            "VariantCode"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "PickorderCompositeBarcode",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Composite_barcode` TEXT NOT NULL, `ItemNo` TEXT NOT NULL, `VariantCode` TEXT NOT NULL, `SortingSequenceNo` INTEGER NOT NULL, PRIMARY KEY(`Composite_barcode`, `ItemNo`, `VariantCode`))",
+        "fields": [
+          {
+            "fieldPath": "compositeBarcodeStr",
+            "columnName": "Composite_barcode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemNoStr",
+            "columnName": "ItemNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "variantCodeStr",
+            "columnName": "VariantCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortingSequenceNoInt",
+            "columnName": "SortingSequenceNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "Composite_barcode",
             "ItemNo",
             "VariantCode"
           ],
@@ -3501,11 +3541,11 @@
       },
       {
         "tableName": "CompositeBarcode",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Composite_barcode` TEXT NOT NULL, `Compositebarcode_type` TEXT, `Description` TEXT, `Field_separator` TEXT, `Layout_regex` TEXT, `Layout_type` TEXT, PRIMARY KEY(`Composite_barcode`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`CompositeBarcode` TEXT NOT NULL, `Compositebarcode_type` TEXT, `Description` TEXT, `Field_separator` TEXT, `Layout_regex` TEXT, `Layout_type` TEXT, PRIMARY KEY(`CompositeBarcode`))",
         "fields": [
           {
             "fieldPath": "compositeBarcodeStr",
-            "columnName": "Composite_barcode",
+            "columnName": "CompositeBarcode",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -3542,7 +3582,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "Composite_barcode"
+            "CompositeBarcode"
           ],
           "autoGenerate": false
         },
@@ -4252,7 +4292,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "Stockowner",
+        "tableName": "StockOwner",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`StockOwner` TEXT NOT NULL, `Omschrijving` TEXT, PRIMARY KEY(`StockOwner`))",
         "fields": [
           {
@@ -4276,12 +4316,38 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "AutorizedStockOwner",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`StockOwner` TEXT NOT NULL, `Vestiging` TEXT, PRIMARY KEY(`StockOwner`))",
+        "fields": [
+          {
+            "fieldPath": "stockownerStr",
+            "columnName": "StockOwner",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "vestigingStr",
+            "columnName": "Vestiging",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "StockOwner"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4a5080a69494fec263c23ad1360dd195')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4e526e6ace58c56fa73687ddce964717')"
     ]
   }
 }

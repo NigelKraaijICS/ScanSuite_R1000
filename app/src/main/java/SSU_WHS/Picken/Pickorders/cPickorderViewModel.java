@@ -72,6 +72,8 @@ public class cPickorderViewModel extends AndroidViewModel {
 
     public cWebresult pGetBarcodesFromWebserviceWrs() {return this.Repository.pGetBarcodesFromWebservice(); }
 
+    public cWebresult pGetCompositeBarcodesFromWebserviceWrs() {return this.Repository.pGetCompositeBarcodesFromWebservice(); }
+
     public cWebresult pGetLineBarcodesFromWebserviceWrs(cWarehouseorder.ActionTypeEnu pvActionTypeEnu) {return this.Repository.pGetLineBarcodesFromWebservice(pvActionTypeEnu); }
 
     public cWebresult pGetLinePropertysViaWebserviceWrs() {return this.Repository.pGetLinePropertysViaWebserviceWrs(); }
