@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -43,7 +44,9 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
+import SSU_WHS.Picken.PickorderLines.cPickorderLineRecyclerItemTouchHelper;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLineRecyclerItemTouchHelper;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
@@ -55,7 +58,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
 
-public class PickorderLinesGeneratedActivity extends AppCompatActivity implements iICSDefaultActivity,  SwipeRefreshLayout.OnRefreshListener  {
+public class PickorderLinesGeneratedActivity extends AppCompatActivity implements iICSDefaultActivity,  SwipeRefreshLayout.OnRefreshListener,  cPickorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener  {
 
     //Region Public Properties
 
@@ -142,6 +145,19 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         this.pFillLines();
     }
 
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder pvViewHolder, int pvDirectionInt, int pvPositionInt) {
+
+        if (!(pvViewHolder instanceof  cPickorderLineAdapter.PickorderLineViewHolder)) {
+            return;
+        }
+
+        cPickorderLine.currentPickOrderLine = cPickorderLine.allLinesObl.get(pvPositionInt);
+
+        //Reset the line
+        this.mRemoveAdapterFromFragment();
+    }
+
     //End Region Default Methods
 
     //Region iICSDefaultActivity defaults
@@ -215,6 +231,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     public void mSetListeners() {
         this.mSetShowCommentListener();
         this.mSetCloseOrderListener();
+        this.mSetRecyclerTouchListener();
     }
 
     @Override
@@ -389,18 +406,18 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
             }
         }
 
-        this.pClosePickAndDecideNextStep();
+        this.pClosePickAndDecideNextStep("");
 
     }
 
-    public  void pClosePickAndDecideNextStep(){
+    public  void pClosePickAndDecideNextStep(final String pvWorkplaceStr){
 
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
         new Thread(new Runnable() {
             public void run() {
-                mHandlePickFaseHandledAndDecideNextStep();
+                mHandlePickFaseHandledAndDecideNextStep(pvWorkplaceStr);
             }
         }).start();
 
@@ -409,6 +426,11 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     public  void pLeaveActivity(){
 
         cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPicking);
+
+        if (cPickorder.currentPickOrder.pQuantityHandledDbl() == 0) {
+            this.mHandleNothingPicked();
+            return;
+        }
 
         //If activity bin is not required, then don't show the fragment
         if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() ||
@@ -570,7 +592,12 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
     }
 
-    private  void mHandlePickFaseHandledAndDecideNextStep(){
+    private  void mHandlePickFaseHandledAndDecideNextStep(String pvWorkplaceStr){
+
+
+        if (!pvWorkplaceStr.isEmpty() && !cPickorder.currentPickOrder.pUpdateWorkplaceViaWebserviceBln(pvWorkplaceStr)) {
+            return;
+        }
 
         if (!this.mPickFaseHandledBln()) {
             return;
@@ -586,6 +613,17 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
             this.mPackAndShipNextStap();
             return;
         }
+
+        this.mStartOrderSelectActivity();
+
+    }
+
+    private  void mHandleNothingPicked(){
+
+        if (!this.mPickFaseHandledBln()) {
+            return;
+        }
+
 
         this.mStartOrderSelectActivity();
 
@@ -654,7 +692,6 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         stepDoneFragment.setCancelable(false);
         stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
-
 
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
@@ -825,6 +862,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         cAppExtension.activity.runOnUiThread(new Runnable() {
             public void run() {
                 Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
+                PickorderSelectActivity.startedViaMenuBln = false;
                 cAppExtension.activity.startActivity(intent);
             }
         });
@@ -968,6 +1006,26 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     private void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
         cUserInterface.pCheckAndCloseOpenDialogs();
+    }
+
+    private void mRemoveAdapterFromFragment(){
+
+        //remove the item from recyclerview
+        boolean resultBln = cPickorderLine.currentPickOrderLine.pResetGeneratedBln();
+        if (! resultBln) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_reset_line_via_webservice_failed),"",true,true);
+            return;
+        }
+
+        //Renew data, so only current lines are shown
+        this.mFieldsInitialize();
+
+    }
+
+    private void mSetRecyclerTouchListener() {
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new cPickorderLineRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(this.recyclerViewPickorderLinesGenerated);
     }
 
     //End Region Private Methods

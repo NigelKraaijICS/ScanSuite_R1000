@@ -39,6 +39,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.Pickorders.cPickorder;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -60,6 +61,9 @@ public class CreatePickActivity extends AppCompatActivity implements iICSDefault
 
     private Button createButton;
     private Button cancelButton;
+
+    public static cWarehouseorder.PickMainTypeEnu pickMainTypeEnu;
+
     //End Region private Properties
 
     //Region Constructor
@@ -247,6 +251,7 @@ public class CreatePickActivity extends AppCompatActivity implements iICSDefault
 
     private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
+        PickorderSelectActivity.startedViaMenuBln = false;
         cAppExtension.activity.startActivity(intent);
     }
 
@@ -254,6 +259,7 @@ public class CreatePickActivity extends AppCompatActivity implements iICSDefault
         this.createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
+                PickorderSelectActivity.startedViaMenuBln = false;
                  mCreateOrder(editTextDocument.getText().toString().trim(),
                               switchCheckBarcodes.isChecked());
             }

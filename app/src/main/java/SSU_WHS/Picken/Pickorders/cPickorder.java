@@ -22,6 +22,7 @@ import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
+import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
@@ -2604,6 +2605,67 @@ public class cPickorder{
         return  true;
     }
 
+    public  double pGetQuantityToPick(cArticleStock pvArticleStock) {
+
+        double resultDbl = pvArticleStock.getQuantityDbl();
+
+
+        for (cPickorderLine pickorderLine : this.linesObl()) {
+
+            if (!pickorderLine.getBinCodeStr().equalsIgnoreCase(pvArticleStock.getBincodeStr())) {
+                continue;
+            }
+
+            if (!pickorderLine.getItemNoStr().equalsIgnoreCase(pvArticleStock.getItemNoStr())) {
+                continue;
+            }
+
+            if (!pickorderLine.getVariantCodeStr().equalsIgnoreCase(pvArticleStock.getVariantCodeStr())) {
+                continue;
+            }
+
+            resultDbl -= pickorderLine.getQuantityHandledDbl();
+
+        }
+
+        if (resultDbl < 0) {
+            resultDbl = 0;
+        }
+
+        return  resultDbl;
+    }
+
+
+    public  boolean pCreateItemVariantGeneratedNeededBln() {
+
+        if (this.linesObl() == null | this.linesObl().size() == 0) {
+            return  true;
+        }
+
+
+        for (cPickorderLine pickorderLine : this.linesObl()) {
+
+            if (!pickorderLine.getItemNoStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getItemNoStr()) ||
+                    !pickorderLine.getVariantCodeStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getVariantCodeStr())) {
+                continue;
+            }
+
+            if (!pickorderLine.getBinCodeStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getBinCodeStr())) {
+                continue;
+            }
+
+            if (!pickorderLine.getDestinationNoStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getDestinationNoStr())) {
+                continue;
+            }
+
+            return  false;
+
+        }
+
+
+        return  true;
+    }
+
     //End Region Public Methods
 
     //Region Private Methods
@@ -2725,7 +2787,7 @@ public class cPickorder{
         }
 
         if (this.linesObl() == null || this.linesObl().size() == 0) {
-            return  false;
+            return this.isGeneratedOrderBln();
         }
 
         List<String> itemNoAndVariantCodeObl;
@@ -2739,27 +2801,31 @@ public class cPickorder{
             }
         }
 
-        cWebresult WebResult;
-        cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
-        WebResult = articleImageViewModel.pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
-        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+        if (itemNoAndVariantCodeObl.size() > 0) {
+            cWebresult WebResult;
+            cArticleImageViewModel articleImageViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleImageViewModel.class);
+            WebResult = articleImageViewModel.pGetArticleImagesFromWebserviceWrs(itemNoAndVariantCodeObl);
+            if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
-            cArticleImage.allImages = new ArrayList<>();
+                cArticleImage.allImages = new ArrayList<>();
 
-            for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cArticleImage articleImage = new cArticleImage(jsonObject);
+                for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                    cArticleImage articleImage = new cArticleImage(jsonObject);
 
-                if (!cArticleImage.allImages.contains(articleImage)) {
-                    articleImage.pInsertInDatabaseBln();
-                    cArticleImage.allImages.add((articleImage));
+                    if (!cArticleImage.allImages.contains(articleImage)) {
+                        articleImage.pInsertInDatabaseBln();
+                        cArticleImage.allImages.add((articleImage));
+                    }
                 }
+                return  true;
             }
+            else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
+                return  false;
+            }
+        }
+
             return  true;
-        }
-        else {
-            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEIMAGESMULTIPLE);
-            return  false;
-        }
     }
 
     private void mGetCommentsViaWebError(List<JSONObject> pvResultDtt) {

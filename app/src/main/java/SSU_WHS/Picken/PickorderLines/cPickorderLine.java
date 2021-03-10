@@ -600,6 +600,55 @@ public class cPickorderLine {
 
     }
 
+    public boolean pResetGeneratedBln() {
+
+        cWebresult WebResult;
+
+        if (this.getLocalStatusInt() == cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT) {
+            WebResult =  this.getPickorderLineViewModel().pResetGeneratedViaWebserviceWrs();
+            if (!WebResult.getResultBln() || !WebResult.getSuccessBln()) {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINERESET);
+                return  false;
+            }
+        }
+
+        this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_NEW);
+        this.mUpdateQuanitityHandled(0);
+
+        //delete all line barcodes
+        for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
+            pickorderLineBarcode.pDeleteFromDatabaseBln();
+        }
+
+        //If we already have a processingSequence, then empty it
+        if (!this.processingSequenceStr.isEmpty()) {
+
+            //Check if we need to remove the SalesorderPackingTableLines
+            if (this.pGetLinesForProcessingSequenceObl().size() <= 1)  {
+                cSalesOrderPackingTable.pDeleteFromDatabaseBln(this.processingSequenceStr);
+            }
+
+            this.pUpdateProcessingSequenceBln("");
+        }
+
+        List<cPickorderLinePropertyValue> linesToDeleteObl = new ArrayList<>();
+
+        if (cPickorderLinePropertyValue.allLinePropertysValuesObl != null) {
+            for (cPickorderLinePropertyValue pickorderLinePropertyValue : cPickorderLinePropertyValue.allLinePropertysValuesObl) {
+                if (pickorderLinePropertyValue.getLineNoInt() == this.getLineNoInt() && pickorderLinePropertyValue.getPickorderLineProperty().getIsRequiredBln() && pickorderLinePropertyValue.getPickorderLineProperty().getIsInputBln()) {
+                    linesToDeleteObl.add(pickorderLinePropertyValue);
+                }
+            }
+
+            for (cPickorderLinePropertyValue pickorderLinePropertyValueToDelete : linesToDeleteObl) {
+                cPickorderLinePropertyValue.allLinePropertysValuesObl.remove(pickorderLinePropertyValueToDelete);
+            }
+        }
+
+        return  true;
+
+    }
+
     public void pHandledIndatabase(){
 
         if (!this.mUpdateQuanitityHandled(this.quantityHandledDbl)) {
@@ -743,6 +792,7 @@ public class cPickorderLine {
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             this.lineNoInt = WebResult.getResultLng().intValue();
            this.mUpdateLocalStatusBln(cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT);
+           cPickorderLine.allLinesObl.add(cPickorderLine.currentPickOrderLine);
            return  result;
         }
         else {

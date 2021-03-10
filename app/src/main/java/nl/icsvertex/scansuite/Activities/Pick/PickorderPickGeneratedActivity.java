@@ -550,11 +550,6 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         //Show the image
         this.articleThumbImageView.setImageBitmap(cPickorder.currentPickOrder.currentArticle.articleImage.imageBitmap());
-
-        //Open the image
-        if ((cPickorder.currentPickOrder.isPickWithPictureAutoOpenBln())) {
-            this.mShowFullArticleFragment();
-        }
     }
 
     private  void mEnablePlusMinusAndBarcodeSelectViews() {
@@ -606,64 +601,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     }
 
     private void mHandleQuantityChosen(double pvQuantityDbl) {
-        this.mTryToChangePickedQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
-    }
-
-    private  void mTryToChangePickedQuantity(Boolean pvIsPositiveBln, Boolean pvAmountFixedBln, double pvAmountDbl) {
-
-        double newQuantityDbl;
-
-        if (pvIsPositiveBln) {
-
-            //Determine the new amount
-            if (pvAmountFixedBln) {
-                newQuantityDbl = pvAmountDbl;
-            } else {
-                newQuantityDbl = this.quantityScannedDbl + pvAmountDbl;
-            }
-
-            //Check if we would exceed amount, then show message
-            if (newQuantityDbl > this.articleStock.getQuantityDbl()) {
-                this.mShowOverpickNotAllowed();
-                return;
-            }
-
-            //Set the new quantityDbl and show in Activity
-            this.quantityScannedDbl = newQuantityDbl;
-            this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
-
-            //Add or update line barcodeStr
-           this.mAddOrUpdateScannedBarcode(pvAmountDbl);
-           return;
-        }
-
-        //negative
-        if (this.quantityScannedDbl == 0 ) {
-            cUserInterface.pDoNope(quantityText, true, true);
-            return;
-        }
-
-        //Determine the new amount
-
-        if (pvAmountFixedBln) {
-            newQuantityDbl = pvAmountDbl;
-        }else {
-            newQuantityDbl= this.quantityScannedDbl - pvAmountDbl;
-        }
-
-        if (newQuantityDbl <= 0) {
-            this.quantityScannedDbl = 0.0;
-        }else {
-            //Set the new quantityDbl and show in Activity
-            this.quantityScannedDbl = newQuantityDbl;
-        }
-
-        this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
-        this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-
-        //Remove or update line barcodeStr
-        this.mRemoveOrUpdateScannedBarcode();
-
+        this.mTryToChangeQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
     }
 
     // Lines, Barcodes, Packing Tables and destionation
@@ -762,7 +700,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
                     return;
                 }
 
-                mTryToChangePickedQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
+                mTryToChangeQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
             }
         });
     }
@@ -801,7 +739,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
                 }
 
 
-                mTryToChangePickedQuantity(false, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
+                mTryToChangeQuantity(false, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
             }
         });
     }
@@ -875,13 +813,6 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         numberpickerFragment.setArguments(bundle);
 
         numberpickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.NUMBERPICKERFRAGMENT_TAG);
-    }
-
-    private  void mShowOverpickNotAllowed(){
-        this.quantityText.setText(quantityRequiredText.getText());
-        cUserInterface.pShowSnackbarMessage(textViewAction , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
-        cUserInterface.pDoNope(quantityText, true, true);
-        cUserInterface.pDoNope(quantityRequiredText, false, false);
     }
 
     private void mFillDestinationSpinner() {
@@ -1014,20 +945,32 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         cResult result = new cResult();
         result.resultBln = true;
 
+        Double quantityAvailable;
+
         if ( cPickorder.currentPickOrder.currentBranchBin == null || cPickorder.currentPickOrder.currentArticle == null) {
             this.quantityRequiredText.setVisibility(View.GONE);
             return result;
         }
 
+        //Show required quantity
+        this.quantityRequiredText.setVisibility(View.VISIBLE);
+
+        //We alrady have this articlestock, so don't need to get it another time
         if ( this.articleStock != null) {
+            quantityAvailable = cPickorder.currentPickOrder.pGetQuantityToPick(this.articleStock);
+
+            if (quantityAvailable == 0) {
+                this.quantityRequiredText.setVisibility(View.GONE);
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
+                return result;
+            }
+
+            this.quantityRequiredText.setText( cText.pDoubleToStringStr(quantityAvailable));
             return  result;
         }
 
-        this.quantityRequiredText.setVisibility(View.VISIBLE);
-
-
         cUserInterface.pShowGettingData();
-
         this.articleStock = cPickorder.currentPickOrder.currentArticle.pGetStockForBINViaWebservice(cPickorder.currentPickOrder.currentBranchBin.getBinCodeStr());
         if (articleStock == null) {
             this.quantityRequiredText.setVisibility(View.GONE);
@@ -1036,7 +979,16 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
             return result;
         }
 
-        this.quantityRequiredText.setText(cText.pDoubleToStringStr(articleStock.getQuantityDbl()));
+        quantityAvailable = cPickorder.currentPickOrder.pGetQuantityToPick(this.articleStock);
+        if (quantityAvailable == 0) {
+            this.quantityRequiredText.setVisibility(View.GONE);
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
+            return result;
+        }
+
+        this.quantityRequiredText.setText( cText.pDoubleToStringStr(quantityAvailable));
+
         cUserInterface.pHideGettingData();
         return  result;
     }
@@ -1067,6 +1019,10 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         //Check if scanned barcode matched the current barcode
         if (cPickorderBarcode.currentPickorderBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr())) {
             result.resultBln = false;
+            return  result;
+        }
+
+        if (cPickorder.currentPickOrder.currentArticle == null || cPickorder.currentPickOrder.currentArticle.barcodesObl == null) {
             return  result;
         }
 
@@ -1124,6 +1080,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         cPickorderLine.currentPickOrderLine = null;
         cPickorder.currentPickOrder.currentArticle = null;
         cArticle.currentArticle = null;
+        cPickorderBarcode.currentPickorderBarcode = null;
         this.scannedBarcodesObl = null;
         this.quantityScannedDbl = (double) 0;
         this.articleStock = null;
@@ -1239,7 +1196,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
                 newQuantityDbl = pvAmountDbl;
 
                 //Check if we would exceed amount stock available, then show message
-                if (this.articleStock != null &&  newQuantityDbl > this.articleStock.getQuantityDbl()) {
+                if (this.articleStock != null &&  newQuantityDbl > cText.pStringToDoubleDbl(this.quantityRequiredText.getText().toString())) {
                     this.mShowExtraPiecesNotAllowed();
                     return;
                 }
@@ -1386,58 +1343,6 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         this.imageButtonDone.setVisibility(View.VISIBLE);
         this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
     }
-
-    private void mAddOrUpdateScannedBarcode(Double pvAmountDbl){
-
-        boolean addBarcodeBln = false;
-
-        //If there are no line barcodes, then simply add this one
-        if (this.scannedBarcodesObl == null || this.scannedBarcodesObl.size() == 0) {
-            addBarcodeBln = true;
-        }
-
-        if (!addBarcodeBln) {
-            for (cPickorderBarcode pickorderBarcode : this.scannedBarcodesObl  ) {
-
-                if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
-                    pickorderBarcode.quantityHandledDbl += pvAmountDbl;
-                    return;
-                }
-            }
-        }
-
-        cPickorderBarcode.currentPickorderBarcode.quantityHandledDbl = pvAmountDbl;
-
-        if (this.scannedBarcodesObl == null) {
-            this.scannedBarcodesObl = new ArrayList<>();
-        }
-        this.scannedBarcodesObl.add(cPickorderBarcode.currentPickorderBarcode);
-
-    }
-
-    private void mRemoveOrUpdateScannedBarcode(){
-
-        //If there are no line barcodes, this should not be possible
-        if (this.scannedBarcodesObl == null || this.scannedBarcodesObl.size() == 0) {
-            return;
-        }
-
-        for (cPickorderBarcode pickorderBarcode : this.scannedBarcodesObl  ) {
-
-            if (pickorderBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
-
-                pickorderBarcode.quantityHandledDbl -= cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl();
-
-                if (pickorderBarcode.getQuantityHandledDbl() > 0) {
-                    return;
-                }
-
-                this.scannedBarcodesObl.remove(pickorderBarcode);
-                return;
-            }
-        }
-    }
-
 
     //End Region Number Broadcaster
 

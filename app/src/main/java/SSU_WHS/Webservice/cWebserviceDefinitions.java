@@ -44,6 +44,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPICKORDERCOMMENTS = "p_PickorderCommentsGetJsonStr";
     public static String WEBMETHOD_PICKORDERSTEPHANDLED = "p_PickorderStapHandledJsonStr";
     public static String WEBMETHOD_PICKORDERLINERESET = "p_PickorderRegelResetPickenJsonStr";
+    public static String WEBMETHOD_PICKORDERLINERESETGENERATED = "p_PickorderRegelResetGeneratedJsonStr";
     public static String WEBMETHOD_UPDATECURRENTORDERLOCATION = "p_PickOrderUpdateCurrentOrderLocationJsonStr";
     public static String WEBMETHOD_GETPICKORDERSSEQUELSTEP = "p_PickordersVervolgstapGetJsonStr";
     public static String WEBMETHOD_PICKORDERLINE_PROPERTIES_HANDLED = "p_WarehouseopdrachtLinePropertiesHandledJsonStr";

@@ -63,18 +63,7 @@
             app:layout_constraintEnd_toStartOf="@id/quantityRelativelayout"
             app:layout_constraintTop_toBottomOf="@id/textViewOrdernumber"
             />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewIsSingleArticle"
-            style="@style/pickorderRecyclerSingleArticles"
-            app:layout_constraintTop_toBottomOf="@id/textViewOrderUser"
-            app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
-            />
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewIsProcessedOrWait"
-            style="@style/pickorderRecyclerProcessedWait"
-            app:layout_constraintTop_toTopOf="@id/textViewOrdertype"
-            app:layout_constraintStart_toEndOf="@id/imageViewIsSingleArticle"
-            />
+
 
         <!--Third line-->
         <androidx.appcompat.widget.AppCompatImageView
@@ -142,6 +131,18 @@
             app:layout_constraintEnd_toStartOf="@id/imageViewIsSingleArticle"
             />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewIsSingleArticle"
+            style="@style/pickorderRecyclerSingleArticles"
+            app:layout_constraintTop_toBottomOf="@id/textViewOrderUser"
+            app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewIsProcessedOrWait"
+            style="@style/pickorderRecyclerProcessedWait"
+            app:layout_constraintTop_toTopOf="@id/textViewOrdertype"
+            app:layout_constraintStart_toEndOf="@id/imageViewIsSingleArticle"
+            />
         <!--General-->
         <View
             android:id="@+id/menuSeparator"

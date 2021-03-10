@@ -82,7 +82,7 @@ public class cWorkplaceAdapter extends RecyclerView.Adapter<cWorkplaceAdapter.Wo
 
                     if (cAppExtension.context instanceof PickorderLinesGeneratedActivity) {
                         PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
-                        pickorderLinesGeneratedActivity.pClosePickAndDecideNextStep();
+                        pickorderLinesGeneratedActivity.pClosePickAndDecideNextStep(cWorkplace.currentWorkplace.getWorkplaceStr());
                         return;
                     }
 

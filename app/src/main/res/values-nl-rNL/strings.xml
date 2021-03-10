@@ -793,4 +793,6 @@
     <string name="addedorhandled">toegevoegd/afgehandeld</string>
     <string name="error_get_composite_barcodes_failed">Ophalen samengestelde barcodes mislukt</string>
     <string name="message_property_unknown">Eigenschap onbekend</string>
+    <string name="message_take_already_exists">Je kunt dit artikel niet op dezelfde BIN plaatsen als waar je hem genomen hebt</string>
+    <string name="ordertype_self_generated">Op eigen initiatief</string>
 </resources>

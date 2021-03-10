@@ -667,6 +667,10 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
             return  result;
         }
 
+        if (cMoveorder.currentMoveOrder.currentArticle == null || cMoveorder.currentMoveOrder.currentArticle.barcodesObl == null) {
+            return  result;
+        }
+
         //We have a different barcode, so check if this barcode belong to the current article
         for (cArticleBarcode articleBarcode : cMoveorder.currentMoveOrder.currentArticle.barcodesObl) {
             if (articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||
@@ -795,7 +799,15 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
             return result;
         }
 
-        hulpRst = mCheckPreviousPlaceLineRst();
+        hulpRst = this.mCheckPreviousPlaceLineRst();
+        if (! hulpRst.resultBln) {
+            cMoveorder.currentMoveOrder.currentBranchBin = null;
+            result.pAddErrorMessage(hulpRst.messagesStr());
+            result.resultBln = false;
+            return result;
+        }
+
+        hulpRst = this.mCheckForTakeLineRst();
         if (! hulpRst.resultBln) {
             cMoveorder.currentMoveOrder.currentBranchBin = null;
             result.pAddErrorMessage(hulpRst.messagesStr());
@@ -878,7 +890,7 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
         this.quantityScannedDbl = (double) 0;
         cMoveorder.currentMoveOrder.currentMoveItemVariant = null;
 
-        result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_already_exists_reset_first));
+        result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_take_already_exists));
         return  result;
 
 

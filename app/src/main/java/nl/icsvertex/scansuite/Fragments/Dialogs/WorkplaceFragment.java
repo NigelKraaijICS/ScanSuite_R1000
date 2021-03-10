@@ -187,7 +187,7 @@ public class WorkplaceFragment extends DialogFragment implements iICSDefaultFrag
             if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
                 cAppExtension.dialogFragment.dismiss();
                 PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
-                pickorderLinesGeneratedActivity.pClosePickAndDecideNextStep();
+                pickorderLinesGeneratedActivity.pClosePickAndDecideNextStep(cWorkplace.currentWorkplace.getWorkplaceStr());
             }
 
             if (cAppExtension.activity instanceof SortorderLinesActivity) {

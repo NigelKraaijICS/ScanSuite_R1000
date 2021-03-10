@@ -135,15 +135,18 @@ public class cPickorderLineRepository {
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();
 
-        try {
-            webResultWrs = new mPickorderLineGeneratedCreateVariantViaWebserviceAsyncTask().execute().get();
-        } catch (ExecutionException | InterruptedException e) {
-            webResultWrs.setResultBln(false);
-            webResultWrs.setSuccessBln(false);
-            resultObl.add(e.getLocalizedMessage());
-            webResultWrs.setResultObl(resultObl);
-            e.printStackTrace();
-            return webResultWrs;
+
+        if (cPickorder.currentPickOrder.pCreateItemVariantGeneratedNeededBln()) {
+            try {
+                webResultWrs = new mPickorderLineGeneratedCreateVariantViaWebserviceAsyncTask().execute().get();
+            } catch (ExecutionException | InterruptedException e) {
+                webResultWrs.setResultBln(false);
+                webResultWrs.setSuccessBln(false);
+                resultObl.add(e.getLocalizedMessage());
+                webResultWrs.setResultObl(resultObl);
+                e.printStackTrace();
+                return webResultWrs;
+            }
         }
 
         try {
@@ -198,6 +201,23 @@ public class cPickorderLineRepository {
 
         try {
             webResultWrs = new mResetViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pResetGeneratedViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mResetGeneratedViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -767,6 +787,42 @@ public class cPickorderLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo4Pin);
 
                 l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINERESET, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                l_WebresultWrs.setSuccessBln(false);
+                l_WebresultWrs.setResultBln(false);
+            }
+            return l_WebresultWrs;
+        }
+    }
+
+    private static class mResetGeneratedViaWebserviceAsyncTask extends AsyncTask<Void, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(Void... params) {
+            cWebresult l_WebresultWrs = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                PropertyInfo l_PropertyInfo4Pin = new PropertyInfo();
+                l_PropertyInfo4Pin.name = cWebserviceDefinitions.WEBPROPERTY_LINENO;
+                l_PropertyInfo4Pin.setValue(cPickorderLine.currentPickOrderLine.getLineNoInt());
+                l_PropertyInfoObl.add(l_PropertyInfo4Pin);
+
+                l_WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINERESETGENERATED, l_PropertyInfoObl);
             } catch (JSONException e) {
                 l_WebresultWrs.setSuccessBln(false);
                 l_WebresultWrs.setResultBln(false);

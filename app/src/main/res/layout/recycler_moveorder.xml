@@ -55,7 +55,7 @@
             android:id="@+id/imageOrderType"
             style="@style/recyclerItemImage"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewDocument"
+            app:layout_constraintTop_toBottomOf="@id/imageDocument"
             app:srcCompat="@drawable/ic_ordertype_black_24dp" />
 
         <TextView
@@ -64,12 +64,6 @@
             app:layout_constraintEnd_toStartOf="@id/imageChevronDown"
             app:layout_constraintStart_toStartOf="@id/textViewOrdernumber"
             app:layout_constraintTop_toBottomOf="@id/textViewDocument" />
-
-        <View
-            android:id="@+id/menuSeparator"
-            style="@style/menuSeparator"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/textViewOrdernumber" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageChevronDown"
@@ -80,12 +74,18 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_chevron_right_black_24dp" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewIsProcessedOrWait"
             style="@style/pickorderRecyclerProcessedWait"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageChevronDown"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toBottomOf="@id/imageChevronDown" />
+        <View
+            android:id="@+id/menuSeparator"
+            style="@style/menuSeparator"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/textViewOrdertype" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -608,8 +608,6 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-
-
     public static boolean PICK_BARCODE_CHECK(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_BARCODE_CHECK);
@@ -640,14 +638,53 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
-    public static String PICK_NEW_WORKFLOWS(){
+    public static List<String> PICK_NEW_WORKFLOWS(){
+
+        List<String> resultObl = new ArrayList<>();
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_NEW_WORKFLOWS);
         if (Setting == null) {
-            return "";
+            return resultObl;
         }
 
-        return Setting.valueStr;
+        if (!Setting.getValueStr().contains(";")) {
+            resultObl.add(Setting.getValueStr());
+            return resultObl;
+        }
+
+        resultObl = new ArrayList<>(Arrays.asList(Setting.valueStr.split(";")));
+
+        return resultObl ;
+    }
+
+    public static boolean PICK_AUTO_CREATE_ORDER(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_AUTO_CREATE_ORDER);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean PICK_AUTO_CREATE_ORDER_SALES(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_AUTO_CREATE_ORDER_SALES);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean PICK_AUTO_CREATE_ORDER_TRANSFER(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_AUTO_CREATE_ORDER_TRANSFER);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
 

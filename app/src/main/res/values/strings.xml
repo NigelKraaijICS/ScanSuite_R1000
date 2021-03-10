@@ -172,6 +172,7 @@
     <string name="ordertype_spv">Selfpicking</string>
     <string name="ordertype_unknown">Unknown</string>
     <string name="ordertype_combined">Combined</string>
+    <string name="ordertype_self_generated">Self Generated</string>
     <string name="ordertype_ps1">Pack and Ship Single Shipment</string>
     <string name="ordertype_psm">Pack and Ship Multi Shipment</string>
     <!--endregion Order types-->
@@ -829,6 +830,7 @@
     <string name="message_scan_bin_first">Scan bin first</string>
     <string name="message_close_action_first_before_new_bin">Close this action first, before scanning new BIN</string>
     <string name="message_already_exists_reset_first">Line already exists for this article and BIN, of you want to edit it reset the line first</string>
+    <string name="message_take_already_exists">You can\'t PLACE an article on the same BIN as where you took it</string>
     <string name="message_no_stock_available">No stock available</string>
     <string name="message_no_sorting_location_adviced">No advised location</string>
     <string name="message_scan_bin_or_article">Scan BIN or Article</string>

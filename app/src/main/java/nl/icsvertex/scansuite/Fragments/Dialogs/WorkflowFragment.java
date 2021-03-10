@@ -23,6 +23,7 @@ import SSU_WHS.Basics.Workflow.cWorkflowAdapter;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipSelectActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderSelectActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -152,8 +153,13 @@ public class WorkflowFragment extends DialogFragment implements iICSDefaultFragm
         if (cAppExtension.activity instanceof ReturnorderSelectActivity) {
             this.getWorkflowAdapter().pFillData(cSetting.RETOUR_NEW_WORKFLOWS());
         }
+
         if (cAppExtension.activity instanceof PackAndShipSelectActivity) {
             this.getWorkflowAdapter().pFillData(cSetting.PACK_AND_SHIP_NEW_WORKFLOWS());
+        }
+
+        if (cAppExtension.activity instanceof PickorderSelectActivity) {
+            this.getWorkflowAdapter().pFillData(cSetting.PICK_NEW_WORKFLOWS());
         }
 
         this.workflowRecyclerView.setHasFixedSize(false);

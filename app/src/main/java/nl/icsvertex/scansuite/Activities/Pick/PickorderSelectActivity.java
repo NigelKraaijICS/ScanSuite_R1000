@@ -58,7 +58,9 @@ import SSU_WHS.Picken.Pickorders.cPickorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.HugeErrorFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.WorkflowFragment;
 import nl.icsvertex.scansuite.R;
 
 public class PickorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
@@ -107,6 +109,8 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     public static ModusEnu currentModusEnu = ModusEnu.NORMAL;
+    public static boolean startedViaMenuBln;
+
 
     // End Region Views
 
@@ -437,19 +441,44 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     }
 
-    public  void pSetToolBarTitleWithCounters(int pvCountFilterInt){
+    public  void pSetToolBarTitleWithCounters(final int pvCountFilterInt){
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (cPickorder.allPickordersObl == null ) {
+                    toolbarSubTitle.setText("0"  + " " + cAppExtension.activity.getString(R.string.orders));
+                    return;
+                }
+                String subtitleStr;
+                if (!cSharedPreferences.userFilterBln()) {
+                    subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cPickorder.totalPicksInt,cPickorder.totalPicksInt);
+                } else {
+                    subtitleStr = cText.pIntToStringStr(pvCountFilterInt)  + "/" + cText.pIntToStringStr(cPickorder.totalPicksInt) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
+                }
+                toolbarSubTitle.setText(subtitleStr);
+            }
+        });
 
-        if (cPickorder.allPickordersObl == null ) {
-            this.toolbarSubTitle.setText("0"  + " " + cAppExtension.activity.getString(R.string.orders));
-            return;
+    }
+
+    public void pNewWorkflowSelected(String pvNewWorkflowsStr) {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        cWarehouseorder.PickMainTypeEnu pickMainTypeEnu = cWarehouseorder.PickMainTypeEnu.Unknown;
+
+        switch (pvNewWorkflowsStr) {
+            case "PA":
+                pickMainTypeEnu =  cWarehouseorder.PickMainTypeEnu.PA;
+                break;
+            case "PF":
+                pickMainTypeEnu = cWarehouseorder.PickMainTypeEnu.PF;
+                break;
+
         }
-        String subtitleStr;
-        if (!cSharedPreferences.userFilterBln()) {
-            subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cPickorder.totalPicksInt,cPickorder.totalPicksInt);
-        } else {
-            subtitleStr = cText.pIntToStringStr(pvCountFilterInt)  + "/" + cText.pIntToStringStr(cPickorder.totalPicksInt) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
-        }
-        this.toolbarSubTitle.setText(subtitleStr);
+
+        this.mShowCreatePickctivity(pickMainTypeEnu);
+
     }
 
     //End Region Public Methods
@@ -472,6 +501,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
             cPickorder.totalPicksInt = 0;
+            pSetToolBarTitleWithCounters(cPickorder.totalPicksInt);
             this.mShowNoOrdersIcon(true);
             return;
         }
@@ -532,7 +562,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        hulpResult =  cPickorder.currentPickOrder.pGetPickDetailsRst(); ;
+        hulpResult =  cPickorder.currentPickOrder.pGetPickDetailsRst();
         if (!hulpResult.resultBln) {
             this.mStepFailed(hulpResult.messagesStr());
             return;
@@ -547,8 +577,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         });
 
     }
-
-
 
     private void mStepFailed(String pvErrorMessageStr){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
@@ -659,12 +687,13 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        if (cSetting.PICK_NEW_WORKFLOWS().toUpperCase().contains(cWarehouseorder.WorkflowEnu.PF.toString().toUpperCase())) {
+        if (cSetting.PICK_NEW_WORKFLOWS().size() >= 1) {
             this.imageViewNewOrder.setVisibility(View.VISIBLE);
         }
         else {
             this.imageViewNewOrder.setVisibility(View.INVISIBLE);
         }
+
     }
 
     private void mSetNewOrderListener() {
@@ -851,6 +880,11 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                     NoOrdersFragment fragment = new NoOrdersFragment();
                     fragmentTransaction.replace(R.id.pickorderContainer, fragment);
                     fragmentTransaction.commit();
+
+                    if (cSetting.PICK_AUTO_CREATE_ORDER()) {
+                        mAutoOpenCreateActivity();
+                    }
+
                     return;
                 }
 
@@ -961,6 +995,55 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
 
+    }
+
+    private void mAutoOpenCreateActivity(){
+
+        // We returned in this form, so don't start create activity
+        if (!PickorderSelectActivity.startedViaMenuBln) {
+            return;
+        }
+
+        if (cSetting.PICK_NEW_WORKFLOWS().size() == 0) {
+            return;
+        }
+
+        this.mShowCreatePickctivity(null);
+
+    }
+
+    private  void mShowCreatePickctivity(cWarehouseorder.PickMainTypeEnu pvMainTypeEnu) {
+
+        if (pvMainTypeEnu != null) {
+            CreatePickActivity.pickMainTypeEnu = pvMainTypeEnu;
+        }
+
+            if (cSetting.PICK_NEW_WORKFLOWS().size() > 1) {
+                this.mShowWorklowFragment();
+                return;
+            }
+
+            switch (cSetting.PICK_NEW_WORKFLOWS().get(0).toUpperCase()) {
+                case  "PF":
+                    CreatePickActivity.pickMainTypeEnu = cWarehouseorder.PickMainTypeEnu.PF;
+                    break;
+                case "PA":
+                    CreatePickActivity.pickMainTypeEnu = cWarehouseorder.PickMainTypeEnu.PA;
+                    break;
+            }
+
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        Intent intent = new Intent(cAppExtension.context, CreatePickActivity.class);
+        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+    }
+
+    private  void mShowWorklowFragment() {
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        WorkflowFragment workflowFragment = new WorkflowFragment();
+        workflowFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.WORKFLOWFRAGMENT_TAG);
     }
 
     // End No orders icon

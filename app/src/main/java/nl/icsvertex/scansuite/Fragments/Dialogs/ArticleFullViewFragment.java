@@ -29,9 +29,11 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Return.ReturnorderLine.cReturnorderLine;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderPickGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -86,6 +88,11 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
                 pickorderPickActivity.pRegisterBarcodeReceiver();
             }
 
+            if (cAppExtension.activity instanceof PickorderPickGeneratedActivity) {
+                PickorderPickGeneratedActivity pickorderPickGeneratedActivity = (PickorderPickGeneratedActivity)cAppExtension.activity;
+                pickorderPickGeneratedActivity.pRegisterBarcodeReceiver();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,6 +107,11 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
             if (cAppExtension.activity instanceof  PickorderPickActivity) {
                 PickorderPickActivity pickorderPickActivity = (PickorderPickActivity)cAppExtension.activity;
                 pickorderPickActivity.pRegisterBarcodeReceiver();
+            }
+
+            if (cAppExtension.activity instanceof  PickorderPickGeneratedActivity) {
+                PickorderPickGeneratedActivity pickorderPickGeneratedActivity = (PickorderPickGeneratedActivity)cAppExtension.activity;
+                pickorderPickGeneratedActivity.pRegisterBarcodeReceiver();
             }
 
         } catch (Exception e) {
@@ -180,6 +192,37 @@ public class ArticleFullViewFragment extends DialogFragment implements iICSDefau
                 this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_no_image_lightgrey_24dp));
             }
         }
+
+         if (cAppExtension.activity instanceof PickorderPickGeneratedActivity) {
+             if (!cPickorder.currentPickOrder.currentArticle.getDescription2Str().isEmpty()) {
+                 this.toolbarSubtext.setText(cPickorder.currentPickOrder.currentArticle.getDescription2Str());
+                 this.toolbarSubtext.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                 this.toolbarSubtext.setSingleLine(true);
+                 this.toolbarSubtext.setMarqueeRepeatLimit(5);
+                 this.toolbarSubtext.postDelayed(new Runnable() {
+                     @Override
+                     public void run() {
+                         toolbarSubtext.setSelected(true);
+                     }
+                 },1500);
+             }
+
+             this.articleFullItemNoTextView.setText(cPickorder.currentPickOrder.currentArticle.getItemNoStr());
+             this.articleFullVariantTextView.setText(cPickorder.currentPickOrder.currentArticle.getVariantCodeStr());
+             this.articleFullVariantTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+             this.articleFullVariantTextView.setSingleLine(true);
+             this.articleFullVariantTextView.setMarqueeRepeatLimit(5);
+             this.articleFullVariantTextView.setSelected(true);
+
+             if (cPickorder.currentPickOrder.currentArticle.articleImage != null) {
+                 byte[] decodedString = Base64.decode(cPickorder.currentPickOrder.currentArticle.articleImage.getImageStr(), Base64.DEFAULT);
+                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                 this.articleFullImageView.setImageBitmap(decodedByte);
+             }
+             else {
+                 this.articleFullImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_no_image_lightgrey_24dp));
+             }
+         }
 
          if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
              if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str().isEmpty()) {

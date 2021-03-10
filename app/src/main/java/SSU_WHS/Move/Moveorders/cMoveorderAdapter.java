@@ -26,12 +26,13 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
 
     public static class MoveorderViewHolder extends RecyclerView.ViewHolder{
 
-        private View viewOrderStatus;
-        private TextView textViewOrdernumber;
-        private TextView textViewOrderUser;
-        private TextView textViewOrdertype;
-        private TextView textViewDocument;
-        private ImageView imageViewIsProcessedOrWait;
+        private final View viewOrderStatus;
+        private final TextView textViewOrdernumber;
+        private final TextView textViewOrderUser;
+        private final TextView textViewOrdertype;
+        private final TextView textViewDocument;
+        private final ImageView imageViewIsProcessedOrWait;
+        private final ImageView imageDocument;
         public LinearLayout moveorderItemLinearLayout;
 
         public MoveorderViewHolder(View pvItemView) {
@@ -53,6 +54,7 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
             this.textViewDocument.setMarqueeRepeatLimit(5);
             this.textViewDocument.setSelected(true);
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
+            this.imageDocument = pvItemView.findViewById(R.id.imageDocument);
             this.imageViewIsProcessedOrWait = pvItemView.findViewById(R.id.imageViewIsProcessedOrWait);
             this.moveorderItemLinearLayout = pvItemView.findViewById(R.id.moveorderItemLinearLayout);
 
@@ -124,6 +126,12 @@ public class cMoveorderAdapter extends RecyclerView.Adapter<cMoveorderAdapter.Mo
         }
         else {
             pvHolder.imageViewIsProcessedOrWait.setVisibility(View.INVISIBLE);
+        }
+
+        if (selectedMoveorder.getDocumentStr().isEmpty()) {
+            pvHolder.textViewDocument.setVisibility(View.GONE);
+            pvHolder.imageDocument.setVisibility(View.GONE);
+            pvHolder.moveorderItemLinearLayout.requestLayout();
         }
 
         pvHolder.moveorderItemLinearLayout.setOnClickListener(new View.OnClickListener() {

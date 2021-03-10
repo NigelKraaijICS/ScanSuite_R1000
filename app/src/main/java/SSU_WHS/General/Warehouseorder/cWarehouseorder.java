@@ -50,6 +50,13 @@ public class cWarehouseorder {
         Store
     }
 
+    public  enum PickMainTypeEnu {
+        Unknown,
+        PA,
+        PF
+    }
+
+
     public  enum MoveMainTypeEnu {
         Unknown,
         TAKE,

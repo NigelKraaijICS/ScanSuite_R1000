@@ -37,6 +37,7 @@ public class cPickorderLineViewModel extends AndroidViewModel {
     public cWebresult pPickLinePropertysHandledViaWebserviceWrs() {return this.Repository.pPickLinePropertysHandledViaWebserviceWrs();}
     public cWebresult pPickLineSortedViaWebserviceWrs() {return this.Repository.pPickLineSortedViaWebserviceWrs();}
     public cWebresult pResetViaWebserviceWrs() {return this.Repository.pResetViaWebserviceWrs();}
+    public cWebresult pResetGeneratedViaWebserviceWrs() {return this.Repository.pResetGeneratedViaWebserviceWrs();}
     public cWebresult pGetSortLocationAdviceViaWebserviceWrs(String pvSourceNoStr) {return this.Repository.pGetSortLocationAdviceViaWebserviceWrs(pvSourceNoStr);}
 
     public cWebresult pAddERPBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan, boolean pvIsUniqueBarcodeBln) {return  this.Repository.pAddERPBarcodeViaWebserviceWrs(pvBarcodeScan, pvIsUniqueBarcodeBln);}

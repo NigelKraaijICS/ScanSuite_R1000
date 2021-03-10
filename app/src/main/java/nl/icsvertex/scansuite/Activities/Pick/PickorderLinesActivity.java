@@ -973,6 +973,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         cAppExtension.activity.runOnUiThread(new Runnable() {
             public void run() {
                 Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
+                PickorderSelectActivity.startedViaMenuBln = false;
                 cAppExtension.activity.startActivity(intent);
             }
         });

@@ -47,11 +47,13 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
         private final TextView  textViewExternalreference;
         private final TextView textViewCurrentLocation;
         private final TextView textViewQuantityTotal;
+        private final ImageView imageExternalReference;
         private final ImageView imageCurrentLocation;
         private final ImageView imageViewIsSingleArticle;
         private final ImageView imageViewIsProcessedOrWait;
         private final ImageView imageViewUser;
         private final ImageView imageChevronDown;
+        private final RelativeLayout quantityRelativelayout;
 
         public LinearLayout pickorderItemLinearLayout;
 
@@ -93,7 +95,9 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             this.textViewCurrentLocation = pvItemView.findViewById(R.id.textViewCurrentLocation);
 
             this.textViewOrdertype = pvItemView.findViewById(R.id.textViewOrdertype);
+            this.quantityRelativelayout = pvItemView.findViewById(R.id.quantityRelativelayout);
             this.textViewQuantityTotal = pvItemView.findViewById(R.id.textViewQuantityTotal);
+            this.imageExternalReference = pvItemView.findViewById(R.id.imageExternalReference);
             this.imageViewIsSingleArticle = pvItemView.findViewById(R.id.imageViewIsSingleArticle);
             this.imageViewIsProcessedOrWait = pvItemView.findViewById(R.id.imageViewIsProcessedOrWait);
 
@@ -249,7 +253,20 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             orderTypeText = cAppExtension.activity.getString(R.string.ordertype_combined);
         }
 
+        if (selectedPickorder.isGeneratedOrderBln()) {
+            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_self_generated);
+
+            if (selectedPickorder.getQuantityTotalInt() == 0) {
+                pvHolder.quantityRelativelayout.setVisibility(View.INVISIBLE);
+            }
+        }
+
         pvHolder.textViewOrdertype.setText(cTranslation.pGetTranslastionStr(orderTypeText, Locale.getDefault().getLanguage().toUpperCase()));
+
+        if (selectedPickorder.getExternalReferenceStr().isEmpty()) {
+            pvHolder.imageExternalReference.setVisibility(View.GONE);
+            pvHolder.textViewExternalreference.setVisibility(View.GONE);
+        }
 
         pvHolder.pickorderItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

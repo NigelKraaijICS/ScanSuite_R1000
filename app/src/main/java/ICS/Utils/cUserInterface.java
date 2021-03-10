@@ -252,6 +252,7 @@ public class cUserInterface {
     }
 
     public static void pDoExplodingScreen(final String pvErrorMesssageStr, final String pvMessage2Str, final Boolean pvPlaysoundBln, final Boolean pvVibrateBln) {
+
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

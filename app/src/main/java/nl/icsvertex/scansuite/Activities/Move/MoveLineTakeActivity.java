@@ -662,6 +662,10 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
             return  result;
         }
 
+        if (cMoveorder.currentMoveOrder.currentArticle == null || cMoveorder.currentMoveOrder.currentArticle.barcodesObl == null)  {
+            return result;
+        }
+
         //We have a different barcode, so check if this barcode belong to the current article
         for (cArticleBarcode articleBarcode : cMoveorder.currentMoveOrder.currentArticle.barcodesObl) {
             if (articleBarcode.getBarcodeStr().equalsIgnoreCase(pvBarcodeScan.getBarcodeOriginalStr()) ||

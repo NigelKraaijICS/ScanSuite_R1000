@@ -323,6 +323,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             }
 
             intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
+            PickorderSelectActivity.startedViaMenuBln = true;
             clickedImage = container.findViewWithTag(cAuthorisation.TAG_IMAGE_PICK);
             clickedText= container.findViewWithTag(cAuthorisation.TAG_TEXT_PICK);
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
