@@ -272,6 +272,7 @@ public class cReturnorder {
         } else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_RETURNORDERCREATE);
             result.resultBln = false;
+            result.pAddErrorMessage(WebResult.getResultStr());
         }
         return result;
     }

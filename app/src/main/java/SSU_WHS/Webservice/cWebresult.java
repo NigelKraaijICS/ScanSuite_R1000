@@ -176,7 +176,7 @@ public class cWebresult {
                 });                httpsTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pvMethodNameStr, envelope);
             }
             else {
-                HttpTransportSE httpTransport = new HttpTransportSE(url.toString());
+                HttpTransportSE httpTransport = new HttpTransportSE(url.toString(),cWebservice.WEBSERVICE_HTTPS_TIMEOUT);
                 try {
                     httpTransport.call(cWebservice.WEBSERVICE_NAMESPACE + cWebservice.WEBSERVICE_WEBSERVICENAME + pvMethodNameStr, envelope);
                 }
