@@ -23,6 +23,8 @@ import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisationEntity;
 import SSU_WHS.Basics.CustomAuthorisations.iCustomAuthorisationDao;
 import SSU_WHS.Basics.ItemProperty.cItemPropertyEntity;
 import SSU_WHS.Basics.ItemProperty.iItemPropertyDao;
+import SSU_WHS.Basics.LabelTemplate.cLabelTemplateEntity;
+import SSU_WHS.Basics.LabelTemplate.iLabelTemplateDao;
 import SSU_WHS.Basics.Packaging.cPackagingEntity;
 import SSU_WHS.Basics.Packaging.iPackagingDao;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroupEntity;
@@ -69,8 +71,8 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEn
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.iInventoryorderLineBarcodeDao;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
 import SSU_WHS.Inventory.InventoryorderLines.iInventoryorderLineDao;
-import SSU_WHS.Move.MoveOrders.cMoveorderEntity;
-import SSU_WHS.Move.MoveOrders.iMoveorderDao;
+import SSU_WHS.Move.Moveorders.cMoveorderEntity;
+import SSU_WHS.Move.Moveorders.iMoveorderDao;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeEntity;
 import SSU_WHS.Move.MoveorderBarcodes.iMoveorderBarcodeDao;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcodeEntity;
@@ -197,7 +199,8 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPackAndShipShippingPackageEntity.class,
         cStockOwnerEntity.class,
         cAuthorizedStockOwnerEntity.class,
-        },version = 148)
+        cLabelTemplateEntity.class,
+        },version = 150)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -262,6 +265,7 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iPackAndShipShippingMethodDao packAndShipShippingMethodDao();
     public  abstract iPackAndShipShippingPackageDao packAndShipShippingPackageDao();
     public  abstract iStockOwnerDao stockOwnerDao();
+    public  abstract iLabelTemplateDao labelTemplateDao();
 
     private static acScanSuiteDatabase INSTANCE;
 

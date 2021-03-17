@@ -85,6 +85,7 @@ public class cBranch {
     public  List<cBranchBin> receiveBinsObl;
     public  List<cBranchBin> shipBinsObl;
 
+    
     public  static  boolean BranchesAvailableBln;
 
     public enum brachTypeEnum {

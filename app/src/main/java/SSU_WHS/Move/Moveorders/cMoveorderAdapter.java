@@ -1,4 +1,4 @@
-package SSU_WHS.Move.MoveOrders;
+package SSU_WHS.Move.Moveorders;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;

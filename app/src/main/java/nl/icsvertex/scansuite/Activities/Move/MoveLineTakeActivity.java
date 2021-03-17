@@ -50,7 +50,7 @@ import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
@@ -60,6 +60,8 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.R;
 
 import static ICS.Utils.cText.pDoubleToStringStr;
@@ -152,6 +154,15 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
         pvMenu.findItem(R.id.item_bin_stock).setVisible(cMoveorder.currentMoveOrder.currentBranchBin != null);
         pvMenu.findItem(R.id.item_article_stock).setVisible(cMoveorder.currentMoveOrder.currentArticle != null);
+        if (cSetting.GENERIC_PRINT_BINLABEL()){
+            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
+            item_print_bin.setVisible(cMoveorder.currentMoveOrder.currentBranchBin != null);
+        }
+
+        if (cSetting.GENERIC_PRINT_ITEMLABEL()){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(cMoveorder.currentMoveOrder.currentMoveorderBarcode != null);
+        }
 
         return super.onPrepareOptionsMenu(pvMenu);
     }
@@ -182,6 +193,16 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
                 cArticle.currentArticle= cMoveorder.currentMoveOrder.currentArticle;
                 selectedFragment = new ItemStockFragment();
                 break;
+
+            case R.id.item_print_bin:
+                selectedFragment = new PrintBinLabelFragment();
+                break;
+
+            case R.id.item_print_item:
+                cArticle.currentArticle= cMoveorder.currentMoveOrder.currentArticle;
+                selectedFragment = new PrintItemLabelFragment();
+                break;
+
 
             default:
                 break;

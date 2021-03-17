@@ -119,7 +119,7 @@
         <item name="android:elevation" tools:targetApi="lollipop">@dimen/default_elevation</item>
     </style>
 
-    <style name="imageviewArticleImage">
+       <style name="imageviewArticleImage">
         <item name="android:layout_height">@dimen/imageview_menu_height</item>
         <item name="android:layout_width">@dimen/imageview_menu_width</item>
     </style>

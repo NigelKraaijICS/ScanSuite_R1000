@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +27,11 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.navigation.NavigationView;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -36,6 +41,8 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
@@ -43,6 +50,9 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryArticleActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -82,6 +92,9 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     private  ImageView imageButtonDone;
     private  ImageButton imageButtonBarcode;
     private ImageView imageButtonNoInputPropertys;
+
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     //End Region Private Properties
 
@@ -126,6 +139,25 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_intakeactions,pvMenu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+
+//        invalidateOptionsMenu();
+
+        if (cSetting.GENERIC_PRINT_ITEMLABEL()){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(true);
+        }
+
+        return super.onPrepareOptionsMenu(pvMenu);
+    }
+
+    @Override
     public void onBackPressed() {
         this.mStartInventoryBINActivity();
     }
@@ -133,12 +165,40 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
-        if (pvMenuItem.getItemId() == android.R.id.home) {
-            this.mStartInventoryBINActivity();
-            return true;
+        DialogFragment selectedFragment = null;
+        switch (pvMenuItem.getItemId()) {
+
+            case android.R.id.home:
+                this.mStartInventoryBINActivity();
+                return true;
+
+            case R.id.item_print_item:
+                selectedFragment = new PrintItemLabelFragment();
+                break;
+
+            default:
+                break;
+        }
+
+
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
         }
 
         return super.onOptionsItemSelected(pvMenuItem);
+
     }
 
     //End Region Default Methods
@@ -198,6 +258,8 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
         this.imageButtonBarcode = findViewById(R.id.imageButtonBarcode);
         this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
 
     }
 

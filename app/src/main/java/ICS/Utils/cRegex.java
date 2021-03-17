@@ -58,4 +58,14 @@ public class cRegex {
         }
         return resultStr;
     }
+    public static String pGetWholePrefixFromLayout(String pvInputStr) {
+        String resultStr;
+        if (pvInputStr.substring(1,2).equals("#") && pvInputStr.substring(5,6).equals("#") ) {
+            resultStr = pvInputStr.substring(1,6);
+        }
+        else {
+            resultStr = "";
+        }
+        return resultStr;
+    }
 }

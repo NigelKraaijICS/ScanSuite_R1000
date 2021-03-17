@@ -18,7 +18,7 @@ import SSU_WHS.Basics.IdentifierWithDestination.cIdentifierWithDestination;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;

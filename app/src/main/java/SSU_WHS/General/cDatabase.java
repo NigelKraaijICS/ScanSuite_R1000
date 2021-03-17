@@ -14,6 +14,7 @@ public class cDatabase {
     public static final String TABLENAME_BRANCH = "Branches";
     public static final String TABLENAME_BRANCHBIN = "BranchBin";
     public static final String TABLENAME_ITEMPROPERTY = "ItemProperties";
+    public static final String TABLENAME_LABELTEMPLATE  =  "Labeltemplate";
     public static final String TABLENAME_PROPERTYGROUP = "PropertyGroup";
     public static final String TABLENAME_PROPERTYGROUPPROPERTY = "PropertyGroupProperty";
     public static final String TABLENAME_COMPOSITEBARCODE = "CompositeBarcode";
@@ -235,6 +236,7 @@ public class cDatabase {
 
     //region L
     public static final String LANGUAGEDUTCH_NAMESTR = "Taal";
+    public static final String LABELCODE_NAMESTR = "Labelcode";
     public static final String LAYOUT_NAMESTR = "Layout";
     public static final String LICENSE_NAMESTR = "License";
     public static final String LICENSE_NL_NAMESTR = "Licentie";
@@ -460,6 +462,7 @@ public class cDatabase {
 
     //region T
     public static final String TAKENTIMESTAMP_NAMESTR = "TakenTimestamp";
+    public static final String TEMPLATE_NAMESTR = "Template";
     public static final String TEXTDUTCH_NAMESTR = "Tekst";
     public static final String TRANSLATIONDUTCH_NAMESTR = "Vertaling";
     //endregion T

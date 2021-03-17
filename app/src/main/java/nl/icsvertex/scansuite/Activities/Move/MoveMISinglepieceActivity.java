@@ -31,7 +31,7 @@ import SSU_WHS.Basics.IdentifierWithDestination.cIdentifierWithDestination;
 import SSU_WHS.Basics.IdentifierWithDestination.cIndentifierInfoAdapter;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;

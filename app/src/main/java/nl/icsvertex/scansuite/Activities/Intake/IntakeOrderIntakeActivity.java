@@ -44,6 +44,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -59,6 +60,8 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -113,8 +116,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     private DrawerLayout menuActionsDrawer;
     private NavigationView actionMenuNavigation;
-
-
 
     private cIntakeorderMATLineAdapter intakeorderMATLineAdapter;
     private cIntakeorderMATLineAdapter getIntakeorderMATLineAdapter(){
@@ -192,11 +193,22 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         MenuItem item_enter_bin = pvMenu.findItem(R.id.item_enter_bin);
         item_enter_bin.setVisible(true);
 
-        if (cIntakeorder.currentIntakeOrder.currentBin != null)  {
-            item_enter_bin.setVisible(false);
-            return true;
+        if (cSetting.GENERIC_PRINT_BINLABEL()){
+            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
+            item_print_bin.setVisible(true);
         }
 
+        if (cSetting.GENERIC_PRINT_ITEMLABEL()){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(true);
+            if (cIntakeorderBarcode.currentIntakeOrderBarcode == null && cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine != null){
+                item_print_item.setVisible(false);
+            }
+        }
+        if (cIntakeorder.currentIntakeOrder.currentBin != null)  {
+            item_enter_bin.setVisible(false);
+                       return true;
+        }
         return super.onPrepareOptionsMenu(pvMenu);
     }
 
@@ -220,6 +232,14 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
             case R.id.item_enter_bin:
                 selectedFragment = new ScanBinFragment();
+                break;
+
+            case R.id.item_print_bin:
+                selectedFragment = new PrintBinLabelFragment();
+                break;
+
+            case R.id.item_print_item:
+                selectedFragment = new PrintItemLabelFragment();
                 break;
 
             default:

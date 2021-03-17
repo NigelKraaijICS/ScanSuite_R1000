@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cDeviceInfo;
@@ -28,6 +30,7 @@ import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineViewModel;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
@@ -138,6 +141,7 @@ public class cIntakeorder {
 
     public static List<cIntakeorder> allIntakeordersObl;
     public static cIntakeorder currentIntakeOrder;
+    public SortedMap<String, cArticle> articleObl;
 
     private int unknownVariantCounterInt = 0;
     public int getUnknownVariantCounterInt() {
@@ -769,6 +773,10 @@ public class cIntakeorder {
             cIntakeorderBarcode.pTruncateTableBln();
         }
 
+        if (this.articleObl == null) {
+            this.articleObl = new TreeMap<>();
+        }
+
         cWebresult WebResult;
         WebResult = this.getIntakeorderViewModel().pGetIntakeorderBarcodesFromWebserviceWrs();
 
@@ -777,6 +785,11 @@ public class cIntakeorder {
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cIntakeorderBarcode intakeorderBarcode = new cIntakeorderBarcode(jsonObject);
                 intakeorderBarcode.pInsertInDatabaseBln();
+                if (!cIntakeorder.currentIntakeOrder.articleObl.containsKey(intakeorderBarcode.getItemNoAndVariantCodeStr())) {
+                    cArticle article = new cArticle(jsonObject);
+                    article.descriptionStr = intakeorderBarcode.getBarcodeStr();
+                    this.articleObl.put(intakeorderBarcode.getItemNoAndVariantCodeStr(), article);
+                }
             }
             return true;
         } else {

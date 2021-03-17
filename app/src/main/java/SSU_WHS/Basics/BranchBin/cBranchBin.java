@@ -41,6 +41,8 @@ public class cBranchBin {
     }
 
     private cBranchBinEntity branchBinEntity;
+
+    public static cBranchBin currentBranchBin;
     //end region Public Propties
 
     //Region Constructor

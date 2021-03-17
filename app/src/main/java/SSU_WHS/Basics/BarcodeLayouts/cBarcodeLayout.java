@@ -86,7 +86,7 @@ public class cBarcodeLayout {
     }
 
     private String layoutValueStr;
-    private String getLayoutValueStr() {
+    public String getLayoutValueStr() {
         return layoutValueStr;
     }
 
@@ -153,7 +153,7 @@ public class cBarcodeLayout {
             return false;
         }
 
-        cBarcodeLayout barcodeLayoutToCheck = cBarcodeLayout.mGetBarcodeLayoutByEnumerate(pvBarcodeLayoutEnu);
+        cBarcodeLayout barcodeLayoutToCheck = cBarcodeLayout.pGetBarcodeLayoutByEnumerate(pvBarcodeLayoutEnu);
         if (barcodeLayoutToCheck == null){
             return  false;
         }
@@ -183,7 +183,7 @@ public class cBarcodeLayout {
             return false;
         }
 
-        cBarcodeLayout barcodeLayoutToCheck = cBarcodeLayout.mGetBarcodeLayoutByEnumerate(pvBarcodeLayoutEnu);
+        cBarcodeLayout barcodeLayoutToCheck = cBarcodeLayout.pGetBarcodeLayoutByEnumerate(pvBarcodeLayoutEnu);
         if (barcodeLayoutToCheck == null){
             return  false;
         }
@@ -214,7 +214,7 @@ public class cBarcodeLayout {
         return resultObl;
     }
 
-    private static cBarcodeLayout mGetBarcodeLayoutByEnumerate(barcodeLayoutEnu pvBarcodeLayoutEnu){
+    public static cBarcodeLayout pGetBarcodeLayoutByEnumerate(barcodeLayoutEnu pvBarcodeLayoutEnu){
         if(cBarcodeLayout.allBarcodeLayoutsObl == null){
             return null;
         }

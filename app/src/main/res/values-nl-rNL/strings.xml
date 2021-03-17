@@ -6,6 +6,7 @@
     <string name="no">Nee</string>
     <string name="ok">OK</string>
     <string name="cancel">Annuleer</string>
+    <string name="print">Print</string>
     <string name="search">Zoek</string>
     <string name="done">Klaar</string>
     <string name="nothing_here">Er is hier nog niets</string>
@@ -795,4 +796,6 @@
     <string name="message_property_unknown">Eigenschap onbekend</string>
     <string name="message_take_already_exists">Je kunt dit artikel niet op dezelfde BIN plaatsen als waar je hem genomen hebt</string>
     <string name="ordertype_self_generated">Op eigen initiatief</string>
+    <string name="print_BIN">Print BIN</string>
+    <string name="print_Article">Print Artikel</string>
 </resources>

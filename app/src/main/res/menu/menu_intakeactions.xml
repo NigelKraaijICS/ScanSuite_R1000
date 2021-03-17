@@ -9,5 +9,17 @@
         app:showAsAction="never"
         android:visible="false"
         />
+    <item
+        android:id="@+id/item_print_bin"
+        android:title="@string/print_BIN"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/item_print_item"
+        android:title="@string/print_Article"
+        app:showAsAction="never"
+        android:visible="false"
+        />
 </group>
 </menu>

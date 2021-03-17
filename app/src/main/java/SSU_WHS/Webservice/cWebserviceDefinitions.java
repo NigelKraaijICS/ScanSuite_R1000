@@ -17,6 +17,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETUSERS = "p_GebruikersGetJsonStr";
     public static String WEBMETHOD_GETSCANNERS = "p_ScannersGetJsonStr";
     public static String WEBMETHOD_GETWORKPLACES = "p_MagazijnWerkplekkenGetJsonStr";
+    public static String WEBMETHOD_GETLABELTEMPLATES = "p_LabelTemplateGetJsonStr";
     public static String WEBMETHOD_GETTRANSLATIONS = "p_VertalingGetJsonStr";
     public static String WEBMETHOD_GETIDENTIFIERWITHDESTINATION = "p_IdentifierWithDestinationGetJsonStr";
     public static String WEBMETHOD_GETBINARTICLES = "p_MagazijnlocatieArtikelenGetJsonStr";
@@ -165,8 +166,9 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_MOVEORDERCREATE = "p_MoveOrderCreateJsonStr";
     public static String WEBMETHOD_PICKORDERCREATE = "p_PickorderCreateJsonStr";
     public static String WEBMETHOD_PICKORDERBARCODECREATE = "p_PickorderBarcodeCreateJsonStr";
-
-
+    public static String WEBMETHOD_PRINTBINLABEL = "p_MagazijnlocatieLabelPrintJsonStr";
+    public static String WEBMETHOD_PRINTLINEITEMLABEL = "p_LineArtikelLabelPrintJsonStr";
+    public static String WEBMETHOD_PRINTITEMLABEL = "p_ArtikelLabelPrintJsonStr";
 
     public static String WEBMETHOD_GETMOVEORDERLINES = "p_MoveRegelsGetJsonStr";
     public static String WEBMETHOD_GETMOVEORDERBARCODES = "p_MoveOrderBarcodesGetJsonStr";
@@ -246,6 +248,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_BINSUBSET = "pv_BinSubsetObl";
     public static String WEBPROPERTY_OWNER = "pv_OwnerStr";
     public static String WEBPROPERTY_ITEMNO = "pv_ItemNoStr";
+    public static String WEBPROPERTY_ITEMPROPERTYSEQUENCENO = "pv_ItemPropertySequenceNoLng";
     public static String WEBPROPERTY_DESTINATIONNO = "pv_DestinationNoStr";
     public static String WEBPROPERTY_VARIANTCODE = "pv_VariantCodeStr";
     public static String WEBPROPERTY_VARIANTCODETINY = "pv_VariantcodeStr";
@@ -260,6 +263,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_CONTAINERSLIST = "pv_ContainersObl";
     public static String WEBPROPERTY_PROCESSINGSEQUENCE = "pv_ProcessingSequenceStr";
     public static String WEBPROPERTY_WORKPLACE = "pv_WorkplaceStr";
+    public static String WEBPROPERTY_WORKSPACE = "pv_WorkspaceStr";
     public static String WEBPROPERTY_CULTURE = "pv_CultureStr";
     public static String WEBPROPERTY_ORDERLOCATION = "pv_OrderLocationStr";
     public static String WEBPROPERTY_CURRENTLOCATION = "pv_OrderCurrentLocationStr";
@@ -276,6 +280,7 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_PASSWORD = "pv_PasswordStr";
     public static String WEBPROPERTY_BINCODE = "pv_BinCodeStr";
     public static String WEBPROPERTY_BINCODENL = "pv_MagazijnlocatieStr";
+    public static String WEBPROPERTY_PRINTBINCODENL = "pv_LocatieStr";
     public static String WEBPROPERTY_BINCODETINY = "pv_BincodeStr";
     public static String WEBPROPERTY_BINCODEHANDLED = "pv_BincodeHandledStr";
     public static String WEBPROPERTY_STOCKOWNER = "pv_StockOwnerStr";
@@ -311,6 +316,10 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_RETURNREASONBIGNL = "pv_RetourRedenStr";
     public static String WEBPROPERTY_RECEIVEDDAT = "pv_ReceivedDat";
     public static String WEBPROPERTY_REASON = "pv_ReasonStr";
+
+    public static String WEBPROPERTY_BINLABELTEMPLATE = "pv_BinLabelTemplateStr";
+    public static String WEBPROPERTY_ITEMLABELTEMPLATE = "pv_ItemLabelTemplateStr";
+    public static String WEBPROPERTY_PRINTQUANTITY = "pv_PrintQuantityLng";
 
     //endregion Properties
 

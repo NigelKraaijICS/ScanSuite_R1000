@@ -2,6 +2,7 @@ package nl.icsvertex.scansuite.Activities.Inventory;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,11 +11,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +36,7 @@ import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorderAdapter;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
@@ -43,6 +49,8 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryorderBinActivity extends AppCompatActivity implements iICSDefaultActivity,cInventoryorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -65,6 +73,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private  ImageView imageAddArticle;
     private ImageView imageViewCloseBIN;
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     private  int positionSwiped;
 
@@ -129,12 +139,58 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
-        if (pvMenuItem.getItemId() == android.R.id.home) {
-            this.mTryToLeaveActivity();
-            return true;
+        DialogFragment selectedFragment = null;
+        switch (pvMenuItem.getItemId()) {
+
+            case android.R.id.home:
+
+                this.mTryToLeaveActivity();
+                return true;
+
+            case R.id.item_print_bin:
+                selectedFragment = new PrintBinLabelFragment();
+                break;
+
+            default:
+                break;
         }
 
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+        }
+
+
         return super.onOptionsItemSelected(pvMenuItem);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_intakeactions,pvMenu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+
+//        invalidateOptionsMenu();
+
+        if (cSetting.GENERIC_PRINT_BINLABEL()){
+            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
+            item_print_bin.setVisible(true);
+        }
+
+        return super.onPrepareOptionsMenu(pvMenu);
     }
 
     @Override
@@ -209,6 +265,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         this.recyclerViewInventoryorderLines = findViewById(R.id.recyclerViewInventoryorderLines);
         this.imageAddArticle = findViewById(R.id.imageAddArticle);
         this.imageViewCloseBIN = findViewById(R.id.imageViewCloseBIN);
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
     }
 
     @Override

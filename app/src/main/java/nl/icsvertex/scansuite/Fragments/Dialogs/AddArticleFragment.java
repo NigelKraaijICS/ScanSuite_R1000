@@ -89,6 +89,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
         cUserInterface.pEnableScanner();
     }
 
+
     @Override
     public void mFragmentInitialize() {
         this.mFindViews();

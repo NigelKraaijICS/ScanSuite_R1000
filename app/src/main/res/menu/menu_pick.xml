@@ -16,5 +16,31 @@
         app:showAsAction="never"
         android:visible="false"
         />
+    <item
+        android:id="@+id/item_print_bin"
+        android:title="@string/print_BIN"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/item_bin_stock"
+        android:title="@string/bin_stock"
+        android:icon="@drawable/ic_location_black_24dp"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/item_article_stock"
+        android:title="@string/article_stock"
+        android:icon="@drawable/ic_baseline_pageview_24"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/item_print_item"
+        android:title="@string/print_Article"
+        app:showAsAction="never"
+        android:visible="false"
+        />
 </group>
 </menu>

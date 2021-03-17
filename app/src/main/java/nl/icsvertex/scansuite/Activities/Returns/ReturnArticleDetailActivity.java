@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +27,11 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
 
@@ -41,6 +46,7 @@ import SSU_WHS.Basics.BranchReason.cBranchReason;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnorderBarcode.cReturnorderBarcode;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
@@ -50,6 +56,7 @@ import SSU_WHS.Return.ReturnorderLineBarcode.cReturnorderLineBarcode;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -91,6 +98,9 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     private ImageView imageButtonNoInputPropertys;
     private ImageButton imageButtonBarcode;
+
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     private cReturnorderLineViewModel getReturnorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderLineViewModel.class);
@@ -134,13 +144,58 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_intakeactions,pvMenu);
+        return true;
+    }
 
-        if (item.getItemId() == android.R.id.home) {
-            this.mShowAcceptFragment();
-            return true;
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+
+//        invalidateOptionsMenu();
+
+        if (cSetting.GENERIC_PRINT_ITEMLABEL()){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(true);
         }
 
+        return super.onPrepareOptionsMenu(pvMenu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        DialogFragment selectedFragment = null;
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                this.mShowAcceptFragment();
+                return true;
+
+            case R.id.item_print_item:
+                selectedFragment = new PrintItemLabelFragment();
+                break;
+
+            default:
+                break;
+        }
+
+
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        item.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+        }
         return super.onOptionsItemSelected(item);
 
     }
@@ -208,6 +263,8 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
         this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
     }
 
     @Override

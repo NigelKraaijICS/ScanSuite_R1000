@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +26,11 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +52,18 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.R;
 
 import static ICS.Utils.cText.pDoubleToStringStr;
@@ -103,6 +113,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     private List<cPickorderBarcode> scannedBarcodesObl;
 
     private cBranch  scannedBranch;
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     //End Region Private Properties
 
@@ -155,21 +167,82 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         finish();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_pick,pvMenu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+        //  invalidateOptionsMenu();
+
+
+        MenuItem item_bin_stock = pvMenu.findItem(R.id.item_bin_stock);
+        item_bin_stock.setVisible(true);
+        if (cSetting.GENERIC_PRINT_BINLABEL()){
+            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
+            item_print_bin.setVisible(cPickorder.currentPickOrder.currentBranchBin != null);
+        }
+        if (cSetting.GENERIC_PRINT_ITEMLABEL()){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(cPickorderBarcode.currentPickorderBarcode != null);
+        }
+        return super.onPrepareOptionsMenu(pvMenu);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == android.R.id.home) {
-            if (this.quantityScannedDbl > 0) {
-                mShowAcceptFragment();
+        DialogFragment selectedFragment = null;
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                if (this.quantityScannedDbl > 0) {
+                    mShowAcceptFragment();
+                    return true;
+                }
+
+                pCancelPick();
+
                 return true;
-            }
 
-            pCancelPick();
+            case R.id.item_bin_stock:
+                selectedFragment = new BinItemsFragment(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+                break;
 
-            return true;
+            case R.id.item_print_bin:
+                selectedFragment = new PrintBinLabelFragment();
+                break;
+
+            case R.id.item_print_item:
+                cArticle.currentArticle= cPickorder.currentPickOrder.articleObl.get(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
+                selectedFragment = new PrintItemLabelFragment();
+                break;
+
+
+            default:
+                break;
         }
 
+
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        item.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+        }
         return super.onOptionsItemSelected(item);
 
     }
@@ -242,6 +315,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.textViewAction = findViewById(R.id.textViewAction);
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
     }
 
     @Override

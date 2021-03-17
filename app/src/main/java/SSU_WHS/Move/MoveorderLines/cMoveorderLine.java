@@ -14,7 +14,7 @@ import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
 import SSU_WHS.Webservice.cWebresult;

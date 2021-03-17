@@ -9,6 +9,7 @@
     <string name="no">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="print">Print</string>
     <string name="search">Search</string>
     <string name="done">Done</string>
     <string name="nothing_here">There\'s nothing here yet.</string>
@@ -883,6 +884,8 @@
     <string name="novalueyet">---</string>
     <string name="none">none</string>
     <string name="enter_BIN">Enter BIN</string>
+    <string name="print_BIN">Print BIN</string>
+    <string name="print_Article">Print Article</string>
     <string name="message_identifier_unknown">Identifier unknown</string>
     <string name="destination_invalid">Destination invalid</string>
     <string name="message_action_handled">Action Handled</string>

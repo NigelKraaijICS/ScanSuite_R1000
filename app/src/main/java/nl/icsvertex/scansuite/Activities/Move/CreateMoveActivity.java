@@ -41,7 +41,7 @@ import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import nl.icsvertex.scansuite.R;
 
 

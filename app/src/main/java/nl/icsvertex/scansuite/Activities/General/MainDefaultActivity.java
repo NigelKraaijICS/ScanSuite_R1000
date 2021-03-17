@@ -40,6 +40,7 @@ import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.CompositeBarcode.cCompositeBarcode;
 import SSU_WHS.Basics.CustomAuthorisations.cCustomAuthorisation;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
+import SSU_WHS.Basics.LabelTemplate.cLabelTemplate;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
 import SSU_WHS.Basics.Scanners.cScanner;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -360,6 +361,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
 
         if (!cItemProperty.pGetItemPropertiesViaWebserviceBln(true)) {
+            return false;
+        }
+
+        if (!cLabelTemplate.pGetLabelTemplatesViaWebserviceBln()){
             return false;
         }
 

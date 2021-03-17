@@ -69,6 +69,11 @@ public class cIntakeorderBarcode {
         return this.variantCodeStr;
     }
 
+    public  String getItemNoAndVariantCodeStr(){
+        return   this.getItemNoStr() + " " + this.getVariantCodeStr();
+    }
+
+
     public Double quantityPerUnitOfMeasureDbl;
     public Double getQuantityPerUnitOfMeasureDbl() {
         return this.quantityPerUnitOfMeasureDbl;

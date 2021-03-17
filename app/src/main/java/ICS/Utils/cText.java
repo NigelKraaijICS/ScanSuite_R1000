@@ -270,6 +270,14 @@ public class cText {
         return resultLng;
     }
 
+    public static Long pIntegerToLongLng(Integer pvInputInt) {
+        Long resultLng;
+
+        resultLng = cText.pStringToLongLng(cText.pIntToStringStr(pvInputInt));
+
+        return resultLng;
+    }
+
     public static String pLongToStringStr(Long pvInputLng) {
         String helpStr = Long.toString(pvInputLng);
         return !helpStr.contains(".") ? helpStr : helpStr.replaceAll("0*$", "").replaceAll("\\.$", "");

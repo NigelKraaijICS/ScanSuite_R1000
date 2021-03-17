@@ -369,6 +369,34 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean GENERIC_PRINT_BINLABEL(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_PRINT_BINLABEL);
+        if (Setting == null) {
+            return  false;
+        }
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
+            return  false;
+        }
+
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean GENERIC_PRINT_ITEMLABEL(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_PRINT_ITEMLABEL);
+        if (Setting == null) {
+            return  false;
+        }
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
+            return  false;
+        }
+
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
     public static String GENERIC_ITEM_EXTRA_FIELD1(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.GENERIC_ITEM_EXTRA_FIELD1);

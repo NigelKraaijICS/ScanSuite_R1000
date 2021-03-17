@@ -23,10 +23,14 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +44,13 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.MoveOrders.cMoveorder;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineAdapter;
@@ -54,7 +59,11 @@ import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.R;
 
 import static ICS.Utils.cText.pDoubleToStringStr;
@@ -98,6 +107,8 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
     private  List<cMoveorderBarcode> scannedBarcodesObl;
 
     private  RecyclerView recyclerScanActions;
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     private cMoveorderLineAdapter moveorderLineAdapter;
     private cMoveorderLineAdapter getMoveorderLineAdapter(){
@@ -170,32 +181,80 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu pvMenu) {
         invalidateOptionsMenu();
+        MenuItem item_bin_stock = pvMenu.findItem(R.id.item_bin_stock);
+        item_bin_stock.setVisible(false);
+
+        MenuItem item_article_stock = pvMenu.findItem(R.id.item_article_stock);
+        item_article_stock .setVisible(false);
 
 
-        MenuItem item_enter_bin = pvMenu.findItem(R.id.item_enter_bin);
-        item_enter_bin.setVisible(true);
-
-        if (cMoveorder.currentMoveOrder.currentBranchBin != null)  {
-            item_enter_bin.setVisible(false);
+        if (cMoveorder.currentMoveOrder == null || !cMoveorder.currentMoveOrder.isMoveValidateStockBln())  {
             return true;
         }
+        if (cSetting.GENERIC_PRINT_BINLABEL()){
+            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
+            item_print_bin.setVisible(cMoveorder.currentMoveOrder.currentBranchBin != null);
+        }
 
+        if (cSetting.GENERIC_PRINT_ITEMLABEL()){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(cMoveorder.currentMoveOrder.currentMoveorderBarcode != null);
+        }
+
+        item_bin_stock .setVisible(cMoveorder.currentMoveOrder.currentBranchBin != null);
+        item_article_stock.setVisible(cMoveorder.currentMoveOrder.currentArticle != null);
         return super.onPrepareOptionsMenu(pvMenu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
+        DialogFragment selectedFragment = null;
+        switch (pvMenuItem.getItemId()) {
 
-        if (pvMenuItem.getItemId() == android.R.id.home) {
-            if (this.quantityScannedDbl == 0) {
+            case android.R.id.home:
                 this.mResetCurrents();
                 this.mGoBackToLinesActivity();
-                return true;
-            }
+                return  true;
 
-            this.mShowAcceptFragment();
-            return true;
+            case R.id.item_bin_stock:
+                selectedFragment = new BinItemsFragment(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
+                break;
+
+            case R.id.item_article_stock:
+                cArticle.currentArticle= cMoveorder.currentMoveOrder.currentArticle;
+                selectedFragment = new ItemStockFragment();
+                break;
+
+            case R.id.item_print_bin:
+                selectedFragment = new PrintBinLabelFragment();
+                break;
+
+                case R.id.item_print_item:
+                    cArticle.currentArticle= cMoveorder.currentMoveOrder.currentArticle;
+                selectedFragment = new PrintItemLabelFragment();
+                break;
+
+            default:
+                break;
         }
+
+
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+        }
+
 
         return true;
     }
@@ -283,6 +342,8 @@ public class MoveLinePlaceGeneratedActivity extends AppCompatActivity implements
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
 
         this.recyclerScanActions = findViewById(R.id.recyclerScanActions);
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
 
         this.articleContainer = findViewById(R.id.articleContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
