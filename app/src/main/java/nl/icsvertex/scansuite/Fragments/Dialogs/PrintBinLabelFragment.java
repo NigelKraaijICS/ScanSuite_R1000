@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -44,21 +45,27 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.LabelTemplate.cLabelTemplate;
 import SSU_WHS.Basics.PrintBinLabel.cPrintBinLabel;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
+import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryArticleActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
@@ -66,6 +73,12 @@ import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeMTActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesPlaceMTActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLinesTakeMTActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveorderLinesPlaceGeneratedActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderPickGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
@@ -80,6 +93,7 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
     private ImageView barcodeImage;
     private Spinner workplaceSpinner;
     private Spinner layoutSpinner;
+    private Spinner binSpinner;
 
     private TextView quantityText;
     private TextView quantityRequiredText;
@@ -90,11 +104,13 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
     private  int counterPlusHelperInt;
     private Handler minusHandler;
     private  Handler plusHandler;
+    private ProgressBar progressBar;
 
     private Button printButton;
     private  Button cancelButton;
     private Long amountLng;
     private String binCodeStr;
+    private Boolean binSpinnerBln;
 
     //End Region private Properties
 
@@ -162,6 +178,7 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
     public void mFindViews() {
 
         this.textViewTitle = getView().findViewById(R.id.textViewTitle);
+        this.binSpinner = getView().findViewById(R.id.binSpinner);
         this.lineBinPrint = getView().findViewById(R.id.lineBinPrint);
         this.workplaceSpinner = getView().findViewById(R.id.workspaceSpinner);
         this.layoutSpinner = getView().findViewById(R.id.layoutSpinner);
@@ -172,77 +189,86 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
         this.barcodeImage = getView().findViewById(R.id.barcodeImageView);
         this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
+        this.progressBar = getView().findViewById(R.id.progressBar);
     }
 
 
     public void mSetToolbar() {
-        this.textViewTitle.setText(this.binCodeStr);
         this.textViewTitle.setSelected(true);
     }
 
     @Override
     public void mFieldsInitialize() {
+        this.binSpinnerBln = false;
+        this.binSpinner.setVisibility(View.INVISIBLE);
         if (cAppExtension.activity instanceof PickorderPickActivity) {
-            this.binCodeStr = cPickorderLine.currentPickOrderLine.getBinCodeStr();
+            this.mSetBarcode(cPickorderLine.currentPickOrderLine.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof PickorderPickGeneratedActivity) {
-            this.binCodeStr = cPickorderLine.currentPickOrderLine.getBinCodeStr();
+            this.mSetBarcode(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+        }
+        if (cAppExtension.activity instanceof PickorderLinesActivity) {
+            this.mSetBarcode(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+        }
+        if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
+            this.mSetBarcode(cPickorderLine.currentPickOrderLine.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof InventoryArticleActivity) {
-            this.binCodeStr = cInventoryorderLine.currentInventoryOrderLine.getBinCodeStr();
+            this.mSetBarcode(cInventoryorderLine.currentInventoryOrderLine.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-            this.binCodeStr = cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr();
+            this.mSetBarcode(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof MoveLinePlaceActivity) {
-            this.binCodeStr = cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr();
+            this.mSetBarcode(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof MoveLinePlaceGeneratedActivity) {
-            this.binCodeStr = cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr();
+            this.mSetBarcode(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof MoveLineTakeActivity) {
-            this.binCodeStr = cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr();
+            this.mSetBarcode(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof MoveLinePlaceMTActivity) {
-            this.binCodeStr = cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr();
+            this.mSetBarcode(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof MoveLineTakeMTActivity) {
-            this.binCodeStr = cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr();
+            this.mSetBarcode(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
+        }
+        if (cAppExtension.activity instanceof MoveLinesActivity) {
+            this.mSetBarcode(cMoveorderLine.currentMoveOrderLine.getBinCodeStr());
+        }
+        if (cAppExtension.activity instanceof MoveLinesPlaceMTActivity) {
+            this.mSetBarcode(cMoveorderLine.currentMoveOrderLine.getBinCodeStr());
+        }
+        if (cAppExtension.activity instanceof MoveLinesTakeMTActivity) {
+            this.mSetBarcode(cMoveorderLine.currentMoveOrderLine.getBinCodeStr());
+        }
+        if (cAppExtension.activity instanceof MoveorderLinesPlaceGeneratedActivity) {
+            this.mSetBarcode(cMoveorderLine.currentMoveOrderLine.getBinCodeStr());
         }
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity){
-            this.binCodeStr = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getBinCodeStr();
+            this.mShowBinSpinner();
         }
         if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity){
-            this.binCodeStr = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getBinCodeStr();
+            this.mShowBinSpinner();
         }
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity){
-            this.binCodeStr = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getBinCodeStr();
+            this.mShowBinSpinner();
+        }
+        if (cAppExtension.activity instanceof IntakeorderMASLinesActivity){
+            this.mShowBinSpinner();
+        }
+        if (cAppExtension.activity instanceof IntakeorderMATLinesActivity){
+            this.mShowBinSpinner();
+        }
+        if (cAppExtension.activity instanceof MenuActivity){
+            this.mSetBarcode(cBranchBin.currentBranchBin.getBinCodeStr());
         }
         this.mShowWorkPlaceSpinner();
         this.mShowLabelTemplateSpinner();
         this.amountLng = 1L;
         this.mShowQuantityInfo();
-
-        cBarcodeLayout barcodeLayout;
-        barcodeLayout = cBarcodeLayout.pGetBarcodeLayoutByEnumerate(cBarcodeLayout.barcodeLayoutEnu.BIN);
-
-        String binCodeStr;
-        binCodeStr = cRegex.pGetWholePrefixFromLayout(barcodeLayout.getLayoutValueStr()) + this.binCodeStr;
-
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(binCodeStr , BarcodeFormat.CODE_128, 250, 72);
-            Bitmap bitmap = Bitmap.createBitmap(250, 72, Bitmap.Config.RGB_565);
-            for(int i = 0; i< 250; i++){
-                for(int j =  0; j< 72; j++){
-                    bitmap.setPixel(i,j,bitMatrix.get(i,j)? Color.BLACK:Color.WHITE);
-                }
-            }
-            this.barcodeImage.setImageBitmap(bitmap);
-
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
+        this.progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -251,6 +277,7 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
         this.mSetCancelListener();
         this.mSetWorkplaceSpinnerListener();
         this.mSetLayoutSpinnerListener();
+        if (this.binSpinnerBln){this.mSetBinSpinnerListener();}
         this.mSetMinusListener();
         this.mSetPlusListener();
         this.mSetNumberListener();
@@ -272,16 +299,29 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
                 if (cWorkplace.currentWorkplace == null | cLabelTemplate.currentLabelTemplate == null){
                     return;
                 }
-                mPrintBinLabel();
+                progressBar.setVisibility(View.VISIBLE);
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        mPrintBinLabel();
+                    }
+                };
+                Thread printLabel = new Thread(runnable);
+                printLabel.start();
+                //
             }
         });
     }
+
     private void mPrintBinLabel(){
         cPrintBinLabel printBinLabel;
         printBinLabel = new cPrintBinLabel(this.binCodeStr,  this.amountLng);
        if(printBinLabel.pPrintBinLabelViaWebserviceBln()){
            cAppExtension.dialogFragment.dismiss();
+           return;
        }
+        this.progressBar.setVisibility(View.INVISIBLE);
+        cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.error_print_failed),null);
     }
 
     private void mShowLabelTemplateSpinner() {
@@ -328,6 +368,80 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
                 // your code here
             }
         });
+    }
+
+    private void mShowBinSpinner() {
+
+        this.binSpinner.setVisibility(View.VISIBLE);
+        this.mFillBinSpinner();
+        this.binSpinnerBln = true;
+    }
+
+
+    private void mFillBinSpinner() {
+        List<String> binObl = new ArrayList<>();
+
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine !=null){
+            for (cIntakeorderMATLine intakeorderMATLine : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.MATLinesObl){
+                if (!binObl.contains(intakeorderMATLine.binCodeHandledStr)){
+                    binObl.add(intakeorderMATLine.binCodeHandledStr);
+                }
+            }
+        } else {
+            for (cReceiveorderLine receiveorderLine : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl){
+                if (!binObl.contains(receiveorderLine.getBinCodeStr())) {
+                    binObl.add(receiveorderLine.getBinCodeStr());
+                }
+            }
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(cAppExtension.context,
+                android.R.layout.simple_spinner_dropdown_item,
+                binObl);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        this.binSpinner.setAdapter(adapter);
+    }
+
+    private void mSetBinSpinnerListener() {
+        this.binSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                 mSetBarcode(binSpinner.getSelectedItem().toString());
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+        });
+    }
+
+    private void mSetBarcode(String pvBinStr){
+        this.binCodeStr = pvBinStr;
+        this.textViewTitle.setText(this.binCodeStr);
+
+        cBarcodeLayout barcodeLayout;
+        barcodeLayout = cBarcodeLayout.pGetBarcodeLayoutByEnumerate(cBarcodeLayout.barcodeLayoutEnu.BIN);
+
+        String binCodeStr;
+        binCodeStr = cRegex.pGetWholePrefixFromLayout(barcodeLayout.getLayoutValueStr()) + this.binCodeStr;
+
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(binCodeStr , BarcodeFormat.CODE_128, 250, 72);
+            Bitmap bitmap = Bitmap.createBitmap(250, 72, Bitmap.Config.RGB_565);
+            for(int i = 0; i< 250; i++){
+                for(int j =  0; j< 72; j++){
+                    bitmap.setPixel(i,j,bitMatrix.get(i,j)? Color.BLACK:Color.WHITE);
+                }
+            }
+            this.barcodeImage.setImageBitmap(bitmap);
+
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void mShowWorkPlaceSpinner() {

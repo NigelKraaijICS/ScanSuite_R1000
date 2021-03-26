@@ -13,13 +13,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
+    <Spinner
+        android:id="@+id/binSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+    </Spinner>
     <ImageView
         android:id="@+id/barcodeImageView"
         android:layout_width="250dp"
         android:layout_height="72dp"
         android:layout_margin="@dimen/default_double_margin"
         android:contentDescription="@string/articleimage_thumb_description"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        app:layout_constraintTop_toBottomOf="@id/binSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
     <Spinner
@@ -73,5 +85,16 @@
         app:layout_constraintTop_toBottomOf="@id/quantityFragmentContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_margin="@dimen/default_double_margin"
+        app:layout_constraintTop_toBottomOf="@id/quantityFragmentContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/printButton"
+        android:progressDrawable="@drawable/ic_progressbar"/>
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -439,9 +439,13 @@
     <string name="message_close_bin">Sluit locatie</string>
     <string name="scan_article_header_default">Scan artikel</string>
     <string name="add_article_header_default">Voeg artikel toe</string>
+    <string name="search_article_header_default">Zoek artikel</string>
     <string name="button_add_article">Voeg artikel toe</string>
     <string name="error_get_intakelines_failed">Regels ophalen mislukt</string>
     <string name="error_get_intakeorders_failed">Orders ophalen mislukt</string>
+    <string name="hint_add_itemno">Geef artikelnummer in</string>
+    <string name="hint_add_variantcode">Geef variantcode in</string>
+    <string name="hint_add_barcode">Scan of typ barcode</string>
     <string name="hint_add_article">Geef artikel in</string>
     <string name="message_accept_line">Accepteer scans</string>
     <string name="message_cancel">Annuleer</string>
@@ -798,4 +802,5 @@
     <string name="ordertype_self_generated">Op eigen initiatief</string>
     <string name="print_BIN">Print BIN</string>
     <string name="print_Article">Print Artikel</string>
+    <string name="error_print_failed">Print label mislukt</string>
 </resources>

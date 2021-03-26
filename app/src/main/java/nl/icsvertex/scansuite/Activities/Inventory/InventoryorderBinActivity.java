@@ -50,6 +50,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -151,6 +152,9 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
                 selectedFragment = new PrintBinLabelFragment();
                 break;
 
+            case R.id.item_print_item:
+                selectedFragment = new PrintItemLabelFragment();
+
             default:
                 break;
         }
@@ -188,6 +192,10 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         if (cSetting.GENERIC_PRINT_BINLABEL()){
             MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
             item_print_bin.setVisible(true);
+        }
+        if (cSetting.GENERIC_PRINT_ITEMLABEL() && cInventoryorderLine.currentInventoryOrderLine != null){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(true);
         }
 
         return super.onPrepareOptionsMenu(pvMenu);

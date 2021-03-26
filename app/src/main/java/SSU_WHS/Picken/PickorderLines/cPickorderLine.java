@@ -521,6 +521,13 @@ public class cPickorderLine {
 
     }
 
+    public Boolean pGetBarcodesObl(){
+        if (cPickorderLine.currentPickOrderLine.mGetBarcodesObl() == null || Objects.requireNonNull(cPickorderLine.currentPickOrderLine.mGetBarcodesObl()).size() == 0) {
+            return false;
+        }
+        return  true;
+    }
+
     public cResult pSortLineBusyRst(){
 
 

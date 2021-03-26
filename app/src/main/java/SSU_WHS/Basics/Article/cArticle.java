@@ -147,6 +147,28 @@ public class cArticle {
         return null;
     }
 
+    public static cArticle pGetArticleByItemNoVariantViaWebservice(String pvItemNoStr, String pvVariantcodeStr){
+
+        cWebresult webresult;
+
+        cArticleViewModel articleViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cArticleViewModel.class);
+        webresult = articleViewModel.pGetArticleByItemNoVariantWrs(pvItemNoStr, pvVariantcodeStr);
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
+            for (JSONObject jsonObject :  webresult.getResultDtt()) {
+                cArticle article = new cArticle(jsonObject);
+
+              if( ! article.pGetBarcodesViaWebserviceBln(null)){
+                  return null;
+              }
+                return article;
+            }
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEVIAOWNERBARCODE);
+        }
+        return null;
+    }
+
     public boolean pGetBarcodesViaWebserviceBln(cBarcodeScan pvBarcodeScan) {
         cWebresult webresult;
 

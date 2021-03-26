@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.cText;
@@ -40,6 +42,7 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
         private final ImageView imageViewCounted;
         private final View menuSeparator;
         public RelativeLayout viewBackground;
+        private FrameLayout moveOrderLineItemLinearLayout;
         public ConstraintLayout viewForeground;
 
         public MoveorderLineViewHolder(View pvItemView) {
@@ -75,6 +78,7 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
             this.viewBackground = pvItemView.findViewById(R.id.view_background);
             this.viewForeground = pvItemView.findViewById(R.id.view_foreground);
             this.menuSeparator = pvItemView.findViewById(R.id.menuSeparator);
+            this.moveOrderLineItemLinearLayout = pvItemView.findViewById(R.id.moveOrderLineItemLinearLayout);
         }
         //End Region Public Properties
     }
@@ -82,9 +86,9 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
     //Region Private Properties
 
     private final LayoutInflater LayoutInflaterObject;
-
-
     private List<cMoveorderLine> localMoveorderLinesObl;
+
+    private final List<FrameLayout> moveOrderLineItemLinearLayouts = new ArrayList<>();
 
     //End Region Private Properties
 
@@ -113,6 +117,7 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
     @Override
     public void onBindViewHolder(@NonNull cMoveorderLineAdapter.MoveorderLineViewHolder pvHolder, int pvPositionInt) {
 
+        this.moveOrderLineItemLinearLayouts.add(pvHolder.moveOrderLineItemLinearLayout);
         if (localMoveorderLinesObl == null || localMoveorderLinesObl.size() == 0 ) {
             return;
         }
@@ -216,6 +221,17 @@ public class cMoveorderLineAdapter extends RecyclerView.Adapter<cMoveorderLineAd
             }
 
         }
+
+        pvHolder.moveOrderLineItemLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (FrameLayout frameLayout : moveOrderLineItemLinearLayouts){
+                    frameLayout.setSelected(false);
+                }
+                view.setSelected(true);
+                cMoveorderLine.currentMoveOrderLine = moveorderLine;
+            }
+        });
 
     }
 

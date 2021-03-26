@@ -72,6 +72,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.SearchArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SetBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
@@ -523,7 +524,11 @@ public class cBarcodeScan {
                         scanArticleFragment.pHandleScan(barcodeScan);
                         return;
                     }
-
+                    if (cAppExtension.dialogFragment instanceof SearchArticleFragment) {
+                        SearchArticleFragment searchArticleFragment = (SearchArticleFragment)cAppExtension.dialogFragment;
+                        searchArticleFragment.pHandleScan(barcodeScan);
+                        return;
+                    }
 
                     if (cAppExtension.dialogFragment instanceof ScanBinFragment) {
                         ScanBinFragment scanBinFragment = (ScanBinFragment)cAppExtension.dialogFragment;

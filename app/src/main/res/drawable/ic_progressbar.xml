@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient
+                android:endColor="@color/design_default_color_secondary"
+                android:startColor="@color/colorQuickhelpRipple"
+                android:useLevel="true" />
+        </shape>
+    </item>
+</selector>
