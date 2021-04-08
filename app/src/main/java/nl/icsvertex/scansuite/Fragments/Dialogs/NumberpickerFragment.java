@@ -25,6 +25,8 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.R;
 
 public class NumberpickerFragment extends DialogFragment implements iICSDefaultFragment {
@@ -124,6 +126,14 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
         this.doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
+                    PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = quantityNumberPicker.getValue();
+                    pickorderLineItemPropertyInputActvity.pRefreshActivity();
+                    pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity(true, false, quantityNumberPicker.getValue());
+                    dismiss();
+                    return;
+                }
                 quantityNumberPicker.clearFocus();
                 Intent intent = new Intent(cPublicDefinitions.NUMBERINTENT_NUMBER);
                 intent.putExtra(cPublicDefinitions.NUMBERINTENT_EXTRANUMBER, quantityNumberPicker.getValue());

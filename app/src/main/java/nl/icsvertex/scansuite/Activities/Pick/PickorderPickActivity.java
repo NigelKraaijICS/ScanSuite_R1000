@@ -1559,13 +1559,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        List<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl = new ArrayList<>();
-
-        for (cPickorderLineProperty pickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl()) {
-            pickorderLinePropertyValuesObl.addAll(pickorderLineProperty.propertyValueObl());
-        }
-
-        ItemPropertyNoInputFragment itemPropertyNoInputFragment = new ItemPropertyNoInputFragment(pickorderLinePropertyValuesObl);
+        ItemPropertyNoInputFragment itemPropertyNoInputFragment = new ItemPropertyNoInputFragment();
         itemPropertyNoInputFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.ITEMPROPERTYVALUENOINPUTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
 

@@ -299,6 +299,8 @@ public class cUserInterface {
         });
     }
 
+
+
     public static void pHideKeyboard() {
         InputMethodManager imm = (InputMethodManager) cAppExtension.activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.

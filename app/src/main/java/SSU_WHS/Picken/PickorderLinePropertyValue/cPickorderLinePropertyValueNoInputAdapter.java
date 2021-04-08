@@ -13,10 +13,14 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adapter<cPickorderLinePropertyValueNoInputAdapter.ItempropertyValueNoInputViewHolder>{
@@ -101,7 +105,6 @@ public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adap
         this.localItemPropertyValueObl = pvDataObl;
         notifyDataSetChanged();
     }
-
 
     @Override
     public int getItemCount () {

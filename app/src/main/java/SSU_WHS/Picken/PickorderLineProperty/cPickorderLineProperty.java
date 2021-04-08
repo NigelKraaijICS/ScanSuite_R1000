@@ -1,11 +1,16 @@
 package SSU_WHS.Picken.PickorderLineProperty;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import ICS.Utils.cResult;
 import ICS.cAppExtension;
@@ -13,7 +18,7 @@ import SSU_WHS.Basics.ItemProperty.cItemProperty;
 import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import nl.icsvertex.scansuite.R;
 
-public class cPickorderLineProperty {
+public class cPickorderLineProperty implements List<JSONObject> {
 
     //Public Properties
     private Integer lineNoInt;
@@ -111,6 +116,7 @@ public class cPickorderLineProperty {
         for (cPickorderLinePropertyValue pickorderLinePropertyValue : this.propertyValueObl()) {
             if (pickorderLinePropertyValue.getValueStr().equalsIgnoreCase(pvValueStr)) {
                 pickorderLinePropertyValue.quantityDbl += 1;
+                cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
                 return;
             }
         }
@@ -120,7 +126,9 @@ public class cPickorderLineProperty {
         }
 
         //Add a new value
-        cPickorderLinePropertyValue.allLinePropertysValuesObl.add(new cPickorderLinePropertyValue(this.getLineNoInt(), this.getPropertyCodeStr(),pvValueStr));
+        cPickorderLinePropertyValue pickorderLinePropertyValue = new cPickorderLinePropertyValue(this.getLineNoInt(), this.getPropertyCodeStr(),pvValueStr);
+        cPickorderLinePropertyValue.allLinePropertysValuesObl.add(pickorderLinePropertyValue);
+        cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
     }
 
     public cResult pCheckScanForUniquePropertyRst(String pvPropertyValueStr) {
@@ -173,4 +181,124 @@ public class cPickorderLineProperty {
         return true;
     }
 
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public boolean contains(@Nullable Object o) {
+        return false;
+    }
+
+    @NonNull
+    @Override
+    public Iterator<JSONObject> iterator() {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public Object[] toArray() {
+        return new Object[0];
+    }
+
+    @NonNull
+    @Override
+    public <T> T[] toArray(@NonNull T[] ts) {
+        return null;
+    }
+
+    @Override
+    public boolean add(JSONObject jsonObject) {
+        return false;
+    }
+
+    @Override
+    public boolean remove(@Nullable Object o) {
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(@NonNull Collection<?> collection) {
+        return false;
+    }
+
+    @Override
+    public boolean addAll(@NonNull Collection<? extends JSONObject> collection) {
+        return false;
+    }
+
+    @Override
+    public boolean addAll(int i, @NonNull Collection<? extends JSONObject> collection) {
+        return false;
+    }
+
+    @Override
+    public boolean removeAll(@NonNull Collection<?> collection) {
+        return false;
+    }
+
+    @Override
+    public boolean retainAll(@NonNull Collection<?> collection) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+
+    }
+
+    @Override
+    public JSONObject get(int i) {
+        return null;
+    }
+
+    @Override
+    public JSONObject set(int i, JSONObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public void add(int i, JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public JSONObject remove(int i) {
+        return null;
+    }
+
+    @Override
+    public int indexOf(@Nullable Object o) {
+        return 0;
+    }
+
+    @Override
+    public int lastIndexOf(@Nullable Object o) {
+        return 0;
+    }
+
+    @NonNull
+    @Override
+    public ListIterator<JSONObject> listIterator() {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public ListIterator<JSONObject> listIterator(int i) {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public List<JSONObject> subList(int i, int i1) {
+        return null;
+    }
 }

@@ -245,6 +245,22 @@ public class cPickorderLine {
         return  resultObl;
     }
 
+    public  cPickorderLineProperty getPickorderLineProperty(String pvPropertyCodeStr){
+
+        if (this.pickorderLinePropertyInputObl().size() == 0) {
+            return  null;
+        }
+
+        for (cPickorderLineProperty pickorderLineProperty : this.pickorderLinePropertyObl() ) {
+            if (pickorderLineProperty.getLineNoInt().equals(this.getLineNoInt()) && pickorderLineProperty.getPropertyCodeStr().equalsIgnoreCase(pvPropertyCodeStr)) {
+                return pickorderLineProperty;
+            }
+        }
+
+        return  null;
+
+    }
+
     public  List<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl() {
 
         List<cPickorderLinePropertyValue> resultObl = new ArrayList<>();

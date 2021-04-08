@@ -230,6 +230,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
             PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
+            pickorderLineItemPropertyInputActvity.amountHandledBln = true;
             pickorderLineItemPropertyInputActvity.pHandled();
             this.dismiss();
             return;
@@ -295,13 +296,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             this.dismiss();
             return;
         }
-        if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity) {
-            IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
-            intakeOrderIntakeGeneratedActivity.pAcceptStore();
-            this.dismiss();
-            return;
-        }
-
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
             ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
@@ -422,6 +416,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             return;
         }
 
+        if (cAppExtension.activity instanceof  PickorderLineItemPropertyInputActvity) {
+            PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
+            pickorderLineItemPropertyInputActvity.pCancelPick();
+            this.dismiss();
+            return;
+        }
+
         if (cAppExtension.activity instanceof SortorderSortActivity) {
             SortorderSortActivity sortorderSortActivity = (SortorderSortActivity)cAppExtension.activity;
             sortorderSortActivity.pCancelPick();
@@ -458,13 +459,6 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof IntakeOrderIntakeActivity) {
             IntakeOrderIntakeActivity intakeOrderIntakeActivity = (IntakeOrderIntakeActivity)cAppExtension.activity;
             intakeOrderIntakeActivity.pCancelStore();
-            this.dismiss();
-            return;
-        }
-
-        if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity) {
-            IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
-            intakeOrderIntakeGeneratedActivity.pCancelStore();
             this.dismiss();
             return;
         }
