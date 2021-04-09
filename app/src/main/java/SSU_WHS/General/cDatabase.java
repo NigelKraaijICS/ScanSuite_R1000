@@ -46,6 +46,8 @@ public class cDatabase {
     public static final String TABLENAME_INVENTORYORDER = "InventoryOrder";
     public static final String TABLENAME_INVENTORYORDERBIN = "InventoryOrderBin";
     public static final String TABLENAME_INVENTORYORDERLINE = "InventoryOrderLines";
+    public static final String TABLENAME_INVENTORYORDERLINEPROPERTY = "InventoryorderlineProperty";
+    public static final String TABLENAME_INVENTORYORDERLINEPROPERTYVALUE = "InventoryorderlinePropertyValue";
     public static final String TABLENAME_INVENTORYORDERBARCODE = "InventoryOrderBarcodes";
     public static final String TABLENAME_INVENTORYORDERLINEBARCODE  = "InventoryOrderLineBarcodes";
     public static final String TABLENAME_INTAKEORDERMATLINES  = "IntakeLinesMAT";

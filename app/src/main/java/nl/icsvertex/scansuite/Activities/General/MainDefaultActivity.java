@@ -364,9 +364,9 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
             return false;
         }
 
-        if (!cLabelTemplate.pGetLabelTemplatesViaWebserviceBln()){
-            return false;
-        }
+//        if (!cLabelTemplate.pGetLabelTemplatesViaWebserviceBln()){
+//            return false;
+//        }
 
         if (!cPropertyGroup.pGetPropertyGroupsViaWebserviceBln(true)) {
             return  false;

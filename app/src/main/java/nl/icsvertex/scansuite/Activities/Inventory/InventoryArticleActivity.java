@@ -48,6 +48,9 @@ import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
@@ -357,6 +360,9 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
             this.mHandleDone();
            return;
         }
+
+
+
 
         this.mShowBarcodeInfo();
 
@@ -760,6 +766,7 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     private void mHandleQuantityChosen(double pvQuantityDbl) {
         this.mTryToChangeInventoryQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
     }
+
 
     //End Region Private Methods
 }

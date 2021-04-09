@@ -2,10 +2,12 @@ package SSU_WHS.Inventory.InventoryOrders;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -20,6 +22,8 @@ import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
+import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
+import SSU_WHS.Basics.PropertyGroup.cPropertyGroupViewModel;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -33,6 +37,7 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEn
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineViewModel;
+import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -122,6 +127,7 @@ public class cInventoryorder {
         return unknownVariantCounterInt;
     }
 
+    public  LinkedHashMap<Integer, List<JSONObject>>  itemProperyDataObl;
     private final cInventoryorderEntity inventoryorderEntity;
 
     private cInventoryorderViewModel getInventoryorderViewModel() {

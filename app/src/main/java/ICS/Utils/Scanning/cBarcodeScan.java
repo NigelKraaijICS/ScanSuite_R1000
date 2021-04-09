@@ -277,7 +277,6 @@ public class cBarcodeScan {
                         return;
                     }
 
-
                     //Intake
                     if (cAppExtension.activity instanceof IntakeAndReceiveSelectActivity){
                         IntakeAndReceiveSelectActivity intakeAndReceiveSelectActivity = (IntakeAndReceiveSelectActivity)cAppExtension.activity;

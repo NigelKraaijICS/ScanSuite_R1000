@@ -29,6 +29,8 @@ import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBinEntity;
 import SSU_WHS.Inventory.InventoryorderBins.iInventoryorderBinDao;
+import SSU_WHS.Picken.Pickorders.cPickorder;
+import SSU_WHS.Picken.Pickorders.cPickorderRepository;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -429,6 +431,41 @@ public class cInventoryorderRepository {
 
         try {
             webResultWrs = new mGetCommentsFromWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    //Region Propertys
+    public cWebresult pGetLinePropertysViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new cInventoryorderRepository.mGetPropertysViaWebserviceAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
+    public cWebresult pGetLinePropertyValuesViaWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new cInventoryorderRepository.mGetPropertyValuesViaWebserviceAsyncTask().execute().get();
         } catch (ExecutionException | InterruptedException e) {
             webResultWrs.setResultBln(false);
             webResultWrs.setSuccessBln(false);
@@ -1139,6 +1176,70 @@ public class cInventoryorderRepository {
             }
 
             return WebresultWrs;
+        }
+    }
+
+    //Region Properties
+    //Region Propertys
+    private static class mGetPropertysViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(String... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+                l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
+        }
+    }
+
+    private static class mGetPropertyValuesViaWebserviceAsyncTask extends AsyncTask<String, Void, cWebresult> {
+        @Override
+        protected cWebresult doInBackground(String... params) {
+            cWebresult webresult = new cWebresult();
+            try {
+                List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+                PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+                l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERTYPE;
+                l_PropertyInfo1Pin.setValue(cWarehouseorder.OrderTypeEnu.INVENTARISATIE.toString());
+                l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+                PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+                l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+                l_PropertyInfo2Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+                l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+                PropertyInfo l_PropertyInfo3Pin = new PropertyInfo();
+                l_PropertyInfo3Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+                l_PropertyInfo3Pin.setValue(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo3Pin);
+
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIEVALUESGET, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                webresult.setSuccessBln(false);
+                webresult.setResultBln(false);
+            }
+            return webresult;
         }
     }
 
