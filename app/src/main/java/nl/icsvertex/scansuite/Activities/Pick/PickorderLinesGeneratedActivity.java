@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,12 +14,16 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -35,6 +40,7 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
@@ -42,6 +48,7 @@ import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineRecyclerItemTouchHelper;
@@ -50,9 +57,13 @@ import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLineRecyclerItemTo
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
@@ -79,6 +90,8 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     private RecyclerView recyclerViewPickorderLinesGenerated;
 
     private ImageView imageButtonCloseOrder;
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     private cPickorderLineAdapter pickorderLineAdapter;
     private cPickorderLineAdapter getPickorderLineAdapter(){
@@ -157,6 +170,32 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         //Reset the line
         this.mRemoveAdapterFromFragment();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_pick,pvMenu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+        //  invalidateOptionsMenu();
+
+        MenuItem item_bin_stock = pvMenu.findItem(R.id.item_bin_stock);
+        MenuItem item_article_stock = pvMenu.findItem(R.id.item_article_stock);
+        item_bin_stock.setVisible(cPickorderLine.currentPickOrderLine != null);
+        item_article_stock.setVisible(cPickorderLine.currentPickOrderLine != null);
+
+        if (cSetting.GENERIC_PRINT_BINLABEL()){
+            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
+            item_print_bin.setVisible(cPickorderLine.currentPickOrderLine != null);
+        }
+        if (cSetting.GENERIC_PRINT_ITEMLABEL()){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(cPickorderLine.currentPickOrderLine != null);
+        }
+
+        return super.onPrepareOptionsMenu(pvMenu);
+    }
 
     //End Region Default Methods
 
@@ -200,6 +239,8 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         this.imageButtonComments = findViewById(R.id.imageButtonComments);
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
     }
 
     @Override
@@ -244,9 +285,56 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
-        if (pvMenuItem.getItemId() == android.R.id.home) {
-            mTryToLeaveActivity();
-            return true;
+        DialogFragment selectedFragment = null;
+
+        switch (pvMenuItem.getItemId()) {
+
+            case android.R.id.home:
+                this.mTryToLeaveActivity();
+                return true;
+
+            case R.id.item_bin_stock:
+                selectedFragment = new BinItemsFragment(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+                break;
+
+            case R.id.item_article_stock:
+
+                cArticle.currentArticle= cPickorder.currentPickOrder.articleObl.get(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
+                selectedFragment = new ItemStockFragment();
+                break;
+
+            case R.id.item_print_bin:
+                selectedFragment = new PrintBinLabelFragment();
+                break;
+
+            case R.id.item_print_item:
+                if (cPickorderLine.currentPickOrderLine.pGetBarcodesObl()){
+                    cArticle.currentArticle= cPickorder.currentPickOrder.articleObl.get(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
+                    selectedFragment = new PrintItemLabelFragment();
+                }
+                else
+                {  cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line),null);}
+                break;
+
+            default:
+                break;
+        }
+
+
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
         }
 
         return super.onOptionsItemSelected(pvMenuItem);

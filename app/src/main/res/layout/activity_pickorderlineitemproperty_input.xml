@@ -13,17 +13,42 @@
         android:layout_margin="@dimen/default_margin"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/itemPropertyRecyclerview"
+    <include layout="@layout/default_item_property_tab"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/default_margin"
-        android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@id/articleInfoCompactContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/imageButtonDone"
         />
+<!--    <com.google.android.material.tabs.TabLayout-->
+<!--        android:id="@+id/itemPropertyTabLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_margin="@dimen/default_margin"-->
+<!--        app:tabIndicatorColor="@android:color/holo_red_dark"-->
+<!--        app:tabSelectedTextColor="@android:color/holo_red_dark"-->
+<!--        app:tabTextColor="@android:color/darker_gray"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/articleInfoCompactContainer"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/imageButtonDone"-->
+<!--        />-->
+
+<!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:id="@+id/itemPropertyViewpager"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_margin="@dimen/default_margin"-->
+<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+<!--        app:layout_constraintTop_toTopOf="@id/itemPropertyTabLayout"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/imageButtonDone"-->
+<!--        />-->
+<!--    -->
+
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/imageButtonDone"
         style="@style/smallButton"

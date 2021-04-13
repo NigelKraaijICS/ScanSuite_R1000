@@ -267,6 +267,7 @@
     <string name="message_underpick_header">Finish order line?</string>
     <string name="message_correcy_line_header">Correct line quanity?</string>
     <string name="message_underpick_text">You need %1$s of these, you\'ve only picked %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
+    <string name="message_underpick_property_text">You need %1$s of these, you\'ve only picked %2$s. The amount filled at this tab is the picked number of the articles</string>
     <string name="message_undermove_text">You need %1$s of these, you\'ve only moved %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
     <string name="message_undercheck_text">There were  %1$s picked items\n\You\'ve checked %2$s items.\n\nAre you sure that you want to correct the picked quantity?</string>
     <string name="message_underplace_text">Quantity to low\n\nYou try to place %1$s items\n\You would have to place %2$s items\n\nBut you can only place %3$s items on other BINS</string>
@@ -274,7 +275,12 @@
     <string name="choose_barcode">Choose barcode</string>
     <string name="quantity_per_scan">Quantity per scan: </string>
     <string name="error_could_not_close_order">The order could not be closed, please try again</string>
+    <string name="message_overpick_not_allowed">Picking more than requested not allowed</string>
     <!--endregion Pickorder Pick-->
+
+    <!--region itemproperty-->
+    <string name="message_fill_all_properties">All properties need to have the same amount</string>
+    <!--endregion itemproperty-->
 
     <!--region Sortorderselect-->
     <string name="screentitle_sortorderselect">Sortorders</string>
@@ -629,8 +635,11 @@
     <string name="error_get_intakeorders_failed">Getting orders failed</string>
     <string name="error_get_intakelines_failed">Getting lines failed</string>
     <string name="screentitle_intakeorderlines">Lines</string>
+    <string name="message_cancel_switch">Cancel tabswitch</string>
+    <string name="message_accept_switch">Accept tabswitch</string>
     <string name="message_cancel_line">Cancel scans</string>
     <string name="message_accept_line">Accept scans</string>
+    <string name="message_accept">Accept</string>
     <string name="message_cancel">Cancel</string>
     <string name="message_leave">Leave</string>
     <string name="message_close">Close</string>
@@ -638,9 +647,13 @@
     <string name="tab_todo">Todo</string>
     <string name="tab_done">Done</string>
     <string name="tab_total">Total</string>
+    <string name="hint_add_itemno">Type Item Number</string>
+    <string name="hint_add_variantcode">Type variantcode</string>
+    <string name="hint_add_barcode">Scan or type barcode</string>
     <string name="hint_add_article">Scan or type article</string>
     <string name="button_add_article">Add article</string>
     <string name="add_article_header_default">Add Article</string>
+    <string name="search_article_header_default">Search Article</string>
     <string name="screentitle_intake">Intake</string>
     <string name="message_bin_not_valid">Invalid BIN</string>
     <string name="message_no_lines_for_this_bin">There are no lines for this BIN</string>
@@ -680,6 +693,7 @@
     <string name="message_split_line">Split line</string>
     <string name="stored">Stored:</string>
     <string name="error_unknown_location">Scan not recogised as a BIN</string>
+    <string name="error_print_failed">Print label failed</string>
     <!--endregion Inventory-->
 
     <!--region supervisor-->

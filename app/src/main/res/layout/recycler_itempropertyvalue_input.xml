@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="198dp" />
+                app:layout_constraintGuide_percent="0.5012658" />
             <androidx.appcompat.widget.AppCompatImageButton
                 style="@style/smallButton.Zerobutton"
                 android:id="@+id/imageButtonZero"
@@ -86,6 +86,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
+
             <androidx.appcompat.widget.AppCompatImageButton
                 style="@style/smallButton.Zerobutton"
                 android:id="@+id/imageButtonManual"
@@ -108,6 +109,17 @@
                 app:srcCompat="@drawable/ic_add_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imageButtonMax"
+                />
+            <Button
+                style="@style/smallButton.Zerobutton"
+                android:id="@+id/imageButtonMax"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/plus_max"
+                android:layout_marginEnd="@dimen/zerobutton_marginright"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

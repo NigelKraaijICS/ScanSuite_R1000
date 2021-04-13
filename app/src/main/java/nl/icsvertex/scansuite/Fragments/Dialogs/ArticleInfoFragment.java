@@ -157,6 +157,5 @@ public class ArticleInfoFragment extends Fragment implements iICSDefaultFragment
             this.articleInfoTabLayout.getTabAt(drawableObl.indexOf(drawable)).setIcon(drawable);
         }
 
-
     }
 }

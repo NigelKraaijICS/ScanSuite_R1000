@@ -53,8 +53,11 @@ import nl.icsvertex.scansuite.Activities.Sort.SortorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Store.StoreorderSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.SearchArticleFragment;
 import nl.icsvertex.scansuite.R;
 
 public class MenuActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -78,6 +81,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     private DrawerLayout menuActionsDrawer;
     private NavigationView actionMenuNavigation;
+    private Boolean printBln;
 
     cAuthorisationAdapter authorisationAdapter;
     cAuthorisationAdapter getAuthorisationAdapter(){
@@ -145,6 +149,8 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         pvMenu.findItem(R.id.item_bin_stock).setVisible(cSetting.REALTIME_BARCODE_CHECK());
         pvMenu.findItem(R.id.item_article_stock).setVisible(cSetting.REALTIME_BARCODE_CHECK());
         pvMenu.findItem(R.id.item_barcodeinfo).setVisible(true);
+        pvMenu.findItem(R.id.item_print_item).setVisible(cSetting.GENERIC_PRINT_ITEMLABEL());
+        pvMenu.findItem(R.id.item_print_bin).setVisible(cSetting.GENERIC_PRINT_BINLABEL());
 
         return super.onPrepareOptionsMenu(pvMenu);
     }
@@ -153,6 +159,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
         DialogFragment selectedFragment = null;
+        this.printBln = false;
 
         switch (pvMenuItem.getItemId()) {
 
@@ -162,10 +169,20 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
             case R.id.item_bin_stock:
                 selectedFragment = new ScanBinFragment();
+                this.printBln = false;
+                break;
+            case R.id.item_print_bin:
+                selectedFragment = new ScanBinFragment();
+                this.printBln = true;
                 break;
 
             case R.id.item_article_stock:
                 selectedFragment = new ScanArticleFragment();
+                this.printBln = false;
+                break;
+            case R.id.item_print_item:
+                selectedFragment = new SearchArticleFragment();
+                this.printBln = true;
                 break;
 
             case R.id.item_barcodeinfo:
@@ -567,11 +584,16 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             this.mStepFailed(cAppExtension.activity.getString(R.string.message_bin_not_valid), pvBinCodeStr);
             return;
         }
+        cBranchBin.currentBranchBin = branchBin;
+        DialogFragment selectedFragment;
 
-     BinItemsFragment binItemsFragment = new BinItemsFragment(branchBin.getBinCodeStr());
-        binItemsFragment.setCancelable(true);
-        binItemsFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
-
+        if (!this.printBln) {
+            selectedFragment = new BinItemsFragment(branchBin.getBinCodeStr());
+        } else {
+            selectedFragment = new PrintBinLabelFragment();
+        }
+        selectedFragment.setCancelable(true);
+        selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
 }
 
     public  void pHandleHandleArticleScanned(cBarcodeScan pvBarcodeScan) {
@@ -581,12 +603,29 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             this.mStepFailed(cAppExtension.activity.getString(R.string.message_unknown_article), pvBarcodeScan.getBarcodeOriginalStr());
             return;
         }
+        DialogFragment selectedFragment;
 
+        if (!this.printBln){
+            selectedFragment = new ItemStockFragment();
+        }else {
+            selectedFragment = new PrintItemLabelFragment();
+        }
+        selectedFragment.setCancelable(true);
+        selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLESTOCKFRAGMENT_TAG);
+    }
 
-        ItemStockFragment itemStockFragment  = new ItemStockFragment();
-        itemStockFragment.setCancelable(true);
-        itemStockFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLESTOCKFRAGMENT_TAG);
+    public  void pHandleArticleSearch(String pvItemNoStr, String pvVariantcodeStr) {
+        cArticle.currentArticle =  cArticle.pGetArticleByItemNoVariantViaWebservice(pvItemNoStr, pvVariantcodeStr);
 
+      if(cArticle.currentArticle == null) {
+          this.mStepFailed(cAppExtension.activity.getString(R.string.message_unknown_article), pvItemNoStr);
+          return;
+      };
+
+        DialogFragment selectedFragment;
+        selectedFragment = new PrintItemLabelFragment();
+        selectedFragment.setCancelable(true);
+        selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ARTICLESTOCKFRAGMENT_TAG);
     }
 
     //End Region Public Methods

@@ -68,10 +68,13 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AddEnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.DatePickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyTextInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.SearchArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SetBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
@@ -522,7 +525,11 @@ public class cBarcodeScan {
                         scanArticleFragment.pHandleScan(barcodeScan);
                         return;
                     }
-
+                    if (cAppExtension.dialogFragment instanceof SearchArticleFragment) {
+                        SearchArticleFragment searchArticleFragment = (SearchArticleFragment)cAppExtension.dialogFragment;
+                        searchArticleFragment.pHandleScan(barcodeScan);
+                        return;
+                    }
 
                     if (cAppExtension.dialogFragment instanceof ScanBinFragment) {
                         ScanBinFragment scanBinFragment = (ScanBinFragment)cAppExtension.dialogFragment;
@@ -539,6 +546,16 @@ public class cBarcodeScan {
                     if (cAppExtension.dialogFragment instanceof ReasonFragment) {
                         ReasonFragment reasonFragment = (ReasonFragment)cAppExtension.dialogFragment;
                         reasonFragment.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.dialogFragment  instanceof ItemPropertyTextInputFragment){
+                        ItemPropertyTextInputFragment itemPropertyTextInputFragment = (ItemPropertyTextInputFragment)cAppExtension.dialogFragment;
+                        itemPropertyTextInputFragment.pHandleScan(barcodeScan);
+                    }
+
+                    if (cAppExtension.dialogFragment  instanceof DatePickerFragment){
+                        DatePickerFragment datePickerFragment = (DatePickerFragment)cAppExtension.dialogFragment;
+                        datePickerFragment.pHandleScan(barcodeScan);
                     }
 
                 }

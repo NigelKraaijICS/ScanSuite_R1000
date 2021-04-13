@@ -168,11 +168,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
 //        invalidateOptionsMenu();
 
-        if (cSetting.GENERIC_PRINT_BINLABEL()){
-            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
-            item_print_bin.setVisible(true);
-        }
-
         if (cSetting.GENERIC_PRINT_ITEMLABEL()){
             MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
             item_print_item.setVisible(true);
@@ -229,10 +224,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
                 this.mShowAcceptFragment();
                 return true;
-
-            case R.id.item_print_bin:
-                selectedFragment = new PrintBinLabelFragment();
-                break;
 
             case R.id.item_print_item:
                 selectedFragment = new PrintItemLabelFragment();

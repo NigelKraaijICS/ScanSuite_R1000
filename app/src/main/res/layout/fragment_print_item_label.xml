@@ -13,23 +13,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/probeersel"
-        android:layout_margin="@dimen/default_margin"
+    <include layout="@layout/default_articleinfo_compact"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/textViewTitle"
-        android:translationZ="2dp"
+        android:layout_margin="@dimen/default_margin"
+        />
+    <Spinner
+        android:id="@+id/barcodeSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/articleInfoCompactContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         >
-        <include layout="@layout/default_articleinfo_compact" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </Spinner>
     <ImageView
         android:id="@+id/barcodeImageView"
         android:layout_width="250dp"
         android:layout_height="72dp"
-        android:layout_margin="@dimen/default_double_margin"
+        android:layout_margin="@dimen/default_margin"
         android:contentDescription="@string/articleimage_thumb_description"
-        app:layout_constraintTop_toBottomOf="@id/probeersel"
+        app:layout_constraintTop_toBottomOf="@id/barcodeSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
     <Spinner
@@ -85,5 +93,15 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_double_margin"
+        android:indeterminate="true"
+        android:progressDrawable="@drawable/ic_progressbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/printButton"
+        app:layout_constraintTop_toBottomOf="@id/quantityFragmentContainer"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@ package nl.icsvertex.scansuite.Activities.Move;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -15,8 +16,11 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
@@ -27,14 +31,19 @@ import ICS.Utils.cNoSwipeViewPager;
 import ICS.Utils.cResult;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
+import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.Moveorders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Move.MoveLinesPlaceFragment;
 import nl.icsvertex.scansuite.Fragments.Move.MoveLinesTakeFragment;
@@ -62,6 +71,8 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     private ImageView quickhelpIcon;
     private SwitchCompat switchTodo;
 
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
     private ImageView imageButtonCloseOrder;
     public boolean closeOrderClickedBln = false;
 
@@ -106,11 +117,66 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_intakeactions,pvMenu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+
+//        invalidateOptionsMenu();
+
+        if (cSetting.GENERIC_PRINT_BINLABEL() && cMoveorderLine.currentMoveOrderLine != null){
+            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
+            item_print_bin.setVisible(true);
+        }
+
+        if (cSetting.GENERIC_PRINT_ITEMLABEL() && cMoveorderLine.currentMoveOrderLine != null){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(true);
+        }
+
+        return super.onPrepareOptionsMenu(pvMenu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
-        if (pvMenuItem.getItemId() == android.R.id.home) {
-            this.mShowAcceptFragment();
-            return true;
+
+        DialogFragment selectedFragment = null;
+        switch (pvMenuItem.getItemId()) {
+
+            case android.R.id.home:
+
+                this.pLeaveActivity();
+                return true;
+
+            case R.id.item_print_bin:
+                selectedFragment = new PrintBinLabelFragment();
+                break;
+
+            case R.id.item_print_item:
+                selectedFragment = new PrintItemLabelFragment();
+
+            default:
+                break;
+        }
+
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
         }
 
         return super.onOptionsItemSelected(pvMenuItem);
@@ -172,7 +238,8 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         this.quickHelpContainer = findViewById(R.id.quickHelpContainer);
         this.quickhelpIcon = findViewById(R.id.quickhelpIcon);
         this.switchTodo = findViewById(R.id.switchTodo);
-
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawer);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
 
         this.imageButtonCloseOrder = findViewById(R.id.imageButtonCloseOrder);
     }

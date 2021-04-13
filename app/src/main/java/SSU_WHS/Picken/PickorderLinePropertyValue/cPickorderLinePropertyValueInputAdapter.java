@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,11 +17,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
+import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.R;
 
@@ -39,6 +44,7 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
         private final AppCompatImageButton imageButtonZero;
         private final  AppCompatImageButton imageButtonManual;
         private final AppCompatImageView imageChevronDown;
+        private final Button imageButtonMax;
 
         public LinearLayout itemPropertyValueInputItemLinearLayout;
 
@@ -68,6 +74,7 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
             this.imageButtonManual = pvView.findViewById(R.id.imageButtonManual);
             this.textViewQuantityUsed = pvView.findViewById(R.id.textViewQuantityUsed);
             this.imageChevronDown = pvView.findViewById(R.id.imageChevronDown);
+            this.imageButtonMax = pvView.findViewById(R.id.imageButtonMax);
         }
     }
 
@@ -184,16 +191,51 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                 }
             });
 
+            pvHolder.imageButtonMax.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
+
+                    double availableDbl  = cPickorderLine.currentPickOrderLine.getQuantityDbl();
+                    ArrayList<cPickorderLinePropertyValue> loopList = localItemPropertySortObl().get(pickorderLinePropertyValue.getPropertyCodeStr());
+
+                    for (cPickorderLinePropertyValue pickorderLinePropertyValue : loopList ) {
+                        availableDbl -= pickorderLinePropertyValue.getQuantityDbl();
+                    }
+
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl += availableDbl;
+
+                    final PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity;
+                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
+                        pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
+                        pickorderLineItemPropertyInputActvity.pRefreshActivity();
+                        pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity(true, false,availableDbl);
+                    }
+
+                }
+            });
+
             pvHolder.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
 
+                    if (pickorderLinePropertyValue.getQuantityDbl()== cPickorderLine.currentPickOrderLine.getQuantityDbl()){
+                        cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
+                        cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.activity.getString(R.string.message_overpick_not_allowed),R.raw.headsupsound,false);
+                        return;
+                    }
+
+                    int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
+                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = currentQuantity + 1;
+
+                    final PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity;
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
-                        PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
+                        pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         pickorderLineItemPropertyInputActvity.pRefreshActivity();
-                        pickorderLineItemPropertyInputActvity.pHandleScan(cBarcodeScan.pFakeScan(cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getValueStr()));
+                        pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity(true, false,1);
                     }
 
                 }
@@ -266,10 +308,33 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
                 public void onClick(View view) {
 
                     cPickorderLinePropertyValue.currentPickorderLinePropertyValue = pickorderLinePropertyValue;
+                    cPickorderLineProperty.currentPickorderLineProperty = cPickorderLine.currentPickOrderLine.getPickorderLineProperty(pickorderLinePropertyValue.getPropertyCodeStr());
 
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
-                        pickorderLineItemPropertyInputActvity.pShowTextInputFragment();
+
+                        switch (pickorderLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase()) {
+
+                            case "BOOLEAN":
+                                pickorderLineItemPropertyInputActvity.pShowTextInputFragment();
+                                break;
+
+                            case "DECIMAL":
+                                pickorderLineItemPropertyInputActvity.pShowTextInputFragment();
+                                break;
+
+                            case "TEXT" :
+                                pickorderLineItemPropertyInputActvity.pShowTextInputFragment();
+                            case "CODE":
+                                pickorderLineItemPropertyInputActvity.pShowTextInputFragment();
+                                break;
+
+                            case "DATE":
+                                pickorderLineItemPropertyInputActvity.pShowDatePickerDialog();
+                                break;
+                        }
+
+
                     }
                 }
             });
@@ -281,6 +346,24 @@ public class cPickorderLinePropertyValueInputAdapter extends RecyclerView.Adapte
         notifyDataSetChanged();
     }
 
+    private LinkedHashMap<String, ArrayList<cPickorderLinePropertyValue>> localItemPropertySortObl(){
+        LinkedHashMap<String, ArrayList<cPickorderLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();;
+
+        for (cPickorderLinePropertyValue pickorderLinePropertyValue : localItemPropertyValueObl) {
+            //Create the hasmap dynammically and fill it
+            ArrayList<cPickorderLinePropertyValue> loopList = linkedHashMap.get(pickorderLinePropertyValue.getPropertyCodeStr());
+            if (loopList == null) {
+                ArrayList<cPickorderLinePropertyValue> propertyValues = new ArrayList<>();
+                propertyValues.add(pickorderLinePropertyValue);
+                linkedHashMap.put(pickorderLinePropertyValue.getPropertyCodeStr(), propertyValues);
+            }
+            else{
+                loopList.add(pickorderLinePropertyValue);
+            }
+
+        }
+        return linkedHashMap;
+    }
 
     @Override
     public int getItemCount () {

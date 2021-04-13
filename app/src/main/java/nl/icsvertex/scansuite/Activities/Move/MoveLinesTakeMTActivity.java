@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -46,6 +47,8 @@ import SSU_WHS.Move.MoveorderLines.cMoveorderLineRecyclerItemTouchHelper;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.R;
 
 
@@ -160,25 +163,56 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
                 pvMenu.findItem(R.id.item_close_take).setVisible(true);
             }
         }
+        if (cSetting.GENERIC_PRINT_BINLABEL() && cMoveorderLine.currentMoveOrderLine != null){
+            MenuItem item_print_bin = pvMenu.findItem(R.id.item_print_bin);
+            item_print_bin.setVisible(true);
+        }
+
+        if (cSetting.GENERIC_PRINT_ITEMLABEL() && cMoveorderLine.currentMoveOrderLine != null){
+            MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
+            item_print_item.setVisible(true);
+        }
         return super.onPrepareOptionsMenu(pvMenu);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem pvMenuItem) {
 
+        DialogFragment selectedFragment = null;
         switch (pvMenuItem.getItemId()) {
 
             case android.R.id.home:
                 this.mShowAcceptFragment();
-                return true;
+                break;
 
-                case R.id.item_close_take:
+            case R.id.item_close_take:
                 this.mHandleTAKEDone();
                 break;
 
-            default:
-                return super.onOptionsItemSelected(pvMenuItem);
+            case R.id.item_print_bin:
+                selectedFragment = new PrintBinLabelFragment();
+                break;
+
+            case R.id.item_print_item:
+                selectedFragment = new PrintItemLabelFragment();
+
 
         }
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // set item as selected to persist highlight
+        pvMenuItem.setChecked(true);
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
+        if (selectedFragment != null) {
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+        }
+
         return super.onOptionsItemSelected(pvMenuItem);
     }
 

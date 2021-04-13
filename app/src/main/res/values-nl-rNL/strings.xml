@@ -145,10 +145,13 @@
     <string name="screentitle_pickorderpick">Picken</string>
     <string name="message_underpick_header">Manco bevestigen?</string>
     <string name="message_underpick_text">Je hebt er %1$s van deze nodig, je hebt er %2$s gepickt.\n\nWeet je zeker dat er geen artikelen meer beschikbaar zijn en dat je deze regel wil afsluiten?</string>
+    <string name="message_underpick_property_text">Je hebt er %1$s van deze nodig, je hebt er %2$s gepickt.\n\nHet aantal wat je ingeeft in dit tabblad is het gepickte aantal voor dit artikel</string>
     <string name="message_undermove_text">Je hebt er %1$s van deze nodig, je hebt er %2$s verplaatst.\n\nWeet je zeker dat er geen artikelen meer beschikbaar zijn en dat je deze regel wil afsluiten?</string>
+    <string name="message_overpick_not_allowed">Er mag niet meer worden gepickt dan gevraagd</string>
     <string name="button_close_orderline">Bevestigen</string>
     <string name="choose_barcode">Kies barcode</string>
     <string name="quantity_per_scan">Aantal per scan</string>
+    <string name="message_fill_all_properties">Het aantal moet overal gelijk zijn</string>
     <string name="filter_orderlines_title">Toon opdrachten:</string>
     <string name="filter_orderlines_enable">Gebruik filters</string>
     <string name="filter_orderlines_enable_summary">Onderstaande filters gebruiken</string>
@@ -439,11 +442,18 @@
     <string name="message_close_bin">Sluit locatie</string>
     <string name="scan_article_header_default">Scan artikel</string>
     <string name="add_article_header_default">Voeg artikel toe</string>
+    <string name="search_article_header_default">Zoek artikel</string>
     <string name="button_add_article">Voeg artikel toe</string>
     <string name="error_get_intakelines_failed">Regels ophalen mislukt</string>
     <string name="error_get_intakeorders_failed">Orders ophalen mislukt</string>
+    <string name="hint_add_itemno">Geef artikelnummer in</string>
+    <string name="hint_add_variantcode">Geef variantcode in</string>
+    <string name="hint_add_barcode">Scan of typ barcode</string>
     <string name="hint_add_article">Geef artikel in</string>
+    <string name="message_accept_switch">Accepteer tabblad wissel</string>
+    <string name="message_cancel_switch">Annuleer wissel</string>
     <string name="message_accept_line">Accepteer scans</string>
+    <string name="message_accept">Accepteer</string>
     <string name="message_cancel">Annuleer</string>
     <string name="message_cancel_line">Annuleer scans</string>
     <string name="message_close">Afronden</string>
@@ -798,4 +808,5 @@
     <string name="ordertype_self_generated">Op eigen initiatief</string>
     <string name="print_BIN">Print BIN</string>
     <string name="print_Article">Print Artikel</string>
+    <string name="error_print_failed">Print label mislukt</string>
 </resources>

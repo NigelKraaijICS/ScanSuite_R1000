@@ -243,7 +243,7 @@ public class cIntakeorderMATSummaryLine implements Comparable {
 
     }
 
-    private List<cIntakeorderMATLine> MATLinesObl;
+    public List<cIntakeorderMATLine> MATLinesObl;
 
     private cIntakeorderMATLineViewModel getIntakeorderMATLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderMATLineViewModel.class);
@@ -336,6 +336,8 @@ public class cIntakeorderMATSummaryLine implements Comparable {
 
 
         for (cIntakeorderMATLine intakeorderMATLine : MATLinesObl) {
+            if (intakeorderMATLine.barcodesObl == null)
+            {intakeorderMATLine.pGetBarcodesObl(); }
 
            for (cIntakeorderBarcode intakeorderBarcode : intakeorderMATLine.barcodesObl) {
 
