@@ -39,6 +39,7 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderPickGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
@@ -345,6 +346,14 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             receiveOrderReceiveActivity.pAcceptReceive();
         }
 
+        if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
+            ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity)cAppExtension.activity;
+            receiveorderLinePropertyInputActivity.amountHandledBln = true;
+            receiveorderLinePropertyInputActivity.pHandled();
+            this.dismiss();
+            return;
+        }
+
         if (cAppExtension.activity instanceof PackagingActivity) {
             PackagingActivity packagingActivity = (PackagingActivity)cAppExtension.activity;
             packagingActivity.pHandlePackagingDone();
@@ -507,6 +516,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity) {
             ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
             receiveOrderReceiveActivity.pCancelReceive();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof  ReceiveorderLinePropertyInputActivity) {
+            ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity)cAppExtension.activity;
+            receiveorderLinePropertyInputActivity.pCancelReceive();
+            this.dismiss();
             return;
         }
 

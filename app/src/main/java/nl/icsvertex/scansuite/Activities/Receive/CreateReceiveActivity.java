@@ -8,9 +8,12 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -22,6 +25,9 @@ import androidx.core.view.ViewCompat;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
@@ -31,6 +37,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
@@ -50,6 +57,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
+    private Spinner spinner;
     private EditText editTextDocument;
     private EditText editTextPackingslip;
     private EditText editTextBin;
@@ -154,6 +162,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
+        this.spinner = findViewById(R.id.stockownerSpinner);
         this.editTextDocument = findViewById(R.id.editTextDocument);
         this.editTextPackingslip = findViewById(R.id.editTextPackingslip);
         this.editTextBin = findViewById(R.id.editTextBin);
@@ -185,6 +194,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         filterArray[0] = new InputFilter.LengthFilter(50);
         this.editTextDocument.setFilters(filterArray);
 
+        this.mShowStockOwnerSpinner();
         if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
             this.editTextBin.setVisibility(View.GONE);
         }
@@ -209,6 +219,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         this.mSetCreateListener();
         this.mSetCancelListener();
         this.mSetEditorActionListener();
+        this.mSetStockOwnerSpinnerListener();
     }
 
     @Override
@@ -524,6 +535,64 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
 
+    }
+
+    private void mShowStockOwnerSpinner() {
+
+        if (cStockOwner.allStockOwnerObl  == null || cStockOwner.allStockOwnerObl.size() == 0) {
+            this.spinner.setVisibility(View.GONE);
+            return;
+        }
+
+        this.spinner.setVisibility(View.VISIBLE);
+        this.spinner.setVisibility(View.VISIBLE);
+
+        this.mFillStockOwnerSpinner();
+    }
+    private void mFillStockOwnerSpinner() {
+
+        if (cStockOwner.allStockOwnerObl == null ||  cStockOwner.allStockOwnerObl.size() <= 0 ) {
+            return;
+        }
+
+        List<String> stockOwnerObl = new ArrayList<>();
+
+        if (cUser.currentUser.currentBranch.stockOwnerObl().size() >= 1) {
+            for (cStockOwner stockOwner :cUser.currentUser.currentBranch.stockOwnerObl() ) {
+                stockOwnerObl.add(stockOwner.getDescriptionStr());
+            }
+        }
+        else
+        {
+            for (cStockOwner stockOwner :cStockOwner.allStockOwnerObl ) {
+                stockOwnerObl.add(stockOwner.getDescriptionStr());
+            }
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(cAppExtension.context,
+                android.R.layout.simple_spinner_dropdown_item,
+                stockOwnerObl);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        this.spinner.setAdapter(adapter);
+        if (cUser.currentUser.currentStockOwner != null)
+        { this.spinner.setSelection(adapter.getPosition(cUser.currentUser.currentStockOwner.getDescriptionStr()));}
+    }
+    private void mSetStockOwnerSpinnerListener() {
+
+        this.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                cUser.currentUser.currentStockOwner = cStockOwner.pGetStockOwnerByDescriptionStr(spinner.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
     }
 
     //End Region Private Methods

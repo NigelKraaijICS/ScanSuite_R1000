@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,27 +15,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.Article.cArticle;
-import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
-import SSU_WHS.Basics.Settings.cSetting;
-import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueNoInputAdapter;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValueNoInputAdapter;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.PagerAdapters.ArticleInfoPagerAdapter;
 import nl.icsvertex.scansuite.R;
@@ -60,16 +51,16 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
     private ViewPager itemPropertyViewpager;
     public  int numberOfTabsInt;
 
-    private  List<cPickorderLinePropertyValue> localItemPropertyValueObl;
+    private  List<cLinePropertyValue> localItemPropertyValueObl;
 
 
-    private cPickorderLinePropertyValueNoInputAdapter pickorderLinePropertyAdapter;
-    private cPickorderLinePropertyValueNoInputAdapter getPickorderLinePropertyAdapter(){
-        if (this.pickorderLinePropertyAdapter == null) {
-            this.pickorderLinePropertyAdapter = new cPickorderLinePropertyValueNoInputAdapter();
+    private cLinePropertyValueNoInputAdapter linePropertyAdapter;
+    private cLinePropertyValueNoInputAdapter getLinePropertyAdapter(){
+        if (this.linePropertyAdapter == null) {
+            this.linePropertyAdapter = new cLinePropertyValueNoInputAdapter();
         }
 
-        return  pickorderLinePropertyAdapter;
+        return linePropertyAdapter;
     }
 
     //End Region Private Properties

@@ -2,6 +2,7 @@ package SSU_WHS.Intake.Intakeorders;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Basics.ArticleProperty.cArticleProperty;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Packaging.cPackaging;
 import SSU_WHS.Basics.Scanners.cScanner;
@@ -26,10 +28,14 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
+import SSU_WHS.General.cDatabase;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineViewModel;
@@ -142,6 +148,8 @@ public class cIntakeorder {
     public static List<cIntakeorder> allIntakeordersObl;
     public static cIntakeorder currentIntakeOrder;
     public SortedMap<String, cArticle> articleObl;
+
+    public List<cLineProperty> linePropertysObl() { return  cLineProperty.allLinePropertysObl; }
 
     private int unknownVariantCounterInt = 0;
     public int getUnknownVariantCounterInt() {
@@ -809,9 +817,24 @@ public class cIntakeorder {
         if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
             if (WebResult.getResultDtt().size() == 1) {
+
+                cReceiveorderLine receiveorderLine = new cReceiveorderLine(WebResult.getResultDtt().get(0),true);
                 cReceiveorderSummaryLine receiveorderSummaryLine = new cReceiveorderSummaryLine(WebResult.getResultDtt().get(0));
                 cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
                 cReceiveorderSummaryLine.currentReceiveorderSummaryLine = receiveorderSummaryLine;
+                cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pAddLine(receiveorderLine);
+                if (cArticle.currentArticle.propertyObl != null){
+                    int lineNoInt = receiveorderLine.getLineNoInt();
+
+                    for (cArticleProperty articleProperty:cArticle.currentArticle.propertyObl ){
+                        cLineProperty lineProperty = new cLineProperty(articleProperty, lineNoInt);
+
+                        if(cLineProperty.allLinePropertysObl == null){
+                            cLineProperty.allLinePropertysObl = new ArrayList<>();
+                        }
+                        cLineProperty.allLinePropertysObl.add(lineProperty);
+                    }
+                }
             }
         }
 
@@ -916,9 +939,25 @@ public class cIntakeorder {
             if (WebResult.getResultBln()&& WebResult.getSuccessBln() ){
 
                 if (WebResult.getResultDtt().size() == 1) {
+                    cReceiveorderLine receiveorderLine = new cReceiveorderLine(WebResult.getResultDtt().get(0),true);
                     cReceiveorderSummaryLine receiveorderSummaryLine = new cReceiveorderSummaryLine(WebResult.getResultDtt().get(0));
                     cReceiveorderSummaryLine.pAddSummaryLine(receiveorderSummaryLine);
                     cReceiveorderSummaryLine.currentReceiveorderSummaryLine = receiveorderSummaryLine;
+                    this.mGetLinePropertysViaWebserviceBln();
+                    cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pAddLine(receiveorderLine);
+
+//                    if (cArticle.currentArticle.propertyObl != null){
+//                        int lineNoInt = receiveorderLine.getLineNoInt();
+//
+//                        for (cArticleProperty articleProperty:cArticle.currentArticle.propertyObl ){
+//                            cLineProperty lineProperty = new cLineProperty(articleProperty, lineNoInt);
+//
+//                            if(cLineProperty.allLinePropertysObl == null){
+//                                cLineProperty.allLinePropertysObl = new ArrayList<>();
+//                            }
+//                            cLineProperty.allLinePropertysObl.add(lineProperty);
+//                        }
+//                    }
                 }
             }
 
@@ -1239,6 +1278,15 @@ public class cIntakeorder {
 
         }
 
+        //Provided lines have no scanner so also retrieve the lines.
+        if(!cIntakeorder.currentIntakeOrder.isGenerated()){
+            if (!cIntakeorder.currentIntakeOrder.mGetReceiveLinesViaWebserviceBln(false, "") ) {
+                result.resultBln = false;
+                result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_intakelines_failed));
+                return result;
+            }
+        }
+
         // Get all barcodes, if size =0 or webservice error then stop
         if (!cIntakeorder.currentIntakeOrder.pGetBarcodesViaWebserviceBln(true)) {
             result.resultBln = false;
@@ -1257,6 +1305,20 @@ public class cIntakeorder {
         if (!cIntakeorder.currentIntakeOrder.mGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLinePropertysViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!this.mGetLinePropertyValuesViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
             return result;
         }
 
@@ -1420,7 +1482,19 @@ public class cIntakeorder {
                 cIntakeorderMATSummaryLine.allIntakeorderMATSummaryLinesObl = new ArrayList<>();
             }
         }
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLinePropertysViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
 
+        // Get all property values, if webservice error then stop
+        if (!this.mGetLinePropertyValuesViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
+            return result;
+        }
 
 
         return  result;
@@ -1522,6 +1596,58 @@ public class cIntakeorder {
         for (JSONObject jsonObject : pvResultDtt) {
             cComment comment = new cComment(jsonObject);
             comment.pInsertInDatabaseBln();
+        }
+    }
+    private boolean mGetLinePropertysViaWebserviceBln() {
+
+        cLineProperty.allLinePropertysObl = null;
+        cLineProperty.pTruncateTableBln();
+
+        cWebresult WebResult;
+        WebResult =  this.getIntakeorderViewModel().pGetLinePropertysViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cLineProperty lineProperty = new cLineProperty(jsonObject);
+                lineProperty.pInsertInDatabaseBln();
+            }
+
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET);
+            return  false;
+        }
+    }
+
+    private boolean mGetLinePropertyValuesViaWebserviceBln() {
+
+
+        cLinePropertyValue.pTruncateTableBln();
+
+        cWebresult WebResult;
+        WebResult =  this.getIntakeorderViewModel().pGetLinePropertyValuesViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cLinePropertyValue linePropertyValue = new cLinePropertyValue(jsonObject);
+                linePropertyValue.pInsertInDatabaseBln();
+                if (linePropertyValue.getValueStr() !=null){
+                    for (cReceiveorderLine receiveorderLine : cReceiveorderLine.allReceiveorderLines){
+                        if (receiveorderLine.getLineNoInt() == linePropertyValue.getLineNoInt()){
+                            if (receiveorderLine.presetValueObl == null) {
+                                receiveorderLine.presetValueObl = new ArrayList<>();
+                            }
+                            receiveorderLine.presetValueObl.add(linePropertyValue);
+                        }
+                    }
+                }
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIEVALUESGET);
+            return  false;
         }
     }
 

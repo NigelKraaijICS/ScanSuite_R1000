@@ -1,4 +1,4 @@
-package SSU_WHS.Picken.PickorderLinePropertyValue;
+package SSU_WHS.LineItemProperty.LinePropertyValue;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -7,12 +7,10 @@ import androidx.room.PrimaryKey;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ICS.Utils.cText;
 import SSU_WHS.General.cDatabase;
 
-@Entity(tableName=cDatabase.TABLENAME_PICKORDERLINEPROPERTYVALUE)
-public class cPickorderLinePropertyValueEntity {
-
+@Entity(tableName= cDatabase.TABLENAME_LINEPROPERTYVALUE)
+public class cLinePropertyValueEntity {
     @PrimaryKey(autoGenerate = true)
     public Integer recordid;
     public Integer getRecordidInt() {return this.recordid;}
@@ -34,11 +32,11 @@ public class cPickorderLinePropertyValueEntity {
     public Integer getSortingSequenceNoInt() {return this.sortingSequenceNoInt;}
 
     //empty constructor
-    public cPickorderLinePropertyValueEntity() {
+    public cLinePropertyValueEntity() {
 
     }
 
-    public cPickorderLinePropertyValueEntity(JSONObject pvJsonObject) {
+    public cLinePropertyValueEntity(JSONObject pvJsonObject) {
         try {
             this.lineNoInt = pvJsonObject.getInt(cDatabase.LINENO_NAMESTR);
             this.propertyCodeStr = pvJsonObject.getString(cDatabase.PROPERTYCODE_NAMESTR);
@@ -48,9 +46,4 @@ public class cPickorderLinePropertyValueEntity {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 }

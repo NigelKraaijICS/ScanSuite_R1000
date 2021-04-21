@@ -1,17 +1,14 @@
 package SSU_WHS.Basics.ItemProperty;
 
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ICS.Utils.cRegex;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
-import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -48,7 +45,7 @@ public class cItemProperty {
     public  static List<cItemProperty> allItemPropertiesObl;
 
     //Region Constructor
-    cItemProperty(JSONObject pvJsonObject) {
+    private cItemProperty(JSONObject pvJsonObject) {
         this.itemPropertyEntity = new cItemPropertyEntity(pvJsonObject);
         this.propertyStr = this.itemPropertyEntity.getPropertyStr();
         this.layoutStr = this.itemPropertyEntity.getLayoutStr();
@@ -106,6 +103,15 @@ public class cItemProperty {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETITEMPROPERTY);
             return  false;
         }
+    }
+
+    public static cItemProperty itemProperty(String pvPropertyCodeStr){
+        for(cItemProperty itemProperty : cItemProperty.allItemPropertiesObl){
+            if(itemProperty.getPropertyStr().equalsIgnoreCase(pvPropertyCodeStr)){
+                return itemProperty;
+            }
+        }
+        return null;
     }
 
 

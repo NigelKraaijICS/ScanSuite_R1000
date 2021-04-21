@@ -34,6 +34,8 @@ public class cIntakeorderViewModel  extends AndroidViewModel {
     public cWebresult pGetIntakeorderPackagingFromWebserviceWrs() {return this.Repository.pGetPackagingFromWebserviceWrs();}
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
 
+    public cWebresult pGetLinePropertysViaWebserviceWrs() {return this.Repository.pGetLinePropertysViaWebserviceWrs(); }
+    public cWebresult pGetLinePropertyValuesViaWebserviceWrs() {return this.Repository.pGetLinePropertyValuesViaWebserviceWrs(); }
 
     public cWebresult pCreateIntakeOrderViaWebserviceWrs(String pvDocumentStr, String pvBinStr,  boolean pvCheckBarcodesBln) {return this.Repository.pCreateIntakeOrderViaWebserviceWrs(pvDocumentStr, pvBinStr, pvCheckBarcodesBln);}
     public cWebresult pCreateReceiverOderViaWebserviceWrs(String pvDocumentStr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln) {return this.Repository.pCreateReceiveOrderViaWebserviceWrs(pvDocumentStr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);}

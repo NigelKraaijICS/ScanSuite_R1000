@@ -76,6 +76,10 @@ public class cDatabase {
     public static final String TABLENAME_PACKANDSHIPSHIPPINPACKAGE= "PackAndShipShippingPackage";
     public static final String TABLENAME_STOCKOWNER= "StockOwner";
     public static final String TABLENAME_AUTHORIZEDSTOCKOWNER= "AutorizedStockOwner";
+    public static final String TABLENAME_LINEPROPERTY= "LineProperty";
+    public static final String TABLENAME_LINEPROPERTYVALUE= "LinePropertyValue";
+    public static final String TABLENAME_ARTICLEPROPERTY = "ArticleProperty";
+    public static final String TABLENAME_ARTICLEPROPERTYVALUE = "ArticlePropertyValue";
 
 
     //endregion Tables
@@ -229,7 +233,7 @@ public class cDatabase {
     public static final String ISINPUT_NAMESTR = "IsInput";
     public static final String ISREQUIRED_NAMESTR = "Isrequired";
     public static final String ISPROCESSINGORPARKED_NAMESTR = "IsProcessingOrParked";
-
+    public static final String INPUTWORKFLOWS_NAMESTR = "InputWorkflows";
 
 
     //endregion I
@@ -394,7 +398,7 @@ public class cDatabase {
     public static final String RECEIVENOEXTRAITEMS_NAMESTR = "Receive_no_extra_items";
     public static final String RECEIVENOEXTRAPIECES_NAMESTR = "Receive_no_extra_pieces";
     public static final String RECEIVEMATAUTOSPLITINCOMPLETELINE_NAMESTR = "Receive_mat_auto_split_incomplete_line";
-
+    public static final String REQUIREDWORKFLOWS_NAMESTR = "RequiredWorkflows";
     public static final String RETOURREDEN_NAMESTR = "Retourreden";
     public static final String RETOURAMAOUNTMANUAL_NAMESTR = "Retour_Amount_manual";
     public static final String RETOURBARCODECHECK_NAMESTR = "Retour_Barcode_check";

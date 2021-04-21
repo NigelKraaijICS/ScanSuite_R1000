@@ -21,6 +21,8 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineViewModel;
 import SSU_WHS.Webservice.cWebresult;
@@ -76,6 +78,10 @@ public class cReceiveorderSummaryLine {
         }
 
         return resultDbl;
+    }
+
+    public Double getSummaryQuantityHandledDbl(){
+        return this.quantityHandledDbl;
     }
 
     public  Double getAllowedQuantityDbl(){
@@ -154,6 +160,24 @@ public class cReceiveorderSummaryLine {
 
     public static List<cReceiveorderSummaryLine> allReceiveorderSummaryLinesObl;
     public List<cReceiveorderLine> receiveLinesObl;
+
+    public ArrayList<cLinePropertyValue> handledPropertyValueObl;
+
+    public ArrayList<cLinePropertyValue> presetValueObl(){
+        ArrayList<cLinePropertyValue> propertyValues = new ArrayList<>();
+
+        for (cReceiveorderLine receiveorderLine : this.receiveLinesObl){
+            if(receiveorderLine.presetValueObl != null){
+                propertyValues.addAll(receiveorderLine.presetValueObl);
+            }
+        }
+        return propertyValues;
+    }
+
+    public  boolean hasPropertysBln() {
+        return this.linePropertyObl().size() != 0;
+    }
+
 
     public  List<cReceiveorderLine> receivedLinesReversedObl(){
 
@@ -447,12 +471,12 @@ public class cReceiveorderSummaryLine {
     public boolean pItemVariantHandledBln(List<cIntakeorderBarcode> pvScannedBarcodesObl ) {
 
         Double quantityScannedDbl = 0.0;
+        cWebresult WebResult;
 
         for (cIntakeorderBarcode intakeorderBarcode : pvScannedBarcodesObl) {
             quantityScannedDbl += intakeorderBarcode.quantityHandledDbl;
         }
 
-        cWebresult WebResult;
         WebResult =  this.getReceiveorderLineViewModel().pLineHandledViaWebserviceWrs(pvScannedBarcodesObl);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
             this.quantityHandledDbl += quantityScannedDbl;
@@ -533,6 +557,118 @@ public class cReceiveorderSummaryLine {
 
             return  result;
         }
+
+    private  List<cLineProperty> linePropertyCachedObl;
+    public List<cLineProperty> linePropertyObl() {
+
+        if (this.linePropertyCachedObl != null) {
+            return  this.linePropertyCachedObl;
+        }
+
+        this.linePropertyCachedObl = new ArrayList<>();
+
+        if (cIntakeorder.currentIntakeOrder.linePropertysObl() == null || cIntakeorder.currentIntakeOrder.linePropertysObl().size() == 0) {
+            return  this.linePropertyCachedObl;
+        }
+
+        for (cLineProperty lineProperty :cIntakeorder.currentIntakeOrder.linePropertysObl() ) {
+            for(cReceiveorderLine receiveorderLine : this.receiveLinesObl){
+                if (receiveorderLine.getQuantityHandledDbl() == 0){
+                    if (lineProperty.getLineNoInt().equals(receiveorderLine.getLineNoInt())) {
+                        this.linePropertyCachedObl.add(lineProperty);
+                    }
+                }
+            }
+        }
+        return  this.linePropertyCachedObl;
+    }
+
+    private  List<cLineProperty> linePropertyNoInputCachedObl;
+    public List<cLineProperty> linePropertyNoInputObl() {
+
+        if (this.linePropertyNoInputCachedObl != null) {
+            return  this.linePropertyNoInputCachedObl;
+        }
+
+        this.linePropertyNoInputCachedObl = new ArrayList<>();
+
+        if (this.linePropertyObl() == null || this.linePropertyObl().size() == 0) {
+            return  this.linePropertyNoInputCachedObl;
+        }
+
+        for (cLineProperty lineProperty :this.linePropertyObl()) {
+            if (!lineProperty.getIsInputBln() &&  !lineProperty.getIsRequiredBln()) {
+                this.linePropertyNoInputCachedObl.add(lineProperty);
+            }
+        }
+
+        return  this.linePropertyNoInputCachedObl;
+    }
+
+    public List<cLineProperty> linePropertyInputObl() {
+
+        List<cLineProperty> resultObl = new ArrayList<>();
+
+        if (this.linePropertyObl() == null || this.linePropertyObl().size() == 0) {
+            return  resultObl;
+        }
+
+        for (cLineProperty lineProperty :this.linePropertyObl()) {
+            if (lineProperty.getIsInputBln() &&  lineProperty.getIsRequiredBln()) {
+                resultObl.add(lineProperty);
+            }
+        }
+
+        return  resultObl;
+    }
+
+    public  List<cLinePropertyValue> linePropertyValueObl() {
+
+        List<cLinePropertyValue> resultObl = new ArrayList<>();
+
+        for (cLineProperty inputLineProperty : this.linePropertyInputObl()) {
+            resultObl.addAll(inputLineProperty.propertyValueObl());
+        }
+
+        return  resultObl;
+
+    }
+
+    public cLinePropertyValue linePropertyValue(String pvValueStr){
+        for (cLinePropertyValue linePropertyValue : linePropertyValueObl()){
+            if (linePropertyValue.getValueStr().equalsIgnoreCase(pvValueStr)){
+                return linePropertyValue;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<cLineProperty> specificLinePropertyObl(String pvPropertyCodeStr){
+        ArrayList<cLineProperty> resultObl = new ArrayList<>();
+
+        for (cLinePropertyValue linePropertyValue : this.handledPropertyValueObl){
+            if (linePropertyValue.getLineProperty().getPropertyCodeStr().equalsIgnoreCase(pvPropertyCodeStr)){
+                resultObl.add(linePropertyValue.getLineProperty());
+            }
+        }
+
+        return resultObl;
+    }
+
+    public  List<cLinePropertyValue> linePropertyValueObl(String pvValueStr) {
+
+        List<cLinePropertyValue> resultObl = new ArrayList<>();
+
+        for (cLinePropertyValue linePropertyValue : this.handledPropertyValueObl) {
+            if (linePropertyValue.getPropertyCodeStr().equalsIgnoreCase(pvValueStr)){
+                resultObl.add(linePropertyValue);
+            }
+        }
+
+        return  resultObl;
+
+    }
+
     }
 
 

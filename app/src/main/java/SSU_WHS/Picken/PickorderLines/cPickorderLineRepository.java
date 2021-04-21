@@ -16,9 +16,9 @@ import ICS.Utils.cDeviceInfo;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
@@ -611,27 +611,27 @@ public class cPickorderLineRepository {
 
                 SoapObject propertysHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
 
-                //Only loop through handled barcodes, of there are any
-                if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl() != null) {
+                //Only loop through handled properties, of there are any
+                if (cPickorderLine.currentPickOrderLine.linePropertyValuesObl() != null) {
 
                     int countForPropertyInt = 0;
                     int countForValueInt;
                     String propertyCodeStr = "";
 
-                    for (cPickorderLinePropertyValue pickorderLinePropertyValue: cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl()) {
+                    for (cLinePropertyValue linePropertyValue: cPickorderLine.currentPickOrderLine.linePropertyValuesObl()) {
 
                         countForValueInt = 1;
 
-                        if (!propertyCodeStr.equalsIgnoreCase(pickorderLinePropertyValue.getPropertyCodeStr())) {
-                            propertyCodeStr = pickorderLinePropertyValue.getPropertyCodeStr();
+                        if (!propertyCodeStr.equalsIgnoreCase(linePropertyValue.getPropertyCodeStr())) {
+                            propertyCodeStr = linePropertyValue.getPropertyCodeStr();
                             countForPropertyInt = 1;
                         }
 
-                        while (countForValueInt <= pickorderLinePropertyValue.getQuantityDbl()) {
+                        while (countForValueInt <= linePropertyValue.getQuantityDbl()) {
                             SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTYHANDLED_COMPLEX);
-                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, pickorderLinePropertyValue.getPropertyCodeStr());
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, linePropertyValue.getPropertyCodeStr());
                             soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED, countForPropertyInt);
-                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, pickorderLinePropertyValue.getValueStr());
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, linePropertyValue.getValueStr());
                             propertysHandledList.addSoapObject(soapObject);
                             countForValueInt++;
                             countForPropertyInt++;
@@ -644,7 +644,7 @@ public class cPickorderLineRepository {
                 l_PropertyInfo6Pin.setValue(propertysHandledList);
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
-                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_PROPERTIES_HANDLED, l_PropertyInfoObl);
+                webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_LINE_PROPERTIES_HANDLED, l_PropertyInfoObl);
 
             } catch (JSONException e) {
                 webresult.setSuccessBln(false);

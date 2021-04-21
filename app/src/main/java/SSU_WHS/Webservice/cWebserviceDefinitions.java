@@ -48,7 +48,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_PICKORDERLINERESETGENERATED = "p_PickorderRegelResetGeneratedJsonStr";
     public static String WEBMETHOD_UPDATECURRENTORDERLOCATION = "p_PickOrderUpdateCurrentOrderLocationJsonStr";
     public static String WEBMETHOD_GETPICKORDERSSEQUELSTEP = "p_PickordersVervolgstapGetJsonStr";
-    public static String WEBMETHOD_PICKORDERLINE_PROPERTIES_HANDLED = "p_WarehouseopdrachtLinePropertiesHandledJsonStr";
+    public static String WEBMETHOD_LINE_PROPERTIES_HANDLED = "p_WarehouseopdrachtLinePropertiesHandledJsonStr";
     public static String WEBMETHOD_PICKORDERLINEGENERATEDTAKEHANDLED = "p_PickorderTakeItemJsonStr";
     public static String WEBMETHOD_PICKORDERITEMVARIANTCREATE = "p_PickorderItemVariantCreateJsonStr";
     public static String WEBMETHOD_PICKORDERHANDLEDGENERATED = "p_PickorderOrderHandledGeneratedJsonStr";
@@ -59,6 +59,8 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETARTICLEBARCODES = "p_VestigingArtikelBarcodesGetJsonStr";
     public static String WEBMETHOD_GETARTICLEBYFORCE = "p_VestigingArtikelGetForcedJsonStr";
     public static String WEBMETHOD_GETUNIQUEBARCODES = "p_VestigingArtikelBarcodesUpdateUniqueGetJsonStr";
+    public static String WEBMETHOD_GETARTICLEPROPERTIES = "p_VestigingArtikelPropertiesGetJsonStr";
+    public static String WEBMETHOD_GETARTICLEPROPERTYVALUES = "p_VestigingArtikelPropertyValuesGetJsonStr";
 
 
     public static String WEBMETHOD_GETARTICLESTOCK = "p_ArtikelVoorraadGetJsonStr";

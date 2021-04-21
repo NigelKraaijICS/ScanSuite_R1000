@@ -38,6 +38,7 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderPickGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.PickorderQCActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnArticleDetailActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
@@ -189,6 +190,13 @@ public class AcceptRejectPropertyFragment  extends DialogFragment implements iIC
             this.dismiss();
             return;
         }
+        if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
+            ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity)cAppExtension.activity;
+            receiveorderLinePropertyInputActivity.amountHandledBln = true;
+            receiveorderLinePropertyInputActivity.pResetTab(false);
+            this.dismiss();
+            return;
+        }
     }
 
     private void mReject() {
@@ -197,6 +205,13 @@ public class AcceptRejectPropertyFragment  extends DialogFragment implements iIC
             PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
             pickorderLineItemPropertyInputActvity.amountHandledBln = false;
             pickorderLineItemPropertyInputActvity.pResetTab(true);
+            this.dismiss();
+            return;
+        }
+        if (cAppExtension.activity instanceof  ReceiveorderLinePropertyInputActivity) {
+            ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity)cAppExtension.activity;
+            receiveorderLinePropertyInputActivity.amountHandledBln = false;
+            receiveorderLinePropertyInputActivity.pResetTab(true);
             this.dismiss();
             return;
         }

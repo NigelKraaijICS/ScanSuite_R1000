@@ -37,14 +37,14 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
-import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineViewModel;
@@ -450,8 +450,8 @@ public class cPickorder{
     public List<cPickorderCompositeBarcode> compositeBarcodesObl() {
         return  cPickorderCompositeBarcode.allCompositeBarcodesObl;
     }
-    public List<cPickorderLineProperty> linePropertysObl() { return  cPickorderLineProperty.allLinePropertysObl; }
-    public List<cPickorderLinePropertyValue> linePropertyValueObl() { return  cPickorderLinePropertyValue.allLinePropertysValuesObl; }
+    public List<cLineProperty> linePropertysObl() { return  cLineProperty.allLinePropertysObl; }
+    public List<cLinePropertyValue> linePropertyValueObl() { return  cLinePropertyValue.allLinePropertysValuesObl; }
     public List<cComment> commentsObl(){
         return  cComment.allCommentsObl;
     }
@@ -1520,6 +1520,14 @@ public class cPickorder{
 
         for (cPickorderLineEntity pickorderLineEntity : hulpResultObl ) {
             cPickorderLine PickorderLine = new cPickorderLine(pickorderLineEntity);
+            for (cPickorderLine pickorderLine : this.linesObl()){
+                if(pickorderLine.getLineNoInt() ==  PickorderLine.getLineNoInt()){
+                    PickorderLine.presetValueObl = new ArrayList<>();
+                    PickorderLine.presetValueObl = pickorderLine.presetValueObl;
+                }
+            }
+
+
             resultObl.add(PickorderLine);
         }
         return  resultObl;
@@ -2702,15 +2710,15 @@ public class cPickorder{
 
     private boolean mGetLinePropertysViaWebserviceBln() {
 
-        cPickorderLineProperty.allLinePropertysObl = null;
-        cPickorderLineProperty.pTruncateTableBln();
+        cLineProperty.allLinePropertysObl = null;
+        cLineProperty.pTruncateTableBln();
 
         cWebresult WebResult;
         WebResult =  this.getPickorderViewModel().pGetLinePropertysViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPickorderLineProperty pickorderLineProperty = new cPickorderLineProperty(jsonObject);
+                cLineProperty pickorderLineProperty = new cLineProperty(jsonObject);
                 pickorderLineProperty.pInsertInDatabaseBln();
             }
 
@@ -2724,19 +2732,27 @@ public class cPickorder{
 
     private boolean mGetLinePropertyValuesViaWebserviceBln() {
 
-
-        cPickorderLinePropertyValue.allLinePropertysValuesObl = null;
-        cPickorderLinePropertyValue.pTruncateTableBln();
+        cLinePropertyValue.allLinePropertysValuesObl = null;
+        cLinePropertyValue.pTruncateTableBln();
 
         cWebresult WebResult;
         WebResult =  this.getPickorderViewModel().pGetLinePropertyValuesViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPickorderLinePropertyValue pickorderLinePropertyValue = new cPickorderLinePropertyValue(jsonObject);
-                pickorderLinePropertyValue.pInsertInDatabaseBln();
+                cLinePropertyValue linePropertyValue = new cLinePropertyValue(jsonObject);
+                linePropertyValue.pInsertInDatabaseBln();
+                if (linePropertyValue.getValueStr() !=null){
+                    for (cPickorderLine pickorderLine : this.linesObl()){
+                        if (pickorderLine.getLineNoInt() == linePropertyValue.getLineNoInt()){
+                            if (pickorderLine.presetValueObl == null) {
+                                pickorderLine.presetValueObl = new ArrayList<>();
+                            }
+                            pickorderLine.presetValueObl.add(linePropertyValue);
+                        }
+                    }
+                }
             }
-
             return  true;
         }
         else {

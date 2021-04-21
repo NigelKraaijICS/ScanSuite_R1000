@@ -152,6 +152,9 @@
     <string name="choose_barcode">Kies barcode</string>
     <string name="quantity_per_scan">Aantal per scan</string>
     <string name="message_fill_all_properties">Het aantal moet overal gelijk zijn</string>
+    <string name="message_property_not_allowed">Property waarde niet toegestaan voor huidige regel</string>
+    <string name="message_underreceive_text">Je hebt er %1$s van deze nodig, je hebt er %2$s ontvangen. \n\nWeet je zeker dat er geen artikelen meer beschikbaar zijn en dat je deze regel wil afsluiten?</string>
+    <string name="message_underreceive_property_text">Je hebt er %1$s van deze nodig, je hebt er %2$s ontvangen.\n\nHet aantal wat je ingeeft in dit tabblad is het ontvangen aantal voor dit artikel</string>
     <string name="filter_orderlines_title">Toon opdrachten:</string>
     <string name="filter_orderlines_enable">Gebruik filters</string>
     <string name="filter_orderlines_enable_summary">Onderstaande filters gebruiken</string>
