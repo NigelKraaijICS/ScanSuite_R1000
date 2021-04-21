@@ -101,7 +101,7 @@ public class PrintItemLabelFragment extends DialogFragment implements iICSDefaul
 
     private ConstraintLayout lineBinPrint;
     private TextView textViewTitle;
-    private ImageView barcodeImage;
+//    private ImageView barcodeImage;
     private Spinner barcodeSpinner;
     private Spinner workplaceSpinner;
     private Spinner layoutSpinner;
@@ -215,7 +215,7 @@ public class PrintItemLabelFragment extends DialogFragment implements iICSDefaul
         this.cancelButton = getView().findViewById(R.id.cancelButton);
         this.quantityText = getView().findViewById(R.id.quantityText);
         this.quantityRequiredText = getView().findViewById(R.id.quantityRequiredText);
-        this.barcodeImage = getView().findViewById(R.id.barcodeImageView);
+//        this.barcodeImage = getView().findViewById(R.id.barcodeImageView);
         this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
         this.progressBar = getView().findViewById(R.id.progressBar);
@@ -1168,20 +1168,20 @@ public class PrintItemLabelFragment extends DialogFragment implements iICSDefaul
         this.barcodeStr = pvBarcodeStr;
         this.textViewTitle.setText(this.barcodeStr);
 
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        try {
-            BitMatrix bitMatrix = multiFormatWriter.encode( this.barcodeStr , BarcodeFormat.CODE_128, 250, 72);
-            Bitmap bitmap = Bitmap.createBitmap(250, 72, Bitmap.Config.RGB_565);
-            for(int i = 0; i< 250; i++){
-                for(int j =  0; j< 72; j++){
-                    bitmap.setPixel(i,j,bitMatrix.get(i,j)? Color.BLACK:Color.WHITE);
-                }
-            }
-            this.barcodeImage.setImageBitmap(bitmap);
-
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
+//        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+//        try {
+//            BitMatrix bitMatrix = multiFormatWriter.encode( this.barcodeStr , BarcodeFormat.CODE_128, 250, 72);
+//            Bitmap bitmap = Bitmap.createBitmap(250, 72, Bitmap.Config.RGB_565);
+//            for(int i = 0; i< 250; i++){
+//                for(int j =  0; j< 72; j++){
+//                    bitmap.setPixel(i,j,bitMatrix.get(i,j)? Color.BLACK:Color.WHITE);
+//                }
+//            }
+//            this.barcodeImage.setImageBitmap(bitmap);
+//
+//        } catch (WriterException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
