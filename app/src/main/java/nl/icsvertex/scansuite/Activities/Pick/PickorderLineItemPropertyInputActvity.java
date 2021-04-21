@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,11 +37,11 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
-import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
@@ -74,43 +76,43 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     public  int numberOfTabsInt;
     public boolean amountHandledBln;
 
-    private  List<cPickorderLinePropertyValue> localItemPropertyValueObl (){
+    private  List<cLinePropertyValue> localItemPropertyValueObl (){
 
-        List<cPickorderLinePropertyValue> resultObl = new ArrayList<>();
-        List<cPickorderLineProperty> hulpObl = new ArrayList<>();
+        List<cLinePropertyValue> resultObl = new ArrayList<>();
+        List<cLineProperty> hulpObl = new ArrayList<>();
 
-        if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl() != null && cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl() .size() > 0 ) {
-            resultObl.addAll(cPickorderLine.currentPickOrderLine.pickorderLinePropertyValuesObl());
-            for(cPickorderLinePropertyValue pickorderLinePropertyValue : resultObl){
-                if (!hulpObl.contains(pickorderLinePropertyValue.getPickorderLineProperty())){
-                    hulpObl.add(pickorderLinePropertyValue.getPickorderLineProperty());
+        if (cPickorderLine.currentPickOrderLine.linePropertyValuesObl() != null && cPickorderLine.currentPickOrderLine.linePropertyValuesObl() .size() > 0 ) {
+            resultObl.addAll(cPickorderLine.currentPickOrderLine.linePropertyValuesObl());
+            for(cLinePropertyValue linePropertyValue : resultObl){
+                if (!hulpObl.contains(linePropertyValue.getLineProperty())){
+                    hulpObl.add(linePropertyValue.getLineProperty());
                 }
             }
         }
 
-        for (cPickorderLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl()) {
-            if (hulpObl.contains(inputPickorderLineProperty)){
+        for (cLineProperty inputLineProperty : cPickorderLine.currentPickOrderLine.linePropertyInputObl()) {
+            if (hulpObl.contains(inputLineProperty)){
                 continue;
             }
-            resultObl.add(new cPickorderLinePropertyValue(inputPickorderLineProperty));
+            resultObl.add(new cLinePropertyValue(inputLineProperty));
         }
         return resultObl;
     }
 
-    private LinkedHashMap<String, ArrayList<cPickorderLinePropertyValue>> localItemPropertySortObl(){
-        LinkedHashMap<String, ArrayList<cPickorderLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, ArrayList<cLinePropertyValue>> localItemPropertySortObl(){
+        LinkedHashMap<String, ArrayList<cLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();
        // ArrayList<cPickorderLinePropertyValue> pickorderLinePropertyValues = new ArrayList<>();
 
-        for (cPickorderLinePropertyValue pickorderLinePropertyValue : localItemPropertyValueObl()) {
+        for (cLinePropertyValue linePropertyValue : localItemPropertyValueObl()) {
                 //Create the hasmap dynammically and fill it
-            ArrayList<cPickorderLinePropertyValue> loopList = linkedHashMap.get(pickorderLinePropertyValue.getPropertyCodeStr());
+            ArrayList<cLinePropertyValue> loopList = linkedHashMap.get(linePropertyValue.getPropertyCodeStr());
             if (loopList == null) {
-                ArrayList<cPickorderLinePropertyValue> propertyValues = new ArrayList<>();
-                propertyValues.add(pickorderLinePropertyValue);
-                linkedHashMap.put(pickorderLinePropertyValue.getPropertyCodeStr(), propertyValues);
+                ArrayList<cLinePropertyValue> propertyValues = new ArrayList<>();
+                propertyValues.add(linePropertyValue);
+                linkedHashMap.put(linePropertyValue.getPropertyCodeStr(), propertyValues);
             }
             else{
-                loopList.add(pickorderLinePropertyValue);
+                loopList.add(linePropertyValue);
             }
 
         }
@@ -125,9 +127,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return quantityDbl;
         }
 
-        ArrayList<cPickorderLinePropertyValue> loopList = localItemPropertySortObl().get(this.titleObl.get(0));
+        ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(this.titleObl.get(0));
 
-        for (cPickorderLinePropertyValue pickorderLinePropertyValue : loopList ) {
+        for (cLinePropertyValue pickorderLinePropertyValue : loopList ) {
             quantityDbl += pickorderLinePropertyValue.getQuantityDbl();
         }
 
@@ -171,7 +173,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedReceiver();
         cUserInterface.pEnableScanner();
@@ -180,7 +181,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     @Override
     protected void onPause() {
         try {
-            LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
             cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
             cConnection.pUnregisterWifiChangedReceiver();
         } catch (Exception e) {
@@ -192,7 +192,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
     }
 
     @Override
@@ -323,8 +322,8 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     public void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
-        if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().size() == 1) {
-            cPickorderLineProperty.currentPickorderLineProperty = cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().get(0);
+        if (cPickorderLine.currentPickOrderLine.linePropertyInputObl().size() == 1) {
+            cLineProperty.currentLineProperty = cPickorderLine.currentPickOrderLine.linePropertyInputObl().get(0);
             this.pHandeManualAction(pvBarcodeScan);
         }
     }
@@ -336,11 +335,12 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         }
         cPickorderLine.currentPickOrderLine.pUpdateProcessingSequenceBln("");
         cPickorderLine.currentPickOrderLine.pCancelIndatabase();
+        cPickorderLine.currentPickOrderLine = null;
         this.mGoBackToLinesActivity();
     }
 
     public  void pHandeManualAction(cBarcodeScan pvBarcodeScan){
-        if (cPickorderLineProperty.currentPickorderLineProperty.getItemProperty()== null ) {
+        if (cLineProperty.currentLineProperty.getItemProperty()== null ) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_property_unknown),"",true, true);
             return;
         }
@@ -358,7 +358,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return;
         }
 
-        if (!cRegex.pCheckRegexBln( cPickorderLineProperty.currentPickorderLineProperty.getItemProperty().getLayoutStr(),pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pCheckRegexBln( cLineProperty.currentLineProperty.getItemProperty().getLayoutStr(),pvBarcodeScan.getBarcodeOriginalStr())) {
             cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout,cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line),R.raw.badsound, true);
             return;
         }
@@ -370,20 +370,20 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             }
         }
         //Check unique values if needed
-        cResult hulpRst = cPickorderLineProperty.currentPickorderLineProperty.pCheckScanForUniquePropertyRst(pvBarcodeScan.getBarcodeOriginalStr());
+        cResult hulpRst = cLineProperty.currentLineProperty.pCheckScanForUniquePropertyRst(pvBarcodeScan.getBarcodeOriginalStr());
         if (!hulpRst.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true, true);
             return;
         }
 
-        cPickorderLineProperty.currentPickorderLineProperty.pValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
+        cLineProperty.currentLineProperty.pValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
 
         if (this.amountHandledBln){
-            cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = cPickorderLine.currentPickOrderLine.getQuantityDbl();
+            cLinePropertyValue.currentLinePropertyValue.quantityDbl = cPickorderLine.currentPickOrderLine.getQuantityDbl();
         }
 
         cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout, pvBarcodeScan.getBarcodeOriginalStr() + " "  + cAppExtension.activity.getString(R.string.addedorhandled),R.raw.headsupsound,false);
-        this.pTryToChangePickedQuantity(true,false,1);
+        this.pTryToChangePickedQuantity();
         this.pRefreshActivity();
 
     }
@@ -397,7 +397,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         if (!mCheckAllPropertysHandledBln()){
             return;
         }
-        this.mGoBackToLinesActivity();
+        this.mGetNextPickLineForCurrentBin();
     }
 
     public void pRefreshActivity(){
@@ -409,15 +409,15 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     }
 
     private void mSelectTabAndItem(){
-        if(cPickorderLinePropertyValue.currentPickorderLinePropertyValue ==null){
+        if(cLinePropertyValue.currentLinePropertyValue ==null){
             return;
         }
-        this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getPropertyCodeStr())));
+        this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())));
     }
 
     public void pDeleteValueFromRecyler() {
-        cPickorderLinePropertyValue.allLinePropertysValuesObl.remove(cPickorderLinePropertyValue.currentPickorderLinePropertyValue);
-        cPickorderLinePropertyValue.currentPickorderLinePropertyValue = null;
+        cLinePropertyValue.allLinePropertysValuesObl.remove(cLinePropertyValue.currentLinePropertyValue);
+        cLinePropertyValue.currentLinePropertyValue = null;
     }
 
     public void pShowNumericInputFragment() {
@@ -436,7 +436,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     }
     public void pShowDatePickerDialog() {
         cUserInterface.pCheckAndCloseOpenDialogs();
-        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        DatePickerFragment datePickerFragment = new DatePickerFragment(cPickorderLine.currentPickOrderLine.presetValueObl);
         datePickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTDATEFRAGMENT_TAG);
     }
 
@@ -469,11 +469,11 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return false;
         }
 
-        for (cPickorderLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl()){
+        for (cLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.linePropertyInputObl()){
             double quantityDbl = 0.0;
-            ArrayList<cPickorderLinePropertyValue> loopList = localItemPropertySortObl().get(inputPickorderLineProperty.getPropertyCodeStr());
-            for (cPickorderLinePropertyValue pickorderLinePropertyValue : loopList ) {
-                quantityDbl += pickorderLinePropertyValue.getQuantityDbl();
+            ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(inputPickorderLineProperty.getPropertyCodeStr());
+            for (cLinePropertyValue linePropertyValue : loopList ) {
+                quantityDbl += linePropertyValue.getQuantityDbl();
             }
             if (quantityDbl != this.getQuantityHandledDbl()){
                 this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(inputPickorderLineProperty.getPropertyCodeStr())));
@@ -539,7 +539,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         this.articleItemCompactText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
         this.articleBarcodeCompactText.setText(cPickorderBarcode.currentPickorderBarcode.getBarcodeAndQuantityStr());
 
-        if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
+        if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.linePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.linePropertyNoInputObl().size() == 0) {
             this.imageButtonNoInputPropertys.setVisibility(View.GONE);
         }
         else {
@@ -604,65 +604,28 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         });
     }
 
-    public   void pTryToChangePickedQuantity(Boolean pvIsPositiveBln,  Boolean pvAmountFixedBln, double pvAmountDbl) {
+    public   void pTryToChangePickedQuantity() {
 
         if (this.amountHandledBln){
             return;
         }
         double newQuantityDbl;
-        List<cPickorderLineBarcode>  hulpObl;
-        if (pvIsPositiveBln) {
 
-            //Determine the new amount
-            if (pvAmountFixedBln) {
-
-                //Check if we already have barcodes and clear them
-                if (cPickorderLine.currentPickOrderLine.handledBarcodesObl().size() > 0 ) {
-
-                    hulpObl = new ArrayList<>(cPickorderLine.currentPickOrderLine.handledBarcodesObl());
-
-                    for (cPickorderLineBarcode pickorderLineBarcode : hulpObl) {
-                        pickorderLineBarcode.pDeleteFromDatabaseBln();
-                    }
-                }
-                newQuantityDbl = pvAmountDbl;
-                cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = newQuantityDbl;
-            } else {
-                newQuantityDbl = cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() + pvAmountDbl;
-            }
-
-            //Set the new quantityDbl and show in Activity
-            cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
-
-            //Add or update line barcodeStr
-            cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(pvAmountDbl);
-
-            //Update orderline info (quantityDbl, timestamp, localStatusInt)
-            cPickorderLine.currentPickOrderLine.pHandledIndatabase();
-            return;
-        }
-
-        //negative
-        if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() == 0 ) {
-            return;
-        }
-
-        //Determine the new amount
-        if (pvAmountFixedBln) {
-            newQuantityDbl = pvAmountDbl;
-        }else {
-            newQuantityDbl= cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() - pvAmountDbl;
-        }
+        newQuantityDbl = cLinePropertyValue.currentLinePropertyValue.getQuantityDbl();
 
         if (newQuantityDbl <= 0) {
-            cPickorderLine.currentPickOrderLine.quantityHandledDbl = 0.0;
-        }else {
-            //Set the new quantityDbl and show in Activity
-            cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
+            newQuantityDbl = 0;
         }
 
-        //Remove or update line barcodeStr
-        cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcode();
+        //Set the new quantityDbl and show in Activity
+        cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
+
+        //Add or update line barcodeStr
+        cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(newQuantityDbl);
+
+        //Update orderline info (quantityDbl, timestamp, localStatusInt)
+        cPickorderLine.currentPickOrderLine.pHandledIndatabase();
+        return;
 
     }
 
@@ -671,13 +634,13 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Bundle bundle = new Bundle();
-        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, (int) cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getQuantityDbl());
+        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, (int) cLinePropertyValue.currentLinePropertyValue.getQuantityDbl());
 
         double availableDbl  = cPickorderLine.currentPickOrderLine.getQuantityDbl();
-        ArrayList<cPickorderLinePropertyValue> loopList = localItemPropertySortObl().get(cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getPropertyCodeStr());
+        ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr());
 
-        for (cPickorderLinePropertyValue pickorderLinePropertyValue : loopList ) {
-            availableDbl -= pickorderLinePropertyValue.getQuantityDbl();
+        for (cLinePropertyValue linePropertyValue : loopList ) {
+            availableDbl -= linePropertyValue.getQuantityDbl();
         }
 
         bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, availableDbl);
@@ -687,11 +650,11 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     }
 
     private void mShowTextInputFragment() {
-        if (cPickorderLinePropertyValue.currentPickorderLinePropertyValue == null){
+        if (cLinePropertyValue.currentLinePropertyValue == null){
             return;
         }
         cUserInterface.pCheckAndCloseOpenDialogs();
-        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment(cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase());
+        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment(cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase());
         itemPropertyTextInputFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTTEXTFRAGMENT_TAG);
     }
 
@@ -702,31 +665,13 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         if (cPickorder.currentPickOrder.destionationBranch() == null) {
             cPickorder.currentPickOrder.scannedBranch =  null;
         }
-
+        cPickorderLine.currentPickOrderLine = null;
 
         Intent intent = new Intent(cAppExtension.context, PickorderLinesActivity.class);
         PickorderLinesActivity.startedViaOrderSelectBln = false;
 
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
-    }
-
-    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int numberChosenInt = 0;
-            Bundle extras = intent.getExtras();
-
-            if (extras != null) {
-                numberChosenInt = extras.getInt(cPublicDefinitions.NUMBERINTENT_EXTRANUMBER);
-            }
-            mHandleQuantityChosen(numberChosenInt);
-        }
-    };
-
-    private void mHandleQuantityChosen(double pvQuantityDbl) {
-        this.pTryToChangePickedQuantity(pvQuantityDbl != 0, true,pvQuantityDbl);
-        this.pRefreshActivity();
     }
 
 
@@ -754,8 +699,8 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return;
         }
 
-        for (cPickorderLineProperty pickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl() ) {
-            String barcodeStr = cPickorderCompositeBarcode.currentCompositePickorderBarcode.KeysAndValuesObl.get(pickorderLineProperty.getPropertyCodeStr());
+        for (cLineProperty lineProperty : cPickorderLine.currentPickOrderLine.linePropertyInputObl() ) {
+            String barcodeStr = cPickorderCompositeBarcode.currentCompositePickorderBarcode.KeysAndValuesObl.get(lineProperty.getPropertyCodeStr());
 
             if (barcodeStr != null && !barcodeStr.isEmpty()) {
                 this.pHandleScan(cBarcodeScan.pFakeScan(barcodeStr));
@@ -767,11 +712,59 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     }
 
+    private  void mGetNextPickLineForCurrentBin() {
+
+        cResult hulpResult;
+
+        if (!cPickorder.currentPickOrder.isPickAutoNextBln()) {
+            cPickorderLine.currentPickOrderLine = null;
+            this.mGoBackToLinesActivity();
+            return;
+        }
+
+        //check if there is a next line for this BIN
+        cPickorderLine nextLine = cPickorder.currentPickOrder.pGetNextLineToHandleForBin(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+
+        //There is no next line, so close this activity
+        if (nextLine == null) {
+            //Clear current barcodeStr and reset defaults
+            cPickorderLine.currentPickOrderLine = null;
+            this.mGoBackToLinesActivity();
+            return;
+        }
+
+        //Set the current line, and update it to busy
+
+        cPickorderLine.currentPickOrderLine = nextLine;
+
+        hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
+        if (!hulpResult.resultBln) {
+            cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
+            cPickorderLine.currentPickOrderLine = null;
+            this.mGoBackToLinesActivity();
+            return;
+        }
+
+        this.mInitnewLineForBin();
+    }
+
+    private void mInitnewLineForBin() {
+
+        //Play a sound
+        cUserInterface.pPlaySound(R.raw.message, null);
+        cPickorderBarcode.currentPickorderBarcode = null;
+
+        Intent intent = new Intent(cAppExtension.context, PickorderPickActivity.class);
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
+
+    }
+
     private void mBuildAndFillTabs() {
         ArrayList<Fragment> fragments = new ArrayList<>();
 
         this.titleObl = new ArrayList<>();
-        for (Map.Entry<String, ArrayList<cPickorderLinePropertyValue>> itemPropertyEntry :  this.localItemPropertySortObl().entrySet()) {
+        for (Map.Entry<String, ArrayList<cLinePropertyValue>> itemPropertyEntry :  this.localItemPropertySortObl().entrySet()) {
 
 
             this.itemPropertyTabLayout.addTab(this.itemPropertyTabLayout.newTab());

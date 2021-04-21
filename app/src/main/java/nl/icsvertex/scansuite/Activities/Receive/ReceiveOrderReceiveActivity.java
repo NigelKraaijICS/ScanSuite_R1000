@@ -53,6 +53,7 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineAdapter;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineRecyclerItemTouchHelper;
@@ -72,6 +73,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     //Region Private Properties
     public  boolean amountExceededDialogShowedBln = false;
+
     public  int positionSwiped;
 
     private  int counterMinusHelperInt;
@@ -880,6 +882,11 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         cIntakeorderBarcode.currentIntakeOrderBarcode = pvBarcode;
+
+        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyInputObl() != null && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyInputObl().size() > 0 ) {
+            mShowItemPropertyInputActivity();
+            return;
+        }
         this.mShowBarcodeInfo();
 
         this.mTryToChangeQuantityBln(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
@@ -1301,6 +1308,13 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         //Renew data, so only current lines are shown
         this.mFieldsInitialize();
 
+    }
+
+    private  void mShowItemPropertyInputActivity() {
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        Intent intent = new Intent(cAppExtension.context, ReceiveorderLinePropertyInputActivity.class);
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
     }
 
     private  List<cIntakeorderBarcode> mSortBarcodeList(List<cIntakeorderBarcode> pvUnsortedBarcodeObl) {

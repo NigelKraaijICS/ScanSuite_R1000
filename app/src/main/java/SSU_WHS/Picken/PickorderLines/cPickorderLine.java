@@ -22,11 +22,11 @@ import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
 import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupProperty;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
-import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Webservice.cWebresult;
@@ -183,77 +183,79 @@ public class cPickorderLine {
         return  this.getSourceNoStr() + " " +  this.getBinCodeStr();
     }
 
-    private  List<cPickorderLineProperty> pickorderLinePropertyCachedObl;
-    private List<cPickorderLineProperty> pickorderLinePropertyObl() {
+    public ArrayList<cLinePropertyValue> presetValueObl;
 
-        if (this.pickorderLinePropertyCachedObl != null) {
-            return  this.pickorderLinePropertyCachedObl;
+    private  List<cLineProperty> linePropertyCachedObl;
+    private List<cLineProperty> linePropertyObl() {
+
+        if (this.linePropertyCachedObl != null) {
+            return  this.linePropertyCachedObl;
         }
 
-        this. pickorderLinePropertyCachedObl = new ArrayList<>();
+        this.linePropertyCachedObl = new ArrayList<>();
 
         if (cPickorder.currentPickOrder.linePropertysObl() == null || cPickorder.currentPickOrder.linePropertysObl().size() == 0) {
-            return  this.pickorderLinePropertyCachedObl;
+            return  this.linePropertyCachedObl;
         }
 
-       for (cPickorderLineProperty pickorderLineProperty :cPickorder.currentPickOrder.linePropertysObl() ) {
-           if (pickorderLineProperty.getLineNoInt().equals(this.getLineNoInt())) {
-               this.pickorderLinePropertyCachedObl.add(pickorderLineProperty);
+       for (cLineProperty lineProperty :cPickorder.currentPickOrder.linePropertysObl() ) {
+           if (lineProperty.getLineNoInt().equals(this.getLineNoInt())) {
+               this.linePropertyCachedObl.add(lineProperty);
            }
        }
 
-       return  this.pickorderLinePropertyCachedObl;
+       return  this.linePropertyCachedObl;
 
     }
 
-    private  List<cPickorderLineProperty> pickorderLinePropertyNoInputCachedObl;
-    public List<cPickorderLineProperty> pickorderLinePropertyNoInputObl() {
+    private  List<cLineProperty> linePropertyNoInputCachedObl;
+    public List<cLineProperty> linePropertyNoInputObl() {
 
-        if (this.pickorderLinePropertyNoInputCachedObl != null) {
-            return  this.pickorderLinePropertyNoInputCachedObl;
+        if (this.linePropertyNoInputCachedObl != null) {
+            return  this.linePropertyNoInputCachedObl;
         }
 
-        this. pickorderLinePropertyNoInputCachedObl = new ArrayList<>();
+        this.linePropertyNoInputCachedObl = new ArrayList<>();
 
-        if (this.pickorderLinePropertyObl() == null || this.pickorderLinePropertyObl().size() == 0) {
-            return  this.pickorderLinePropertyNoInputCachedObl;
+        if (this.linePropertyObl() == null || this.linePropertyObl().size() == 0) {
+            return  this.linePropertyNoInputCachedObl;
         }
 
-        for (cPickorderLineProperty pickorderLineProperty :this.pickorderLinePropertyObl()) {
-            if (!pickorderLineProperty.getIsInputBln() &&  !pickorderLineProperty.getIsRequiredBln()) {
-                this.pickorderLinePropertyNoInputCachedObl.add(pickorderLineProperty);
+        for (cLineProperty lineProperty :this.linePropertyObl()) {
+            if (!lineProperty.getIsInputBln() &&  !lineProperty.getIsRequiredBln()) {
+                this.linePropertyNoInputCachedObl.add(lineProperty);
             }
         }
 
-        return  this.pickorderLinePropertyNoInputCachedObl;
+        return  this.linePropertyNoInputCachedObl;
     }
 
-    public List<cPickorderLineProperty> pickorderLinePropertyInputObl() {
+    public List<cLineProperty> linePropertyInputObl() {
 
-        List<cPickorderLineProperty> resultObl = new ArrayList<>();
+        List<cLineProperty> resultObl = new ArrayList<>();
 
-        if (this.pickorderLinePropertyObl() == null || this.pickorderLinePropertyObl().size() == 0) {
+        if (this.linePropertyObl() == null || this.linePropertyObl().size() == 0) {
             return  resultObl;
         }
 
-        for (cPickorderLineProperty pickorderLineProperty :this.pickorderLinePropertyObl()) {
-            if (pickorderLineProperty.getIsInputBln() &&  pickorderLineProperty.getIsRequiredBln()) {
-                resultObl.add(pickorderLineProperty);
+        for (cLineProperty lineProperty :this.linePropertyObl()) {
+            if (lineProperty.getIsInputBln() &&  lineProperty.getIsRequiredBln()) {
+                resultObl.add(lineProperty);
             }
         }
 
         return  resultObl;
     }
 
-    public  cPickorderLineProperty getPickorderLineProperty(String pvPropertyCodeStr){
+    public  cLineProperty getLineProperty(String pvPropertyCodeStr){
 
-        if (this.pickorderLinePropertyInputObl().size() == 0) {
+        if (this.linePropertyInputObl().size() == 0) {
             return  null;
         }
 
-        for (cPickorderLineProperty pickorderLineProperty : this.pickorderLinePropertyObl() ) {
-            if (pickorderLineProperty.getLineNoInt().equals(this.getLineNoInt()) && pickorderLineProperty.getPropertyCodeStr().equalsIgnoreCase(pvPropertyCodeStr)) {
-                return pickorderLineProperty;
+        for (cLineProperty lineProperty : this.linePropertyObl() ) {
+            if (lineProperty.getLineNoInt().equals(this.getLineNoInt()) && lineProperty.getPropertyCodeStr().equalsIgnoreCase(pvPropertyCodeStr)) {
+                return lineProperty;
             }
         }
 
@@ -261,12 +263,12 @@ public class cPickorderLine {
 
     }
 
-    public  List<cPickorderLinePropertyValue> pickorderLinePropertyValuesObl() {
+    public  List<cLinePropertyValue> linePropertyValuesObl() {
 
-        List<cPickorderLinePropertyValue> resultObl = new ArrayList<>();
+        List<cLinePropertyValue> resultObl = new ArrayList<>();
 
-        for (cPickorderLineProperty inputPickorderLineProperty : this.pickorderLinePropertyInputObl()) {
-                resultObl.addAll(inputPickorderLineProperty.propertyValueObl());
+        for (cLineProperty inputLineProperty : this.linePropertyInputObl()) {
+                resultObl.addAll(inputLineProperty.propertyValueObl());
         }
 
         return  resultObl;
@@ -278,7 +280,7 @@ public class cPickorderLine {
     }
 
     public  boolean hasPropertysBln() {
-        return this.pickorderLinePropertyObl().size() != 0;
+        return this.linePropertyObl().size() != 0;
     }
 
     private final cPickorderLineEntity PickorderLineEntity;
@@ -605,17 +607,17 @@ public class cPickorderLine {
             this.pUpdateProcessingSequenceBln("");
         }
 
-        List<cPickorderLinePropertyValue> linesToDeleteObl = new ArrayList<>();
+        List<cLinePropertyValue> linesToDeleteObl = new ArrayList<>();
 
-        if (cPickorderLinePropertyValue.allLinePropertysValuesObl != null) {
-            for (cPickorderLinePropertyValue pickorderLinePropertyValue : cPickorderLinePropertyValue.allLinePropertysValuesObl) {
-                if (pickorderLinePropertyValue.getLineNoInt() == this.getLineNoInt() && pickorderLinePropertyValue.getPickorderLineProperty().getIsRequiredBln() && pickorderLinePropertyValue.getPickorderLineProperty().getIsInputBln()) {
-                    linesToDeleteObl.add(pickorderLinePropertyValue);
+        if (cLinePropertyValue.allLinePropertysValuesObl != null) {
+            for (cLinePropertyValue linePropertyValue : cLinePropertyValue.allLinePropertysValuesObl) {
+                if (linePropertyValue.getLineNoInt() == this.getLineNoInt() && linePropertyValue.getLineProperty().getIsRequiredBln() && linePropertyValue.getLineProperty().getIsInputBln()) {
+                    linesToDeleteObl.add(linePropertyValue);
                 }
             }
 
-            for (cPickorderLinePropertyValue pickorderLinePropertyValueToDelete : linesToDeleteObl) {
-                cPickorderLinePropertyValue.allLinePropertysValuesObl.remove(pickorderLinePropertyValueToDelete);
+            for (cLinePropertyValue linePropertyValue : linesToDeleteObl) {
+                cLinePropertyValue.allLinePropertysValuesObl.remove(linePropertyValue);
             }
         }
 
@@ -654,17 +656,17 @@ public class cPickorderLine {
             this.pUpdateProcessingSequenceBln("");
         }
 
-        List<cPickorderLinePropertyValue> linesToDeleteObl = new ArrayList<>();
+        List<cLinePropertyValue> linesToDeleteObl = new ArrayList<>();
 
-        if (cPickorderLinePropertyValue.allLinePropertysValuesObl != null) {
-            for (cPickorderLinePropertyValue pickorderLinePropertyValue : cPickorderLinePropertyValue.allLinePropertysValuesObl) {
-                if (pickorderLinePropertyValue.getLineNoInt() == this.getLineNoInt() && pickorderLinePropertyValue.getPickorderLineProperty().getIsRequiredBln() && pickorderLinePropertyValue.getPickorderLineProperty().getIsInputBln()) {
-                    linesToDeleteObl.add(pickorderLinePropertyValue);
+        if (cLinePropertyValue.allLinePropertysValuesObl != null) {
+            for (cLinePropertyValue linePropertyValue : cLinePropertyValue.allLinePropertysValuesObl) {
+                if (linePropertyValue.getLineNoInt() == this.getLineNoInt() && linePropertyValue.getLineProperty().getIsRequiredBln() && linePropertyValue.getLineProperty().getIsInputBln()) {
+                    linesToDeleteObl.add(linePropertyValue);
                 }
             }
 
-            for (cPickorderLinePropertyValue pickorderLinePropertyValueToDelete : linesToDeleteObl) {
-                cPickorderLinePropertyValue.allLinePropertysValuesObl.remove(pickorderLinePropertyValueToDelete);
+            for (cLinePropertyValue linePropertyValue : linesToDeleteObl) {
+                cLinePropertyValue.allLinePropertysValuesObl.remove(linePropertyValue);
             }
         }
 
@@ -785,10 +787,10 @@ public class cPickorderLine {
 
         cWebresult WebResult;
 
-        if (this.pickorderLinePropertyInputObl() != null && this.pickorderLinePropertyInputObl() .size() > 0)  {
+        if (this.linePropertyInputObl() != null && this.linePropertyInputObl() .size() > 0)  {
             WebResult = this.getPickorderLineViewModel().pPickLinePropertysHandledViaWebserviceWrs();
             if (!WebResult.getResultBln() || !WebResult.getSuccessBln()){
-                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_PICKORDERLINE_PROPERTIES_HANDLED);
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_LINE_PROPERTIES_HANDLED);
                 return  false;
             }
         }

@@ -161,10 +161,6 @@ public class SearchArticleFragment extends DialogFragment implements iICSDefault
         this.scanArticleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!editTextItemNo.getText().toString().trim().isEmpty() && editTextVariantCode.getText().toString().trim().isEmpty() && editTextScanArticle.getText().toString().trim().isEmpty()) {
-                    cUserInterface.pDoNope(editTextVariantCode, true, true);
-                    return;
-                }
 
                 if (editTextItemNo.getText().toString().trim().isEmpty() && !editTextVariantCode.getText().toString().trim().isEmpty() && editTextScanArticle.getText().toString().trim().isEmpty()) {
                     cUserInterface.pDoNope(editTextItemNo, true, true);

@@ -25,8 +25,9 @@ import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.R;
 
 public class NumberpickerFragment extends DialogFragment implements iICSDefaultFragment {
@@ -128,9 +129,19 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
             public void onClick(View view) {
                 if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                     PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
-                    cPickorderLinePropertyValue.currentPickorderLinePropertyValue.quantityDbl = quantityNumberPicker.getValue();
+                    cLinePropertyValue.currentLinePropertyValue.quantityDbl = quantityNumberPicker.getValue();
+
+                    pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity();
                     pickorderLineItemPropertyInputActvity.pRefreshActivity();
-                    pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity(true, false, quantityNumberPicker.getValue());
+                    dismiss();
+                    return;
+                }
+                if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
+                    ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity)cAppExtension.activity;
+                    cLinePropertyValue.currentLinePropertyValue.quantityDbl = quantityNumberPicker.getValue();
+
+                    receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
+                    receiveorderLinePropertyInputActivity.pRefreshActivity();
                     dismiss();
                     return;
                 }

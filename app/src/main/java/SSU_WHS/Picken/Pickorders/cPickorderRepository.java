@@ -21,7 +21,6 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
-import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyRepository;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.Shipment.cShipment;

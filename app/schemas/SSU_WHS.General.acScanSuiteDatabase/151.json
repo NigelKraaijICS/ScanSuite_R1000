@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 151,
-    "identityHash": "b971f1cbeb59fe9dccff03b56f01ba4b",
+    "identityHash": "e26bac4661d62f049b2572064b12d85b",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -616,118 +616,6 @@
             "Barcode"
           ],
           "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "PickorderlineProperty",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER, `Propertycode` TEXT, `SequenceNoHandled` INTEGER, `SortingSequenceNo` INTEGER, `Layout` TEXT, `IsInput` INTEGER NOT NULL, `Isrequired` INTEGER NOT NULL, `ValueHandled` TEXT)",
-        "fields": [
-          {
-            "fieldPath": "recordid",
-            "columnName": "recordid",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "linenoInt",
-            "columnName": "LineNo",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "propertyCodeStr",
-            "columnName": "Propertycode",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "sequenceNoHandledInt",
-            "columnName": "SequenceNoHandled",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "sortingSequenceNoInt",
-            "columnName": "SortingSequenceNo",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "layoutStr",
-            "columnName": "Layout",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "isInputBln",
-            "columnName": "IsInput",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isRequiredBln",
-            "columnName": "Isrequired",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "valueHandledStr",
-            "columnName": "ValueHandled",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "recordid"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "PickorderlinePropertyValue",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER NOT NULL, `Propertycode` TEXT, `Value` TEXT, `SortingSequenceNo` INTEGER)",
-        "fields": [
-          {
-            "fieldPath": "recordid",
-            "columnName": "recordid",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "lineNoInt",
-            "columnName": "LineNo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "propertyCodeStr",
-            "columnName": "Propertycode",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "valueStr",
-            "columnName": "Value",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "sortingSequenceNoInt",
-            "columnName": "SortingSequenceNo",
-            "affinity": "INTEGER",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "recordid"
-          ],
-          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -1990,118 +1878,6 @@
             "Barcode"
           ],
           "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "InventoryorderlineProperty",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER, `Propertycode` TEXT, `SequenceNoHandled` INTEGER, `SortingSequenceNo` INTEGER, `Layout` TEXT, `IsInput` INTEGER NOT NULL, `Isrequired` INTEGER NOT NULL, `ValueHandled` TEXT)",
-        "fields": [
-          {
-            "fieldPath": "recordid",
-            "columnName": "recordid",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "linenoInt",
-            "columnName": "LineNo",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "propertyCodeStr",
-            "columnName": "Propertycode",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "sequenceNoHandledInt",
-            "columnName": "SequenceNoHandled",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "sortingSequenceNoInt",
-            "columnName": "SortingSequenceNo",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "layoutStr",
-            "columnName": "Layout",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "isInputBln",
-            "columnName": "IsInput",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isRequiredBln",
-            "columnName": "Isrequired",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "valueHandledStr",
-            "columnName": "ValueHandled",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "recordid"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "InventoryorderlinePropertyValue",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER NOT NULL, `Propertycode` TEXT, `Value` TEXT, `SortingSequenceNo` INTEGER)",
-        "fields": [
-          {
-            "fieldPath": "recordid",
-            "columnName": "recordid",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "lineNoInt",
-            "columnName": "LineNo",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "propertyCodeStr",
-            "columnName": "Propertycode",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "valueStr",
-            "columnName": "Value",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "sortingSequenceNoInt",
-            "columnName": "SortingSequenceNo",
-            "affinity": "INTEGER",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "recordid"
-          ],
-          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -4480,12 +4256,124 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "LineProperty",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER, `Propertycode` TEXT, `SequenceNoHandled` INTEGER, `SortingSequenceNo` INTEGER, `Layout` TEXT, `IsInput` INTEGER NOT NULL, `Isrequired` INTEGER NOT NULL, `ValueHandled` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "recordid",
+            "columnName": "recordid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "linenoInt",
+            "columnName": "LineNo",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "propertyCodeStr",
+            "columnName": "Propertycode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sequenceNoHandledInt",
+            "columnName": "SequenceNoHandled",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sortingSequenceNoInt",
+            "columnName": "SortingSequenceNo",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "layoutStr",
+            "columnName": "Layout",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isInputBln",
+            "columnName": "IsInput",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRequiredBln",
+            "columnName": "Isrequired",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "valueHandledStr",
+            "columnName": "ValueHandled",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "recordid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "LinePropertyValue",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `LineNo` INTEGER NOT NULL, `Propertycode` TEXT, `Value` TEXT, `SortingSequenceNo` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "recordid",
+            "columnName": "recordid",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lineNoInt",
+            "columnName": "LineNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "propertyCodeStr",
+            "columnName": "Propertycode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "valueStr",
+            "columnName": "Value",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sortingSequenceNoInt",
+            "columnName": "SortingSequenceNo",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "recordid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b971f1cbeb59fe9dccff03b56f01ba4b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e26bac4661d62f049b2572064b12d85b')"
     ]
   }
 }

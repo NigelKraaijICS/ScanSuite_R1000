@@ -13,6 +13,8 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
+import SSU_WHS.Basics.ArticleProperty.cArticleProperty;
+import SSU_WHS.Basics.ArticlePropertyValue.cArticlePropertyValue;
 import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -63,6 +65,8 @@ public class cArticle {
     private final cArticleEntity articleEntity;
     public  List<cArticleBarcode> barcodesObl;
     public  List<cArticleStock> stockObl;
+    public  List<cArticleProperty> propertyObl;
+    public List<cArticlePropertyValue> propertyValueObl;
 
     public cArticleImage articleImage;
     private cArticleViewModel getArticleViewModel() {
@@ -136,6 +140,8 @@ public class cArticle {
 
                 article.barcodesObl.add(articleBarcode);
 
+//                article.pGetPropertyViaWebservice();
+
 
 
                 return article;
@@ -160,6 +166,7 @@ public class cArticle {
               if( ! article.pGetBarcodesViaWebserviceBln(null)){
                   return null;
               }
+                article.pGetPropertyViaWebservice();
                 return article;
             }
         }
@@ -217,6 +224,50 @@ public class cArticle {
                 }
 
                 this.stockObl.add(articleStock);
+
+            }
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEBARCODES);
+        }
+    }
+
+    public void pGetPropertyViaWebservice(){
+        cWebresult webresult;
+
+        webresult = getArticleViewModel().pGetItemPropertyWrs(this);
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
+
+            for (JSONObject jsonObject :  webresult.getResultDtt()) {
+                cArticleProperty articleProperty = new cArticleProperty(jsonObject, this);
+                if (articleProperty.getItemProperty() == null){
+                    continue;
+                }
+
+                if (this.propertyObl == null){
+                    this.propertyObl = new ArrayList<>();
+                }
+                this.propertyObl.add(articleProperty);
+            }
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLEPROPERTIES);
+        }
+        pGetPropertyValueViaWebservice();
+    }
+
+    public void pGetPropertyValueViaWebservice(){
+        cWebresult webresult;
+
+        webresult = getArticleViewModel().pGetItemPropertyValueWrs(this);
+        if (webresult.getResultBln() && webresult.getSuccessBln()) {
+
+            for (JSONObject jsonObject :  webresult.getResultDtt()) {
+                cArticlePropertyValue articlePropertyValue = new cArticlePropertyValue(jsonObject , this);
+                if (this.propertyValueObl == null){
+                    this.propertyValueObl = new ArrayList<>();
+                }
+                this.propertyValueObl.add(articlePropertyValue);
 
             }
         }

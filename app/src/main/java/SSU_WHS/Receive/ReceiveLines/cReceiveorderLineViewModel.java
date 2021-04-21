@@ -4,10 +4,12 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.Webservice.cWebresult;
 
 public class cReceiveorderLineViewModel extends AndroidViewModel {
@@ -33,7 +35,7 @@ public class cReceiveorderLineViewModel extends AndroidViewModel {
     public  cWebresult pReceiveAddUnknownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pReceiveAddUnkownItemViaWebserviceWrs(pvBarcodeScan);}
     public  cWebresult pReceiveAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pReceiveAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan);}
 
-
+    public  cWebresult pLinePropertysHandledViaWebserviceWrs(List<cLineProperty> pvLinePropertieObl) {return this.Repository.pLinePropertysHandledViaWebserviceWrs(pvLinePropertieObl);}
     public  cWebresult pIntakeAddUnknownItemViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return  this.Repository.pIntakeAddUnkownItemViaWebserviceWrs(pvBarcodeScan);}
     public  cWebresult pIntakeAddUnknownBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan, boolean pvIsUniqueBarcodeBln) {return  this.Repository.pIntakeAddUnkownBarcodeViaWebserviceWrs(pvBarcodeScan, pvIsUniqueBarcodeBln);}
 

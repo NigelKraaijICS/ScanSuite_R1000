@@ -48,12 +48,9 @@ import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
-import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
@@ -359,10 +356,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
 
-        if (PickorderPickActivity.handledViaPropertysBln) {
-            this.mHandlePickDoneClick();
-            return;
-        }
+//        if (PickorderPickActivity.handledViaPropertysBln) {
+//            this.mHandlePickDoneClick();
+//            return;
+//        }
 
         PickorderPickActivity.destionationScannedBln = cPickorder.currentPickOrder.destionationBranch() != null;
 
@@ -678,7 +675,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mShowNoInputPropertyInfo() {
 
-       if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
+       if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.linePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.linePropertyNoInputObl().size() == 0) {
            this.imageButtonNoInputPropertys.setVisibility(View.GONE);
        }
        else {
@@ -994,7 +991,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cPickorderBarcode.currentPickorderBarcode = pvBarcode;
 
-        if (cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl() != null && cPickorderLine.currentPickOrderLine.pickorderLinePropertyInputObl().size() > 0 ) {
+        if (cPickorderLine.currentPickOrderLine.linePropertyInputObl() != null && cPickorderLine.currentPickOrderLine.linePropertyInputObl().size() > 0 ) {
             mShowItemPropertyInputActivity();
             return;
         }
@@ -1547,7 +1544,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     private  void mShowNoInputPropertys(){
 
-        if (PickorderPickActivity.noInputPropertysShownBln || !cPickorderLine.currentPickOrderLine.hasPropertysBln()|| cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
+        if (PickorderPickActivity.noInputPropertysShownBln || !cPickorderLine.currentPickOrderLine.hasPropertysBln()|| cPickorderLine.currentPickOrderLine.linePropertyNoInputObl().size() == 0) {
             return;
         }
 

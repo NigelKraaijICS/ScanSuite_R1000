@@ -39,11 +39,13 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLineRecyclerItemTouchHelper;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiverorderSummaryLineAdapter;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AddArticleFragment;
@@ -60,6 +62,7 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     public static boolean closeOrderClickedBln = false;
     public static boolean packagingClickedBln = false;
     public static boolean packagingHandledBln = false;
+    public static boolean handledViaPropertysBln;
     public static cBarcodeScan barcodeScanToHandle;
     //End Region Public Properties
 
@@ -497,6 +500,9 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
             cIntakeorderBarcode.currentIntakeOrderBarcode = null;
 
             hulpResult = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pSummaryLineBusyRst();
+            if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().size() > 0 && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl() > 0){
+                cIntakeorderBarcode.currentIntakeOrderBarcode = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().get(0);
+            }
             if (!hulpResult.resultBln) {
                 mStepFailed(hulpResult.messagesStr(), pvBarcodeScan.getBarcodeOriginalStr());
                 cReceiveorderSummaryLine.currentReceiveorderSummaryLine = null;
@@ -873,6 +879,10 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     private  void mStartReceiveActivity(){
 
         ReceiveLinesActivity.busyBln = false;
+        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyInputObl() != null && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyInputObl().size() > 0 && cIntakeorderBarcode.currentIntakeOrderBarcode != null) {
+            mShowItemPropertyInputActivity();
+            return;
+        }
 
         //we have a LINE to handle, so start Receive activity
         Intent intent = new Intent(cAppExtension.context, ReceiveOrderReceiveActivity.class);
@@ -1072,6 +1082,12 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
         }
     }
 
+    private  void mShowItemPropertyInputActivity() {
+        cUserInterface.pCheckAndCloseOpenDialogs();
+        Intent intent = new Intent(cAppExtension.context, ReceiveorderLinePropertyInputActivity.class);
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
+    }
 
     //End Region Private Methods
 

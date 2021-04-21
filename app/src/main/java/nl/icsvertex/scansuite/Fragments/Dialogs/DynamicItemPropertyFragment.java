@@ -12,32 +12,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupPropertyAdapter;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueInputAdapter;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueNoInputAdapter;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValueInputAdapter;
 import nl.icsvertex.scansuite.R;
 
 public class DynamicItemPropertyFragment extends Fragment implements iICSDefaultFragment {
 
     private RecyclerView itemPropertyRecyclerview;
 
-    private final ArrayList<cPickorderLinePropertyValue> dataObl;
-    private cPickorderLinePropertyValueInputAdapter pickorderLinePropertyAdapter;
-    private cPickorderLinePropertyValueInputAdapter getPickorderLinePropertyAdapter(){
-        if (this.pickorderLinePropertyAdapter == null) {
-            this.pickorderLinePropertyAdapter = new cPickorderLinePropertyValueInputAdapter();
+    private final ArrayList<cLinePropertyValue> dataObl;
+    private cLinePropertyValueInputAdapter linePropertyAdapter;
+    private cLinePropertyValueInputAdapter getLinePropertyAdapter(){
+        if (this.linePropertyAdapter == null) {
+            this.linePropertyAdapter = new cLinePropertyValueInputAdapter();
         }
 
-        return  pickorderLinePropertyAdapter;
+        return linePropertyAdapter;
     }
 
-    public DynamicItemPropertyFragment(ArrayList<cPickorderLinePropertyValue> pvArrayList) {
+    public DynamicItemPropertyFragment(ArrayList<cLinePropertyValue> pvArrayList) {
         this.dataObl =  pvArrayList;
     }
 
@@ -95,11 +91,11 @@ public class DynamicItemPropertyFragment extends Fragment implements iICSDefault
         }
 
         //Show the recycler view
-        this.getPickorderLinePropertyAdapter().pFillData(this.dataObl);
+        this.getLinePropertyAdapter().pFillData(this.dataObl);
         this.itemPropertyRecyclerview.setHasFixedSize(false);
         this.itemPropertyRecyclerview.setVisibility(View.VISIBLE);
         this.itemPropertyRecyclerview.setHasFixedSize(false);
-        this.itemPropertyRecyclerview.setAdapter(this.getPickorderLinePropertyAdapter());
+        this.itemPropertyRecyclerview.setAdapter(this.getLinePropertyAdapter());
         this.itemPropertyRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
     }
 }

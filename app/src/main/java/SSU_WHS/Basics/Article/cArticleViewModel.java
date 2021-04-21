@@ -22,8 +22,7 @@ public class cArticleViewModel extends AndroidViewModel {
     public cWebresult pGetArticleByItemNoVariantWrs(String pvItemNoStr, String pvVariantcodeStr) {return this.Repository.pGetArticleByItemNoVariantWrs(pvItemNoStr, pvVariantcodeStr);}
     public cWebresult pGetUniqueBarcodeViaWebserviceWrs(cBarcodeScan pvBarcodeScan) {return this.Repository.pGetUniqueBarcodesWrs(pvBarcodeScan);}
     public cWebresult pGetStockViaWebserviceWrs(cArticle pvArticle) {return this.Repository.pGetStockWrs(pvArticle);}
-
-
-
+    public cWebresult pGetItemPropertyWrs(cArticle pvArticle) {return this.Repository.pGetItemPropertyWrs(pvArticle);}
+    public cWebresult pGetItemPropertyValueWrs(cArticle pvArticle) {return this.Repository.pGetItemPropertyValueWrs(pvArticle);}
 
 }

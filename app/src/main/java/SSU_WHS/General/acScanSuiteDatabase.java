@@ -71,6 +71,10 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEn
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.iInventoryorderLineBarcodeDao;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
 import SSU_WHS.Inventory.InventoryorderLines.iInventoryorderLineDao;
+import SSU_WHS.LineItemProperty.LineProperty.cLinePropertyEntity;
+import SSU_WHS.LineItemProperty.LineProperty.iLinePropertyDao;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValueEntity;
+import SSU_WHS.LineItemProperty.LinePropertyValue.iLinePropertyValueDao;
 import SSU_WHS.Move.Moveorders.cMoveorderEntity;
 import SSU_WHS.Move.Moveorders.iMoveorderDao;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcodeEntity;
@@ -105,10 +109,6 @@ import SSU_WHS.Picken.PickorderCompositeBarcode.iPickorderCompositeBarcodeDao;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcodeEntity;
 import SSU_WHS.Picken.PickorderLineBarcodes.iPickorderLineBarcodeDao;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShipEntity;
-import SSU_WHS.Picken.PickorderLineProperty.cPickorderLinePropertyEntity;
-import SSU_WHS.Picken.PickorderLineProperty.iPickorderLinePropertyDao;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValueEntity;
-import SSU_WHS.Picken.PickorderLinePropertyValue.iPickorderLinePropertyValueDao;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.PickorderSetting.cPickorderSettingEntity;
@@ -145,8 +145,6 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cPickorderEntity.class,
         cPickorderLineEntity.class,
         cPickorderLineBarcodeEntity.class,
-        cPickorderLinePropertyEntity.class,
-        cPickorderLinePropertyValueEntity.class,
         cArticleImageEntity.class,
         cPickorderBarcodeEntity.class,
         cPickorderCompositeBarcodeEntity.class,
@@ -200,7 +198,9 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cStockOwnerEntity.class,
         cAuthorizedStockOwnerEntity.class,
         cLabelTemplateEntity.class,
-        },version = 152)
+        cLinePropertyEntity.class,
+        cLinePropertyValueEntity.class,
+        },version = 151)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
@@ -215,8 +215,6 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public abstract iPickorderDao pickorderDao();
     public abstract iPickorderLineDao pickorderLineDao();
     public abstract iPickorderLineBarcodeDao pickorderLineBarcodeDao();
-    public abstract iPickorderLinePropertyDao pickorderLinePropertyDao();
-    public abstract iPickorderLinePropertyValueDao pickorderLinePropertyValueDao();
     public abstract iArticleImageDao articleImageDao();
     public abstract iPickorderBarcodeDao pickorderBarcodeDao();
     public abstract iPickorderCompositeBarcodeDao pickorderCompositeBarcodeDao();
@@ -266,6 +264,8 @@ public abstract class acScanSuiteDatabase extends RoomDatabase {
     public  abstract iPackAndShipShippingPackageDao packAndShipShippingPackageDao();
     public  abstract iStockOwnerDao stockOwnerDao();
     public  abstract iLabelTemplateDao labelTemplateDao();
+    public  abstract iLinePropertyDao linePropertyDao();
+    public  abstract iLinePropertyValueDao linePropertyValueDao();
 
     private static acScanSuiteDatabase INSTANCE;
 

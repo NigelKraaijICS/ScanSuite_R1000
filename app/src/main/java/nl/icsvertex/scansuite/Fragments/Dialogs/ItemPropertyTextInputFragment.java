@@ -19,9 +19,9 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import SSU_WHS.Picken.PickorderLinePropertyValue.cPickorderLinePropertyValue;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -31,7 +31,7 @@ public class ItemPropertyTextInputFragment extends DialogFragment implements iIC
     private  EditText inputText;
     private  Button buttonCancel;
     private  Button buttonOk;
-    private String typeStr;
+    private final String typeStr;
 
 
     public ItemPropertyTextInputFragment(String pvTypeStr) {
@@ -101,8 +101,8 @@ public class ItemPropertyTextInputFragment extends DialogFragment implements iIC
     public void mFieldsInitialize() {
         this.inputText.setSelectAllOnFocus(true);
         this.inputText.requestFocus();
-        this.inputText.setHint(cAppExtension.activity.getString(R.string.message_please_enter, cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getItemProperty().getOmschrijvingStr().toLowerCase()));
-        this.textHeader.setText(cPickorderLinePropertyValue.currentPickorderLinePropertyValue.getItemProperty().getOmschrijvingStr());
+        this.inputText.setHint(cAppExtension.activity.getString(R.string.message_please_enter, cLinePropertyValue.currentLinePropertyValue.getItemProperty().getOmschrijvingStr().toLowerCase()));
+        this.textHeader.setText(cLinePropertyValue.currentLinePropertyValue.getItemProperty().getOmschrijvingStr());
 
         if (this.typeStr.equals("DECIMAL")){
             this.inputText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED| InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -141,9 +141,16 @@ public class ItemPropertyTextInputFragment extends DialogFragment implements iIC
 
 
     private void mHandleOk() {
-            PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
+        if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
+            PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
             pickorderLineItemPropertyInputActvity.pHandeManualAction(cBarcodeScan.pFakeScan(this.inputText.getText().toString()));
             dismiss();
-    }
+        }
+        if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
+            ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
+            receiveorderLinePropertyInputActivity.pHandeManualAction(cBarcodeScan.pFakeScan(this.inputText.getText().toString()));
+            dismiss();
+        }
 
+    }
 }

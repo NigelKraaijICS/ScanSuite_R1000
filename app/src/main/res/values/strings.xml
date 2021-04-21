@@ -267,7 +267,7 @@
     <string name="message_underpick_header">Finish order line?</string>
     <string name="message_correcy_line_header">Correct line quanity?</string>
     <string name="message_underpick_text">You need %1$s of these, you\'ve only picked %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
-    <string name="message_underpick_property_text">You need %1$s of these, you\'ve only picked %2$s. The amount filled at this tab is the picked number of the articles</string>
+    <string name="message_underpick_property_text">You need %1$s of these, you\'ve only picked %2$s. The amount filled at this tab is the picked number of articles</string>
     <string name="message_undermove_text">You need %1$s of these, you\'ve only moved %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
     <string name="message_undercheck_text">There were  %1$s picked items\n\You\'ve checked %2$s items.\n\nAre you sure that you want to correct the picked quantity?</string>
     <string name="message_underplace_text">Quantity to low\n\nYou try to place %1$s items\n\You would have to place %2$s items\n\nBut you can only place %3$s items on other BINS</string>
@@ -280,7 +280,13 @@
 
     <!--region itemproperty-->
     <string name="message_fill_all_properties">All properties need to have the same amount</string>
+    <string name="message_property_not_allowed">Property value not allowed for current line</string>
     <!--endregion itemproperty-->
+
+    <!--region Receive-->
+    <string name="message_underreceive_text">You need %1$s of these, you\'ve only received %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
+    <string name="message_underreceive_property_text">You need %1$s of these, you\'ve only received %2$s. The amount filled at this tab is the received number of articles</string>
+    <!--endregion Receive-->
 
     <!--region Sortorderselect-->
     <string name="screentitle_sortorderselect">Sortorders</string>

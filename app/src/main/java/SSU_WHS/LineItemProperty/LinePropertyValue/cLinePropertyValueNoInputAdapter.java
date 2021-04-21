@@ -1,4 +1,4 @@
-package SSU_WHS.Picken.PickorderLinePropertyValue;
+package SSU_WHS.LineItemProperty.LinePropertyValue;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,20 +10,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Picken.PickorderLineProperty.cPickorderLineProperty;
 import nl.icsvertex.scansuite.R;
 
-public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adapter<cPickorderLinePropertyValueNoInputAdapter.ItempropertyValueNoInputViewHolder>{
+public class cLinePropertyValueNoInputAdapter extends RecyclerView.Adapter<cLinePropertyValueNoInputAdapter.ItempropertyValueNoInputViewHolder>{
 
     public class ItempropertyValueNoInputViewHolder extends RecyclerView.ViewHolder{
 
@@ -43,11 +38,11 @@ public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adap
 
     //Region Private Properties
     private final LayoutInflater layoutInflaterObject;
-    private List<cPickorderLinePropertyValue> localItemPropertyValueObl;
+    private List<cLinePropertyValue> localItemPropertyValueObl;
     //End Region Private Properties
 
     //Region Constructor
-    public cPickorderLinePropertyValueNoInputAdapter() {
+    public cLinePropertyValueNoInputAdapter() {
         this.layoutInflaterObject = LayoutInflater.from(cAppExtension.context);
     }
     //End Region Constructor
@@ -60,10 +55,10 @@ public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItempropertyValueNoInputViewHolder pvHolderObj, int pvPositionInt) {
+    public void onBindViewHolder(@NonNull cLinePropertyValueNoInputAdapter.ItempropertyValueNoInputViewHolder pvHolderObj, int pvPositionInt) {
 
         if (this.localItemPropertyValueObl != null || this.localItemPropertyValueObl.size() > 0) {
-            final cPickorderLinePropertyValue pickorderLinePropertyValue = this.localItemPropertyValueObl.get(pvPositionInt);
+            final cLinePropertyValue pickorderLinePropertyValue = this.localItemPropertyValueObl.get(pvPositionInt);
 
             pvHolderObj.itemPropertyTextView.setText(pickorderLinePropertyValue.getItemProperty().getOmschrijvingStr());
             pvHolderObj.itemPropertyValueTextView.setText(pickorderLinePropertyValue.getValueStr());
@@ -96,12 +91,12 @@ public class cPickorderLinePropertyValueNoInputAdapter extends RecyclerView.Adap
                     animation.setInterpolator(interpolator);
                     v.startAnimation(animation);
                     cUserInterface.pPlaySound(R.raw.message, 0);
-                    }
+                }
             });
         }
     }
 
-    public void pFillData(List<cPickorderLinePropertyValue> pvDataObl) {
+    public void pFillData(List<cLinePropertyValue> pvDataObl) {
         this.localItemPropertyValueObl = pvDataObl;
         notifyDataSetChanged();
     }
