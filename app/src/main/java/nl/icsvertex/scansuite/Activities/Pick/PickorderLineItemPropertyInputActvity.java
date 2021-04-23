@@ -641,7 +641,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
         //Update orderline info (quantityDbl, timestamp, localStatusInt)
         cPickorderLine.currentPickOrderLine.pHandledIndatabase();
-        return;
 
     }
 
