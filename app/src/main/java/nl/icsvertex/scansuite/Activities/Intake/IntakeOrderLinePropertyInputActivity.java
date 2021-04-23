@@ -1,4 +1,4 @@
-package nl.icsvertex.scansuite.Activities.Receive;
+package nl.icsvertex.scansuite.Activities.Intake;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,15 +34,13 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
-
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
+import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
-import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
-import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
-
-import nl.icsvertex.scansuite.BuildConfig;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.DatePickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.DynamicItemPropertyFragment;
@@ -52,7 +50,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.PagerAdapters.ItemPropertyPagerAdapter;
 import nl.icsvertex.scansuite.R;
 
-public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Private Properties
     private ImageView toolbarImage;
@@ -84,13 +82,13 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
         List<cLinePropertyValue> resultObl = new ArrayList<>();
         List<cLineProperty> hulpObl = new ArrayList<>();
 
-        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl == null){
-            cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl = new ArrayList<>();
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl == null){
+            cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl = new ArrayList<>();
         }else {
-            cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl.clear();
+            cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.clear();
         }
-        if ( cReceiveorderSummaryLine.currentReceiveorderSummaryLine.presetValueObl() != null &&  cReceiveorderSummaryLine.currentReceiveorderSummaryLine.presetValueObl().size() > 0){
-            resultObl.addAll(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.presetValueObl());
+        if ( cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl() != null &&  cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl().size() > 0){
+            resultObl.addAll(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl());
             for(cLinePropertyValue linePropertyValue : resultObl){
                 if (!hulpObl.contains(linePropertyValue.getLineProperty())){
                     hulpObl.add(linePropertyValue.getLineProperty());
@@ -98,21 +96,21 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
             }
         }
 
-        for (cLineProperty lineProperty : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyInputObl()) {
+        for (cLineProperty lineProperty : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyInputObl()) {
             if (hulpObl.contains(lineProperty)){
                 continue;
             }
             resultObl.add(new cLinePropertyValue(lineProperty));
         }
 
-       cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl.addAll(resultObl);
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.addAll(resultObl);
     }
 
     private LinkedHashMap<String, ArrayList<cLinePropertyValue>> localItemPropertySortObl(){
         LinkedHashMap<String, ArrayList<cLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();
         // ArrayList<cPickorderLinePropertyValue> pickorderLinePropertyValues = new ArrayList<>();
 
-        Collections.sort(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl, new Comparator<cLinePropertyValue>() {
+        Collections.sort(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl, new Comparator<cLinePropertyValue>() {
 
             @Override
             public int compare(cLinePropertyValue o1, cLinePropertyValue o2) {
@@ -120,7 +118,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
             }
         });
 
-        for (cLinePropertyValue linePropertyValue : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl) {
+        for (cLinePropertyValue linePropertyValue : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl) {
             //Create the hasmap dynammically and fill it
             ArrayList<cLinePropertyValue> loopList = linkedHashMap.get(linePropertyValue.getPropertyCodeStr());
             if (loopList == null) {
@@ -155,7 +153,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     }
 
     public  double getQuantityAvailable() {
-        return    cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() - mQuantityHandledDbl();
+        return    cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() - mQuantityHandledDbl();
     }
 
 
@@ -163,7 +161,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
 
 
     //Region Constructor
-    public  ReceiveorderLinePropertyInputActivity() {
+    public  IntakeOrderLinePropertyInputActivity() {
 
     }
 
@@ -221,9 +219,9 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-
             if (this.intakeorderBarcode.getQuantityHandledDbl() == 0){
-                this.mGoBackToLinesActivity(true);
+                this.mResetCurrents();
+                this.mGoBackToLinesActivity();
 
                 return true;
             }
@@ -231,7 +229,6 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
                 this.mShowAcceptFragment();
                 return true;
             }
-
             return true;
         }
 
@@ -243,7 +240,8 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     public void onBackPressed() {
 
         if (this.intakeorderBarcode.getQuantityHandledDbl() == 0){
-            this.mGoBackToLinesActivity(true);
+            this.mResetCurrents();
+            this.mGoBackToLinesActivity();
 
             return;
         }
@@ -340,23 +338,24 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
 
     public void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
-        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyInputObl().size() == 1) {
-            cLineProperty.currentLineProperty = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyInputObl().get(0);
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyInputObl().size() == 1) {
+            cLineProperty.currentLineProperty = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyInputObl().get(0);
         } else {
-            cLineProperty.currentLineProperty = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getLineProperty(Objects.requireNonNull(Objects.requireNonNull(this.itemPropertyTabLayout.getTabAt(this.itemPropertyTabLayout.getSelectedTabPosition())).getText()).toString());
+            cLineProperty.currentLineProperty = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getLineProperty(Objects.requireNonNull(Objects.requireNonNull(this.itemPropertyTabLayout.getTabAt(this.itemPropertyTabLayout.getSelectedTabPosition())).getText()).toString());
         }
         this.pHandeManualAction(pvBarcodeScan);
     }
 
     public  void pCancelReceive() {
 
-        this.mGoBackToLinesActivity(true);
+        this.mResetCurrents();
+        this.mGoBackToLinesActivity();
     }
 
     public  void pHandeManualAction(cBarcodeScan pvBarcodeScan){
         //Check if kwnown value is selected
-        if(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyValue(pvBarcodeScan.getBarcodeOriginalStr()) != null){
-            cLinePropertyValue.currentLinePropertyValue = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyValue(pvBarcodeScan.getBarcodeOriginalStr());
+        if(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValue(pvBarcodeScan.getBarcodeOriginalStr()) != null){
+            cLinePropertyValue.currentLinePropertyValue = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValue(pvBarcodeScan.getBarcodeOriginalStr());
             cLineProperty.currentLineProperty = cLinePropertyValue.currentLinePropertyValue.getLineProperty();
         }
 
@@ -372,7 +371,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
         }
 
         if (!this.amountHandledBln){
-            if (this.getQuantityHandledDbl() == cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl() && !this.isGeneratedBln) {
+            if (this.getQuantityHandledDbl() == cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl() && cSetting.RECEIVE_NO_EXTRA_ITEMS() && cSetting.RECEIVE_NO_EXTRA_PIECES() && !this.isGeneratedBln) {
                 cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout,cAppExtension.activity.getString(R.string.message_extra_pieces_not_allowed),R.raw.badsound, true);
                 return;
             }
@@ -384,17 +383,18 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
             return;
         }
 
-        cLineProperty.currentLineProperty.pReceiveLineValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
+        cLineProperty.currentLineProperty.pIntakeLineValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
 
         if (this.amountHandledBln && !cLinePropertyValue.currentLinePropertyValue.getItemProperty().getUniqueBln()){
+            //Check if summary line has more than 1 property if so devide equally
 
-            if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyValueObl(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr()).size() > 1 ){
+            if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValueObl(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr()).size() > 1 ){
 
                 int totalInt = (int) Math.round(this.intakeorderBarcode.getQuantityHandledDbl());
-                int availableInt = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.specificLinePropertyObl(cLineProperty.currentLineProperty.getPropertyCodeStr()).size();
+                int availableInt = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValueObl(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr()).size();
                 int commitInt;
                 double amountDbl ;
-                for(cLinePropertyValue linePropertyValue : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyValueObl(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
+                for(cLinePropertyValue linePropertyValue : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValueObl(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
 
                     if (linePropertyValue.getQuantityDbl() > 0 && !linePropertyValue.getValueStr().equalsIgnoreCase(cLinePropertyValue.currentLinePropertyValue.getValueStr())){
                         totalInt -= (int) Math.round(linePropertyValue.getQuantityDbl());
@@ -425,10 +425,11 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     }
 
     public void pHandled() {
+
         if (!mCheckAllPropertysHandledBln()){
             return;
         }
-        this.mGoBackToLinesActivity(false);
+        this.mGoBackToIntakeActivity(false);
     }
 
     public void pRefreshActivity(){
@@ -452,7 +453,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     public void pDeleteValueFromRecyler() {
         this.deletedFromRecyclerBln = true;
         this.tabIndexInt = this.itemPropertyTabLayout.getSelectedTabPosition();
-       cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl.remove(cLinePropertyValue.currentLinePropertyValue);
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.remove(cLinePropertyValue.currentLinePropertyValue);
         cLinePropertyValue.currentLinePropertyValue = null;
     }
 
@@ -471,7 +472,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     }
     public void pShowDatePickerDialog() {
         cUserInterface.pCheckAndCloseOpenDialogs();
-        DatePickerFragment datePickerFragment = new DatePickerFragment(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.presetValueObl());
+        DatePickerFragment datePickerFragment = new DatePickerFragment(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl());
         datePickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTDATEFRAGMENT_TAG);
     }
 
@@ -481,31 +482,30 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
 
         double newQuantityDbl = 0.0;
 
-        for(cLinePropertyValue linePropertyValue: cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyValueObl(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
+        for(cLinePropertyValue linePropertyValue: cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValueObl(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
             newQuantityDbl += linePropertyValue.getQuantityDbl();
         }
 
 
         //Check if we would exceed amount, then show message if needed
-        if (newQuantityDbl > cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl()) {
+        if (newQuantityDbl > cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl()) {
 
-            if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln() && !cIntakeorder.currentIntakeOrder.isGenerated() && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0 ) {
+            if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln() && !cIntakeorder.currentIntakeOrder.isGenerated() && cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() > 0 ) {
                 this.mShowExtraPiecesNotAllowed();
                 return ;
             }
 
-            if (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() > 0 && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0  && (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY())) {
+            if (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() > 0 && cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() > 0  && (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY())) {
 
                 //Check if the new quantity would exceed the allowed quantity
-                if (newQuantityDbl > cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl()) {
+                if (newQuantityDbl > cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl() && cSetting.RECEIVE_NO_EXTRA_PIECES() && cSetting.RECEIVE_NO_EXTRA_ITEMS()) {
 
                     //We would exceed the allowed quantity so show that this is not allowed
-                    this.mShowExtraPiecesNotAllowedByPercentage(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl());
+                    this.mShowExtraPiecesNotAllowed();
                     return ;
                 }
             }
             intakeorderBarcode.quantityHandledDbl = newQuantityDbl;
-            cReceiveorderSummaryLine.currentReceiveorderSummaryLine.quantityHandledDbl = mQuantityHandledDbl();
             return;
         }
 
@@ -515,7 +515,14 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
             return;
         }
         intakeorderBarcode.quantityHandledDbl = newQuantityDbl;
-        cReceiveorderSummaryLine.currentReceiveorderSummaryLine.quantityHandledDbl = mQuantityHandledDbl();
+    }
+
+    public void pSendScansBln() {
+
+        IntakeOrderIntakeActivity.handledViaPropertysBln = true;
+        cIntakeorderBarcode.currentIntakeOrderBarcode.quantityHandledDbl = this.intakeorderBarcode.getQuantityHandledDbl();
+        mShowIntakeActivity();
+
     }
 
     //End Region Public Methods
@@ -538,7 +545,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
 
     private boolean mCheckAllPropertysHandledBln(){
 
-        for (cLineProperty lineProperty : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyInputObl()){
+        for (cLineProperty lineProperty : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyInputObl()){
             if (!lineProperty.getIsRequiredBln()){
                 continue;
             }
@@ -560,8 +567,8 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     private double mQuantityHandledDbl(){
         Double newQuantityDbl= 0.0;
 
-        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl()!= null){
-            for (cIntakeorderBarcode intakeorderBarcode: cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl()){
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl()!= null){
+            for (cIntakeorderBarcode intakeorderBarcode: cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl()){
                 newQuantityDbl += intakeorderBarcode.getQuantityHandledDbl();
             }
         }
@@ -617,14 +624,14 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     private void mSetArticleInfo(){
 
         this.mSetBarcode();
-        this.isGeneratedBln = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() == 0.0;
+        this.isGeneratedBln = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() == 0.0;
 
-        this.articleDescriptionCompactText.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getDescriptionStr());
-        this.articleDescription2CompactText.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getDescription2Str());
-        this.articleItemCompactText.setText(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getItemNoAndVariantCodeStr());
+        this.articleDescriptionCompactText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescriptionStr());
+        this.articleDescription2CompactText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getDescription2Str());
+        this.articleItemCompactText.setText(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getItemNoAndVariantCodeStr());
         this.articleBarcodeCompactText.setText(intakeorderBarcode.getBarcodeAndQuantityStr());
 
-        if (!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.hasPropertysBln() || cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyNoInputObl() == null || cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyNoInputObl().size() == 0) {
+        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.hasPropertysBln() || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyNoInputObl() == null || cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyNoInputObl().size() == 0) {
             this.imageButtonNoInputPropertys.setVisibility(View.GONE);
         }
         else {
@@ -633,17 +640,20 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     }
 
     private  void mSetBarcode(){
-        this.scannedBarcodesObl = new ArrayList<>();
-        intakeorderBarcode = new cIntakeorderBarcode(cIntakeorderBarcode.currentIntakeOrderBarcode);
-        this.scannedBarcodesObl.add(intakeorderBarcode);
 
-        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl() > 0) {
-            Double handledDbl = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl();
-            for (cIntakeorderBarcode intakeorderBarcode : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl()){
+        if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
+                cIntakeorderBarcode.currentIntakeOrderBarcode = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(0);
+        }
+
+        intakeorderBarcode = new cIntakeorderBarcode(cIntakeorderBarcode.currentIntakeOrderBarcode);
+
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl() > 0) {
+            Double handledDbl = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl();
+            for (cIntakeorderBarcode intakeorderBarcode : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl()){
                 handledDbl -= intakeorderBarcode.getQuantityHandledDbl();
             }
             if (handledDbl > 0){
-                cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().get(0).quantityHandledDbl = handledDbl;
+                cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(0).quantityHandledDbl = handledDbl;
             }
         }
     }
@@ -651,8 +661,8 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     private  void mSetQuantityText() {
         String quantityStr = "";
 
-        if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0){
-            quantityStr =   cText.pDoubleToStringStr(mQuantityHandledDbl()) + "/" +  cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl());
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() > 0){
+            quantityStr =   cText.pDoubleToStringStr(mQuantityHandledDbl()) + "/" +  cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl());
         } else {
             quantityStr =    cText.pIntToStringStr((int)this.getQuantityHandledDbl());
         }
@@ -675,10 +685,30 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
         cUserInterface.pShowSnackbarMessage(toolbarImage , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
     }
 
-    private  void mShowExtraPiecesNotAllowedByPercentage(Double pvValueDbl){
 
-        cUserInterface.pShowSnackbarMessage(toolbarImage , cAppExtension.context.getString(R.string.number_received_total_cant_be_higher_then, cText.pDoubleToStringStr(pvValueDbl)) , null, false);
+    private void mGoBackToLinesActivity() {
 
+        Intent intent = null;
+
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAS")) {
+            intent = new Intent(cAppExtension.context, IntakeorderMASLinesActivity.class);
+        }
+
+        if (cIntakeorder.currentIntakeOrder.getOrderTypeStr().equalsIgnoreCase("MAT")) {
+            intent = new Intent(cAppExtension.context, IntakeorderMATLinesActivity.class);
+        }
+
+        cAppExtension.activity.startActivity(intent);
+        cAppExtension.activity.finish();
+    }
+
+    private void mResetCurrents() {
+
+        IntakeOrderIntakeActivity.handledViaPropertysBln = false;
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
+        cIntakeorderMATLine.currentIntakeorderMATLine = null;
+        cIntakeorder.currentIntakeOrder.currentBin = null;
+        this.scannedBarcodesObl = null;
     }
 
     private void mShowNumberPickerFragment() {
@@ -688,7 +718,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
         Bundle bundle = new Bundle();
         bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, (int) cLinePropertyValue.currentLinePropertyValue.getQuantityDbl());
 
-        double availableDbl  = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() - cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl();
+        double availableDbl  = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() - cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl();
         ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr());
 
         for (cLinePropertyValue linePropertyValue : loopList ) {
@@ -711,24 +741,22 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     }
 
 
-    private  void mGoBackToLinesActivity(Boolean pvCancelBln) {
+    private  void mGoBackToIntakeActivity(Boolean pvCancelBln) {
 
         cUserInterface.pShowGettingData();
 
         if (!pvCancelBln){ new Thread(new Runnable() {
             public void run() {
-                mSendScans();
+                pSendScansBln();
             }
         }).start();}
         else{
-            mShowLinesActivity();
+            mShowIntakeActivity();
         }
     }
 
-    private void mShowLinesActivity(){
-        this.mResetCurrents();
-
-        Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
+    private void mShowIntakeActivity(){
+        Intent intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);
         cAppExtension.activity.startActivity(intent);
         cAppExtension.activity.finish();
     }
@@ -772,48 +800,13 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
         this.itemPropertyTabLayout.setupWithViewPager(itemPropertyViewpager);
     }
 
-    private void mSendScans() {
-
-        //If internet is not connected
-        if (!cConnection.isInternetConnectedBln()) {
-            //could not send line, let user know but answer succes so user can go to next line
-            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line_no_connection), null);
-            return;
-        }
-
-        if(!cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pItemVariantHandledBln(this.scannedBarcodesObl)) {
-            cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.couldnt_send_line), "",true,true);
-            return;
-        }
-        cIntakeorderBarcode.currentIntakeOrderBarcode.quantityHandledDbl += this.intakeorderBarcode.getQuantityHandledDbl();
-
-        this.mShowLinesActivity();
-
-    }
-
-    private void mResetCurrents(){
-        cReceiveorderSummaryLine.currentReceiveorderSummaryLine = null;
-        cReceiveorderLine.currentReceiveorderLine = null;
-        cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = null;
-        cIntakeorderBarcode.currentIntakeOrderBarcode = null;
-    }
-
-
     private void mShowAcceptFragment(){
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        String acceptStr = cAppExtension.activity.getString(R.string.message_accept_line);
-        String rejectStr = cAppExtension.activity.getString(R.string.message_cancel_line);
-
-        if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
-            acceptStr =  cAppExtension.activity.getString(R.string.message_yes);
-            rejectStr = cAppExtension.activity.getString(R.string.message_no);
-        }
-
-        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderlinebusy_header),
-                cAppExtension.activity.getString(R.string.message_orderlinebusy_text),
-                rejectStr, acceptStr, false);
+        final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderbusy_header),
+                cAppExtension.activity.getString(R.string.message_orderbusy_text),
+                cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
         acceptRejectFragment.setCancelable(true);
 
         runOnUiThread(new Runnable() {
@@ -824,7 +817,6 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
             }
         });
     }
-
 
 
     //End Region Private Methods

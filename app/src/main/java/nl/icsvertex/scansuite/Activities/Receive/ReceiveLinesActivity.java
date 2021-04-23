@@ -62,7 +62,6 @@ public class ReceiveLinesActivity extends AppCompatActivity implements iICSDefau
     public static boolean closeOrderClickedBln = false;
     public static boolean packagingClickedBln = false;
     public static boolean packagingHandledBln = false;
-    public static boolean handledViaPropertysBln;
     public static cBarcodeScan barcodeScanToHandle;
     //End Region Public Properties
 

@@ -1633,6 +1633,17 @@ public class cIntakeorder {
                 cLinePropertyValue linePropertyValue = new cLinePropertyValue(jsonObject);
                 linePropertyValue.pInsertInDatabaseBln();
                 if (linePropertyValue.getValueStr() !=null){
+                    if (this.getOrderTypeStr().equalsIgnoreCase("MAT") || this.getOrderTypeStr().equalsIgnoreCase("MAS")){
+                        for (cIntakeorderMATLine intakeorderMATLine : cIntakeorderMATLine.allIntakeorderMATLinesObl){
+                            if (intakeorderMATLine.getLineNoInt() == linePropertyValue.getLineNoInt()){
+                                if (intakeorderMATLine.presetValueObl == null) {
+                                    intakeorderMATLine.presetValueObl = new ArrayList<>();
+                                }
+                                intakeorderMATLine.presetValueObl.add(linePropertyValue);
+                            }
+                        }
+                    }else {
+
                     for (cReceiveorderLine receiveorderLine : cReceiveorderLine.allReceiveorderLines){
                         if (receiveorderLine.getLineNoInt() == linePropertyValue.getLineNoInt()){
                             if (receiveorderLine.presetValueObl == null) {
@@ -1640,6 +1651,7 @@ public class cIntakeorder {
                             }
                             receiveorderLine.presetValueObl.add(linePropertyValue);
                         }
+                    }
                     }
                 }
             }

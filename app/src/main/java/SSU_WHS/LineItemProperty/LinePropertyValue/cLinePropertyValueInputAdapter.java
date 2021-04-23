@@ -24,11 +24,13 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.R;
@@ -141,12 +143,12 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
             if (linePropertyValue.getItemProperty().getUniqueBln() && linePropertyValue.getQuantityDbl() > 0 ) {
                 pvHolder.imageButtonPlus.setVisibility(View.INVISIBLE);
                 pvHolder.imageButtonManual.setVisibility(View.INVISIBLE);
+                pvHolder.imageButtonMax.setVisibility(View.INVISIBLE);
             }
 
             if (linePropertyValue == cLinePropertyValue.currentLinePropertyValue) {
                 pvHolder.secondaryContent.setVisibility(View.VISIBLE);
             }
-
 
             pvHolder.primaryContent.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -201,7 +203,10 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                     cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
                     double availableDbl = 0.0;
                     if(cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity){
-                        availableDbl = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl();
+                        availableDbl = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() - cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl();
+                    }
+                    if(cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity){
+                        availableDbl = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() - cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl();
                     }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         availableDbl = cPickorderLine.currentPickOrderLine.getQuantityDbl();
@@ -222,6 +227,13 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         receiveorderLinePropertyInputActivity.pRefreshActivity();
                     }
 
+                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                        IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+
+                        intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
+                        intakeOrderLinePropertyInputActivity.pRefreshActivity();
+                    }
+
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
 
@@ -238,7 +250,7 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
 
                     cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
                     if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity){
-                        if (linePropertyValue.getQuantityDbl()>= cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl()){
+                        if (linePropertyValue.getQuantityDbl()>= (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() - cReceiveorderSummaryLine.currentReceiveorderSummaryLine.quantityHandledDbl)){
                             if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln() && !cIntakeorder.currentIntakeOrder.isGenerated() && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0 ) {
                                 cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
                                 cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.context.getString(R.string.number_cannot_be_higher),R.raw.headsupsound,false);
@@ -263,6 +275,14 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         }
                     }
 
+                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity){
+                        if (linePropertyValue.getQuantityDbl()== cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl()&& cSetting.RECEIVE_NO_EXTRA_ITEMS() && cSetting.RECEIVE_NO_EXTRA_PIECES()){
+                            cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
+                            cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus,  cAppExtension.context.getString(R.string.number_cannot_be_higher),R.raw.headsupsound,false);
+                            return;
+                        }
+                    }
+
                     int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
                     cLinePropertyValue.currentLinePropertyValue.quantityDbl = currentQuantity + 1;
 
@@ -271,6 +291,12 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
 
                         receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
                         receiveorderLinePropertyInputActivity.pRefreshActivity();
+                    }
+                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                        IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+
+                        intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
+                        intakeOrderLinePropertyInputActivity.pRefreshActivity();
                     }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
@@ -302,6 +328,17 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
                         receiveorderLinePropertyInputActivity.pRefreshActivity();
                     }
+
+                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                        IntakeOrderLinePropertyInputActivity  intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+
+                        if (newQuantity == 0) {
+                            intakeOrderLinePropertyInputActivity.pDeleteValueFromRecyler();
+                        }
+
+                        intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
+                        intakeOrderLinePropertyInputActivity.pRefreshActivity();
+                    }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         if (newQuantity == 0) {
@@ -330,6 +367,14 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         receiveorderLinePropertyInputActivity.pDeleteValueFromRecyler();
                         receiveorderLinePropertyInputActivity.pRefreshActivity();
                     }
+                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                        IntakeOrderLinePropertyInputActivity  intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+
+                        cLinePropertyValue.currentLinePropertyValue.quantityDbl --;
+                        intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
+                        intakeOrderLinePropertyInputActivity.pDeleteValueFromRecyler();
+                        intakeOrderLinePropertyInputActivity.pRefreshActivity();
+                    }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         while (countDbl > 0) {
@@ -357,6 +402,10 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
                         receiveorderLinePropertyInputActivity.pShowNumericInputFragment();
                     }
+                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                        IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+                        intakeOrderLinePropertyInputActivity.pShowNumericInputFragment();
+                    }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         pickorderLineItemPropertyInputActvity.pShowNumericInputFragment();
@@ -378,6 +427,10 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                             ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
                             receiveorderLinePropertyInputActivity.pShowTextInputFragment();
                         }
+                        if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                            IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+                            intakeOrderLinePropertyInputActivity.pShowTextInputFragment();
+                        }
                         if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                             PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                             pickorderLineItemPropertyInputActvity.pShowTextInputFragment();
@@ -387,6 +440,10 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
                             ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
                             receiveorderLinePropertyInputActivity.pShowDatePickerDialog();
+                        }
+                        if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                            IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+                            intakeOrderLinePropertyInputActivity.pShowDatePickerDialog();
                         }
                         if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                             PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;

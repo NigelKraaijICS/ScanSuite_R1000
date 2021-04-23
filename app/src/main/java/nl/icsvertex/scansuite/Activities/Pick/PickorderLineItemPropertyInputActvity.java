@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -75,6 +76,8 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     private ViewPager itemPropertyViewpager;
     public  int numberOfTabsInt;
     public boolean amountHandledBln;
+    private boolean deletedFromRecyclerBln;
+    private int tabIndexInt;
 
     private  List<cLinePropertyValue> localItemPropertyValueObl (){
 
@@ -324,8 +327,12 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
         if (cPickorderLine.currentPickOrderLine.linePropertyInputObl().size() == 1) {
             cLineProperty.currentLineProperty = cPickorderLine.currentPickOrderLine.linePropertyInputObl().get(0);
-            this.pHandeManualAction(pvBarcodeScan);
+
+        } else{
+            cLineProperty.currentLineProperty = cPickorderLine.currentPickOrderLine.getLineProperty(Objects.requireNonNull(Objects.requireNonNull(this.itemPropertyTabLayout.getTabAt(this.itemPropertyTabLayout.getSelectedTabPosition())).getText()).toString());
         }
+
+        this.pHandeManualAction(pvBarcodeScan);
     }
 
     public  void pCancelPick() {
@@ -378,7 +385,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
         cLineProperty.currentLineProperty.pValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
 
-        if (this.amountHandledBln){
+        if (this.amountHandledBln && !cLinePropertyValue.currentLinePropertyValue.getItemProperty().getUniqueBln()){
             cLinePropertyValue.currentLinePropertyValue.quantityDbl = cPickorderLine.currentPickOrderLine.getQuantityDbl();
         }
 
@@ -410,12 +417,18 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     private void mSelectTabAndItem(){
         if(cLinePropertyValue.currentLinePropertyValue ==null){
+            if(this.deletedFromRecyclerBln){
+                this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.tabIndexInt));
+            }
+            this.deletedFromRecyclerBln = false;
             return;
         }
         this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())));
     }
 
     public void pDeleteValueFromRecyler() {
+        this.deletedFromRecyclerBln = true;
+        this.tabIndexInt = this.itemPropertyTabLayout.getSelectedTabPosition();
         cLinePropertyValue.allLinePropertysValuesObl.remove(cLinePropertyValue.currentLinePropertyValue);
         cLinePropertyValue.currentLinePropertyValue = null;
     }
@@ -470,6 +483,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         }
 
         for (cLineProperty inputPickorderLineProperty : cPickorderLine.currentPickOrderLine.linePropertyInputObl()){
+            if (!inputPickorderLineProperty.getIsRequiredBln()){
+                continue;
+            }
             double quantityDbl = 0.0;
             ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(inputPickorderLineProperty.getPropertyCodeStr());
             for (cLinePropertyValue linePropertyValue : loopList ) {

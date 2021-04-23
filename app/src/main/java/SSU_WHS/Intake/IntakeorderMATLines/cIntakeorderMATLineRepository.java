@@ -17,7 +17,9 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -335,6 +337,34 @@ public class cIntakeorderMATLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 SoapObject propertiesHandledObl = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
+
+                //Only loop through handled properties, of there are any
+                if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl != null) {
+
+                    int countForPropertyInt = 0;
+                    int countForValueInt;
+                    String propertyCodeStr = "";
+
+                    for (cLinePropertyValue linePropertyValue: cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl) {
+
+                        countForValueInt = 1;
+
+                        if (!propertyCodeStr.equalsIgnoreCase(linePropertyValue.getPropertyCodeStr())) {
+                            propertyCodeStr = linePropertyValue.getPropertyCodeStr();
+                            countForPropertyInt = 1;
+                        }
+
+                        while (countForValueInt <= linePropertyValue.getQuantityDbl()) {
+                            SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTYHANDLED_COMPLEX);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, linePropertyValue.getPropertyCodeStr());
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED, countForPropertyInt);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, linePropertyValue.getValueStr());
+                            propertiesHandledObl.addSoapObject(soapObject);
+                            countForValueInt++;
+                            countForPropertyInt++;
+                        }
+                    }
+                }
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
                 l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
                 l_PropertyInfo9Pin.setValue(propertiesHandledObl);
@@ -412,6 +442,35 @@ public class cIntakeorderMATLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 SoapObject propertiesHandledObl = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
+
+                //Only loop through handled properties, of there are any
+                if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl != null) {
+
+                    int countForPropertyInt = 0;
+                    int countForValueInt;
+                    String propertyCodeStr = "";
+
+                    for (cLinePropertyValue linePropertyValue: cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl) {
+
+                        countForValueInt = 1;
+
+                        if (!propertyCodeStr.equalsIgnoreCase(linePropertyValue.getPropertyCodeStr())) {
+                            propertyCodeStr = linePropertyValue.getPropertyCodeStr();
+                            countForPropertyInt = 1;
+                        }
+
+                        while (countForValueInt <= linePropertyValue.getQuantityDbl()) {
+                            SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTYHANDLED_COMPLEX);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, linePropertyValue.getPropertyCodeStr());
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED, countForPropertyInt);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, linePropertyValue.getValueStr());
+                            propertiesHandledObl.addSoapObject(soapObject);
+                            countForValueInt++;
+                            countForPropertyInt++;
+                        }
+                    }
+                }
+
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();
                 l_PropertyInfo9Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
                 l_PropertyInfo9Pin.setValue(propertiesHandledObl);
@@ -493,6 +552,34 @@ public class cIntakeorderMATLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo9Pin);
 
                 SoapObject propertiesHandledObl = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
+
+                //Only loop through handled properties, of there are any
+                if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl != null) {
+
+                    int countForPropertyInt = 0;
+                    int countForValueInt;
+                    String propertyCodeStr = "";
+
+                    for (cLinePropertyValue linePropertyValue: cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl) {
+
+                        countForValueInt = 1;
+
+                        if (!propertyCodeStr.equalsIgnoreCase(linePropertyValue.getPropertyCodeStr())) {
+                            propertyCodeStr = linePropertyValue.getPropertyCodeStr();
+                            countForPropertyInt = 1;
+                        }
+
+                        while (countForValueInt <= linePropertyValue.getQuantityDbl()) {
+                            SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTYHANDLED_COMPLEX);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, linePropertyValue.getPropertyCodeStr());
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED, countForPropertyInt);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, linePropertyValue.getValueStr());
+                            propertiesHandledObl.addSoapObject(soapObject);
+                            countForValueInt++;
+                            countForPropertyInt++;
+                        }
+                    }
+                }
                 PropertyInfo l_PropertyInfo10Pin = new PropertyInfo();
                 l_PropertyInfo10Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
                 l_PropertyInfo10Pin.setValue(propertiesHandledObl);

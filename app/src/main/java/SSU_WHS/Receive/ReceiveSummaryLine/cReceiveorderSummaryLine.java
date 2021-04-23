@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -78,10 +79,6 @@ public class cReceiveorderSummaryLine {
         }
 
         return resultDbl;
-    }
-
-    public Double getSummaryQuantityHandledDbl(){
-        return this.quantityHandledDbl;
     }
 
     public  Double getAllowedQuantityDbl(){
@@ -558,6 +555,22 @@ public class cReceiveorderSummaryLine {
             return  result;
         }
 
+    public  cLineProperty getLineProperty(String pvPropertyCodeStr){
+
+        if (this.linePropertyInputObl().size() == 0) {
+            return  null;
+        }
+
+        for (cLineProperty lineProperty : this.linePropertyObl() ) {
+            if (lineProperty.getPropertyCodeStr().equalsIgnoreCase(pvPropertyCodeStr)) {
+                return lineProperty;
+            }
+        }
+
+        return  null;
+
+    }
+
     private  List<cLineProperty> linePropertyCachedObl;
     public List<cLineProperty> linePropertyObl() {
 
@@ -664,6 +677,14 @@ public class cReceiveorderSummaryLine {
                 resultObl.add(linePropertyValue);
             }
         }
+        Collections.sort(resultObl, new Comparator<cLinePropertyValue>() {
+
+            @Override
+            public int compare(cLinePropertyValue o1, cLinePropertyValue o2) {
+                return Double.compare(o1.getQuantityDbl(), o2.getQuantityDbl());
+            }
+        });
+        Collections.reverse(resultObl);
 
         return  resultObl;
 
