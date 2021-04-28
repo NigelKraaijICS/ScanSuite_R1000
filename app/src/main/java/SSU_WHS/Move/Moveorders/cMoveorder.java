@@ -224,6 +224,25 @@ public class cMoveorder {
 
     }
 
+    public  List<cMoveorderLine> takeLinesToHandleObl (){
+
+        List<cMoveorderLine> resultObl = new ArrayList<>();
+
+        if (this.takeLinesObl == null || this.takeLinesObl.size() == 0) {
+            return resultObl;
+        }
+
+        for (cMoveorderLine moveorderLine :this.takeLinesObl)
+        {
+            if (!moveorderLine.isHandledBln())
+            {
+                    resultObl.add(moveorderLine);
+            }
+        }
+        return resultObl;
+
+    }
+
     public  List<cMoveorderLine> placeLinesTodoObl (String pvBinCodeStr){
 
         List<cMoveorderLine> resultObl = new ArrayList<>();

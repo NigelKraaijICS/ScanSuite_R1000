@@ -1,7 +1,6 @@
 package ICS.Utils;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
@@ -40,7 +39,7 @@ public class cSharedPreferences {
     }
 
     public static void  setSerialNumerStr(String pvSerialStr){
-        mSetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_serial_key),pvSerialStr);
+        pSetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_serial_key),pvSerialStr);
     }
 
     public static void  setDarkModusBln(Boolean pvDarkModus){
@@ -76,7 +75,7 @@ public class cSharedPreferences {
         return cSharedPreferences.getSharedPreferences().getString(pvKeyStr, pvDefaultValueStr);
     }
 
-    public static void mSetSharedPreferenceString(String pvKeyStr, String pvValueStr) {
+    public static void pSetSharedPreferenceString(String pvKeyStr, String pvValueStr) {
         SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
         editor.putString(pvKeyStr, pvValueStr);
         editor.apply();

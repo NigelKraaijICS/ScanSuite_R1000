@@ -182,7 +182,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
             case android.R.id.home:
                 this.mShowAcceptFragment();
-                break;
+                 return true;
 
             case R.id.item_close_take:
                 this.mHandleTAKEDone();
@@ -513,6 +513,11 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
                     NothingHereFragment fragment = new NothingHereFragment();
                     fragmentTransaction.replace(R.id.container, fragment);
                     fragmentTransaction.commit();
+
+                    // We are done taking, so start PLACE
+                    if (cMoveorder.currentMoveOrder.takeLinesToHandleObl().size() == 0) {
+                        mHandleTAKEDone();
+                    }
 
                     return;
                 }
