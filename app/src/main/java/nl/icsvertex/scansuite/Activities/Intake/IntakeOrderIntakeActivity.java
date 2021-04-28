@@ -72,6 +72,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     //Region Private Properties
 
     public  boolean startedWithBINBln = false;
+    public static boolean handledViaPropertysBln;
 
     private  int counterMinusHelperInt;
     private  int counterPlusHelperInt;
@@ -390,7 +391,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.mShowBarcodeInfo();
         this.mShowLines();
         this.mHideArticleInfo();
-
+        this.mShowItemPropertyActivity();
         this.imageButtonNoInputPropertys.setVisibility(View.GONE);
     }
 
@@ -400,8 +401,14 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         //Raise quantity with scanned barcodeStr, if we started this activity with a scan
         if (cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned != null) {
-            this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
+            if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.hasPropertysBln()){
+                this.pHandleScan(cBarcodeScan.pFakeScan(cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
+            }
             cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned =null;
+        }
+        //If handled with itempropertyactivity use this method
+        if (IntakeOrderIntakeActivity.handledViaPropertysBln){
+            this.pHandledWithProperties();
         }
 
         if (cIntakeorder.currentIntakeOrder.currentBin != null) {
@@ -496,6 +503,22 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         }
 
         cUserInterface.pShowSnackbarMessage(intakeorderIntakeContainer,cAppExtension.activity.getString(R.string.message_unknown_barcode),null,true);
+
+    }
+
+    public void pHandledWithProperties(){
+
+        this.scannedBarcodesObl = null;
+
+        this.mTryToChangeQuantity(true, true, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityHandledDbl());
+
+        this.imageButtonBarcode.setVisibility(View.INVISIBLE);
+        this.imageButtonMinus.setVisibility(View.INVISIBLE);
+        this.imageButtonPlus.setVisibility(View.INVISIBLE);
+        this.quantityText.setVisibility(View.INVISIBLE);
+
+        IntakeOrderIntakeActivity.handledViaPropertysBln = false;
+        this.articleScannedBln = true;
 
     }
 
@@ -906,8 +929,13 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         cIntakeorderBarcode.currentIntakeOrderBarcode = pvBarcode;
         this.articleScannedBln = true;
         this.mShowBarcodeInfo();
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.hasPropertysBln()){
+            this.mShowItemPropertyActivity();
+        }else{
+            this.mTryToChangeQuantity(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+        }
 
-        this.mTryToChangeQuantity(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+
     }
 
     // Lines, Barcodes
@@ -1332,6 +1360,22 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
         //Renew data, so only current lines are shown
         this.mFieldsInitialize();
+    }
+
+    private void mShowItemPropertyActivity(){
+        if (IntakeOrderIntakeActivity.handledViaPropertysBln){
+            return;
+        }
+
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null){
+            return;
+        }
+        if (!cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.hasPropertysBln()){
+            return;
+        }
+        //we have a properties to handle, so start Store activity
+        Intent intent = new Intent(cAppExtension.context, IntakeOrderLinePropertyInputActivity.class);
+        cAppExtension.activity.startActivity(intent);
     }
 
     //End Region Number Broadcaster

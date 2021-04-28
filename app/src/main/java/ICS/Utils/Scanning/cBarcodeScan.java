@@ -20,6 +20,7 @@ import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.Intake.CreateIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
@@ -50,6 +51,7 @@ import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveOrderReceiveActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Returns.CreateReturnActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentsActivity;
@@ -198,6 +200,10 @@ public class cBarcodeScan {
                         PickorderPickGeneratedActivity pickorderPickGeneratedActivity = (PickorderPickGeneratedActivity)cAppExtension.activity;
                         pickorderPickGeneratedActivity.pHandleScan(barcodeScan);
                     }
+                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
+                        PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
+                        pickorderLineItemPropertyInputActvity.pHandleScan(barcodeScan);
+                    }
 
                     //Sort
                     if (cAppExtension.activity instanceof SortorderSelectActivity){
@@ -305,6 +311,10 @@ public class cBarcodeScan {
                         ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
                         receiveOrderReceiveActivity.pHandleScan(barcodeScan);
                     }
+                    if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity){
+                        ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity)cAppExtension.activity;
+                        receiveorderLinePropertyInputActivity.pHandleScan(barcodeScan);
+                    }
 
 
                     if (cAppExtension.activity instanceof IntakeorderMATLinesActivity){
@@ -325,6 +335,10 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof IntakeOrderIntakeGeneratedActivity){
                         IntakeOrderIntakeGeneratedActivity intakeOrderIntakeGeneratedActivity = (IntakeOrderIntakeGeneratedActivity)cAppExtension.activity;
                         intakeOrderIntakeGeneratedActivity.pHandleScan(barcodeScan, false);
+                    }
+                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity){
+                        IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity)cAppExtension.activity;
+                        intakeOrderLinePropertyInputActivity.pHandleScan(barcodeScan);
                     }
 
                     //Return

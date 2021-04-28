@@ -12,6 +12,7 @@ import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.IntakeorderMATLineBarcodes.cIntakeorderMATLineBarcode;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -168,6 +169,7 @@ public class cIntakeorderMATLine {
     }
 
     public  List<cIntakeorderBarcode> barcodesObl;
+    public ArrayList<cLinePropertyValue> presetValueObl;
 
     public static ArrayList<cIntakeorderMATLineBarcode> allLineBarcodesObl;
 
@@ -346,6 +348,19 @@ public class cIntakeorderMATLine {
                 cIntakeorderBarcode intakeorderBarcodeToCheck = cIntakeorderBarcode.pGetIntakeOrderBarcodeByBarcode(intakeorderMATLineBarcode.getBarcodeStr());
                 if (intakeorderBarcodeToCheck != null && intakeorderBarcodeToCheck.getIsUniqueBarcodeBln()) {
                         cIntakeorderBarcode.allBarcodesObl.remove(intakeorderBarcodeToCheck);
+                }
+            }
+            //delete all line properties
+            if (cLinePropertyValue.allLinePropertysValuesObl != null) {
+                List<cLinePropertyValue> linesToDeleteObl = new ArrayList<>();
+                for (cLinePropertyValue linePropertyValue : cLinePropertyValue.allLinePropertysValuesObl) {
+                    if (linePropertyValue.getLineNoInt() == this.getLineNoInt() && linePropertyValue.getLineProperty().getIsRequiredBln() && linePropertyValue.getLineProperty().getIsInputBln()) {
+                        linesToDeleteObl.add(linePropertyValue);
+                    }
+                }
+
+                for (cLinePropertyValue linePropertyValue : linesToDeleteObl) {
+                    cLinePropertyValue.allLinePropertysValuesObl.remove(linePropertyValue);
                 }
             }
 

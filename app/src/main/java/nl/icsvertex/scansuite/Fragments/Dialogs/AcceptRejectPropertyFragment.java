@@ -17,6 +17,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
@@ -188,14 +189,21 @@ public class AcceptRejectPropertyFragment  extends DialogFragment implements iIC
             pickorderLineItemPropertyInputActvity.amountHandledBln = true;
             pickorderLineItemPropertyInputActvity.pResetTab(false);
             this.dismiss();
-            return;
+
         }
         if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
             ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity)cAppExtension.activity;
             receiveorderLinePropertyInputActivity.amountHandledBln = true;
             receiveorderLinePropertyInputActivity.pResetTab(false);
             this.dismiss();
-            return;
+
+        }
+        if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+            IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity)cAppExtension.activity;
+            intakeOrderLinePropertyInputActivity.amountHandledBln = true;
+            intakeOrderLinePropertyInputActivity.pResetTab(false);
+            this.dismiss();
+
         }
     }
 
@@ -206,14 +214,21 @@ public class AcceptRejectPropertyFragment  extends DialogFragment implements iIC
             pickorderLineItemPropertyInputActvity.amountHandledBln = false;
             pickorderLineItemPropertyInputActvity.pResetTab(true);
             this.dismiss();
-            return;
+
         }
         if (cAppExtension.activity instanceof  ReceiveorderLinePropertyInputActivity) {
             ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity)cAppExtension.activity;
             receiveorderLinePropertyInputActivity.amountHandledBln = false;
             receiveorderLinePropertyInputActivity.pResetTab(true);
             this.dismiss();
-            return;
+
+        }
+        if (cAppExtension.activity instanceof  IntakeOrderLinePropertyInputActivity) {
+            IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity)cAppExtension.activity;
+            intakeOrderLinePropertyInputActivity.amountHandledBln = false;
+            intakeOrderLinePropertyInputActivity.pResetTab(true);
+            this.dismiss();
+
         }
     }
 }

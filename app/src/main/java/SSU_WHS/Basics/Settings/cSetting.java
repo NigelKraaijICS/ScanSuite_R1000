@@ -776,6 +776,26 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static boolean RECEIVE_NO_EXTRA_ITEMS(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_NO_EXTRA_ITEMS);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static boolean RECEIVE_NO_EXTRA_PIECES(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_NO_EXTRA_PIECES);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
     public  static String RECEIVE_INTAKE_EO_CREATE_EXTRA_ITEM_VALIDATION(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_INTAKE_EO_CREATE_EXTRA_ITEM_VALIDATION);

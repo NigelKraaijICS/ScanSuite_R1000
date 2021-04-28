@@ -20,6 +20,7 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.R;
@@ -151,6 +152,10 @@ public class ItemPropertyTextInputFragment extends DialogFragment implements iIC
             receiveorderLinePropertyInputActivity.pHandeManualAction(cBarcodeScan.pFakeScan(this.inputText.getText().toString()));
             dismiss();
         }
-
+        if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+            IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+            intakeOrderLinePropertyInputActivity.pHandeManualAction(cBarcodeScan.pFakeScan(this.inputText.getText().toString()));
+            dismiss();
+        }
     }
 }

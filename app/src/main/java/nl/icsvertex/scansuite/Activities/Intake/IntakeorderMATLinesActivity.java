@@ -432,6 +432,7 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
     }
 
     public void pStartLine(){
+        IntakeOrderIntakeActivity.handledViaPropertysBln = false;
         cAppExtension.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -727,6 +728,7 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
     }
 
     private void mStartStoreActivity(){
+        IntakeOrderIntakeActivity.handledViaPropertysBln = false;
 
         //we have a LINE to handle, so start Store activity
         Intent intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);

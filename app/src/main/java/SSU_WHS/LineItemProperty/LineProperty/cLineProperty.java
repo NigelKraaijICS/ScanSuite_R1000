@@ -16,6 +16,7 @@ import ICS.Utils.cResult;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleProperty.cArticleProperty;
 import SSU_WHS.Basics.ItemProperty.cItemProperty;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import nl.icsvertex.scansuite.R;
@@ -198,6 +199,29 @@ public class cLineProperty implements List<JSONObject> {
         for (cLinePropertyValue propertyValue:  cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl){
             if (propertyValue.getPropertyCodeStr().equalsIgnoreCase(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr()) && propertyValue.getValueStr().equals("---")){
                 cReceiveorderSummaryLine.currentReceiveorderSummaryLine.handledPropertyValueObl.remove(propertyValue);
+                return;
+            }
+        }
+    }
+
+    public void pIntakeLineValueAdded(String pvValueStr) {
+        //Try to find value with same value
+        for (cLinePropertyValue linePropertyValue : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl) {
+            if (linePropertyValue.getValueStr().equalsIgnoreCase(pvValueStr)) {
+                linePropertyValue.quantityDbl += 1;
+                cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
+                return;
+            }
+        }
+
+        //Add a new value
+        cLinePropertyValue linePropertyValue = new cLinePropertyValue(this.getLineNoInt(), this.getPropertyCodeStr(),pvValueStr);
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.add(linePropertyValue);
+        cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
+
+        for (cLinePropertyValue propertyValue:  cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl){
+            if (propertyValue.getPropertyCodeStr().equalsIgnoreCase(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr()) && propertyValue.getValueStr().equals("---")){
+                cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.remove(propertyValue);
                 return;
             }
         }

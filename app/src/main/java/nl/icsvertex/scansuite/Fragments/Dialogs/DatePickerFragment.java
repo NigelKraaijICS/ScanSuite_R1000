@@ -23,6 +23,7 @@ import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.R;
@@ -188,6 +189,11 @@ public  class DatePickerFragment extends DialogFragment implements iICSDefaultFr
         if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity){
             ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
             receiveorderLinePropertyInputActivity.pHandeManualAction(cBarcodeScan.pFakeScan(this.dateStr));
+            dismiss();
+        }
+        if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity){
+            IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+            intakeOrderLinePropertyInputActivity.pHandeManualAction(cBarcodeScan.pFakeScan(this.dateStr));
             dismiss();
         }
     }
