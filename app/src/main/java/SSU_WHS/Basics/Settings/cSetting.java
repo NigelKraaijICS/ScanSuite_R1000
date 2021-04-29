@@ -671,7 +671,7 @@ public class cSetting {
         List<String> resultObl = new ArrayList<>();
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_NEW_WORKFLOWS);
-        if (Setting == null) {
+        if (Setting == null || Setting.getValueStr().isEmpty()) {
             return resultObl;
         }
 
@@ -732,7 +732,7 @@ public class cSetting {
         List<String> resultObl = new  ArrayList();
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_NEW_WORKFLOWS);
-        if (Setting == null) {
+        if (Setting == null || Setting.getValueStr().isEmpty()) {
             return resultObl;
         }
 
@@ -905,7 +905,7 @@ public class cSetting {
         List<String> resultObl = new ArrayList<>();
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.INV_NEW_WORKFLOWS);
-        if (Setting == null) {
+        if (Setting == null || Setting.getValueStr().isEmpty()) {
             return resultObl;
         }
 
@@ -936,7 +936,7 @@ public class cSetting {
         List<String> resultObl = new ArrayList<>();
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.MOVE_NEW_WORKFLOWS);
-        if (Setting == null) {
+        if (Setting == null || Setting.getValueStr().isEmpty()) {
             return resultObl;
         }
 
@@ -1047,7 +1047,7 @@ public class cSetting {
 
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RETOUR_NEW_WORKFLOWS);
-        if (Setting == null) {
+        if (Setting == null || Setting.getValueStr().isEmpty()) {
             return resultObl;
         }
 
