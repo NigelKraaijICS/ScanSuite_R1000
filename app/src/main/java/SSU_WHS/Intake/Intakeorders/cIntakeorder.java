@@ -946,18 +946,6 @@ public class cIntakeorder {
                     this.mGetLinePropertysViaWebserviceBln();
                     cReceiveorderSummaryLine.currentReceiveorderSummaryLine.pAddLine(receiveorderLine);
 
-//                    if (cArticle.currentArticle.propertyObl != null){
-//                        int lineNoInt = receiveorderLine.getLineNoInt();
-//
-//                        for (cArticleProperty articleProperty:cArticle.currentArticle.propertyObl ){
-//                            cLineProperty lineProperty = new cLineProperty(articleProperty, lineNoInt);
-//
-//                            if(cLineProperty.allLinePropertysObl == null){
-//                                cLineProperty.allLinePropertysObl = new ArrayList<>();
-//                            }
-//                            cLineProperty.allLinePropertysObl.add(lineProperty);
-//                        }
-//                    }
                 }
             }
 
@@ -1603,6 +1591,9 @@ public class cIntakeorder {
         cLineProperty.allLinePropertysObl = null;
         cLineProperty.pTruncateTableBln();
 
+        cLinePropertyValue.allLinePropertysValuesObl = null;
+        cLinePropertyValue.pTruncateTableBln();
+
         cWebresult WebResult;
         WebResult =  this.getIntakeorderViewModel().pGetLinePropertysViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
@@ -1621,9 +1612,6 @@ public class cIntakeorder {
     }
 
     private boolean mGetLinePropertyValuesViaWebserviceBln() {
-
-
-        cLinePropertyValue.pTruncateTableBln();
 
         cWebresult WebResult;
         WebResult =  this.getIntakeorderViewModel().pGetLinePropertyValuesViaWebserviceWrs();

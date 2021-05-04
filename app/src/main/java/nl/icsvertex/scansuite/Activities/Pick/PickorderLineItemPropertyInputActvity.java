@@ -627,7 +627,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         }
         double newQuantityDbl;
 
-        newQuantityDbl = cLinePropertyValue.currentLinePropertyValue.getQuantityDbl();
+        newQuantityDbl = this.getQuantityHandledDbl();
 
         if (newQuantityDbl <= 0) {
             newQuantityDbl = 0;

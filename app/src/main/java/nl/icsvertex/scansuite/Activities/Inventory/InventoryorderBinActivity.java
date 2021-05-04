@@ -625,9 +625,12 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        //Add quantityDbl of the current barcodeStr
-        cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
-        cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        //If a line has propertys than handle the amount in the property screen
+        if(!cInventoryorderLine.currentInventoryOrderLine.hasPropertysBln()){
+            //Add quantityDbl of the current barcodeStr
+            cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+            cInventoryorderBarcode.currentInventoryOrderBarcode.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        }
 
         //Make line barcodeStr the current line barcodeStr
         cInventoryorderLineBarcode.currentInventoryorderLineBarcode = cInventoryorderLine.currentInventoryOrderLine.lineBarcodesObl().get(0);
@@ -693,7 +696,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
         if (cInventoryorderLineBarcode.currentInventoryorderLineBarcode != null) {
             //Raise the quantity handled
-            if (updateQuantityBln) {
+            if (updateQuantityBln && !cInventoryorderLine.currentInventoryOrderLine.hasPropertysBln()) {
                 cInventoryorderLineBarcode.currentInventoryorderLineBarcode.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
             }
 
@@ -707,15 +710,23 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         }
 
         //Add quantityDbl of the current barcodeStr
-        cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        if (!cInventoryorderLine.currentInventoryOrderLine.hasPropertysBln()){
+            cInventoryorderLine.currentInventoryOrderLine.quantityHandledDbl += cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+        }
 
         //Open the line (found or created), so we can edit it
         this.mShowArticleActivity();
     }
 
     private  void mShowArticleActivity() {
-        Intent intent = new Intent(cAppExtension.context, InventoryArticleActivity.class);
-        cAppExtension.activity.startActivity(intent);
+
+        if (!cInventoryorderLine.currentInventoryOrderLine.hasPropertysBln()){
+            Intent intent = new Intent(cAppExtension.context, InventoryArticleActivity.class);
+            cAppExtension.activity.startActivity(intent);
+        } else {
+            Intent intent = new Intent(cAppExtension.context, InventoryLinePropertyInputActivity.class);
+            cAppExtension.activity.startActivity(intent);
+        }
         cAppExtension.activity.finish();
     }
 

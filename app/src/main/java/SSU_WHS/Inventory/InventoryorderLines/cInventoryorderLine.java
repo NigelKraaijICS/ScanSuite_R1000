@@ -17,6 +17,8 @@ import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -292,7 +294,98 @@ public class cInventoryorderLine {
         return  result;
     }
 
+    public  boolean hasPropertysBln() {
+        return this.linePropertyObl().size() != 0;
+    }
+    public ArrayList<cLinePropertyValue> presetValueObl;
 
+    private  List<cLineProperty> linePropertyCachedObl;
+    private List<cLineProperty> linePropertyObl() {
+
+//        if (this.linePropertyCachedObl != null) {
+//            return  this.linePropertyCachedObl;
+//        }
+
+        this.linePropertyCachedObl = new ArrayList<>();
+
+        if (cLineProperty.allLinePropertysObl == null || cLineProperty.allLinePropertysObl.size() == 0) {
+            return  this.linePropertyCachedObl;
+        }
+
+        for (cLineProperty lineProperty :cLineProperty.allLinePropertysObl ) {
+            if (lineProperty.getLineNoInt().equals(this.getLineNoInt())) {
+                this.linePropertyCachedObl.add(lineProperty);
+            }
+        }
+        return  this.linePropertyCachedObl;
+    }
+
+    private  List<cLineProperty> linePropertyNoInputCachedObl;
+    public List<cLineProperty> linePropertyNoInputObl() {
+
+        if (this.linePropertyNoInputCachedObl != null) {
+            return  this.linePropertyNoInputCachedObl;
+        }
+
+        this.linePropertyNoInputCachedObl = new ArrayList<>();
+
+        if (this.linePropertyObl() == null || this.linePropertyObl().size() == 0) {
+            return  this.linePropertyNoInputCachedObl;
+        }
+
+        for (cLineProperty lineProperty :this.linePropertyObl()) {
+            if (!lineProperty.getIsInputBln() &&  !lineProperty.getIsRequiredBln()) {
+                this.linePropertyNoInputCachedObl.add(lineProperty);
+            }
+        }
+
+        return  this.linePropertyNoInputCachedObl;
+    }
+
+    public List<cLineProperty> linePropertyInputObl() {
+
+        List<cLineProperty> resultObl = new ArrayList<>();
+
+        if (this.linePropertyObl() == null || this.linePropertyObl().size() == 0) {
+            return  resultObl;
+        }
+
+        for (cLineProperty lineProperty :this.linePropertyObl()) {
+            if (lineProperty.getIsInputBln() &&  lineProperty.getIsRequiredBln()) {
+                resultObl.add(lineProperty);
+            }
+        }
+
+        return  resultObl;
+    }
+
+    public  cLineProperty getLineProperty(String pvPropertyCodeStr){
+
+        if (this.linePropertyInputObl().size() == 0) {
+            return  null;
+        }
+
+        for (cLineProperty lineProperty : this.linePropertyObl() ) {
+            if (lineProperty.getLineNoInt().equals(this.getLineNoInt()) && lineProperty.getPropertyCodeStr().equalsIgnoreCase(pvPropertyCodeStr)) {
+                return lineProperty;
+            }
+        }
+
+        return  null;
+
+    }
+
+    public  List<cLinePropertyValue> linePropertyValuesObl() {
+
+        List<cLinePropertyValue> resultObl = new ArrayList<>();
+
+        for (cLineProperty inputLineProperty : this.linePropertyInputObl()) {
+            resultObl.addAll(inputLineProperty.propertyValueObl());
+        }
+
+        return  resultObl;
+
+    }
 
 
 

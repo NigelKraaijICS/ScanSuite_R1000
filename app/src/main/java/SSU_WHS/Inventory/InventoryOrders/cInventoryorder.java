@@ -35,6 +35,9 @@ import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcodeEn
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineEntity;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLineViewModel;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -143,6 +146,9 @@ public class cInventoryorder {
     private List<cArticleImage> imagesObl()  {
         return  cArticleImage.allImages;
     }
+
+    public List<cLineProperty> linePropertysObl() { return  cLineProperty.allLinePropertysObl; }
+    public List<cLinePropertyValue> linePropertyValueObl() { return  cLinePropertyValue.allLinePropertysValuesObl; }
 
     private static List<cInventoryorder> allCachedOrdersObl;
     public static List<cInventoryorder> allInventoryOrdersObl(Boolean pvRefreshBln ){
@@ -606,6 +612,8 @@ public class cInventoryorder {
                 cInventoryorderLine.currentInventoryOrderLine= new cInventoryorderLine(WebResult.getResultDtt().get(0));
                 cInventoryorderLine.currentInventoryOrderLine.pInsertInDatabaseBln();
                 cInventoryorderLine.currentInventoryOrderLine.pAddLineBarcode(cInventoryorderBarcode.currentInventoryOrderBarcode.getBarcodeStr(),cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl(), false);
+
+                this.mGetLinePropertysViaWebserviceBln();
                 return  true;
             }
         }
@@ -737,6 +745,20 @@ public class cInventoryorder {
         if (!this.mGetArticleImagesViaWebserviceBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_article_images_failed));
+            return result;
+        }
+
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLinePropertysViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!this.mGetLinePropertyValuesViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
             return result;
         }
 
@@ -1033,6 +1055,7 @@ public class cInventoryorder {
             return  false;
         }
 
+
         cWebresult WebResult;
         WebResult =  getInventoryorderViewModel().pAddERPItemViaWebserviceWrs(matchedArticleBarcode);
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
@@ -1237,6 +1260,60 @@ public class cInventoryorder {
         }
 
 
+    }
+    private boolean mGetLinePropertysViaWebserviceBln() {
+
+        cLineProperty.allLinePropertysObl = null;
+        cLineProperty.pTruncateTableBln();
+
+        cLinePropertyValue.allLinePropertysValuesObl = null;
+        cLinePropertyValue.pTruncateTableBln();
+
+        cWebresult WebResult;
+        WebResult =  this.getInventoryorderViewModel().pGetLinePropertysViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cLineProperty pickorderLineProperty = new cLineProperty(jsonObject);
+                pickorderLineProperty.pInsertInDatabaseBln();
+            }
+
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET);
+            return  false;
+        }
+    }
+
+    private boolean mGetLinePropertyValuesViaWebserviceBln() {
+
+
+
+        cWebresult WebResult;
+        WebResult =  this.getInventoryorderViewModel().pGetLinePropertyValuesViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cLinePropertyValue linePropertyValue = new cLinePropertyValue(jsonObject);
+                linePropertyValue.pInsertInDatabaseBln();
+                if (linePropertyValue.getValueStr() !=null){
+                    for (cInventoryorderLine inventoryorderLine : this.linesObl()){
+                        if (inventoryorderLine.getLineNoInt() == linePropertyValue.getLineNoInt()){
+                            if (inventoryorderLine.presetValueObl == null) {
+                                inventoryorderLine.presetValueObl = new ArrayList<>();
+                            }
+                            inventoryorderLine.presetValueObl.add(linePropertyValue);
+                        }
+                    }
+                }
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIEVALUESGET);
+            return  false;
+        }
     }
 
     //End Region Comments

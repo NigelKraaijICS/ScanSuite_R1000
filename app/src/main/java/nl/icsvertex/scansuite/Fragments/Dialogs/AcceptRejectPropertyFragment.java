@@ -20,6 +20,7 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivi
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
@@ -205,6 +206,13 @@ public class AcceptRejectPropertyFragment  extends DialogFragment implements iIC
             this.dismiss();
 
         }
+        if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+            InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity)cAppExtension.activity;
+            inventoryLinePropertyInputActivity.amountHandledBln = true;
+            inventoryLinePropertyInputActivity.pResetTab(false);
+            this.dismiss();
+
+        }
     }
 
     private void mReject() {
@@ -227,6 +235,13 @@ public class AcceptRejectPropertyFragment  extends DialogFragment implements iIC
             IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity)cAppExtension.activity;
             intakeOrderLinePropertyInputActivity.amountHandledBln = false;
             intakeOrderLinePropertyInputActivity.pResetTab(true);
+            this.dismiss();
+
+        }
+        if (cAppExtension.activity instanceof  InventoryLinePropertyInputActivity) {
+            InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity)cAppExtension.activity;
+            inventoryLinePropertyInputActivity.amountHandledBln = false;
+            inventoryLinePropertyInputActivity.pResetTab(true);
             this.dismiss();
 
         }

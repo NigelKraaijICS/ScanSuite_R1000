@@ -2713,6 +2713,9 @@ public class cPickorder{
         cLineProperty.allLinePropertysObl = null;
         cLineProperty.pTruncateTableBln();
 
+        cLinePropertyValue.allLinePropertysValuesObl = null;
+        cLinePropertyValue.pTruncateTableBln();
+
         cWebresult WebResult;
         WebResult =  this.getPickorderViewModel().pGetLinePropertysViaWebserviceWrs();
         if (WebResult.getResultBln() && WebResult.getSuccessBln()){
@@ -2731,9 +2734,6 @@ public class cPickorder{
     }
 
     private boolean mGetLinePropertyValuesViaWebserviceBln() {
-
-        cLinePropertyValue.allLinePropertysValuesObl = null;
-        cLinePropertyValue.pTruncateTableBln();
 
         cWebresult WebResult;
         WebResult =  this.getPickorderViewModel().pGetLinePropertyValuesViaWebserviceWrs();

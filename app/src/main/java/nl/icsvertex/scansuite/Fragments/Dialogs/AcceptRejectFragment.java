@@ -21,6 +21,7 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivi
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
@@ -271,6 +272,14 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             return;
         }
 
+        if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+            InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity)cAppExtension.activity;
+            inventoryLinePropertyInputActivity.amountHandledBln = true;
+            inventoryLinePropertyInputActivity.pHandled();
+            this.dismiss();
+            return;
+        }
+
         if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
             IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity)cAppExtension.activity;
             intakeOrderLinePropertyInputActivity.pSendScansBln();
@@ -470,6 +479,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {
             InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
             inventoryorderBinsActivity.pAcceptRejectDialogDismissed();
+            return;
+        }
+
+        if (cAppExtension.activity instanceof  InventoryLinePropertyInputActivity) {
+            InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity)cAppExtension.activity;
+            inventoryLinePropertyInputActivity.pCancel();
+            this.dismiss();
             return;
         }
 

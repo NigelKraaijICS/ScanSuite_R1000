@@ -17,6 +17,7 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -270,6 +271,34 @@ public class cInventoryorderLineRepository {
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
                 SoapObject propertiesHandledObl = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED);
+
+                //Only loop through handled properties, of there are any
+                if (cInventoryorderLine.currentInventoryOrderLine.linePropertyValuesObl() != null) {
+
+                    int countForPropertyInt = 0;
+                    int countForValueInt;
+                    String propertyCodeStr = "";
+
+                    for (cLinePropertyValue linePropertyValue: cInventoryorderLine.currentInventoryOrderLine.linePropertyValuesObl()) {
+
+                        countForValueInt = 1;
+
+                        if (!propertyCodeStr.equalsIgnoreCase(linePropertyValue.getPropertyCodeStr())) {
+                            propertyCodeStr = linePropertyValue.getPropertyCodeStr();
+                            countForPropertyInt = 1;
+                        }
+
+                        while (countForValueInt <= linePropertyValue.getQuantityDbl()) {
+                            SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_PROPERTYHANDLED_COMPLEX);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE, linePropertyValue.getPropertyCodeStr());
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED, countForPropertyInt);
+                            soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED, linePropertyValue.getValueStr());
+                            propertiesHandledObl.addSoapObject(soapObject);
+                            countForValueInt++;
+                            countForPropertyInt++;
+                        }
+                    }
+                }
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_PROPERTIESHANDLED;
                 l_PropertyInfo8Pin.setValue(propertiesHandledObl);

@@ -26,11 +26,13 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
+import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
 import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.R;
@@ -211,6 +213,9 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         availableDbl = cPickorderLine.currentPickOrderLine.getQuantityDbl();
                     }
+                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity){
+                        availableDbl = cInventoryorderLine.currentInventoryOrderLine.getQuantityDbl();
+                    }
 
                     ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(linePropertyValue.getPropertyCodeStr());
 
@@ -232,6 +237,13 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
 
                         intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
                         intakeOrderLinePropertyInputActivity.pRefreshActivity();
+                    }
+
+                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                        InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+
+                        inventoryLinePropertyInputActivity.pTryToChangeQuantity();
+                        inventoryLinePropertyInputActivity.pRefreshActivity();
                     }
 
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
@@ -298,6 +310,12 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
                         intakeOrderLinePropertyInputActivity.pRefreshActivity();
                     }
+                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                        InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+
+                        inventoryLinePropertyInputActivity.pTryToChangeQuantity();
+                        inventoryLinePropertyInputActivity.pRefreshActivity();
+                    }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
 
@@ -339,6 +357,16 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
                         intakeOrderLinePropertyInputActivity.pRefreshActivity();
                     }
+                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                        InventoryLinePropertyInputActivity  inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+
+                        if (newQuantity == 0) {
+                            inventoryLinePropertyInputActivity.pDeleteValueFromRecyler();
+                        }
+
+                        inventoryLinePropertyInputActivity.pTryToChangeQuantity();
+                        inventoryLinePropertyInputActivity.pRefreshActivity();
+                    }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         if (newQuantity == 0) {
@@ -375,6 +403,14 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         intakeOrderLinePropertyInputActivity.pDeleteValueFromRecyler();
                         intakeOrderLinePropertyInputActivity.pRefreshActivity();
                     }
+                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                        InventoryLinePropertyInputActivity  inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+
+                        cLinePropertyValue.currentLinePropertyValue.quantityDbl --;
+                        inventoryLinePropertyInputActivity.pTryToChangeQuantity();
+                        inventoryLinePropertyInputActivity.pDeleteValueFromRecyler();
+                        inventoryLinePropertyInputActivity.pRefreshActivity();
+                    }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         while (countDbl > 0) {
@@ -406,6 +442,10 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
                         intakeOrderLinePropertyInputActivity.pShowNumericInputFragment();
                     }
+                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                        InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+                        inventoryLinePropertyInputActivity.pShowNumericInputFragment();
+                    }
                     if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                         PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                         pickorderLineItemPropertyInputActvity.pShowNumericInputFragment();
@@ -435,6 +475,10 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                             PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                             pickorderLineItemPropertyInputActvity.pShowTextInputFragment();
                         }
+                        if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity){
+                            InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+                            inventoryLinePropertyInputActivity.pShowTextInputFragment();
+                        }
                     }
                     if(propertyValueStr.equals("DATE")){
                         if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
@@ -448,6 +492,10 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                             PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
                             pickorderLineItemPropertyInputActvity.pShowDatePickerDialog();
+                        }
+                        if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity){
+                            InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+                            inventoryLinePropertyInputActivity.pShowDatePickerDialog();
                         }
                     }
                 }

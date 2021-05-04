@@ -68,8 +68,6 @@ public class cLinePropertyValue implements Comparable{
     public static cLinePropertyValue currentLinePropertyValue;
     public static ArrayList<cLinePropertyValue> allLinePropertysValuesObl;
 
-    public static ArrayList<cLinePropertyValue> allowedPropertyValuesObl;
-
     private cLinePropertyValueViewModel getLinePropertyValueViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cLinePropertyValueViewModel.class);
     }
@@ -108,16 +106,11 @@ public class cLinePropertyValue implements Comparable{
         if (cLinePropertyValue.allLinePropertysValuesObl == null) {
             cLinePropertyValue.allLinePropertysValuesObl = new ArrayList<>();
         }
-        if (cLinePropertyValue.allowedPropertyValuesObl == null) {
-            cLinePropertyValue.allowedPropertyValuesObl = new ArrayList<>();
-        }
-
         for (cLinePropertyValue linePropertyValue : cLinePropertyValue.allLinePropertysValuesObl){
-            if (linePropertyValue.getLineNoInt() == this.getLineNoInt() && linePropertyValue.getPropertyCodeStr().equalsIgnoreCase(this.getPropertyCodeStr())){
+            if (linePropertyValue.getLineNoInt() == this.getLineNoInt() && linePropertyValue.getPropertyCodeStr().equalsIgnoreCase(this.getPropertyCodeStr()) && linePropertyValue.getValueStr().equalsIgnoreCase(this.getValueStr())){
                 return true;
             }
         }
-
         cLinePropertyValue.allLinePropertysValuesObl.add(this);
         return true;
     }
@@ -133,7 +126,8 @@ public class cLinePropertyValue implements Comparable{
 
         cLinePropertyValueViewModel linePropertyValueViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cLinePropertyValueViewModel.class);
         linePropertyValueViewModel.deleteAll();
-        cLinePropertyValue.allowedPropertyValuesObl = null;
+        cLinePropertyValue.allLinePropertysValuesObl = null;
+
         return true;
     }
 

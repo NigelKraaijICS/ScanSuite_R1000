@@ -23,6 +23,7 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderIntakeGeneratedActivi
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
+import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
@@ -283,6 +284,12 @@ public class cBarcodeScan {
                     if (cAppExtension.activity instanceof InventoryArticleActivity) {
                         InventoryArticleActivity inventoryArticleDetailActivity = (InventoryArticleActivity)cAppExtension.activity;
                         inventoryArticleDetailActivity.pHandleScan(barcodeScan);
+                        return;
+                    }
+
+                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                        InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity)cAppExtension.activity;
+                        inventoryLinePropertyInputActivity.pHandleScan(barcodeScan);
                         return;
                     }
 
