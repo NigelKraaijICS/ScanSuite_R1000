@@ -2,6 +2,8 @@ package ICS.Utils;
 
 import android.content.SharedPreferences;
 
+import androidx.preference.PreferenceManager;
+
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -11,27 +13,27 @@ import static android.content.Context.MODE_PRIVATE;
 public class cSharedPreferences {
 
     public static Boolean userFilterBln(){
-       return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key), false);
+       return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key), false);
     }
 
     public static Boolean showProcessedWaitBln(){
-        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_processing_key), false);
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_processing_key), false);
     }
 
     public static Boolean showSingleArticlesBln(){
-        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_singlearticles_key), false);
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_singlearticles_key), false);
     }
 
     public static Boolean showAssignedToMeBln(){
-        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_my_orders_key), false);
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_my_orders_key), false);
     }
 
     public static Boolean showAssignedToOthersBln(){
-        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_their_orders_key), false);
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_their_orders_key), false);
     }
 
     public static Boolean showNotAssignedBln(){
-        return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_nobodys_orders_key), false);
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_nobodys_orders_key), false);
     }
 
     public static String getSerialNumerStr(){
@@ -79,6 +81,11 @@ public class cSharedPreferences {
         SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
         editor.putString(pvKeyStr, pvValueStr);
         editor.apply();
+    }
+
+    private static Boolean mGetDefaultSharedPreferenceBoolean(String pvKeyStr, Boolean pvDefaultValueBln) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
+        return sharedPreferences.getBoolean(pvKeyStr, pvDefaultValueBln);
     }
 
 

@@ -198,6 +198,9 @@ public class BranchFragment extends DialogFragment implements iICSDefaultFragmen
         //Stopping Shimmer Effect's animation after data is loaded
         this.shimmerViewContainer.stopShimmerAnimation();
         this.shimmerViewContainer.setVisibility(View.GONE);
+
+
+
     }
 
     private void mSetCloseListener() {
