@@ -82,6 +82,7 @@ public class InventoryLinePropertyInputActivity extends AppCompatActivity implem
                 if (!hulpObl.contains(linePropertyValue.getLineProperty())){
                     hulpObl.add(linePropertyValue.getLineProperty());
                 }
+
             }
         }
 
