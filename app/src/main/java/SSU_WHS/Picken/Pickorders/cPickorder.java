@@ -1808,7 +1808,7 @@ public class cPickorder{
 
     }
 
-    public cResult pPickGeneratedFaseHandledViaWebserviceRst(String pvShipBinStr) {
+    public cResult pPickGeneratedFaseHandledViaWebserviceRst() {
 
         cResult result;
         result = new cResult();
@@ -1819,7 +1819,7 @@ public class cPickorder{
         cWebresult webresult;
 
 
-        webresult =  this.getPickorderViewModel().pPickingGeneratedHandledViaWebserviceWrs(pvShipBinStr);
+        webresult =  this.getPickorderViewModel().pPickingGeneratedHandledViaWebserviceWrs();
 
 
         //No result, so something really went wrong

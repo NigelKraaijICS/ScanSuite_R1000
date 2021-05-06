@@ -517,22 +517,18 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         cPickorder.totalPicksInt  = cPickorder.allPickordersObl.size();
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-
-                if (PickorderSelectActivity.currentModusEnu == ModusEnu.NORMAL) {
-                    cPickorder.allPickordersObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
-                }
-
-                if (PickorderSelectActivity.currentModusEnu == ModusEnu.COMBINE) {
-                    cPickorder.allPickordersObl = cPickorder.pickordersToSelectObl();
-                }
-
-                mRefreshRecycler();
-
+            if (PickorderSelectActivity.currentModusEnu == ModusEnu.NORMAL) {
+                cPickorder.allPickordersObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
             }
+
+            if (PickorderSelectActivity.currentModusEnu == ModusEnu.COMBINE) {
+                cPickorder.allPickordersObl = cPickorder.pickordersToSelectObl();
+            }
+
+            mRefreshRecycler();
+
         });
     }
 

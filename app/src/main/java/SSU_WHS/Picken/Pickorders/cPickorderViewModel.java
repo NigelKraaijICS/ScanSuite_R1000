@@ -34,7 +34,7 @@ public class cPickorderViewModel extends AndroidViewModel {
     public List<cPickorderEntity> pGetPickordersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.Repository.pGetPickordersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 
     public cWebresult pPickingHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pPickHandledViaWebserviceBln(pvWorkplaceStr);}
-    public cWebresult pPickingGeneratedHandledViaWebserviceWrs(String pvShipBinStr) { return this.Repository.pPickGeneratedHandledViaWebserviceBln(pvShipBinStr);}
+    public cWebresult pPickingGeneratedHandledViaWebserviceWrs() { return this.Repository.pPickGeneratedHandledViaWebserviceBln();}
     public cWebresult pStoreHandledViaWebserviceWrs() { return this.Repository.pStoreHandledViaWebserviceBln();}
     public cWebresult pSortHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pSortHandledViaWebserviceBln(pvWorkplaceStr);}
     public cWebresult pQCHandledViaWebserviceWrs(String pvWorkplaceStr) { return this.Repository.pQCHandledViaWebserviceBln(pvWorkplaceStr);}

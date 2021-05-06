@@ -204,18 +204,21 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
             quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
             pvHolder.textViewBIN.setText(currentPickorderLine.getProcessingSequenceStr());
             pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
             quantityToShowStr  = currentPickorderLine.getQuantityHandledDbl().intValue() + "/" + currentPickorderLine.getQuantityDbl().intValue();
             pvHolder.textViewBIN.setText(currentPickorderLine.getProcessingSequenceStr());
             pvHolder.textViewBIN.setVisibility(View.VISIBLE);
+            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
         }
 
         if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
             quantityToShowStr  = cText.pIntToStringStr( currentPickorderLine.getQuantityDbl().intValue());
             pvHolder.textViewBIN.setText("");
             pvHolder.textViewBIN.setVisibility(View.GONE);
+            pvHolder.imageSendStatus.setVisibility(View.INVISIBLE);
         }
 
         if (currentPickorderLine.getBinCodeStr().isEmpty()) {
@@ -227,67 +230,63 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         pvHolder.textViewSourceNo.setText(currentPickorderLine.getSourceNoStr());
 
         //Start On Click Listener
-        pvHolder.pickorderLineItemFrameLayout.setOnClickListener(new View.OnClickListener() {
+        pvHolder.pickorderLineItemFrameLayout.setOnClickListener(pvView -> {
 
-            @Override
-            public void onClick(View pvView) {
+            //deselect all
+            for (FrameLayout frameLayout : pickorderLineItemLinearLayouts) {
+                frameLayout.setSelected(false);
+            }
 
-                //deselect all
-                for (FrameLayout frameLayout : pickorderLineItemLinearLayouts) {
-                    frameLayout.setSelected(false);
+            //select current
+            pvView.setSelected(true);
+
+            //Kick off correct event at correct activity
+            if (cAppExtension.context instanceof PickorderLinesActivity) {
+
+                PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+
+                if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
+                    pickorderLinesActivity.pPicklineSelected(currentPickorderLine);
                 }
 
-                //select current
-                pvView.setSelected(true);
+                if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
+                    pickorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
+                }
+            }
 
-                //Kick off correct event at correct activity
-                if (cAppExtension.context instanceof PickorderLinesActivity) {
+            if (cAppExtension.context instanceof PickorderLinesGeneratedActivity) {
 
-                    PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
+                PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
 
-                    if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesTopick) {
-                        pickorderLinesActivity.pPicklineSelected(currentPickorderLine);
+                pickorderLinesGeneratedActivity.pPicklineToResetSelected(currentPickorderLine);
+
+            }
+
+
+            if (cAppExtension.context  instanceof SortorderLinesActivity) {
+
+                SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
+
+                if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
+                    sortorderLinesActivity.pPicklineSelected(currentPickorderLine);
+
+                    if (SortorderLinesActivity.currentLineFragment instanceof SortorderLinesToSortFragment) {
+                        SortorderLinesToSortFragment sortorderLinesToSortFragment = (SortorderLinesToSortFragment) SortorderLinesActivity.currentLineFragment;
+                        sortorderLinesToSortFragment.pShowHideDetailButton();
                     }
 
-                    if (thisRecyclerView.getId() == R.id.recyclerViewPickorderLinesPicked) {
-                        pickorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
-                    }
+                }
+                if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
+                    sortorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
+                    return;
                 }
 
-                if (cAppExtension.context instanceof PickorderLinesGeneratedActivity) {
-
-                    PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
-
-                    pickorderLinesGeneratedActivity.pPicklineToResetSelected(currentPickorderLine);
-
-                }
-
-
-                if (cAppExtension.context  instanceof SortorderLinesActivity) {
-
-                    SortorderLinesActivity sortorderLinesActivity = (SortorderLinesActivity)cAppExtension.activity;
-
-                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTosort) {
-                        sortorderLinesActivity.pPicklineSelected(currentPickorderLine);
-
-                        if (SortorderLinesActivity.currentLineFragment instanceof SortorderLinesToSortFragment) {
-                            SortorderLinesToSortFragment sortorderLinesToSortFragment = (SortorderLinesToSortFragment) SortorderLinesActivity.currentLineFragment;
-                            sortorderLinesToSortFragment.pShowHideDetailButton();
-                        }
-
-                    }
-                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesSorted) {
-                        sortorderLinesActivity.pPicklineToResetSelected(currentPickorderLine);
-                        return;
-                    }
-
-                    if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
-                        pvHolder.textViewBIN.setVisibility(View.GONE);
-                    }
-
+                if (thisRecyclerView.getId() == R.id.recyclerViewSortorderLinesTotal) {
+                    pvHolder.textViewBIN.setVisibility(View.GONE);
                 }
 
             }
+
         });
         //End On Click Listener
 

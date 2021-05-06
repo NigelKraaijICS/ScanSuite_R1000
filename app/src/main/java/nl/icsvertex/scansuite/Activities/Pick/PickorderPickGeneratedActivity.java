@@ -51,8 +51,6 @@ import SSU_WHS.Basics.Branches.cBranch;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
-import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
@@ -60,7 +58,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
@@ -192,6 +189,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     }
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -337,20 +335,22 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     @Override
     public void mFieldsInitialize() {
 
-        this.pickCounterPlusHelperInt = 0;
-        this.pickCounterMinusHelperInt = 0;
+        cAppExtension.activity.runOnUiThread(() -> {
 
+            this.pickCounterPlusHelperInt = 0;
+            this.pickCounterMinusHelperInt = 0;
+            this.mShowArticleImage();
+            this.mShowOrHideArticleInfoContainer();
 
-        this.mShowArticleImage();
-        this.mShowOrHideArticleInfoContainer();
+            this.mShowArticleInfo();
+            this.mShowBarcodeInfo();
+            this.mShowNoInputPropertyInfo();
+            this.mFillDestinationSpinner();
+            this.mShowQuantityInfo();
+            this.mEnablePlusMinusAndBarcodeSelectViews();
+            this.mSetInstructions();
+        });
 
-        this.mShowArticleInfo();
-        this.mShowBarcodeInfo();
-        this.mShowNoInputPropertyInfo();
-        this.mFillDestinationSpinner();
-        this.mShowQuantityInfo();
-        this.mEnablePlusMinusAndBarcodeSelectViews();
-        this.mSetInstructions();
     }
 
     @Override
@@ -384,6 +384,14 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
+        // Show that we are getting data
+        cUserInterface.pShowGettingData();
+
+        new Thread(() -> mHandleScan(pvBarcodeScan)).start();
+
+    }
+
+    private void mHandleScan(cBarcodeScan pvBarcodeScan){
         //If we scan a branch reset current branch
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.LOCATION)) {
             cResult hulpRst = this.mHandleDestinationScanRst(pvBarcodeScan);
@@ -402,7 +410,6 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
             this.mSetInstructions();
             this.mFieldsInitialize();
         }
-
     }
 
     public  void pAcceptPick(boolean ignoreAccept) {
@@ -432,34 +439,25 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
 
     private void mSetArticleImageListener() {
-        this.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowFullArticleFragment();
-
-            }
-        });
+        this.articleThumbImageView.setOnClickListener(view -> mShowFullArticleFragment());
     }
 
     private void mSetImageButtonBarcodeListener() {
-        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.imageButtonBarcode.setOnClickListener(pvView -> {
 
-                if (cPickorder.currentPickOrder.currentArticle.barcodesObl == null || cPickorder.currentPickOrder.currentArticle.barcodesObl.size() == 0) {
-                    return;
-                }
-
-                mEnablePlusMinusAndBarcodeSelectViews();
-
-                //If we only have one barcodeStr, then automatticaly select that barcodeStr
-                if (cPickorder.currentPickOrder.currentArticle.barcodesObl.size() == 1) {
-                    pHandleScan(cBarcodeScan.pFakeScan(cPickorder.currentPickOrder.currentArticle.barcodesObl.get(0).getBarcodeStr()));
-                    return;
-                }
-
-                mShowBarcodeSelectFragment();
+            if (cPickorder.currentPickOrder.currentArticle.barcodesObl == null || cPickorder.currentPickOrder.currentArticle.barcodesObl.size() == 0) {
+                return;
             }
+
+            mEnablePlusMinusAndBarcodeSelectViews();
+
+            //If we only have one barcodeStr, then automatticaly select that barcodeStr
+            if (cPickorder.currentPickOrder.currentArticle.barcodesObl.size() == 1) {
+                pHandleScan(cBarcodeScan.pFakeScan(cPickorder.currentPickOrder.currentArticle.barcodesObl.get(0).getBarcodeStr()));
+                return;
+            }
+
+            mShowBarcodeSelectFragment();
         });
     }
 
@@ -487,43 +485,15 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     }
 
     private  void mShowOrHideArticleInfoContainer() {
+        this.articleInfoContainer.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        newCardViewLayoutParams.setMargins(15,15,15,15);
+        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
 
-        boolean hideArticleInfoContainerBln = false;
-
-        if (cPickorder.currentPickOrder.currentArticle == null) {
-            hideArticleInfoContainerBln =true;
-        }
-        else
-        {
-            //Get article info via the web service
-            cArticle.currentArticle  = new cArticle(cPickorder.currentPickOrder.currentArticle.getItemNoStr(), cPickorder.currentPickOrder.currentArticle.getVariantCodeStr());
-                hideArticleInfoContainerBln =true;
-
-                //todo: something with itempropertys
-//            if ( cPickorderLine.currentPickOrderLine.itemProperyDataObl() == null) {
-//                hideArticleInfoContainerBln =true;
-//            }
-        }
-
-        if (hideArticleInfoContainerBln) {
-            this.articleInfoContainer.setVisibility(View.GONE);
-            ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            newCardViewLayoutParams.setMargins(15,15,15,15);
-            this.articleContainer.setLayoutParams(newCardViewLayoutParams);
-
-            ConstraintSet constraintSetSpace = new ConstraintSet();
-            constraintSetSpace.clone(pickorderPickGeneratedContainer);
-            constraintSetSpace.connect(articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
-            constraintSetSpace.applyTo(pickorderPickGeneratedContainer);
-            return;
-        }
-
-        this.articleInfoContainer.setVisibility(View.VISIBLE);
-
-        //todo: something with itempropertys
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.articleInfoContainer, new ArticleInfoFragment(cPickorderLine.currentPickOrderLine.itemProperyDataObl()));
-//        transaction.commit();
+        ConstraintSet constraintSetSpace = new ConstraintSet();
+        constraintSetSpace.clone(pickorderPickGeneratedContainer);
+        constraintSetSpace.connect(articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
+        constraintSetSpace.applyTo(pickorderPickGeneratedContainer);
     }
 
     private  void mShowArticleInfo() {
@@ -732,106 +702,77 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     //Listeners
     private void mSetDoneListener() {
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mHandlePickDoneClick();
-            }
-        });
+        this.imageButtonDone.setOnClickListener(view -> mHandlePickDoneClick());
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetPlusListener() {
 
-        this.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
+        this.imageButtonPlus.setOnTouchListener((v, event) -> {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (plusHandler != null) return true;
-                    plusHandler = new Handler();
-                    plusHandler.postDelayed(mPlusAction, 750);
-                }
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (plusHandler == null) return true;
-                    plusHandler.removeCallbacks(mPlusAction);
-                    plusHandler = null;
-                    pickCounterPlusHelperInt = 0;
-                }
-
-                return false;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (plusHandler != null) return true;
+                plusHandler = new Handler();
+                plusHandler.postDelayed(mPlusAction, 750);
             }
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (plusHandler == null) return true;
+                plusHandler.removeCallbacks(mPlusAction);
+                plusHandler = null;
+                pickCounterPlusHelperInt = 0;
+            }
+
+            return false;
         });
 
-        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonPlus.setOnClickListener(view -> {
 
-                //There is no selected barcodeStr, select one first
-                if (cPickorderBarcode.currentPickorderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-
-                mTryToChangeQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cPickorderBarcode.currentPickorderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+
+            mTryToChangeQuantity(true, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
-        this.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (minusHandler != null) return true;
-                    minusHandler = new Handler();
-                    minusHandler.postDelayed(mMinusAction, 750);
-                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (minusHandler == null) return true;
-                    minusHandler.removeCallbacks(mMinusAction);
-                    minusHandler = null;
-                    pickCounterMinusHelperInt = 0;
-                }
-                return false;
+        this.imageButtonMinus.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (minusHandler != null) return true;
+                minusHandler = new Handler();
+                minusHandler.postDelayed(mMinusAction, 750);
             }
-
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (minusHandler == null) return true;
+                minusHandler.removeCallbacks(mMinusAction);
+                minusHandler = null;
+                pickCounterMinusHelperInt = 0;
+            }
+            return false;
         });
 
-        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonMinus.setOnClickListener(view -> {
 
 
-                //There is no selected barcodeStr, select one first
-                if (cPickorderBarcode.currentPickorderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-
-
-                mTryToChangeQuantity(false, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cPickorderBarcode.currentPickorderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+
+
+            mTryToChangeQuantity(false, false, cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     private void mSetNumberListener() {
-        this.quantityText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mNumberClicked();
-            }
-        });
-        quantityRequiredText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mNumberClicked();
-            }
-        });
+        this.quantityText.setOnClickListener(view -> mNumberClicked());
+        quantityRequiredText.setOnClickListener(view -> mNumberClicked());
     }
 
     //Dialogs and Activitys
@@ -855,12 +796,9 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
                 cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line),ignoreAccept);
         acceptRejectFragment.setCancelable(true);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
@@ -892,31 +830,34 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     private void mFillDestinationSpinner() {
 
-        List<String> destinationObl = new ArrayList<>();
+        cAppExtension.activity.runOnUiThread(() -> {
+            List<String> destinationObl = new ArrayList<>();
 
-        destinationObl.add(cAppExtension.activity.getString(R.string.message_select_a_destination));
+            destinationObl.add(cAppExtension.activity.getString(R.string.message_select_a_destination));
 
-        for (cBranch branch :cBranch.allBranchesObl ) {
+            for (cBranch branch :cBranch.allBranchesObl ) {
 
-            if (branch.getBranchStr().equalsIgnoreCase(cUser.currentUser.currentBranch.getBranchStr())) {
-                continue;
+                if (branch.getBranchStr().equalsIgnoreCase(cUser.currentUser.currentBranch.getBranchStr())) {
+                    continue;
+                }
+
+                destinationObl.add(branch.getBranchNameStr());
             }
 
-            destinationObl.add(branch.getBranchNameStr());
-        }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(cAppExtension.context,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    destinationObl);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(cAppExtension.context,
-                                                          android.R.layout.simple_spinner_dropdown_item,
-                                                          destinationObl);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            this.destinationSpinner.setAdapter(adapter);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.destinationSpinner.setAdapter(adapter);
+            if (this.scannedBranch == null) {
+                return;
+            }
 
-        if (this.scannedBranch == null) {
-            return;
-        }
+            this.destinationSpinner.setSelection(adapter.getPosition(this.scannedBranch.getBranchNameStr()));
+                });
 
-        this.destinationSpinner.setSelection(adapter.getPosition(this.scannedBranch.getBranchNameStr()));
     }
 
     private cResult mHandleArticleScanRst(cBarcodeScan pvBarcodeScan){
@@ -1020,35 +961,39 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         cResult result = new cResult();
         result.resultBln = true;
 
-        Double quantityAvailable;
+        double quantityAvailable;
+
+
 
         if ( cPickorder.currentPickOrder.currentBranchBin == null || cPickorder.currentPickOrder.currentArticle == null) {
-            this.quantityRequiredText.setVisibility(View.GONE);
+            cAppExtension.activity.runOnUiThread(() -> this.quantityRequiredText.setVisibility(View.GONE));
             return result;
         }
 
         //Show required quantity
-        this.quantityRequiredText.setVisibility(View.VISIBLE);
+        cAppExtension.activity.runOnUiThread(() -> this.quantityRequiredText.setVisibility(View.VISIBLE));
 
         //We alrady have this articlestock, so don't need to get it another time
         if ( this.articleStock != null) {
             quantityAvailable = cPickorder.currentPickOrder.pGetQuantityToPick(this.articleStock);
 
             if (quantityAvailable == 0) {
-                this.quantityRequiredText.setVisibility(View.GONE);
+                cAppExtension.activity.runOnUiThread(() -> this.quantityRequiredText.setVisibility(View.GONE));
                 result.resultBln = false;
                 result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
                 return result;
             }
 
-            this.quantityRequiredText.setText( cText.pDoubleToStringStr(quantityAvailable));
+            cAppExtension.activity.runOnUiThread(() -> this.quantityRequiredText.setText( cText.pDoubleToStringStr(quantityAvailable)));
             return  result;
         }
 
         cUserInterface.pShowGettingData();
         this.articleStock = cPickorder.currentPickOrder.currentArticle.pGetStockForBINViaWebservice(cPickorder.currentPickOrder.currentBranchBin.getBinCodeStr());
         if (articleStock == null) {
-            this.quantityRequiredText.setVisibility(View.GONE);
+
+            cAppExtension.activity.runOnUiThread(() -> this.quantityRequiredText.setVisibility(View.GONE));
+
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
             return result;
@@ -1056,13 +1001,14 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         quantityAvailable = cPickorder.currentPickOrder.pGetQuantityToPick(this.articleStock);
         if (quantityAvailable == 0) {
-            this.quantityRequiredText.setVisibility(View.GONE);
+
+            cAppExtension.activity.runOnUiThread(() -> this.quantityRequiredText.setVisibility(View.GONE));
+
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_no_stock_available));
             return result;
         }
-
-        this.quantityRequiredText.setText( cText.pDoubleToStringStr(quantityAvailable));
+        cAppExtension.activity.runOnUiThread(() -> this.quantityRequiredText.setText( cText.pDoubleToStringStr(quantityAvailable)));
 
         cUserInterface.pHideGettingData();
         return  result;
@@ -1288,7 +1234,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
                 //Update activity and Check if this line is done
                 this.quantityScannedDbl = newQuantityDbl;
-                this.quantityText.setText(cText.pDoubleToStringStr(this.quantityScannedDbl));
+                cAppExtension.activity.runOnUiThread(() -> this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl)));
                 this.mFieldsInitialize();
                 return;
 
@@ -1305,7 +1251,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
             //Set the new quantityDbl and show in Activity
             this.quantityScannedDbl = newQuantityDbl;
-            this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl));
+
+            cAppExtension.activity.runOnUiThread(() -> this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl)));
 
             //Add a barcodeStr to the scanned barcodeStr list, so you can use it later when line is determined
             this.scannedBarcodesObl.add(cPickorderBarcode.currentPickorderBarcode);
@@ -1351,7 +1298,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
             //Set the new quantityDbl and show in Activity
             this.quantityScannedDbl = newQuantityDbl;
-            this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl));
+            cAppExtension.activity.runOnUiThread(() -> this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl)));
             return;
 
 
@@ -1368,8 +1315,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
             this.quantityScannedDbl = newQuantityDbl;
         }
 
-        this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl));
-        this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+        cAppExtension.activity.runOnUiThread(() -> this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl)));
+        cAppExtension.activity.runOnUiThread(() -> this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp));
     }
 
     private cResult mAddERPArticleRst (cBarcodeScan pvBarcodeScan){
@@ -1386,6 +1333,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
             cUserInterface.pHideGettingData();
             return result;
         }
+
         //Refresh the activity
         this.mFieldsInitialize();
         cUserInterface.pHideGettingData();

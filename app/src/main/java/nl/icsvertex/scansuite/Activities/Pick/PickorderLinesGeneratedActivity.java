@@ -26,11 +26,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -42,21 +37,21 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineAdapter;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineRecyclerItemTouchHelper;
 import SSU_WHS.Picken.Pickorders.cPickorder;
-import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLineRecyclerItemTouchHelper;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Sort.SortorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.BinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
@@ -64,7 +59,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.R;
@@ -280,6 +274,10 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         this.mShowComments();
 
+        if (cBranchBin.currentBranchBin == null) {
+            mDecideBranchBin();
+        }
+
     }
 
     @Override
@@ -348,6 +346,12 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
+
+    public  void pCurrentBranchBinSet(){
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
+        cUserInterface.pEnableScanner();
+
+    }
 
     public  void pPicklineToResetSelected(cPickorderLine pvPickorderLine) {
         cPickorderLine.currentPickOrderLine = pvPickorderLine;
@@ -503,11 +507,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandlePickFaseHandledAndDecideNextStep(pvWorkplaceStr);
-            }
-        }).start();
+        new Thread(() -> mHandlePickFaseHandledAndDecideNextStep(pvWorkplaceStr)).start();
 
     }
 
@@ -537,13 +537,10 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleFillLines();
-            }
-        }).start();
+        new Thread(() -> mHandleFillLines()).start();
 
     }
+
 
     //End Region Public Methods
 
@@ -635,24 +632,28 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
     //Region Private Methods
 
+    private void mDecideBranchBin() {
+
+        if (!cUser.currentUser.currentBranch.pGetShipBinsViaWebserviceBln()) {
+            return;
+        }
+
+        if (cUser.currentUser.currentBranch.shipBinsObl != null&& cUser.currentUser.currentBranch.shipBinsObl.size() == 1) {
+            cBranchBin.currentBranchBin = cUser.currentUser.currentBranch.shipBinsObl.get(0);
+            return;
+        }
+
+        this.mShowBINFragment();
+
+    }
+
     private  boolean mPickFaseHandledBln(){
 
         cResult hulpResult;
         hulpResult = new cResult();
         hulpResult.resultBln = false;
 
-        if (!cUser.currentUser.currentBranch.pGetShipBinsViaWebserviceBln()) {
-            return false;
-        }
-
-        String shipBinStr = "";
-
-        if (cUser.currentUser.currentBranch.shipBinsObl != null&& cUser.currentUser.currentBranch.shipBinsObl.size() > 0) {
-            shipBinStr = cUser.currentUser.currentBranch.shipBinsObl.get(0).getBinCodeStr();
-        }
-
-        hulpResult = cPickorder.currentPickOrder.pPickGeneratedFaseHandledViaWebserviceRst(shipBinStr);
-
+        hulpResult = cPickorder.currentPickOrder.pPickGeneratedFaseHandledViaWebserviceRst();
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {
             return true;
@@ -675,6 +676,8 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
             return  false;
         }
+
+
 
         return true;
 
@@ -712,29 +715,17 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
             return;
         }
 
-
         this.mStartOrderSelectActivity();
 
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackAndPickCommentObl(),"");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackAndPickCommentObl(),""));
     }
 
     private void mSetCloseOrderListener() {
 
-        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              pCloseOrder();
-
-            }
-        });
+        this.imageButtonCloseOrder.setOnClickListener(view -> pCloseOrder());
     }
 
     private   void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
@@ -772,6 +763,13 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         workplaceFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.WORKPLACEFRAGMENT_TAG);
     }
 
+    private  void mShowBINFragment() {
+
+        BinFragment binFragment = new BinFragment();
+        binFragment.setCancelable(false);
+        binFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINFRAGMENT_TAG);
+    }
+
     private  void mShowPickDoneFragment(Boolean pvShowCurrentLocationBln) {
 
         cUserInterface.pPlaySound(R.raw.goodsound, null);
@@ -781,91 +779,37 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
     }
 
-    private  void mShowSending() {
-        final SendingFragment sendingFragment = new SendingFragment();
-        sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
-        });
-    }
-
-    private void mShowNotSent() {
-        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.SENDING_TAG);
-        if (fragment != null) {
-            if (fragment instanceof SendingFragment) {
-                ((SendingFragment) fragment).pShowCrashAnimation("");
-            }
-        }
-    }
-
-    private  void mShowSent() {
-        Fragment fragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.SENDING_TAG);
-        if (fragment != null) {
-            if (fragment instanceof SendingFragment) {
-                ((SendingFragment) fragment).pShowFlyAwayAnimation();
-            }
-        }
-    }
-
-    private  void mStepFailed(String pvErrorMessageStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu,int pvWorkflowPickStepInt ){
+    private  void mStepFailed(String pvErrorMessageStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
-        cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(pvStepCodeEnu,pvWorkflowPickStepInt);
+        cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(pvStepCodeEnu, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
     private  void mAskSort() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
+        cAppExtension.activity.runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
 
-                builder.setMessage(cAppExtension.context.getString(R.string.question_open_sort));
-                builder.setTitle(cAppExtension.context.getString(R.string.question_open_sort_title));
-                builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mStartSortActivity();
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mStartOrderSelectActivity();
-                    }
-                });
-                builder.setIcon(R.drawable.ic_menu_sort);
-                builder.show();
-            }
+            builder.setMessage(cAppExtension.context.getString(R.string.question_open_sort));
+            builder.setTitle(cAppExtension.context.getString(R.string.question_open_sort_title));
+            builder.setPositiveButton(R.string.open, (dialog, id) -> mStartSortActivity());
+            builder.setNegativeButton(R.string.no, (dialogInterface, i) -> mStartOrderSelectActivity());
+            builder.setIcon(R.drawable.ic_menu_sort);
+            builder.show();
         });
     }
 
     private  void mAskShip() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
+        cAppExtension.activity.runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
 
-                builder.setMessage(cAppExtension.context.getString(R.string.question_open_ship));
-                builder.setTitle(cAppExtension.context.getString(R.string.question_open_ship_title));
-                builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mStartShipActivity();
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mStartOrderSelectActivity();
-                    }
-                });
-                builder.setIcon(R.drawable.ic_menu_ship);
-                builder.show();
-            }
+            builder.setMessage(cAppExtension.context.getString(R.string.question_open_ship));
+            builder.setTitle(cAppExtension.context.getString(R.string.question_open_ship_title));
+            builder.setPositiveButton(R.string.open, (dialog, id) -> mStartShipActivity());
+            builder.setNegativeButton(R.string.no, (dialogInterface, i) -> mStartOrderSelectActivity());
+            builder.setIcon(R.drawable.ic_menu_ship);
+            builder.show();
         });
 
 
@@ -947,12 +891,10 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
     private  void mStartOrderSelectActivity() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
-                PickorderSelectActivity.startedViaMenuBln = false;
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
+            PickorderSelectActivity.startedViaMenuBln = false;
+            cAppExtension.activity.startActivity(intent);
         });
 
     }
@@ -961,11 +903,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStartSortActivity();
-            }
-        }).start();
+        new Thread(() -> mHandleStartSortActivity()).start();
 
     }
 
@@ -976,40 +914,31 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         //Try to lock the pickorder
         if (!cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Picking, cWarehouseorder.WorkflowPickStepEnu.PickSorting).resultBln) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_lock_order),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_lock_order),cWarehouseorder.StepCodeEnu.Pick_Picking);
             return;
         }
 
         //Get sort linesInt
         if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT)) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_getting_sort_lines_failed),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_getting_sort_lines_failed),cWarehouseorder.StepCodeEnu.Pick_Picking);
             return;
         }
 
         if (!cPickorder.currentPickOrder.pGetPropertyLineDataViaWebserviceBln()) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_get_property_line_data_failed),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_get_property_line_data_failed),cWarehouseorder.StepCodeEnu.Pick_Picking);
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                //Show Sort Activity
-                Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            //Show Sort Activity
+            Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
+            cAppExtension.activity.startActivity(intent);
         });
     }
 
     private  void mStartShipActivity() {
-
         cUserInterface.pShowGettingData();
-
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStartShipActivity();
-            }
-        }).start();
-
+        new Thread(() -> mHandleStartShipActivity()).start();
     }
 
     private  void mHandleStartShipActivity(){
@@ -1022,7 +951,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         hulpResult = cPickorder.currentPickOrder.pGetShipmentDetailsRst();
         if (!hulpResult.resultBln) {
-            this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip);
             return;
         }
 
@@ -1068,7 +997,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
-            this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip);
             return  false;
         }
 

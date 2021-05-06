@@ -812,4 +812,5 @@
     <string name="print_BIN">Print BIN</string>
     <string name="print_Article">Print Artikel</string>
     <string name="error_print_failed">Print label mislukt</string>
+    <string name="choose_bin">Kies BIN</string>
 </resources>

@@ -351,6 +351,7 @@
     <!--endregion orderdone-->
 
     <string name="choose_branch">Choose branch</string>
+    <string name="choose_bin">Choose BIN</string>
     <string name="no_orders">There are no orders</string>
     <string name="get_stock_failed">Getting stock failed</string>
     <string name="show_only_defects">Show only defects</string>

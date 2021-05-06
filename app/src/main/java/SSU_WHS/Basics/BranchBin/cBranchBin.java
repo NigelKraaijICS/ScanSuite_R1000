@@ -7,12 +7,12 @@ import SSU_WHS.Basics.Users.cUser;
 public class cBranchBin {
 
     //Region Public Properties
-    private String branchStr;
+    private final String branchStr;
     public String getBranchStr() {
         return branchStr;
     }
 
-    private String binCodeStr;
+    private final String binCodeStr;
     public String getBinCodeStr() {
         return binCodeStr;
     }
@@ -22,25 +22,25 @@ public class cBranchBin {
         return descriptionStr;
     }
 
-    private String zoneStr;
+    private final String zoneStr;
     public String getZoneStr() {
         return zoneStr;
     }
 
-    private String binTypeStr;
+    private final String binTypeStr;
     public String getBinTypeStr() { return binTypeStr; }
 
-    private Boolean useForStorageBln;
+    private final Boolean useForStorageBln;
     public Boolean isUseForStorageBln() {
         return useForStorageBln;
     }
 
-    private Boolean useForReturnSalesBln;
+    private final Boolean useForReturnSalesBln;
     public Boolean isUseForReturnSalesBln() {
         return useForReturnSalesBln;
     }
 
-    private cBranchBinEntity branchBinEntity;
+    private final cBranchBinEntity branchBinEntity;
 
     public static cBranchBin currentBranchBin;
     //end region Public Propties
@@ -64,6 +64,21 @@ public class cBranchBin {
         this.binTypeStr = "";
         this.useForStorageBln = false;
         this.useForReturnSalesBln =false;
+    }
+
+    public static cBranchBin pGetBranchBinByCode(String pvBinCodeStr){
+        if(cUser.currentUser == null || cUser.currentUser.currentBranch.shipBinsObl == null){
+            return null;
+        }
+
+        for (cBranchBin branchBin :  cUser.currentUser.currentBranch.shipBinsObl)
+        {
+            if(branchBin.getBinCodeStr().equalsIgnoreCase(pvBinCodeStr)){
+                return  branchBin;
+            }
+        }
+
+        return null;
     }
 
     //End Region Constructor

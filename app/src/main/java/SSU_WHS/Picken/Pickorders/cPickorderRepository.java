@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -352,12 +353,19 @@ public class cPickorderRepository {
         }
     }
 
-    public cWebresult pPickGeneratedHandledViaWebserviceBln(String pvShipBinStr) {
+    public cWebresult pPickGeneratedHandledViaWebserviceBln() {
 
         cWebresult webResult;
 
         PickorderStepHandledParams pickorderStepHandledParams;
-        pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), pvShipBinStr, cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
+
+        if (cBranchBin.currentBranchBin == null) {
+            pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), "", cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
+        }
+            else
+        {
+            pickorderStepHandledParams = new PickorderStepHandledParams(cUser.currentUser.getUsernameStr(), "", cUser.currentUser.currentBranch.getBranchStr(), cPickorder.currentPickOrder.getOrderNumberStr(), cDeviceInfo.getSerialnumberStr(), cBranchBin.currentBranchBin.getBinCodeStr(), cWarehouseorder.StepCodeEnu.Pick_Picking.toString(), cWarehouseorder.WorkflowPickStepEnu.PickPicking, "");
+        }
 
         try {
 

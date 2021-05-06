@@ -6,8 +6,8 @@ android {
         applicationId "nl.icsvertex.scansuite"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 15897
-        versionName "1.5.8.97A"
+        versionCode 15898
+        versionName "1.5.8.98A"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
