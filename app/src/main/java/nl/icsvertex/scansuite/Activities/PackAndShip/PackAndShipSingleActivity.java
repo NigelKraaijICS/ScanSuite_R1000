@@ -310,11 +310,7 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
         }
 
         mShowSending();
-        new Thread(new Runnable() {
-            public void run() {
-                mDocumentDone();
-            }
-        }).start();
+        new Thread(() -> mDocumentDone()).start();
     }
 
     public  void pHandleBackToLines(){

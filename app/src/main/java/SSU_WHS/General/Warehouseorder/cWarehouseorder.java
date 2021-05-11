@@ -218,7 +218,6 @@ public class cWarehouseorder {
         public final static int Generated = 99;
     }
 
-
     public static ActivityActionEnu  pGetActivityActionEnu (int pvActionInt) {
 
         ActivityActionEnu resultEnu = ActivityActionEnu.Unknown;
@@ -246,105 +245,215 @@ public class cWarehouseorder {
         return  resultEnu;
     }
 
-
-
-
     public static String pGetWorkflowDescriptionStr(String pvWorkflowCodeStr) {
-        String result = "";
+        String resultStr = "";
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.BC.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_bc);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_bc);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.BM.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_bm);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_bm);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.BP.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_bp);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_bp);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.EOM.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_eom);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_eom);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.EOOM.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_eoom);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_eoom);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.EOOS.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_eoos);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_eoos);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.EOR.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_eor);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_eor);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.EOS.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_eos);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_eos);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.ER.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_er);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_er);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.IVM.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_ivm);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_ivm);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.IVS.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_ivs);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_ivs);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.MAM.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_mam);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_mam);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.MAS.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_mas);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_mas);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.MAT.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_mat);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_mat);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.MI.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_mi);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_mi);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.MO.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_mo);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_mo);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.MT.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_mt);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_mt);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.MV.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_mv);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_mv);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.MVI.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_mvi);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_mvi);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.OMM.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_omm);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_omm);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.OMOM.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_omom);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_omom);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.OMOS.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_omos);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_omos);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.OMR.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_omr);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_omr);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.OMS.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_oms);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_oms);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.PA.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_pa);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_pa);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.PF.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_pf);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_pf);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.PV.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_pv);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_pv);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.RVR.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_rvr);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_rvr);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.RVS.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_rvs);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_rvs);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.SPV.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_spv);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_spv);
         }
         if(pvWorkflowCodeStr.equalsIgnoreCase(cPublicDefinitions.Workflows.UNKNOWN.toString())) {
-            result = cAppExtension.context.getString(R.string.ordertype_unknown);
+            resultStr = cAppExtension.context.getString(R.string.ordertype_unknown);
         }
-        return result;
+        return resultStr;
     }
+
+
+    public static String pGetWorkflowByDescriptionStr(String pvWorkflowCodeStr) {
+
+        String resultStr = "";
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_bc))) {
+            resultStr = cPublicDefinitions.Workflows.BC.toString();
+        }
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_bm))) {
+            resultStr = cPublicDefinitions.Workflows.BM.toString();
+        }
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_bp))) {
+            resultStr = cPublicDefinitions.Workflows.BP.toString();
+        }
+
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_eom))) {
+            resultStr = cPublicDefinitions.Workflows.EOM.toString();
+        }
+
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_eoom))) {
+            resultStr = cPublicDefinitions.Workflows.EOOM.toString();
+        }
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_eoos))) {
+            resultStr = cPublicDefinitions.Workflows.EOOS.toString();
+        }
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_eor))) {
+            resultStr = cPublicDefinitions.Workflows.EOR.toString();
+        }
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_eos))) {
+            resultStr = cPublicDefinitions.Workflows.EOS.toString();
+        }
+
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_er))) {
+            resultStr = cPublicDefinitions.Workflows.ER.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_ivm))) {
+            resultStr = cPublicDefinitions.Workflows.IVM.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_ivs))) {
+            resultStr = cPublicDefinitions.Workflows.IVS.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_mam))) {
+            resultStr = cPublicDefinitions.Workflows.MAM.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_mas))) {
+            resultStr = cPublicDefinitions.Workflows.MAS.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_mat))) {
+            resultStr = cPublicDefinitions.Workflows.MAT.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_mi))) {
+            resultStr = cPublicDefinitions.Workflows.MI.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_mo))) {
+            resultStr = cPublicDefinitions.Workflows.MO.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_mt))) {
+            resultStr = cPublicDefinitions.Workflows.MT.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_mv))) {
+            resultStr = cPublicDefinitions.Workflows.MV.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_mvi))) {
+            resultStr = cPublicDefinitions.Workflows.MVI.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_omm))) {
+            resultStr = cPublicDefinitions.Workflows.OMM.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_omom))) {
+            resultStr = cPublicDefinitions.Workflows.OMOM.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_omos))) {
+            resultStr = cPublicDefinitions.Workflows.OMOS.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_omr))) {
+            resultStr = cPublicDefinitions.Workflows.OMR.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_oms))) {
+            resultStr = cPublicDefinitions.Workflows.OMS.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_pa))) {
+            resultStr = cPublicDefinitions.Workflows.PA.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_pf))) {
+            resultStr = cPublicDefinitions.Workflows.PF.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_pv))) {
+            resultStr = cPublicDefinitions.Workflows.PV.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_rvr))) {
+            resultStr = cPublicDefinitions.Workflows.RVR.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_rvs))) {
+            resultStr = cPublicDefinitions.Workflows.RVS.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_spv))) {
+            resultStr = cPublicDefinitions.Workflows.SPV.toString();
+        }
+        if(pvWorkflowCodeStr.equalsIgnoreCase(cAppExtension.context.getString(R.string.ordertype_unknown))) {
+            resultStr = cPublicDefinitions.Workflows.UNKNOWN.toString();
+        }
+
+        return resultStr;
+    }
+
 
 }

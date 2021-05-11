@@ -813,4 +813,6 @@
     <string name="print_Article">Print Artikel</string>
     <string name="error_print_failed">Print label mislukt</string>
     <string name="choose_bin">Kies BIN</string>
+    <string name="create_receive_or_intake">Aanmaken ontvangst of opslag</string>
+    <string name="message_select_workflow">Selecteer een workflow</string>
 </resources>

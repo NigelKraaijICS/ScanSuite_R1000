@@ -791,6 +791,7 @@
     <string name="message_scan_reason_first">Decide reason, before you scan a different article</string>
     <string name="message_document_already_active">This document is the current document</string>
     <string name="create_external_receive">Create external receive</string>
+    <string name="create_receive_or_intake">Create receive or intake</string>
     <string name="create">Create</string>
     <string name="create_intake_order">Create intake order</string>
     <string name="message_scan_receive_document">Scan/type document</string>
@@ -924,6 +925,7 @@
     <string name="scan_next_document_or_close">Scan next document for same address or press OK to Send</string>
     <string name="message_shipment_not_send">Shipment not send</string>
     <string name="message_shipment_send">Shipment  send</string>
+    <string name="message_select_workflow">Select a workflow</string>
     <string name="message_shipment_incomplete">Shipment incomplete</string>
     <string name="message_workplaces_not_available">Workplaces not available</string>
     <string name="number_of_documents">Documents:</string>

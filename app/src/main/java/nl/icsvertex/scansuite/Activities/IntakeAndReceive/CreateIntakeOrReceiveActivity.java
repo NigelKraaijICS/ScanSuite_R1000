@@ -1,12 +1,12 @@
-package nl.icsvertex.scansuite.Activities.Receive;
+package nl.icsvertex.scansuite.Activities.IntakeAndReceive;
 
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -42,11 +44,13 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMASLinesActivity;
+import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
+import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.R;
 
 
-public class CreateReceiveActivity extends AppCompatActivity implements iICSDefaultActivity {
+public class CreateIntakeOrReceiveActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
 
@@ -68,7 +72,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     //End Region private Properties
 
     //Region Constructor
-    public CreateReceiveActivity() {
+    public CreateIntakeOrReceiveActivity() {
     }
     //End Region Constructor
 
@@ -78,7 +82,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
-        setContentView(R.layout.activity_create_receive_order);
+        setContentView(R.layout.activity_create_receive_or_intake_order);
         this.mActivityInitialize();
 
     }
@@ -87,7 +91,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     public void onDestroy() {
         super.onDestroy();
 
-        if (cAppExtension.activity instanceof CreateReceiveActivity) {
+        if (cAppExtension.activity instanceof CreateIntakeOrReceiveActivity) {
             cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
 
@@ -139,7 +143,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
         this.mFindViews();
 
-        this.mSetToolbar(getResources().getString(R.string.create_external_receive));
+        this.mSetToolbar(getResources().getString(R.string.create_receive_or_intake));
 
         this.mFieldsInitialize();
 
@@ -151,7 +155,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public void mSetAppExtensions() {
-
         cAppExtension.context = this;
         cAppExtension.fragmentActivity  = this;
         cAppExtension.activity = this;
@@ -174,9 +177,9 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
-        this.toolbarImage.setImageResource(R.drawable.ic_menu_intake_eo);
-        this.toolbarTitle.setText(pvScreenTitle);
+    public void mSetToolbar(String pvScreenTitleStr) {
+        this.toolbarImage.setImageResource(R.drawable.ic_menu_intake);
+        this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
         this.toolbarSubTitle.setText(cUser.currentUser.currentBranch.getBranchNameStr());
 
@@ -222,14 +225,13 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         this.mSetCreateListener();
         this.mSetCancelListener();
         this.mSetEditorActionListener();
-        this.mSetStockOwnerSpinnerListener();
         this.mSetWorkflowSpinnerListener();
+        this.mSetStockOwnerSpinnerListener();
     }
 
     @Override
     public void mInitScreen() {
         cIntakeorder.newWorkflowStr = "";
-
     }
 
     //End Region iICSDefaultActivity defaults
@@ -313,21 +315,12 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCreateOrder(pvDocumentStr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln);
-            }
-        }).start();
+        new Thread(() -> mHandleCreateOrder(pvDocumentStr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln)).start();
 
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mStartOrderSelectActivity();
-            }
-        });
+        this.cancelButton.setOnClickListener(pvView -> mStartOrderSelectActivity());
     }
 
     private void mStartOrderSelectActivity() {
@@ -337,61 +330,50 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mSetCreateListener() {
-        this.createReceiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.createReceiveButton.setOnClickListener(pvView -> {
 
-                if (editTextDocument.getText().toString().isEmpty()){
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_document),null);
-                    return;
-                }
-                IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-                mCreateOrder(editTextDocument.getText().toString().trim(),
-                        editTextPackingslip.getText().toString().trim(),
-                        editTextBin.getText().toString().trim(),
-                        switchCheckBarcodes.isChecked());
+            if (cIntakeorder.newWorkflowStr.isEmpty()) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_workflow),null);
+                return;
             }
+
+            IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
+            mCreateOrder(editTextDocument.getText().toString().trim(),
+                    editTextPackingslip.getText().toString().trim(),
+                    editTextBin.getText().toString().trim(),
+                    switchCheckBarcodes.isChecked());
         });
     }
 
     private void mSetEditorActionListener() {
-        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextDocument.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false, false);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false, false);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
 
-        this.editTextPackingslip.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextPackingslip.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextPackingslip.getText().toString()),false,true,false);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextPackingslip.getText().toString()),false,true,false);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
 
-        this.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextBin.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,false,true);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,false,true);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
 
 
@@ -414,7 +396,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         }
     }
 
-    private  void mHandleCreateOrder(String pvDocumentstr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln ){
+    private  void mHandleCreateOrder(String pvDocumentstr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln){
 
         cResult hulpResult;
 
@@ -470,24 +452,50 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        switch(cIntakeorder.currentIntakeOrder.getOrderTypeStr().toUpperCase()) {
+            case "EOS":
                 // If everything went well, then start Lines Activity
-                mShowReceiveLinesActivity();
-            }
-        });
+                cAppExtension.activity.runOnUiThread(this::mShowReceiveLinesActivity);
+                break;
+            case "MAS":
+            case "MAT":
+                cAppExtension.activity.runOnUiThread(this::mShowIntakeLinesActivity);
+                break;
+            default:
+                // code block
+        }
+
+
 
     }
 
     private  cResult mTryToCreateOrderRst(String pvDocumentstr, String pvPackingSlipStr, String pvBinCodeStr, boolean pvCheckBarcodesBln){
 
-        cResult result =  cIntakeorder.pCreateReceiveOrderViaWebserviceRst(pvDocumentstr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
-        if (!result.resultBln) {
-            this.editTextDocument.setText("");
-            mStepFailed(result.messagesStr());
-            return  result;
+        cResult result = new cResult();
+
+        switch(cIntakeorder.newWorkflowStr) {
+            case "EOS":
+            case "EOR":
+                result   =  cIntakeorder.pCreateReceiveOrderViaWebserviceRst(pvDocumentstr, pvPackingSlipStr, pvBinCodeStr, pvCheckBarcodesBln);
+                if (!result.resultBln) {
+                    this.editTextDocument.setText("");
+                    mStepFailed(result.messagesStr());
+                    return  result;
+                }
+                break;
+            case "MAS":
+                result   =  cIntakeorder.pCreateIntakeOrderViaWebserviceRst(pvDocumentstr, pvBinCodeStr, pvCheckBarcodesBln);
+                if (!result.resultBln) {
+                    this.editTextDocument.setText("");
+                    mStepFailed(result.messagesStr());
+                    return  result;
+                }
+                break;
+            default:
+                // code block
         }
+
+
 
         return result;
 
@@ -540,6 +548,28 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
 
+    }
+
+    private  void mShowIntakeLinesActivity() {
+
+        final Intent intent;
+
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr().toUpperCase()) {
+            case  "MAT":
+                intent = new Intent(cAppExtension.context, IntakeorderMATLinesActivity.class);
+                break;
+
+            case "MAS":
+                intent = new Intent(cAppExtension.context, IntakeorderMASLinesActivity.class);
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected value: " + cIntakeorder.currentIntakeOrder.getOrderTypeStr().toUpperCase());
+        }
+
+        ActivityCompat.startActivity(cAppExtension.context,intent, null);
     }
 
     private void mShowStockOwnerSpinner() {
@@ -604,13 +634,13 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
     private void mFillWorkflowSpinner() {
 
-        if (cSetting.RECEIVE_EO_NEW_WORKFLOWS() == null ||  cSetting.RECEIVE_EO_NEW_WORKFLOWS().size() <= 0 ) {
+        if (cSetting.RECEIVE_NEW_WORKFLOWS() == null ||  cSetting.RECEIVE_NEW_WORKFLOWS().size() <= 0 ) {
             return;
         }
 
         List<String> workflowObl = new ArrayList<>();
 
-        for (String workflowStr : cSetting.RECEIVE_EO_NEW_WORKFLOWS()) {
+        for (String workflowStr : cSetting.RECEIVE_NEW_WORKFLOWS()) {
             workflowObl.add(cWarehouseorder.pGetWorkflowDescriptionStr(workflowStr));
         }
 
@@ -638,6 +668,7 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
         });
     }
-            //End Region Private Methods
+
+    //End Region Private Methods
 
 }

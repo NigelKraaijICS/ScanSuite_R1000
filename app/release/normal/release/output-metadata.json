@@ -5,13 +5,13 @@
     "kind": "Directory"
   },
   "applicationId": "nl.icsvertex.scansuite",
-  "variantName": "processNormalReleaseResources",
+  "variantName": "normalRelease",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 15897,
-      "versionName": "1.5.8.97A",
+      "versionCode": 15898,
+      "versionName": "1.5.8.98A",
       "outputFile": "app-normal-release.apk"
     }
   ]

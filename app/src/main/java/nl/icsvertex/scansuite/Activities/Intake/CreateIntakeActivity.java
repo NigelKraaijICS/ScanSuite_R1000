@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -42,9 +41,7 @@ import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -60,7 +57,8 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
-    private Spinner spinner;
+    private Spinner stockownerSpinner;
+    private Spinner workflowSpinner;
     private EditText editTextDocument;
     private EditText editTextBin;
     private SwitchCompat switchCheckBarcodes;
@@ -163,7 +161,8 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     public void mFindViews() {
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
-        this.spinner = findViewById(R.id.stockownerSpinner);
+        this.stockownerSpinner = findViewById(R.id.stockownerSpinner);
+        this.workflowSpinner = findViewById(R.id.workflowSpinner);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
         this.editTextDocument = findViewById(R.id.editTextDocument);
         this.editTextBin = findViewById(R.id.editTextBin);
@@ -205,6 +204,7 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         this.editTextDocument.setFilters(filterArray);
 
         this.mShowStockOwnerSpinner();
+        this.mFillWorkflowSpinner();
         if (!cUser.currentUser.currentBranch.isBinMandatoryBln()) {
             this.editTextBin.setVisibility(View.GONE);
         }
@@ -227,11 +227,12 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
         this.mSetCancelListener();
         this.mSetEditorActionListener();
         this.mSetStockOwnerSpinnerListener();
+        this.mSetWorkflowSpinnerListener();
     }
 
     @Override
     public void mInitScreen() {
-
+        cIntakeorder.newWorkflowStr = "";
     }
 
     //End Region iICSDefaultActivity defaults
@@ -466,12 +467,12 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     private void mShowStockOwnerSpinner() {
 
         if (cStockOwner.allStockOwnerObl  == null || cStockOwner.allStockOwnerObl.size() == 0) {
-            this.spinner.setVisibility(View.GONE);
+            this.stockownerSpinner.setVisibility(View.GONE);
             return;
         }
 
-        this.spinner.setVisibility(View.VISIBLE);
-        this.spinner.setVisibility(View.VISIBLE);
+        this.stockownerSpinner.setVisibility(View.VISIBLE);
+        this.stockownerSpinner.setVisibility(View.VISIBLE);
 
         this.mFillStockOwnerSpinner();
     }
@@ -501,16 +502,53 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        this.spinner.setAdapter(adapter);
+        this.stockownerSpinner.setAdapter(adapter);
         if (cUser.currentUser.currentStockOwner != null)
-        { this.spinner.setSelection(adapter.getPosition(cUser.currentUser.currentStockOwner.getDescriptionStr()));}
+        { this.stockownerSpinner.setSelection(adapter.getPosition(cUser.currentUser.currentStockOwner.getDescriptionStr()));}
     }
     private void mSetStockOwnerSpinnerListener() {
 
-        this.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.stockownerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                cUser.currentUser.currentStockOwner = cStockOwner.pGetStockOwnerByDescriptionStr(spinner.getSelectedItem().toString());
+                cUser.currentUser.currentStockOwner = cStockOwner.pGetStockOwnerByDescriptionStr(stockownerSpinner.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+    }
+
+    private void mFillWorkflowSpinner() {
+
+        if (cSetting.RECEIVE_MA_NEW_WORKFLOWS() == null ||  cSetting.RECEIVE_MA_NEW_WORKFLOWS().size() <= 0 ) {
+            return;
+        }
+
+        List<String> workflowObl = new ArrayList<>();
+
+        for (String workflowStr : cSetting.RECEIVE_MA_NEW_WORKFLOWS()) {
+            workflowObl.add(cWarehouseorder.pGetWorkflowDescriptionStr(workflowStr));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(cAppExtension.context,
+                android.R.layout.simple_spinner_dropdown_item,
+               workflowObl);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        this.workflowSpinner.setAdapter(adapter);
+    }
+
+    private void mSetWorkflowSpinnerListener() {
+
+        this.workflowSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                cIntakeorder.newWorkflowStr =  cWarehouseorder.pGetWorkflowByDescriptionStr(workflowSpinner.getSelectedItem().toString());
             }
 
             @Override

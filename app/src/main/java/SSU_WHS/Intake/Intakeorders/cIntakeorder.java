@@ -204,6 +204,8 @@ public class cIntakeorder {
     public boolean showDeviationsBln = true;
     public cBranchBin currentBin;
 
+    public static String newWorkflowStr;
+
     //Region Constructor
 
     public cIntakeorder(JSONObject pvJsonObject) {
@@ -689,7 +691,6 @@ public class cIntakeorder {
 
         return Objects.requireNonNull(Webresult).getSuccessBln() && Webresult.getResultBln();
     }
-
 
     public boolean pDeleteViaWebserviceBln() {
 

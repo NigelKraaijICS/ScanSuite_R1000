@@ -11,6 +11,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.Fragments.Packaging.PackagingUsedFragment;
@@ -746,9 +747,50 @@ public class cSetting {
         return resultObl ;
     }
 
+    public static List<String> RECEIVE_EO_NEW_WORKFLOWS(){
+
+        List<String> resultObl = new  ArrayList();
+
+        for (String workflowStr : RECEIVE_NEW_WORKFLOWS() ) {
+
+            if (workflowStr.equalsIgnoreCase("EOR") || workflowStr.equalsIgnoreCase("EOS") )     {
+                resultObl.add((workflowStr));
+            }
+
+        }
+
+        return resultObl ;
+    }
+
+    public static List<String> RECEIVE_MA_NEW_WORKFLOWS(){
+
+        List<String> resultObl = new  ArrayList();
+
+        for (String workflowStr : RECEIVE_NEW_WORKFLOWS() ) {
+
+            if (workflowStr.equalsIgnoreCase("MAS")  )     {
+                resultObl.add((workflowStr));
+            }
+
+        }
+
+        return resultObl ;
+    }
+
     public static boolean RECEIVE_AMOUNT_MANUAL_MA(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_AMOUNT_MANUAL_MA);
+        if (Setting == null) {
+            return  false;
+        }
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+
+    public static boolean RECEIVE_AUTO_CREATE_ORDER(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.RECEIVE_AUTO_CREATE_ORDER);
         if (Setting == null) {
             return  false;
         }

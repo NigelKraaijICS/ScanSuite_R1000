@@ -2,13 +2,9 @@ package nl.icsvertex.scansuite.Activities.Intake;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -398,11 +394,7 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleClose();
-            }
-        }).start();
+        new Thread(this::mHandleClose).start();
 
     }
 
@@ -415,17 +407,14 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
     public  void pSetToolBarTitleWithCounters(final String pvTextStr){
 
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                toolbarSubTitle.setText(pvTextStr);
+        cAppExtension.activity.runOnUiThread(() -> {
+            toolbarSubTitle.setText(pvTextStr);
 
-                //Close open dialogs, so keyboard will also close
-                cUserInterface.pHideKeyboard();
+            //Close open dialogs, so keyboard will also close
+            cUserInterface.pHideKeyboard();
 
-                //Click to make even more sure that keyboard gets hidden
-                toolbarSubTitle.performClick();
-            }
+            //Click to make even more sure that keyboard gets hidden
+            toolbarSubTitle.performClick();
         });
 
 
@@ -433,11 +422,7 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
     public void pStartLine(){
         IntakeOrderIntakeActivity.handledViaPropertysBln = false;
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                imageViewStart.performClick();
-            }});
+        cAppExtension.activity.runOnUiThread(() -> imageViewStart.performClick());
     }
 
     public  void pShowData(List<cIntakeorderMATSummaryLine> pvDataObl) {
@@ -586,54 +571,38 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pCommentObl(), "");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pCommentObl(), ""));
     }
 
     private void mSetDeviationsListener() {
-        this.switchDeviations.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
+        this.switchDeviations.setOnCheckedChangeListener((compoundButton, show) -> {
 
-                if (switchDeviations.isChecked()) {
-                    cIntakeorder.currentIntakeOrder.showDeviationsBln = true;
-                    getIntakeorderMATSummaryLineAdapter().pShowDeviations();
-                }
-                else {
-                    cIntakeorder.currentIntakeOrder.showDeviationsBln = false;
-                    getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
-                }
+            if (switchDeviations.isChecked()) {
+                cIntakeorder.currentIntakeOrder.showDeviationsBln = true;
+                getIntakeorderMATSummaryLineAdapter().pShowDeviations();
+            }
+            else {
+                cIntakeorder.currentIntakeOrder.showDeviationsBln = false;
+                getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
             }
         });
 }
 
     private void mSetStartLineListener() {
-        this.imageViewStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pHandleScan(null,true);
-            }
-        });
+        this.imageViewStart.setOnClickListener(view -> pHandleScan(null,true));
     }
 
     private void mSetSendOrderListener() {
 
-        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonCloseOrder.setOnClickListener(view -> {
 
-                //do we need an administrator for this?
-                if (!cSetting.RECEIVE_STORE_DEVIATIONS_PASSWORD().isEmpty() && cIntakeorderMATSummaryLine.totalItemsDifference() > 0 ) {
-                    cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_deviations_password_text), false);
-                    return;
-                }
-
-                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
+            //do we need an administrator for this?
+            if (!cSetting.RECEIVE_STORE_DEVIATIONS_PASSWORD().isEmpty() && cIntakeorderMATSummaryLine.totalItemsDifference() > 0 ) {
+                cUserInterface.pShowpasswordDialog(getString(R.string.supervisor_password_header), getString(R.string.supervisor_deviations_password_text), false);
+                return;
             }
+
+            mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
         });
     }
 
@@ -664,12 +633,10 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
     private  void mStartOrderSelectActivity() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
-                IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
+            IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
+            cAppExtension.activity.startActivity(intent);
         });
 
     }
@@ -717,12 +684,9 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
                 false);
 
         acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
 
     }
@@ -763,18 +727,7 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-
-                cAppExtension.activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        recyclerSearchView.setIconified(false);
-                    }
-                });
-            }
-        });
+        this.recyclerSearchView.setOnClickListener(pvView -> cAppExtension.activity.runOnUiThread(() -> recyclerSearchView.setIconified(false)));
 
 //        query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -807,24 +760,21 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
     private void mSetSearchCloseListener() {
         //make whole view clickable
-        this.closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                recyclerSearchView.setQuery("",false);
-                recyclerSearchView.setIconified(true);
-                currentInputType = InputType.UNKNOWN;
-                cIntakeorder.currentIntakeOrder.currentBin = null;
+        this.closeButton.setOnClickListener(pvView -> {
+            recyclerSearchView.setQuery("",false);
+            recyclerSearchView.setIconified(true);
+            currentInputType = InputType.UNKNOWN;
+            cIntakeorder.currentIntakeOrder.currentBin = null;
 
-                if (switchDeviations.isChecked()) {
-                    cIntakeorder.currentIntakeOrder.showDeviationsBln = true;
-                    getIntakeorderMATSummaryLineAdapter().pShowDeviations();
-                }
-                else {
-                    cIntakeorder.currentIntakeOrder.showDeviationsBln = false;
-                    getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
-                }
-
+            if (switchDeviations.isChecked()) {
+                cIntakeorder.currentIntakeOrder.showDeviationsBln = true;
+                getIntakeorderMATSummaryLineAdapter().pShowDeviations();
             }
+            else {
+                cIntakeorder.currentIntakeOrder.showDeviationsBln = false;
+                getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
+            }
+
         });
 
         //query entered

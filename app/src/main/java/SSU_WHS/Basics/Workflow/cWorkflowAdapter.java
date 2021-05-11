@@ -75,28 +75,25 @@ public class cWorkflowAdapter extends RecyclerView.Adapter<cWorkflowAdapter.Work
             this.mSetImage(pvHolder, workflowStr);
 
 
-            pvHolder.workflowItemLinearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            pvHolder.workflowItemLinearLayout.setOnClickListener(v -> {
 
-                    //Set the current workflow
+                //Set the current workflow
 
-                    if (cAppExtension.activity instanceof MoveorderSelectActivity) {
-                        MoveorderSelectActivity moveorderSelectActivity = (MoveorderSelectActivity)cAppExtension.activity;
-                        moveorderSelectActivity.pNewWorkflowSelected(workflowStr);
-                    }
-
-                    if (cAppExtension.activity instanceof PackAndShipSelectActivity) {
-                        PackAndShipSelectActivity packAndShipSelectActivity = (PackAndShipSelectActivity)cAppExtension.activity;
-                        packAndShipSelectActivity.pNewWorkflowSelected(workflowStr);
-                    }
-                    if (cAppExtension.activity instanceof PickorderSelectActivity) {
-                        PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
-                        pickorderSelectActivity.pNewWorkflowSelected(workflowStr);
-                    }
-
-
+                if (cAppExtension.activity instanceof MoveorderSelectActivity) {
+                    MoveorderSelectActivity moveorderSelectActivity = (MoveorderSelectActivity)cAppExtension.activity;
+                    moveorderSelectActivity.pNewWorkflowSelected(workflowStr);
                 }
+
+                if (cAppExtension.activity instanceof PackAndShipSelectActivity) {
+                    PackAndShipSelectActivity packAndShipSelectActivity = (PackAndShipSelectActivity)cAppExtension.activity;
+                    packAndShipSelectActivity.pNewWorkflowSelected(workflowStr);
+                }
+                if (cAppExtension.activity instanceof PickorderSelectActivity) {
+                    PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
+                    pickorderSelectActivity.pNewWorkflowSelected(workflowStr);
+                }
+
+
             });
         }
     }
@@ -179,7 +176,6 @@ public class cWorkflowAdapter extends RecyclerView.Adapter<cWorkflowAdapter.Work
 
         if (pvWorkflowStr.equalsIgnoreCase(cWarehouseorder.WorkflowEnu.SPV.toString())) {
             pvHolder.imageViewWorkflow.setImageResource(R.drawable.ic_menu_selfpick);
-            return;
         }
     }
 }
