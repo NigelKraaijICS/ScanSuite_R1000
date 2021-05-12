@@ -143,6 +143,7 @@
     <!--region Order types-->
     <string name="ordertype_bc">Batch picking sorting per VKO</string>
     <string name="ordertype_bm">Batch pick manual sorting</string>
+    <string name="ordertype_bm_singlepiece">Batch pick manual sorting, single piece</string>
     <string name="ordertype_bp">Batch picking</string>
     <string name="ordertype_eom">External reception Multi-user</string>
     <string name="ordertype_eoom">External reception and Storage Multi-user</string>

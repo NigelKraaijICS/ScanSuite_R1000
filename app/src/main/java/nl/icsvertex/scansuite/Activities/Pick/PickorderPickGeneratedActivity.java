@@ -31,6 +31,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1341,7 +1342,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     }
 
     private void mShowExtraPiecesNotAllowed(){
-        this.quantityText.setText(this.quantityRequiredText.getText());
+        cAppExtension.activity.runOnUiThread(() -> quantityText.setText(quantityRequiredText.getText()));
         cUserInterface.pShowSnackbarMessage(this.pickorderPickGeneratedContainer, cAppExtension.context.getString(R.string.number_cannot_be_higher_than_stock), null, false);
         cUserInterface.pDoNope(this.quantityText, true, true);
         cUserInterface.pDoNope(this.quantityRequiredText, false, false);

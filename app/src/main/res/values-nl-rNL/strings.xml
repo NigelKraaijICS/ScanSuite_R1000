@@ -95,6 +95,7 @@
     <string name="menuitem_ship">Verzenden</string>
     <string name="ordertype_bc">Batch picking sorteren per document</string>
     <string name="ordertype_bm">Picken zonder sortering op scanner</string>
+    <string name="ordertype_bm_singlepiece">Picken zonder sortering op scanner, enkele stuks</string>
     <string name="ordertype_bp">Batch picking sorteren per artikel</string>
     <string name="ordertype_eom">Externe Ontvangst Multi-user</string>
     <string name="ordertype_eoom">Externe Ontvangst en Opslag Multi-user</string>

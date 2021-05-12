@@ -222,7 +222,13 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
         String orderTypeText = "";
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BM.toString())) {
-            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_bm);
+            if (selectedPickorder.isSingleArticleOrdersBln()) {
+                orderTypeText = cAppExtension.activity.getString(R.string.ordertype_bm_singlepiece);
+            }
+            else{
+
+                orderTypeText = cAppExtension.activity.getString(R.string.ordertype_bm);
+            }
         }
 
         if(selectedPickorder.getOrderTypeStr().equalsIgnoreCase(cPublicDefinitions.Workflows.BC.toString())) {
