@@ -96,11 +96,6 @@ dependencies {
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'com.google.zxing:android-core:3.3.0'
 
-    //Circular image
-    implementation 'com.mikhaellopez:circularimageview:3.2.0'
-    implementation 'com.balysv:material-ripple:1.0.2'
-
-
     //LeakCanary
 //    debugImplementation "com.squareup.leakcanary:leakcanary-android:2.2"
 }
