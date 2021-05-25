@@ -8,6 +8,7 @@ import java.util.Date;
 
 import ICS.Utils.cText;
 import SSU_WHS.Basics.Article.cArticle;
+import SSU_WHS.Basics.ArticlePropertyStock.cArticlePropertyStock;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 
@@ -61,6 +62,16 @@ public class cArticleStock implements Comparable {
         this.bincodeStr =  this.articleStockEntity.getBinCodeStr();
         this.quantityDbl =  this.articleStockEntity.getQuantityDbl();
         this.dataTimeStampDat = cText.pStringToDateStr(this.articleStockEntity.getDataTimeStamp(),"YYYY-MM-dd");
+    }
+
+    public cArticleStock(cArticlePropertyStock pvArticlePropertyStock) {
+
+        this.itemNoStr = pvArticlePropertyStock.getItemNoStr();
+        this.variantCodeStr = pvArticlePropertyStock.getVariantCodeStr();
+        this.locationStr = cUser.currentUser.currentBranch.getBranchStr();
+        this.bincodeStr =  pvArticlePropertyStock.getBincodeStr();
+        this.quantityDbl =  pvArticlePropertyStock.getQuantityDbl();
+        this.dataTimeStampDat =pvArticlePropertyStock.getDataTimeStampDat();
     }
 
     //End Region Constructor

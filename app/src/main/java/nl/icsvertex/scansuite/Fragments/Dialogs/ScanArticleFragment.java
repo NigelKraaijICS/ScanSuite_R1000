@@ -152,6 +152,7 @@ public class ScanArticleFragment extends DialogFragment implements iICSDefaultFr
                dismiss();
 
                 if (cAppExtension.activity instanceof MenuActivity) {
+                    cUserInterface.pHideKeyboard();
                     MenuActivity menuActivity = (MenuActivity)cAppExtension.activity;
                     menuActivity.pHandleHandleArticleScanned( cBarcodeScan.pFakeScan(editTextScanArticle.getText().toString()));
 

@@ -198,7 +198,15 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
         this.createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View pvView) {
-                mHandleCreateOrder();
+                cUserInterface.pShowGettingData();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        mHandleCreateOrder();
+                    }
+                };
+                Thread createOrder = new Thread(runnable);
+                createOrder.start();
             }
         });
     }
@@ -237,6 +245,7 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                    cUserInterface.pHideKeyboard();
                     createButton.callOnClick();
                 }
                 return true;

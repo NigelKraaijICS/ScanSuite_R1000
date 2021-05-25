@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,7 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
     private String binCodeStr;
     private TextView textViewBIN;
     private Button buttonOk;
+    private ProgressBar progressBar;
 
     //End Region Private Properties
 
@@ -113,6 +115,8 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
             this.textViewBIN = getView().findViewById(R.id.textViewBIN);
             this.binRecyclerview = getView().findViewById(R.id.binRecyclerview);
             this.buttonOk = getView().findViewById(R.id.buttonOk);
+            this.progressBar = getView().findViewById(R.id.progressBar);
+            this.progressBar.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -121,7 +125,15 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
     @Override
     public void mFieldsInitialize() {
         this.textViewBIN.setText(this.binCodeStr);
-        this.mGetData();
+        this.progressBar.setVisibility(View.VISIBLE);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mGetData();
+            }
+        };
+        Thread getData = new Thread(runnable);
+        getData.start();
     }
 
     @Override
@@ -138,6 +150,7 @@ public class BinItemsFragment extends DialogFragment implements iICSDefaultFragm
         boolean webserviceResult;
         webserviceResult = cBinItem.pGetBinItemsViaWebserviceBln(this.binCodeStr);
         this.mShowNoLinesIcon(!webserviceResult);
+        this.progressBar.setVisibility(View.INVISIBLE);
     }
 
     private  void mShowNoLinesIcon(final Boolean pvShowBln){

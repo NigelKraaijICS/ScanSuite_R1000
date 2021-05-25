@@ -32,11 +32,13 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import SSU_WHS.Receive.ReceiveSummaryLine.cReceiveorderSummaryLine;
 import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectPropertyFragment;
@@ -533,6 +535,8 @@ public class InventoryLinePropertyInputActivity extends AppCompatActivity implem
     }
 
     private void mSetArticleInfo(){
+        cLinePropertyValue.quantityPerUnitOfMeasureDbl = cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+
         this.articleDescriptionCompactText.setText(cInventoryorderLine.currentInventoryOrderLine.getDescriptionStr());
         this.articleDescription2CompactText.setText(cInventoryorderLine.currentInventoryOrderLine.getDescription2Str());
         this.articleItemCompactText.setText(cInventoryorderLine.currentInventoryOrderLine.getItemNoAndVariantCodeStr());
@@ -619,7 +623,7 @@ public class InventoryLinePropertyInputActivity extends AppCompatActivity implem
             return;
         }
         cUserInterface.pCheckAndCloseOpenDialogs();
-        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment(cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase());
+        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment(cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase(), cInventoryorderLine.currentInventoryOrderLine.presetValueObl);
         itemPropertyTextInputFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTTEXTFRAGMENT_TAG);
     }
 
@@ -677,6 +681,25 @@ public class InventoryLinePropertyInputActivity extends AppCompatActivity implem
 
     private  void mHandleDone() {
 
+        cUserInterface.pShowGettingData();
+
+        new Thread(new Runnable() {
+            public void run() {
+                mSendScans();
+            }
+        }).start();
+
+    }
+
+    private void mSendScans() {
+
+        //If internet is not connected
+        if (!cConnection.isInternetConnectedBln()) {
+            //could not send line, let user know but answer succes so user can go to next line
+            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line_no_connection), null);
+            return;
+        }
+
         //Try to save the line to the database
         if (!cInventoryorderLine.currentInventoryOrderLine.pSaveLineViaWebserviceBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_line_save_failed),"",true,true);
@@ -685,10 +708,8 @@ public class InventoryLinePropertyInputActivity extends AppCompatActivity implem
 
         //Change quantityDbl handled in database
         cInventoryorderLine.currentInventoryOrderLine.pUpdateQuantityInDatabase();
-
-        cUserInterface.pHideGettingData();
-
         this.mStartInventoryBINActivity();
+
     }
 
     private void mResetCurrents(){

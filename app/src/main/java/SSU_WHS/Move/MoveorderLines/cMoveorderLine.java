@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import ICS.Utils.cResult;
@@ -12,7 +13,11 @@ import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
+import SSU_WHS.Basics.ArticlePropertyValue.cArticlePropertyValue;
+import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
@@ -190,6 +195,7 @@ public class cMoveorderLine implements Comparable {
     public static List<cMoveorderLine> allLinesObl;
     public static cMoveorderLine currentMoveOrderLine;
 
+
     private cMoveorderLineViewModel getMoveorderLineViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderLineViewModel.class);
     }
@@ -325,6 +331,37 @@ public class cMoveorderLine implements Comparable {
         this.extraField8Str =  "";
     }
 
+    public cMoveorderLine(cArticleStock pvArticleStock) {
+        this.moveorderLineEntity = null;
+
+        this.lineNoInt = 0;
+        this.actionTypeCodeStr = cWarehouseorder.ActionTypeEnu.TAKE.toString();
+
+        this.itemNoStr = pvArticleStock.getItemNoStr();
+        this.variantCodeStr = pvArticleStock.getVariantCodeStr();
+        this.descriptionStr = "";
+        this.description2Str = "";
+        this.binCodeStr = pvArticleStock.getBincodeStr();
+
+        this.quantityDbl = pvArticleStock.getQuantityDbl();
+        this.quantityHandledDbl = 0;
+        this.quantityTakenDbl = 0;
+        this.quantityPlacedDbl = 0;
+
+        this.handledTimeStampStr = "";
+        this.sourceNoStr = "";
+        this.statusInt = cWarehouseorder.MovelineLocalStatusEnu.LOCALSTATUS_NEW;
+        this.sortingSequenceInt = 0;
+
+        this.extraField1Str =  "";
+        this.extraField2Str = "";
+        this.extraField3Str =  "";
+        this.extraField4Str =  "";
+        this.extraField5Str =  "";
+        this.extraField6Str =  "";
+        this.extraField7Str =  "";
+        this.extraField8Str =  "";
+    }
 
     //End Region Constructor
 
@@ -444,5 +481,163 @@ public class cMoveorderLine implements Comparable {
         int compareint =((cMoveorderLine)o).getSortingSequenceInt();
         return compareint-this.getSortingSequenceInt();
 
+    }
+
+    public ArrayList<cLinePropertyValue> presetValueObl;
+    public ArrayList<cLinePropertyValue> generatedValueObl;
+
+    public LinkedHashMap<String, ArrayList<cLinePropertyValue>> generatedTakeItemPropertySortObl(){
+        if (this.generatedValueObl == null){
+            return null;
+        }
+
+        LinkedHashMap<String, ArrayList<cLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();
+
+        for (cLinePropertyValue linePropertyValue : generatedValueObl) {
+            //Create the hasmap dynammically and fill it
+            ArrayList<cLinePropertyValue> loopList = linkedHashMap.get(linePropertyValue.getPropertyCodeStr());
+            if (loopList == null) {
+                ArrayList<cLinePropertyValue> propertyValues = new ArrayList<>();
+                propertyValues.add(linePropertyValue);
+                linkedHashMap.put(linePropertyValue.getPropertyCodeStr(), propertyValues);
+            }
+            else{
+                loopList.add(linePropertyValue);
+            }
+
+        }
+        return linkedHashMap;
+    }
+
+    public ArrayList<cLinePropertyValue> generatedPlaceLineValueObl;
+
+    public LinkedHashMap<String, ArrayList<cLinePropertyValue>> generatedPlaceItemPropertySortObl(){
+        if (this.generatedPlaceLineValueObl == null){
+            return null;
+        }
+
+        LinkedHashMap<String, ArrayList<cLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();
+
+        for (cLinePropertyValue linePropertyValue : generatedPlaceLineValueObl) {
+            //Create the hasmap dynammically and fill it
+            ArrayList<cLinePropertyValue> loopList = linkedHashMap.get(linePropertyValue.getPropertyCodeStr());
+            if (loopList == null) {
+                ArrayList<cLinePropertyValue> propertyValues = new ArrayList<>();
+                propertyValues.add(linePropertyValue);
+                linkedHashMap.put(linePropertyValue.getPropertyCodeStr(), propertyValues);
+            }
+            else{
+                loopList.add(linePropertyValue);
+            }
+
+        }
+        return linkedHashMap;
+    }
+
+    private  List<cLineProperty> linePropertyCachedObl;
+    private List<cLineProperty> linePropertyObl(boolean pvRefreshBln) {
+
+        if (pvRefreshBln){this.linePropertyCachedObl = null;}
+
+        if (this.linePropertyCachedObl != null) {
+            return  this.linePropertyCachedObl;
+        }
+
+        this.linePropertyCachedObl = new ArrayList<>();
+
+        if (cLineProperty.allLinePropertysObl == null || cLineProperty.allLinePropertysObl.size() == 0) {
+            return  this.linePropertyCachedObl;
+        }
+
+        for (cLineProperty lineProperty :cLineProperty.allLinePropertysObl ) {
+            if (lineProperty.getLineNoInt().equals(this.getLineNoInt())) {
+                this.linePropertyCachedObl.add(lineProperty);
+            }
+        }
+        return  this.linePropertyCachedObl;
+    }
+
+    private  List<cLineProperty> linePropertyNoInputCachedObl;
+    public List<cLineProperty> linePropertyNoInputObl() {
+
+        if (this.linePropertyNoInputCachedObl != null) {
+            return  this.linePropertyNoInputCachedObl;
+        }
+
+        this.linePropertyNoInputCachedObl = new ArrayList<>();
+
+        if (this.linePropertyObl(true) == null || this.linePropertyObl(false).size() == 0) {
+            return  this.linePropertyNoInputCachedObl;
+        }
+
+        for (cLineProperty lineProperty :this.linePropertyObl(false)) {
+            if (!lineProperty.getIsInputBln() &&  !lineProperty.getIsRequiredBln()) {
+                this.linePropertyNoInputCachedObl.add(lineProperty);
+            }
+        }
+
+        return  this.linePropertyNoInputCachedObl;
+    }
+
+    public List<cLineProperty> linePropertyInputObl() {
+
+        List<cLineProperty> resultObl = new ArrayList<>();
+
+        if (this.linePropertyObl(true) == null || this.linePropertyObl(false).size() == 0) {
+            return  resultObl;
+        }
+
+        for (cLineProperty lineProperty :this.linePropertyObl(false)) {
+            if (lineProperty.getIsInputBln() ) {
+                resultObl.add(lineProperty);
+            }
+        }
+
+        return  resultObl;
+    }
+
+    public  cLineProperty getLineProperty(String pvPropertyCodeStr){
+
+        if (this.linePropertyInputObl().size() == 0) {
+            return  null;
+        }
+
+        for (cLineProperty lineProperty : this.linePropertyObl(true) ) {
+            if (lineProperty.getLineNoInt().equals(this.getLineNoInt()) && lineProperty.getPropertyCodeStr().equalsIgnoreCase(pvPropertyCodeStr)) {
+                return lineProperty;
+            }
+        }
+
+        return  null;
+
+    }
+
+    public void pAddPropertyValue(cArticlePropertyValue pvPropertyValue, double pvAvailableDbl){
+        if (this.generatedValueObl == null){
+            this.generatedValueObl = new ArrayList<>();
+        }
+        cLinePropertyValue linePropertyValue = new cLinePropertyValue(this.lineNoInt, pvPropertyValue.getPropertyCodeStr(), pvPropertyValue.getValueStr());
+        linePropertyValue.quantityAvailableDbl = pvAvailableDbl;
+
+        this.generatedValueObl.add(linePropertyValue);
+        if (cLinePropertyValue.allLinePropertysValuesObl == null) {
+            cLinePropertyValue.allLinePropertysValuesObl = new ArrayList<>();
+        }
+        cLinePropertyValue.allLinePropertysValuesObl.add(linePropertyValue);
+    }
+
+    public  List<cLinePropertyValue> linePropertyValuesObl() {
+
+        List<cLinePropertyValue> resultObl = new ArrayList<>();
+
+        for (cLineProperty inputLineProperty : this.linePropertyInputObl()) {
+            resultObl.addAll(inputLineProperty.propertyValueObl());
+        }
+
+        return  resultObl;
+
+    }
+    public  boolean hasPropertysBln() {
+        return this.linePropertyObl(true).size() != 0;
     }
 }

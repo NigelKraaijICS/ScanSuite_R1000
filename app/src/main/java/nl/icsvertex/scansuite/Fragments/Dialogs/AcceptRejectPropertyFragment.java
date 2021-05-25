@@ -23,6 +23,7 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineItemPropertyActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
@@ -213,6 +214,13 @@ public class AcceptRejectPropertyFragment  extends DialogFragment implements iIC
             this.dismiss();
 
         }
+        if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+            MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity)cAppExtension.activity;
+            moveLineItemPropertyActivity.amountHandledBln = true;
+            moveLineItemPropertyActivity.pResetTab(false);
+            this.dismiss();
+
+        }
     }
 
     private void mReject() {
@@ -242,6 +250,13 @@ public class AcceptRejectPropertyFragment  extends DialogFragment implements iIC
             InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity)cAppExtension.activity;
             inventoryLinePropertyInputActivity.amountHandledBln = false;
             inventoryLinePropertyInputActivity.pResetTab(true);
+            this.dismiss();
+
+        }
+        if (cAppExtension.activity instanceof  MoveLineItemPropertyActivity) {
+            MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity)cAppExtension.activity;
+            moveLineItemPropertyActivity.amountHandledBln = false;
+            moveLineItemPropertyActivity.pResetTab(true);
             this.dismiss();
 
         }

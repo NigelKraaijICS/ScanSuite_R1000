@@ -102,15 +102,15 @@ public class cLineProperty implements List<JSONObject> {
         this.valueHandledStr = this.linePropertyEntity.getValueHandledStr();
     }
 
-    public cLineProperty (cArticleProperty articleProperty, int lineNoInt) {
+    public cLineProperty (cArticleProperty articleProperty, int lineNoInt, boolean pvInputBln, Boolean pvIsRequiredBln) {
         this.linePropertyEntity = null;
         this.lineNoInt = lineNoInt;
         this.propertyCodeStr = articleProperty.getPropertyCodeStr();
         this.sequenceNoHandledInt = 0;
         this.sortingSequenceNoInt = articleProperty.getSortingSequenceNoInt();
         this.layoutStr = articleProperty.getItemProperty().getLayoutStr();
-        this.isInputBln = true;
-        this.isRequiredBln = true;
+        this.isInputBln = pvInputBln;
+        this.isRequiredBln = pvIsRequiredBln;
         this.valueHandledStr = "";
     }
 

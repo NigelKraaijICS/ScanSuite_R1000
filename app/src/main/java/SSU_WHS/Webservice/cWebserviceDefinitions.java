@@ -61,7 +61,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETUNIQUEBARCODES = "p_VestigingArtikelBarcodesUpdateUniqueGetJsonStr";
     public static String WEBMETHOD_GETARTICLEPROPERTIES = "p_VestigingArtikelPropertiesGetJsonStr";
     public static String WEBMETHOD_GETARTICLEPROPERTYVALUES = "p_VestigingArtikelPropertyValuesGetJsonStr";
-
+    public static String WEBMETHOD_GETARTICLESTOCKWITHPROPERTY = "p_ItemPropertyStockGetForcedJsonStr";
 
     public static String WEBMETHOD_GETARTICLESTOCK = "p_ArtikelVoorraadGetJsonStr";
     public static String WEBMETHOD_SORTORDERLINE_HANDLED = "p_PickorderRegelPlaceSortedJsonStr";
@@ -343,6 +343,8 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINER = "g_ContainerStr";
 
     public static String WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE = "g_PropertyCodeStr";
+    public static String WEBPROPERTY_REQUEST_PROPERTYCODE = "pv_PropertyCodeStr";
+    public static String WEBPROPERTY_INTERFACESPROPERTY_PROPERTYVALUE = "pv_PropertyValueStr";
     public static String WEBPROPERTY_INTERFACESPROPERTY_SEQUENCENOHANDLED = "g_SequenceNoHandledLng";
     public static String WEBPROPERTY_INTERFACESPROPERTY_VALUEHANDLED = "g_ValueHandledStr";
 

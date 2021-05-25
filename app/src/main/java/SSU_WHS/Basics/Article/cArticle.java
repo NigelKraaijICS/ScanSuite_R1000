@@ -14,6 +14,7 @@ import SSU_WHS.Basics.ArticleBarcode.cArticleBarcode;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.ArticleProperty.cArticleProperty;
+import SSU_WHS.Basics.ArticlePropertyStock.cArticlePropertyStock;
 import SSU_WHS.Basics.ArticlePropertyValue.cArticlePropertyValue;
 import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.Webservice.cWebresult;
@@ -67,6 +68,7 @@ public class cArticle {
     public  List<cArticleStock> stockObl;
     public  List<cArticleProperty> propertyObl;
     public List<cArticlePropertyValue> propertyValueObl;
+    public cArticlePropertyValue currentPropertyValue;
 
     public cArticleImage articleImage;
     private cArticleViewModel getArticleViewModel() {
@@ -139,10 +141,7 @@ public class cArticle {
                 }
 
                 article.barcodesObl.add(articleBarcode);
-
-//                article.pGetPropertyViaWebservice();
-
-
+                article.pGetPropertyViaWebservice();
 
                 return article;
             }
@@ -248,6 +247,7 @@ public class cArticle {
                     this.propertyObl = new ArrayList<>();
                 }
                 this.propertyObl.add(articleProperty);
+                currentArticle = this;
             }
         }
         else {
@@ -300,6 +300,51 @@ public class cArticle {
 
         return  null;
 
+    }
+
+    public cArticleStock pGetPropertyStockForBINViaWebservice(ArrayList<cArticlePropertyValue> pvPropertyValueObl, String pvBinCodeStr){
+        cWebresult webresult;
+        double amountDbl = 0.0;
+        ArrayList <cArticlePropertyStock> articlePropertyStockObl = new ArrayList<>();
+
+        for (cArticlePropertyValue articlePropertyValue: pvPropertyValueObl){
+
+            if (articlePropertyValue.getValueStr() == null){
+                continue;
+            }
+            webresult = getArticleViewModel().pGetPropertyStockWrs(articlePropertyValue);
+            if (webresult.getResultBln() && webresult.getSuccessBln()) {
+                for (JSONObject jsonObject :  webresult.getResultDtt()) {
+                    cArticlePropertyStock articlePropertyStock = new cArticlePropertyStock(jsonObject);
+                    if (!articlePropertyStock.getBincodeStr().equalsIgnoreCase(pvBinCodeStr) || !articlePropertyStock.getItemNoStr().equalsIgnoreCase(this.getItemNoStr()) || !articlePropertyStock.getVariantCodeStr().equalsIgnoreCase(this.getVariantCodeStr())) {
+                        continue;
+                    }
+                    articlePropertyStockObl.add(articlePropertyStock);
+                    if (amountDbl == 0.0) {
+                        amountDbl = articlePropertyStock.getQuantityDbl();
+                    }
+                }
+            }  else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETARTICLESTOCKWITHPROPERTY);
+            }
+        }
+
+        if (articlePropertyStockObl.size() == 0){
+            return null;
+        }
+
+        if (articlePropertyStockObl.size() == 1){
+            return new cArticleStock(articlePropertyStockObl.get(0));
+        }
+
+        //Multiple properties so compare the available amount should be the same at the location
+
+        for (cArticlePropertyStock articlePropertyStock: articlePropertyStockObl){
+            if (amountDbl != articlePropertyStock.getQuantityDbl()){
+                return null;
+            }
+        }
+        return new cArticleStock(articlePropertyStockObl.get(0));
     }
 
     public boolean pGetArticleImageBln(){

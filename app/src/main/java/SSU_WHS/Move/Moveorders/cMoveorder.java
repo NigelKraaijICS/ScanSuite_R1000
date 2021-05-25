@@ -27,11 +27,14 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineViewModel;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 import nl.icsvertex.scansuite.R;
@@ -131,6 +134,8 @@ public class cMoveorder {
     }
     public List<cMoveorderBarcode> barcodesObl () {return  cMoveorderBarcode.allMoveorderBarcodesObl;}
     public List<cMoveorderLine> linesObl () {return  cMoveorderLine.allLinesObl;}
+    public List<cLineProperty> linePropertysObl() { return  cLineProperty.allLinePropertysObl; }
+    public List<cLinePropertyValue> linePropertyValueObl() { return  cLinePropertyValue.allLinePropertysValuesObl; }
 
     public List<cMoveorderLine> takeLinesObl;
     public List<cMoveorderLine> sortedTakeLinesObl() {
@@ -761,6 +766,20 @@ public class cMoveorder {
             return result;
         }
 
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLinePropertysViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!this.mGetLinePropertyValuesViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
+            return result;
+        }
+
         return  result;
     }
 
@@ -803,6 +822,20 @@ public class cMoveorder {
         if (!cMoveorder.currentMoveOrder.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        // Get all propertys, if webservice error then stop
+        if (!this.mGetLinePropertysViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_propertys_failed));
+            return result;
+        }
+
+        // Get all property values, if webservice error then stop
+        if (!this.mGetLinePropertyValuesViaWebserviceBln( )) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_line_property_values_failed));
             return result;
         }
 
@@ -1225,6 +1258,10 @@ public class cMoveorder {
                 continue;
             }
 
+            if (moveorderLine.handledBln){
+                continue;
+            }
+
 
             //Check if item matches scanned item
             if (moveorderLine.getItemNoStr().equalsIgnoreCase(pvMoveorderBarcode.getItemNoStr()) &&
@@ -1251,6 +1288,9 @@ public class cMoveorder {
                 continue;
             }
 
+            if (moveorderLine.handledBln){
+                continue;
+            }
 
             //Check if item matches scanned item
             if (moveorderLine.getItemNoStr().equalsIgnoreCase(pvMoveorderBarcode.getItemNoStr()) &&
@@ -1447,6 +1487,8 @@ public class cMoveorder {
 
                 //Refresh line barcodes
                 cMoveorder.currentMoveOrder.pGetLineBarcodesViaWebserviceBln(true);
+                cMoveorder.currentMoveOrder.mGetLinePropertysViaWebserviceBln();
+                cMoveorder.currentMoveOrder.mGetLinePropertyValuesViaWebserviceBln();
                 return true;
             }
 
@@ -1585,6 +1627,8 @@ public class cMoveorder {
 
                 //Add the new line
                 cMoveorder.currentMoveOrder.placeLinesObl.add(moveorderLine);
+                cMoveorder.currentMoveOrder.mGetLinePropertysViaWebserviceBln();
+                cMoveorder.currentMoveOrder.mGetLinePropertyValuesViaWebserviceBln();
                 return true;
             }
             return  true;
@@ -1710,6 +1754,58 @@ public class cMoveorder {
 
 
         return resultObl;
+    }
+    private boolean mGetLinePropertysViaWebserviceBln() {
+
+        cLineProperty.allLinePropertysObl = null;
+        cLineProperty.pTruncateTableBln();
+
+        cLinePropertyValue.allLinePropertysValuesObl = null;
+        cLinePropertyValue.pTruncateTableBln();
+
+        cWebresult WebResult;
+        WebResult =  this.getMoveorderViewModel().pGetLinePropertysViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cLineProperty pickorderLineProperty = new cLineProperty(jsonObject);
+                pickorderLineProperty.pInsertInDatabaseBln();
+            }
+
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIESGET);
+            return  false;
+        }
+    }
+
+    private boolean mGetLinePropertyValuesViaWebserviceBln() {
+
+        cWebresult WebResult;
+        WebResult =  this.getMoveorderViewModel().pGetLinePropertyValuesViaWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cLinePropertyValue linePropertyValue = new cLinePropertyValue(jsonObject);
+                linePropertyValue.pInsertInDatabaseBln();
+                if (linePropertyValue.getValueStr() !=null){
+                    for (cMoveorderLine moveorderLine : this.linesObl()){
+                        if (moveorderLine.getLineNoInt() == linePropertyValue.getLineNoInt()){
+                            if (moveorderLine.presetValueObl == null) {
+                                moveorderLine.presetValueObl = new ArrayList<>();
+                            }
+                            moveorderLine.presetValueObl.add(linePropertyValue);
+                        }
+                    }
+                }
+            }
+            return  true;
+        }
+        else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_WAREHOUSEOPDRACHTLINEITEMPROPERTIEVALUESGET);
+            return  false;
+        }
     }
 
     //End Region Private Methods

@@ -1,15 +1,9 @@
 package nl.icsvertex.scansuite.Activities.Pick;
 
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -42,7 +35,6 @@ import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
-import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
@@ -347,6 +339,28 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     }
 
     public  void pHandeManualAction(cBarcodeScan pvBarcodeScan){
+
+        if (cPickorderLine.currentPickOrderLine.presetValueObl != null){
+            boolean foundBln = false;
+            ArrayList<String> propertyObl = new ArrayList<>();
+            for (cLinePropertyValue propertyValue : cPickorderLine.currentPickOrderLine.presetValueObl){
+                if(propertyValue.getPropertyCodeStr().equalsIgnoreCase(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
+                    propertyObl.add(propertyValue.getValueStr());}
+            }
+            if (propertyObl.size() > 0){
+                for (String string: propertyObl){
+                    if (string.equalsIgnoreCase(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()))){
+                        foundBln = true;
+                        break;
+                    }
+                }
+                if(!foundBln){
+                    cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_property_not_allowed),"",true, true);
+                    return;
+                }
+            }
+        }
+
         if (cLineProperty.currentLineProperty.getItemProperty()== null ) {
             cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_property_unknown),"",true, true);
             return;
@@ -365,7 +379,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return;
         }
 
-        if (!cRegex.pCheckRegexBln( cLineProperty.currentLineProperty.getItemProperty().getLayoutStr(),pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pCheckRegexBln( cLineProperty.currentLineProperty.getItemProperty().getLayoutStr(),cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()))) {
             cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout,cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line),R.raw.badsound, true);
             return;
         }
@@ -377,19 +391,19 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             }
         }
         //Check unique values if needed
-        cResult hulpRst = cLineProperty.currentLineProperty.pCheckScanForUniquePropertyRst(pvBarcodeScan.getBarcodeOriginalStr());
+        cResult hulpRst = cLineProperty.currentLineProperty.pCheckScanForUniquePropertyRst(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
         if (!hulpRst.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true, true);
             return;
         }
 
-        cLineProperty.currentLineProperty.pValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
+        cLineProperty.currentLineProperty.pValueAdded(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
 
         if (this.amountHandledBln && !cLinePropertyValue.currentLinePropertyValue.getItemProperty().getUniqueBln()){
             cLinePropertyValue.currentLinePropertyValue.quantityDbl = cPickorderLine.currentPickOrderLine.getQuantityDbl();
         }
 
-        cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout, pvBarcodeScan.getBarcodeOriginalStr() + " "  + cAppExtension.activity.getString(R.string.addedorhandled),R.raw.headsupsound,false);
+        cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout, cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()) + " "  + cAppExtension.activity.getString(R.string.addedorhandled),R.raw.headsupsound,false);
         this.pTryToChangePickedQuantity();
         this.pRefreshActivity();
 
@@ -550,6 +564,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     }
 
     private void mSetArticleInfo(){
+
+        cLinePropertyValue.quantityPerUnitOfMeasureDbl = cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl();
+
         this.articleDescriptionCompactText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
         this.articleDescription2CompactText.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
         this.articleItemCompactText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
@@ -669,7 +686,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return;
         }
         cUserInterface.pCheckAndCloseOpenDialogs();
-        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment(cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase());
+        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment(cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase(), cPickorderLine.currentPickOrderLine.presetValueObl);
         itemPropertyTextInputFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTTEXTFRAGMENT_TAG);
     }
 

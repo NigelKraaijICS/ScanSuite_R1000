@@ -111,6 +111,8 @@ public class PrintItemLabelFragment extends DialogFragment implements iICSDefaul
     private TextView articleDescription2CompactText;
     private TextView articleItemCompactText;
     private TextView articleBarcodeCompactText;
+    private TextView textViewWorkspaceFail;
+    private TextView textViewLayoutFail;
     private ProgressBar progressBar;
 
     private TextView quantityText;
@@ -219,6 +221,8 @@ public class PrintItemLabelFragment extends DialogFragment implements iICSDefaul
         this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
         this.progressBar = getView().findViewById(R.id.progressBar);
+        this.textViewWorkspaceFail = getView().findViewById(R.id.textViewWorkspaceFail);
+        this.textViewLayoutFail = getView().findViewById(R.id.textViewLayoutFail);
     }
 
 
@@ -828,7 +832,8 @@ public class PrintItemLabelFragment extends DialogFragment implements iICSDefaul
     private void mShowLabelTemplateSpinner() {
 
         if (cLabelTemplate.itemTemplateObl == null ||  cLabelTemplate.itemTemplateObl.size() <= 0) {
-            this.layoutSpinner.setVisibility(View.GONE);
+            this.printButton.setVisibility(View.GONE);
+            this.textViewLayoutFail.setText(cAppExtension.activity.getString(R.string.message_templates_not_available));
             return;
         }
 
@@ -874,7 +879,8 @@ public class PrintItemLabelFragment extends DialogFragment implements iICSDefaul
     private void mShowWorkPlaceSpinner() {
 
         if (cWorkplace.allWorkplacesObl  == null || cWorkplace.allWorkplacesObl.size() == 0) {
-            this.workplaceSpinner.setVisibility(View.GONE);
+            this.printButton.setVisibility(View.GONE);
+            this.textViewWorkspaceFail.setText(cAppExtension.activity.getString(R.string.message_workplaces_not_available));
             return;
         }
 

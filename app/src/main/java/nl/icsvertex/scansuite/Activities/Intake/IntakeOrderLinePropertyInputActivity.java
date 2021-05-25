@@ -40,6 +40,7 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.DatePickerFragment;
@@ -66,8 +67,6 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
 
     private List<String> titleObl;
     private AppCompatImageButton imageButtonDone;
-
-    private  List<cIntakeorderBarcode> scannedBarcodesObl;
 
     private TabLayout itemPropertyTabLayout;
     private ViewPager itemPropertyViewpager;
@@ -353,9 +352,31 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     }
 
     public  void pHandeManualAction(cBarcodeScan pvBarcodeScan){
+
+      if(  cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl() != null){
+          boolean foundBln = false;
+          ArrayList<String> propertyObl = new ArrayList<>();
+          for (cLinePropertyValue propertyValue : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl()){
+              if(propertyValue.getPropertyCodeStr().equalsIgnoreCase(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
+                  propertyObl.add(propertyValue.getValueStr());}
+          }
+          if (propertyObl.size() > 0){
+              for (String string: propertyObl){
+                  if (string.equalsIgnoreCase(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()))){
+                      foundBln = true;
+                      break;
+                  }
+              }
+              if(!foundBln){
+                  cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_property_not_allowed),"",true, true);
+                  return;
+              }
+          }
+      }
+
         //Check if kwnown value is selected
-        if(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValue(pvBarcodeScan.getBarcodeOriginalStr()) != null){
-            cLinePropertyValue.currentLinePropertyValue = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValue(pvBarcodeScan.getBarcodeOriginalStr());
+        if(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValue(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr())) != null){
+            cLinePropertyValue.currentLinePropertyValue = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyValue(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
             cLineProperty.currentLineProperty = cLinePropertyValue.currentLinePropertyValue.getLineProperty();
         }
 
@@ -365,7 +386,7 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
         }
 
 
-        if (!cRegex.pCheckRegexBln( cLineProperty.currentLineProperty.getItemProperty().getLayoutStr(),pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pCheckRegexBln( cLineProperty.currentLineProperty.getItemProperty().getLayoutStr(),cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()))) {
             cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout,cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line),R.raw.badsound, true);
             return;
         }
@@ -377,13 +398,13 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
             }
         }
         //Check unique values if needed
-        cResult hulpRst = cLineProperty.currentLineProperty.pCheckScanForUniquePropertyRst(pvBarcodeScan.getBarcodeOriginalStr());
+        cResult hulpRst = cLineProperty.currentLineProperty.pCheckScanForUniquePropertyRst(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
         if (!hulpRst.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true, true);
             return;
         }
 
-        cLineProperty.currentLineProperty.pIntakeLineValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
+        cLineProperty.currentLineProperty.pIntakeLineValueAdded(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
 
         if (this.amountHandledBln && !cLinePropertyValue.currentLinePropertyValue.getItemProperty().getUniqueBln()){
             //Check if summary line has more than 1 property if so devide equally
@@ -418,7 +439,7 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
             }
         }
 
-        cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout, pvBarcodeScan.getBarcodeOriginalStr() + " "  + cAppExtension.activity.getString(R.string.addedorhandled),R.raw.headsupsound,false);
+        cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout, cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()) + " "  + cAppExtension.activity.getString(R.string.addedorhandled),R.raw.headsupsound,false);
         this.pTryToChangeQuantity();
         this.pRefreshActivity();
 
@@ -645,6 +666,7 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
                 cIntakeorderBarcode.currentIntakeOrderBarcode = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.barcodesObl().get(0);
         }
 
+        cLinePropertyValue.quantityPerUnitOfMeasureDbl = cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl();
         intakeorderBarcode = new cIntakeorderBarcode(cIntakeorderBarcode.currentIntakeOrderBarcode);
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl() > 0) {
@@ -708,7 +730,7 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
         cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
         cIntakeorderMATLine.currentIntakeorderMATLine = null;
         cIntakeorder.currentIntakeOrder.currentBin = null;
-        this.scannedBarcodesObl = null;
+        List<cIntakeorderBarcode> scannedBarcodesObl = null;
     }
 
     private void mShowNumberPickerFragment() {
@@ -736,7 +758,7 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
             return;
         }
         cUserInterface.pCheckAndCloseOpenDialogs();
-        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment( cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase());
+        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment( cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase(), cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl());
         itemPropertyTextInputFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTTEXTFRAGMENT_TAG);
     }
 

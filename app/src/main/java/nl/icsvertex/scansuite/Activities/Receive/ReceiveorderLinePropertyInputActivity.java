@@ -36,6 +36,7 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
+import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
@@ -354,8 +355,29 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     }
 
     public  void pHandeManualAction(cBarcodeScan pvBarcodeScan){
+
+        if(  cReceiveorderSummaryLine.currentReceiveorderSummaryLine.presetValueObl() != null){
+            boolean foundBln = false;
+            ArrayList<String> propertyObl = new ArrayList<>();
+            for (cLinePropertyValue propertyValue : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.presetValueObl()){
+                if(propertyValue.getPropertyCodeStr().equalsIgnoreCase(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
+                    propertyObl.add(propertyValue.getValueStr());}
+            }
+            if (propertyObl.size() > 0){
+                for (String string: propertyObl){
+                    if (string.equalsIgnoreCase(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()))){
+                        foundBln = true;
+                        break;
+                    }
+                }
+                if(!foundBln){
+                    cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_property_not_allowed),"",true, true);
+                    return;
+                }
+            }
+        }
         //Check if kwnown value is selected
-        if(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyValue(pvBarcodeScan.getBarcodeOriginalStr()) != null){
+        if(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyValue(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr())) != null){
             cLinePropertyValue.currentLinePropertyValue = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.linePropertyValue(pvBarcodeScan.getBarcodeOriginalStr());
             cLineProperty.currentLineProperty = cLinePropertyValue.currentLinePropertyValue.getLineProperty();
         }
@@ -366,7 +388,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
         }
 
 
-        if (!cRegex.pCheckRegexBln( cLineProperty.currentLineProperty.getItemProperty().getLayoutStr(),pvBarcodeScan.getBarcodeOriginalStr())) {
+        if (!cRegex.pCheckRegexBln( cLineProperty.currentLineProperty.getItemProperty().getLayoutStr(),cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()))) {
             cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout,cAppExtension.activity.getString(R.string.message_unknown_barcode_for_this_line),R.raw.badsound, true);
             return;
         }
@@ -378,13 +400,13 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
             }
         }
         //Check unique values if needed
-        cResult hulpRst = cLineProperty.currentLineProperty.pCheckScanForUniquePropertyRst(pvBarcodeScan.getBarcodeOriginalStr());
+        cResult hulpRst = cLineProperty.currentLineProperty.pCheckScanForUniquePropertyRst(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
         if (!hulpRst.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"",true, true);
             return;
         }
 
-        cLineProperty.currentLineProperty.pReceiveLineValueAdded(pvBarcodeScan.getBarcodeOriginalStr());
+        cLineProperty.currentLineProperty.pReceiveLineValueAdded(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
 
         if (this.amountHandledBln && !cLinePropertyValue.currentLinePropertyValue.getItemProperty().getUniqueBln()){
 
@@ -418,7 +440,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
             }
         }
 
-        cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout, pvBarcodeScan.getBarcodeOriginalStr() + " "  + cAppExtension.activity.getString(R.string.addedorhandled),R.raw.headsupsound,false);
+        cUserInterface.pShowSnackbarMessage(this.itemPropertyTabLayout, cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()) + " "  + cAppExtension.activity.getString(R.string.addedorhandled),R.raw.headsupsound,false);
         this.pTryToChangeQuantity();
         this.pRefreshActivity();
 
@@ -637,6 +659,8 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
         intakeorderBarcode = new cIntakeorderBarcode(cIntakeorderBarcode.currentIntakeOrderBarcode);
         this.scannedBarcodesObl.add(intakeorderBarcode);
 
+        cLinePropertyValue.quantityPerUnitOfMeasureDbl = cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl();
+
         if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl() > 0) {
             Double handledDbl = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl();
             for (cIntakeorderBarcode intakeorderBarcode : cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl()){
@@ -710,7 +734,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
             return;
         }
         cUserInterface.pCheckAndCloseOpenDialogs();
-        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment( cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase());
+        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment( cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase(), cReceiveorderSummaryLine.currentReceiveorderSummaryLine.presetValueObl());
         itemPropertyTextInputFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTTEXTFRAGMENT_TAG);
     }
 
@@ -719,7 +743,8 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
 
         cUserInterface.pShowGettingData();
 
-        if (!pvCancelBln){ new Thread(new Runnable() {
+        if (!pvCancelBln){
+            new Thread(new Runnable() {
             public void run() {
                 mSendScans();
             }

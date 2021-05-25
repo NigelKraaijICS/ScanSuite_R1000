@@ -28,6 +28,7 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineItemPropertyActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.R;
@@ -129,6 +130,8 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
         this.doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                quantityNumberPicker.clearFocus();
+
                 if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                     PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
                     cLinePropertyValue.currentLinePropertyValue.quantityDbl = quantityNumberPicker.getValue();
@@ -165,7 +168,16 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
                     dismiss();
                     return;
                 }
-                quantityNumberPicker.clearFocus();
+                if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+                    MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity)cAppExtension.activity;
+                    cLinePropertyValue.currentLinePropertyValue.quantityDbl = quantityNumberPicker.getValue();
+
+                    moveLineItemPropertyActivity.pTryToChangeQuantity(true, true, cLinePropertyValue.currentLinePropertyValue.quantityDbl);
+                    moveLineItemPropertyActivity.pRefreshActivity();
+                    dismiss();
+                    return;
+                }
+
                 Intent intent = new Intent(cPublicDefinitions.NUMBERINTENT_NUMBER);
                 intent.putExtra(cPublicDefinitions.NUMBERINTENT_EXTRANUMBER, quantityNumberPicker.getValue());
                 LocalBroadcastManager.getInstance(cAppExtension.context).sendBroadcast(intent);

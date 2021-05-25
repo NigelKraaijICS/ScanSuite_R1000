@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 
 public class cMoveItemVariant {
@@ -122,6 +123,48 @@ public class cMoveItemVariant {
     }
 
     public  List<cMoveorderLine> linesObl;
+    public ArrayList<cLinePropertyValue> linePropertyValueObl;
+
+    public void pFillPropertyValueObl(){
+        linePropertyValueObl = new ArrayList<>();
+
+        for (cMoveorderLine moveorderLine : this.linesObl) {
+
+            if (moveorderLine.getActionTypeCodeStr().equalsIgnoreCase("PLACE")) {
+                continue;
+            }
+
+           for (cLinePropertyValue linePropertyValue : moveorderLine.linePropertyValuesObl()){
+                linePropertyValue.quantityAvailableDbl = linePropertyValue.getQuantityDbl();
+                linePropertyValue.quantityDbl = 0;
+                linePropertyValueObl.add(linePropertyValue);
+           }
+        }
+        this.pUpdatePropertyValueObl();
+    }
+
+    public void pUpdatePropertyValueObl(){
+        if (linePropertyValueObl == null){
+            return;
+        }
+        for (cMoveorderLine moveorderLine : this.linesObl) {
+
+            if (moveorderLine.getActionTypeCodeStr().equalsIgnoreCase("TAKE")) {
+                continue;
+            }
+
+            for (cLinePropertyValue linePropertyValue : moveorderLine.linePropertyValuesObl()){
+
+                for (cLinePropertyValue loopValue : linePropertyValueObl){
+                    if (loopValue.getPropertyCodeStr().equalsIgnoreCase(linePropertyValue.getPropertyCodeStr()) && loopValue.getValueStr().equalsIgnoreCase(linePropertyValue.getValueStr())){
+                        loopValue.quantityAvailableDbl -= linePropertyValue.getQuantityDbl();
+                        loopValue.quantityDbl = 0;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     public cMoveItemVariant(String pvItemNoStr, String pvVariantCodeStr) {
         this.itemNoStr = pvItemNoStr;

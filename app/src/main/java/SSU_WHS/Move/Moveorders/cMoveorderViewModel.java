@@ -46,6 +46,8 @@ public class cMoveorderViewModel extends AndroidViewModel {
 
     public cWebresult pHandledViaWebserviceWrs(){return this.Repository.pHandledViaWebserviceWrs();}
 
+    public cWebresult pGetLinePropertysViaWebserviceWrs() {return this.Repository.pGetLinePropertysViaWebserviceWrs(); }
 
+    public cWebresult pGetLinePropertyValuesViaWebserviceWrs() {return this.Repository.pGetLinePropertyValuesViaWebserviceWrs(); }
 
 }

@@ -138,6 +138,7 @@ public class ScanBinFragment extends DialogFragment implements iICSDefaultFragme
             @Override
             public void onClick(View view) {
 
+
                 if (editTextScanBin.getText().toString().trim().isEmpty()) {
                     cUserInterface.pDoNope(editTextScanBin, true, true);
                     return;

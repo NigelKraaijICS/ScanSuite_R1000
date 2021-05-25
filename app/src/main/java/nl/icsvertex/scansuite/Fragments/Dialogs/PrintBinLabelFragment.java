@@ -97,6 +97,8 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
 
     private TextView quantityText;
     private TextView quantityRequiredText;
+    private TextView textViewWorkspaceFail;
+    private TextView textViewLayoutFail;
     private AppCompatImageButton imageButtonMinus;
     private AppCompatImageButton imageButtonPlus;
 
@@ -190,6 +192,8 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
         this.imageButtonMinus = getView().findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = getView().findViewById(R.id.imageButtonPlus);
         this.progressBar = getView().findViewById(R.id.progressBar);
+        this.textViewWorkspaceFail = getView().findViewById(R.id.textViewWorkspaceFail);
+        this.textViewLayoutFail = getView().findViewById(R.id.textViewLayoutFail);
     }
 
 
@@ -327,7 +331,8 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
     private void mShowLabelTemplateSpinner() {
 
         if (cLabelTemplate.binTemplateObl == null ||  cLabelTemplate.binTemplateObl.size() <= 0) {
-            this.layoutSpinner.setVisibility(View.GONE);
+            this.printButton.setVisibility(View.GONE);
+            this.textViewLayoutFail.setText(cAppExtension.activity.getString(R.string.message_templates_not_available));
             return;
         }
 
@@ -447,7 +452,8 @@ public class PrintBinLabelFragment extends DialogFragment implements iICSDefault
     private void mShowWorkPlaceSpinner() {
 
         if (cWorkplace.allWorkplacesObl  == null || cWorkplace.allWorkplacesObl.size() == 0) {
-            this.workplaceSpinner.setVisibility(View.GONE);
+            this.textViewWorkspaceFail.setText(cAppExtension.activity.getString(R.string.message_workplaces_not_available));
+            this.printButton.setVisibility(View.GONE);
             return;
         }
 

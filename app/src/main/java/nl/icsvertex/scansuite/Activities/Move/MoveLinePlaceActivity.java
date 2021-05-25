@@ -667,6 +667,25 @@ public class MoveLinePlaceActivity extends AppCompatActivity implements iICSDefa
 
         }
 
+        //Check for item Properties
+        if (cMoveorder.currentMoveOrder.currentMoveItemVariant != null){
+
+            cMoveorder.currentMoveOrder.currentMoveItemVariant.pFillPropertyValueObl();
+
+            if( cMoveorder.currentMoveOrder.currentMoveItemVariant.linesObl.get(0).hasPropertysBln()){
+                //Handle through properties
+                cMoveorderLine.currentMoveOrderLine = new cMoveorderLine(cMoveorder.currentMoveOrder.currentMoveItemVariant.getItemNoStr(), cMoveorder.currentMoveOrder.currentMoveItemVariant.getVariantCodeStr());
+                cMoveorderLine.currentMoveOrderLine.quantityDbl = cMoveorder.currentMoveOrder.currentMoveItemVariant.getQuantityTodoPlaceDbl();
+                MoveLineItemPropertyActivity.currentModus = MoveLineItemPropertyActivity.modusEnu.GENERATEDPLACE;
+                Intent intent = new Intent(cAppExtension.context, MoveLineItemPropertyActivity.class);
+                cAppExtension.activity.startActivity(intent);
+                cAppExtension.activity.finish();
+
+                result.resultBln = true;
+                return result;
+            }
+        }
+
         //Scanned barcode matches current barcode so raise barcode scanned
         this.mBarcodeScanned();
         this.mFieldsInitialize();
