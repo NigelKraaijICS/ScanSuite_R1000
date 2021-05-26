@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -541,16 +540,13 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
 
 
     private void mSetCloseListener() {
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonDone.setOnClickListener(view -> {
 
-                amountHandledBln = true;
-                if (!mCheckAllPropertysHandledBln()){
-                    return;
-                }
-                pHandled();
+            amountHandledBln = true;
+            if (!mCheckAllPropertysHandledBln()){
+                return;
             }
+            pHandled();
         });
     }
 
@@ -739,7 +735,7 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
         newQuantityDbl= cMoveorderLine.currentMoveOrderLine.quantityHandledDbl - pvAmountDbl;
 
         if (newQuantityDbl <= 0) {
-            cMoveorderLine.currentMoveOrderLine.quantityHandledDbl = (double) 0;
+            cMoveorderLine.currentMoveOrderLine.quantityHandledDbl = 0;
         }else {
             //Set the new quantityDbl and show in Activity
             cMoveorderLine.currentMoveOrderLine.quantityHandledDbl = newQuantityDbl;
@@ -814,8 +810,6 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
                 availableDbl = 999;
             }
         }
-
-
         bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, availableDbl);
         NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
         numberpickerFragment.setArguments(bundle);
