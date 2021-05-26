@@ -277,6 +277,8 @@
     <string name="quantity_per_scan">Quantity per scan: </string>
     <string name="error_could_not_close_order">The order could not be closed, please try again</string>
     <string name="message_overpick_not_allowed">Picking more than requested not allowed</string>
+    <string name="message_overtake_not_allowed">Taking more than available not possible</string>
+    <string name="message_overplace_not_allowed">Placing more than available not possible</string>
     <!--endregion Pickorder Pick-->
 
     <!--region itemproperty-->
@@ -659,6 +661,7 @@
     <string name="hint_add_variantcode">Type variantcode</string>
     <string name="hint_add_barcode">Scan or type barcode</string>
     <string name="hint_add_article">Scan or type article</string>
+    <string name="hint_add_property">Scan or type Item Property</string>
     <string name="button_add_article">Add article</string>
     <string name="add_article_header_default">Add Article</string>
     <string name="search_article_header_default">Search Article</string>
@@ -696,6 +699,7 @@
     <string name="message_bin_unknown">Bin %1$s unknown to this branch</string>
     <string name="multiple_barcodes">Multiple barcodes</string>
     <string name="message_unknown_barcode_for_this_line">Unknown barcode for this line</string>
+    <string name="message_unknown_value">Value not valid for property</string>
     <string name="message_adding_or_changing_bin_now_allowed">Adding/changing bins is not allowed</string>
     <string name="quantity_scanned">Quantity scanned:</string>
     <string name="message_split_line">Split line</string>
@@ -779,6 +783,8 @@
     <string name="add_document_header_default">Add Document</string>
     <string name="error_getting_return_reasons">Getting return reasons failes</string>
     <string name="choose_reason">Choose returnreason</string>
+    <string name="fill_property">Fill item property</string>
+    <string name="select_property">Select item property</string>
     <string name="hint_add_reason">Scan or select reason</string>
     <string name="select_reason_switch" translatable="false">Select_reason_switch</string>
     <string name="select_reason">Select reason</string>
@@ -929,6 +935,7 @@
     <string name="message_select_workflow">Select a workflow</string>
     <string name="message_shipment_incomplete">Shipment incomplete</string>
     <string name="message_workplaces_not_available">Workplaces not available</string>
+    <string name="message_templates_not_available">Templates not available</string>
     <string name="number_of_documents">Documents:</string>
     <string name="documents">Documents</string>
     <string name="message_no_addresses_to_check">No addresses to check</string>

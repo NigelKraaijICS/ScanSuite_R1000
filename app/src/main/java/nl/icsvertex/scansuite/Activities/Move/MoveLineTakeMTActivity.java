@@ -620,6 +620,21 @@ public class MoveLineTakeMTActivity extends AppCompatActivity implements iICSDef
             return result;
         }
 
+        //Check for item Properties
+        if (cMoveorderLine.currentMoveOrderLine != null){
+            if( cMoveorderLine.currentMoveOrderLine.hasPropertysBln()){
+                //Handle through properties
+
+                MoveLineItemPropertyActivity.currentModus = MoveLineItemPropertyActivity.modusEnu.MTTAKE;
+                Intent intent = new Intent(cAppExtension.context, MoveLineItemPropertyActivity.class);
+                cAppExtension.activity.startActivity(intent);
+                cAppExtension.activity.finish();
+
+                result.resultBln = true;
+                return result;
+            }
+        }
+
         //Scanned barcode matches current barcode so raise barcode scanned
         this.mBarcodeScanned();
         this.mFieldsInitialize();

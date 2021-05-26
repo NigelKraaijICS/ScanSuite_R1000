@@ -48,6 +48,8 @@ import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderCompositeBarcode.cPickorderCompositeBarcode;
 import SSU_WHS.Picken.PickorderLineBarcodes.cPickorderLineBarcode;
@@ -1556,7 +1558,13 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        ItemPropertyNoInputFragment itemPropertyNoInputFragment = new ItemPropertyNoInputFragment();
+        List<cLinePropertyValue> linePropertyValues = new ArrayList<>();
+
+        for (cLineProperty lineProperty : cPickorderLine.currentPickOrderLine.linePropertyNoInputObl()) {
+            linePropertyValues.addAll(lineProperty.propertyValueObl());
+        }
+
+        ItemPropertyNoInputFragment itemPropertyNoInputFragment = new ItemPropertyNoInputFragment(linePropertyValues);
         itemPropertyNoInputFragment.show(cAppExtension.fragmentManager , cPublicDefinitions.ITEMPROPERTYVALUENOINPUTFRAGMENT_TAG);
         cUserInterface.pPlaySound(R.raw.message, 0);
 

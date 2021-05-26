@@ -239,7 +239,7 @@ public class cPickorderLine {
         }
 
         for (cLineProperty lineProperty :this.linePropertyObl()) {
-            if (lineProperty.getIsInputBln() &&  lineProperty.getIsRequiredBln()) {
+            if (lineProperty.getIsInputBln()) {
                 resultObl.add(lineProperty);
             }
         }

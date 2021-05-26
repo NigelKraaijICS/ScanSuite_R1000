@@ -26,6 +26,7 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.CreateIntakeOrReceiveActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Move.CreateMoveActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineItemPropertyActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
@@ -75,6 +76,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.DatePickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyTextInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
@@ -415,6 +417,11 @@ public class cBarcodeScan {
                         moveLinePlaceMTActivity.pHandleScan(barcodeScan);
                     }
 
+                    if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+                        MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity)cAppExtension.activity;
+                        moveLineItemPropertyActivity.pHandleScan(barcodeScan);
+                    }
+
                     if (cAppExtension.activity instanceof MoveLineTakeActivity){
                         MoveLineTakeActivity moveLineTakeActivity = (MoveLineTakeActivity)cAppExtension.activity;
                         moveLineTakeActivity.pHandleScan(barcodeScan);
@@ -555,6 +562,12 @@ public class cBarcodeScan {
                     if (cAppExtension.dialogFragment instanceof SearchArticleFragment) {
                         SearchArticleFragment searchArticleFragment = (SearchArticleFragment)cAppExtension.dialogFragment;
                         searchArticleFragment.pHandleScan(barcodeScan);
+                        return;
+                    }
+
+                    if (cAppExtension.dialogFragment instanceof ItemPropertyStockFragment) {
+                        ItemPropertyStockFragment itemPropertyStockFragment = (ItemPropertyStockFragment)cAppExtension.dialogFragment;
+                        itemPropertyStockFragment.pHandleScan(barcodeScan);
                         return;
                     }
 

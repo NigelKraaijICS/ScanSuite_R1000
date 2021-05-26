@@ -24,6 +24,7 @@ import nl.icsvertex.scansuite.Activities.Intake.IntakeorderMATLinesActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineItemPropertyActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLinePlaceMTActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineTakeActivity;
@@ -425,6 +426,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
             MoveorderLinesPlaceGeneratedActivity moveorderLinesPlaceGeneratedActivity = (MoveorderLinesPlaceGeneratedActivity)cAppExtension.activity;
             moveorderLinesPlaceGeneratedActivity.pDone();
         }
+        if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+            MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity)cAppExtension.activity;
+            moveLineItemPropertyActivity.takeConfirmedBln = true;
+            moveLineItemPropertyActivity.pHandled();
+            this.dismiss();
+            return;
+        }
 
     }
 
@@ -577,6 +585,13 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof MoveLinesActivity){
             this.dismiss();
+        }
+
+        if (cAppExtension.activity instanceof  MoveLineItemPropertyActivity) {
+            MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity)cAppExtension.activity;
+            moveLineItemPropertyActivity.pCancel();
+            this.dismiss();
+            return;
         }
 
         if (cAppExtension.activity instanceof MoveLineTakeActivity) {

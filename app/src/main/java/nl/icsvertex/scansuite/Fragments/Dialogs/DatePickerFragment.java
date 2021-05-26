@@ -25,6 +25,7 @@ import ICS.cAppExtension;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineItemPropertyActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveorderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.R;
@@ -35,7 +36,8 @@ public  class DatePickerFragment extends DialogFragment implements iICSDefaultFr
         if (pvLinePropertyValues != null){
             this.propertyObl = new ArrayList<>();
             for (cLinePropertyValue propertyValue : pvLinePropertyValues){
-                this.propertyObl.add(propertyValue.getValueStr());
+                if(propertyValue.getPropertyCodeStr().equalsIgnoreCase(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
+                this.propertyObl.add(propertyValue.getValueStr());}
             }
         }
 
@@ -202,13 +204,25 @@ public  class DatePickerFragment extends DialogFragment implements iICSDefaultFr
             inventoryLinePropertyInputActivity.pHandeManualAction(cBarcodeScan.pFakeScan(this.dateStr));
             dismiss();
         }
+        if (cAppExtension.activity instanceof MoveLineItemPropertyActivity){
+            dismiss();
+            MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity) cAppExtension.activity;
+            moveLineItemPropertyActivity.pHandeManualAction(cBarcodeScan.pFakeScan(this.dateStr));
+
+        }
     }
 
     private boolean mCheckValueAllowedBln(){
         if (this.propertyObl == null || this.propertyObl.size() < 1){
             return true;
         }
-
+        if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity){
+            return true;
+        }
+        //Check if allowed in activity
+        if (cAppExtension.activity instanceof MoveLineItemPropertyActivity){
+            return true;
+        }
         for (String string: this.propertyObl) {
             if (string.equalsIgnoreCase(this.dateStr)){
                 return  true;

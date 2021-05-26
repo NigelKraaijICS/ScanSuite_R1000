@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -29,6 +31,7 @@ import ICS.cAppExtension;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValueNoInputAdapter;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.PagerAdapters.ArticleInfoPagerAdapter;
 import nl.icsvertex.scansuite.R;
 
@@ -44,15 +47,10 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
     private TextView articleItemCompactText;
     private TextView articleBarcodeCompactText;
 
-   // private  RecyclerView itemPropertyRecyclerview;
+    private RecyclerView itemPropertyRecyclerview;
     private  Button buttonOK;
 
-    private TabLayout itemPropertyTabLayout;
-    private ViewPager itemPropertyViewpager;
-    public  int numberOfTabsInt;
-
     private  List<cLinePropertyValue> localItemPropertyValueObl;
-
 
     private cLinePropertyValueNoInputAdapter linePropertyAdapter;
     private cLinePropertyValueNoInputAdapter getLinePropertyAdapter(){
@@ -71,10 +69,10 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
         // Required empty public constructor
     }
 
-//    public ItemPropertyNoInputFragment(List<cPickorderLinePropertyValue> pvDataObl) {
-//        this.localItemPropertyValueObl = pvDataObl;
-//    }
-    //End Region Constructor
+    public ItemPropertyNoInputFragment(List<cLinePropertyValue> pvDataObl) {
+        this.localItemPropertyValueObl = pvDataObl;
+    }
+   // End Region Constructor
 
     //Region Default Methods
 
@@ -110,7 +108,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
         this.mFieldsInitialize();
         this.mSetListeners();
         this.mSetToolbar();
-     //   this.mSetItemPropertyValueRecycler();
+       this.mSetItemPropertyValueRecycler();
     }
 
     @Override
@@ -125,9 +123,7 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
             this.articleItemCompactText = getView().findViewById(R.id.articleItemCompactText);
             this.articleBarcodeCompactText = getView().findViewById(R.id.articleBarcodeCompactText);
 
-            //this.itemPropertyRecyclerview = getView().findViewById(R.id.itemPropertyRecyclerview);
-            this.itemPropertyTabLayout = getView().findViewById(R.id.itemPropertyTabLayout);
-            this.itemPropertyViewpager = getView().findViewById(R.id.itemPropertyViewpager);
+            this.itemPropertyRecyclerview = getView().findViewById(R.id.itemPropertyRecyclerview);
             this.buttonOK = getView().findViewById(R.id.buttonOK);
         }
     }
@@ -136,12 +132,11 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
     @Override
     public void mFieldsInitialize() {
         this.mSetArticleInfo();
-        this.mBuildAndFillTabs();
     }
 
     @Override
     public void mSetListeners() {
-     //   this.mSetHeaderListener();
+        this.mSetHeaderListener();
         this.mSetCloseListener();
     }
 
@@ -181,64 +176,51 @@ public class ItemPropertyNoInputFragment extends DialogFragment implements iICSD
         });
     }
 
-//    private void mSetHeaderListener() {
-//        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mScrollToBottom();
-//            }
-//        });
-//
-//        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                mScrollToTop();
-//                return true;
-//            }
-//        });
-//    }
+    private void mSetHeaderListener() {
+        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mScrollToBottom();
+            }
+        });
 
-//    private void mScrollToTop() {
-//        this.itemPropertyRecyclerview.smoothScrollToPosition(0);
-//    }
-//
-//    private void mScrollToBottom() {
-//        if (this.getPickorderLinePropertyAdapter()!= null) {
-//            if (this.getPickorderLinePropertyAdapter().getItemCount() > 0) {
-//                this.itemPropertyRecyclerview.smoothScrollToPosition(this.getPickorderLinePropertyAdapter().getItemCount() -1 );
-//            }
-//        }
-//    }
-//
-//    private void mSetItemPropertyValueRecycler() {
-//        this.itemPropertyRecyclerview.setHasFixedSize(false);
-//        this.itemPropertyRecyclerview.setAdapter(this.getPickorderLinePropertyAdapter());
-//        this.itemPropertyRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-//        this.getPickorderLinePropertyAdapter().pFillData(this.localItemPropertyValueObl);
-//    }
-    private void  mSetArticleInfo(){
-
-        this.articleDescriptionCompactText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
-        this.articleDescription2CompactText.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
-        this.articleItemCompactText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
-        this.articleBarcodeCompactText.setVisibility(View.GONE);
-        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
+        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mScrollToTop();
+                return true;
+            }
+        });
     }
 
-    private void mBuildAndFillTabs() {
-        ArrayList<Fragment> fragments = new ArrayList<>();
+    private void mScrollToTop() {
+        this.itemPropertyRecyclerview.smoothScrollToPosition(0);
+    }
 
-//        this.itemPropertyTabLayout = getView().findViewById(R.id.itemPropertyTabLayout);
-//        for (cPickorderLineProperty pickorderLineProperty : cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl()) {
-//
-//            DynamicItemPropertyFragment dynamicItemPropertyFragment = new DynamicItemPropertyFragment(pickorderLineProperty.getPropertyCodeStr(), pickorderLineProperty.propertyValueObl());
-//            fragments.add(dynamicItemPropertyFragment);
-//
-//        }
+    private void mScrollToBottom() {
+        if (this.getLinePropertyAdapter()!= null) {
+            if (this.getLinePropertyAdapter().getItemCount() > 0) {
+                this.itemPropertyRecyclerview.smoothScrollToPosition(this.getLinePropertyAdapter().getItemCount() -1 );
+            }
+        }
+    }
 
-        ArticleInfoPagerAdapter articleInfoPagerAdapter = new ArticleInfoPagerAdapter(this.getChildFragmentManager(),  fragments);
-        this.itemPropertyViewpager.setAdapter(articleInfoPagerAdapter);
-        this.itemPropertyTabLayout.setupWithViewPager(itemPropertyViewpager);
+    private void mSetItemPropertyValueRecycler() {
+        this.itemPropertyRecyclerview.setHasFixedSize(false);
+        this.itemPropertyRecyclerview.setAdapter(this.getLinePropertyAdapter());
+        this.itemPropertyRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+        this.getLinePropertyAdapter().pFillData(this.localItemPropertyValueObl);
+    }
+    private void  mSetArticleInfo(){
+
+        if (cAppExtension.activity instanceof PickorderPickActivity){
+            this.articleDescriptionCompactText.setText(cPickorderLine.currentPickOrderLine.getDescriptionStr());
+            this.articleDescription2CompactText.setText(cPickorderLine.currentPickOrderLine.getDescription2Str());
+            this.articleItemCompactText.setText(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
+        }
+
+        this.articleBarcodeCompactText.setVisibility(View.GONE);
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
     }
     //End Region Private Methods
 }

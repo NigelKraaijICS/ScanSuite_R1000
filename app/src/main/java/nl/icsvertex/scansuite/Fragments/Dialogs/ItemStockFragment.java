@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,7 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
 
     private TextView textViewItem;
     private Button buttonOk;
+    private ProgressBar progressBar;
 
     //End Region Private Properties
 
@@ -109,6 +111,8 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
             this.textViewItem = getView().findViewById(R.id.textViewItem);
             this.stockRecyclerview = getView().findViewById(R.id.stockRecyclerview);
             this.buttonOk = getView().findViewById(R.id.buttonOk);
+            this.progressBar = getView().findViewById(R.id.progressBar);
+            this.progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -116,7 +120,16 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void mFieldsInitialize() {
         this.textViewItem.setText(cArticle.currentArticle.getItemNoStr() + " " + cArticle.currentArticle.getVariantCodeStr());
-        this.mGetData();
+        this.progressBar.setVisibility(View.VISIBLE);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mGetData();
+            }
+        };
+        Thread getData = new Thread(runnable);
+        getData.start();
+
     }
 
     @Override
@@ -133,6 +146,7 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
 
         if (cArticle.currentArticle.stockObl != null && cArticle.currentArticle.stockObl.size() > 0 ) {
             this.mShowNoLinesIcon(true);
+            this.progressBar.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -144,6 +158,7 @@ public class ItemStockFragment extends DialogFragment implements iICSDefaultFrag
         else {
             this.mShowNoLinesIcon(true);
         }
+        this.progressBar.setVisibility(View.INVISIBLE);
     }
 
     private  void mShowNoLinesIcon(final Boolean pvShowBln){

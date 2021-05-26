@@ -19,7 +19,7 @@ public class cLinePropertyValue implements Comparable{
 
     public int getLineNoInt() {return lineNoInt;}
 
-    private String propertyCodeStr;
+    private final String propertyCodeStr;
     public String getPropertyCodeStr() {return propertyCodeStr;}
 
     public cLineProperty getLineProperty(){
@@ -54,19 +54,23 @@ public class cLinePropertyValue implements Comparable{
 
     }
 
-    private String valueStr;
+    private final String valueStr;
     public String getValueStr() {return valueStr;}
 
-    private int sortingSequenceNoInt;
+    private final int sortingSequenceNoInt;
     public  int getSortingSequenceNoInt(){return sortingSequenceNoInt;}
 
     public double quantityDbl;
     public double getQuantityDbl() {return quantityDbl;}
 
-    private cLinePropertyValueEntity linePropertyValueEntity;
+    public double quantityAvailableDbl;
+    public double getQuantityAvailableDbl(){return quantityAvailableDbl;}
+
+    private final cLinePropertyValueEntity linePropertyValueEntity;
 
     public static cLinePropertyValue currentLinePropertyValue;
     public static ArrayList<cLinePropertyValue> allLinePropertysValuesObl;
+    public static Double quantityPerUnitOfMeasureDbl;
 
     private cLinePropertyValueViewModel getLinePropertyValueViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cLinePropertyValueViewModel.class);
@@ -138,4 +142,8 @@ public class cLinePropertyValue implements Comparable{
 
     }
 
+    public int compareStr(Object o) {
+        String compareStr = ((cLinePropertyValue)o).getPropertyCodeStr();
+        return compareStr.compareToIgnoreCase( this.getPropertyCodeStr());
+    }
 }

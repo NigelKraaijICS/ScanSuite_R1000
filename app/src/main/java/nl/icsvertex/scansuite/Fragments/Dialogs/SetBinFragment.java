@@ -25,8 +25,11 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Users.cUser;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Picken.Storement.cStorement;
+import nl.icsvertex.scansuite.Activities.Move.MoveLineItemPropertyActivity;
 import nl.icsvertex.scansuite.Activities.Store.StoreorderLinesActivity;
 import nl.icsvertex.scansuite.R;
 
@@ -134,6 +137,9 @@ public class SetBinFragment extends DialogFragment implements iICSDefaultFragmen
         if (!cUser.currentUser.currentBranch.getPickDefaultStorageBinStr().isEmpty()) {
             this.editTextSetBin.setText(cUser.currentUser.currentBranch.getPickDefaultStorageBinStr());
         }
+        if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+            this.cancelButton.setVisibility(View.GONE);
+        }
 
     }
 
@@ -169,6 +175,12 @@ public class SetBinFragment extends DialogFragment implements iICSDefaultFragmen
                     cAppExtension.dialogFragment.dismiss();
                 }
 
+                if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+
+                    cMoveorder.currentMoveOrder.currentBranchBin  = cUser.currentUser.currentBranch.pGetBinByCode(editTextSetBin.getText().toString());
+                    cAppExtension.dialogFragment.dismiss();
+                }
+
             }
         });
     }
@@ -195,8 +207,9 @@ public class SetBinFragment extends DialogFragment implements iICSDefaultFragmen
             if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(), cBarcodeLayout.barcodeLayoutEnu.BIN)) {
                 foundBin = true;
             }
+            cBranchBin branchBin =  cUser.currentUser.currentBranch.pGetBinByCode(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
 
-            if (foundBin) {
+            if (branchBin != null && foundBin) {
                 //has prefix, is bin
                 this.editTextSetBin.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
                 this.setBinButton.callOnClick();

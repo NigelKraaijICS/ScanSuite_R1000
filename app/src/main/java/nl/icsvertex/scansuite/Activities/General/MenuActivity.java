@@ -578,6 +578,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     public  void pHandleHandleBINScanned(String pvBinCodeStr) {
 
     String binCodeStr = cRegex.pStripRegexPrefixStr(pvBinCodeStr);
+        cUserInterface.pHideKeyboard();
 
         cBranchBin branchBin = cUser.currentUser.currentBranch.pGetBinByCode(binCodeStr);
         if (branchBin == null) {

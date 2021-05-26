@@ -26,6 +26,7 @@ public class cDatabase {
     public static final String TABLENAME_ARTICLE = "Article" ;
     public static final String TABLENAME_ARTICLEBARCODE = "ArticleBarcode" ;
     public static final String TABLENAME_ARTICLESTOCK = "ArticleStock";
+    public static final String TABLENAME_ARTICLEPROPERTYSTOCK = "ArticlePropertyStock";
     public static final String TABLENAME_COMMENT = "Comment";
     public static final String TABLENAME_AUTHORISATIONS = "Authorisations";
     public static final String TABLENAME_SALESORDERPACKINGTABLE = "SalesOrderPackingTable";

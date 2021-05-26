@@ -50,6 +50,7 @@ import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
 import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
@@ -58,6 +59,8 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyStockFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyTextInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
@@ -234,9 +237,9 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         super.onDestroy();
         LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
 
-        if (cAppExtension.activity instanceof  MoveLineTakeActivity) {
-            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
-        }
+//        if (cAppExtension.activity instanceof  MoveLineTakeActivity) {
+//            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
+//        }
 
     }
 
@@ -667,6 +670,11 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
                 //Get article from cache
                 cMoveorder.currentMoveOrder.currentArticle = cMoveorder.currentMoveOrder.articleObl.get(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getItemNoAndVariantCodeStr());
+                //Double check for properties possibly not yet in cache
+                assert cMoveorder.currentMoveOrder.currentArticle != null;
+                if (cMoveorder.currentMoveOrder.currentArticle.propertyObl == null){
+                    cMoveorder.currentMoveOrder.currentArticle.pGetPropertyViaWebservice();
+                }
                 if (cMoveorder.currentMoveOrder.currentArticle == null) {
                     result.resultBln = false;
                     result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_unknown_article));
@@ -807,7 +815,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
             result = callableResultBln.get();
 
             if (!result.resultBln) {
-                quantityRequiredText.setVisibility(View.GONE);
+                cAppExtension.activity.runOnUiThread(() ->{   quantityRequiredText.setVisibility(View.GONE);});
                 result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_barcode_unknown_ERP,pvBarcodeScan.barcodeOriginalStr));
 
                 return  result;
@@ -887,6 +895,13 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
         cAppExtension.activity.runOnUiThread(() ->    this.quantityRequiredText.setText(cText.pDoubleToStringStr(articleStock.getQuantityDbl())));
         return  result;
+    }
+
+    private void mGetStockWithProperty(){
+        ItemPropertyStockFragment itemPropertyStockFragment = new ItemPropertyStockFragment(cMoveorder.currentMoveOrder.currentArticle, cMoveorder.currentMoveOrder.getOrderTypeStr());
+        itemPropertyStockFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYSTOCKFRAGMENT_TAG);
+
+
     }
 
     private cResult mCheckForPreviousLineRst(){
@@ -1068,6 +1083,12 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         cResult result;
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+
+        if (cMoveorder.currentMoveOrder.currentArticle.propertyObl != null){
+            //Search with propertyvalues for stock
+            this.mGetStockWithProperty();
+            return;
+        }
 
         cUserInterface.pShowGettingData();
         result = this.mGetArticleStockForBINRst();

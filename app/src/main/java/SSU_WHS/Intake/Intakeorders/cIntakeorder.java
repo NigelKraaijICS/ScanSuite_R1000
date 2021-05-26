@@ -828,7 +828,10 @@ public class cIntakeorder {
                     int lineNoInt = receiveorderLine.getLineNoInt();
 
                     for (cArticleProperty articleProperty:cArticle.currentArticle.propertyObl ){
-                        cLineProperty lineProperty = new cLineProperty(articleProperty, lineNoInt);
+                        cLineProperty lineProperty = new cLineProperty(articleProperty,
+                                                                       lineNoInt,
+                                                                       articleProperty.InputWorkflowObl().contains(cIntakeorder.currentIntakeOrder.getOrderTypeStr()),
+                                                                       articleProperty.RequiredWorkflowObl().contains(cIntakeorder.currentIntakeOrder.getOrderTypeStr()));
 
                         if(cLineProperty.allLinePropertysObl == null){
                             cLineProperty.allLinePropertysObl = new ArrayList<>();

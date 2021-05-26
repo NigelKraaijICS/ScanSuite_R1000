@@ -149,6 +149,8 @@
     <string name="message_underpick_property_text">Je hebt er %1$s van deze nodig, je hebt er %2$s gepickt.\n\nHet aantal wat je ingeeft in dit tabblad is het gepickte aantal voor dit artikel</string>
     <string name="message_undermove_text">Je hebt er %1$s van deze nodig, je hebt er %2$s verplaatst.\n\nWeet je zeker dat er geen artikelen meer beschikbaar zijn en dat je deze regel wil afsluiten?</string>
     <string name="message_overpick_not_allowed">Er mag niet meer worden gepickt dan gevraagd</string>
+    <string name="message_overtake_not_allowed">Het is niet mogelijk meer te nemen dan beschikbaar</string>
+    <string name="message_overplace_not_allowed">Meer plaatsen dan beschikbaar is onmogelijk</string>
     <string name="button_close_orderline">Bevestigen</string>
     <string name="choose_barcode">Kies barcode</string>
     <string name="quantity_per_scan">Aantal per scan</string>
@@ -453,6 +455,7 @@
     <string name="hint_add_itemno">Geef artikelnummer in</string>
     <string name="hint_add_variantcode">Geef variantcode in</string>
     <string name="hint_add_barcode">Scan of typ barcode</string>
+    <string name="hint_add_property">Scan of typ Item Property</string>
     <string name="hint_add_article">Geef artikel in</string>
     <string name="message_accept_switch">Accepteer tabblad wissel</string>
     <string name="message_cancel_switch">Annuleer wissel</string>
@@ -499,6 +502,7 @@
     <string name="message_bin_unknown">Locatie %1$s onbekend voor deze vestiging</string>
     <string name="multiple_barcodes">Meerdere barcodes</string>
     <string name="message_unknown_barcode_for_this_line">Onbekende barcode voor deze regel</string>
+    <string name="message_unknown_value">Waarde niet geldig voor property</string>
     <string name="message_adding_or_changing_bin_now_allowed">"Locaties toevoegen/wijzigen is niet toegestaan "</string>
     <string name="quantity_scanned">Aantal gescanned:</string>
     <string name="error_unknown_location">Onbekende locatie</string>
@@ -566,6 +570,8 @@
     <string name="error_get_returnordersdocuments_failed">Retourdocumenten ophalen mislukt</string>
     <string name="error_getting_return_reasons">Ophalen retour redenen mislukt</string>
     <string name="choose_reason">Kies retourreden</string>
+    <string name="fill_property">Vul item property</string>
+    <string name="select_property">Selecteer item property</string>
     <string name="hint_add_reason">Scan of selecteer reden</string>
     <string name="select_reason_switch" translatable="false">Select_reason_switch</string>
 
@@ -762,6 +768,7 @@
     <string name="screentitle_packandship_multi">Inpakken en Verzenden Multi</string>
     <string name="message_shipment_incomplete">Zending incompleet</string>
     <string name="message_workplaces_not_available">Werkplekken niet beschikbaar</string>
+    <string name="message_templates_not_available">Templates niet beschikbaar</string>
     <string name="number_of_documents">Documenten:</string>
     <string name="documents">Documenten</string>
     <string name="scan_next_document_or_close">Scan document voor zelfde adres, of OK om te verzenden</string>
