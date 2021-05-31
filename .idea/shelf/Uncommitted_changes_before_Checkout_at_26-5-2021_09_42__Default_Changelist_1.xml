@@ -1,0 +1,9 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_26-5-2021_09_42_[Default_Changelist]1" date="1622014962559" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-5-2021_09_42_[Default_Changelist]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 26-5-2021 09:42 [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="app/release/normal/release/app-normal-release.apk" />
+    <option name="AFTER_PATH" value="app/release/normal/release/app-normal-release.apk" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-5-2021_09_42_[Default_Changelist]1/app-normal-release.apk" />
+  </binary>
+</changelist>
