@@ -20,7 +20,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -78,8 +77,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
-        setContentView(R.layout.activity_create_receive_order);
-        this.mActivityInitialize();
 
     }
 
@@ -90,7 +87,6 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         if (cAppExtension.activity instanceof CreateReceiveActivity) {
             cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
         }
-
     }
 
     @Override
@@ -102,13 +98,13 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -313,85 +309,65 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCreateOrder(pvDocumentStr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln);
-            }
-        }).start();
+        new Thread(() -> mHandleCreateOrder(pvDocumentStr,pvPackingSlipStr,pvBinCodeStr,pvCheckBarcodesBln)).start();
 
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mStartOrderSelectActivity();
-            }
-        });
+        this.cancelButton.setOnClickListener(pvView -> mStartOrderSelectActivity());
     }
 
     private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
         IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
     private void mSetCreateListener() {
-        this.createReceiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.createReceiveButton.setOnClickListener(pvView -> {
 
-                if (editTextDocument.getText().toString().isEmpty()){
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_document),null);
-                    return;
-                }
-                IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-                mCreateOrder(editTextDocument.getText().toString().trim(),
-                        editTextPackingslip.getText().toString().trim(),
-                        editTextBin.getText().toString().trim(),
-                        switchCheckBarcodes.isChecked());
+            if (editTextDocument.getText().toString().isEmpty()){
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_receive_document),null);
+                return;
             }
+            IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
+            mCreateOrder(editTextDocument.getText().toString().trim(),
+                    editTextPackingslip.getText().toString().trim(),
+                    editTextBin.getText().toString().trim(),
+                    switchCheckBarcodes.isChecked());
         });
     }
 
     private void mSetEditorActionListener() {
-        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextDocument.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false, false);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false, false);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
 
-        this.editTextPackingslip.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextPackingslip.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextPackingslip.getText().toString()),false,true,false);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextPackingslip.getText().toString()),false,true,false);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
 
-        this.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextBin.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,false,true);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,false,true);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
 
 
@@ -470,13 +446,8 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cIntakeorder.currentIntakeOrder.getOrderNumberStr());
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowReceiveLinesActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowReceiveLinesActivity);
 
     }
 
@@ -538,7 +509,8 @@ public class CreateReceiveActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
+        finish();
 
     }
 

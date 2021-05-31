@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.Activities.Store;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -65,7 +64,6 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
 
-
     //End Region Views
     //End Region Private Properties
 
@@ -75,7 +73,6 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_storeorderlines);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -86,6 +83,7 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -103,7 +101,6 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     //End Region Default Methods
@@ -269,11 +266,7 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStoreFaseHandledAndDecideNextStep();
-            }
-        }).start();
+        new Thread(this::mHandleStoreFaseHandledAndDecideNextStep).start();
     }
 
     public void pHandleScan(cBarcodeScan pvBarcodeScan,Boolean pvStorementSelectedBln) {
@@ -357,22 +350,16 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
         alertDialog.setCancelable(true);
 
         //If we don't want to leave then we are done
-        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        alertDialog.setNeutralButton(R.string.cancel, (dialogInterface, i) -> {
 
-            }
         });
 
 
         //If we want to leave, check if we still need to send progress
-        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface pvDialogInterface, int i) {
-                    cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Storage, cWarehouseorder.WorkflowPickStepEnu.PickStorage);
-                    mStartOrderSelectActivity();
+        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, (pvDialogInterface, i) -> {
+                cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Storage, cWarehouseorder.WorkflowPickStepEnu.PickStorage);
+                mStartOrderSelectActivity();
 
-            }
         });
 
         alertDialog.show();
@@ -419,18 +406,14 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
 
     private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, StoreorderSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
     //End Region Fragments and Activities
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cPickorder.currentPickOrder.pStoreCommentObl(),"");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cPickorder.currentPickOrder.pStoreCommentObl(),""));
     }
 
     private  boolean mStoreFaseHandledBln(){
@@ -505,27 +488,15 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
 
     private  void mAskSort() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
+        cAppExtension.activity.runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
 
-                builder.setMessage(cAppExtension.context.getString(R.string.question_open_sort));
-                builder.setTitle(cAppExtension.context.getString(R.string.question_open_sort_title));
-                builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mStartSortActivity();
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mStartOrderSelectActivity();
-                    }
-                });
-                builder.setIcon(R.drawable.ic_menu_sort);
-                builder.show();
-            }
+            builder.setMessage(cAppExtension.context.getString(R.string.question_open_sort));
+            builder.setTitle(cAppExtension.context.getString(R.string.question_open_sort_title));
+            builder.setPositiveButton(R.string.open, (dialog, id) -> mStartSortActivity());
+            builder.setNegativeButton(R.string.no, (dialogInterface, i) -> mStartOrderSelectActivity());
+            builder.setIcon(R.drawable.ic_menu_sort);
+            builder.show();
         });
     }
 
@@ -558,27 +529,15 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
 
     private  void mAskShip() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
+        cAppExtension.activity.runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
 
-                builder.setMessage(cAppExtension.context.getString(R.string.question_open_ship));
-                builder.setTitle(cAppExtension.context.getString(R.string.question_open_ship_title));
-                builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mStartShipActivity();
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mStartOrderSelectActivity();
-                    }
-                });
-                builder.setIcon(R.drawable.ic_menu_ship);
-                builder.show();
-            }
+            builder.setMessage(cAppExtension.context.getString(R.string.question_open_ship));
+            builder.setTitle(cAppExtension.context.getString(R.string.question_open_ship_title));
+            builder.setPositiveButton(R.string.open, (dialog, id) -> mStartShipActivity());
+            builder.setNegativeButton(R.string.no, (dialogInterface, i) -> mStartOrderSelectActivity());
+            builder.setIcon(R.drawable.ic_menu_ship);
+            builder.show();
         });
     }
 
@@ -586,11 +545,7 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
 
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStartSortActivity();
-            }
-        }).start();
+        new Thread(this::mHandleStartSortActivity).start();
 
     }
 
@@ -601,27 +556,26 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
 
         //Try to lock the pickorder
         if (!cPickorder.currentPickOrder.pLockViaWebserviceRst(cWarehouseorder.StepCodeEnu.Pick_Storage, cWarehouseorder.WorkflowPickStepEnu.PickSorting).resultBln) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_lock_order),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_couldnt_lock_order),cWarehouseorder.StepCodeEnu.Pick_Picking);
             return;
         }
 
         //Get sort linesInt
         if (!cPickorder.currentPickOrder.pGetLinesViaWebserviceBln(true,cWarehouseorder.PickOrderTypeEnu.SORT)) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_getting_sort_lines_failed),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_getting_sort_lines_failed),cWarehouseorder.StepCodeEnu.Pick_Picking);
             return;
         }
 
         if (!cPickorder.currentPickOrder.pGetPropertyLineDataViaWebserviceBln()) {
-            this.mStepFailed(cAppExtension.context.getString(R.string.error_get_property_line_data_failed),cWarehouseorder.StepCodeEnu.Pick_Picking,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(cAppExtension.context.getString(R.string.error_get_property_line_data_failed),cWarehouseorder.StepCodeEnu.Pick_Picking);
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                //Show Sort Activity
-                Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            //Show Sort Activity
+            Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -629,11 +583,7 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
 
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStartShipActivity();
-            }
-        }).start();
+        new Thread(this::mHandleStartShipActivity).start();
 
     }
 
@@ -647,19 +597,20 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
 
         hulpResult = cPickorder.currentPickOrder.pGetShipmentDetailsRst();
         if (!hulpResult.resultBln) {
-            this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip);
             return;
         }
 
         //Show ShipLines
         Intent intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
 
     }
 
-    private  void mStepFailed(String pvErrorMessageStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu,int pvWorkflowPickStepInt ){
+    private  void mStepFailed(String pvErrorMessageStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
-        cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(pvStepCodeEnu,pvWorkflowPickStepInt);
+        cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(pvStepCodeEnu, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
 
@@ -675,7 +626,7 @@ public class StoreorderLinesActivity extends AppCompatActivity implements iICSDe
 
         //Something went wrong, but no further actions are needed, so ony show reason of failure
         if (hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
-            this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip, cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            this.mStepFailed(hulpResult.messagesStr(),cWarehouseorder.StepCodeEnu.Pick_PackAndShip);
             return  false;
         }
 

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -53,7 +52,6 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLine;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineAdapter;
 import SSU_WHS.Receive.ReceiveLines.cReceiveorderLineRecyclerItemTouchHelper;
@@ -64,9 +62,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.R;
 
 public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iICSDefaultActivity, cReceiveorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -145,19 +141,8 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receiveorder_receive);
-        this.mActivityInitialize();
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-
-        //Init the screen
-        this.mInitScreen();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu pvMenu) {
@@ -199,6 +184,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
@@ -207,7 +193,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -302,6 +287,12 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         this.mFindViews();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_receive));
+
+        //Set listeners here, so click listeners only work after activity is shown
+        this.mSetListeners();
+
+        //Init the screen
+        this.mInitScreen();
 
         this.mFieldsInitialize();
 
@@ -498,7 +489,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private  void mShowLines() {
 
         if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl == null  || cReceiveorderSummaryLine.currentReceiveorderSummaryLine.receiveLinesObl.size() == 0) {
-            this.mFillRecycler(new ArrayList<cReceiveorderLine>());
+            this.mFillRecycler(new ArrayList<>());
             return;
         }
 
@@ -506,35 +497,27 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     }
 
     private void mSetArticleImageListener() {
-        this.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowFullArticleFragment();
-            }
-        });
+        this.articleThumbImageView.setOnClickListener(view -> mShowFullArticleFragment());
     }
 
     private void mSetImageButtonBarcodeListener() {
-        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.imageButtonBarcode.setOnClickListener(pvView -> {
 
-                if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl() == null || cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().size() == 0) {
-                    return;
-                }
-
-                mEnablePlusMinusAndBarcodeSelectViews();
-
-                //If we only have one barcodeStr, then automatticaly select that barcodeStr
-                if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().size() == 1) {
-                    cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().get(0);
-                    pHandleScan(cBarcodeScan.pFakeScan( cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
-                    return;
-                }
-
-                mShowBarcodeSelectFragment();
-
+            if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl() == null || cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().size() == 0) {
+                return;
             }
+
+            mEnablePlusMinusAndBarcodeSelectViews();
+
+            //If we only have one barcodeStr, then automatticaly select that barcodeStr
+            if (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().size() == 1) {
+                cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.barcodesObl().get(0);
+                pHandleScan(cBarcodeScan.pFakeScan( cIntakeorder.currentIntakeOrder.intakeorderBarcodeScanned.getBarcodeStr()));
+                return;
+            }
+
+            mShowBarcodeSelectFragment();
+
         });
     }
 
@@ -656,13 +639,10 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             this.mResetCurrents();
             this.mGoBackToLinesActivity();
 
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ReceiveLinesActivity receiveLinesActivity = new ReceiveLinesActivity();
-                    receiveLinesActivity.pHandleScan(pvBarcodeScan,false);
-                    finish();
-                }
+            cAppExtension.activity.runOnUiThread(() -> {
+                ReceiveLinesActivity receiveLinesActivity = new ReceiveLinesActivity();
+                receiveLinesActivity.pHandleScan(pvBarcodeScan,false);
+                finish();
             });
 
             return result;
@@ -681,13 +661,10 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
                 this.mResetCurrents();
                 this.mGoBackToLinesActivity();
 
-                cAppExtension.activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ReceiveLinesActivity receiveLinesActivity = new ReceiveLinesActivity();
-                        receiveLinesActivity.pHandleScan(pvBarcodeScan,false);
-                        finish();
-                    }
+                cAppExtension.activity.runOnUiThread(() -> {
+                    ReceiveLinesActivity receiveLinesActivity = new ReceiveLinesActivity();
+                    receiveLinesActivity.pHandleScan(pvBarcodeScan,false);
+                    finish();
                 });
 
                 return result;
@@ -708,13 +685,10 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
             this.mGoBackToLinesActivity();
 
 
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ReceiveLinesActivity receiveLinesActivity = new ReceiveLinesActivity();
-                    receiveLinesActivity.pHandleScan(pvBarcodeScan,false);
-                    finish();
-                }
+            cAppExtension.activity.runOnUiThread(() -> {
+                ReceiveLinesActivity receiveLinesActivity = new ReceiveLinesActivity();
+                receiveLinesActivity.pHandleScan(pvBarcodeScan,false);
+                finish();
             });
 
             return result;
@@ -950,98 +924,74 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     //Listeners
     private void mSetDoneListener() {
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               pAcceptReceive();
-            }
-        });
+        this.imageButtonDone.setOnClickListener(view -> pAcceptReceive());
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetPlusListener() {
 
-        this.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
+        this.imageButtonPlus.setOnTouchListener((v, event) -> {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (plusHandler != null) return true;
-                    plusHandler = new Handler();
-                    plusHandler.postDelayed(mPlusAction, 750);
-                }
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (plusHandler == null) return true;
-                    plusHandler.removeCallbacks(mPlusAction);
-                    plusHandler = null;
-                    counterPlusHelperInt = 0;
-                }
-
-                return false;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (plusHandler != null) return true;
+                plusHandler = new Handler();
+                plusHandler.postDelayed(mPlusAction, 750);
             }
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (plusHandler == null) return true;
+                plusHandler.removeCallbacks(mPlusAction);
+                plusHandler = null;
+                counterPlusHelperInt = 0;
+            }
+
+            return false;
         });
 
-        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonPlus.setOnClickListener(view -> {
 
-                //There is no selected barcodeStr, select one first
-                if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-                mTryToChangeQuantityBln(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+            mTryToChangeQuantityBln(true, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
-        this.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (minusHandler != null) return true;
-                    minusHandler = new Handler();
-                    minusHandler.postDelayed(mMinusAction, 750);
-                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (minusHandler == null) return true;
-                    minusHandler.removeCallbacks(mMinusAction);
-                    minusHandler = null;
-                    counterMinusHelperInt = 0;
-                }
-                return false;
+        this.imageButtonMinus.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (minusHandler != null) return true;
+                minusHandler = new Handler();
+                minusHandler.postDelayed(mMinusAction, 750);
             }
-
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (minusHandler == null) return true;
+                minusHandler.removeCallbacks(mMinusAction);
+                minusHandler = null;
+                counterMinusHelperInt = 0;
+            }
+            return false;
         });
 
-        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonMinus.setOnClickListener(view -> {
 
-                //There is no selected barcodeStr, select one first
-                if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-
-
-                mTryToChangeQuantityBln(false, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+
+
+            mTryToChangeQuantityBln(false, false, cIntakeorderBarcode.currentIntakeOrderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     private void mSetNumberListener() {
-        this.quantityText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mNumberClicked();
-            }
-        });
+        this.quantityText.setOnClickListener(view -> mNumberClicked());
     }
 
     //Dialogs and Activitys
@@ -1077,12 +1027,9 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
                                                                                    rejectStr, acceptStr, false);
         acceptRejectFragment.setCancelable(true);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
@@ -1105,12 +1052,9 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
                 rejectStr, acceptStr, false);
         acceptRejectFragment.setCancelable(true);
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
@@ -1132,8 +1076,8 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     private  void mGoBackToLinesActivity() {
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private  void mResetCurrents() {
@@ -1228,7 +1172,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     //Region Number Broadcaster
 
-    private Runnable mMinusAction = new Runnable() {
+    private final Runnable mMinusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonMinus.performClick();
@@ -1248,7 +1192,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         }
     };
 
-    private Runnable mPlusAction = new Runnable() {
+    private final Runnable mPlusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonPlus.performClick();
@@ -1268,7 +1212,7 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         }
     };
 
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int numberChosenInt = 0;
@@ -1313,8 +1257,8 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
     private  void mShowItemPropertyInputActivity() {
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, ReceiveorderLinePropertyInputActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private  List<cIntakeorderBarcode> mSortBarcodeList(List<cIntakeorderBarcode> pvUnsortedBarcodeObl) {
@@ -1341,36 +1285,30 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
     private void mSetEditorActionListener() {
 
-        this.quantityText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        this.quantityText.setOnClickListener(v -> {
 
-                //There is no selected barcodeStr, select one first
-                if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    cUserInterface.pHideKeyboard();
-                    return;
-                }
-
-                quantityText.requestFocus();
-                quantityText.setSelection(0,quantityText.getText().toString().length());
+            //There is no selected barcodeStr, select one first
+            if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                cUserInterface.pHideKeyboard();
+                return;
             }
+
+            quantityText.requestFocus();
+            quantityText.setSelection(0,quantityText.getText().toString().length());
         });
 
 
-        this.quantityText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.quantityText.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                if(mTryToChangeQuantityBln(true,
-                        true,
-                        cText.pStringToDoubleDbl(String.valueOf(quantityText.getText()))))  {
-                    imageButtonDone.callOnClick();
-                }
-                }
-                return true;
+            if(mTryToChangeQuantityBln(true,
+                    true,
+                    cText.pStringToDoubleDbl(String.valueOf(quantityText.getText()))))  {
+                imageButtonDone.callOnClick();
             }
+            }
+            return true;
         });
     }
 

@@ -17,7 +17,7 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
-import SSU_WHS.Picken.Shipment.cShipment;
+import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethod;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebservice;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -27,7 +27,7 @@ public class cPackAndShipShipmentRepository {
 
 
     //Region Public Properties
-    private iPackAndShipShipmentDao packAndShipShipmentDao;
+    private final iPackAndShipShipmentDao packAndShipShipmentDao;
     //End Region Public Properties
 
     //Region Constructor
@@ -217,12 +217,25 @@ public class cPackAndShipShipmentRepository {
                 l_PropertyInfo6Pin.setValue(cPackAndShipShipment.currentShipment.getShippingAgentServiceCodeStr());
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
 
+
+                SoapObject shippingOptions = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_SHIPPINGOPTIONS);
+
+                if (cPackAndShipShippingMethod.allShippingMethodsObl != null) {
+                    for (cPackAndShipShippingMethod packAndShipShippingMethod : cPackAndShipShippingMethod.allShippingMethodsObl) {
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGOPTION);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_OPTIONCODE, packAndShipShippingMethod.shippingMethodCodeStr);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUECODE, packAndShipShippingMethod.shippingMethodValueStr);
+                        shippingOptions.addSoapObject(soapObject);
+                    }
+                }
+
+
                 PropertyInfo l_PropertyInfo7Pin = new PropertyInfo();
                 l_PropertyInfo7Pin.name = cWebserviceDefinitions.WEBPROPERTY_SHIPPINGOPTIONS;
-                l_PropertyInfo7Pin.setValue("");
+                l_PropertyInfo7Pin.setValue(shippingOptions);
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
-                SoapObject shippingpackages = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_SHIPPINGPACKAGES);
+                SoapObject shippingPackages= new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_SHIPPINGPACKAGES);
 
                 int sequencenumberInt = 0;
                 String packageTypeToRememberStr = "";
@@ -253,13 +266,13 @@ public class cPackAndShipShipmentRepository {
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_ITEMCOUNT, 0);
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINERTYPE, "");
                         soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINER, "");
-                        shippingpackages.addSoapObject(soapObject);
+                        shippingPackages.addSoapObject(soapObject);
                     }
                 }
 
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_SHIPPINGPACKAGES;
-                l_PropertyInfo8Pin.setValue(shippingpackages);
+                l_PropertyInfo8Pin.setValue(shippingPackages);
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();

@@ -92,6 +92,7 @@
     <string name="mainmenu_datetime">Date and time</string>
     <string name="mainmenu_environments">Environments</string>
     <string name="mainmenu_proglove">Pair ProGlove</string>
+    <string name="mainmenu_close_application">Close application</string>
     <string name="changelanguage_description">Change language</string>
     <string name="changedatetime_description">Change date and time</string>
     <string name="tab_support_network">Network</string>

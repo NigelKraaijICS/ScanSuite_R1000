@@ -53,4 +53,11 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_barcodescan_black_24dp"
         />
+    <item android:id="@+id/action_close_application"
+        android:theme="@style/menuButton"
+        android:orderInCategory="100"
+        android:title="@string/mainmenu_close_application"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_on_off_black_24dp"
+        />
 </menu>

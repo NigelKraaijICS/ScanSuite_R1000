@@ -26,10 +26,10 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
 
     //Region Public Properties
     public static class EnvironmentViewHolder extends RecyclerView.ViewHolder{
-        private TextView textViewDescription;
-        private TextView textViewName;
-        private TextView textViewURL;
-        private ImageView imageQRCode;
+        private final TextView textViewDescription;
+        private final TextView textViewName;
+        private final TextView textViewURL;
+        private final ImageView imageQRCode;
         public RelativeLayout viewBackground;
         public ConstraintLayout viewForeground;
 
@@ -87,44 +87,31 @@ public class cEnvironmentAdapter extends RecyclerView.Adapter<cEnvironmentAdapte
             pvHolder.textViewName.setText(environment.getNameStr());
             pvHolder.textViewURL.setText(environment.getWebserviceURLStr());
 
-            pvHolder.imageQRCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    pvHolder.imageQRCode.setVisibility(View.GONE);
+            pvHolder.imageQRCode.setOnClickListener(view -> pvHolder.imageQRCode.setVisibility(View.GONE));
+
+            pvHolder.viewForeground.setOnClickListener(v -> {
+                cEnvironment.pSetCurrentEnviroment(environment);
+
+                if (cAppExtension.context instanceof MainDefaultActivity) {
+                    MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+                    mainDefaultActivity.pSetChosenEnvironment();
                 }
+
             });
+            pvHolder.viewForeground.setOnLongClickListener(view -> {
+                String barcodeText = "name=" + environment.getNameStr() + "|";
+                barcodeText += "description=" + environment.getDescriptionStr() +"|";
+                barcodeText += "url=" + environment.getWebserviceURLStr() + "|";
+                barcodeText += "default=f";
 
-            pvHolder.viewForeground.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    cEnvironment.pSetCurrentEnviroment(environment);
-
-                    if (cAppExtension.context instanceof MainDefaultActivity) {
-
-
-                        MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
-                        mainDefaultActivity.pSetChosenEnvironment();
-                    }
-
+                try {
+                    Bitmap qrCodeImage = cBarcodeGenerator.encodeAsBitmap(barcodeText, BarcodeFormat.QR_CODE, 400, 400);
+                    pvHolder.imageQRCode.setImageBitmap(qrCodeImage);
+                    pvHolder.imageQRCode.setVisibility(View.VISIBLE);
+                } catch (WriterException e) {
+                    e.printStackTrace();
                 }
-            });
-            pvHolder.viewForeground.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    String barcodeText = "name=" + environment.getNameStr() + "|";
-                    barcodeText += "description=" + environment.getDescriptionStr() +"|";
-                    barcodeText += "url=" + environment.getWebserviceURLStr() + "|";
-                    barcodeText += "default=f";
-
-                    try {
-                        Bitmap qrCodeImage = cBarcodeGenerator.encodeAsBitmap(barcodeText, BarcodeFormat.QR_CODE, 400, 400);
-                        pvHolder.imageQRCode.setImageBitmap(qrCodeImage);
-                        pvHolder.imageQRCode.setVisibility(View.VISIBLE);
-                    } catch (WriterException e) {
-                        e.printStackTrace();
-                    }
-                    return true;
-                }
+                return true;
             });
         }
     }

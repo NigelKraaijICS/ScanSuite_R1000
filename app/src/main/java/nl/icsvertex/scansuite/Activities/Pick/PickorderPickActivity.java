@@ -123,15 +123,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pickorder_pick);
-        this.mActivityInitialize();
-    }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
     }
 
 
@@ -155,6 +147,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onResume() {
         super.onResume();
+
+        this.mActivityInitialize();
+
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
@@ -163,8 +158,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu pvMenu) {
         getMenuInflater().inflate(R.menu.menu_pick,pvMenu);
@@ -263,6 +258,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.mFindViews();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_pickorderpick));
+
+        this.mSetListeners();
 
         this.mInitScreen();
 
@@ -1502,8 +1499,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         PickorderLinesActivity.startedViaOrderSelectBln = false;
         PickorderPickActivity.noInputPropertysShownBln = false;
 
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private void mShowBarcodeSelectFragment() {
@@ -1574,8 +1571,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private  void mShowItemPropertyInputActivity() {
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, PickorderLineItemPropertyInputActvity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     //Region Number Broadcaster

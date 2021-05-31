@@ -241,18 +241,15 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     @Override
     public void mFieldsInitialize() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSetToolbar(getResources().getString(R.string.screentitle_packandship_multi));
-                mSetActionText();
-                mSetAddress();
-                mSetShippingInfo();
-                mSetShippingUnits();
-                mSetDocumentInfo();
-                mSetButtons();
-                mCheckEmptyScreen();
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            mSetToolbar(getResources().getString(R.string.screentitle_packandship_multi));
+            mSetActionText();
+            mSetAddress();
+            mSetShippingInfo();
+            mSetShippingUnits();
+            mSetDocumentInfo();
+            mSetButtons();
+            mCheckEmptyScreen();
         });
     }
 
@@ -293,11 +290,7 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleDocumentScan(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
-            }
-        }).start();
+        new Thread(() -> mHandleDocumentScan(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()))).start();
 
     }
 
@@ -309,11 +302,7 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
         }
 
         mShowSending();
-        new Thread(new Runnable() {
-            public void run() {
-                mDocumentDone();
-            }
-        }).start();
+        new Thread(this::mDocumentDone).start();
     }
 
     public  void pHandleBackToLines(){
@@ -433,27 +422,19 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     }
 
     private void mSetDocumentsListener() {
-        this.imageViewDocuments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.imageViewDocuments.setOnClickListener(pvView -> {
 
-                if (cPackAndShipBarcode.allPackAndShipOrderBarcodesObl == null || cPackAndShipBarcode.allPackAndShipOrderBarcodesObl.size() == 0) {
-                    return;
-                }
-
-                mShowDocumentSelectFragment();
+            if (cPackAndShipBarcode.allPackAndShipOrderBarcodesObl == null || cPackAndShipBarcode.allPackAndShipOrderBarcodesObl.size() == 0) {
+                return;
             }
+
+            mShowDocumentSelectFragment();
         });
     }
 
     private void mSetDocumentDoneListener() {
 
-        this.imageViewShippingDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pHandleDocumentDone();
-            }
-        });
+        this.imageViewShippingDone.setOnClickListener(view -> pHandleDocumentDone());
     }
 
     private void mSetShippingAgentSpinnerListener() {
@@ -533,12 +514,9 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 
@@ -766,29 +744,26 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
 
     private void mCheckEmptyScreen() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                if (cPackAndShipShipment.currentShipment == null) {
+            if (cPackAndShipShipment.currentShipment == null) {
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                ScanDocumentFragment fragment = new ScanDocumentFragment();
+                fragmentTransaction.replace(R.id.packAndShipMultiConstraintLayout, fragment);
+                fragmentTransaction.commit();
+                actionTextView.setVisibility(View.GONE);
+                return;
+            }
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof ScanDocumentFragment) {
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    ScanDocumentFragment fragment = new ScanDocumentFragment();
-                    fragmentTransaction.replace(R.id.packAndShipMultiConstraintLayout, fragment);
+                    fragmentTransaction.remove(fragment);
                     fragmentTransaction.commit();
-                    actionTextView.setVisibility(View.GONE);
-                    return;
-                }
-
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof ScanDocumentFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                        actionTextView.setVisibility(View.VISIBLE);
-                    }
+                    actionTextView.setVisibility(View.VISIBLE);
                 }
             }
         });

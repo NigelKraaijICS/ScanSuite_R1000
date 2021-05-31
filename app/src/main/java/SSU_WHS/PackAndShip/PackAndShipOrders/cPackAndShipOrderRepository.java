@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import ICS.Utils.cDateAndTime;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
@@ -23,8 +22,6 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
-import SSU_WHS.Picken.Pickorders.cPickorder;
-import SSU_WHS.Picken.Pickorders.cPickorderRepository;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
 
@@ -941,7 +938,7 @@ public class cPackAndShipOrderRepository {
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
@@ -964,6 +961,11 @@ public class cPackAndShipOrderRepository {
                 l_PropertyInfo5Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
                 l_PropertyInfoObl.add(l_PropertyInfo5Pin);
 
+                PropertyInfo l_PropertyInfo6Pin = new PropertyInfo();
+                l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_SCANNERID;
+                l_PropertyInfo6Pin.setValue(cDeviceInfo.getSerialnumberStr());
+                l_PropertyInfoObl.add(l_PropertyInfo6Pin);
+
                 webresult = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETSOURCEDOCUMENTSHIPPINGDATA, l_PropertyInfoObl);
 
             } catch (JSONException e) {
@@ -983,7 +985,7 @@ public class cPackAndShipOrderRepository {
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
@@ -1025,7 +1027,7 @@ public class cPackAndShipOrderRepository {
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUTCH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
@@ -1072,7 +1074,7 @@ public class cPackAndShipOrderRepository {
 
                 PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
                 l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_USERNAMEDUNGLISH;
-                l_PropertyInfo1Pin.setValue(cUser.currentUser.getNameStr());
+                l_PropertyInfo1Pin.setValue(cUser.currentUser.getUsernameStr());
                 l_PropertyInfoObl.add(l_PropertyInfo1Pin);
 
                 PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();

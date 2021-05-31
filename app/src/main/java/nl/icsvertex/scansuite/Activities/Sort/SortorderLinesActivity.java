@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.Activities.Sort;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -442,64 +441,52 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
         alertDialog.setCancelable(true);
 
         //If we don't want to leave then we are done
-        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        alertDialog.setNeutralButton(R.string.cancel, (dialogInterface, i) -> {
 
-            }
         });
 
 
         //If we want to leave, check if we still need to send progress
-        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface pvDialogInterface, int i) {
+        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, (pvDialogInterface, i) -> {
 
-                //Check if there is progress, and ask if user wants to send now
-                if (cPickorder.currentPickOrder.pGetLinesToSendFromDatabaseObl().size() > 0 || cPickorder.currentPickOrder.pGetLinesBusyFromDatabaseObl().size() >0 ) {
-                    AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(cAppExtension.context);
-                    alertDialog2.setTitle(R.string.message_progress_to_send);
-                    alertDialog2.setMessage(getString(R.string.message_send_now));
-                    alertDialog2.setCancelable(true);
+            //Check if there is progress, and ask if user wants to send now
+            if (cPickorder.currentPickOrder.pGetLinesToSendFromDatabaseObl().size() > 0 || cPickorder.currentPickOrder.pGetLinesBusyFromDatabaseObl().size() >0 ) {
+                AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(cAppExtension.context);
+                alertDialog2.setTitle(R.string.message_progress_to_send);
+                alertDialog2.setMessage(getString(R.string.message_send_now));
+                alertDialog2.setCancelable(true);
 
-                    // User doesn't wanna send, so we are done
-                    alertDialog2.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                // User doesn't wanna send, so we are done
+                alertDialog2.setNeutralButton(R.string.cancel, (dialogInterface, i1) -> {
 
-                        }
-                    });
+                });
 
-                    // Try to send everything
-                    alertDialog2.setPositiveButton(R.string.message_send, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface pvDialogInterface, int i) {
+                // Try to send everything
+                alertDialog2.setPositiveButton(R.string.message_send, (pvDialogInterface1, i12) -> {
 
-                            // Update alle busy linesInt to statusInt to be send
-                            if (! mHandleBusyLinesBln()) {
-                                return;
-                            }
+                    // Update alle busy linesInt to statusInt to be send
+                    if (! mHandleBusyLinesBln()) {
+                        return;
+                    }
 
-                            // Check if there are linesInt to be send, and send them, if we fail we stop
-                            if (! mCheckAndSentLinesToBeSendBln()) {
-                                return;
-                            }
+                    // Check if there are linesInt to be send, and send them, if we fail we stop
+                    if (! mCheckAndSentLinesToBeSendBln()) {
+                        return;
+                    }
 
-                            //We managed to send everuthing, so we are done
-                            cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
-                            pStartOrderSelectActivity();
-                        }
-                    });
-
-                    alertDialog2.show();
-                }
-                //There is no progress, so we are done
-                else {
+                    //We managed to send everuthing, so we are done
                     cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
                     pStartOrderSelectActivity();
-                }
+                });
 
+                alertDialog2.show();
             }
+            //There is no progress, so we are done
+            else {
+                cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_Sorting, cWarehouseorder.WorkflowPickStepEnu.PickPicking);
+                pStartOrderSelectActivity();
+            }
+
         });
 
         alertDialog.show();
@@ -679,29 +666,14 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
 
         builder.setMessage(cAppExtension.context.getString(R.string.question_open_ship));
         builder.setTitle(cAppExtension.context.getString(R.string.question_open_ship_title));
-        builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                mStartShipActivity();
-            }
-        });
-        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                pStartOrderSelectActivity();
-            }
-        });
+        builder.setPositiveButton(R.string.open, (dialog, id) -> mStartShipActivity());
+        builder.setNegativeButton(R.string.no, (dialogInterface, i) -> pStartOrderSelectActivity());
         builder.setIcon(R.drawable.ic_menu_ship);
         builder.show();
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cPickorder.currentPickOrder.pSortCommentObl(),"");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cPickorder.currentPickOrder.pSortCommentObl(),""));
     }
 
     private boolean mTryToCloseOrderBln(){

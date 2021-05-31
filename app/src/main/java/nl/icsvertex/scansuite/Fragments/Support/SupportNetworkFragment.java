@@ -123,13 +123,10 @@ public class SupportNetworkFragment extends Fragment implements iICSDefaultFragm
     }
 
     private void mSetWifiListener() {
-        this.buttonWifiSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent  = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                if (intent.resolveActivity(Objects.requireNonNull(getView()).getContext().getPackageManager()) != null) {
-                    startActivityForResult(intent, cPublicDefinitions.CHANGEWIFI_REQUESTCODE);
-                }
+        this.buttonWifiSettings.setOnClickListener(v -> {
+            Intent intent  = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            if (intent.resolveActivity(requireView().getContext().getPackageManager()) != null) {
+                startActivityForResult(intent, cPublicDefinitions.CHANGEWIFI_REQUESTCODE);
             }
         });
     }

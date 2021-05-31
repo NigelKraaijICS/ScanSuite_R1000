@@ -78,8 +78,6 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_create_intake_order);
-        this.mActivityInitialize();
-
     }
 
     @Override
@@ -101,13 +99,13 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -296,7 +294,8 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
     private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
         IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-        cAppExtension.activity.startActivity(intent);
+       startActivity(intent);
+       finish();
     }
 
     private void mSetCreateListener() {
@@ -444,8 +443,8 @@ public class CreateIntakeActivity extends AppCompatActivity implements iICSDefau
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, IntakeorderMASLinesActivity.class);
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
-
+        startActivity(intent);
+        finish();
     }
 
     private void mSetBin(){

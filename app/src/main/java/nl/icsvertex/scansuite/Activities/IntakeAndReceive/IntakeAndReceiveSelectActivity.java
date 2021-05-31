@@ -131,7 +131,6 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -452,8 +451,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             return;
         }
 
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
-
+        startActivity(intent);
     }
 
     private  void mShowCreateReceiveActivity() {
@@ -461,7 +459,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Intent intent = new Intent(cAppExtension.context, CreateReceiveActivity.class);
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
     }
 
     private  void mShowCreateIntakeActivity() {
@@ -469,7 +467,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Intent intent = new Intent(cAppExtension.context, CreateIntakeActivity.class);
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
     }
 
     private  void mShowCreateIntakeOrReceiveActivity() {
@@ -477,7 +475,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Intent intent = new Intent(cAppExtension.context, CreateIntakeOrReceiveActivity.class);
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
     }
 
     // End Region Private Methods
@@ -781,8 +779,8 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
     private void mLeaveActivity(){
         this.mReleaseLicense();
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private void mSetNewOrderButton() {

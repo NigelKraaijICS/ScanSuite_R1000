@@ -111,7 +111,6 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sortorder_sort);
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver,new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
-        this.mActivityInitialize();
     }
 
     @Override
@@ -139,6 +138,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver,new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
@@ -161,10 +161,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
-
-
 
     //End Region Default Methods
 
@@ -728,8 +725,8 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     private  void mGoBackToLinesActivity() {
         Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     public void mHandleQuantityChosen(int pvQuantityDbl) {

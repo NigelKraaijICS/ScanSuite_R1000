@@ -37,10 +37,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+
         <activity
             android:name=".Activities.General.MainDefaultActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,34 +54,38 @@
             android:name=".Activities.General.MenuActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.General.LoginActivity"
-
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Activities.General.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="nl.icsvertex.scansuite.Activities.General.MainDefaultActivity" />
+        </activity>
+
         <activity
             android:name=".Activities.General.BarcodeInfoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.General.MainDefaultActivity" />
         </activity>
-        <activity
-            android:name=".Activities.General.LoginActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
 
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="nl.icsvertex.scansuite.Activities.General.MainDefaultActivity" />
-        </activity>
+
         <activity
             android:name=".Activities.Pick.PickorderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -88,7 +95,7 @@
             android:name=".Activities.Pick.PickorderLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -98,7 +105,7 @@
             android:name=".Activities.Pick.PickorderPickActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -108,7 +115,7 @@
             android:name=".Activities.Pick.PickorderLineItemPropertyInputActvity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -119,83 +126,55 @@
         <activity android:name=".Activities.Pick.CreatePickActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity" />
         </activity>
+
         <activity android:name=".Activities.Pick.PickorderLinesGeneratedActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity" />
         </activity>
+
         <activity android:name=".Activities.Pick.PickorderPickGeneratedActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity" />
         </activity>
 
-        <activity android:name=".Activities.Sort.SortorderSortActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".Activities.Sort.SortorderLinesActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-
         <activity android:name=".Activities.Sort.SortorderSelectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name=".Activities.Store.StoreorderSelectActivity"
+        <activity android:name=".Activities.Sort.SortorderLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name=".Activities.Store.StoreorderLinesActivity"
+        <activity android:name=".Activities.Sort.SortorderSortActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <activity android:name=".Activities.Ship.ShiporderSelectActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <activity android:name=".Activities.Ship.ShiporderLinesActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <activity android:name=".Activities.Ship.ShiporderShipActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <activity android:name=".Activities.FinishShip.FinishShiporderSelectActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"/>
-
-        <activity android:name=".Activities.FinishShip.FinishShipLinesActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name=".Activities.QualityControl.QualityControlLinesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -205,11 +184,55 @@
         <activity android:name=".Activities.QualityControl.PickorderQCActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity" />
         </activity>
+
+        <activity android:name=".Activities.Ship.ShiporderSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.Ship.ShiporderLinesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.Ship.ShiporderShipActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.FinishShip.FinishShiporderSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.FinishShip.FinishShipLinesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.Store.StoreorderSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name=".Activities.Store.StoreorderLinesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"/>
+
         <activity
             android:name=".Activities.Inventory.CreateInventoryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -285,7 +308,7 @@
         <activity android:name=".Activities.IntakeAndReceive.CreateIntakeOrReceiveActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -297,6 +320,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -308,6 +332,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -318,6 +343,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.Intake.IntakeorderMATLinesActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -327,6 +353,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.Intake.IntakeOrderIntakeActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -336,6 +363,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.Intake.IntakeorderMATLinesActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -346,6 +374,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -356,6 +385,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.Receive.ReceiveLinesActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -366,6 +396,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".Activities.Receive.ReceiveLinesActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

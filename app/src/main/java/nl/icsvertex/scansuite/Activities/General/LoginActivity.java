@@ -30,7 +30,6 @@ import SSU_WHS.Basics.Users.cUserAdapter;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.ScannerLogon.cScannerLogon;
-import nl.icsvertex.scansuite.BuildConfig;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
 import nl.icsvertex.scansuite.R;
 
@@ -63,7 +62,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_login);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -74,6 +72,8 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     @Override
     public void onResume() {
         super.onResume();
+
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -88,7 +88,6 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -267,7 +266,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
         Intent intent = new Intent(cAppExtension.context, MainDefaultActivity.class);
         cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        finish();
 
     }
 
