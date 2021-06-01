@@ -31,7 +31,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,17 +121,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pickorder_pick_generated);
-        this.mActivityInitialize();
     }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-    }
-
 
     @Override
     protected void onDestroy() {
@@ -154,6 +143,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
+
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
@@ -162,7 +153,6 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -173,9 +163,6 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu pvMenu) {
-        //  invalidateOptionsMenu();
-
-
         MenuItem item_bin_stock = pvMenu.findItem(R.id.item_bin_stock);
         item_bin_stock.setVisible(true);
         if (cSetting.GENERIC_PRINT_BINLABEL()){
@@ -269,6 +256,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         this.mFindViews();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_pickorderpick));
+
+        this.mSetListeners();
 
         this.mInitScreen();
 
@@ -536,14 +525,7 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     }
 
     private  void mShowNoInputPropertyInfo() {
-
-        if (cPickorder.currentPickOrder.currentArticle == null) {
-            this.imageButtonNoInputPropertys.setVisibility(View.GONE);
-            return;
-        }
-
         this.imageButtonNoInputPropertys.setVisibility(View.GONE);
-
         //todo: something with propertys
 //        if (!cPickorderLine.currentPickOrderLine.hasPropertysBln() || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl() == null || cPickorderLine.currentPickOrderLine.pickorderLinePropertyNoInputObl().size() == 0) {
 //            this.imageButtonNoInputPropertys.setVisibility(View.GONE);
@@ -806,8 +788,8 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
     private  void mGoBackToLinesActivity() {
         this.mResetCurrents();
         Intent intent = new Intent(cAppExtension.context, PickorderLinesGeneratedActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private void mShowBarcodeSelectFragment() {

@@ -57,8 +57,6 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
     //Region Private Properties
 
-    private ConstraintLayout packAndShipSingleConstraintLayout;
-
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubTitle;
@@ -180,7 +178,6 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
     @Override
     public void mFindViews() {
 
-        this.packAndShipSingleConstraintLayout = findViewById(R.id.packAndShipSingleConstraintLayout);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubTitle = findViewById(R.id.toolbarSubtext);
@@ -244,17 +241,14 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
             this.scannedDocumentStr = cPackAndShipOrder.currentPackAndShipOrder.barcodesObl().get(0).getBarcodeStr();
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSetToolbar(getResources().getString(R.string.screentitle_packandship_single));
-                mSetActionText();
-                mSetAddress();
-                mSetShippingInfo();
-                mSetShippingUnits();
-                mSetButtons();
-                mCheckEmptyScreen();
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            mSetToolbar(getResources().getString(R.string.screentitle_packandship_single));
+            mSetActionText();
+            mSetAddress();
+            mSetShippingInfo();
+            mSetShippingUnits();
+            mSetButtons();
+            mCheckEmptyScreen();
         });
     }
 
@@ -294,12 +288,12 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleDocumentScan(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
-            }
-        }).start();
+        new Thread(() -> mHandleDocumentScan(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()))).start();
 
+    }
+
+    public  void pHandleShippingPackageChanged() {
+        this.mSetButtons();
     }
 
     public  void pHandleDocumentDone(){
@@ -310,7 +304,7 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
         }
 
         mShowSending();
-        new Thread(() -> mDocumentDone()).start();
+        new Thread(this::mDocumentDone).start();
     }
 
     public  void pHandleBackToLines(){
@@ -441,12 +435,7 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
     private void mSetDocumentDoneListener() {
 
-        this.imageViewShippingDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pHandleDocumentDone();
-            }
-        });
+        this.imageViewShippingDone.setOnClickListener(view -> pHandleDocumentDone());
     }
 
     private void mSetShippingAgentSpinnerListener() {
@@ -533,12 +522,9 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 
@@ -744,29 +730,26 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
     private void mCheckEmptyScreen() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                if (cPackAndShipShipment.currentShipment == null) {
+            if (cPackAndShipShipment.currentShipment == null) {
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                ScanDocumentFragment fragment = new ScanDocumentFragment();
+                fragmentTransaction.replace(R.id.packAndShipSingleConstraintLayout, fragment);
+                fragmentTransaction.commit();
+                actionTextView.setVisibility(View.GONE);
+                return;
+            }
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof ScanDocumentFragment) {
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    ScanDocumentFragment fragment = new ScanDocumentFragment();
-                    fragmentTransaction.replace(R.id.packAndShipSingleConstraintLayout, fragment);
+                    fragmentTransaction.remove(fragment);
                     fragmentTransaction.commit();
-                    actionTextView.setVisibility(View.GONE);
-                    return;
-                }
-
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof ScanDocumentFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                        actionTextView.setVisibility(View.VISIBLE);
-                    }
+                    actionTextView.setVisibility(View.VISIBLE);
                 }
             }
         });

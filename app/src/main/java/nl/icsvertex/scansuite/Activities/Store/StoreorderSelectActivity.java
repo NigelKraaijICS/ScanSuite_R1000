@@ -86,7 +86,6 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
          }
 
          return  this.pickorderAdapter;
-
      }
 
     // End Region Views
@@ -99,12 +98,12 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storeorder_select);
-        this.mActivityInitialize();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -148,10 +147,7 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
-
-
 
     //End Region Default Methods
 
@@ -242,11 +238,7 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleFillOrders();
-            }
-        }).start();
+        new Thread(this::mHandleFillOrders).start();
 
 
     }
@@ -266,11 +258,7 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
         cPickorder.currentPickOrder = pvPickorder;
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cPickorder.currentPickOrder.getOrderNumberStr());
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStoreOrderSelected();
-            }
-        }).start();
+        new Thread(this::mHandleStoreOrderSelected).start();
 
     }
 
@@ -314,14 +302,11 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //Fill and show recycler
-                mSetStoreorderRecycler(cPickorder.allPickordersObl);
-                mShowNoOrdersIcon(false);
-                cUserInterface.pHideGettingData();
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            //Fill and show recycler
+            mSetStoreorderRecycler(cPickorder.allPickordersObl);
+            mShowNoOrdersIcon(false);
+            cUserInterface.pHideGettingData();
         });
 
     }
@@ -350,25 +335,15 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowStoreLinesActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowStoreLinesActivity);
 
 
     }
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recyclerSearchView.setIconified(false);
-            }
-        });
+        this.recyclerSearchView.setOnClickListener(view -> recyclerSearchView.setIconified(false));
 
         //query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -387,17 +362,7 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mShowHideBottomSheet(true);
-                }
-                else {
-                    mShowHideBottomSheet(false);
-                }
-            }
-        });
+        this.imageViewFilter.setOnClickListener(view -> mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED));
     }
 
     private void mSetSwipeRefreshListener() {
@@ -480,34 +445,31 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
     private void mShowNoOrdersIcon(final Boolean pvShowBln){
 
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewStoreorders.setVisibility(View.INVISIBLE);
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NoOrdersFragment fragment = new NoOrdersFragment();
-                    fragmentTransaction.replace(R.id.storeOrderSelectContainer, fragment);
-                    fragmentTransaction.commit();
-                    return;
-                }
-
-                recyclerViewStoreorders.setVisibility(View.VISIBLE);
-
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NoOrdersFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
-                }
-
+                recyclerViewStoreorders.setVisibility(View.INVISIBLE);
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NoOrdersFragment fragment = new NoOrdersFragment();
+                fragmentTransaction.replace(R.id.storeOrderSelectContainer, fragment);
+                fragmentTransaction.commit();
+                return;
             }
+
+            recyclerViewStoreorders.setVisibility(View.VISIBLE);
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NoOrdersFragment) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
+                }
+            }
+
         });
     }
 
@@ -649,7 +611,8 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
         this.mReleaseLicense();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
     //End Region Private Methods

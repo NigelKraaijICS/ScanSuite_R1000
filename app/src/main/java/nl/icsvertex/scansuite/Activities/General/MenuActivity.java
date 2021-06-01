@@ -103,9 +103,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_menu);
 
-        // Standard methods to initialize the Activity
-        this.mActivityInitialize();
-
         FirebaseCrashlytics.getInstance().setCustomKey("Device", cDeviceInfo.getSerialnumberStr());
         FirebaseCrashlytics.getInstance().setCustomKey("Enviroment", cEnvironment.currentEnvironment.getDescriptionStr());
         FirebaseCrashlytics.getInstance().setCustomKey("Branch", cUser.currentUser.currentBranch.getBranchStr());
@@ -116,6 +113,10 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     @Override
     public void onResume() {
         super.onResume();
+
+        // Standard methods to initialize the Activity
+        this.mActivityInitialize();
+
         this.mStartShimmering();
     }
 
@@ -128,7 +129,6 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -663,17 +663,13 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
         Intent intent = new Intent(cAppExtension.context, LoginActivity.class);
         cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        finish();
 
     }
 
     private void mShowBarcodeInfoActivity() {
-
-
         Intent  intent = new Intent(cAppExtension.context, BarcodeInfoActivity.class);
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
-
-
     }
 
     //End Region Private Methods

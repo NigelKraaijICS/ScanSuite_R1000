@@ -66,7 +66,6 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_qcordershipments);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -77,6 +76,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -94,7 +94,6 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     //End Region Default Methods
@@ -262,7 +261,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     public void pStartQCActivity(){
         //we have a line to handle, so start Sort activity
         Intent intent = new Intent(cAppExtension.context, PickorderQCActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     //End Region Public Methods
@@ -273,7 +272,8 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
 
     private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
     private void mTryToLeaveActivity(){
@@ -403,7 +403,7 @@ public class QualityControlLinesActivity extends AppCompatActivity implements iI
     private void mStartShipActivity(){
         //we have a SourceDocument to handle, so start Ship activity
         Intent intent = new Intent(cAppExtension.context, ShiporderShipActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private void mSendQCOrderLine(cBarcodeScan pvBarcodeScan) {

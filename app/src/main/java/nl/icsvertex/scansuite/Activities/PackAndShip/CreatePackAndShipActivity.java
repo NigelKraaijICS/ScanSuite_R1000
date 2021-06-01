@@ -3,9 +3,7 @@ package nl.icsvertex.scansuite.Activities.PackAndShip;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +28,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
-import nl.icsvertex.scansuite.Activities.Move.MoveLinesActivity;
 import nl.icsvertex.scansuite.R;
 
 
@@ -217,21 +214,12 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCreateOrder(pvDocumentStr);
-            }
-        }).start();
+        new Thread(() -> mHandleCreateOrder(pvDocumentStr)).start();
 
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mStartOrderSelectActivity();
-            }
-        });
+        this.cancelButton.setOnClickListener(pvView -> mStartOrderSelectActivity());
     }
 
     private void mStartOrderSelectActivity() {
@@ -241,25 +229,19 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetCreateListener() {
-        this.createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                PackAndShipSelectActivity.startedViaMenuBln = false;
-                 mCreateOrder(editTextDocument.getText().toString().trim());
-            }
+        this.createButton.setOnClickListener(pvView -> {
+            PackAndShipSelectActivity.startedViaMenuBln = false;
+             mCreateOrder(editTextDocument.getText().toString().trim());
         });
     }
 
     private void mSetEditorActionListener() {
-        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()));
-                    cUserInterface.pHideKeyboard();
-                }
-                return true;
+        this.editTextDocument.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()));
+                cUserInterface.pHideKeyboard();
             }
+            return true;
         });
 
 
@@ -320,13 +302,8 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowPackAndShipActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowPackAndShipActivity);
 
     }
 
@@ -466,6 +443,7 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
         }
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+        assert intent != null;
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
 
     }

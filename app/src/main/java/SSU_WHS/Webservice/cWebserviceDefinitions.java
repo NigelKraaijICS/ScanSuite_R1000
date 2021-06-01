@@ -334,6 +334,7 @@ public class cWebserviceDefinitions {
     //endregion temporary Properties
 
     //region complex types
+    public static String WEBPROPERTY_INTERFACESHIPPINGOPTION = "c_InterfaceShippingOptionIeso";
     public static String WEBPROPERTY_INTERFACESHIPPINGPACKAGE = "c_InterfaceShippingPackageIesp";
     public static String WEBPROPERTY_INTERFACESHIPPINGPACKAGE_PACKAGE = "g_PackageTypeStr";
     public static String WEBPROPERTY_INTERFACESHIPPINGPACKAGE_SEQUENCENUMBER = "g_SequenceNumberInt";
@@ -342,6 +343,8 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINERTYPE = "g_ContainersoortStr";
     public static String WEBPROPERTY_INTERFACESHIPPINGPACKAGE_CONTAINER = "g_ContainerStr";
 
+    public static String WEBPROPERTY_INTERFACESPROPERTY_OPTIONCODE = "g_OptionStr";
+    public static String WEBPROPERTY_INTERFACESPROPERTY_VALUECODE = "g_ValueStr";
     public static String WEBPROPERTY_INTERFACESPROPERTY_PROPERTYCODE = "g_PropertyCodeStr";
     public static String WEBPROPERTY_REQUEST_PROPERTYCODE = "pv_PropertyCodeStr";
     public static String WEBPROPERTY_INTERFACESPROPERTY_PROPERTYVALUE = "pv_PropertyValueStr";

@@ -86,7 +86,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
             this.pHandleBackToLines();
         }
 
-        this.mActivityInitialize();
+
     }
 
     @Override
@@ -97,6 +97,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -114,7 +115,6 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -281,11 +281,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
         }
         else {
             mShowSending();
-            new Thread(new Runnable() {
-                public void run() {
-                    mSalesOrderDone();
-                }
-            }).start();
+            new Thread(this::mSalesOrderDone).start();
         }
     }
 
@@ -311,11 +307,9 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mGoBackToLinesActivity() {
-
        Intent intent =new Intent(cAppExtension.context, ShiporderLinesActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
-
+        startActivity(intent);
+        finish();
     }
 
     //region default private voids
@@ -394,22 +388,12 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     }
 
     private void mSetShippingUnitsListener() {
-        this.imageViewPackaging.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowShippingUnitFragment();
-            }
-        });
+        this.imageViewPackaging.setOnClickListener(view -> mShowShippingUnitFragment());
     }
 
     private void mSetOrderDoneListener() {
 
-        this.imageViewShippingDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pHandleSourceDocumentDone();
-            }
-        });
+        this.imageViewShippingDone.setOnClickListener(view -> pHandleSourceDocumentDone());
     }
 
     private void mSalesOrderDone() {
@@ -429,12 +413,9 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 

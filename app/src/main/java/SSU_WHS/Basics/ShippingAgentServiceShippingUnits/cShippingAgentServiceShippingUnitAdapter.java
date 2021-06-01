@@ -21,6 +21,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipSingleActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapter<cShippingAgentServiceShippingUnitAdapter.ShippingAgentServiceShippingUnitViewHolder> {
@@ -30,17 +31,17 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
 
     static class ShippingAgentServiceShippingUnitViewHolder extends RecyclerView.ViewHolder{
 
-        private LinearLayout shippingUnitItemLinearLayout;
-        private ImageView imageViewShippingUnit;
-        private TextView textViewDescription;
-        private TextView textViewShippingUnit;
-        private TextView textViewQuantityUsed;
-        private ConstraintLayout primaryContent;
-        private ConstraintLayout secondaryContent;
-        private AppCompatImageButton imageButtonMinus;
-        private AppCompatImageButton imageButtonPlus;
-        private  AppCompatImageButton imageButtonZero;
-        private AppCompatImageView imageChevronDown;
+        private final LinearLayout shippingUnitItemLinearLayout;
+        private final ImageView imageViewShippingUnit;
+        private final TextView textViewDescription;
+        private final TextView textViewShippingUnit;
+        private final TextView textViewQuantityUsed;
+        private final ConstraintLayout primaryContent;
+        private final ConstraintLayout secondaryContent;
+        private final AppCompatImageButton imageButtonMinus;
+        private final AppCompatImageButton imageButtonPlus;
+        private final AppCompatImageButton imageButtonZero;
+        private final AppCompatImageView imageChevronDown;
 
         ShippingAgentServiceShippingUnitViewHolder(View pvView) {
             super(pvView);
@@ -71,8 +72,8 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
 
     //Region Private Properties
 
-    private List<LinearLayout> shippingUnitItemLinearLayouts = new ArrayList<>();
-    private LayoutInflater layoutInflater;
+    private final List<LinearLayout> shippingUnitItemLinearLayouts = new ArrayList<>();
+    private final LayoutInflater layoutInflater;
     private List<cShippingAgentServiceShippingUnit> localShippingUnitsObl;
 
     //End Region Private Properties
@@ -133,89 +134,89 @@ public class cShippingAgentServiceShippingUnitAdapter extends RecyclerView.Adapt
             pvHolder.imageViewShippingUnit.setImageResource(R.drawable.ic_hanging);
         }
 
-        pvHolder.primaryContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.rotate_180);
+        pvHolder.primaryContent.setOnClickListener(view -> {
+            AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.rotate_180);
 
-                //Close all others
-                for (LinearLayout aLayout : shippingUnitItemLinearLayouts) {
-                    ConstraintLayout secondaryLayout = aLayout.findViewById(R.id.secondaryContent);
-                    ConstraintLayout primaryLayout = aLayout.findViewById(R.id.primaryContent);
-                    if (secondaryLayout != null) {
-                        if (primaryLayout != view) {
-                            if (secondaryLayout.getVisibility() == View.VISIBLE) {
-                                ImageView chevronImage = primaryLayout.findViewById(R.id.imageChevronDown);
-                                if (chevronImage != null) {
-                                    chevronImage.animate().rotation(0).start();
-                                }
+            //Close all others
+            for (LinearLayout aLayout : shippingUnitItemLinearLayouts) {
+                ConstraintLayout secondaryLayout = aLayout.findViewById(R.id.secondaryContent);
+                ConstraintLayout primaryLayout = aLayout.findViewById(R.id.primaryContent);
+                if (secondaryLayout != null) {
+                    if (primaryLayout != view) {
+                        if (secondaryLayout.getVisibility() == View.VISIBLE) {
+                            ImageView chevronImage = primaryLayout.findViewById(R.id.imageChevronDown);
+                            if (chevronImage != null) {
+                                chevronImage.animate().rotation(0).start();
                             }
-                            secondaryLayout.animate().scaleY(0).start();
-                            secondaryLayout.setVisibility(View.GONE);
                         }
+                        secondaryLayout.animate().scaleY(0).start();
+                        secondaryLayout.setVisibility(View.GONE);
                     }
                 }
+            }
 
-                boolean isExpanded;
+            boolean isExpanded;
 
-                isExpanded = pvHolder.secondaryContent.getVisibility() == View.VISIBLE;
+            isExpanded = pvHolder.secondaryContent.getVisibility() == View.VISIBLE;
 
-                if (isExpanded) {
-                    pvHolder.imageChevronDown.animate().rotation(0).start();
-                    pvHolder.secondaryContent.animate().scaleY(0).start();
-                    pvHolder.secondaryContent.setVisibility(View.GONE);
-                }
-                else {
-                    //package + 1
-                    pvHolder.imageButtonPlus.callOnClick();
-                    pvHolder.imageChevronDown.animate().rotation(180).start();
-                    pvHolder.secondaryContent.animate().scaleY(1).start();
-                    pvHolder.secondaryContent.setVisibility(View.VISIBLE);
-                }
+            if (isExpanded) {
+                pvHolder.imageChevronDown.animate().rotation(0).start();
+                pvHolder.secondaryContent.animate().scaleY(0).start();
+                pvHolder.secondaryContent.setVisibility(View.GONE);
+            }
+            else {
+                //package + 1
+                pvHolder.imageButtonPlus.callOnClick();
+                pvHolder.imageChevronDown.animate().rotation(180).start();
+                pvHolder.secondaryContent.animate().scaleY(1).start();
+                pvHolder.secondaryContent.setVisibility(View.VISIBLE);
+            }
 
 
+        });
+
+        pvHolder.imageButtonPlus.setOnClickListener(view -> {
+
+            cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit = shippingAgentServiceShippingUnit;
+
+            int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
+            int newQuantity;
+            newQuantity = currentQuantity + 1;
+            pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr((newQuantity)));
+            cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
+
+            if (cAppExtension.activity instanceof PackAndShipSingleActivity) {
+                PackAndShipSingleActivity packAndShipSingleActivity = (PackAndShipSingleActivity)cAppExtension.activity;
+                packAndShipSingleActivity.pHandleShippingPackageChanged();
+            }
+
+
+        });
+
+        pvHolder.imageButtonMinus.setOnClickListener(view -> {
+
+            cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit = shippingAgentServiceShippingUnit;
+
+
+            int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
+            if (currentQuantity == 0) {
+                cUserInterface.pDoNope(pvHolder.textViewQuantityUsed, true, false);
+                return;
+            }
+            int newQuantity = currentQuantity - 1;
+            pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(newQuantity));
+            cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
+
+            if (cAppExtension.activity instanceof PackAndShipSingleActivity) {
+                PackAndShipSingleActivity packAndShipSingleActivity = (PackAndShipSingleActivity)cAppExtension.activity;
+                packAndShipSingleActivity.pHandleShippingPackageChanged();
             }
         });
 
-        pvHolder.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit = shippingAgentServiceShippingUnit;
-
-                int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
-                Integer newQuantity;
-                newQuantity = currentQuantity + 1;
-                pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr((newQuantity)));
-                cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
-            }
-        });
-
-        pvHolder.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit = shippingAgentServiceShippingUnit;
-
-
-                int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
-                if (currentQuantity == 0) {
-                    cUserInterface.pDoNope(pvHolder.textViewQuantityUsed, true, false);
-                    return;
-                }
-                Integer newQuantity = currentQuantity - 1;
-                pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(newQuantity));
-                cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
-            }
-        });
-
-        pvHolder.imageButtonZero.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Integer newQuantity = 0;
-                pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(newQuantity));
-                cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
-            }
+        pvHolder.imageButtonZero.setOnClickListener(view -> {
+            int newQuantity = 0;
+            pvHolder.textViewQuantityUsed.setText(cText.pIntToStringStr(newQuantity));
+            cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = newQuantity;
         });
     }
 

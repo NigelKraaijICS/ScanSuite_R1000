@@ -106,17 +106,8 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_intakeorder_lines);
-        this.mActivityInitialize();
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-        this.switchDeviations.setChecked(cIntakeorder.currentIntakeOrder.showDeviationsBln);
-    }
 
     @Override
     protected void onDestroy() {
@@ -126,6 +117,7 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -143,7 +135,6 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -184,6 +175,11 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
         this.mSetToolbar(getResources().getString(R.string.screentitle_intakeorderlines));
 
         this.mFieldsInitialize();
+
+        //Set listeners here, so click listeners only work after activity is shown
+        this.mSetListeners();
+
+        this.switchDeviations.setChecked(cIntakeorder.currentIntakeOrder.showDeviationsBln);
 
         this.mInitScreen();
 
@@ -636,7 +632,8 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
         cAppExtension.activity.runOnUiThread(() -> {
             Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
             IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-            cAppExtension.activity.startActivity(intent);
+            startActivity(intent);
+            finish();
         });
 
     }
@@ -696,7 +693,7 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
         //we have a LINE to handle, so start Store activity
         Intent intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
 
     }
 

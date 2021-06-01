@@ -18,7 +18,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +39,6 @@ import SSU_WHS.Intake.IntakeorderMATLines.cIntakeorderMATLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.DatePickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.DynamicItemPropertyFragment;
@@ -64,7 +61,6 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     private TextView articleBarcodeCompactText;
     private TextView quantityCompactText;
     private cIntakeorderBarcode intakeorderBarcode;
-
     private List<String> titleObl;
     private AppCompatImageButton imageButtonDone;
 
@@ -76,46 +72,10 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     private boolean deletedFromRecyclerBln;
     private int tabIndexInt;
 
-    private  void mFillSummaryPropertyList (){
-
-        List<cLinePropertyValue> resultObl = new ArrayList<>();
-        List<cLineProperty> hulpObl = new ArrayList<>();
-
-        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl == null){
-            cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl = new ArrayList<>();
-        }else {
-            cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.clear();
-        }
-        if ( cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl() != null &&  cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl().size() > 0){
-            resultObl.addAll(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl());
-            for(cLinePropertyValue linePropertyValue : resultObl){
-                if (!hulpObl.contains(linePropertyValue.getLineProperty())){
-                    hulpObl.add(linePropertyValue.getLineProperty());
-                }
-            }
-        }
-
-        for (cLineProperty lineProperty : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyInputObl()) {
-            if (hulpObl.contains(lineProperty)){
-                continue;
-            }
-            resultObl.add(new cLinePropertyValue(lineProperty));
-        }
-
-        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.addAll(resultObl);
-    }
-
     private LinkedHashMap<String, ArrayList<cLinePropertyValue>> localItemPropertySortObl(){
         LinkedHashMap<String, ArrayList<cLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();
-        // ArrayList<cPickorderLinePropertyValue> pickorderLinePropertyValues = new ArrayList<>();
 
-        Collections.sort(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl, new Comparator<cLinePropertyValue>() {
-
-            @Override
-            public int compare(cLinePropertyValue o1, cLinePropertyValue o2) {
-                return Integer.compare(o1.getLineProperty().getSortingSequenceNoInt(), o2.getLineProperty().getSortingSequenceNoInt());
-            }
-        });
+        Collections.sort(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl, (o1, o2) -> Integer.compare(o1.getLineProperty().getSortingSequenceNoInt(), o2.getLineProperty().getSortingSequenceNoInt()));
 
         for (cLinePropertyValue linePropertyValue : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl) {
             //Create the hasmap dynammically and fill it
@@ -143,8 +103,10 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
 
         ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(this.titleObl.get(0));
 
-        for (cLinePropertyValue linePropertyValue : loopList ) {
-            quantityDbl += linePropertyValue.getQuantityDbl();
+        if (loopList != null) {
+            for (cLinePropertyValue linePropertyValue : loopList ) {
+                quantityDbl += linePropertyValue.getQuantityDbl();
+            }
         }
 
         return  quantityDbl;
@@ -173,7 +135,6 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_pickorderlineitemproperty_input);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -181,12 +142,13 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
         super.onPostCreate(savedInstanceState);
 
         //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedReceiver();
         cUserInterface.pEnableScanner();
@@ -211,7 +173,6 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -263,6 +224,8 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
         this.mSetToolbar(getResources().getString(R.string.screentitle_itemproperty_input));
 
         this.mFieldsInitialize();
+
+        this.mSetListeners();
 
         this.mInitScreen();
 
@@ -450,7 +413,7 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
         if (!mCheckAllPropertysHandledBln()){
             return;
         }
-        this.mGoBackToIntakeActivity(false);
+        this.mGoBackToIntakeActivity();
     }
 
     public void pRefreshActivity(){
@@ -551,16 +514,13 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     //Region Private Methods
 
     private void mSetCloseListener() {
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonDone.setOnClickListener(view -> {
 
-                amountHandledBln = true;
-                if (!mCheckAllPropertysHandledBln()){
-                    return;
-                }
-                pHandled();
+            amountHandledBln = true;
+            if (!mCheckAllPropertysHandledBln()){
+                return;
             }
+            pHandled();
         });
     }
 
@@ -572,8 +532,10 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
             }
             double quantityDbl = 0.0;
             ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(lineProperty.getPropertyCodeStr());
-            for (cLinePropertyValue linePropertyValue : loopList ) {
-                quantityDbl += linePropertyValue.getQuantityDbl();
+            if (loopList != null) {
+                for (cLinePropertyValue linePropertyValue : loopList ) {
+                    quantityDbl += linePropertyValue.getQuantityDbl();
+                }
             }
             if (quantityDbl != this.getQuantityHandledDbl()){
                 this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(lineProperty.getPropertyCodeStr())));
@@ -620,19 +582,11 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
 
     private void mSetHeaderListener() {
 
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mScrollToBottom();
-            }
-        });
+        this.toolbarTitle.setOnClickListener(view -> mScrollToBottom());
 
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mScrollToTop();
-                return true;
-            }
+        this.toolbarTitle.setOnLongClickListener(view -> {
+            mScrollToTop();
+            return true;
         });
     }
 
@@ -681,7 +635,7 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     }
 
     private  void mSetQuantityText() {
-        String quantityStr = "";
+        String quantityStr;
 
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() > 0){
             quantityStr =   cText.pDoubleToStringStr(mQuantityHandledDbl()) + "/" +  cText.pDoubleToStringStr(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl());
@@ -720,8 +674,8 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
             intent = new Intent(cAppExtension.context, IntakeorderMATLinesActivity.class);
         }
 
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private void mResetCurrents() {
@@ -730,7 +684,6 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
         cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine = null;
         cIntakeorderMATLine.currentIntakeorderMATLine = null;
         cIntakeorder.currentIntakeOrder.currentBin = null;
-        List<cIntakeorderBarcode> scannedBarcodesObl = null;
     }
 
     private void mShowNumberPickerFragment() {
@@ -743,8 +696,10 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
         double availableDbl  = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() - cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl();
         ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr());
 
-        for (cLinePropertyValue linePropertyValue : loopList ) {
-            availableDbl -= linePropertyValue.getQuantityDbl();
+        if (loopList != null) {
+            for (cLinePropertyValue linePropertyValue : loopList ) {
+                availableDbl -= linePropertyValue.getQuantityDbl();
+            }
         }
 
         bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, availableDbl);
@@ -763,34 +718,21 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     }
 
 
-    private  void mGoBackToIntakeActivity(Boolean pvCancelBln) {
+    private  void mGoBackToIntakeActivity() {
 
         cUserInterface.pShowGettingData();
-
-        if (!pvCancelBln){ new Thread(new Runnable() {
-            public void run() {
-                pSendScansBln();
-            }
-        }).start();}
-        else{
-            mShowIntakeActivity();
-        }
+        new Thread(this::pSendScansBln).start();
     }
 
     private void mShowIntakeActivity(){
         Intent intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+       finish();
     }
 
 
     private void mSetNoInputPropertyListener() {
-        this.imageButtonNoInputPropertys.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowItemPropertyNoInputFragment();
-            }
-        });
+        this.imageButtonNoInputPropertys.setOnClickListener(view -> mShowItemPropertyNoInputFragment());
     }
 
     private  void mShowItemPropertyNoInputFragment() {
@@ -831,13 +773,39 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
                 cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
         acceptRejectFragment.setCancelable(true);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
+    }
+
+    private  void mFillSummaryPropertyList (){
+
+        List<cLinePropertyValue> resultObl = new ArrayList<>();
+        List<cLineProperty> hulpObl = new ArrayList<>();
+
+        if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl == null){
+            cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl = new ArrayList<>();
+        }else {
+            cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.clear();
+        }
+        if ( cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl() != null &&  cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl().size() > 0){
+            resultObl.addAll(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.presetValueObl());
+            for(cLinePropertyValue linePropertyValue : resultObl){
+                if (!hulpObl.contains(linePropertyValue.getLineProperty())){
+                    hulpObl.add(linePropertyValue.getLineProperty());
+                }
+            }
+        }
+
+        for (cLineProperty lineProperty : cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.linePropertyInputObl()) {
+            if (hulpObl.contains(lineProperty)){
+                continue;
+            }
+            resultObl.add(new cLinePropertyValue(lineProperty));
+        }
+
+        cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.handledPropertyValueObl.addAll(resultObl);
     }
 
 

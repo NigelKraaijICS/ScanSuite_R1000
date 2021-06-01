@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -98,20 +99,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         this.setContentView(R.layout.activity_main);
 
-        // Standard methods to initialize the Activity
-        this.mActivityInitialize();
-
         //check permissions first
-        cPermissions.checkPermissions();
-
-        //set environment from preferences/by QR code
-        this.mSetEnviroment();
-
-        //Try to set the serialnumber
-        this.mSetSerialNumberIfPossible();
-
-        //Set darmode
-        this.pChangeDarkModus();
+        cPermissions.checkPermissions(this, this);
 
          //set Crashlytics, otherwise Firebase wont work
         FirebaseAnalytics.getInstance(this);
@@ -121,6 +110,10 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void onResume() {
         super.onResume();
+
+        // Standard methods to initialize the Activity
+        this.mActivityInitialize();
+
         cPower.pRegisterPowerConnectReceiver();
         cPower.pRegisterPowerLevelChangedReceiver();
         cUserInterface.pEnableScanner();
@@ -180,6 +173,15 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         //Find all views in Activity
         this.mFindViews();
+
+        //set environment from preferences/by QR code
+        this.mSetEnviroment();
+
+        //Try to set the serialnumber
+        this.mSetSerialNumberIfPossible();
+
+        //Set darmode
+        this.pChangeDarkModus();
 
         // Show and set toolbar
         this.mSetToolbar(getResources().getString(R.string.screentitle_main));
@@ -451,97 +453,99 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         environmentFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ENVIRONMENTFRAGMENT_TAG);
     }
 
-
-
     //End Region Private Methods
 
 
     //Region Listeners
     private void mSetHomeListener() {
-        this.imageHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowHomeFragment();
-            }
-        });
+        this.imageHome.setOnClickListener(view -> mShowHomeFragment());
     }
 
 
     private void mSetMenuListener() {
-        this.mainmenuNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment selectedFragment = null;
-                switch (menuItem.getItemId()) {
+        this.mainmenuNavigation.setNavigationItemSelectedListener(menuItem -> {
+            Fragment selectedFragment = null;
+            switch (menuItem.getItemId()) {
 
-                    case R.id.action_home:
-                        imageHome.setVisibility(View.GONE);
-                        selectedFragment = new HomeFragment();
-                        toolbarTitle.setText(R.string.screentitle_main);
-                        toolbarImage.setImageResource(R.drawable.ic_welcome);
-                        break;
+                case R.id.action_home:
+                    imageHome.setVisibility(View.GONE);
+                    selectedFragment = new HomeFragment();
+                    toolbarTitle.setText(R.string.screentitle_main);
+                    toolbarImage.setImageResource(R.drawable.ic_welcome);
+                    break;
 
-                    case R.id.action_settings:
-                        imageHome.setVisibility(View.VISIBLE);
-                        toolbarTitle.setText(R.string.screentitle_settings);
-                        toolbarImage.setImageResource(R.drawable.ic_settings);
-                        break;
+                case R.id.action_settings:
+                    imageHome.setVisibility(View.VISIBLE);
+                    toolbarTitle.setText(R.string.screentitle_settings);
+                    toolbarImage.setImageResource(R.drawable.ic_settings);
+                    break;
 
-                    case R.id.action_support:
-                        imageHome.setVisibility(View.VISIBLE);
-                        selectedFragment = new SupportFragment();
-                        toolbarTitle.setText(R.string.screentitle_support);
-                        toolbarImage.setImageResource(R.drawable.ic_support);
-                        break;
+                case R.id.action_support:
+                    imageHome.setVisibility(View.VISIBLE);
+                    selectedFragment = new SupportFragment();
+                    toolbarTitle.setText(R.string.screentitle_support);
+                    toolbarImage.setImageResource(R.drawable.ic_support);
+                    break;
 
-                    case R.id.action_language:
-                        imageHome.setVisibility(View.VISIBLE);
-                        selectedFragment = new LanguageFragment();
-                        toolbarTitle.setText(R.string.screentitle_language);
-                        toolbarImage.setImageResource(R.drawable.ic_language);
-                        break;
+                case R.id.action_language:
+                    imageHome.setVisibility(View.VISIBLE);
+                    selectedFragment = new LanguageFragment();
+                    toolbarTitle.setText(R.string.screentitle_language);
+                    toolbarImage.setImageResource(R.drawable.ic_language);
+                    break;
 
-                    case R.id.action_datetime:
-                        imageHome.setVisibility(View.VISIBLE);
-                        selectedFragment = new DateTimeFragment();
-                        toolbarTitle.setText(R.string.screentitle_datetime);
-                        toolbarImage.setImageResource(R.drawable.ic_calendar);
-                        break;
-                    case R.id.action_environments:
-                        cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
-                        break;
+                case R.id.action_datetime:
+                    imageHome.setVisibility(View.VISIBLE);
+                    selectedFragment = new DateTimeFragment();
+                    toolbarTitle.setText(R.string.screentitle_datetime);
+                    toolbarImage.setImageResource(R.drawable.ic_calendar);
+                    break;
+                case R.id.action_environments:
+                    cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
+                    break;
 
-                    case R.id.action_proglove:
-                        imageHome.setVisibility(View.GONE);
-                        mShowPairGlove();
-                        return true;
+                case R.id.action_proglove:
+                    imageHome.setVisibility(View.GONE);
+                    mShowPairGlove();
+                    return true;
 
-                    default:
-                        imageHome.setVisibility(View.GONE);
-                        selectedFragment = new HomeFragment();
-                        toolbarTitle.setText(R.string.screentitle_main);
-                        toolbarImage.setImageResource(R.drawable.ic_welcome);
-                        break;
-                }
+                case R.id.action_close_application:
 
-                if (selectedFragment != null) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.mainFramelayout, selectedFragment);
-                    transaction.commit();
-                }
+                   finishAffinity();
 
-                // deselect everything
-                int size = mainmenuNavigation.getMenu().size();
-                for (int i = 0; i < size; i++) {
-                    mainmenuNavigation.getMenu().getItem(i).setChecked(false);
-                }
 
-                // set item as selected to persist highlight
-                menuItem.setChecked(true);
-                // close drawer when item is tapped
-                menuMainDrawer.closeDrawers();
-                return true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        finishAndRemoveTask();
+                    }
+
+                    System.exit(0);
+                    return true;
+
+                default:
+                    imageHome.setVisibility(View.GONE);
+                    selectedFragment = new HomeFragment();
+                    toolbarTitle.setText(R.string.screentitle_main);
+                    toolbarImage.setImageResource(R.drawable.ic_welcome);
+                    break;
             }
+
+            if (selectedFragment != null) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.mainFramelayout, selectedFragment);
+                transaction.commit();
+            }
+
+            // deselect everything
+            int size = mainmenuNavigation.getMenu().size();
+            for (int i = 0; i < size; i++) {
+                mainmenuNavigation.getMenu().getItem(i).setChecked(false);
+            }
+
+            // set item as selected to persist highlight
+            menuItem.setChecked(true);
+            // close drawer when item is tapped
+            menuMainDrawer.closeDrawers();
+            return true;
         });
     }
 

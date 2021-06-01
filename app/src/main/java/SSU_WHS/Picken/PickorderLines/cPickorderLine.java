@@ -759,6 +759,32 @@ public class cPickorderLine {
 
     }
 
+    public void pAddOrSetLineBarcode(Double pvAmountDbl){
+
+        boolean addBarcodeBln = false;
+
+        //If there are no line barcodes, then simply add this one
+        if (this.handledBarcodesObl() == null || this.handledBarcodesObl().size() == 0) {
+            addBarcodeBln = true;
+        }
+
+        if (!addBarcodeBln) {
+            for (cPickorderLineBarcode pickorderLineBarcode : this.handledBarcodesObl()  ) {
+
+                if (pickorderLineBarcode.getBarcodeStr().equalsIgnoreCase(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr())) {
+                    pickorderLineBarcode.quantityHandledDbl = pvAmountDbl;
+                    pickorderLineBarcode.pUpdateAmountInDatabase();
+                    return;
+                }
+            }
+        }
+
+        cPickorderLineBarcode pickorderLineBarcode = new cPickorderLineBarcode(cPickorderLine.currentPickOrderLine.getLineNoInt().longValue(), cPickorderBarcode.currentPickorderBarcode.getBarcodeStr());
+        pickorderLineBarcode.quantityHandledDbl = pvAmountDbl;
+        pickorderLineBarcode.pInsertInDatabaseBln();
+
+    }
+
     public void pRemoveOrUpdateLineBarcode(){
 
         //If there are no line barcodes, this should not be possible

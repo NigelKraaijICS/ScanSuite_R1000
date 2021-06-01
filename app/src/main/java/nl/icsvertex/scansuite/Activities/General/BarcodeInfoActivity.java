@@ -48,7 +48,6 @@ public class BarcodeInfoActivity extends AppCompatActivity implements iICSDefaul
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_barcodeinfo);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -60,6 +59,7 @@ public class BarcodeInfoActivity extends AppCompatActivity implements iICSDefaul
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -74,7 +74,6 @@ public class BarcodeInfoActivity extends AppCompatActivity implements iICSDefaul
     protected void onStop() {
         super.onStop();
         cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
-        finish();
     }
 
     @Override
@@ -234,8 +233,8 @@ public class BarcodeInfoActivity extends AppCompatActivity implements iICSDefaul
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
 
     }
 

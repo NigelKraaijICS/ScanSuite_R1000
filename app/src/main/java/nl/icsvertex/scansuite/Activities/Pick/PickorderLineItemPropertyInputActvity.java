@@ -96,7 +96,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     private LinkedHashMap<String, ArrayList<cLinePropertyValue>> localItemPropertySortObl(){
         LinkedHashMap<String, ArrayList<cLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();
-       // ArrayList<cPickorderLinePropertyValue> pickorderLinePropertyValues = new ArrayList<>();
 
         for (cLinePropertyValue linePropertyValue : localItemPropertyValueObl()) {
                 //Create the hasmap dynammically and fill it
@@ -124,8 +123,10 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
         ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(this.titleObl.get(0));
 
-        for (cLinePropertyValue pickorderLinePropertyValue : loopList ) {
-            quantityDbl += pickorderLinePropertyValue.getQuantityDbl();
+        if (loopList != null) {
+            for (cLinePropertyValue pickorderLinePropertyValue : loopList ) {
+                quantityDbl += pickorderLinePropertyValue.getQuantityDbl();
+            }
         }
 
         return  quantityDbl;
@@ -135,7 +136,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     public  double getQuantityAvailable() {
      return    cPickorderLine.currentPickOrderLine.getQuantityDbl() - this.getQuantityHandledDbl();
     }
-
 
     //End Region Private Properties
 
@@ -411,33 +411,24 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     public void pHandled() {
         PickorderPickActivity.handledViaPropertysBln = true;
+
         if (getQuantityAvailable() > 0 && !this.amountHandledBln) {
             mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
             return;
         }
+
         if (!mCheckAllPropertysHandledBln()){
             return;
         }
+
         this.mGetNextPickLineForCurrentBin();
     }
 
     public void pRefreshActivity(){
-       // this.mSetItemPropertyValueRecycler();
         this.mSetQuantityText();
         this.mShowHideOKButton();
         this.mBuildAndFillTabs();
         this.mSelectTabAndItem();
-    }
-
-    private void mSelectTabAndItem(){
-        if(cLinePropertyValue.currentLinePropertyValue ==null){
-            if(this.deletedFromRecyclerBln){
-                this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.tabIndexInt));
-            }
-            this.deletedFromRecyclerBln = false;
-            return;
-        }
-        this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())));
     }
 
     public void pDeleteValueFromRecyler() {
@@ -458,35 +449,66 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     public void pResetTab(boolean pvResetBln){
         if (pvResetBln) {
             this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(0));
-       //     this.itemPropertyViewpager.setCurrentItem(0);
         }
     }
+
     public void pShowDatePickerDialog() {
         cUserInterface.pCheckAndCloseOpenDialogs();
         DatePickerFragment datePickerFragment = new DatePickerFragment(cPickorderLine.currentPickOrderLine.presetValueObl);
         datePickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTDATEFRAGMENT_TAG);
     }
 
+    public void pTryToChangePickedQuantity() {
+
+        if (this.amountHandledBln){
+            return;
+        }
+        double newQuantityDbl;
+
+        newQuantityDbl = this.getQuantityHandledDbl();
+
+        if (newQuantityDbl <= 0) {
+            newQuantityDbl = 0;
+        }
+
+        //Set the new quantityDbl and show in Activity
+        cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
+
+        //Add or set line barcodeStr
+        cPickorderLine.currentPickOrderLine.pAddOrSetLineBarcode(newQuantityDbl);
+
+        //Update orderline info (quantityDbl, timestamp, localStatusInt)
+        cPickorderLine.currentPickOrderLine.pHandledIndatabase();
+
+    }
 
     //End Region Public Methods
 
     //Region Private Methods
 
-    private void mSetCloseListener() {
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (getQuantityAvailable() > 0 ) {
-                    mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
-                    return;
-                }
-                amountHandledBln = true;
-                if (!mCheckAllPropertysHandledBln()){
-                   return;
-                }
-                pHandled();
+    private void mSelectTabAndItem(){
+        if(cLinePropertyValue.currentLinePropertyValue ==null){
+            if(this.deletedFromRecyclerBln){
+                this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.tabIndexInt));
             }
+            this.deletedFromRecyclerBln = false;
+            return;
+        }
+        this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())));
+    }
+
+    private void mSetCloseListener() {
+        this.imageButtonDone.setOnClickListener(view -> {
+
+            if (getQuantityAvailable() > 0 ) {
+                mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+                return;
+            }
+            amountHandledBln = true;
+            if (!mCheckAllPropertysHandledBln()){
+               return;
+            }
+            pHandled();
         });
     }
 
@@ -502,8 +524,10 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             }
             double quantityDbl = 0.0;
             ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(inputPickorderLineProperty.getPropertyCodeStr());
-            for (cLinePropertyValue linePropertyValue : loopList ) {
-                quantityDbl += linePropertyValue.getQuantityDbl();
+            if (loopList != null) {
+                for (cLinePropertyValue linePropertyValue : loopList ) {
+                    quantityDbl += linePropertyValue.getQuantityDbl();
+                }
             }
             if (quantityDbl != this.getQuantityHandledDbl()){
                 this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(inputPickorderLineProperty.getPropertyCodeStr())));
@@ -541,19 +565,11 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     private void mSetHeaderListener() {
 
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mScrollToBottom();
-            }
-        });
+        this.toolbarTitle.setOnClickListener(view -> mScrollToBottom());
 
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mScrollToTop();
-                return true;
-            }
+        this.toolbarTitle.setOnLongClickListener(view -> {
+            mScrollToTop();
+            return true;
         });
     }
 
@@ -608,12 +624,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
                 pvAcceptStr ,
                 false);
         acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
@@ -628,37 +641,10 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
                 pvRejectStr,
                 pvAcceptStr );
         acceptRejectPropertyFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectPropertyFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectPropertyFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
-    }
-
-    public   void pTryToChangePickedQuantity() {
-
-        if (this.amountHandledBln){
-            return;
-        }
-        double newQuantityDbl;
-
-        newQuantityDbl = this.getQuantityHandledDbl();
-
-        if (newQuantityDbl <= 0) {
-            newQuantityDbl = 0;
-        }
-
-        //Set the new quantityDbl and show in Activity
-        cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
-
-        //Add or update line barcodeStr
-        cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(newQuantityDbl);
-
-        //Update orderline info (quantityDbl, timestamp, localStatusInt)
-        cPickorderLine.currentPickOrderLine.pHandledIndatabase();
-
     }
 
     private void mShowNumberPickerFragment() {
@@ -671,8 +657,10 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         double availableDbl  = cPickorderLine.currentPickOrderLine.getQuantityDbl();
         ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr());
 
-        for (cLinePropertyValue linePropertyValue : loopList ) {
-            availableDbl -= linePropertyValue.getQuantityDbl();
+        if (loopList != null) {
+            for (cLinePropertyValue linePropertyValue : loopList ) {
+                availableDbl -= linePropertyValue.getQuantityDbl();
+            }
         }
 
         bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, availableDbl);
@@ -690,7 +678,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         itemPropertyTextInputFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTTEXTFRAGMENT_TAG);
     }
 
-
     private  void mGoBackToLinesActivity() {
 
         //Reset current branch
@@ -706,14 +693,8 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         cAppExtension.activity.finish();
     }
 
-
     private void mSetNoInputPropertyListener() {
-        this.imageButtonNoInputPropertys.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowItemPropertyNoInputFragment();
-            }
-        });
+        this.imageButtonNoInputPropertys.setOnClickListener(view -> mShowItemPropertyNoInputFragment());
     }
 
     private  void mShowItemPropertyNoInputFragment() {
@@ -811,7 +792,6 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         this.itemPropertyViewpager.setAdapter(itemPropertyPagerAdapter);
         this.itemPropertyTabLayout.setupWithViewPager(itemPropertyViewpager);
     }
-
 
     //End Region Private Methods
 }

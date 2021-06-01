@@ -20,6 +20,7 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cUser {
 
+
     //region Public Properties
     private final String usernameStr;
     public String getUsernameStr() {
@@ -32,7 +33,6 @@ public class cUser {
     }
 
     public String getInitialsStr() {
-
         String firstInitialStr;
         String lastInitialStr;
         String resultStr;

@@ -122,7 +122,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_pickorderselect);
-        this.mActivityInitialize();
+
     }
 
     @Override
@@ -145,6 +145,8 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onResume() {
         super.onResume();
+
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -152,7 +154,6 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -998,7 +999,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         this.mReleaseLicense();
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
         cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        finish();
 
     }
 

@@ -96,15 +96,14 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_pickorderlines);
-        this.mActivityInitialize();
+
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
+
     }
 
     @Override
@@ -115,6 +114,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedReceiver();
         cUserInterface.pEnableScanner();
@@ -134,7 +134,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu pvMenu) {
@@ -242,6 +241,9 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         this.mSetToolbar(getResources().getString(R.string.screentitle_pickorderlines));
 
         this.mFieldsInitialize();
+
+        //Set listeners here, so click listeners only work after activity is shown
+        this.mSetListeners();
 
         this.mInitScreen();
 
@@ -612,11 +614,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandlePickFaseHandledAndDecideNextStep();
-            }
-        }).start();
+        new Thread(this::mHandlePickFaseHandledAndDecideNextStep).start();
 
     }
 
@@ -643,20 +641,12 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
         builder.setTitle(R.string.message_abort_header);
         builder.setMessage(cAppExtension.activity.getString(R.string.message_abort_text));
-        builder.setPositiveButton(R.string.button_abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                cUserInterface.pCheckAndCloseOpenDialogs();
-                mAbortOrder();
-            }
+        builder.setPositiveButton(R.string.button_abort, (dialogInterface, i) -> {
+            cUserInterface.pCheckAndCloseOpenDialogs();
+            mAbortOrder();
         });
 
-        builder.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                cUserInterface.pCheckAndCloseOpenDialogs();
-            }
-        });
+        builder.setNeutralButton(R.string.cancel, (dialogInterface, i) -> cUserInterface.pCheckAndCloseOpenDialogs());
 
         builder.show();
     }
@@ -745,24 +735,16 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackAndPickCommentObl(),"");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cPickorder.currentPickOrder.pFeedbackAndPickCommentObl(),""));
     }
 
     private void mSetCloseOrderListener() {
 
-        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonCloseOrder.setOnClickListener(view -> {
 
-              PickorderLinesActivity.startedViaOrderSelectBln = false;
-              pCheckAllDone();
+          PickorderLinesActivity.startedViaOrderSelectBln = false;
+          pCheckAllDone();
 
-            }
         });
     }
 
@@ -823,22 +805,19 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Callable<Boolean> callableBln = new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
+        Callable<Boolean> callableBln = () -> {
 
-                // Try to send each line, if one failes then stop
-                for (cPickorderLine pickorderLine : linesToSendObl) {
+            // Try to send each line, if one failes then stop
+            for (cPickorderLine pickorderLine : linesToSendObl) {
 
-                    //Set the current line
-                    cPickorderLine.currentPickOrderLine = pickorderLine;
+                //Set the current line
+                cPickorderLine.currentPickOrderLine = pickorderLine;
 
-                    //Try to send the line
-                   cPickorderLine.currentPickOrderLine .pHandledBln();
+                //Try to send the line
+               cPickorderLine.currentPickOrderLine .pHandledBln();
 
-                }
-                return  true;
             }
+            return  true;
         };
 
 
@@ -867,12 +846,9 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 
@@ -902,53 +878,29 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private  void mAskSort() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
+        cAppExtension.activity.runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
 
-                builder.setMessage(cAppExtension.context.getString(R.string.question_open_sort));
-                builder.setTitle(cAppExtension.context.getString(R.string.question_open_sort_title));
-                builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mStartSortActivity();
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mStartOrderSelectActivity();
-                    }
-                });
-                builder.setIcon(R.drawable.ic_menu_sort);
-                builder.show();
-            }
+            builder.setMessage(cAppExtension.context.getString(R.string.question_open_sort));
+            builder.setTitle(cAppExtension.context.getString(R.string.question_open_sort_title));
+            builder.setPositiveButton(R.string.open, (dialog, id) -> mStartSortActivity());
+            builder.setNegativeButton(R.string.no, (dialogInterface, i) -> mStartOrderSelectActivity());
+            builder.setIcon(R.drawable.ic_menu_sort);
+            builder.show();
         });
     }
 
     private  void mAskShip() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
+        cAppExtension.activity.runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(cAppExtension.context);
 
-                builder.setMessage(cAppExtension.context.getString(R.string.question_open_ship));
-                builder.setTitle(cAppExtension.context.getString(R.string.question_open_ship_title));
-                builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mStartShipActivity();
-                    }
-                });
-                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mStartOrderSelectActivity();
-                    }
-                });
-                builder.setIcon(R.drawable.ic_menu_ship);
-                builder.show();
-            }
+            builder.setMessage(cAppExtension.context.getString(R.string.question_open_ship));
+            builder.setTitle(cAppExtension.context.getString(R.string.question_open_ship_title));
+            builder.setPositiveButton(R.string.open, (dialog, id) -> mStartShipActivity());
+            builder.setNegativeButton(R.string.no, (dialogInterface, i) -> mStartOrderSelectActivity());
+            builder.setIcon(R.drawable.ic_menu_ship);
+            builder.show();
         });
 
 
@@ -1045,24 +997,20 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_sure_leave_pick_screen_title),
                 cAppExtension.activity.getString(R.string.message_sure_leave_pick_screen_text),cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_leave), false);
         acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
 
     }
 
     private  void mStartOrderSelectActivity() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
-                PickorderSelectActivity.startedViaMenuBln = false;
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
+            PickorderSelectActivity.startedViaMenuBln = false;
+           startActivity(intent);
+           finish();
         });
 
     }
@@ -1071,11 +1019,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStartSortActivity();
-            }
-        }).start();
+        new Thread(this::mHandleStartSortActivity).start();
 
     }
 
@@ -1083,11 +1027,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStartStoreActivity();
-            }
-        }).start();
+        new Thread(this::mHandleStartStoreActivity).start();
 
     }
 
@@ -1108,12 +1048,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                //Show Sort Activity
-                Intent intent = new Intent(cAppExtension.context, StoreorderLinesActivity.class);
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            //Show Sort Activity
+            Intent intent = new Intent(cAppExtension.context, StoreorderLinesActivity.class);
+            cAppExtension.activity.startActivity(intent);
         });
     }
 
@@ -1139,12 +1077,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                //Show Sort Activity
-                Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            //Show Sort Activity
+            Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
+            cAppExtension.activity.startActivity(intent);
         });
     }
 
@@ -1152,11 +1088,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleStartShipActivity();
-            }
-        }).start();
+        new Thread(this::mHandleStartShipActivity).start();
 
     }
 

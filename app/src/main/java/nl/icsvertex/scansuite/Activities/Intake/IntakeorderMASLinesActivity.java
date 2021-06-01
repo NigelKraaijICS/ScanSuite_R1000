@@ -42,8 +42,6 @@ import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLineAdapter;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLineRecyclerItemTouchHelper;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
-import SSU_WHS.PackAndShip.PackAndShipShipment.cPackAndShipShipment;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
@@ -96,17 +94,8 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_intakeorder_lines_generated);
-        this.mActivityInitialize();
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-
-    }
 
     @Override
     protected void onDestroy() {
@@ -116,6 +105,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -133,7 +123,6 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -186,6 +175,8 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         this.mFindViews();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_intakeorderlines));
+
+        this.mSetListeners();
 
         this.mFieldsInitialize();
 
@@ -367,11 +358,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleClose();
-            }
-        }).start();
+        new Thread(this::mHandleClose).start();
 
     }
 
@@ -397,17 +384,14 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     public void pSetToolBarTitleWithCounters(final String pvTextStr) {
 
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                toolbarSubTitle.setText(pvTextStr);
+        cAppExtension.activity.runOnUiThread(() -> {
+            toolbarSubTitle.setText(pvTextStr);
 
-                //Close open dialogs, so keyboard will also close
-                cUserInterface.pHideKeyboard();
+            //Close open dialogs, so keyboard will also close
+            cUserInterface.pHideKeyboard();
 
-                //Click to make even more sure that keyboard gets hidden
-                toolbarSubTitle.performClick();
-            }
+            //Click to make even more sure that keyboard gets hidden
+            toolbarSubTitle.performClick();
         });
 
 
@@ -485,22 +469,12 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pCommentObl(), "");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cIntakeorder.currentIntakeOrder.pCommentObl(), ""));
     }
 
     private void mSetSendOrderListener() {
 
-        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
-            }
-        });
+        this.imageButtonCloseOrder.setOnClickListener(view -> mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close)));
     }
 
     private void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
@@ -529,12 +503,11 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
     private void mStartOrderSelectActivity() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
-                IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
+            IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
+           startActivity(intent);
+           finish();
         });
 
     }
@@ -593,12 +566,9 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
 
         acceptRejectFragment.setCancelable(true);
         final AcceptRejectFragment finalAcceptRejectFragment = acceptRejectFragment;
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                finalAcceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            finalAcceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
 
     }
@@ -617,7 +587,7 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
             intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);
         }
 
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
 
     }
 
@@ -637,34 +607,31 @@ public class IntakeorderMASLinesActivity extends AppCompatActivity implements iI
     private void mNoLinesAvailable(final boolean pvShowBln) {
 
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewLines.setVisibility(View.INVISIBLE);
-                    imageButtonCloseOrder.setVisibility(View.INVISIBLE);
+                recyclerViewLines.setVisibility(View.INVISIBLE);
+                imageButtonCloseOrder.setVisibility(View.INVISIBLE);
 
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NothingHereFragment fragment = new NothingHereFragment();
+                fragmentTransaction.replace(R.id.IntakeorderLinesGeneratedContainer, fragment);
+                fragmentTransaction.commit();
+                pSetToolBarTitleWithCounters(cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
+                return;
+            }
+
+            recyclerViewLines.setVisibility(View.VISIBLE);
+            imageButtonCloseOrder.setVisibility(View.VISIBLE);
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NothingHereFragment) {
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NothingHereFragment fragment = new NothingHereFragment();
-                    fragmentTransaction.replace(R.id.IntakeorderLinesGeneratedContainer, fragment);
+                    fragmentTransaction.remove(fragment);
                     fragmentTransaction.commit();
-                    pSetToolBarTitleWithCounters(cText.pIntToStringStr(cIntakeorderMATSummaryLine.sortedMATSummaryLinesGeneratedObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
-                    return;
-                }
-
-                recyclerViewLines.setVisibility(View.VISIBLE);
-                imageButtonCloseOrder.setVisibility(View.VISIBLE);
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
                 }
             }
         });

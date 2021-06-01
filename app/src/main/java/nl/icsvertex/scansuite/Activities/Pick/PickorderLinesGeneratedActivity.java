@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.Activities.Pick;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -71,9 +69,6 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
     //Region Private Properties
 
-    //Region Views
-    private ConstraintLayout pickorderLinesGeneratedContainer;
-
     private TextView quantityPickordersText;
     private ImageView imageButtonComments;
 
@@ -106,15 +101,6 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_pickorderlines_generated);
-        this.mActivityInitialize();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
     }
 
     @Override
@@ -125,6 +111,9 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     @Override
     protected void onResume() {
         super.onResume();
+
+        this.mActivityInitialize();
+
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedReceiver();
         cUserInterface.pEnableScanner();
@@ -144,7 +133,6 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -172,7 +160,6 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
     @Override
     public boolean onPrepareOptionsMenu(Menu pvMenu) {
-        //  invalidateOptionsMenu();
 
         MenuItem item_bin_stock = pvMenu.findItem(R.id.item_bin_stock);
         MenuItem item_article_stock = pvMenu.findItem(R.id.item_article_stock);
@@ -206,6 +193,8 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         this.mFieldsInitialize();
 
+        this.mSetListeners();
+
         this.mInitScreen();
 
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
@@ -222,8 +211,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     @Override
     public void mFindViews() {
 
-        this.pickorderLinesGeneratedContainer = findViewById(R.id.pickorderLinesGeneratedContainer);
-
+        //Region Views
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
@@ -537,7 +525,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(() -> mHandleFillLines()).start();
+        new Thread(this::mHandleFillLines).start();
 
     }
 
@@ -551,31 +539,28 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
     }
 
     private void mFillRecycler() {
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                if (cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl().size() == 0) {
-                    mNoLinesAvailable(true);
-                    return;
-                }
+            if (cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl().size() == 0) {
+                mNoLinesAvailable(true);
+                return;
+            }
 
-                mNoLinesAvailable(false);
+            mNoLinesAvailable(false);
 
-                getPickorderLineAdapter().pFillData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl());
-                recyclerViewPickorderLinesGenerated.setHasFixedSize(false);
-                recyclerViewPickorderLinesGenerated.setAdapter(getPickorderLineAdapter());
-                recyclerViewPickorderLinesGenerated.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-                recyclerViewPickorderLinesGenerated.setVisibility(View.VISIBLE);
+            getPickorderLineAdapter().pFillData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl());
+            recyclerViewPickorderLinesGenerated.setHasFixedSize(false);
+            recyclerViewPickorderLinesGenerated.setAdapter(getPickorderLineAdapter());
+            recyclerViewPickorderLinesGenerated.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+            recyclerViewPickorderLinesGenerated.setVisibility(View.VISIBLE);
 
-                mChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()));
-                if (cPickorder.currentPickOrder.linesObl().size() > 0) {
-                    imageButtonCloseOrder.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    imageButtonCloseOrder.setVisibility(View.INVISIBLE);
-                }
+            mChangeTabCounterText(cText.pDoubleToStringStr(cPickorder.currentPickOrder.pQuantityHandledDbl()));
+            if (cPickorder.currentPickOrder.linesObl().size() > 0) {
+                imageButtonCloseOrder.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                imageButtonCloseOrder.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -879,12 +864,9 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_sure_leave_screen_title),
                 cAppExtension.activity.getString(R.string.message_sure_leave_screen_text),cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_leave), false);
         acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
 
     }
@@ -894,7 +876,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         cAppExtension.activity.runOnUiThread(() -> {
             Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
             PickorderSelectActivity.startedViaMenuBln = false;
-            cAppExtension.activity.startActivity(intent);
+            startActivity(intent);
         });
 
     }
@@ -903,7 +885,7 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         cUserInterface.pShowGettingData();
 
-        new Thread(() -> mHandleStartSortActivity()).start();
+        new Thread(this::mHandleStartSortActivity).start();
 
     }
 
@@ -932,13 +914,13 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
         cAppExtension.activity.runOnUiThread(() -> {
             //Show Sort Activity
             Intent intent = new Intent(cAppExtension.context, SortorderLinesActivity.class);
-            cAppExtension.activity.startActivity(intent);
+            startActivity(intent);
         });
     }
 
     private  void mStartShipActivity() {
         cUserInterface.pShowGettingData();
-        new Thread(() -> mHandleStartShipActivity()).start();
+        new Thread(this::mHandleStartShipActivity).start();
     }
 
     private  void mHandleStartShipActivity(){
@@ -957,14 +939,14 @@ public class PickorderLinesGeneratedActivity extends AppCompatActivity implement
 
         //Show ShipLines
         Intent intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
 
     }
 
     private  void mStartPickActivity(){
         //we have a line to handle, so start Pick activity
         Intent intent = new Intent(cAppExtension.context, PickorderPickGeneratedActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private  void mShowComments(){

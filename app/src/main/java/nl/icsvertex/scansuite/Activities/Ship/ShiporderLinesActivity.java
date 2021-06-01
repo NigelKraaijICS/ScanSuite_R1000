@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.Activities.Ship;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -35,7 +34,6 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
-import nl.icsvertex.scansuite.Activities.General.BarcodeInfoActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
@@ -78,11 +76,8 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shiporderlines);
-        this.mActivityInitialize();
-
     }
 
     @Override
@@ -93,6 +88,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -106,7 +102,6 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -544,26 +539,20 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(cAppExtension.context);
         alertDialog.setTitle(R.string.message_sure_leave_screen_title);
         alertDialog.setMessage(getString(R.string.message_sure_leave_screen_text));
-        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface pvDialogInterface, int i) {
+        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, (pvDialogInterface, i) -> {
 
-                cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_PackAndShip,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
+            cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_PackAndShip,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
 
-                //If activity bin is not required, then don't show the fragment
-                if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
-                    mStartOrderSelectActivity();
-                }
-
+            //If activity bin is not required, then don't show the fragment
+            if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
+                mStartOrderSelectActivity();
             }
+
         });
 
 
-        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing (close the dialog)
-            }
+        alertDialog.setNeutralButton(R.string.cancel, (dialogInterface, i) -> {
+            //do nothing (close the dialog)
         });
 
         alertDialog.setCancelable(true);
@@ -610,19 +599,22 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         cWorkplace.currentWorkplace = null;
 
         Intent intent = new Intent(cAppExtension.context, ShiporderSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
     private void mStartShipActivity(){
         //we have a SourceDocument to handle, so start Ship activity
         Intent intent = new Intent(cAppExtension.context, ShiporderShipActivity.class);
-        cAppExtension.activity.startActivity(intent);
+       startActivity(intent);
+        finish();
     }
 
     private void mStartQCLinesActivity(){
         //we have a SourceDocument to check, so start QC lines activity
         Intent intent = new Intent(cAppExtension.context, QualityControlLinesActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
 

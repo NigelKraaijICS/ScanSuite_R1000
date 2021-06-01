@@ -139,8 +139,6 @@ public class cPackAndShipShipment {
 
     }
 
-
-
     private cPackAndShipShipmentEntity packAndShipShipmentEntity;
 
     public cPackAndShipAddress deliveryAddress() {

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,9 +19,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -83,8 +79,6 @@ public class CreateIntakeOrReceiveActivity extends AppCompatActivity implements 
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_create_receive_or_intake_order);
-        this.mActivityInitialize();
-
     }
 
     @Override
@@ -106,13 +100,13 @@ public class CreateIntakeOrReceiveActivity extends AppCompatActivity implements 
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -326,7 +320,8 @@ public class CreateIntakeOrReceiveActivity extends AppCompatActivity implements 
     private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
         IntakeAndReceiveSelectActivity.startedViaMenuBln = false;
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
     private void mSetCreateListener() {
@@ -546,8 +541,8 @@ public class CreateIntakeOrReceiveActivity extends AppCompatActivity implements 
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, ReceiveLinesActivity.class);
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
-
+        startActivity(intent);
+        finish();
     }
 
     private  void mShowIntakeLinesActivity() {
@@ -569,7 +564,8 @@ public class CreateIntakeOrReceiveActivity extends AppCompatActivity implements 
                 throw new IllegalStateException("Unexpected value: " + cIntakeorder.currentIntakeOrder.getOrderTypeStr().toUpperCase());
         }
 
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
+        finish();
     }
 
     private void mShowStockOwnerSpinner() {

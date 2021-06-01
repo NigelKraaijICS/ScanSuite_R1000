@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.Activities.FinishShip;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -76,11 +75,8 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish_singlepiecelines);
-        this.mActivityInitialize();
-
     }
 
     @Override
@@ -91,6 +87,7 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -104,7 +101,6 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -278,11 +274,7 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
             }
 
             mShowSending();
-            new Thread(new Runnable() {
-                public void run() {
-                    mPrintDocumentsViaWebservice();
-                }
-            }).start();
+            new Thread(this::mPrintDocumentsViaWebservice).start();
 
 
         }
@@ -421,21 +413,15 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(cAppExtension.context);
         alertDialog.setTitle(R.string.message_sure_leave_screen_title);
         alertDialog.setMessage(getString(R.string.message_sure_leave_screen_text));
-        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface pvDialogInterface, int i) {
+        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, (pvDialogInterface, i) -> {
 
-                cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Finish_Packing, cWarehouseorder.WorkflowPickStepEnu.PickFinishPacking);
-                mStartOrderSelectActivity();
-            }
+            cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Finish_Packing, cWarehouseorder.WorkflowPickStepEnu.PickFinishPacking);
+            mStartOrderSelectActivity();
         });
 
 
-        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing (close the dialog)
-            }
+        alertDialog.setNeutralButton(R.string.cancel, (dialogInterface, i) -> {
+            //do nothing (close the dialog)
         });
 
         alertDialog.setCancelable(true);
@@ -479,18 +465,16 @@ public class FinishShipLinesActivity extends AppCompatActivity implements iICSDe
 
     private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, FinishShiporderSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
 
     private void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 

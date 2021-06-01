@@ -40,12 +40,12 @@ import nl.icsvertex.scansuite.R;
 
 public class cPackAndShipOrder {
 
-    private int numberOfBinsInt;
+    private final int numberOfBinsInt;
     public int getNumberOfBinsInt() {
         return numberOfBinsInt;
     }
 
-    private String assignedUserIdStr;
+    private final String assignedUserIdStr;
     public String getAssignedUserIdStr() {
         return assignedUserIdStr;
     }
@@ -65,42 +65,42 @@ public class cPackAndShipOrder {
         return destinationNoStr;
     }
 
-    private String documentStr;
+    private final String documentStr;
     public String getDocumentStr() {
         return documentStr;
     }
 
-    private String document2Str;
+    private final String document2Str;
     public String getDocument2Str() {
         return document2Str;
     }
 
-    private String documentTypeStr;
+    private final String documentTypeStr;
     public String getDocumentTypeStr() {
         return documentTypeStr;
     }
 
-    private String documentType2Str;
+    private final String documentType2Str;
     public String getDocumentType2Str() {
         return documentType2Str;
     }
 
-    private String externalReferenceStr;
+    private final String externalReferenceStr;
     public String getExternalReferenceStr() {
         return externalReferenceStr;
     }
 
-    private String orderNumberStr;
+    private final String orderNumberStr;
     public String getOrderNumberStr() {
         return orderNumberStr;
     }
 
-    private String orderTypeStr;
+    private final String orderTypeStr;
     public String getOrderTypeStr() {
         return orderTypeStr;
     }
 
-    private int sourceDocumentInt;
+    private final int sourceDocumentInt;
     private int getSourceDocumentInt() {
         return sourceDocumentInt;
     }
@@ -110,7 +110,7 @@ public class cPackAndShipOrder {
         return statusInt;
     }
 
-    private String workplaceStr;
+    private final String workplaceStr;
     public String getWorkplaceStr() {
         return workplaceStr;
     }
@@ -129,7 +129,7 @@ public class cPackAndShipOrder {
        return this.getSourceDocumentInt() == cWarehouseorder.SourceDocumentTypeEnu.Generated;
    }
 
-    private cPackAndShipOrderEntity packAndShipOrderEntity;
+    private final cPackAndShipOrderEntity packAndShipOrderEntity;
 
     public List<cComment> commentsObl() {
         return cComment.allCommentsObl;
@@ -673,7 +673,6 @@ public class cPackAndShipOrder {
                         packAndShipAddress.pInsertInDatabaseBln();
 
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

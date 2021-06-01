@@ -249,11 +249,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleFillOrders();
-            }
-        }).start();
+        new Thread(this::mHandleFillOrders).start();
 
     }
 
@@ -286,11 +282,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
         //Set the current pack and ship order
         cPackAndShipOrder.currentPackAndShipOrder = pvPackAndShipOrder;
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandlePackAndShipOrderSelected();
-            }
-        }).start();
+        new Thread(this::mHandlePackAndShipOrderSelected).start();
 
     }
 
@@ -330,26 +322,23 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //Fill and show recycler
+        cAppExtension.activity.runOnUiThread(() -> {
+            //Fill and show recycler
 
-                cPackAndShipOrder.allPackAndShipOrdersObl = cPackAndShipOrder.pGetPackAndShipOrdersWithFilterFromDatabasObl();
-                if (cPackAndShipOrder.allPackAndShipOrdersObl.size() == 0) {
-                    mShowNoOrdersIcon( true);
-                    cUserInterface.pHideGettingData();
-                    return;
-                }
-
-                mFillRecycler(cPackAndShipOrder.allPackAndShipOrdersObl);
-                mShowNoOrdersIcon(false);
-                if (cSharedPreferences.userFilterBln()) {
-                    mApplyFilter();
-                }
-
+            cPackAndShipOrder.allPackAndShipOrdersObl = cPackAndShipOrder.pGetPackAndShipOrdersWithFilterFromDatabasObl();
+            if (cPackAndShipOrder.allPackAndShipOrdersObl.size() == 0) {
+                mShowNoOrdersIcon( true);
                 cUserInterface.pHideGettingData();
+                return;
             }
+
+            mFillRecycler(cPackAndShipOrder.allPackAndShipOrdersObl);
+            mShowNoOrdersIcon(false);
+            if (cSharedPreferences.userFilterBln()) {
+                mApplyFilter();
+            }
+
+            cUserInterface.pHideGettingData();
         });
     }
 
@@ -377,13 +366,8 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowPackAndShipActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowPackAndShipActivity);
 
 
     }
@@ -408,6 +392,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
         }
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+        assert intent != null;
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
 
     }
@@ -425,12 +410,10 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
 
             if (CreatePackAndShipActivity.packAndShipMainTypeEnu == cWarehouseorder.PackAndShipMainTypeEnu.SINGLE){
-                CreatePackAndShipActivity.packAndShipMainTypeEnu = cWarehouseorder.PackAndShipMainTypeEnu.SINGLE;
                 intent = new Intent(cAppExtension.context, PackAndShipSingleActivity.class);
             }
 
             if (CreatePackAndShipActivity.packAndShipMainTypeEnu == cWarehouseorder.PackAndShipMainTypeEnu.MULTI){
-                CreatePackAndShipActivity.packAndShipMainTypeEnu = cWarehouseorder.PackAndShipMainTypeEnu.MULTI;
                 intent = new Intent(cAppExtension.context, PackAndShipMultiActivity.class);
             }
 
@@ -457,6 +440,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
         }
 
         cUserInterface.pCheckAndCloseOpenDialogs();
+        assert intent != null;
         ActivityCompat.startActivity(cAppExtension.context,intent, null);
     }
 
@@ -532,12 +516,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
+        this.imageViewFilter.setOnClickListener(view -> mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED));
     }
 
     private void mSetSwipeRefreshListener() {
@@ -623,12 +602,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                recyclerSearchView.setIconified(false);
-            }
-        });
+        this.recyclerSearchView.setOnClickListener(pvView -> recyclerSearchView.setIconified(false));
 
         //query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -653,41 +627,38 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
     private void mShowNoOrdersIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
-                swipeRefreshLayout.setRefreshing(false);
+            cUserInterface.pHideGettingData();
+            swipeRefreshLayout.setRefreshing(false);
 
 
-                mSetToolBarTitleWithCounters();
+            mSetToolBarTitleWithCounters();
 
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewPackAndShipOrders.setVisibility(View.INVISIBLE);
+                recyclerViewPackAndShipOrders.setVisibility(View.INVISIBLE);
 
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NoOrdersFragment fragment = new NoOrdersFragment();
-                    fragmentTransaction.replace(R.id.packAndShipOrderContainer, fragment);
-                    fragmentTransaction.commit();
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NoOrdersFragment fragment = new NoOrdersFragment();
+                fragmentTransaction.replace(R.id.packAndShipOrderContainer, fragment);
+                fragmentTransaction.commit();
 
-                    if (cSetting.PACK_AND_SHIP_AUTO_CREATE_ORDER()) {
-                        mAutoOpenCreateActivity();
-                    }
-                    return;
+                if (cSetting.PACK_AND_SHIP_AUTO_CREATE_ORDER()) {
+                    mAutoOpenCreateActivity();
                 }
+                return;
+            }
 
-                recyclerViewPackAndShipOrders.setVisibility(View.VISIBLE);
+            recyclerViewPackAndShipOrders.setVisibility(View.VISIBLE);
 
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NoOrdersFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NoOrdersFragment) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
                 }
             }
         });
@@ -787,12 +758,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetNewOrderListener() {
-        this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mShowCreatePackAndShipActivity(null);
-            }
-        });
+        this.imageViewNewOrder.setOnClickListener(pvView -> mShowCreatePackAndShipActivity(null));
     }
 
     private void mAutoOpenCreateActivity(){

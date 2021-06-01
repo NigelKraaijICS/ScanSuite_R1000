@@ -169,288 +169,278 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
 
             if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
 
-                for (cLinePropertyValue loopValue : cPickorderLine.currentPickOrderLine.presetValueObl){
-                    if (loopValue.getPropertyCodeStr().equalsIgnoreCase(linePropertyValue.getPropertyCodeStr()) && loopValue.getValueStr().equalsIgnoreCase(linePropertyValue.getValueStr())){
-                        pvHolder.imageButtonZero.setVisibility(View.INVISIBLE);
-                        break;
+                if ( cPickorderLine.currentPickOrderLine != null && cPickorderLine.currentPickOrderLine.presetValueObl != null) {
+                    for (cLinePropertyValue loopValue : cPickorderLine.currentPickOrderLine.presetValueObl){
+                        if (loopValue.getPropertyCodeStr().equalsIgnoreCase(linePropertyValue.getPropertyCodeStr()) && loopValue.getValueStr().equalsIgnoreCase(linePropertyValue.getValueStr())){
+                            pvHolder.imageButtonZero.setVisibility(View.INVISIBLE);
+                            break;
+                        }
                     }
                 }
             }
 
-            pvHolder.primaryContent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
+            pvHolder.primaryContent.setOnClickListener(view -> {
 
-                    if (linePropertyValue.getValueStr() == null) {
-                        return;
-                    }
+                if (linePropertyValue.getValueStr() == null) {
+                    return;
+                }
 
-                    AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.rotate_180);
+                AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.rotate_180);
 
-                    //Close all others
-                    for (LinearLayout aLayout : itemPropertyValueLinearLayoutObl) {
-                        ConstraintLayout secondaryLayout = aLayout.findViewById(R.id.secondaryContent);
-                        ConstraintLayout primaryLayout = aLayout.findViewById(R.id.primaryContent);
-                        if (secondaryLayout != null) {
-                            if (primaryLayout != view) {
-                                if (secondaryLayout.getVisibility() == View.VISIBLE) {
-                                    ImageView chevronImage = primaryLayout.findViewById(R.id.imageChevronDown);
-                                    if (chevronImage != null) {
-                                        chevronImage.animate().rotation(0).start();
-                                    }
+                //Close all others
+                for (LinearLayout aLayout : itemPropertyValueLinearLayoutObl) {
+                    ConstraintLayout secondaryLayout = aLayout.findViewById(R.id.secondaryContent);
+                    ConstraintLayout primaryLayout = aLayout.findViewById(R.id.primaryContent);
+                    if (secondaryLayout != null) {
+                        if (primaryLayout != view) {
+                            if (secondaryLayout.getVisibility() == View.VISIBLE) {
+                                ImageView chevronImage = primaryLayout.findViewById(R.id.imageChevronDown);
+                                if (chevronImage != null) {
+                                    chevronImage.animate().rotation(0).start();
                                 }
-                                secondaryLayout.animate().scaleY(0).start();
-                                secondaryLayout.setVisibility(View.GONE);
                             }
+                            secondaryLayout.animate().scaleY(0).start();
+                            secondaryLayout.setVisibility(View.GONE);
                         }
                     }
-
-                    boolean isExpanded;
-                    isExpanded = pvHolder.secondaryContent.getVisibility() == View.VISIBLE;
-
-                    if (isExpanded) {
-                        pvHolder.imageChevronDown.animate().rotation(0).start();
-                        pvHolder.secondaryContent.animate().scaleY(0).start();
-                        pvHolder.secondaryContent.setVisibility(View.GONE);
-                    }
-                    else {
-                        pvHolder.imageChevronDown.animate().rotation(180).start();
-                        pvHolder.secondaryContent.animate().scaleY(1).start();
-                        pvHolder.secondaryContent.setVisibility(View.VISIBLE);
-                    }
-
-
                 }
+
+                boolean isExpanded;
+                isExpanded = pvHolder.secondaryContent.getVisibility() == View.VISIBLE;
+
+                if (isExpanded) {
+                    pvHolder.imageChevronDown.animate().rotation(0).start();
+                    pvHolder.secondaryContent.animate().scaleY(0).start();
+                    pvHolder.secondaryContent.setVisibility(View.GONE);
+                }
+                else {
+                    pvHolder.imageChevronDown.animate().rotation(180).start();
+                    pvHolder.secondaryContent.animate().scaleY(1).start();
+                    pvHolder.secondaryContent.setVisibility(View.VISIBLE);
+                }
+
+
             });
 
-            pvHolder.imageButtonMax.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            pvHolder.imageButtonMax.setOnClickListener(view -> {
 
-                    cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
-                    double availableDbl = 0.0;
-                    boolean moveLineBln = false;
-                    if(cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity){
-                        availableDbl = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() - cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl();
+                cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
+                double availableDbl = 0.0;
+                boolean moveLineBln = false;
+                if(cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity){
+                    availableDbl = cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() - cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityHandledDbl();
+                }
+                if(cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity){
+                    availableDbl = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() - cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl();
+                }
+                if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
+                    availableDbl = cPickorderLine.currentPickOrderLine.getQuantityDbl();
+                }
+                if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity){
+                    availableDbl = cInventoryorderLine.currentInventoryOrderLine.getQuantityDbl();
+                }
+                if (cAppExtension.activity instanceof MoveLineItemPropertyActivity){
+                    if (cLinePropertyValue.currentLinePropertyValue.getQuantityAvailableDbl() > 0){
+                        availableDbl = cLinePropertyValue.currentLinePropertyValue.getQuantityAvailableDbl() - cLinePropertyValue.currentLinePropertyValue.getQuantityDbl();
+                        moveLineBln = true;
+                    }else{
+                        availableDbl = cMoveorderLine.currentMoveOrderLine.getQuantityDbl();
                     }
-                    if(cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity){
-                        availableDbl = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl() - cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityHandledDbl();
-                    }
-                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
-                        availableDbl = cPickorderLine.currentPickOrderLine.getQuantityDbl();
-                    }
-                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity){
-                        availableDbl = cInventoryorderLine.currentInventoryOrderLine.getQuantityDbl();
-                    }
-                    if (cAppExtension.activity instanceof MoveLineItemPropertyActivity){
-                        if (cLinePropertyValue.currentLinePropertyValue.getQuantityAvailableDbl() > 0){
-                            availableDbl = cLinePropertyValue.currentLinePropertyValue.getQuantityAvailableDbl() - cLinePropertyValue.currentLinePropertyValue.getQuantityDbl();
-                            moveLineBln = true;
-                        }else{
-                            availableDbl = cMoveorderLine.currentMoveOrderLine.getQuantityDbl();
+                }
+
+                if (!moveLineBln){
+                ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(linePropertyValue.getPropertyCodeStr());
+
+                for (cLinePropertyValue linePropertyValue1 : loopList ) {
+                    availableDbl -= linePropertyValue1.getQuantityDbl();
+                 }
+                }
+
+                cLinePropertyValue.currentLinePropertyValue.quantityDbl += availableDbl;
+
+                if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
+                    ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
+
+                    receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
+                    receiveorderLinePropertyInputActivity.pRefreshActivity();
+                }
+
+                if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                    IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+
+                    intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
+                    intakeOrderLinePropertyInputActivity.pRefreshActivity();
+                }
+
+                if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                    InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+
+                    inventoryLinePropertyInputActivity.pTryToChangeQuantity();
+                    inventoryLinePropertyInputActivity.pRefreshActivity();
+                }
+
+                if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+                    MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity) cAppExtension.activity;
+
+                    moveLineItemPropertyActivity.pTryToChangeQuantity(true, false, availableDbl);
+                    moveLineItemPropertyActivity.pRefreshActivity();
+                }
+
+                if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
+                    PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
+
+                    pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity( );
+                    pickorderLineItemPropertyInputActvity.pRefreshActivity();
+                }
+
+            });
+
+            pvHolder.imageButtonPlus.setOnClickListener(view -> {
+
+                cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
+                if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity){
+                    if (linePropertyValue.getQuantityDbl()>= (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() - cReceiveorderSummaryLine.currentReceiveorderSummaryLine.quantityHandledDbl)){
+                        if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln() && !cIntakeorder.currentIntakeOrder.isGenerated() && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0 ) {
+                            cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
+                            cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.context.getString(R.string.number_cannot_be_higher),R.raw.headsupsound,false);
+                            return ;
                         }
-                    }
-
-                    if (!moveLineBln){
-                    ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(linePropertyValue.getPropertyCodeStr());
-
-                    for (cLinePropertyValue linePropertyValue1 : loopList ) {
-                        availableDbl -= linePropertyValue1.getQuantityDbl();
-                     }
-                    }
-
-                    cLinePropertyValue.currentLinePropertyValue.quantityDbl += availableDbl;
-
-                    if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
-                        ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
-
-                        receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
-                        receiveorderLinePropertyInputActivity.pRefreshActivity();
-                    }
-
-                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
-                        IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
-
-                        intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
-                        intakeOrderLinePropertyInputActivity.pRefreshActivity();
-                    }
-
-                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
-                        InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
-
-                        inventoryLinePropertyInputActivity.pTryToChangeQuantity();
-                        inventoryLinePropertyInputActivity.pRefreshActivity();
-                    }
-
-                    if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
-                        MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity) cAppExtension.activity;
-
-                        moveLineItemPropertyActivity.pTryToChangeQuantity(true, false, availableDbl);
-                        moveLineItemPropertyActivity.pRefreshActivity();
-                    }
-
-                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
-                        PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
-
-                        pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity( );
-                        pickorderLineItemPropertyInputActvity.pRefreshActivity();
-                    }
-
-                }
-            });
-
-            pvHolder.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
-                    if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity){
-                        if (linePropertyValue.getQuantityDbl()>= (cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() - cReceiveorderSummaryLine.currentReceiveorderSummaryLine.quantityHandledDbl)){
-                            if (cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln() && !cIntakeorder.currentIntakeOrder.isGenerated() && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0 ) {
+                        if (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() > 0 && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0  && (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY())) {
+                            //Check if the new quantity would exceed the allowed quantity
+                            if (linePropertyValue.getQuantityDbl() > cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl()) {
+                                //We would exceed the allowed quantity so show that this is not allowed
                                 cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
-                                cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.context.getString(R.string.number_cannot_be_higher),R.raw.headsupsound,false);
+                                cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus,  cAppExtension.context.getString(R.string.number_received_total_cant_be_higher_then, cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl())),R.raw.headsupsound,false);
                                 return ;
                             }
-                            if (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE() > 0 && cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl() > 0  && (cSetting.RECEIVE_EXTRA_PIECES_PERCENTAGE_MANDATORY())) {
-                                //Check if the new quantity would exceed the allowed quantity
-                                if (linePropertyValue.getQuantityDbl() > cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl()) {
-                                    //We would exceed the allowed quantity so show that this is not allowed
-                                    cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
-                                    cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus,  cAppExtension.context.getString(R.string.number_received_total_cant_be_higher_then, cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getAllowedQuantityDbl())),R.raw.headsupsound,false);
-                                    return ;
-                                }
-                            }
                         }
                     }
-                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
-                        if (linePropertyValue.getQuantityDbl()== cPickorderLine.currentPickOrderLine.getQuantityDbl()){
-                            cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
-                            cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.activity.getString(R.string.message_overpick_not_allowed),R.raw.headsupsound,false);
-                            return;
-                        }
-                    }
-                    if (cAppExtension.activity instanceof MoveLineItemPropertyActivity){
-
-                        if (linePropertyValue.getQuantityAvailableDbl() > 0){
-                            if (linePropertyValue.getQuantityDbl()== linePropertyValue.getQuantityAvailableDbl()){
-                                cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
-                                cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.activity.getString(R.string.message_overtake_not_allowed),R.raw.headsupsound,false);
-                                return;
-                            }
-                        } else{
-                            if (linePropertyValue.getQuantityDbl()== cMoveorderLine.currentMoveOrderLine.getQuantityDbl()){
-                                cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
-                                cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.activity.getString(R.string.message_overtake_not_allowed),R.raw.headsupsound,false);
-                                return;
-                            }
-                        }
-                    }
-
-                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity){
-                        if (linePropertyValue.getQuantityDbl()== cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl()&& cSetting.RECEIVE_NO_EXTRA_ITEMS() && cSetting.RECEIVE_NO_EXTRA_PIECES()){
-                            cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
-                            cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus,  cAppExtension.context.getString(R.string.number_cannot_be_higher),R.raw.headsupsound,false);
-                            return;
-                        }
-                    }
-
-                    int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
-                    cLinePropertyValue.currentLinePropertyValue.quantityDbl = currentQuantity + cLinePropertyValue.quantityPerUnitOfMeasureDbl;
-
-                    if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
-                        ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
-
-                        receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
-                        receiveorderLinePropertyInputActivity.pRefreshActivity();
-                    }
-                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
-                        IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
-
-                        intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
-                        intakeOrderLinePropertyInputActivity.pRefreshActivity();
-                    }
-                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
-                        InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
-
-                        inventoryLinePropertyInputActivity.pTryToChangeQuantity();
-                        inventoryLinePropertyInputActivity.pRefreshActivity();
-                    }
-                    if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
-                        MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity) cAppExtension.activity;
-
-                        moveLineItemPropertyActivity.pTryToChangeQuantity(true, false, cLinePropertyValue.quantityPerUnitOfMeasureDbl);
-                        moveLineItemPropertyActivity.pRefreshActivity();
-                    }
-                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
-                        PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
-
-                        pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity();
-                        pickorderLineItemPropertyInputActvity.pRefreshActivity();
-                    }
-
                 }
+                if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
+                    if (linePropertyValue.getQuantityDbl()== cPickorderLine.currentPickOrderLine.getQuantityDbl()){
+                        cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
+                        cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.activity.getString(R.string.message_overpick_not_allowed),R.raw.headsupsound,false);
+                        return;
+                    }
+                }
+                if (cAppExtension.activity instanceof MoveLineItemPropertyActivity){
+
+                    if (linePropertyValue.getQuantityAvailableDbl() > 0){
+                        if (linePropertyValue.getQuantityDbl()== linePropertyValue.getQuantityAvailableDbl()){
+                            cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
+                            cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.activity.getString(R.string.message_overtake_not_allowed),R.raw.headsupsound,false);
+                            return;
+                        }
+                    } else{
+                        if (linePropertyValue.getQuantityDbl()== cMoveorderLine.currentMoveOrderLine.getQuantityDbl()){
+                            cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
+                            cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus, cAppExtension.activity.getString(R.string.message_overtake_not_allowed),R.raw.headsupsound,false);
+                            return;
+                        }
+                    }
+                }
+
+                if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity){
+                    if (linePropertyValue.getQuantityDbl()== cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl()&& cSetting.RECEIVE_NO_EXTRA_ITEMS() && cSetting.RECEIVE_NO_EXTRA_PIECES()){
+                        cUserInterface.pDoNope(pvHolder.imageButtonPlus, true, true);
+                        cUserInterface.pShowSnackbarMessage(pvHolder.imageButtonPlus,  cAppExtension.context.getString(R.string.number_cannot_be_higher),R.raw.headsupsound,false);
+                        return;
+                    }
+                }
+
+                int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
+                cLinePropertyValue.currentLinePropertyValue.quantityDbl = currentQuantity + cLinePropertyValue.quantityPerUnitOfMeasureDbl;
+
+                if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
+                    ReceiveorderLinePropertyInputActivity receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
+
+                    receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
+                    receiveorderLinePropertyInputActivity.pRefreshActivity();
+                }
+                if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                    IntakeOrderLinePropertyInputActivity intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+
+                    intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
+                    intakeOrderLinePropertyInputActivity.pRefreshActivity();
+                }
+                if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                    InventoryLinePropertyInputActivity inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
+
+                    inventoryLinePropertyInputActivity.pTryToChangeQuantity();
+                    inventoryLinePropertyInputActivity.pRefreshActivity();
+                }
+                if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+                    MoveLineItemPropertyActivity moveLineItemPropertyActivity = (MoveLineItemPropertyActivity) cAppExtension.activity;
+
+                    moveLineItemPropertyActivity.pTryToChangeQuantity(true, false, cLinePropertyValue.quantityPerUnitOfMeasureDbl);
+                    moveLineItemPropertyActivity.pRefreshActivity();
+                }
+                if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
+                    PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
+
+                    pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity();
+                    pickorderLineItemPropertyInputActvity.pRefreshActivity();
+                }
+
             });
 
-            pvHolder.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            pvHolder.imageButtonMinus.setOnClickListener(view -> {
 
-                    cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
+                cLinePropertyValue.currentLinePropertyValue = linePropertyValue;
 
-                    int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
-                    double newQuantity = currentQuantity - cLinePropertyValue.quantityPerUnitOfMeasureDbl;
-                    cLinePropertyValue.currentLinePropertyValue.quantityDbl = newQuantity;
+                int currentQuantity = cText.pStringToIntegerInt(pvHolder.textViewQuantityUsed.getText().toString());
+                double newQuantity = currentQuantity - cLinePropertyValue.quantityPerUnitOfMeasureDbl;
+                cLinePropertyValue.currentLinePropertyValue.quantityDbl = newQuantity;
 
-                    if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
-                        ReceiveorderLinePropertyInputActivity  receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
+                if (cAppExtension.activity instanceof ReceiveorderLinePropertyInputActivity) {
+                    ReceiveorderLinePropertyInputActivity  receiveorderLinePropertyInputActivity = (ReceiveorderLinePropertyInputActivity) cAppExtension.activity;
 
-                        if (newQuantity == 0) {
-                            receiveorderLinePropertyInputActivity.pDeleteValueFromRecyler();
-                        }
-
-                        receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
-                        receiveorderLinePropertyInputActivity.pRefreshActivity();
+                    if (newQuantity == 0) {
+                        receiveorderLinePropertyInputActivity.pDeleteValueFromRecyler();
                     }
 
-                    if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
-                        IntakeOrderLinePropertyInputActivity  intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
+                    receiveorderLinePropertyInputActivity.pTryToChangeQuantity();
+                    receiveorderLinePropertyInputActivity.pRefreshActivity();
+                }
 
-                        if (newQuantity == 0) {
-                            intakeOrderLinePropertyInputActivity.pDeleteValueFromRecyler();
-                        }
+                if (cAppExtension.activity instanceof IntakeOrderLinePropertyInputActivity) {
+                    IntakeOrderLinePropertyInputActivity  intakeOrderLinePropertyInputActivity = (IntakeOrderLinePropertyInputActivity) cAppExtension.activity;
 
-                        intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
-                        intakeOrderLinePropertyInputActivity.pRefreshActivity();
+                    if (newQuantity == 0) {
+                        intakeOrderLinePropertyInputActivity.pDeleteValueFromRecyler();
                     }
-                    if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
-                        InventoryLinePropertyInputActivity  inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
 
-                        if (newQuantity == 0) {
-                            inventoryLinePropertyInputActivity.pDeleteValueFromRecyler();
-                        }
+                    intakeOrderLinePropertyInputActivity.pTryToChangeQuantity();
+                    intakeOrderLinePropertyInputActivity.pRefreshActivity();
+                }
+                if (cAppExtension.activity instanceof InventoryLinePropertyInputActivity) {
+                    InventoryLinePropertyInputActivity  inventoryLinePropertyInputActivity = (InventoryLinePropertyInputActivity) cAppExtension.activity;
 
-                        inventoryLinePropertyInputActivity.pTryToChangeQuantity();
-                        inventoryLinePropertyInputActivity.pRefreshActivity();
+                    if (newQuantity == 0) {
+                        inventoryLinePropertyInputActivity.pDeleteValueFromRecyler();
                     }
-                    if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
-                        MoveLineItemPropertyActivity  moveLineItemPropertyActivity = (MoveLineItemPropertyActivity) cAppExtension.activity;
 
-                        if (newQuantity == 0) {
-                            moveLineItemPropertyActivity.pDeleteValueFromRecyler();
-                        }
+                    inventoryLinePropertyInputActivity.pTryToChangeQuantity();
+                    inventoryLinePropertyInputActivity.pRefreshActivity();
+                }
+                if (cAppExtension.activity instanceof MoveLineItemPropertyActivity) {
+                    MoveLineItemPropertyActivity  moveLineItemPropertyActivity = (MoveLineItemPropertyActivity) cAppExtension.activity;
 
-                        moveLineItemPropertyActivity.pTryToChangeQuantity(false,false, cLinePropertyValue.quantityPerUnitOfMeasureDbl);
-                        moveLineItemPropertyActivity.pRefreshActivity();
+                    if (newQuantity == 0) {
+                        moveLineItemPropertyActivity.pDeleteValueFromRecyler();
                     }
-                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
-                        PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
-                        if (newQuantity == 0) {
-                            pickorderLineItemPropertyInputActvity.pDeleteValueFromRecyler();
-                        }
 
-                        pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity();
-                        pickorderLineItemPropertyInputActvity.pRefreshActivity();
+                    moveLineItemPropertyActivity.pTryToChangeQuantity(false,false, cLinePropertyValue.quantityPerUnitOfMeasureDbl);
+                    moveLineItemPropertyActivity.pRefreshActivity();
+                }
+                if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
+                    PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
+                    if (newQuantity == 0) {
+                        pickorderLineItemPropertyInputActvity.pDeleteValueFromRecyler();
                     }
+
+                    pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity();
+                    pickorderLineItemPropertyInputActvity.pRefreshActivity();
                 }
             });
 

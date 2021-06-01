@@ -38,9 +38,6 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
-import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShippingUnit;
-import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
-import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
@@ -53,7 +50,6 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Pickorders.cPickorderAdapter;
 import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
@@ -106,7 +102,6 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shiporder_select);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -118,6 +113,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -130,7 +126,6 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -241,11 +236,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleFillOrders();
-            }
-        }).start();
+        new Thread(this::mHandleFillOrders).start();
 
 
     }
@@ -266,11 +257,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorder.currentPickOrder = pvPickorder;
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cPickorder.currentPickOrder.getOrderNumberStr());
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleShipOrderSelected();
-            }
-        }).start();
+        new Thread(this::mHandleShipOrderSelected).start();
 
 
     }
@@ -321,13 +308,10 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //Fill and show recycler
-                mSetSortorderRecycler(cPickorder.allPickordersObl);
-                mShowNoOrdersIcon(false);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            //Fill and show recycler
+            mSetSortorderRecycler(cPickorder.allPickordersObl);
+            mShowNoOrdersIcon(false);
         });
 
     }
@@ -357,24 +341,14 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowShipLinesActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowShipLinesActivity);
 
     }
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recyclerSearchView.setIconified(false);
-            }
-        });
+        this.recyclerSearchView.setOnClickListener(view -> recyclerSearchView.setIconified(false));
 
         //query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -393,16 +367,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mShowHideBottomSheet(true);
-                } else {
-                    mShowHideBottomSheet(false);
-                }
-            }
-        });
+        this.imageViewFilter.setOnClickListener(view -> mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED));
     }
 
     private void mSetSwipeRefreshListener() {
@@ -484,31 +449,28 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     private  void mShowNoOrdersIcon(final Boolean pvShowBln) {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewShiporders.setVisibility(View.INVISIBLE);
+                recyclerViewShiporders.setVisibility(View.INVISIBLE);
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NoOrdersFragment fragment = new NoOrdersFragment();
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.commit();
+                return;
+            }
+
+            recyclerViewShiporders.setVisibility(View.VISIBLE);
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NoOrdersFragment) {
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NoOrdersFragment fragment = new NoOrdersFragment();
-                    fragmentTransaction.replace(R.id.container, fragment);
+                    fragmentTransaction.remove(fragment);
                     fragmentTransaction.commit();
-                    return;
-                }
-
-                recyclerViewShiporders.setVisibility(View.VISIBLE);
-
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NoOrdersFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
                 }
             }
         });
@@ -625,7 +587,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         this.mReleaseLicense();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private void mReleaseLicense() {

@@ -16,17 +16,17 @@ public class cEnvironment {
 
     //region Public Properties
 
-    private String nameStr;
+    private final String nameStr;
     public String getNameStr() {
         return nameStr;
     }
 
-    private String descriptionStr;
+    private final String descriptionStr;
     public String getDescriptionStr() {
         return descriptionStr;
     }
 
-    private String webserviceURLStr;
+    private final String webserviceURLStr;
     String getWebserviceURLStr() {
         return webserviceURLStr;
     }
@@ -36,7 +36,7 @@ public class cEnvironment {
         return getDefaultBln();
     }
 
-    private cEnvironmentEntity environmentEntity;
+    private final cEnvironmentEntity environmentEntity;
 
     private cEnvironmentViewModel getEnvironmentViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cEnvironmentViewModel.class);
