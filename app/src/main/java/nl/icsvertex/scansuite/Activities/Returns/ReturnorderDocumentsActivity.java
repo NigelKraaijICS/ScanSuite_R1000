@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.Activities.Returns;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +42,6 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocument;
 import SSU_WHS.Return.ReturnorderDocument.cReturnorderDocumentAdapter;
-import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
@@ -78,7 +76,6 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_returnorder_documents);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -89,6 +86,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
@@ -101,7 +99,6 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -251,11 +248,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleScan(pvBarcodeScan.getBarcodeOriginalStr(),pvIsDocumentBln);
-            }
-        }).start();
+        new Thread(() -> mHandleScan(pvBarcodeScan.getBarcodeOriginalStr(),pvIsDocumentBln)).start();
     }
 
     public void pHandleAddDocument(final String pvDocumentStr) {
@@ -265,11 +258,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleAddDocument(pvDocumentStr);
-            }
-        }).start();
+        new Thread(() -> mHandleAddDocument(pvDocumentStr)).start();
     }
 
     public void pHandleOrderCloseClick() {
@@ -278,11 +267,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
     public void pCloseOrder(){
         mShowSending();
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCloseOrder();
-            }
-        }).start();
+        new Thread(this::mHandleCloseOrder).start();
     }
 
     public void pReturnorderDocumentSelected() {
@@ -302,12 +287,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     //Region Private Methods
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cReturnorder.currentReturnOrder.pFeedbackCommentObl(),"");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cReturnorder.currentReturnOrder.pFeedbackCommentObl(),""));
     }
 
     private void mHandleCloseOrder(){
@@ -382,12 +362,8 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         }
 
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                pReturnorderDocumentSelected();
-                // Actions to do after 0.3 seconds
-            }
-        }, 300);
+        // Actions to do after 0.3 seconds
+        handler.postDelayed(this::pReturnorderDocumentSelected, 300);
     }
 
     private void mHandleAddDocument(String pvDocumentStr){
@@ -400,12 +376,8 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         }
 
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                pReturnorderDocumentSelected();
-                // Actions to do after 0.3 seconds
-            }
-        }, 300);
+        // Actions to do after 0.3 seconds
+        handler.postDelayed(this::pReturnorderDocumentSelected, 300);
     }
 
     private cResult mCheckAndGetSourceDocumentRst(String pvSourceDocumentStr){
@@ -468,17 +440,14 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         final View clickedDocumentImage = container.findViewWithTag(cReturnorderDocument.currentReturnOrderDocument.getSourceDocumentStr() + "_IMG");
         if (clickedDocument != null &&clickedDocumentImage != null) {
 
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedDocument, cPublicDefinitions.VIEW_CHOSEN_DOCUMENT),new Pair<>(clickedDocumentImage, cPublicDefinitions.VIEW_CHOSEN_DOCUMENT_IMAGE) );
-                    ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-                }
+            cAppExtension.activity.runOnUiThread(() -> {
+                ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedDocument, cPublicDefinitions.VIEW_CHOSEN_DOCUMENT),new Pair<>(clickedDocumentImage, cPublicDefinitions.VIEW_CHOSEN_DOCUMENT_IMAGE) );
+                ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             });
         }
         else {
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -487,22 +456,16 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(cAppExtension.context);
         alertDialog.setTitle(R.string.message_sure_leave_screen_title);
         alertDialog.setMessage(getString(R.string.message_sure_leave_screen_text));
-        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface pvDialogInterface, int i) {
+        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, (pvDialogInterface, i) -> {
 
-                if (!cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return)) {
-                    cUserInterface.pDoExplodingScreen(getString(R.string.error_couldnt_release_lock_order), "", true, true);
-                    return;
-                }
-                mStartOrderSelectActivity();
+            if (!cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return)) {
+                cUserInterface.pDoExplodingScreen(getString(R.string.error_couldnt_release_lock_order), "", true, true);
+                return;
             }
+            mStartOrderSelectActivity();
         });
-        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing (close the dialog)
-            }
+        alertDialog.setNeutralButton(R.string.cancel, (dialogInterface, i) -> {
+            //do nothing (close the dialog)
         });
 
         alertDialog.setCancelable(true);
@@ -513,7 +476,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         cBranchReason.currentBranchReason = null;
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         ReturnorderSelectActivity.startedViaMenuBln = true;
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private void mStepFailed(String pvErrorMessageStr ){
@@ -528,12 +491,9 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
                 cAppExtension.activity.getString(R.string.message_close_order_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close),false);
         acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
@@ -554,12 +514,9 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     private void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 

@@ -75,7 +75,6 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventoryorder_bins);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -86,6 +85,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -101,7 +101,6 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -246,11 +245,7 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleScan(pvBarcodeScan, pvManualInputBln);
-            }
-        }).start();
+        new Thread(() -> mHandleScan(pvBarcodeScan, pvManualInputBln)).start();
 
     }
 
@@ -263,16 +258,8 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     }
 
     public  void pCloseOrder(){
-
         this.mShowSending();
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCloseOrder();
-            }
-        }).start();
-
-
-
+        new Thread(this::mHandleCloseOrder).start();
     }
 
     public  void pInventoryorderBinSelected() {
@@ -466,18 +453,15 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         final View clickedBin = container.findViewWithTag(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr());
         final View clickedBinImage = container.findViewWithTag(cInventoryorderBin.currentInventoryOrderBin.getBinCodeStr() + "_IMG");
         if (clickedBin != null &&clickedBinImage != null) {
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedBin, cPublicDefinitions.VIEW_CHOSEN_BIN),new Pair<>(clickedBinImage, cPublicDefinitions.VIEW_CHOSEN_BIN_IMAGE) );
-                    ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-                }
+            cAppExtension.activity.runOnUiThread(() -> {
+                ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedBin, cPublicDefinitions.VIEW_CHOSEN_BIN),new Pair<>(clickedBinImage, cPublicDefinitions.VIEW_CHOSEN_BIN_IMAGE) );
+                ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             });
 
         }
         else {
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
+           startActivity(intent);
+            finish();
         }
     }
 
@@ -488,7 +472,8 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
 
         Intent intent = new Intent(cAppExtension.context, InventoryorderSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
+       startActivity(intent);
+       finish();
     }
 
     private  void mStepFailed(String pvErrorMessageStr ){
@@ -502,13 +487,10 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_inventoryorder),
                                                                                    cAppExtension.activity.getString(R.string.message_close_inventoryorder_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close), false);
         acceptRejectFragment.setCancelable(true);
-       cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
-        });
+       cAppExtension.activity.runOnUiThread(() -> {
+           // show my popup
+           acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
+       });
     }
 
     private  void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
@@ -528,12 +510,9 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 
@@ -564,22 +543,14 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
                 cAppExtension.activity.getString(R.string.message_finish_later), cAppExtension.activity.getString(R.string.message_close_now), false);
         acceptRejectFragment.setCancelable(true);
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cInventoryorder.currentInventoryOrder.commentsObl(),"");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cInventoryorder.currentInventoryOrder.commentsObl(),""));
     }
 
     //End Region Private Methods

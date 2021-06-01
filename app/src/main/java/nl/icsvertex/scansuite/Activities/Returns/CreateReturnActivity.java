@@ -4,7 +4,6 @@ package nl.icsvertex.scansuite.Activities.Returns;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -87,8 +86,6 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_create_return_order);
-        this.mActivityInitialize();
-
     }
 
     @Override
@@ -105,13 +102,13 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -353,37 +350,24 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     //Region Private Methods
 
     private void mSetImageListener() {
-        this.imageReason.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mShowAddReasonFragment();
-            }
-        });
+        this.imageReason.setOnClickListener(pvView -> mShowAddReasonFragment());
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mStartOrderSelectActivity();
-            }
-        });
+        this.cancelButton.setOnClickListener(pvView -> mStartOrderSelectActivity());
     }
 
     private void mSetReasonSwitchListener() {
-        this.switchReason.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                if (switchReason.isChecked()) {
-                    switchReason.setText(cAppExtension.activity.getString(R.string.message_clear_reason));
-                    mHandleReasonSwitch(false);
-                } else {
-                    cBranchReason.currentBranchReason = null;
-                    textViewReturnReason.setText("");
-                    imageReason.setVisibility(View.INVISIBLE);
-                    textViewReturnReason.setVisibility(View.INVISIBLE);
-                    switchReason.setText(cAppExtension.activity.getString(R.string.select_reason));
-                }
+        this.switchReason.setOnClickListener(pvView -> {
+            if (switchReason.isChecked()) {
+                switchReason.setText(cAppExtension.activity.getString(R.string.message_clear_reason));
+                mHandleReasonSwitch(false);
+            } else {
+                cBranchReason.currentBranchReason = null;
+                textViewReturnReason.setText("");
+                imageReason.setVisibility(View.INVISIBLE);
+                textViewReturnReason.setVisibility(View.INVISIBLE);
+                switchReason.setText(cAppExtension.activity.getString(R.string.select_reason));
             }
         });
     }
@@ -391,27 +375,24 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
         ReturnorderSelectActivity.startedViaMenuBln = false;
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private void mSetCreateListener() {
-        this.createReturnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.createReturnButton.setOnClickListener(pvView -> {
 
-                if (editTextDocument.getText().toString().isEmpty()){
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_document),null);
-                    return;
-                }
-                if (editTextBin.getText().toString().isEmpty() && cUser.currentUser.currentBranch.isBinMandatoryBln()){
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_bin),null);
-                    return;
-                }
-
-                ReturnorderSelectActivity.startedViaMenuBln = false;
-                mCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
-
+            if (editTextDocument.getText().toString().isEmpty()){
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_document),null);
+                return;
             }
+            if (editTextBin.getText().toString().isEmpty() && cUser.currentUser.currentBranch.isBinMandatoryBln()){
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_scan_return_bin),null);
+                return;
+            }
+
+            ReturnorderSelectActivity.startedViaMenuBln = false;
+            mCreateOrder(editTextDocument.getText().toString().trim(), switchMultipleDocuments.isChecked(), editTextBin.getText().toString().trim());
+
         });
     }
 
@@ -440,8 +421,8 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     private void mLeaveActivity(){
         ReturnorderSelectActivity.startedViaMenuBln = false;
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
 
     }
 
@@ -454,30 +435,24 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
     }
 
     private void mSetEditorActionListener() {
-        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextDocument.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
 
-        this.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextBin.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,true);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,true);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
     }
 
@@ -494,11 +469,7 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCreateOrder(pvDocumentStr, pvMultipleDocumentsBln, pvBincodeStr);
-            }
-        }).start();
+        new Thread(() -> mHandleCreateOrder(pvDocumentStr, pvMultipleDocumentsBln, pvBincodeStr)).start();
     }
 
     //End Region Public Methods
@@ -562,13 +533,8 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cReturnorder.currentReturnOrder.getOrderNumberStr());
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowReturnorderDocumentsActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowReturnorderDocumentsActivity);
 
     }
 
@@ -645,8 +611,8 @@ public class CreateReturnActivity extends AppCompatActivity implements iICSDefau
 
         Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentsActivity.class);
 
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
+            startActivity(intent);
+            finish();
     }
     private void mFillStockOwnerSpinner() {
 

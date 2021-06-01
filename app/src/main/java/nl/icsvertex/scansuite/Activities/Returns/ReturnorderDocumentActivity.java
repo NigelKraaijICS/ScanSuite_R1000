@@ -1,7 +1,6 @@
 package nl.icsvertex.scansuite.Activities.Returns;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -93,7 +92,6 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_returnorder_document);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -104,6 +102,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
@@ -116,7 +115,6 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -245,11 +243,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         ReturnorderDocumentActivity.busyBln = true;
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleScan(pvBarcodeScan);
-            }
-        }).start();
+        new Thread(() -> mHandleScan(pvBarcodeScan)).start();
 
     }
 
@@ -311,11 +305,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         if (!cReturnorder.currentReturnOrder.isRetourMultiDocument()) {
 
         mShowSending();
-        new Thread(new Runnable() {
-            public void run() {
-                mOrderHandledViaWebservice();
-            }
-        }).start();
+        new Thread(this::mOrderHandledViaWebservice).start();
         }
 
         else {
@@ -450,29 +440,16 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     }
 
     private void mSetToolbarTitleListeners() {
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mScrollToTop();
-            }
-        });
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mScrollToBottom();
-                return true;
-            }
+        this.toolbarTitle.setOnClickListener(view -> mScrollToTop());
+        this.toolbarTitle.setOnLongClickListener(view -> {
+            mScrollToBottom();
+            return true;
         });
     }
 
     private void mSetDoneListeners() {
 
-        this.imageDocumentDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mTryToLeaveActivity();
-            }
-        });
+        this.imageDocumentDone.setOnClickListener(view -> mTryToLeaveActivity());
 
     }
 
@@ -490,8 +467,8 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     private void mStartDocumentsActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentsActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private void mAddUnkownArticle(cBarcodeScan pvBarcodeScan){
@@ -639,8 +616,8 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
         Intent intent = new Intent(cAppExtension.context, ReturnArticleDetailActivity.class);
 
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
 
 
     }
@@ -652,36 +629,33 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     private void mShowNoLinesIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                mSetToolBarTitleWithCounters();
-                imageDocumentDone.setVisibility(View.INVISIBLE);
+            mSetToolBarTitleWithCounters();
+            imageDocumentDone.setVisibility(View.INVISIBLE);
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewReturnorderLines.setVisibility(View.INVISIBLE);
+                recyclerViewReturnorderLines.setVisibility(View.INVISIBLE);
 
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NothingHereFragment fragment = new NothingHereFragment();
+                fragmentTransaction.replace(R.id.returnorderContainer, fragment);
+                fragmentTransaction.commit();
+                return;
+            }
+
+            recyclerViewReturnorderLines.setVisibility(View.VISIBLE);
+            imageDocumentDone.setVisibility(View.VISIBLE);
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NothingHereFragment) {
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NothingHereFragment fragment = new NothingHereFragment();
-                    fragmentTransaction.replace(R.id.returnorderContainer, fragment);
+                    fragmentTransaction.remove(fragment);
                     fragmentTransaction.commit();
-                    return;
-                }
-
-                recyclerViewReturnorderLines.setVisibility(View.VISIBLE);
-                imageDocumentDone.setVisibility(View.VISIBLE);
-
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
                 }
             }
         });
@@ -695,30 +669,20 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
+        final AcceptRejectFragment acceptRejectFragment;// show my popup
         if (!cReturnorder.currentReturnOrder.getRetourMultiDocumentBln()){
-            final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
-                    cAppExtension.activity.getString(R.string.message_close_order_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close),false);
-            acceptRejectFragment.setCancelable(true);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // show my popup
-                    acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-                }
-            });
+            acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_order),
+                    cAppExtension.activity.getString(R.string.message_close_order_text), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close), false);
         }
         else {
-            final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_document),
-                    cAppExtension.activity.getString(R.string.message_document_text_sure), cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_close),false);
-            acceptRejectFragment.setCancelable(true);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // show my popup
-                    acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-                }
-            });
+            acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_close_document),
+                    cAppExtension.activity.getString(R.string.message_document_text_sure), cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_close), false);
         }
+        acceptRejectFragment.setCancelable(true);
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
+        });
     }
 
     private  void mShowCurrentLocationFragment() {
@@ -732,12 +696,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
     }
 
     private void mSetAddArticleListener() {
-        this.imageAddArticle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowAddArticleFragment();
-            }
-        });
+        this.imageAddArticle.setOnClickListener(view -> mShowAddArticleFragment());
     }
 
     @Override
@@ -809,22 +768,16 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(cAppExtension.context);
         alertDialog.setTitle(R.string.message_sure_leave_screen_title);
         alertDialog.setMessage(getString(R.string.message_sure_leave_screen_text));
-        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface pvDialogInterface, int i) {
+        alertDialog.setPositiveButton(R.string.message_sure_leave_screen_positive, (pvDialogInterface, i) -> {
 
-                if (!cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return)) {
-                    cUserInterface.pDoExplodingScreen(getString(R.string.error_couldnt_release_lock_order), "", true, true);
-                    return;
-                }
-                mStartOrderSelectActivity();
+            if (!cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return)) {
+                cUserInterface.pDoExplodingScreen(getString(R.string.error_couldnt_release_lock_order), "", true, true);
+                return;
             }
+            mStartOrderSelectActivity();
         });
-        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing (close the dialog)
-            }
+        alertDialog.setNeutralButton(R.string.cancel, (dialogInterface, i) -> {
+            //do nothing (close the dialog)
         });
 
         alertDialog.setCancelable(true);
@@ -833,18 +786,15 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
     private  void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 

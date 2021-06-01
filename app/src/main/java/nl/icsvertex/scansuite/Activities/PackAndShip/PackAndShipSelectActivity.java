@@ -95,7 +95,6 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_pack_and_ship_orderselect);
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -117,8 +116,9 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
     @Override
     protected void onResume() {
         super.onResume();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
-        mActivityInitialize();
+        this.mActivityInitialize();
     }
 
     @Override
@@ -145,7 +145,6 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     //End Region Default Methods
@@ -393,8 +392,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         assert intent != null;
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
-
+        startActivity(intent);
     }
 
     private  void mShowCreatePackAndShipActivity(cWarehouseorder.PackAndShipMainTypeEnu pvPackAndShipMainTypeEnu) {
@@ -742,8 +740,8 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
         this.mReleaseLicense();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
 
     }
 

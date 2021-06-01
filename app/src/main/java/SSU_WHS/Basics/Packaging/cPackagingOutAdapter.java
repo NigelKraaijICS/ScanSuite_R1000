@@ -185,11 +185,6 @@ public class cPackagingOutAdapter extends RecyclerView.Adapter<cPackagingOutAdap
                     pvHolder.secondaryContent.setVisibility(View.GONE);
                 }
                 else {
-                    //package + 1
-                    if (!BuildConfig.FLAVOR.equalsIgnoreCase("BMN")) {
-                        pvHolder.imageButtonPlus.callOnClick();
-                    }
-
                     pvHolder.imageChevronDown.animate().rotation(180).start();
                     pvHolder.secondaryContent.animate().scaleY(1).start();
                     pvHolder.secondaryContent.setVisibility(View.VISIBLE);

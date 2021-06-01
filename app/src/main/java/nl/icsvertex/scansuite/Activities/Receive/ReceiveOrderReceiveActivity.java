@@ -1017,11 +1017,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
         String acceptStr = cAppExtension.activity.getString(R.string.message_accept_line);
         String rejectStr = cAppExtension.activity.getString(R.string.message_cancel_line);
 
-        if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
-            acceptStr =  cAppExtension.activity.getString(R.string.message_yes);
-            rejectStr = cAppExtension.activity.getString(R.string.message_no);
-        }
-
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderlinebusy_header),
                                                                                    cAppExtension.activity.getString(R.string.message_orderlinebusy_text),
                                                                                    rejectStr, acceptStr, false);
@@ -1041,11 +1036,6 @@ public class ReceiveOrderReceiveActivity extends AppCompatActivity implements iI
 
         String acceptStr = cAppExtension.activity.getString(R.string.message_accept_line);
         String rejectStr = cAppExtension.activity.getString(R.string.message_cancel_line);
-
-        if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
-            acceptStr =  cAppExtension.activity.getString(R.string.message_yes);
-            rejectStr = cAppExtension.activity.getString(R.string.message_no);
-        }
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_extra_pieces_exceeded_header),
                 cAppExtension.context.getString(R.string.number_received_total_eminently_more, cText.pDoubleToStringStr(pvValueDbl), cText.pDoubleToStringStr(cReceiveorderSummaryLine.currentReceiveorderSummaryLine.getQuantityDbl())),

@@ -725,11 +725,6 @@ public class InventoryLinePropertyInputActivity extends AppCompatActivity implem
         String acceptStr = cAppExtension.activity.getString(R.string.message_accept_line);
         String rejectStr = cAppExtension.activity.getString(R.string.message_cancel_line);
 
-        if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
-            acceptStr =  cAppExtension.activity.getString(R.string.message_yes);
-            rejectStr = cAppExtension.activity.getString(R.string.message_no);
-        }
-
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderlinebusy_header),
                 cAppExtension.activity.getString(R.string.message_orderlinebusy_text),
                 rejectStr, acceptStr, false);

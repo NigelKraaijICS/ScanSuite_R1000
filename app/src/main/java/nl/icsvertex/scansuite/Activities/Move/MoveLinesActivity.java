@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,7 +35,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.Moveorders.cMoveorder;
 import nl.icsvertex.scansuite.Activities.Receive.ReceiveLinesActivity;
@@ -84,8 +82,6 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movelines);
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
-        this.mActivityInitialize();
     }
 
     @Override
@@ -100,6 +96,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -113,7 +110,6 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -335,11 +331,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     public void pHandleScan(final cBarcodeScan pvBarcodeScan) {
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleScan(pvBarcodeScan);
-            }
-        }).start();
+        new Thread(() -> mHandleScan(pvBarcodeScan)).start();
 
     }
 
@@ -368,11 +360,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleClose();
-            }
-        }).start();
+        new Thread(this::mHandleClose).start();
 
     }
 
@@ -397,11 +385,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     private void mHandleClose() {
 
         mShowSending();
-        new Thread(new Runnable() {
-            public void run() {
-                mTryToCloseOrder();
-            }
-        }).start();
+        new Thread(this::mTryToCloseOrder).start();
 
 
     }
@@ -471,8 +455,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
         Intent intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
         MoveorderSelectActivity.startedViaMenuBln = false;
-
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private  void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
@@ -492,12 +475,9 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     private void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 
@@ -528,73 +508,54 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
                 cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_leave), false);
         acceptRejectFragment.setCancelable(true);
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cMoveorder.currentMoveOrder.commentsObl(),"");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cMoveorder.currentMoveOrder.commentsObl(),""));
     }
 
     private void mSetQuickHelpListener() {
-        this.quickHelpContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cUserInterface.pDoRotate(quickhelpIcon, 0);
-                if (quickhelpText.getVisibility() == View.VISIBLE) {
-                    quickhelpText.setVisibility(View.GONE);
-                }
-                else {
-                    quickhelpText.setVisibility(View.VISIBLE);
-                }
+        this.quickHelpContainer.setOnClickListener(view -> {
+            cUserInterface.pDoRotate(quickhelpIcon, 0);
+            if (quickhelpText.getVisibility() == View.VISIBLE) {
+                quickhelpText.setVisibility(View.GONE);
+            }
+            else {
+                quickhelpText.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void mSetTodoListener() {
-        this.switchTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
+        this.switchTodo.setOnCheckedChangeListener((compoundButton, show) -> {
 
-                cMoveorder.currentMoveOrder.showTodoBln = switchTodo.isChecked();
+            cMoveorder.currentMoveOrder.showTodoBln = switchTodo.isChecked();
 
 
-                if (cMoveorder.currentMoveOrder.showTodoBln) {
-                    if (currentLineFragment instanceof MoveLinesPlaceFragment) {
-                        MoveLinesPlaceFragment moveLinesPlaceFragment = (MoveLinesPlaceFragment)currentLineFragment;
-                        moveLinesPlaceFragment.pShowTodo();
-                        return;
-                    }
-                }
-
+            if (cMoveorder.currentMoveOrder.showTodoBln) {
                 if (currentLineFragment instanceof MoveLinesPlaceFragment) {
                     MoveLinesPlaceFragment moveLinesPlaceFragment = (MoveLinesPlaceFragment)currentLineFragment;
-                    moveLinesPlaceFragment.pGetData(cMoveorder.currentMoveOrder.sortedPlaceLinesObl());
+                    moveLinesPlaceFragment.pShowTodo();
+                    return;
                 }
-
-
             }
+
+            if (currentLineFragment instanceof MoveLinesPlaceFragment) {
+                MoveLinesPlaceFragment moveLinesPlaceFragment = (MoveLinesPlaceFragment)currentLineFragment;
+                moveLinesPlaceFragment.pGetData(cMoveorder.currentMoveOrder.sortedPlaceLinesObl());
+            }
+
+
         });
     }
 
     private void mCloseOrderListener() {
 
-        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_no), cAppExtension.activity.getString(R.string.message_close));
-            }
-        });
+        this.imageButtonCloseOrder.setOnClickListener(view -> mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_no), cAppExtension.activity.getString(R.string.message_close)));
     }
 
     private void mShowCloseOrderDialog(String pvRejectStr, String pvAcceptStr) {
@@ -610,12 +571,9 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
                     false);
 
             acceptRejectFragment.setCancelable(true);
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // show my popup
-                    acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-                }
+            cAppExtension.activity.runOnUiThread(() -> {
+                // show my popup
+                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
             });
 
     }

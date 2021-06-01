@@ -6,9 +6,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -40,10 +38,10 @@ import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Move.MoveItemVariant.cMoveItemVariant;
-import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineAdapter;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLineRecyclerItemTouchHelper;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
@@ -96,21 +94,12 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-
-        this.switchTodo.setChecked(cMoveorder.currentMoveOrder.showTodoBln);
-
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movelines_take_mt);
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
-        this.mActivityInitialize();
     }
 
     @Override
@@ -125,6 +114,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -138,7 +128,6 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -234,12 +223,15 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_moveorderlines_take));
 
+        //Set listeners here, so click listeners only work after activity is shown
+        this.mSetListeners();
+
+        this.switchTodo.setChecked(cMoveorder.currentMoveOrder.showTodoBln);
+
         this.mFieldsInitialize();
 
         this.mInitScreen();
 
-
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -335,11 +327,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
     public void pHandleScan(final cBarcodeScan pvBarcodeScan) {
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleScan(pvBarcodeScan);
-            }
-        }).start();
+        new Thread(() -> mHandleScan(pvBarcodeScan)).start();
 
     }
 
@@ -362,13 +350,10 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                recyclerViewMoveLinesTake.setHasFixedSize(false);
-                recyclerViewMoveLinesTake.setAdapter(getMoveorderLineAdapter());
-                recyclerViewMoveLinesTake.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            recyclerViewMoveLinesTake.setHasFixedSize(false);
+            recyclerViewMoveLinesTake.setAdapter(getMoveorderLineAdapter());
+            recyclerViewMoveLinesTake.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         });
 
     }
@@ -376,13 +361,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     public void pChangeToolBarSubText(final String pvTextStr){
 
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                toolbarSubTitle.setText(pvTextStr);
-
-            }
-        });
+        cAppExtension.activity.runOnUiThread(() -> toolbarSubTitle.setText(pvTextStr));
     }
 
     public void pLeaveActivity(){
@@ -475,16 +454,15 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
         Intent intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
         MoveorderSelectActivity.startedViaMenuBln = false;
-
-        cAppExtension.activity.startActivity(intent);
+startActivity(intent);
     }
 
-    private  void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
+    private  void mShowCommentsFragment(List<cComment> pvDataObl) {
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         Bundle bundle = new Bundle();
-        bundle.putString(cPublicDefinitions.KEY_COMMENTHEADER, pvTitleStr);
+        bundle.putString(cPublicDefinitions.KEY_COMMENTHEADER, "");
 
         CommentFragment commentFragment = new CommentFragment(pvDataObl);
         commentFragment.setArguments(bundle);
@@ -495,45 +473,42 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
     private  void mShowNoLinesIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                mSetToolBarTitleWithCounters();
+            mSetToolBarTitleWithCounters();
 
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewMoveLinesTake.setVisibility(View.INVISIBLE);
-                    bottomContainer.setVisibility(View.INVISIBLE);
+                recyclerViewMoveLinesTake.setVisibility(View.INVISIBLE);
+                bottomContainer.setVisibility(View.INVISIBLE);
 
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NothingHereFragment fragment = new NothingHereFragment();
-                    fragmentTransaction.replace(R.id.container, fragment);
-                    fragmentTransaction.commit();
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NothingHereFragment fragment = new NothingHereFragment();
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.commit();
 
-                    // We are done taking, so start PLACE
-                    if (cMoveorder.currentMoveOrder.takeLinesToHandleObl().size() == 0) {
-                        mHandleTAKEDone();
-                    }
-
-                    return;
+                // We are done taking, so start PLACE
+                if (cMoveorder.currentMoveOrder.takeLinesToHandleObl().size() == 0) {
+                    mHandleTAKEDone();
                 }
 
+                return;
+            }
 
-                recyclerViewMoveLinesTake.setVisibility(View.VISIBLE);
-                bottomContainer.setVisibility(View.VISIBLE);
+
+            recyclerViewMoveLinesTake.setVisibility(View.VISIBLE);
+            bottomContainer.setVisibility(View.VISIBLE);
 
 
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NothingHereFragment) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
                 }
             }
         });
@@ -553,76 +528,59 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
                 cAppExtension.activity.getString(R.string.message_cancel), cAppExtension.activity.getString(R.string.message_leave), false);
         acceptRejectFragment.setCancelable(true);
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cMoveorder.currentMoveOrder.commentsObl(),"");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cMoveorder.currentMoveOrder.commentsObl()));
     }
 
     private void mSetQuickHelpListener() {
-        this.quickHelpContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cUserInterface.pDoRotate(quickhelpIcon, 0);
-                if (quickhelpText.getVisibility() == View.VISIBLE) {
-                    quickhelpText.setVisibility(View.GONE);
-                }
-                else {
-                    quickhelpText.setVisibility(View.VISIBLE);
-                }
+        this.quickHelpContainer.setOnClickListener(view -> {
+            cUserInterface.pDoRotate(quickhelpIcon, 0);
+            if (quickhelpText.getVisibility() == View.VISIBLE) {
+                quickhelpText.setVisibility(View.GONE);
+            }
+            else {
+                quickhelpText.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void mSetClearBINListener() {
-        this.currentBINView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    cMoveorder.currentMoveOrder.currentBranchBin = null;
-                    mSetBINInfo();
+        this.currentBINView.setOnClickListener(view -> {
+                cMoveorder.currentMoveOrder.currentBranchBin = null;
+                mSetBINInfo();
 
-                    if (cMoveorder.currentMoveOrder.showTodoBln) {
-                        getMoveorderLineAdapter().pShowTAKETodo("");
-                    }
-                    else{
-                        getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.takeLinesObl);
-                    }
-            }
+                if (cMoveorder.currentMoveOrder.showTodoBln) {
+                    getMoveorderLineAdapter().pShowTAKETodo("");
+                }
+                else{
+                    getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.takeLinesObl);
+                }
         });
     }
 
     private void mSetTodoListener() {
-        this.switchTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
+        this.switchTodo.setOnCheckedChangeListener((compoundButton, show) -> {
 
-                if (switchTodo.isChecked()) {
-                    cMoveorder.currentMoveOrder.showTodoBln = true;
+            if (switchTodo.isChecked()) {
+                cMoveorder.currentMoveOrder.showTodoBln = true;
 
-                    if (cMoveorder.currentMoveOrder.currentBranchBin == null) {
-                        getMoveorderLineAdapter().pShowTAKETodo("");
-                    }
-                    else {
-                        getMoveorderLineAdapter().pShowTAKETodo(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
-                    }
-
+                if (cMoveorder.currentMoveOrder.currentBranchBin == null) {
+                    getMoveorderLineAdapter().pShowTAKETodo("");
                 }
                 else {
-                    cMoveorder.currentMoveOrder.showTodoBln= false;
-                    getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.takeLinesObl);
+                    getMoveorderLineAdapter().pShowTAKETodo(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
                 }
+
+            }
+            else {
+                cMoveorder.currentMoveOrder.showTodoBln= false;
+                getMoveorderLineAdapter().pFillData(cMoveorder.currentMoveOrder.takeLinesObl);
             }
         });
     }
@@ -633,23 +591,20 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
     private void mSetBINInfo(){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (cMoveorder.currentMoveOrder.currentBranchBin  == null) {
-                    currentBINView.setVisibility(View.GONE);
-                    textViewBin.setVisibility(View.GONE);
-                    quickHelpContainer.setVisibility(View.VISIBLE);
-                    switchTodo.setVisibility(View.VISIBLE);
-                    return;
-                }
-
-                currentBINView.setVisibility(View.VISIBLE);
-                textViewBin.setVisibility(View.VISIBLE);
-                textViewBin.setText(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
-                quickHelpContainer.setVisibility(View.GONE);
-                switchTodo.setVisibility(View.GONE);
+        cAppExtension.activity.runOnUiThread(() -> {
+            if (cMoveorder.currentMoveOrder.currentBranchBin  == null) {
+                currentBINView.setVisibility(View.GONE);
+                textViewBin.setVisibility(View.GONE);
+                quickHelpContainer.setVisibility(View.VISIBLE);
+                switchTodo.setVisibility(View.VISIBLE);
+                return;
             }
+
+            currentBINView.setVisibility(View.VISIBLE);
+            textViewBin.setVisibility(View.VISIBLE);
+            textViewBin.setText(cMoveorder.currentMoveOrder.currentBranchBin.getBinCodeStr());
+            quickHelpContainer.setVisibility(View.GONE);
+            switchTodo.setVisibility(View.GONE);
         });
 
 
@@ -657,12 +612,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetQuickhelp(){
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                quickhelpText.setText(R.string.message_scan_article);
-            }
-        });
+        cAppExtension.activity.runOnUiThread(() -> quickhelpText.setText(R.string.message_scan_article));
 
     }
 
@@ -670,7 +620,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
 
         //we have an article or bin to handle, so start move activity
         Intent intent = new Intent(cAppExtension.context, MoveLineTakeMTActivity.class);
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
 
     }
 
@@ -745,9 +695,7 @@ public class MoveLinesTakeMTActivity extends AppCompatActivity implements iICSDe
         }
 
         Intent intent = new Intent(cAppExtension.context, MoveLinesPlaceMTActivity.class);
-        cAppExtension.activity.startActivity(intent);
-
-
+        startActivity(intent);
 
     }
 

@@ -62,8 +62,6 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_create_pack_and_ship_order);
-        this.mActivityInitialize();
-
     }
 
     @Override
@@ -84,15 +82,14 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
-
 
     @Override
     public void onBackPressed() {
@@ -225,7 +222,7 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
     private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, PackAndShipSelectActivity.class);
         PackAndShipSelectActivity.startedViaMenuBln = false;
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private void mSetCreateListener() {
@@ -444,7 +441,8 @@ public class CreatePackAndShipActivity extends AppCompatActivity implements iICS
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         assert intent != null;
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
+        finish();
 
     }
 

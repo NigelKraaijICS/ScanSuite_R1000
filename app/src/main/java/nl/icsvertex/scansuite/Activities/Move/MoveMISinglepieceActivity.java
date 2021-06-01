@@ -75,7 +75,6 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_move_mi_singlepiece);
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -97,8 +96,10 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
     @Override
     protected void onResume() {
         super.onResume();
-        cUserInterface.pEnableScanner();
         this.mActivityInitialize();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
+        cUserInterface.pEnableScanner();
+
     }
 
     @Override
@@ -120,7 +121,6 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     //End Region Default Methods
@@ -226,17 +226,11 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
             // Show that we are getting data
             cUserInterface.pShowGettingData();
 
-            new Thread(new Runnable() {
-                public void run() {
-                    mGetIdentifier(pvBarcodeScan);
-                }
-            }).start();
+            new Thread(() -> mGetIdentifier(pvBarcodeScan)).start();
 
             return;
 
         }
-
-
 
         this.mHandleDestinationScan(pvBarcodeScan);
 
@@ -259,8 +253,8 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
 
         this.mResetCurrents();
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+       finish();
     }
 
     //Listeners
@@ -299,16 +293,13 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
 
     private void mFillRecycler() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textViewInfoData.setVisibility(View.INVISIBLE);
-                recyclerIdentifierInfo.setVisibility(View.VISIBLE);
-                getIndentifierInfoAdapter().pFillData();
-                recyclerIdentifierInfo.setHasFixedSize(false);
-                recyclerIdentifierInfo.setAdapter(getIndentifierInfoAdapter());
-                recyclerIdentifierInfo.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            textViewInfoData.setVisibility(View.INVISIBLE);
+            recyclerIdentifierInfo.setVisibility(View.VISIBLE);
+            getIndentifierInfoAdapter().pFillData();
+            recyclerIdentifierInfo.setHasFixedSize(false);
+            recyclerIdentifierInfo.setAdapter(getIndentifierInfoAdapter());
+            recyclerIdentifierInfo.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
         });
 
     }
@@ -330,11 +321,7 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
 
         cIdentifierWithDestination.currentIdentifier.destinationStr = barcodeStrippedStr;
         this.mShowSending();
-        new Thread(new Runnable() {
-            public void run() {
-                mMoveMISinglePieceDone();
-            }
-        }).start();
+        new Thread(this::mMoveMISinglePieceDone).start();
 
     }
 
@@ -342,23 +329,15 @@ public class MoveMISinglepieceActivity extends AppCompatActivity implements iICS
         cIdentifierWithDestination.currentIdentifier = null;
         cMoveorder.currentMoveOrder = null;
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mFieldsInitialize();
-            }
-        });
+        cAppExtension.activity.runOnUiThread(this::mFieldsInitialize);
     }
 
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 

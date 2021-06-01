@@ -36,7 +36,6 @@ import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorderAdapter;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
@@ -51,7 +50,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryorderBinActivity extends AppCompatActivity implements iICSDefaultActivity,cInventoryorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
@@ -107,7 +105,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventoryorder_bin);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -118,6 +115,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -134,7 +132,6 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -339,11 +336,7 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         InventoryorderBinActivity.busyBln = true;
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleScan(pvBarcodeScan, pvIsArticleBln);
-            }
-        }).start();
+        new Thread(() -> mHandleScan(pvBarcodeScan, pvIsArticleBln)).start();
 
     }
 
@@ -426,15 +419,12 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
                 //We are not busy anymore
                 InventoryorderBinActivity.busyBln = false;
 
-                cAppExtension.activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
-                        inventoryorderBinsActivity.pHandleScan(pvBarcodeScan, false);
-                    }
+                cAppExtension.activity.runOnUiThread(() -> {
+                    InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+                    inventoryorderBinsActivity.pHandleScan(pvBarcodeScan, false);
                 });
 
-                this.finish();
+                finish();
                 return;
             }
 
@@ -457,15 +447,12 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
             InventoryorderBinActivity.busyBln = false;
 
             //Pass this new BIN scan on to the BINS activity
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
-                    inventoryorderBinsActivity.pHandleScan(pvBarcodeScan, false);
-                }
+            cAppExtension.activity.runOnUiThread(() -> {
+                InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+                inventoryorderBinsActivity.pHandleScan(pvBarcodeScan, false);
             });
 
-            this.finish();
+           finish();
             return;
         }
 
@@ -535,29 +522,16 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetToolbarTitleListeners() {
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mScrollToTop();
-            }
-        });
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mScrollToBottom();
-                return true;
-            }
+        this.toolbarTitle.setOnClickListener(view -> mScrollToTop());
+        this.toolbarTitle.setOnLongClickListener(view -> {
+            mScrollToBottom();
+            return true;
         });
     }
 
     private void mSetBINDoneListeners() {
 
-        this.imageViewCloseBIN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mTryToLeaveActivity();
-            }
-        });
+        this.imageViewCloseBIN.setOnClickListener(view -> mTryToLeaveActivity());
 
     }
 
@@ -576,8 +550,8 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private  void mStartBinsActivity() {
         Intent intent = new Intent(cAppExtension.context, InventoryorderBinsActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private  void mAddUnkownArticle(cBarcodeScan pvBarcodeScan){
@@ -720,14 +694,17 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private  void mShowArticleActivity() {
 
+        Intent intent;
+
         if (!cInventoryorderLine.currentInventoryOrderLine.hasPropertysBln()){
-            Intent intent = new Intent(cAppExtension.context, InventoryArticleActivity.class);
-            cAppExtension.activity.startActivity(intent);
+            intent= new Intent(cAppExtension.context, InventoryArticleActivity.class);
+
         } else {
-            Intent intent = new Intent(cAppExtension.context, InventoryLinePropertyInputActivity.class);
+             intent = new Intent(cAppExtension.context, InventoryLinePropertyInputActivity.class);
             cAppExtension.activity.startActivity(intent);
         }
-        cAppExtension.activity.finish();
+       startActivity(intent);
+       finish();
     }
 
     private  void mStepFailed(String pvErrorMessageStr , String scannedBarcode){
@@ -736,36 +713,33 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
 
     private  void mShowNoLinesIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                mSetToolBarTitleWithCounters();
-                imageViewCloseBIN.setVisibility(View.INVISIBLE);
+            mSetToolBarTitleWithCounters();
+            imageViewCloseBIN.setVisibility(View.INVISIBLE);
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewInventoryorderLines.setVisibility(View.INVISIBLE);
+                recyclerViewInventoryorderLines.setVisibility(View.INVISIBLE);
 
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NothingHereFragment fragment = new NothingHereFragment();
+                fragmentTransaction.replace(R.id.inventoryOrderBINContainer, fragment);
+                fragmentTransaction.commit();
+                return;
+            }
+
+            recyclerViewInventoryorderLines.setVisibility(View.VISIBLE);
+            imageViewCloseBIN.setVisibility(View.VISIBLE);
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NothingHereFragment) {
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NothingHereFragment fragment = new NothingHereFragment();
-                    fragmentTransaction.replace(R.id.inventoryOrderBINContainer, fragment);
+                    fragmentTransaction.remove(fragment);
                     fragmentTransaction.commit();
-                    return;
-                }
-
-                recyclerViewInventoryorderLines.setVisibility(View.VISIBLE);
-                imageViewCloseBIN.setVisibility(View.VISIBLE);
-
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
                 }
             }
         });
@@ -794,22 +768,14 @@ public class InventoryorderBinActivity extends AppCompatActivity implements iICS
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment( cAppExtension.activity.getString(R.string.message_close_bin),
                 messageStr, cAppExtension.activity.getString(R.string.message_cancel),cAppExtension.activity.getString(R.string.message_close), false);
         acceptRejectFragment.setCancelable(true);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
     private void mSetAddArticleListener() {
-        this.imageAddArticle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowAddArticleFragment();
-            }
-        });
+        this.imageAddArticle.setOnClickListener(view -> mShowAddArticleFragment());
     }
 
     private void mRemoveAdapterFromFragment(){

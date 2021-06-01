@@ -119,7 +119,6 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
 
     private LinkedHashMap<String, ArrayList<cLinePropertyValue>> localItemPropertySortObl(){
         LinkedHashMap<String, ArrayList<cLinePropertyValue>> linkedHashMap = new LinkedHashMap<>();
-        // ArrayList<cPickorderLinePropertyValue> pickorderLinePropertyValues = new ArrayList<>();
 
         for (cLinePropertyValue linePropertyValue : localItemPropertyValueObl()) {
             //Create the hasmap dynammically and fill it
@@ -147,8 +146,10 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
 
         ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(this.titleObl.get(0));
 
-        for (cLinePropertyValue linePropertyValue : loopList ) {
-            quantityDbl += linePropertyValue.getQuantityDbl();
+        if (loopList != null) {
+            for (cLinePropertyValue linePropertyValue : loopList ) {
+                quantityDbl += linePropertyValue.getQuantityDbl();
+            }
         }
 
         return  quantityDbl;
@@ -177,20 +178,14 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_pickorderlineitemproperty_input);
-        this.mActivityInitialize();
+
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cConnection.pRegisterWifiChangedReceiver();
         cUserInterface.pEnableScanner();
@@ -266,6 +261,8 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
         this.mSetToolbar(getResources().getString(R.string.screentitle_itemproperty_input));
 
         this.mFieldsInitialize();
+
+        this.mSetListeners();
 
         this.mInitScreen();
 
@@ -562,8 +559,10 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
             }
             double quantityDbl = 0.0;
             ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(lineProperty.getPropertyCodeStr());
-            for (cLinePropertyValue linePropertyValue : loopList ) {
-                quantityDbl += linePropertyValue.getQuantityDbl();
+            if (loopList != null) {
+                for (cLinePropertyValue linePropertyValue : loopList ) {
+                    quantityDbl += linePropertyValue.getQuantityDbl();
+                }
             }
             if (quantityDbl != this.getQuantityHandledDbl()){
                 this.itemPropertyTabLayout.selectTab(this.itemPropertyTabLayout.getTabAt(this.titleObl.indexOf(lineProperty.getPropertyCodeStr())));
@@ -597,19 +596,11 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
 
     private void mSetHeaderListener() {
 
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mScrollToBottom();
-            }
-        });
+        this.toolbarTitle.setOnClickListener(view -> mScrollToBottom());
 
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mScrollToTop();
-                return true;
-            }
+        this.toolbarTitle.setOnLongClickListener(view -> {
+            mScrollToTop();
+            return true;
         });
     }
 
@@ -793,7 +784,7 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
 
         Bundle bundle = new Bundle();
         bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, (int) cLinePropertyValue.currentLinePropertyValue.getQuantityDbl());
-        double availableDbl = 0.0;
+        double availableDbl;
 
         if (currentModus == modusEnu.GENERATEDPLACE || currentModus == modusEnu.GENERATEDTAKE){
             availableDbl = cLinePropertyValue.currentLinePropertyValue.getQuantityAvailableDbl() - cLinePropertyValue.currentLinePropertyValue.getQuantityDbl();
@@ -803,8 +794,10 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
                 availableDbl  = cMoveorderLine.currentMoveOrderLine.getQuantityDbl();
                 ArrayList<cLinePropertyValue> loopList = localItemPropertySortObl().get(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr());
 
-                for (cLinePropertyValue linePropertyValue : loopList ) {
-                    availableDbl -= linePropertyValue.getQuantityDbl();
+                if (loopList != null) {
+                    for (cLinePropertyValue linePropertyValue : loopList ) {
+                        availableDbl -= linePropertyValue.getQuantityDbl();
+                    }
                 }
             }   else {
                 availableDbl = 999;
@@ -826,12 +819,7 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
     }
 
     private void mSetNoInputPropertyListener() {
-        this.imageButtonNoInputPropertys.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowItemPropertyNoInputFragment();
-            }
-        });
+        this.imageButtonNoInputPropertys.setOnClickListener(view -> mShowItemPropertyNoInputFragment());
     }
 
     private  void mShowItemPropertyNoInputFragment() {
@@ -880,25 +868,22 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
             return ;
         }
 
+        Intent intent = null;
+
         if(currentModus == modusEnu.GENERATEDPLACE || currentModus == modusEnu.GENERATEDTAKE){
-            Intent intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
-            currentModus = modusEnu.NULL;
+            intent  = new Intent(cAppExtension.context, MoveLinesActivity.class);
         }
 
         if(currentModus == modusEnu.MTTAKE){
-            Intent intent = new Intent(cAppExtension.context, MoveLinesTakeMTActivity.class);
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
-            currentModus = modusEnu.NULL;
+            intent = new Intent(cAppExtension.context, MoveLinesTakeMTActivity.class);
         }
         if(currentModus == modusEnu.MTPLACE){
-            Intent intent = new Intent(cAppExtension.context, MoveLinesPlaceMTActivity.class);
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
-            currentModus = modusEnu.NULL;
+            intent = new Intent(cAppExtension.context, MoveLinesPlaceMTActivity.class);
         }
+
+        startActivity(intent);
+        finish();
+        currentModus = modusEnu.NULL;
 
     }
 
@@ -977,22 +962,14 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
         String acceptStr = cAppExtension.activity.getString(R.string.message_accept_line);
         String rejectStr = cAppExtension.activity.getString(R.string.message_cancel_line);
 
-        if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
-            acceptStr =  cAppExtension.activity.getString(R.string.message_yes);
-            rejectStr = cAppExtension.activity.getString(R.string.message_no);
-        }
-
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderlinebusy_header),
                 cAppExtension.activity.getString(R.string.message_orderlinebusy_text),
                 rejectStr, acceptStr, false);
         acceptRejectFragment.setCancelable(true);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
@@ -1008,12 +985,9 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
                 pvAcceptStr ,
                 false);
         acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 

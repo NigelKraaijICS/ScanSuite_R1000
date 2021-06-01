@@ -57,8 +57,6 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_packaging);
-
-        this.mActivityInitialize();
     }
 
     @Override
@@ -69,6 +67,7 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -85,7 +84,6 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
 
     @Override protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -101,7 +99,7 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     @Override
     public void onBackPressed() {
         ReceiveLinesActivity.packagingHandledBln = false;
-        this.finish();
+        finish();
     }
 
     //End Region Default Methods
@@ -224,11 +222,7 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     public  void pHandlePackagingDone(){
 
             mShowSending();
-            new Thread(new Runnable() {
-                public void run() {
-                    mPackagingDone();
-                }
-            }).start();
+            new Thread(this::mPackagingDone).start();
 
     }
 
@@ -240,8 +234,8 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
 
     private  void mGoBackToIntakeAndReceiveSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, IntakeAndReceiveSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private void mShowClosePackagingDialog(String pvRejectStr, String pvAcceptStr) {
@@ -255,12 +249,9 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
                                                                                         false);
 
         acceptRejectFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
 
     }
@@ -276,19 +267,11 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
 
     private void mSetOrderDoneListener() {
 
-        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonCloseOrder.setOnClickListener(view -> {
 
-                String acceptStr =cAppExtension.activity.getString(R.string.message_close);
-                String rejectStr = cAppExtension.activity.getString(R.string.message_cancel);
-
-                if (BuildConfig.FLAVOR.toUpperCase().equalsIgnoreCase("BMN")) {
-                    acceptStr = cAppExtension.activity.getString(R.string.message_send);
-                }
-
-                mShowClosePackagingDialog(rejectStr,acceptStr);
-            }
+            String acceptStr =cAppExtension.activity.getString(R.string.message_close);
+            String rejectStr = cAppExtension.activity.getString(R.string.message_cancel);
+            mShowClosePackagingDialog(rejectStr,acceptStr);
         });
     }
 
@@ -317,12 +300,9 @@ public class PackagingActivity extends AppCompatActivity implements iICSDefaultA
     private  void mShowSending() {
         final SendingFragment sendingFragment = new SendingFragment();
         sendingFragment.setCancelable(true);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            sendingFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SENDING_TAG);
         });
     }
 

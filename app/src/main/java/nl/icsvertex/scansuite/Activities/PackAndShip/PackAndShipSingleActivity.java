@@ -14,7 +14,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -99,7 +98,6 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_packandshiporder_ship_single);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -110,6 +108,7 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -127,7 +126,6 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -353,8 +351,8 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
        PackAndShipSelectActivity.startedViaMenuBln = false;
        Intent intent =new Intent(cAppExtension.context, PackAndShipSelectActivity.class);
-       cAppExtension.activity.startActivity(intent);
-       cAppExtension.activity.finish();
+       startActivity(intent);
+       finish();
 
     }
 

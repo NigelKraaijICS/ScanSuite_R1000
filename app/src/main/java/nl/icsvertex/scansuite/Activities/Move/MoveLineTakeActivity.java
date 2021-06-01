@@ -50,17 +50,15 @@ import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
-import SSU_WHS.Move.Moveorders.cMoveorder;
 import SSU_WHS.Move.MoveorderBarcodes.cMoveorderBarcode;
 import SSU_WHS.Move.MoveorderLineBarcode.cMoveorderLineBarcode;
 import SSU_WHS.Move.MoveorderLines.cMoveorderLine;
+import SSU_WHS.Move.Moveorders.cMoveorder;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyStockFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyTextInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
@@ -125,20 +123,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_moveline_take);
-        this.mActivityInitialize();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-
-        //Init the screen
-        this.mInitScreen();
     }
 
     @Override
@@ -236,11 +221,6 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(cAppExtension.context).unregisterReceiver(mNumberReceiver);
-
-//        if (cAppExtension.activity instanceof  MoveLineTakeActivity) {
-//            cBarcodeScan.pUnregisterBarcodeReceiver(this.getClass().getSimpleName());
-//        }
-
     }
 
     @Override
@@ -257,6 +237,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
@@ -265,7 +246,6 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -292,6 +272,11 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
         this.mFindViews();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_moveline_take));
+
+        this.mSetListeners();
+
+        //Init the screen
+        this.mInitScreen();
 
         this.mFieldsInitialize();
 
@@ -815,7 +800,7 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
             result = callableResultBln.get();
 
             if (!result.resultBln) {
-                cAppExtension.activity.runOnUiThread(() ->{   quantityRequiredText.setVisibility(View.GONE);});
+                cAppExtension.activity.runOnUiThread(() -> quantityRequiredText.setVisibility(View.GONE));
                 result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_barcode_unknown_ERP,pvBarcodeScan.barcodeOriginalStr));
 
                 return  result;
@@ -1289,8 +1274,8 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
 
     private void mGoBackToLinesActivity() {
         Intent intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private void mResetCurrents() {
