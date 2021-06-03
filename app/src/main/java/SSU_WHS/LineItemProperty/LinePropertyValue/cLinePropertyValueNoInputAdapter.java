@@ -20,11 +20,11 @@ import nl.icsvertex.scansuite.R;
 
 public class cLinePropertyValueNoInputAdapter extends RecyclerView.Adapter<cLinePropertyValueNoInputAdapter.ItempropertyValueNoInputViewHolder>{
 
-    public class ItempropertyValueNoInputViewHolder extends RecyclerView.ViewHolder{
+    public static class ItempropertyValueNoInputViewHolder extends RecyclerView.ViewHolder{
 
-        private AppCompatImageView imageViewPropertyType;
-        private TextView itemPropertyTextView;
-        private TextView itemPropertyValueTextView;
+        private final AppCompatImageView imageViewPropertyType;
+        private final TextView itemPropertyTextView;
+        private final TextView itemPropertyValueTextView;
         public LinearLayout itemPropertyValueNoInputItemLinearLayout;
 
         public ItempropertyValueNoInputViewHolder(View itemView) {
@@ -60,38 +60,37 @@ public class cLinePropertyValueNoInputAdapter extends RecyclerView.Adapter<cLine
         if (this.localItemPropertyValueObl != null || this.localItemPropertyValueObl.size() > 0) {
             final cLinePropertyValue pickorderLinePropertyValue = this.localItemPropertyValueObl.get(pvPositionInt);
 
-            pvHolderObj.itemPropertyTextView.setText(pickorderLinePropertyValue.getItemProperty().getOmschrijvingStr());
-            pvHolderObj.itemPropertyValueTextView.setText(pickorderLinePropertyValue.getValueStr());
+            if (pickorderLinePropertyValue.getItemProperty() != null) {
+                pvHolderObj.itemPropertyTextView.setText(pickorderLinePropertyValue.getItemProperty().getOmschrijvingStr());
+                pvHolderObj.itemPropertyValueTextView.setText(pickorderLinePropertyValue.getValueStr());
 
-            switch (pickorderLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase()) {
+                switch (pickorderLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase()) {
 
-                case "BOOLEAN":
-                    pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_check_black_24dp);
-                    break;
+                    case "BOOLEAN":
+                        pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_check_black_24dp);
+                        break;
 
-                case "DECIMAL":
-                    pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_counter_black_24dp);
-                    break;
+                    case "DECIMAL":
+                        pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_counter_black_24dp);
+                        break;
 
-                case "TEXT" :
-                case "CODE":
-                    pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_text_black_24dp);
-                    break;
+                    case "TEXT" :
+                    case "CODE":
+                        pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_text_black_24dp);
+                        break;
 
-                case "DATE":
-                    pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_calendar_black_24dp);
-                    break;
+                    case "DATE":
+                        pvHolderObj.imageViewPropertyType.setImageResource(R.drawable.ic_calendar_black_24dp);
+                        break;
+                }
             }
 
-            pvHolderObj.itemPropertyValueTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.bounce);
-                    ICS.Utils.cBounceInterpolator interpolator = new ICS.Utils.cBounceInterpolator(0.1,15);
-                    animation.setInterpolator(interpolator);
-                    v.startAnimation(animation);
-                    cUserInterface.pPlaySound(R.raw.message, 0);
-                }
+            pvHolderObj.itemPropertyValueTextView.setOnClickListener(v -> {
+                final Animation animation = AnimationUtils.loadAnimation(cAppExtension.context.getApplicationContext(), R.anim.bounce);
+                ICS.Utils.cBounceInterpolator interpolator = new ICS.Utils.cBounceInterpolator(0.1,15);
+                animation.setInterpolator(interpolator);
+                v.startAnimation(animation);
+                cUserInterface.pPlaySound(R.raw.message, 0);
             });
         }
     }

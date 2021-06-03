@@ -16,23 +16,23 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cPropertyGroupProperty implements Comparable {
 
-    private String originStr;
+    private final String originStr;
     public String getOriginStr() { return originStr; }
 
-    private String originKeyStr;
+    private final String originKeyStr;
     public String getOriginKeyStr() { return originKeyStr; }
 
-    private String propertyStr;
+    private final String propertyStr;
     public String getPropertyStr() { return propertyStr; }
 
-    private int orderInt;
+    private final int orderInt;
     public int getOrderInt() { return orderInt; }
 
     private cPropertyGroupPropertyViewModel getPropertyGroupPropertyViewModel() {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPropertyGroupPropertyViewModel.class);
     }
 
-    private cPropertyGroupPropertyEntity propertyGroupPropertyEntity;
+    private final cPropertyGroupPropertyEntity propertyGroupPropertyEntity;
 
     //Region Constructor
     public cPropertyGroupProperty(JSONObject pvJsonObject) {
