@@ -98,7 +98,6 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_packandshiporder_ship_multi);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -109,6 +108,7 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -126,7 +126,6 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -342,8 +341,8 @@ public class PackAndShipMultiActivity extends AppCompatActivity implements iICSD
 
         PackAndShipSelectActivity.startedViaMenuBln = false;
         Intent intent =new Intent(cAppExtension.context, PackAndShipSelectActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+       finish();
 
     }
 

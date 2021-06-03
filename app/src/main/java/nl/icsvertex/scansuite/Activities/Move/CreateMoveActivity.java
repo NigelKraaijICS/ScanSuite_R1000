@@ -3,7 +3,6 @@ package nl.icsvertex.scansuite.Activities.Move;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,7 +18,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -79,8 +77,6 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_create_move_order);
-        this.mActivityInitialize();
-
     }
 
     @Override
@@ -101,13 +97,13 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -301,67 +297,46 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleCreateOrder(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln);
-            }
-        }).start();
+        new Thread(() -> mHandleCreateOrder(pvDocumentStr,pvBinCodeStr,pvCheckBarcodesBln)).start();
 
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mStartOrderSelectActivity();
-            }
-        });
+        this.cancelButton.setOnClickListener(pvView -> mStartOrderSelectActivity());
     }
 
     private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
         MoveorderSelectActivity.startedViaMenuBln = false;
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
     }
 
     private void mSetCreateListener() {
-        this.createMoveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-
-
-
-                 MoveorderSelectActivity.startedViaMenuBln = false;
-                 mCreateOrder(editTextDocument.getText().toString().trim(),
-                                                editTextBin.getText().toString().trim(),
-                                                switchCheckBarcodes.isChecked());
-            }
+        this.createMoveButton.setOnClickListener(pvView -> {
+             MoveorderSelectActivity.startedViaMenuBln = false;
+             mCreateOrder(editTextDocument.getText().toString().trim(),
+                                            editTextBin.getText().toString().trim(),
+                                            switchCheckBarcodes.isChecked());
         });
     }
 
     private void mSetEditorActionListener() {
-        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false);
-                    cUserInterface.pHideKeyboard();
-                }
-                return true;
+        this.editTextDocument.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                pHandleScan(cBarcodeScan.pFakeScan(editTextDocument.getText().toString()),true,false);
+                cUserInterface.pHideKeyboard();
             }
+            return true;
         });
 
-        this.editTextBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+        this.editTextBin.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
 
-                    pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,false);
-                    cUserInterface.pHideKeyboard();
+                pHandleScan(cBarcodeScan.pFakeScan(editTextBin.getText().toString()),false,false);
+                cUserInterface.pHideKeyboard();
 
-                }
-                return true;
             }
+            return true;
         });
 
 
@@ -450,13 +425,8 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
 
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cMoveorder.currentMoveOrder.getOrderNumberStr());
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowMoveLinesActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowMoveLinesActivity);
 
     }
 
@@ -595,7 +565,7 @@ public class CreateMoveActivity extends AppCompatActivity implements iICSDefault
                 throw new IllegalStateException("Unexpected value: " + cMoveorder.currentMoveOrder.getOrderTypeStr());
         }
 
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
 
     }
     private void mFillStockOwnerSpinner() {

@@ -43,12 +43,9 @@ import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Licenses.cLicense;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
-import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorder;
 import SSU_WHS.Return.ReturnOrder.cReturnorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
@@ -102,7 +99,6 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_returnorderselect);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -120,13 +116,13 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -251,11 +247,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleFillOrders();
-            }
-        }).start();
+        new Thread(this::mHandleFillOrders).start();
 
     }
 
@@ -272,11 +264,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         cReturnorder.currentReturnOrder = pvReturnorder;
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cReturnorder.currentReturnOrder.getOrderNumberStr());
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleReturnOrderSelected();
-            }
-        }).start();
+        new Thread(this::mHandleReturnOrderSelected).start();
 
     }
 
@@ -290,15 +278,12 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
        if (!mCheckOrderIsLockableBln(cReturnorder.currentReturnOrder)) {
 
-           cAppExtension.activity.runOnUiThread(new Runnable() {
-               @Override
-               public void run() {
-                   cReturnorder.currentReturnOrder = null;
-                   cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
-                   cUserInterface.pCheckAndCloseOpenDialogs();
-                   cUserInterface.pHideGettingData();
-                   return;
-               }
+           cAppExtension.activity.runOnUiThread(() -> {
+               cReturnorder.currentReturnOrder = null;
+               cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.lockorder_order_assigned_to_another_user), R.raw.badsound);
+               cUserInterface.pCheckAndCloseOpenDialogs();
+               cUserInterface.pHideGettingData();
+               return;
            });
        }
 
@@ -377,27 +362,24 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cReturnorder.allReturnordersObl  = cReturnorder.pGetReturnOrdersWithFilterFromDatabasObl();
-                if (cReturnorder.allReturnordersObl.size() == 0) {
-                    mShowNoOrdersIcon( true);
-                    cUserInterface.pHideGettingData();
-                    return;
-                }
-
-
-                //Fill and show recycler
-                mSetReturnorderRecycler(cReturnorder.allReturnordersObl);
-                mShowNoOrdersIcon(false);
-                if (cSharedPreferences.userFilterBln()) {
-                    mApplyFilter();
-                }
-
+            cReturnorder.allReturnordersObl  = cReturnorder.pGetReturnOrdersWithFilterFromDatabasObl();
+            if (cReturnorder.allReturnordersObl.size() == 0) {
+                mShowNoOrdersIcon( true);
                 cUserInterface.pHideGettingData();
+                return;
             }
+
+
+            //Fill and show recycler
+            mSetReturnorderRecycler(cReturnorder.allReturnordersObl);
+            mShowNoOrdersIcon(false);
+            if (cSharedPreferences.userFilterBln()) {
+                mApplyFilter();
+            }
+
+            cUserInterface.pHideGettingData();
         });
     }
 
@@ -460,11 +442,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
         this.mSetReturnorderRecycler(returnorderObl);
 
-        if (returnorderObl.size() == 0) {
-            mShowNoOrdersIcon(true);
-        } else {
-            mShowNoOrdersIcon(false);
-        }
+        mShowNoOrdersIcon(returnorderObl.size() == 0);
 
     }
 
@@ -478,34 +456,18 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mShowHideBottomSheet(true);
-                }
-                else {
-                    mShowHideBottomSheet(false);
-                }
-            }
+        this.imageViewFilter.setOnClickListener(view -> {
+            mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
         });
     }
 
     private void mSetToolbarTitleListeners() {
 
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mScrollToTop();
-            }
-        });
+        this.toolbarTitle.setOnClickListener(view -> mScrollToTop());
 
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mScrollToBottom();
-                return true;
-            }
+        this.toolbarTitle.setOnLongClickListener(view -> {
+            mScrollToBottom();
+            return true;
         });
     }
 
@@ -596,12 +558,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                recyclerSearchView.setIconified(false);
-            }
-        });
+        this.recyclerSearchView.setOnClickListener(pvView -> recyclerSearchView.setIconified(false));
 
         //query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -624,12 +581,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     // End Recycler View
 
     private void mSetNewOrderListener() {
-        this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mShowCreateReturnorderActivity();
-            }
-        });
+        this.imageViewNewOrder.setOnClickListener(pvView -> mShowCreateReturnorderActivity());
     }
 
     private void mSetSwipeRefreshListener() {
@@ -642,35 +594,32 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
     // No orders icon
     private  void mShowNoOrdersIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
-                swipeRefreshLayout.setRefreshing(false);
-                mSetToolBarTitleWithCounters();
+            cUserInterface.pHideGettingData();
+            swipeRefreshLayout.setRefreshing(false);
+            mSetToolBarTitleWithCounters();
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewReturnorders.setVisibility(View.INVISIBLE);
+                recyclerViewReturnorders.setVisibility(View.INVISIBLE);
 
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NoOrdersFragment fragment = new NoOrdersFragment();
+                fragmentTransaction.replace(R.id.returnorderContainer, fragment);
+                fragmentTransaction.commit();
+                mAutoOpenCreateActivity();
+                return;
+            }
+
+            recyclerViewReturnorders.setVisibility(View.VISIBLE);
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NoOrdersFragment) {
                     FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NoOrdersFragment fragment = new NoOrdersFragment();
-                    fragmentTransaction.replace(R.id.returnorderContainer, fragment);
+                    fragmentTransaction.remove(fragment);
                     fragmentTransaction.commit();
-                    mAutoOpenCreateActivity();
-                    return;
-                }
-
-                recyclerViewReturnorders.setVisibility(View.VISIBLE);
-
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NoOrdersFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
                 }
             }
         });
@@ -710,15 +659,12 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
     private  void mStepFailed(final String pvErrorMessageStr){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                cUserInterface.pHideGettingData();
-                cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cReturnorder.currentReturnOrder.getOrderNumberStr(), true, true );
-                cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return);
-                cUserInterface.pCheckAndCloseOpenDialogs();
-                cReturnorder.currentReturnOrder = null;
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            cUserInterface.pHideGettingData();
+            cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cReturnorder.currentReturnOrder.getOrderNumberStr(), true, true );
+            cReturnorder.currentReturnOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Retour, cWarehouseorder.WorkflowReturnStepEnu.Return);
+            cUserInterface.pCheckAndCloseOpenDialogs();
+            cReturnorder.currentReturnOrder = null;
         });
 
     }
@@ -758,17 +704,14 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         final View clickedOrder = container.findViewWithTag(cReturnorder.currentReturnOrder.getOrderNumberStr());
 
         final Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentsActivity.class);
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (clickedOrder != null) {
+        cAppExtension.activity.runOnUiThread(() -> {
+            if (clickedOrder != null) {
 
-                    ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
-                    ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
-                } else {
-                    cAppExtension.activity.startActivity(intent);
-                    cAppExtension.activity.finish();
-                }
+                ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
+                ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
+            } else {
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -787,8 +730,8 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
         this.mReleaseLicense();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
 
     }
 

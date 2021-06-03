@@ -109,20 +109,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_moveline_place);
-        this.mActivityInitialize();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-
-        //Init the screen
-        this.mInitScreen();
     }
 
     @Override
@@ -242,6 +229,7 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
@@ -277,6 +265,12 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
         this.mFindViews();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_moveline_place));
+
+        //Set listeners here, so click listeners only work after activity is shown
+        this.mSetListeners();
+
+        //Init the screen
+        this.mInitScreen();
 
         this.mFieldsInitialize();
 
@@ -455,34 +449,26 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
     //Views
 
     private void mSetArticleImageListener() {
-        this.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowFullArticleFragment();
-            }
-        });
+        this.articleThumbImageView.setOnClickListener(view -> mShowFullArticleFragment());
     }
 
     private void mSetImageButtonBarcodeListener() {
-        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.imageButtonBarcode.setOnClickListener(pvView -> {
 
-                if (cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() == null || cMoveorderLine.currentMoveOrderLine.orderBarcodesObl().size() == 0) {
-                    return;
-                }
-
-                mEnablePlusMinusAndBarcodeSelectViews();
-
-                //If we only have one barcodeStr, then automatticaly select that barcodeStr
-                if (cMoveorderLine.currentMoveOrderLine.orderBarcodesObl().size() == 1) {
-                    pHandleScan(cBarcodeScan.pFakeScan(cMoveorderLine.currentMoveOrderLine.orderBarcodesObl().get(0).getBarcodeStr()));
-                    return;
-                }
-
-                mShowBarcodeSelectFragment();
-
+            if (cMoveorderLine.currentMoveOrderLine.orderBarcodesObl() == null || cMoveorderLine.currentMoveOrderLine.orderBarcodesObl().size() == 0) {
+                return;
             }
+
+            mEnablePlusMinusAndBarcodeSelectViews();
+
+            //If we only have one barcodeStr, then automatticaly select that barcodeStr
+            if (cMoveorderLine.currentMoveOrderLine.orderBarcodesObl().size() == 1) {
+                pHandleScan(cBarcodeScan.pFakeScan(cMoveorderLine.currentMoveOrderLine.orderBarcodesObl().get(0).getBarcodeStr()));
+                return;
+            }
+
+            mShowBarcodeSelectFragment();
+
         });
     }
 
@@ -914,99 +900,75 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
 
     //Listeners
     private void mSetDoneListener() {
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mHandleDoneClick();
-            }
-        });
+        this.imageButtonDone.setOnClickListener(view -> mHandleDoneClick());
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetPlusListener() {
 
-        this.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
+        this.imageButtonPlus.setOnTouchListener((v, event) -> {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (plusHandler != null) return true;
-                    plusHandler = new Handler();
-                    plusHandler.postDelayed(mPlusAction, 750);
-                }
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (plusHandler == null) return true;
-                    plusHandler.removeCallbacks(mPlusAction);
-                    plusHandler = null;
-                    counterPlusHelperInt = 0;
-                }
-
-                return false;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (plusHandler != null) return true;
+                plusHandler = new Handler();
+                plusHandler.postDelayed(mPlusAction, 750);
             }
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (plusHandler == null) return true;
+                plusHandler.removeCallbacks(mPlusAction);
+                plusHandler = null;
+                counterPlusHelperInt = 0;
+            }
+
+            return false;
         });
 
-        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonPlus.setOnClickListener(view -> {
 
-                //There is no selected barcodeStr, select one first
-                if (cMoveorder.currentMoveOrder.currentMoveorderBarcode  == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-                pHandleScan(cBarcodeScan.pFakeScan(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getBarcodeStr()));
+            //There is no selected barcodeStr, select one first
+            if (cMoveorder.currentMoveOrder.currentMoveorderBarcode  == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+            pHandleScan(cBarcodeScan.pFakeScan(cMoveorder.currentMoveOrder.currentMoveorderBarcode.getBarcodeStr()));
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
-        this.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (minusHandler != null) return true;
-                    minusHandler = new Handler();
-                    minusHandler.postDelayed(mMinusAction, 750);
-                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (minusHandler == null) return true;
-                    minusHandler.removeCallbacks(mMinusAction);
-                    minusHandler = null;
-                    counterMinusHelperInt = 0;
-                }
-                return false;
+        this.imageButtonMinus.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (minusHandler != null) return true;
+                minusHandler = new Handler();
+                minusHandler.postDelayed(mMinusAction, 750);
             }
-
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (minusHandler == null) return true;
+                minusHandler.removeCallbacks(mMinusAction);
+                minusHandler = null;
+                counterMinusHelperInt = 0;
+            }
+            return false;
         });
 
-        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonMinus.setOnClickListener(view -> {
 
 
-                //There is no selected barcodeStr, select one first
-                if (cMoveorder.currentMoveOrder.currentMoveorderBarcode  == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-
-
-                mTryToChangeQuantity(false, false, cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cMoveorder.currentMoveOrder.currentMoveorderBarcode  == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+
+
+            mTryToChangeQuantity(false, false, cMoveorder.currentMoveOrder.currentMoveorderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     private void mSetNumberListener() {
-        this.quantityText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mNumberClicked();
-            }
-        });
+        this.quantityText.setOnClickListener(view -> mNumberClicked());
     }
 
     //Dialogs and Activitys
@@ -1031,12 +993,9 @@ public class MoveLinePlaceMTActivity extends AppCompatActivity implements iICSDe
                                                                                    cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
         acceptRejectFragment.setCancelable(true);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 

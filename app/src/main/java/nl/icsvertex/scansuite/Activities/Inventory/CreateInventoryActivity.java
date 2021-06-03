@@ -4,7 +4,6 @@ package nl.icsvertex.scansuite.Activities.Inventory;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -65,7 +64,6 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_inventory_order);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -82,6 +80,7 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -186,28 +185,15 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
 
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-              mStartOrderSelectActivity();
-            }
-        });
+        this.cancelButton.setOnClickListener(pvView -> mStartOrderSelectActivity());
     }
 
     private void mSetCreateListener() {
-        this.createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                cUserInterface.pShowGettingData();
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        mHandleCreateOrder();
-                    }
-                };
-                Thread createOrder = new Thread(runnable);
-                createOrder.start();
-            }
+        this.createButton.setOnClickListener(pvView -> {
+            cUserInterface.pShowGettingData();
+            Runnable runnable = this::mHandleCreateOrder;
+            Thread createOrder = new Thread(runnable);
+            createOrder.start();
         });
     }
 
@@ -241,15 +227,12 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
     }
 
     private void mSetEditorActionListener() {
-        this.editTextDocument.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    cUserInterface.pHideKeyboard();
-                    createButton.callOnClick();
-                }
-                return true;
+        this.editTextDocument.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                cUserInterface.pHideKeyboard();
+                createButton.callOnClick();
             }
+            return true;
         });
     }
 
@@ -278,13 +261,8 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowInventoryorderBinsActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowInventoryorderBinsActivity);
 
     }
 
@@ -322,14 +300,15 @@ public class CreateInventoryActivity  extends AppCompatActivity implements iICSD
     private  void mShowInventoryorderBinsActivity() {
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, InventoryorderBinsActivity.class);
-        cAppExtension.activity.startActivity(intent);
-       cAppExtension.activity.finish();
+        startActivity(intent);
+       finish();
     }
 
     private void mStartOrderSelectActivity() {
         Intent intent = new Intent(cAppExtension.context, InventoryorderSelectActivity.class);
         InventoryorderSelectActivity.startedViaMenuBln = false;
-        cAppExtension.activity.startActivity(intent);
+        startActivity(intent);
+        finish();
     }
     private void mShowStockOwnerSpinner() {
 

@@ -467,10 +467,7 @@ public class cBarcodeScan {
                         storeorderLinesActivity.pHandleScan(barcodeScan, false);
                     }
 
-                    if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
-                        PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
-                        pickorderLineItemPropertyInputActvity.pHandleScan(barcodeScan);
-                    }
+
 
 
                 }

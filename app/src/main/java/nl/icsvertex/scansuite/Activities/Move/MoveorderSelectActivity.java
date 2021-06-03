@@ -101,7 +101,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_move_orderselect);
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -123,8 +122,9 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cUserInterface.pEnableScanner();
-        mActivityInitialize();
+        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -151,7 +151,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     //End Region Default Methods
@@ -255,11 +254,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleFillOrders();
-            }
-        }).start();
+        new Thread(this::mHandleFillOrders).start();
 
     }
 
@@ -302,11 +297,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         cUser.currentUser.currentStockOwner = cStockOwner.pGetStockOwnerByCodeStr( cMoveorder.currentMoveOrder.getStockownerStr());
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cMoveorder.currentMoveOrder.getOrderNumberStr());
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleMoveorderSelected();
-            }
-        }).start();
+        new Thread(this::mHandleMoveorderSelected).start();
 
     }
 
@@ -350,26 +341,23 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //Fill and show recycler
+        cAppExtension.activity.runOnUiThread(() -> {
+            //Fill and show recycler
 
-                cMoveorder.allMoveordersObl = cMoveorder.pGetMovesWithFilterFromDatabasObl();
-                if (cMoveorder.allMoveordersObl.size() == 0) {
-                    mShowNoOrdersIcon( true);
-                    cUserInterface.pHideGettingData();
-                    return;
-                }
-
-                mSetMoveorderRecycler(cMoveorder.allMoveordersObl);
-                mShowNoOrdersIcon(false);
-                if (cSharedPreferences.userFilterBln()) {
-                    mApplyFilter();
-                }
-
+            cMoveorder.allMoveordersObl = cMoveorder.pGetMovesWithFilterFromDatabasObl();
+            if (cMoveorder.allMoveordersObl.size() == 0) {
+                mShowNoOrdersIcon( true);
                 cUserInterface.pHideGettingData();
+                return;
             }
+
+            mSetMoveorderRecycler(cMoveorder.allMoveordersObl);
+            mShowNoOrdersIcon(false);
+            if (cSharedPreferences.userFilterBln()) {
+                mApplyFilter();
+            }
+
+            cUserInterface.pHideGettingData();
         });
     }
 
@@ -405,13 +393,8 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowMoveLinesActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowMoveLinesActivity);
 
 
     }
@@ -472,7 +455,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
 
     }
 
@@ -509,7 +492,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         cUserInterface.pCheckAndCloseOpenDialogs();
         Intent intent = new Intent(cAppExtension.context, CreateMoveActivity.class);
-        ActivityCompat.startActivity(cAppExtension.context,intent, null);
+        startActivity(intent);
     }
 
     // End Region Private Methods
@@ -584,12 +567,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
+        this.imageViewFilter.setOnClickListener(view -> mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED));
     }
 
     private void mSetSwipeRefreshListener() {
@@ -675,12 +653,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                recyclerSearchView.setIconified(false);
-            }
-        });
+        this.recyclerSearchView.setOnClickListener(pvView -> recyclerSearchView.setIconified(false));
 
         //query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -705,41 +678,38 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mShowNoOrdersIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
-                swipeRefreshLayout.setRefreshing(false);
+            cUserInterface.pHideGettingData();
+            swipeRefreshLayout.setRefreshing(false);
 
 
-                mSetToolBarTitleWithCounters();
+            mSetToolBarTitleWithCounters();
 
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewMoveorders.setVisibility(View.INVISIBLE);
+                recyclerViewMoveorders.setVisibility(View.INVISIBLE);
 
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NoOrdersFragment fragment = new NoOrdersFragment();
-                    fragmentTransaction.replace(R.id.moveorderContainer, fragment);
-                    fragmentTransaction.commit();
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NoOrdersFragment fragment = new NoOrdersFragment();
+                fragmentTransaction.replace(R.id.moveorderContainer, fragment);
+                fragmentTransaction.commit();
 
-                    if (cSetting.MOVE_AUTO_CREATE_ORDER()) {
-                        mAutoOpenCreateActivity();
-                    }
-                    return;
+                if (cSetting.MOVE_AUTO_CREATE_ORDER()) {
+                    mAutoOpenCreateActivity();
                 }
+                return;
+            }
 
-                recyclerViewMoveorders.setVisibility(View.VISIBLE);
+            recyclerViewMoveorders.setVisibility(View.VISIBLE);
 
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NoOrdersFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NoOrdersFragment) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
                 }
             }
         });
@@ -823,8 +793,8 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
         this.mReleaseLicense();
 
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+       finish();
 
     }
 
@@ -839,12 +809,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetNewOrderListener() {
-        this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mShowCreateMoveActivity(null);
-            }
-        });
+        this.imageViewNewOrder.setOnClickListener(pvView -> mShowCreateMoveActivity(null));
     }
 
     private void mAutoOpenCreateActivity(){

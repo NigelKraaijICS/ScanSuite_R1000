@@ -92,16 +92,6 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_moveorder_lines_place_generated);
-        this.mActivityInitialize();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-
     }
 
     @Override
@@ -112,6 +102,7 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -129,7 +120,6 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu pvMenu) {
@@ -182,6 +172,9 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
         this.mSetToolbar(getResources().getString(R.string.screentitle_moveorderlines_place));
 
         this.mFieldsInitialize();
+
+        //Set listeners here, so click listeners only work after activity is shown
+        this.mSetListeners();
 
         this.mInitScreen();
 
@@ -349,11 +342,7 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleClose();
-            }
-        }).start();
+        new Thread(this::mHandleClose).start();
 
     }
 
@@ -365,17 +354,14 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
 
     public void pSetToolBarTitleWithCounters(final String pvTextStr) {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                toolbarSubTitle.setText(pvTextStr);
+        cAppExtension.activity.runOnUiThread(() -> {
+            toolbarSubTitle.setText(pvTextStr);
 
-                //Close open dialogs, so keyboard will also close
-                cUserInterface.pHideKeyboard();
+            //Close open dialogs, so keyboard will also close
+            cUserInterface.pHideKeyboard();
 
-                //Click to make even more sure that keyboard gets hidden
-                toolbarSubTitle.performClick();
-            }
+            //Click to make even more sure that keyboard gets hidden
+            toolbarSubTitle.performClick();
         });
 
     }
@@ -448,22 +434,12 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
     }
 
     private void mSetShowCommentListener() {
-        this.imageButtonComments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCommentsFragment(cMoveorder.currentMoveOrder.commentsObl(), "");
-            }
-        });
+        this.imageButtonComments.setOnClickListener(view -> mShowCommentsFragment(cMoveorder.currentMoveOrder.commentsObl(), ""));
     }
 
     private void mSetSendOrderListener() {
 
-        this.imageButtonCloseOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close));
-            }
-        });
+        this.imageButtonCloseOrder.setOnClickListener(view -> mShowCloseOrderDialog(cAppExtension.activity.getString(R.string.message_leave), cAppExtension.activity.getString(R.string.message_close)));
     }
 
     private void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
@@ -491,12 +467,11 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
 
     private void mStartOrderSelectActivity() {
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            public void run() {
-                Intent intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
-                MoveorderSelectActivity.startedViaMenuBln = false;
-                cAppExtension.activity.startActivity(intent);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            Intent intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
+            MoveorderSelectActivity.startedViaMenuBln = false;
+            startActivity(intent);
+            finish();
         });
 
     }
@@ -533,12 +508,9 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
 
         acceptRejectFragment.setCancelable(true);
         final AcceptRejectFragment finalAcceptRejectFragment = acceptRejectFragment;
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                finalAcceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        cAppExtension.activity.runOnUiThread(() -> {
+            // show my popup
+            finalAcceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
 
     }
@@ -549,7 +521,7 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
         cMoveorderLine.currentMoveOrderLine = null;
 
         intent = new Intent(cAppExtension.context, MoveLinePlaceGeneratedActivity.class);
-        cAppExtension.activity.startActivity(intent);
+       startActivity(intent);
 
     }
 
@@ -573,39 +545,36 @@ public class MoveorderLinesPlaceGeneratedActivity extends AppCompatActivity impl
     private void mNoLinesAvailable(final boolean pvShowBln) {
 
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewLines.setVisibility(View.INVISIBLE);
-                    imageButtonCloseOrder.setVisibility(View.INVISIBLE);
+                recyclerViewLines.setVisibility(View.INVISIBLE);
+                imageButtonCloseOrder.setVisibility(View.INVISIBLE);
 
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NothingHereFragment fragment = new NothingHereFragment();
-                    fragmentTransaction.replace(R.id.MoveorderLinesPlaceGeneratedContainer, fragment);
-                    fragmentTransaction.commit();
-                     pSetToolBarTitleWithCounters(cText.pIntToStringStr(cMoveorder.currentMoveOrder.sortedPlaceLinesObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
-                    return;
-                }
-
-                recyclerViewLines.setVisibility(View.VISIBLE);
-                imageButtonCloseOrder.setVisibility(View.VISIBLE);
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NothingHereFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
-                }
-
-                mFillRecycler();
-
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NothingHereFragment fragment = new NothingHereFragment();
+                fragmentTransaction.replace(R.id.MoveorderLinesPlaceGeneratedContainer, fragment);
+                fragmentTransaction.commit();
+                 pSetToolBarTitleWithCounters(cText.pIntToStringStr(cMoveorder.currentMoveOrder.sortedPlaceLinesObl().size()) + " "  + cAppExtension.activity.getString(R.string.lines));
+                return;
             }
+
+            recyclerViewLines.setVisibility(View.VISIBLE);
+            imageButtonCloseOrder.setVisibility(View.VISIBLE);
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NothingHereFragment) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
+                }
+            }
+
+            mFillRecycler();
+
         });
 
     }

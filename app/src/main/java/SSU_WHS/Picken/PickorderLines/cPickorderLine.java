@@ -31,6 +31,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
+import nl.icsvertex.scansuite.Activities.PackAndShip.PackAndShipSingleActivity;
 import nl.icsvertex.scansuite.R;
 
 public class cPickorderLine {
@@ -211,6 +212,8 @@ public class cPickorderLine {
     private  List<cLineProperty> linePropertyNoInputCachedObl;
     public List<cLineProperty> linePropertyNoInputObl() {
 
+        boolean addPropertyBln = true;
+
         if (this.linePropertyNoInputCachedObl != null) {
             return  this.linePropertyNoInputCachedObl;
         }
@@ -222,9 +225,20 @@ public class cPickorderLine {
         }
 
         for (cLineProperty lineProperty :this.linePropertyObl()) {
+
+            addPropertyBln = true;
+
             if (!lineProperty.getIsInputBln() &&  !lineProperty.getIsRequiredBln()) {
-                this.linePropertyNoInputCachedObl.add(lineProperty);
+
+                if (cPropertyGroup.allPropertyGroupsObl != null && cPropertyGroup.allPropertyGroupsObl.size() > 0 ) {
+                    addPropertyBln = false;
+                }
+                if (addPropertyBln) {
+                    this.linePropertyNoInputCachedObl.add(lineProperty);
+                }
             }
+
+
         }
 
         return  this.linePropertyNoInputCachedObl;

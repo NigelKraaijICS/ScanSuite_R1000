@@ -47,7 +47,6 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
-import nl.icsvertex.scansuite.Activities.Move.MoveorderSelectActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
@@ -98,7 +97,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_inventoryorderselect);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -116,6 +114,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     @Override
     protected void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
     }
@@ -123,7 +122,6 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
 
@@ -251,11 +249,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleFillOrders();
-            }
-        }).start();
+        new Thread(this::mHandleFillOrders).start();
 
     }
 
@@ -287,11 +281,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cInventoryorder.currentInventoryOrder.getOrderNumberStr());
 
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleInventoryOrderSelected();
-            }
-        }).start();
+        new Thread(this::mHandleInventoryOrderSelected).start();
 
     }
 
@@ -319,13 +309,8 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
         }
 
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowInventoryorderBinsActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowInventoryorderBinsActivity);
 
     }
 
@@ -375,26 +360,23 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                List<cInventoryorder> filteredInventoryOrdersObl = cInventoryorder.pGetInventoriesWithFilterFromDatabasObl();
-                if (filteredInventoryOrdersObl == null || filteredInventoryOrdersObl.size() == 0) {
-                    mShowNoOrdersIcon( true);
-                    cUserInterface.pHideGettingData();
-                    return;
-                }
-
-                //Fill and show recycler
-                mSetInventoryorderRecycler(filteredInventoryOrdersObl);
-                mShowNoOrdersIcon(false);
-                if (cSharedPreferences.userFilterBln()) {
-                    mApplyFilter();
-                }
-
+            List<cInventoryorder> filteredInventoryOrdersObl = cInventoryorder.pGetInventoriesWithFilterFromDatabasObl();
+            if (filteredInventoryOrdersObl.size() == 0) {
+                mShowNoOrdersIcon( true);
                 cUserInterface.pHideGettingData();
+                return;
             }
+
+            //Fill and show recycler
+            mSetInventoryorderRecycler(filteredInventoryOrdersObl);
+            mShowNoOrdersIcon(false);
+            if (cSharedPreferences.userFilterBln()) {
+                mApplyFilter();
+            }
+
+            cUserInterface.pHideGettingData();
         });
     }
 
@@ -473,27 +455,14 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
+        this.imageViewFilter.setOnClickListener(view -> mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED));
     }
 
     private void mSetToolbarTitleListeners() {
-        this.toolbarTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mScrollToTop();
-            }
-        });
-        this.toolbarTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mScrollToBottom();
-                return true;
-            }
+        this.toolbarTitle.setOnClickListener(view -> mScrollToTop());
+        this.toolbarTitle.setOnLongClickListener(view -> {
+            mScrollToBottom();
+            return true;
         });
     }
 
@@ -585,12 +554,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                recyclerSearchView.setIconified(false);
-            }
-        });
+        this.recyclerSearchView.setOnClickListener(pvView -> recyclerSearchView.setIconified(false));
 
         //query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -613,12 +577,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     // End Recycler View
 
     private void mSetNewOrderListener() {
-        this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mShowCreateInventoryActivity();
-            }
-        });
+        this.imageViewNewOrder.setOnClickListener(pvView -> mShowCreateInventoryActivity());
     }
 
     private void mSetSwipeRefreshListener() {
@@ -634,38 +593,35 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
     // No orders icon
     private  void mShowNoOrdersIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
-                swipeRefreshLayout.setRefreshing(false);
-                mSetToolBarTitleWithCounters();
+            cUserInterface.pHideGettingData();
+            swipeRefreshLayout.setRefreshing(false);
+            mSetToolBarTitleWithCounters();
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewInventoryorders.setVisibility(View.INVISIBLE);
+                recyclerViewInventoryorders.setVisibility(View.INVISIBLE);
 
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NoOrdersFragment fragment = new NoOrdersFragment();
-                    fragmentTransaction.replace(R.id.inventoryorderContainer, fragment);
-                    fragmentTransaction.commit();
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NoOrdersFragment fragment = new NoOrdersFragment();
+                fragmentTransaction.replace(R.id.inventoryorderContainer, fragment);
+                fragmentTransaction.commit();
 
-                    if (cSetting.INV_AUTO_CREATE_ORDER()) {
-                        mAutoOpenCreateActivity();
-                    }
-                    return;
+                if (cSetting.INV_AUTO_CREATE_ORDER()) {
+                    mAutoOpenCreateActivity();
                 }
+                return;
+            }
 
-                recyclerViewInventoryorders.setVisibility(View.VISIBLE);
+            recyclerViewInventoryorders.setVisibility(View.VISIBLE);
 
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NoOrdersFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NoOrdersFragment) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
                 }
             }
         });
@@ -712,8 +668,8 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private void mShowCreateInventoryActivity() {
         Intent intent = new Intent(cAppExtension.context, CreateInventoryActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+       startActivity(intent);
+        finish();
     }
 
     private  void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
@@ -742,9 +698,9 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
         } else {
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
+            startActivity(intent);
         }
+        finish();
     }
 
     private void mReleaseLicense() {
@@ -759,11 +715,9 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private void mLeaveActivity(){
         this.mReleaseLicense();
-
-
         Intent intent = new Intent(cAppExtension.context, MenuActivity.class);
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
 
     }
 

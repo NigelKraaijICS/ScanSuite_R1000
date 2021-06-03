@@ -33,8 +33,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
-
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cText;
@@ -43,22 +41,14 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
-import SSU_WHS.Intake.IntakeorderBarcodes.cIntakeorderBarcode;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Inventory.InventoryOrders.cInventoryorder;
 import SSU_WHS.Inventory.InventoryorderBarcodes.cInventoryorderBarcode;
 import SSU_WHS.Inventory.InventoryorderBins.cInventoryorderBin;
 import SSU_WHS.Inventory.InventoryorderLineBarcodes.cInventoryorderLineBarcode;
 import SSU_WHS.Inventory.InventoryorderLines.cInventoryorderLine;
-import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
-import SSU_WHS.Picken.PickorderLines.cPickorderLine;
-import nl.icsvertex.scansuite.Activities.Pick.PickorderLineItemPropertyInputActvity;
-import nl.icsvertex.scansuite.Activities.Pick.PickorderPickActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.R;
 
 public class InventoryArticleActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -117,7 +107,6 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventoryarticle);
-        this.mActivityInitialize();
     }
 
     @Override
@@ -139,6 +128,7 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
         cUserInterface.pEnableScanner();
         LocalBroadcastManager.getInstance(cAppExtension.context).registerReceiver(mNumberReceiver, new IntentFilter(cPublicDefinitions.NUMBERINTENT_NUMBER));
@@ -548,23 +538,20 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     }
 
     private void mSetImageButtonBarcodeListener() {
-        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.imageButtonBarcode.setOnClickListener(pvView -> {
 
-                if (cInventoryorderLine.currentInventoryOrderLine.barcodesObl() == null || cInventoryorderLine.currentInventoryOrderLine.barcodesObl().size() == 0) {
-                    return;
-                }
-
-                //If we only have one barcodeStr, then automatticaly select that barcodeStr
-                if (cInventoryorderLine.currentInventoryOrderLine.barcodesObl().size() == 1) {
-                    pHandleScan(cBarcodeScan.pFakeScan(cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr()));
-                    return;
-                }
-
-                mShowBarcodeSelectFragment();
-
+            if (cInventoryorderLine.currentInventoryOrderLine.barcodesObl() == null || cInventoryorderLine.currentInventoryOrderLine.barcodesObl().size() == 0) {
+                return;
             }
+
+            //If we only have one barcodeStr, then automatticaly select that barcodeStr
+            if (cInventoryorderLine.currentInventoryOrderLine.barcodesObl().size() == 1) {
+                pHandleScan(cBarcodeScan.pFakeScan(cInventoryorderLine.currentInventoryOrderLine.barcodesObl().get(0).getBarcodeStr()));
+                return;
+            }
+
+            mShowBarcodeSelectFragment();
+
         });
     }
 
@@ -579,8 +566,8 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
         InventoryorderBinActivity.busyBln = false;
 
         final Intent intent = new Intent(cAppExtension.context, InventoryorderBinActivity.class);
-            cAppExtension.activity.startActivity(intent);
-            cAppExtension.activity.finish();
+            startActivity(intent);
+            finish();
     }
 
     private void mResetCurrents(){
@@ -608,98 +595,74 @@ public class InventoryArticleActivity extends AppCompatActivity implements iICSD
     @SuppressLint("ClickableViewAccessibility")
     private void mSetPlusListener() {
 
-        this.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
+        this.imageButtonPlus.setOnTouchListener((v, event) -> {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (plusHandler != null) return true;
-                    plusHandler = new Handler();
-                    plusHandler.postDelayed(mPlusAction, 750);
-                }
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (plusHandler == null) return true;
-                    plusHandler.removeCallbacks(mPlusAction);
-                    plusHandler = null;
-                    inventoryCounterPlusHelperInt = 0;
-                }
-
-                return false;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (plusHandler != null) return true;
+                plusHandler = new Handler();
+                plusHandler.postDelayed(mPlusAction, 750);
             }
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (plusHandler == null) return true;
+                plusHandler.removeCallbacks(mPlusAction);
+                plusHandler = null;
+                inventoryCounterPlusHelperInt = 0;
+            }
+
+            return false;
         });
 
-        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonPlus.setOnClickListener(view -> {
 
-                //There is no selected barcodeStr, select one first
-                if (cInventoryorderBarcode.currentInventoryOrderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-
-                mTryToChangeInventoryQuantity(true, false, cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cInventoryorderBarcode.currentInventoryOrderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+
+            mTryToChangeInventoryQuantity(true, false, cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
-        this.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (minusHandler != null) return true;
-                    minusHandler = new Handler();
-                    minusHandler.postDelayed(mMinusAction, 750);
-                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (minusHandler == null) return true;
-                    minusHandler.removeCallbacks(mMinusAction);
-                    minusHandler = null;
-                    inventoryCounterMinusHelperInt = 0;
-                }
-                return false;
+        this.imageButtonMinus.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (minusHandler != null) return true;
+                minusHandler = new Handler();
+                minusHandler.postDelayed(mMinusAction, 750);
             }
-
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (minusHandler == null) return true;
+                minusHandler.removeCallbacks(mMinusAction);
+                minusHandler = null;
+                inventoryCounterMinusHelperInt = 0;
+            }
+            return false;
         });
 
-        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonMinus.setOnClickListener(view -> {
 
 
-                //There is no selected barcodeStr, select one first
-                if (cInventoryorderBarcode.currentInventoryOrderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-                mTryToChangeInventoryQuantity(false, false, cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cInventoryorderBarcode.currentInventoryOrderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+            mTryToChangeInventoryQuantity(false, false, cInventoryorderBarcode.currentInventoryOrderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     private void mSetNumberListener() {
-        this.quantityText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mNumberClicked();
-            }
-        });
+        this.quantityText.setOnClickListener(view -> mNumberClicked());
 
     }
 
     private void mSetDoneListener(){
 
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mHandleDone();
-            }
-        });
+        this.imageButtonDone.setOnClickListener(view -> mHandleDone());
 
     }
 

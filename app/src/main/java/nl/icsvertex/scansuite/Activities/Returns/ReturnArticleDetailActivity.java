@@ -65,19 +65,15 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     //Region Private Properties
 
-    private ConstraintLayout returnArticleDetailContainer;
-
     private int returnCounterMinusHelperInt;
     private int returnCounterPlusHelperInt;
     private Handler minusHandler;
     private Handler plusHandler;
 
-    private Toolbar toolbar;
     private ImageView toolbarImage;
     private TextView toolbarTitle;
     private TextView toolbarSubtext;
 
-    private CardView articleContainer;
     private ConstraintLayout articleInfoContainer;
 
     private ImageView articleThumbImageView;
@@ -121,8 +117,6 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     protected void onCreate(Bundle pvSavedInstanceState) {
         super.onCreate(pvSavedInstanceState);
         setContentView(R.layout.activity_returnarticle_detail);
-        this.mActivityInitialize();
-
     }
 
     @Override
@@ -134,13 +128,13 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     @Override
     public void onResume() {
         super.onResume();
+        this.mActivityInitialize();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
     }
 
     @Override
@@ -151,8 +145,6 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     @Override
     public boolean onPrepareOptionsMenu(Menu pvMenu) {
-
-//        invalidateOptionsMenu();
 
         if (cSetting.GENERIC_PRINT_ITEMLABEL()){
             MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
@@ -233,14 +225,10 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     @Override
     public void mFindViews() {
 
-        this.returnArticleDetailContainer = findViewById(R.id.returnArticleDetailContainer);
-
-        this.toolbar = findViewById(R.id.toolbar);
         this.toolbarImage = findViewById(R.id.toolbarImage);
         this.toolbarTitle = findViewById(R.id.toolbarTitle);
         this.toolbarSubtext = findViewById(R.id.toolbarSubtext);
 
-        this.articleContainer = findViewById(R.id.articleContainer);
         this.articleInfoContainer = findViewById(R.id.articleInfoContainer);
 
         this.articleThumbImageView = findViewById(R.id.articleThumbImageView);
@@ -565,125 +553,97 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     @SuppressLint("ClickableViewAccessibility")
     private void mSetPlusListener() {
 
-        this.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
+        this.imageButtonPlus.setOnTouchListener((v, event) -> {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (plusHandler != null) return true;
-                    plusHandler = new Handler();
-                    plusHandler.postDelayed(mPlusAction, 750);
-                }
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (plusHandler == null) return true;
-                    plusHandler.removeCallbacks(mPlusAction);
-                    plusHandler = null;
-                    returnCounterPlusHelperInt = 0;
-                }
-
-                return false;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (plusHandler != null) return true;
+                plusHandler = new Handler();
+                plusHandler.postDelayed(mPlusAction, 750);
             }
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (plusHandler == null) return true;
+                plusHandler.removeCallbacks(mPlusAction);
+                plusHandler = null;
+                returnCounterPlusHelperInt = 0;
+            }
+
+            return false;
         });
 
-        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonPlus.setOnClickListener(view -> {
 
-                //There is no selected barcodeStr, select one first
-                if (cReturnorderBarcode.currentReturnOrderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-
-                mTryToChangeReturnorderQuantity(true, false, cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cReturnorderBarcode.currentReturnOrderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+
+            mTryToChangeReturnorderQuantity(true, false, cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
-        this.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (minusHandler != null) return true;
-                    minusHandler = new Handler();
-                    minusHandler.postDelayed(mMinusAction, 750);
-                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (minusHandler == null) return true;
-                    minusHandler.removeCallbacks(mMinusAction);
-                    minusHandler = null;
-                    returnCounterMinusHelperInt = 0;
-                }
-                return false;
+        this.imageButtonMinus.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (minusHandler != null) return true;
+                minusHandler = new Handler();
+                minusHandler.postDelayed(mMinusAction, 750);
             }
-
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (minusHandler == null) return true;
+                minusHandler.removeCallbacks(mMinusAction);
+                minusHandler = null;
+                returnCounterMinusHelperInt = 0;
+            }
+            return false;
         });
 
-        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonMinus.setOnClickListener(view -> {
 
 
-                //There is no selected barcodeStr, select one first
-                if (cReturnorderBarcode.currentReturnOrderBarcode == null) {
-                    cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
-                    return;
-                }
-                mTryToChangeReturnorderQuantity(false, false, cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl());
+            //There is no selected barcodeStr, select one first
+            if (cReturnorderBarcode.currentReturnOrderBarcode == null) {
+                cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_select_one_of_multiple_barcodes),null);
+                return;
             }
+            mTryToChangeReturnorderQuantity(false, false, cReturnorderBarcode.currentReturnOrderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     private void mSetEditorActionListener() {
 
 
-        this.quantityText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                quantityText.requestFocus();
-                quantityText.setSelection(0, quantityText.getText().toString().length());
-            }
+        this.quantityText.setOnClickListener(v -> {
+            quantityText.requestFocus();
+            quantityText.setSelection(0, quantityText.getText().toString().length());
         });
 
 
-        quantityText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    mTryToChangeReturnorderQuantity(true,
-                            true,
-                            cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl());
+        quantityText.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                mTryToChangeReturnorderQuantity(true,
+                        true,
+                        cReturnorderLine.currentReturnOrderLine.getQuantityHandledTakeDbl());
 
-                    imageButtonDone.callOnClick();
-                }
-                return true;
+                imageButtonDone.callOnClick();
             }
+            return true;
         });
     }
 
     private void mSetDoneListener(){
 
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mHandleDone();
-            }
-        });
+        this.imageButtonDone.setOnClickListener(view -> mHandleDone());
 
     }
 
     private void mSetReasonListener(){
-        this.imageButtonReason.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                if (cReturnorderLine.currentReturnOrderLine.nieuweRegelBln) {
-                    mShowAddReasonFragment();
-                }
+        this.imageButtonReason.setOnClickListener(view -> {
+            if (cReturnorderLine.currentReturnOrderLine.nieuweRegelBln) {
+                mShowAddReasonFragment();
             }
         });
     }
@@ -867,22 +827,8 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
 
     }
 
-    private void mHideArticleInfo(){
 
-        this.articleInfoContainer.setVisibility(View.GONE);
-        ConstraintLayout.LayoutParams newCardViewLayoutParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        newCardViewLayoutParams.setMargins(15,15,15,15);
-        this.articleContainer.setLayoutParams(newCardViewLayoutParams);
-
-        ConstraintSet constraintSetSpace = new ConstraintSet();
-        constraintSetSpace.clone(this.returnArticleDetailContainer);
-        constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
-        constraintSetSpace.applyTo(this.returnArticleDetailContainer);
-
-    }
-
-
-    private Runnable mMinusAction = new Runnable() {
+    private final Runnable mMinusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonMinus.performClick();
@@ -902,7 +848,7 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
         }
     };
 
-    private Runnable mPlusAction = new Runnable() {
+    private final Runnable mPlusAction = new Runnable() {
         @Override
         public void run() {
             imageButtonPlus.performClick();
@@ -930,23 +876,20 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     }
 
     private void mSetImageButtonBarcodeListener() {
-        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.imageButtonBarcode.setOnClickListener(pvView -> {
 
-                if (cReturnorderLine.currentReturnOrderLine.barcodeObl() == null || cReturnorderLine.currentReturnOrderLine.barcodeObl().size() == 0) {
-                    return;
-                }
-
-                //If we only have one barcodeStr, then automatticaly select that barcodeStr
-                if (cReturnorderLine.currentReturnOrderLine.barcodeObl().size() == 1) {
-                    pHandleScan(cBarcodeScan.pFakeScan(cReturnorderLine.currentReturnOrderLine.barcodeObl().get(0).getBarcodeStr()));
-                    return;
-                }
-
-                mShowBarcodeSelectFragment();
-
+            if (cReturnorderLine.currentReturnOrderLine.barcodeObl() == null || cReturnorderLine.currentReturnOrderLine.barcodeObl().size() == 0) {
+                return;
             }
+
+            //If we only have one barcodeStr, then automatticaly select that barcodeStr
+            if (cReturnorderLine.currentReturnOrderLine.barcodeObl().size() == 1) {
+                pHandleScan(cBarcodeScan.pFakeScan(cReturnorderLine.currentReturnOrderLine.barcodeObl().get(0).getBarcodeStr()));
+                return;
+            }
+
+            mShowBarcodeSelectFragment();
+
         });
     }
 
@@ -958,37 +901,26 @@ public class ReturnArticleDetailActivity extends AppCompatActivity implements iI
     private  void mGoBackToDocumentActivity() {
         Intent intent = new Intent(cAppExtension.context, ReturnorderDocumentActivity.class);
         ReturnorderDocumentActivity.busyBln = false;
-        cAppExtension.activity.startActivity(intent);
-        cAppExtension.activity.finish();
+        startActivity(intent);
+        finish();
     }
 
     private void mShowAcceptFragment(){
-        boolean ignoreAccept = false;
-
-
         cUserInterface.pCheckAndCloseOpenDialogs();
 
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderbusy_header),
                 cAppExtension.activity.getString(R.string.message_orderbusy_text),
-                cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line),ignoreAccept);
+                cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
         acceptRejectFragment.setCancelable(true);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
     private void mSetArticleImageListener() {
-        this.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowFullArticleFragment();
-            }
-        });
+        this.articleThumbImageView.setOnClickListener(view -> mShowFullArticleFragment());
     }
 
     private void mShowFullArticleFragment() {
