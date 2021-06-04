@@ -312,11 +312,16 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     @Override
-    public void mSetToolbar(String pvScreenTitle) {
+    public void mSetToolbar(String pvScreenTitleStr) {
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
-        this.toolbarTitle.setText(pvScreenTitle);
+        this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
         this.toolbarSubtext.setSelected(true);
+
+        if (cPickorderLine.currentPickOrderLine != null) {
+            this.toolbarSubtext.setText(cPickorderLine.currentPickOrderLine.getBinCodeStr());
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -408,8 +413,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-
-
         if (!cPickorder.currentPickOrder.isPABln()) {
             PickorderPickActivity.destionationScannedBln = true;
         }
@@ -428,6 +431,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         if (cPickorder.currentPickOrder.isPVBln()) {
             this.mHandlePVScan(pvBarcodeScan);
+            return;
+        }
+
+        if (cPickorderLine.currentPickOrderLine == null) {
             return;
         }
 

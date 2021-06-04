@@ -5,7 +5,7 @@
         android:title="@string/filter_orderlines_enable"
         android:summary="@string/filter_orderlines_enable_summary"
         android:icon="@drawable/ic_nofilter_black_24dp"
-        android:defaultValue="true"
+        android:defaultValue="false"
         />
     <PreferenceCategory
         android:title="@string/filter_orderlines_title">
@@ -16,7 +16,7 @@
             android:summaryOff="@string/show_all"
             android:summaryOn="@string/filter_orderlines_processing_summary_on"
             android:dependency="@string/filter_orderlines_enable_key"
-            android:defaultValue="true"
+            android:defaultValue="false"
         />
         <!--android:summary="@string/filter_orderlines_processing_summary"-->
         <SwitchPreference
@@ -26,7 +26,7 @@
             android:summaryOff="@string/show_all"
             android:icon="@drawable/ic_circle_one_black_24p"
             android:dependency="@string/filter_orderlines_enable_key"
-            android:defaultValue="true"
+            android:defaultValue="false"
             />
         <!--android:summary="@string/filter_orderlines_singlearticles_summary"-->
         <SwitchPreference
@@ -34,7 +34,7 @@
             android:title="@string/filter_orderlines_my_orders"
             android:icon="@drawable/ic_me_black_24dp"
             android:dependency="@string/filter_orderlines_enable_key"
-            android:defaultValue="true"
+            android:defaultValue="false"
             />
         <!--android:summary="@string/filter_orderlines_my_orders_summary"-->
         <SwitchPreference
@@ -42,7 +42,7 @@
             android:title="@string/filter_orderlines_their_orders"
             android:icon="@drawable/ic_others_black_24dp"
             android:dependency="@string/filter_orderlines_enable_key"
-            android:defaultValue="true"
+            android:defaultValue="false"
             />
         <!--android:summary="@string/filter_orderlines_their_orders_summary"-->
         <SwitchPreference
@@ -50,7 +50,7 @@
             android:title="@string/filter_orderlines_nobodys_orders"
             android:icon="@drawable/ic_nobody_black_24dp"
             android:dependency="@string/filter_orderlines_enable_key"
-            android:defaultValue="true"
+            android:defaultValue="false"
             />
         <!--android:summary="@string/filter_orderlines_nobodys_orders_summary"-->
     </PreferenceCategory>

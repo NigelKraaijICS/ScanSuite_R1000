@@ -19,10 +19,10 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
 
     //Region Public Properties
 
-    public class UserViewHolder extends RecyclerView.ViewHolder{
-        private TextView textViewName;
-        private TextView textViewUserName;
-        private TextView textViewInitials;
+    public static class UserViewHolder extends RecyclerView.ViewHolder{
+        private final TextView textViewName;
+        private final TextView textViewUserName;
+        private final TextView textViewInitials;
         public LinearLayout userItemLinearLayout;
 
         public UserViewHolder(View pvItemView) {
@@ -55,22 +55,18 @@ public class cUserAdapter extends RecyclerView.Adapter<cUserAdapter.UserViewHold
     @Override
     public cUserAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = this.LayoutInflaterObject.inflate(R.layout.recycler_user, parent, false);
-        return new cUserAdapter.UserViewHolder(itemView);
+        return new UserViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull cUserAdapter.UserViewHolder holder, int position) {
         if (cUser.allUsersObl != null) {
-            final cUser User = cUser.allUsersObl.get(position);
+            int safePosition = holder.getAdapterPosition();
+            final cUser User = cUser.allUsersObl.get(safePosition);
             holder.textViewName.setText(User.getNameStr());
             holder.textViewUserName.setText(User.getUsernameStr());
             holder.textViewInitials.setText(User.getInitialsStr());
-            holder.userItemLinearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mUserSelected(User);
-                }
-            });
+            holder.userItemLinearLayout.setOnClickListener(v -> mUserSelected(User));
         }
     }
 

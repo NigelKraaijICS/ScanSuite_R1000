@@ -321,6 +321,11 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
             //Clear current barcodeStr
             cIntakeorderBarcode.currentIntakeOrderBarcode = null;
+
+            if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
+                return;
+            }
+
             hulpResult = cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pSummaryLineBusyRst();
             if (!hulpResult.resultBln) {
                 this.mStepFailed(hulpResult.messagesStr());

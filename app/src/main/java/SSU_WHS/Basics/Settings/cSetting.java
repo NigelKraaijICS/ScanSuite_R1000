@@ -595,7 +595,7 @@ public class cSetting {
         return Setting.valueStr;
     }
 
-    public static Boolean PICK_SORT_LOCATION_ADVICE_MANDATORY(){
+    public static boolean PICK_SORT_LOCATION_ADVICE_MANDATORY(){
 
         cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_SORT_LOCATION_ADVICE_MANDATORY);
         if (Setting == null) {
@@ -603,7 +603,7 @@ public class cSetting {
         }
 
         if (Setting.valueStr.equalsIgnoreCase( "")) {
-            return  null;
+            return  false;
         }
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);

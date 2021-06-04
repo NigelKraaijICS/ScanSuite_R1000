@@ -238,16 +238,17 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         this.mFindViews();
 
+        this.mSetListeners();
+
+        if (cPickorder.currentPickOrder == null) {
+            return;
+        }
+
         this.mSetToolbar(getResources().getString(R.string.screentitle_pickorderlines));
 
         this.mFieldsInitialize();
 
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
-
         this.mInitScreen();
-
-        cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -281,7 +282,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         this.toolbarImage.setImageResource(R.drawable.ic_menu_pick);
         this.toolbarTitle.setText(pvScreenTitleStr);
         this.toolbarTitle.setSelected(true);
-
         this.toolbarSubtext.setText(cPickorder.currentPickOrder.getOrderNumberStr());
         this.toolbarSubtext.setSelected(true);
 
@@ -295,6 +295,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     @Override
     public void mFieldsInitialize() {
+
         this.imageButtonCloseOrder.setVisibility(View.INVISIBLE);
         this.mSetTabLayout();
     }

@@ -42,7 +42,6 @@ import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
-import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
 import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
@@ -50,7 +49,6 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.R;
 
 public class SortorderSortActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -472,7 +470,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         boolean adviceMatchedBln = false;
 
         //We have advice(s) and it is mandatory, so check if we have a correct scan
-        if (this.sortingAdviceObl.size() > 0 && cSetting.PICK_SORT_LOCATION_ADVICE_MANDATORY()) {
+        if (this.sortingAdviceObl != null &&  this.sortingAdviceObl.size() > 0 && cSetting.PICK_SORT_LOCATION_ADVICE_MANDATORY()) {
 
             for (String adviceStr : this.sortingAdviceObl) {
                 if (adviceStr.equalsIgnoreCase(barcodeWithoutPrefixStr)) {
@@ -557,122 +555,81 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
     @SuppressLint("ClickableViewAccessibility")
     private void mSetPlusListener() {
 
-        this.imageButtonPlus.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (plusHandler != null) return true;
-                    plusHandler = new Handler();
-                    plusHandler.postDelayed(plusAction, 750);
-                }
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(plusHandler == null) return true;
-                    plusHandler.removeCallbacks(plusAction);
-                    plusHandler = null;
-                    pickCounterPlusHelperInt = 0;
-                }
-                return false;
+        this.imageButtonPlus.setOnTouchListener((v, event) -> {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (plusHandler != null) return true;
+                plusHandler = new Handler();
+                plusHandler.postDelayed(plusAction, 750);
             }
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(plusHandler == null) return true;
+                plusHandler.removeCallbacks(plusAction);
+                plusHandler = null;
+                pickCounterPlusHelperInt = 0;
+            }
+            return false;
         });
 
-        this.imageButtonPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mTryToChangeSortedQuantity(true, false,  cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
-            }
-        });
+        this.imageButtonPlus.setOnClickListener(view -> mTryToChangeSortedQuantity(true, false,  cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl()));
 
-    }
-
-    private void mShowNumberPickerFragment() {
-
-        cUserInterface.pCheckAndCloseOpenDialogs();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(cPublicDefinitions.NUMBERINTENT_CURRENTQUANTITY, cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getQuantityCheckedDbl().intValue());
-        bundle.putDouble(cPublicDefinitions.NUMBERINTENT_MAXQUANTITY, cPickorderLinePackAndShip.currentPickorderLinePackAndShip.getQuantityDbl().intValue());
-
-        NumberpickerFragment numberpickerFragment = new NumberpickerFragment();
-        numberpickerFragment.setArguments(bundle);
-
-        numberpickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.NUMBERPICKERFRAGMENT_TAG);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void mSetMinusListener() {
 
-        this.imageButtonMinus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+        this.imageButtonMinus.setOnTouchListener((v, event) -> {
 
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (minusHandler != null) return true;
-                    minusHandler = new Handler();
-                    minusHandler.postDelayed(minusAction, 750);
-                }
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(minusHandler == null) return true;
-                    minusHandler.removeCallbacks(minusAction);
-                    minusHandler = null;
-                    pickCounterMinusHelperInt = 0;
-                }
-                return false;
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (minusHandler != null) return true;
+                minusHandler = new Handler();
+                minusHandler.postDelayed(minusAction, 750);
             }
-
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(minusHandler == null) return true;
+                minusHandler.removeCallbacks(minusAction);
+                minusHandler = null;
+                pickCounterMinusHelperInt = 0;
+            }
+            return false;
         });
 
-        this.imageButtonMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
-                mTryToChangeSortedQuantity(false, false,  cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
-            }
+        this.imageButtonMinus.setOnClickListener(view -> {
+            imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
+            mTryToChangeSortedQuantity(false, false,  cPickorderBarcode.currentPickorderBarcode.getQuantityPerUnitOfMeasureDbl());
         });
     }
 
     private void mSetArticleImageListener() {
-        this.articleThumbImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowFullArticleFragment();
-            }
-        });
+        this.articleThumbImageView.setOnClickListener(view -> mShowFullArticleFragment());
     }
 
     private void mSetImageButtonBarcodeListener() {
-        this.imageButtonBarcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
+        this.imageButtonBarcode.setOnClickListener(pvView -> {
 
-                if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
-                    return;
-                }
-
-                mEnablePlusMinusAndBarcodeSelectViews();
-
-                //If we only have one barcodeStr, then automatticaly select that barcodeStr
-                if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
-                   pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
-                    return;
-                }
-
-                mShowBarcodeSelectFragment();
-
+            if (cPickorderLine.currentPickOrderLine.barcodesObl == null || cPickorderLine.currentPickOrderLine.barcodesObl.size() == 0) {
+                return;
             }
+
+            mEnablePlusMinusAndBarcodeSelectViews();
+
+            //If we only have one barcodeStr, then automatticaly select that barcodeStr
+            if (cPickorderLine.currentPickOrderLine.barcodesObl.size() == 1) {
+               pHandleScan(cBarcodeScan.pFakeScan(cPickorderBarcode.currentPickorderBarcode.getBarcodeStr()));
+                return;
+            }
+
+            mShowBarcodeSelectFragment();
+
         });
     }
 
     private void mSetDoneListener() {
-        this.imageButtonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.imageButtonDone.setOnClickListener(view -> {
 
-                if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
-                    mSortDone();
-                } else {
-                    mSortDoneForNow();
-                }
+            if (cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl())) {
+                mSortDone();
+            } else {
+                mSortDoneForNow();
             }
         });
     }
@@ -864,12 +821,9 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
         final AcceptRejectFragment acceptRejectFragment = new AcceptRejectFragment(cAppExtension.activity.getString(R.string.message_orderbusy_header),
                                                                                    cAppExtension.activity.getString(R.string.message_orderbusy_text),cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line), false);
         acceptRejectFragment.setCancelable(true);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // show my popup
-                acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
-            }
+        runOnUiThread(() -> {
+            // show my popup
+            acceptRejectFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ACCEPTREJECTFRAGMENT_TAG);
         });
     }
 
@@ -982,7 +936,7 @@ public class SortorderSortActivity extends AppCompatActivity implements iICSDefa
 
     }
 
-    private BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mNumberReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context pvContext, Intent pvIntent) {
             int numberChosenInt = 0;

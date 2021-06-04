@@ -499,6 +499,11 @@ public class CreateIntakeOrReceiveActivity extends AppCompatActivity implements 
     private  boolean mTryToLockOrderBln(){
 
         cResult hulpResult;
+
+        if (cIntakeorder.currentIntakeOrder == null) {
+            return false;
+        }
+
         hulpResult = cIntakeorder.currentIntakeOrder.pLockViaWebserviceRst();
         //Everything was fine, so we are done
         if (hulpResult.resultBln) {

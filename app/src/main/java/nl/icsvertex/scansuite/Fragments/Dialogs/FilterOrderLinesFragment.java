@@ -8,7 +8,6 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import nl.icsvertex.scansuite.Activities.IntakeAndReceive.IntakeAndReceiveSelectActivity;
@@ -80,26 +79,19 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
         super.onCreate(savedInstanceState);
         Preference applyButton = findPreference(getString(R.string.filter_orderlines_apply_key));
         if (applyButton != null) {
-            applyButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    return true;
-                }
-            });
+            applyButton.setOnPreferenceClickListener(preference -> true);
         }
         cUserInterface.pEnableScanner();
     }
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        SharedPreferences.OnSharedPreferenceChangeListener spChanged = new
-                SharedPreferences.OnSharedPreferenceChangeListener() {
-                    @Override
-                    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                                          String key) {
 
-                    }
-                };
-        PreferenceManager.getDefaultSharedPreferences(cAppExtension.activity.getApplicationContext()).registerOnSharedPreferenceChangeListener(spChanged);
-    }
+// todo: kijken of dit niet alles en zijn moeder kapot maakt
+
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        SharedPreferences.OnSharedPreferenceChangeListener spChanged = (sharedPreferences, key) -> {
+//
+//        };
+//        PreferenceManager.getDefaultSharedPreferences(cAppExtension.activity.getApplicationContext()).registerOnSharedPreferenceChangeListener(spChanged);
+//    }
 }

@@ -574,12 +574,8 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
         cUserInterface.pCheckAndCloseOpenDialogs();
 
-        final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
-
         Intent intent = new Intent(cAppExtension.context, ShiporderLinesActivity.class);
-        View clickedOrder = container.findViewWithTag(cPickorder.currentPickOrder.getOrderNumberStr());
-        ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER));
-        ActivityCompat.startActivity(cAppExtension.context, intent, activityOptions.toBundle());
+        startActivity(intent);
     }
 
     private void mTryToLeaveActivity() {
