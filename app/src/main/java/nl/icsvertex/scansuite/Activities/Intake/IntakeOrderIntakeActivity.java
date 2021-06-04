@@ -87,6 +87,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     private  ImageView toolbarImage;
     private  TextView toolbarTitle;
     private  TextView toolbarSubtext;
+    private TextView textViewHintScanArticleOrBin;
 
     private  CardView articleContainer;
     private ConstraintLayout articleInfoContainer;
@@ -342,6 +343,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.imageButtonMinus = findViewById(R.id.imageButtonMinus);
         this.imageButtonPlus = findViewById(R.id.imageButtonPlus);
         this.imageButtonDone = findViewById(R.id.imageButtonDone);
+        this.textViewHintScanArticleOrBin = findViewById(R.id.textViewHintScanArticleOrBin);
 
         this.recyclerScanActions = findViewById(R.id.recyclerScanActions);
 
@@ -386,7 +388,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.mShowLines();
         this.mHideArticleInfo();
         this.mShowItemPropertyActivity();
-        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
+        this.mSetHint();
     }
 
     @Override
@@ -509,9 +511,9 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         this.imageButtonBarcode.setVisibility(View.INVISIBLE);
         this.imageButtonMinus.setVisibility(View.INVISIBLE);
         this.imageButtonPlus.setVisibility(View.INVISIBLE);
-        this.quantityText.setVisibility(View.INVISIBLE);
+        //this.quantityText.setVisibility(View.INVISIBLE);
 
-        IntakeOrderIntakeActivity.handledViaPropertysBln = false;
+       // IntakeOrderIntakeActivity.handledViaPropertysBln = false;
         this.articleScannedBln = true;
 
     }
@@ -685,6 +687,11 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             this.imageButtonPlus.setVisibility(View.VISIBLE);
             this.imageButtonBarcode.setVisibility(View.VISIBLE);
         }
+
+        if (IntakeOrderIntakeActivity.handledViaPropertysBln){
+            this.imageButtonMinus.setVisibility(View.INVISIBLE);
+            this.imageButtonPlus.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void mHideArticleInfo(){
@@ -698,7 +705,6 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         constraintSetSpace.clone(this.intakeorderIntakeContainer);
         constraintSetSpace.connect(this.articleContainer.getId(), ConstraintSet.TOP, toolbar.getId(), ConstraintSet.BOTTOM);
         constraintSetSpace.applyTo(this.intakeorderIntakeContainer);
-
     }
 
     //Scans and manual input
@@ -761,6 +767,10 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
     }
 
     private void mNumberClicked() {
+
+        if (IntakeOrderIntakeActivity.handledViaPropertysBln){
+            return;
+        }
 
         if (cIntakeorderBarcode.currentIntakeOrderBarcode == null) {
             cUserInterface.pDoNope(quantityText, false, false);
@@ -1156,6 +1166,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
 
     private void mSetArticleInfo(){
 
+        this.imageButtonNoInputPropertys.setVisibility(View.GONE);
+
         if (cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine == null) {
             this.articleDescriptionText.setText(cAppExtension.activity.getString(R.string.novalueyet));
             this.articleDescription2Text.setText(cAppExtension.activity.getString(R.string.novalueyet));
@@ -1179,7 +1191,28 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             this.articleDescription2Text.setVisibility(View.GONE);
         }
 
+    }
 
+    private void mSetHint(){
+        if (IntakeOrderIntakeActivity.handledViaPropertysBln && quantityScannedDbl > 0){
+            this.textViewHintScanArticleOrBin.setText(cAppExtension.activity.getString(R.string.message_scan_bin));
+            return;
+        }
+
+        if(!cIntakeorder.currentIntakeOrder.getReceiveNoExtraPiecesBln()){
+            if (this.quantityScannedDbl == 0) {
+                this.textViewHintScanArticleOrBin.setText(cAppExtension.activity.getString(R.string.message_scan_article));
+            }else {
+                this.textViewHintScanArticleOrBin.setText(cAppExtension.activity.getString(R.string.message_scan_bin_or_article));
+            }
+
+        } else {
+            if (this.quantityScannedDbl.equals(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.getQuantityDbl())){
+                this.textViewHintScanArticleOrBin.setText(cAppExtension.activity.getString(R.string.message_scan_bin));
+            } else {
+                this.textViewHintScanArticleOrBin.setText(cAppExtension.activity.getString(R.string.message_scan_bin_or_article));
+            }
+        }
     }
 
     private void mSetQuantityInfo(){
@@ -1190,7 +1223,7 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        this.quantityText.setText("0");
+        this.quantityText.setText(pDoubleToStringStr(this.quantityScannedDbl));
         this.quantityRequiredText.setText(pDoubleToStringStr(cIntakeorderMATSummaryLine.currentIntakeorderMATSummaryLine.pGetQuantityToHandleDbl()));
 
         if (cIntakeorder.currentIntakeOrder.isGenerated()) {

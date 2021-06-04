@@ -727,7 +727,6 @@ public class IntakeOrderLinePropertyInputActivity extends AppCompatActivity impl
     private void mShowIntakeActivity(){
         Intent intent = new Intent(cAppExtension.context, IntakeOrderIntakeActivity.class);
         startActivity(intent);
-       finish();
     }
 
 

@@ -63,6 +63,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
+    <TextView
+        style="@style/userNameText"
+        android:id="@+id/textViewHintScanArticleOrBin"
+        android:layout_margin="@dimen/default_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageButtonDone"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButtonDone"
+        app:layout_constraintTop_toTopOf="@+id/imageButtonDone"
+        />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/actionMenuNavigation"
@@ -73,4 +82,5 @@
         app:menu="@menu/menu_intakeactions"
         android:hapticFeedbackEnabled="true"
         />
+
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -233,6 +233,8 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
+        this.recyclerSearchView.setQuery("", true);
+        this.recyclerSearchView.setIconified(true);
 
     }
 
