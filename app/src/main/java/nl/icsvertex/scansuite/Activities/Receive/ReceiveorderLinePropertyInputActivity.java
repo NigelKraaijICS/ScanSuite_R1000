@@ -146,8 +146,7 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        //Set listeners here, so click listeners only work after activity is shown
-        this.mSetListeners();
+
     }
 
     @Override
@@ -227,6 +226,9 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
         this.mFindViews();
 
         this.mSetToolbar(getResources().getString(R.string.screentitle_itemproperty_input));
+
+        //Set listeners here, so click listeners only work after activity is shown
+        this.mSetListeners();
 
         this.mFieldsInitialize();
 
