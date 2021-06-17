@@ -973,8 +973,8 @@ public class IntakeOrderIntakeActivity extends AppCompatActivity implements iICS
         //If internet is not connected
         if (!cConnection.isInternetConnectedBln()) {
             //could not send line, let user know but answer succes so user can go to next line
-            cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.couldnt_send_line_no_connection), null);
-            return;
+           cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.couldnt_send_line_no_connection),"", true, true);
+           return;
         }
 
         List<cIntakeorderBarcode> sortedBarcodeList = this.mSortBarcodeList(this.scannedBarcodesObl);

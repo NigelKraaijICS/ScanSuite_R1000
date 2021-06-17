@@ -168,8 +168,6 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
     @Override
     public boolean onPrepareOptionsMenu(Menu pvMenu) {
-      //  invalidateOptionsMenu();
-
         MenuItem item_bin_stock = pvMenu.findItem(R.id.item_bin_stock);
         MenuItem item_article_stock = pvMenu.findItem(R.id.item_article_stock);
         item_bin_stock.setVisible(true);

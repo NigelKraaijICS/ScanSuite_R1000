@@ -86,6 +86,9 @@ public class cPickorderViewModel extends AndroidViewModel {
 
     public cWebresult pGetPackagesFromWebserviceWrs() {return this.Repository.pGetPackagesFromWebserviceWrs(); }
 
+    public cWebresult pGetShippingMethodsFromWebserviceWrs() {return this.Repository.pGetShippingMethodsFromWebserviceWrs(); }
+
+
     public cWebresult pCreateCombinedPickViaWebserviceWrs( ) {return this.Repository.pCreateCombinedPickViaWebserviceWrs();}
 
     public cWebresult pAddOrderToCombinedPickViaWebserviceWrs( ) {return this.Repository.pAddOrderToCombinedPickViaWebserviceWrs();}

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 153,
-    "identityHash": "e26bac4661d62f049b2572064b12d85b",
+    "identityHash": "b7cac5224b25a394149ab321450c2afd",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -4081,12 +4081,18 @@
       },
       {
         "tableName": "PackAndShipShippingMethod",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `ShippingMethodCode` TEXT, `ShippingMethodValue` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordid` INTEGER PRIMARY KEY AUTOINCREMENT, `SourceNo` TEXT, `ShippingMethodCode` TEXT, `ShippingMethodValue` TEXT)",
         "fields": [
           {
             "fieldPath": "recordid",
             "columnName": "recordid",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sourceNoStr",
+            "columnName": "SourceNo",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -4373,7 +4379,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e26bac4661d62f049b2572064b12d85b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b7cac5224b25a394149ab321450c2afd')"
     ]
   }
 }

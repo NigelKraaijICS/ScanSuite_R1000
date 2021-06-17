@@ -149,7 +149,7 @@ public class ArticleInfoFragment extends Fragment implements iICSDefaultFragment
 
         }
 
-        ArticleInfoPagerAdapter articleInfoPagerAdapter = new ArticleInfoPagerAdapter(this.getChildFragmentManager(),  fragments);
+        ArticleInfoPagerAdapter articleInfoPagerAdapter = new ArticleInfoPagerAdapter(fragments);
         this.articleInfoViewpager.setAdapter(articleInfoPagerAdapter);
         this.articleInfoTabLayout.setupWithViewPager(articleInfoViewpager);
 

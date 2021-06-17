@@ -683,7 +683,7 @@ public class cPackAndShipOrder {
                     for (int i = 0, size = shippingMethodsObl.length(); i < size; i++)
                     {
                         JSONObject object =shippingMethodsObl.getJSONObject(i);
-                        cPackAndShipShippingMethod packAndShipShippingMethod = new cPackAndShipShippingMethod(object);
+                        cPackAndShipShippingMethod packAndShipShippingMethod = new cPackAndShipShippingMethod(object, "PS1");
                         packAndShipShippingMethod.pInsertInDatabaseBln();
 
                     }
@@ -977,7 +977,7 @@ public class cPackAndShipOrder {
             }
 
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
-                cPackAndShipShippingMethod packAndShipShipment = new cPackAndShipShippingMethod(jsonObject);
+                cPackAndShipShippingMethod packAndShipShipment = new cPackAndShipShippingMethod(jsonObject,"PS1");
                 packAndShipShipment.pInsertInDatabaseBln();
             }
 

@@ -36,6 +36,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETWAREHOUSELOCATIONS = "p_MagazijnlocatieGetSubsetJsonStr";
     public static String WEBMETHOD_GETWAREHOUSEORDERCOMPOSITEBARCODES = "p_WarehouseopdrachtCompositeBarcodesGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERBARCODES = "p_PickorderBarcodesGetJsonStr";
+    public static String WEBMETHOD_GETSHIPPINGMETHODS = "p_PickorderShippingmethodGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINEBARCODES = "p_PickorderRegelBarcodesGetJsonStr";
     public static String WEBMETHOD_GETARTICLEIMAGE = "p_ArtikelImageGetJsonStr";
     public static String WEBMETHOD_PICKORDERLINE_HANDLED = "p_PickorderRegelTakeHandledJsonStr";

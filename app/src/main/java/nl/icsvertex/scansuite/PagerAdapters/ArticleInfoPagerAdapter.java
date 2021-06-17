@@ -4,19 +4,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleInfoPagerAdapter extends FragmentPagerAdapter {
+import ICS.cAppExtension;
+
+public class ArticleInfoPagerAdapter extends FragmentStatePagerAdapter {
 
     //Region Private Properties
     private List<Fragment> fragmentsObl;
     //End Region Private Properties
 
     //Region Constructor
-    public ArticleInfoPagerAdapter(@NonNull FragmentManager pvFragmentManager, List<Fragment> pvFragmentObl) {
-        super(pvFragmentManager);
+    public ArticleInfoPagerAdapter(List<Fragment> pvFragmentObl) {
+        super(cAppExtension.fragmentManager, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.fragmentsObl = pvFragmentObl;
 
     }

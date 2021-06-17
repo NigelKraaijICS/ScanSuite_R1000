@@ -39,6 +39,7 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorderViewModel;
 import SSU_WHS.General.cDatabase;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethod;
 import SSU_WHS.Picken.FinishSinglePieceLine.cPickorderLineFinishSinglePiece;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
@@ -1121,6 +1122,13 @@ public class cPickorder{
 
         // Get all packages
         if (!this.pGetShippingPackagedViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
+            return result;
+        }
+
+        // Get all ShippingMethods
+        if (!this.pGetShippingMethodsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_packages_failed));
             return result;
@@ -2341,6 +2349,31 @@ public class cPickorder{
         }
         else {
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERCOMMENTS);
+            return false;
+        }
+    }
+
+    public boolean pGetShippingMethodsViaWebserviceBln(Boolean pvRefeshBln) {
+        if (pvRefeshBln) {
+            cPackAndShipShippingMethod.allShippingMethodsObl = null;
+            cPackAndShipShippingMethod.pTruncateTableBln();
+        }
+        cWebresult WebResult = this.getPickorderViewModel().pGetShippingMethodsFromWebserviceWrs();
+        if (WebResult.getResultBln() && WebResult.getSuccessBln()) {
+
+            if (cPackAndShipShippingMethod.allShippingMethodsObl == null) {
+                cPackAndShipShippingMethod.allShippingMethodsObl= new ArrayList<>();
+            }
+
+            for (JSONObject jsonObject : WebResult.getResultDtt()) {
+                cPackAndShipShippingMethod packAndShipShipment = new cPackAndShipShippingMethod(jsonObject,"PICKEN");
+                packAndShipShipment.pInsertInDatabaseBln();
+            }
+
+            return  true;
+
+        } else {
+            cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPACKANDSHIPSHIPPINGMETHODS);
             return false;
         }
     }

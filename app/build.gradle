@@ -6,8 +6,8 @@ android {
         applicationId "nl.icsvertex.scansuite"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 158104
-        versionName "1.5.8.104A"
+        versionCode 158105
+        versionName "1.5.8.105A"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -61,7 +61,7 @@ dependencies {
 
     //Firebase
 
-    implementation 'com.google.firebase:firebase-crashlytics:18.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.0.1'
     implementation 'com.google.firebase:firebase-analytics:19.0.0'
     implementation platform('com.google.firebase:firebase-bom:26.5.0')
     implementation 'com.google.firebase:firebase-perf'

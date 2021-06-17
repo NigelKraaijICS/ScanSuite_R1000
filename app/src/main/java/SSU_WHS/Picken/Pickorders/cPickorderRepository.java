@@ -22,6 +22,7 @@ import SSU_WHS.Basics.ShippingAgentServiceShippingUnits.cShippingAgentServiceShi
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
+import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethod;
 import SSU_WHS.Picken.PickorderLines.cPickorderLineEntity;
 import SSU_WHS.Picken.PickorderLines.iPickorderLineDao;
 import SSU_WHS.Picken.Shipment.cShipment;
@@ -885,6 +886,23 @@ public class cPickorderRepository {
         return webResultWrs;
     }
 
+    public cWebresult pGetShippingMethodsFromWebserviceWrs() {
+
+        List<String> resultObl = new ArrayList<>();
+        cWebresult webResultWrs = new cWebresult();
+
+        try {
+            webResultWrs = new mGetShippingMethodsAsyncTask().execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            webResultWrs.setResultBln(false);
+            webResultWrs.setSuccessBln(false);
+            resultObl.add(e.getLocalizedMessage());
+            webResultWrs.setResultObl(resultObl);
+            e.printStackTrace();
+        }
+        return webResultWrs;
+    }
+
     //Pack and Ship
 
 
@@ -1294,10 +1312,22 @@ public class cPickorderRepository {
                 l_PropertyInfo7Pin.setValue(cShipment.currentShipment.shippingAgentService().getServiceStr());
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
+                SoapObject shippingOptions = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_SHIPPINGOPTIONS);
+
+                if (cShipment.currentShipment.shippingMethodsObl() != null) {
+                    for (cPackAndShipShippingMethod packAndShipShippingMethod : cShipment.currentShipment.shippingMethodsObl()) {
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_INTERFACESHIPPINGOPTION);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_OPTIONCODE, packAndShipShippingMethod.shippingMethodCodeStr);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_INTERFACESPROPERTY_VALUECODE, packAndShipShippingMethod.shippingMethodValueStr);
+                        shippingOptions.addSoapObject(soapObject);
+                    }
+                }
+
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_SHIPPINGOPTIONS;
-                l_PropertyInfo8Pin.setValue("");
+                l_PropertyInfo8Pin.setValue(shippingOptions);
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
+
 
                 SoapObject shippingpackages = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_SHIPPINGPACKAGES);
 
@@ -2183,7 +2213,34 @@ public class cPickorderRepository {
         }
     }
 
+    private static class mGetShippingMethodsAsyncTask extends AsyncTask <Void, Void, cWebresult>{
+        @Override
+        protected cWebresult doInBackground(final Void... params){
+            cWebresult WebresultWrs = new cWebresult();
 
+            List<PropertyInfo> l_PropertyInfoObl = new ArrayList<>();
+
+            PropertyInfo l_PropertyInfo1Pin = new PropertyInfo();
+            l_PropertyInfo1Pin.name = cWebserviceDefinitions.WEBPROPERTY_LOCATION_NL;
+            l_PropertyInfo1Pin.setValue(cUser.currentUser.currentBranch.getBranchStr());
+            l_PropertyInfoObl.add(l_PropertyInfo1Pin);
+
+            PropertyInfo l_PropertyInfo2Pin = new PropertyInfo();
+            l_PropertyInfo2Pin.name = cWebserviceDefinitions.WEBPROPERTY_ORDERNUMBER;
+            l_PropertyInfo2Pin.setValue(cPickorder.currentPickOrder.getOrderNumberStr());
+            l_PropertyInfoObl.add(l_PropertyInfo2Pin);
+
+            try{
+                WebresultWrs = cWebresult.pGetwebresultWrs(cWebserviceDefinitions.WEBMETHOD_GETSHIPPINGMETHODS, l_PropertyInfoObl);
+            } catch (JSONException e) {
+                WebresultWrs.setResultBln(false);
+                WebresultWrs.setSuccessBln(false);
+                e.printStackTrace();
+            }
+
+            return WebresultWrs;
+        }
+    }
 
     //End Region Private Methods
 

@@ -3,7 +3,6 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +24,7 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
-import nl.icsvertex.scansuite.Activities.Inventory.InventoryorderBinsActivity;
+import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 import nl.icsvertex.scansuite.R;
 
 public class SetSerialFragment extends DialogFragment implements iICSDefaultFragment {
@@ -74,6 +72,7 @@ public class SetSerialFragment extends DialogFragment implements iICSDefaultFrag
     @Override
     public void onPause() {
         super.onPause();
+        cBarcodeScan.pUnregisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
     }
 
     @Override
@@ -82,6 +81,8 @@ public class SetSerialFragment extends DialogFragment implements iICSDefaultFrag
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
         Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(width, height);
+        cBarcodeScan.pRegisterBarcodeFragmentReceiver(this.getClass().getSimpleName());
+        cUserInterface.pEnableScanner();
     }
 
     @Override
@@ -94,11 +95,14 @@ public class SetSerialFragment extends DialogFragment implements iICSDefaultFrag
 
     @Override
     public void mFindViews() {
-        this.textViewSetSerialHeader = requireView().findViewById(R.id.textViewSetSerialHeader );
-        this.textViewSetSerialText = getView().findViewById(R.id.textViewSetSerialText);
-        this.editTextSetSerial = getView().findViewById(R.id.editTextSetSerial);
-        this.setSerialButton = getView().findViewById(R.id.setSerialButton);
-        this.cancelButton = getView().findViewById(R.id.cancelButton);
+
+        if (getView() != null) {
+            this.textViewSetSerialHeader = requireView().findViewById(R.id.textViewSetSerialHeader );
+            this.textViewSetSerialText = getView().findViewById(R.id.textViewSetSerialText);
+            this.editTextSetSerial = getView().findViewById(R.id.editTextSetSerial);
+            this.setSerialButton = getView().findViewById(R.id.setSerialButton);
+            this.cancelButton = getView().findViewById(R.id.cancelButton);
+        }
     }
 
 
@@ -121,37 +125,40 @@ public class SetSerialFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               dismiss();
-            }
-        });
+        this.cancelButton.setOnClickListener(view -> dismiss());
     }
-    private void mSetSetSerialListener() {
-        this.setSerialButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                if (editTextSetSerial.getText().toString().trim().isEmpty()) {
-                    cUserInterface.pDoNope(editTextSetSerial, true, true);
-                    return;
-                }
-                cSharedPreferences.setSerialNumerStr(editTextSetSerial.getText().toString());
-                dismiss();
+    private void mSetSetSerialListener() {
+        this.setSerialButton.setOnClickListener(view -> {
+
+            if (editTextSetSerial.getText().toString().trim().isEmpty()) {
+                cUserInterface.pDoNope(editTextSetSerial, true, true);
+                return;
             }
+            cSharedPreferences.setSerialNumerStr(editTextSetSerial.getText().toString());
+
+            if (cAppExtension.activity instanceof MainDefaultActivity) {
+                MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+                mainDefaultActivity.mActivityInitialize();
+            }
+
+            dismiss();
         });
     }
+
     private void mSetEditorActionListener() {
-        this.editTextSetSerial.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    setSerialButton.callOnClick();
-                }
-                return true;
+        this.editTextSetSerial.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                setSerialButton.callOnClick();
             }
+            return true;
         });
+    }
+
+    public void pHandleScan(cBarcodeScan pvBarcodeScan) {
+        this.editTextSetSerial.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+        this.setSerialButton.callOnClick();
+
     }
 
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONObject;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,9 @@ import SSU_WHS.PackAndShip.PackAndShipSetting.cPackAndShipSettingViewModel;
 
 public class cPackAndShipShippingMethod {
 
+    public String sourceNoStr;
+    public String getSourceNoStr() { return sourceNoStr; }
+
     public String shippingMethodCodeStr;
     public String getShippingMethodCodeStr() { return shippingMethodCodeStr; }
 
@@ -20,7 +24,6 @@ public class cPackAndShipShippingMethod {
     public String getShippingMethodValueStr() {
         return shippingMethodValueStr;
     }
-
 
     private cPackAndShipShippingMethodEntity packAndShipShippingMethodEntity;
 
@@ -38,9 +41,10 @@ public class cPackAndShipShippingMethod {
     //End Region Public Properties
 
     //Region Constructor
-    public cPackAndShipShippingMethod(JSONObject pvJsonObject) {
-        this.packAndShipShippingMethodEntity = new cPackAndShipShippingMethodEntity(pvJsonObject);
+    public cPackAndShipShippingMethod(JSONObject pvJsonObject, String pvModusStr) {
+        this.packAndShipShippingMethodEntity = new cPackAndShipShippingMethodEntity(pvJsonObject,pvModusStr);
 
+        this.sourceNoStr =  this.packAndShipShippingMethodEntity.getSourceNoStr();
         this.shippingMethodCodeStr = this.packAndShipShippingMethodEntity.getShippingMethodCodeStr();
         this.shippingMethodValueStr = this.packAndShipShippingMethodEntity.getShippingMethodValueStr();
     }

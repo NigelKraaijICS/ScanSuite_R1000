@@ -8,12 +8,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import SSU_WHS.General.cDatabase;
+import SSU_WHS.PackAndShip.PackAndShipOrders.cPackAndShipOrder;
 
 @Entity(tableName= cDatabase.TABLENAME_PACKANDSHIPSHIPPINGMETHOD)
 public class cPackAndShipShippingMethodEntity {
 
     @PrimaryKey(autoGenerate = true)
     public Integer recordid;
+
+    @ColumnInfo(name = cDatabase.SOURCENO_NAMESTR)
+    public String sourceNoStr;
+    public String getSourceNoStr() {return this.sourceNoStr;}
 
     @ColumnInfo(name = cDatabase.SHIPPINGMETHODCODE_NAMESTR)
     public String shippingMethodCodeStr;
@@ -28,8 +33,16 @@ public class cPackAndShipShippingMethodEntity {
 
     }
 
-    public cPackAndShipShippingMethodEntity(JSONObject pvJsonObject) {
+    public cPackAndShipShippingMethodEntity(JSONObject pvJsonObject,  String pvModusStr) {
         try {
+
+            if (pvModusStr.toUpperCase().equals("PICKEN")) {
+                this.sourceNoStr =  pvJsonObject.getString(cDatabase.SOURCENO_NAMESTR);
+            }
+            else
+            {
+                this.sourceNoStr = cPackAndShipOrder.currentPackAndShipOrder.getOrderNumberStr();
+            }
 
             this.shippingMethodCodeStr = pvJsonObject.getString(cDatabase.SHIPPINGMETHODCODE_NAMESTR);
             this.shippingMethodValueStr = pvJsonObject.getString(cDatabase.SHIPPINGMETHODVALUE_NAMESTR);

@@ -24,7 +24,7 @@ public class cPackAndShipOrderViewModel extends AndroidViewModel {
     public void insert(cPackAndShipOrderEntity pvPackAndShipOrderEntity) {this.Repository.insert(pvPackAndShipOrderEntity);}
     public void deleteAll() {this.Repository.deleteAll();}
 
-    public cWebresult pGetPackAndShipOrdersFromWebserviceWrs(String pvSearchTextStr) {return this.Repository.pGePackAndShipOrdersFromWebserviceWrs(pvSearchTextStr);}
+    public cWebresult pGetPackAndShipOrdersFromWebserviceWrs(String pvSearchTextStr) {return this.Repository.pGetPackAndShipOrdersFromWebserviceWrs(pvSearchTextStr);}
 
     public List<cPackAndShipOrderEntity> pGetPackAndShipOrdersWithFilterFromDatabaseObl(String pvCurrentUserStr, Boolean pvUseFiltersBln) {return this.Repository.pGetPackAndShipOrdersFromDatabaseWithFilterObl(pvCurrentUserStr, pvUseFiltersBln);}
 

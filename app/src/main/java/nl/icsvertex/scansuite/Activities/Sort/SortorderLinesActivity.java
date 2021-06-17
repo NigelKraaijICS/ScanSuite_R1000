@@ -801,6 +801,13 @@ public class SortorderLinesActivity extends AppCompatActivity implements iICSDef
             return result;
         }
 
+        // Get all shippingmethods
+        if (!cPickorder.currentPickOrder.pGetShippingMethodsViaWebserviceBln(true)) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_getting_methods_failed));
+            return result;
+        }
+
         // Get all adresses, if system settings Pick Shipping Sales == false then don't ask web service
         if (!cPickorder.currentPickOrder.pGetAdressesViaWebserviceBln(true)) {
             result.resultBln = false;

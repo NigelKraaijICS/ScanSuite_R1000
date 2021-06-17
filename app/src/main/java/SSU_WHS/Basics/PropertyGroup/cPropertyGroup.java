@@ -25,29 +25,27 @@ import SSU_WHS.Webservice.cWebserviceDefinitions;
 
 public class cPropertyGroup {
 
-    private String propertyGroupStr;
+    private final String propertyGroupStr;
     public String getPropertyGroupStr() { return propertyGroupStr; }
 
-    private String descriptionStr;
+    private final String descriptionStr;
     public String getDescriptionStr() { return descriptionStr; }
 
-    private String shortNameStr;
+    private final String shortNameStr;
     public String getShortNameStr() { return shortNameStr; }
 
-    private String imageBase64Str;
+    private final String imageBase64Str;
     public String getImageBase64Str() { return imageBase64Str; }
 
     public List<cPropertyGroupProperty> propertyObl;
 
     public  List<cPropertyGroupProperty> sortedPropertyObl() {
 
-        List<cPropertyGroupProperty> sortedPropertysObl = new ArrayList<>();
-
         if (this.propertyObl == null || this.propertyObl.size() == 0) {
             return  this.propertyObl;
         }
 
-        sortedPropertysObl.addAll(this.propertyObl);
+        List<cPropertyGroupProperty> sortedPropertysObl = new ArrayList<>(this.propertyObl);
 
         Collections.sort(sortedPropertysObl);
         Collections.reverse(sortedPropertysObl);
@@ -69,7 +67,7 @@ public class cPropertyGroup {
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cPropertyGroupViewModel.class);
     }
 
-    private cPropertyGroupEntity propertyGroupEntity;
+    private final cPropertyGroupEntity propertyGroupEntity;
     public  static List<cPropertyGroup> allPropertyGroupsObl;
 
     //Region Constructor

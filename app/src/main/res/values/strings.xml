@@ -193,6 +193,8 @@
     <!--region Password settings-->
     <string name="dialog_password_settings_button_login">Log in</string>
     <string name="dialog_password_settings_text">Enter password for settings</string>
+    <string name="dialog_password_enviroment_text">Enter password to configure an environment</string>
+    <string name="dialog_password_unknown_enviroment_text">No environment(s) availaibe\n\n Enter password to configure an environment</string>
     <string name="dialog_password_settings_title">Log in</string>
     <!--endregion Password Settings-->
 
@@ -573,6 +575,7 @@
     <string name="error_no_shippingagent_services_units_available">No shipping agent service units available</string>
     <string name="error_getting_pack_and_ship_lines_failed">Getting pack and ship lines failed</string>
     <string name="error_getting_packages_failed">Getting packages failed</string>
+    <string name="error_getting_methods_failed">Getting shipping methods failed</string>
     <string name="message_article_not_allowed">Article scan not allowed</string>
     <string name="dialog_error">error detail</string>
     <string name="shown">shown</string>

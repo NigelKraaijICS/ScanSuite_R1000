@@ -12,6 +12,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.ShippingAgentServices.cShippingAgentService;
 import SSU_WHS.Basics.ShippingAgents.cShippingAgent;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
+import SSU_WHS.PackAndShip.PackAndShipShippingMethod.cPackAndShipShippingMethod;
 import SSU_WHS.Picken.PickorderAddresses.cPickorderAddress;
 import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
 import SSU_WHS.Picken.PickorderLinePackAndShip.cPickorderLinePackAndShip;
@@ -24,7 +25,7 @@ public class cShipment {
 
     //Region Public Properties
 
-    private String sourceNoStr;
+    private final String sourceNoStr;
     public String getSourceNoStr() {
         return this.sourceNoStr;
     }
@@ -116,6 +117,24 @@ public class cShipment {
 
     }
 
+    public List<cPackAndShipShippingMethod> shippingMethodsObl(){
+
+        List<cPackAndShipShippingMethod> resultObl = new ArrayList<>();
+
+        if (cPackAndShipShippingMethod.allShippingMethodsObl == null || cPackAndShipShippingMethod.allShippingMethodsObl.size() == 0) {
+            return  resultObl;
+        }
+
+        for (cPackAndShipShippingMethod packAndShipShippingMethod :cPackAndShipShippingMethod.allShippingMethodsObl ) {
+            if (packAndShipShippingMethod.getSourceNoStr().equalsIgnoreCase(this.getSourceNoStr())) {
+                resultObl.add((packAndShipShippingMethod));
+            }
+        }
+
+        return  resultObl;
+
+    }
+
     public cShippingAgent shippingAgent () {
 
         cShippingAgent resultShippingAgent;
@@ -190,12 +209,7 @@ public class cShipment {
         this.quantityDbl = (double) 0;
         this.processingSequenceStr = "";
 
-        if (!cPickorder.currentPickOrder.PICK_SHIPPING_QC_CHECK_COUNT()) {
-            this.checkedBln = true;
-        }
-        else {
-            this.checkedBln = false;
-        }
+        this.checkedBln = !cPickorder.currentPickOrder.PICK_SHIPPING_QC_CHECK_COUNT();
 
     }
 

@@ -3,7 +3,6 @@ package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,11 +97,16 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
 
     @Override
     public void mFindViews() {
-        this.textViewAddBinHeader = requireView().findViewById(R.id.textViewAddBinHeader );
-        this.textViewAddBinText = getView().findViewById(R.id.textViewAddBinText);
-        this.editTextAddBin = getView().findViewById(R.id.editTextAddBin);
-        this.addBinButton = getView().findViewById(R.id.addBinButton);
-        this.cancelButton = getView().findViewById(R.id.cancelButton);
+
+        if (getView() != null) {
+            this.textViewAddBinHeader = requireView().findViewById(R.id.textViewAddBinHeader );
+            this.textViewAddBinText = getView().findViewById(R.id.textViewAddBinText);
+            this.editTextAddBin = getView().findViewById(R.id.editTextAddBin);
+            this.addBinButton = getView().findViewById(R.id.addBinButton);
+            this.cancelButton = getView().findViewById(R.id.cancelButton);
+        }
+
+
     }
 
 
@@ -125,46 +129,37 @@ public class AddBinFragment extends DialogFragment implements iICSDefaultFragmen
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.cancelButton.setOnClickListener(view -> {
 
-                InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
-                inventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
-                cAppExtension.dialogFragment.dismiss();
-            }
+            InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+            inventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
+            cAppExtension.dialogFragment.dismiss();
         });
     }
     private void mSetAddBinListener() {
-        this.addBinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.addBinButton.setOnClickListener(view -> {
 
-                if (editTextAddBin.getText().toString().trim().isEmpty()) {
-                    cUserInterface.pDoNope(editTextAddBin, true, true);
-                    return;
-                }
-
-                if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-
-                    InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
-                    inventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(editTextAddBin.getText().toString()), true);
-                    inventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
-                    cAppExtension.dialogFragment.dismiss();
-                }
-
+            if (editTextAddBin.getText().toString().trim().isEmpty()) {
+                cUserInterface.pDoNope(editTextAddBin, true, true);
+                return;
             }
+
+            if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+
+                InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
+                inventoryorderBinsActivity.pHandleScan(cBarcodeScan.pFakeScan(editTextAddBin.getText().toString()), true);
+                inventoryorderBinsActivity.pHandleAddBinFragmentDismissed();
+                cAppExtension.dialogFragment.dismiss();
+            }
+
         });
     }
     private void mSetEditorActionListener() {
-        this.editTextAddBin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    addBinButton.callOnClick();
-                }
-                return true;
+        this.editTextAddBin.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                addBinButton.callOnClick();
             }
+            return true;
         });
     }
 

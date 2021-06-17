@@ -201,6 +201,7 @@ public class AddArticleFragment extends DialogFragment implements iICSDefaultFra
         this.editTextAddArticle.setText(pvBarcodeScan.getBarcodeOriginalStr());
         this.addArticleButton.callOnClick();
     }
+
     private void mSetEditorActionListener() {
         this.editTextAddArticle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

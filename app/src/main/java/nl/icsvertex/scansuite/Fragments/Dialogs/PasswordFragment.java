@@ -5,7 +5,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,120 +146,114 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     }
 
     private void mSetPasswordCheckListener() {
-        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (cAppExtension.activity instanceof LoginActivity) {
-                    if (cUser.currentUser.pLoginBln(editPassword.getText().toString().trim())) {
-                        mRightPassword();
-                    }
-                    else {
-                        mWrongPassword();
-                    }
+        this.buttonLogin.setOnClickListener(view -> {
+            if (cAppExtension.activity instanceof LoginActivity) {
+                if (cUser.currentUser.pLoginBln(editPassword.getText().toString().trim())) {
+                    mRightPassword();
                 }
-                if (cAppExtension.activity instanceof MainDefaultActivity) {
-                    if (editPassword.getText().toString().equals(cPublicDefinitions.SETTINGS_PASSWORD)) {
-                        mRightPassword();
-                    }
-                    else {
-                        mWrongPassword();
-                    }
+                else {
+                    mWrongPassword();
                 }
-                if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-                    if (editPassword.getText().toString().equals(cSetting.INV_RESET_PASSWORD())) {
-                        mRightPassword();
-                    }
-                    else {
-                        mWrongPassword();
-                    }
-                }
-                if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-                    if (editPassword.getText().toString().equals(cSetting.INV_RESET_PASSWORD())) {
-                        mRightPassword();
-                    }
-                    else {
-                        mWrongPassword();
-                    }
-                }
-                if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
-                    if (editPassword.getText().toString().equals(cSetting.RECEIVE_STORE_DEVIATIONS_PASSWORD())) {
-                        mRightPassword();
-                    }
-                    else {
-                        mWrongPassword();
-                    }
-                }
-
-                if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity || cAppExtension.activity instanceof  ReceiveLinesActivity)  {
-                    if (editPassword.getText().toString().equals(cSetting.RECEIVE_RESET_PASSWORD())) {
-                        mRightPassword();
-                    }
-                    else {
-                        mWrongPassword();
-                    }
-                }
-
             }
+            if (cAppExtension.activity instanceof MainDefaultActivity) {
+                if (editPassword.getText().toString().equals(cPublicDefinitions.SETTINGS_PASSWORD)) {
+                    mRightPassword();
+                }
+                else {
+                    mWrongPassword();
+                }
+            }
+            if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+                if (editPassword.getText().toString().equals(cSetting.INV_RESET_PASSWORD())) {
+                    mRightPassword();
+                }
+                else {
+                    mWrongPassword();
+                }
+            }
+            if (cAppExtension.activity instanceof InventoryorderBinActivity) {
+                if (editPassword.getText().toString().equals(cSetting.INV_RESET_PASSWORD())) {
+                    mRightPassword();
+                }
+                else {
+                    mWrongPassword();
+                }
+            }
+            if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
+                if (editPassword.getText().toString().equals(cSetting.RECEIVE_STORE_DEVIATIONS_PASSWORD())) {
+                    mRightPassword();
+                }
+                else {
+                    mWrongPassword();
+                }
+            }
+
+            if (cAppExtension.activity instanceof ReceiveOrderReceiveActivity || cAppExtension.activity instanceof  ReceiveLinesActivity)  {
+                if (editPassword.getText().toString().equals(cSetting.RECEIVE_RESET_PASSWORD())) {
+                    mRightPassword();
+                }
+                else {
+                    mWrongPassword();
+                }
+            }
+
         });
     }
 
     private void mSetCancelListener() {
-        this.buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (cAppExtension.dialogFragment != null) {
+        this.buttonCancel.setOnClickListener(view -> {
+            if (cAppExtension.dialogFragment != null) {
 
-                    cAppExtension.dialogFragment.dismiss();
+                cAppExtension.dialogFragment.dismiss();
 
-                    if (cAppExtension.activity instanceof  MainDefaultActivity) {
-                        dismiss();
-                        MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
-                        mainDefaultActivity.pPasswordCancelled();
-                    }
-
-                    if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-                        if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
-                            InventoryBinsDoneFragment inventoryBinsDoneFragment = (InventoryBinsDoneFragment)InventoryorderBinsActivity.currentBinFragment;
-                            inventoryBinsDoneFragment.pPasswordCancelled();
-                        }
-
-                    if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
-                            InventoryBinsTotalFragment inventoryBinsTotalFragment =  (InventoryBinsTotalFragment)InventoryorderBinsActivity.currentBinFragment;
-                            inventoryBinsTotalFragment.pPasswordCancelled();
-                        }
-                    }
-
-                    if (cAppExtension.activity instanceof InventoryorderBinActivity) {
-                        InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
-                        inventoryorderBinActivity.pPasswordCancelled();
-                    }
-
-                    if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
-                        IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
-                        intakeorderMATLinesActivity.pPasswordCancelled();
-                    }
-
-                    if (cAppExtension.dialogFragment instanceof EnvironmentFragment) {
-                        EnvironmentFragment environmentFragment = (EnvironmentFragment)cAppExtension.dialogFragment;
-                        environmentFragment.pHandlePasswordFragmentDismissed();
-                    }
-
-
-                    if (cAppExtension.activity instanceof LoginActivity) {
-                        LoginActivity loginActivity = (LoginActivity)cAppExtension.activity;
-                        loginActivity.pHandlePasswordFragmentDismissed();
-                    }
-
-                    if (cAppExtension.activity instanceof  ReceiveLinesActivity) {
-                        ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
-                        receiveLinesActivity.pPasswordCancelled();
-                    }
-                    if (cAppExtension.activity instanceof  ReceiveOrderReceiveActivity) {
-                        ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
-                        receiveOrderReceiveActivity.pPasswordCancelled();
-                    }
-
+                if (cAppExtension.activity instanceof  MainDefaultActivity) {
+                    dismiss();
+                    MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+                    mainDefaultActivity.pPasswordCancelled();
                 }
+
+                if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
+                    if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsDoneFragment) {
+                        InventoryBinsDoneFragment inventoryBinsDoneFragment = (InventoryBinsDoneFragment)InventoryorderBinsActivity.currentBinFragment;
+                        inventoryBinsDoneFragment.pPasswordCancelled();
+                    }
+
+                if (InventoryorderBinsActivity.currentBinFragment instanceof InventoryBinsTotalFragment) {
+                        InventoryBinsTotalFragment inventoryBinsTotalFragment =  (InventoryBinsTotalFragment)InventoryorderBinsActivity.currentBinFragment;
+                        inventoryBinsTotalFragment.pPasswordCancelled();
+                    }
+                }
+
+                if (cAppExtension.activity instanceof InventoryorderBinActivity) {
+                    InventoryorderBinActivity inventoryorderBinActivity = (InventoryorderBinActivity)cAppExtension.activity;
+                    inventoryorderBinActivity.pPasswordCancelled();
+                }
+
+                if (cAppExtension.activity instanceof IntakeorderMATLinesActivity) {
+                    IntakeorderMATLinesActivity intakeorderMATLinesActivity = (IntakeorderMATLinesActivity)cAppExtension.activity;
+                    intakeorderMATLinesActivity.pPasswordCancelled();
+                }
+
+                if (cAppExtension.dialogFragment instanceof EnvironmentFragment) {
+                    EnvironmentFragment environmentFragment = (EnvironmentFragment)cAppExtension.dialogFragment;
+                    environmentFragment.pHandlePasswordFragmentDismissed();
+                }
+
+
+                if (cAppExtension.activity instanceof LoginActivity) {
+                    LoginActivity loginActivity = (LoginActivity)cAppExtension.activity;
+                    loginActivity.pHandlePasswordFragmentDismissed();
+                }
+
+                if (cAppExtension.activity instanceof  ReceiveLinesActivity) {
+                    ReceiveLinesActivity receiveLinesActivity = (ReceiveLinesActivity)cAppExtension.activity;
+                    receiveLinesActivity.pPasswordCancelled();
+                }
+                if (cAppExtension.activity instanceof  ReceiveOrderReceiveActivity) {
+                    ReceiveOrderReceiveActivity receiveOrderReceiveActivity = (ReceiveOrderReceiveActivity)cAppExtension.activity;
+                    receiveOrderReceiveActivity.pPasswordCancelled();
+                }
+
             }
         });
     }
@@ -363,14 +356,11 @@ public class PasswordFragment extends DialogFragment implements iICSDefaultFragm
     }
 
     private void mSetEditorActionListener() {
-        this.editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
-                    buttonLogin.callOnClick();
-                }
-                return true;
+        this.editPassword.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_GO ) {
+                buttonLogin.callOnClick();
             }
+            return true;
         });
     }
 }

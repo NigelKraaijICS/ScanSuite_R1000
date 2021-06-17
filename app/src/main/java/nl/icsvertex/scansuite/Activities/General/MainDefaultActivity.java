@@ -9,8 +9,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -23,7 +21,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
 
 import java.util.concurrent.ExecutionException;
 
@@ -55,7 +52,6 @@ import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.ScannerLogon.cScannerLogon;
 import SSU_WHS.Webservice.cWebservice;
-
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
 import nl.icsvertex.scansuite.Fragments.Main.DateTimeFragment;
@@ -264,12 +260,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         // If scanner had different interface version then web service, then stop
         if (!cWebservice.pWebserviceIsAvailableAndRightVersionBln()) {
 
-            cAppExtension.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mShowHomeFragment();
-                }
-            });
+            cAppExtension.activity.runOnUiThread(this::mShowHomeFragment);
             return;
         }
 
@@ -501,7 +492,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                     toolbarImage.setImageResource(R.drawable.ic_calendar);
                     break;
                 case R.id.action_environments:
-                    cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_settings_text),false);
+                    cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_enviroment_text),false);
                     break;
 
                 case R.id.action_proglove:

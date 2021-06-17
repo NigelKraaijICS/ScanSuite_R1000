@@ -101,6 +101,7 @@ public class cEnvironment {
 
     private static void mDoNoEnvironments() {
         cUserInterface.pDoExplodingScreen(cAppExtension.context.getResources().getString(R.string.error_no_environments), "", true, false);
+        cUserInterface.pShowpasswordDialog(cAppExtension.context.getString(R.string.password_header_default) ,cAppExtension.context.getString(R.string.dialog_password_unknown_enviroment_text),false);
     }
 
     public static void pGetEnviromentsFromDatabase() {

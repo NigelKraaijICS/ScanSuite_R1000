@@ -82,6 +82,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SearchArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SetBinFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.SetSerialFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PasswordFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ReasonFragment;
@@ -593,6 +594,12 @@ public class cBarcodeScan {
                     if (cAppExtension.dialogFragment  instanceof DatePickerFragment){
                         DatePickerFragment datePickerFragment = (DatePickerFragment)cAppExtension.dialogFragment;
                         datePickerFragment.pHandleScan(barcodeScan);
+                    }
+
+
+                    if (cAppExtension.dialogFragment  instanceof SetSerialFragment){
+                        SetSerialFragment setSerialFragment = (SetSerialFragment)cAppExtension.dialogFragment;
+                        setSerialFragment.pHandleScan(barcodeScan);
                     }
 
                 }

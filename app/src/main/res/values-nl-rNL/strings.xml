@@ -824,4 +824,7 @@
     <string name="create_receive_or_intake">Aanmaken ontvangst of opslag</string>
     <string name="message_select_workflow">Selecteer een workflow</string>
     <string name="mainmenu_close_application">Sluit applicatie</string>
+    <string name="error_getting_methods_failed">Ophalen verzendmethoden mislukt</string>
+    <string name="dialog_password_enviroment_text">Vul een wachtwoord in om een omgeving te kunnen configureren</string>
+    <string name="dialog_password_unknown_enviroment_text">Geen omgeving(en) geconfigureerd\n\nGeef een wachtwoord in om een omgeving te configureren</string>
 </resources>

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -23,8 +22,6 @@ import ICS.Utils.cText;
 import ICS.Utils.cUpdate;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
-import SSU_WHS.Intake.Intakeorders.cIntakeorder;
 import SSU_WHS.Webservice.cWebservice;
 import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 import nl.icsvertex.scansuite.R;
@@ -126,6 +123,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         this.updateImageButton.setVisibility(View.INVISIBLE);
         this.textViewApplicationInstalled.setText(cDeviceInfo.getInstalldate());
         this.textViewApplicationLastUpdate.setText(cDeviceInfo.getLastUpdateDate());
+        this.checkDarkModus.setChecked(cSharedPreferences.getDarkModusBln());
     }
 
     @Override
@@ -141,57 +139,43 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
     //Region Private Methods
 
     private void mSetUpdateListener() {
-        this.updateImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cUpdate.mUpdateBln(updateImageButton ,"");
-            }
-        });
+        this.updateImageButton.setOnClickListener(view -> cUpdate.mUpdateBln(updateImageButton ,""));
     }
 
     private void mSetDarkModusListener() {
-        this.checkDarkModus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
+        this.checkDarkModus.setOnCheckedChangeListener((compoundButton, show) -> {
 
-                cSharedPreferences.setDarkModusBln(checkDarkModus.isChecked());
+            cSharedPreferences.setDarkModusBln(checkDarkModus.isChecked());
 
-                if (cAppExtension.activity instanceof  MainDefaultActivity) {
-                    MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
-                    mainDefaultActivity.pChangeDarkModus();
-                }
+            if (cAppExtension.activity instanceof  MainDefaultActivity) {
+                MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+                mainDefaultActivity.pChangeDarkModus();
             }
         });
     }
 
     private void mTestWebserviceListener() {
-        this.testWebserviceImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (cWebservice.pGetWebserviceAvailableBln()) {
-                    cUserInterface.pShowToastMessage(getString(R.string.message_webservice_live) , null);
-                    cUserInterface.pDoYep(textViewWebservice, true, false);
-                }
-                else {
-                    cUserInterface.pShowToastMessage( getString(R.string.message_webservice_not_live) , null);
-                    cUserInterface.pDoNope(textViewWebservice, true,false);
-                }
+        this.testWebserviceImageButton.setOnClickListener(view -> {
+            if (cWebservice.pGetWebserviceAvailableBln()) {
+                cUserInterface.pShowToastMessage(getString(R.string.message_webservice_live) , null);
+                cUserInterface.pDoYep(textViewWebservice, true, false);
+            }
+            else {
+                cUserInterface.pShowToastMessage( getString(R.string.message_webservice_not_live) , null);
+                cUserInterface.pDoNope(textViewWebservice, true,false);
             }
         });
     }
     private void mWebserviceURLLongClickListener() {
-        textViewWebservice.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (cText.pCopyTextToClipboard(textViewWebservice, "webservice url")) {
-                    cUserInterface.pShowToastMessage(getString(R.string.text_copied_to_clipboard), R.raw.headsupsound);
-                    textViewWebservice.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-                else {
-                    cUserInterface.pShowToastMessage(getString(R.string.text_not_copied_to_clipboard), R.raw.headsupsound);
-                }
-                return false;
+        textViewWebservice.setOnLongClickListener(view -> {
+            if (cText.pCopyTextToClipboard(textViewWebservice, "webservice url")) {
+                cUserInterface.pShowToastMessage(getString(R.string.text_copied_to_clipboard), R.raw.headsupsound);
+                textViewWebservice.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
+            else {
+                cUserInterface.pShowToastMessage(getString(R.string.text_not_copied_to_clipboard), R.raw.headsupsound);
+            }
+            return false;
         });
     }
 

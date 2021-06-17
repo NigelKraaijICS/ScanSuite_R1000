@@ -143,13 +143,6 @@ public class ReceiveorderLinePropertyInputActivity extends AppCompatActivity imp
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         this.mActivityInitialize();

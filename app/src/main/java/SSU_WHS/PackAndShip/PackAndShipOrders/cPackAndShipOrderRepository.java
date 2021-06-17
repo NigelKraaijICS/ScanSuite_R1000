@@ -54,7 +54,7 @@ public class cPackAndShipOrderRepository {
 
 
 
-    public cWebresult pGePackAndShipOrdersFromWebserviceWrs(String pvSearchTextStr) {
+    public cWebresult pGetPackAndShipOrdersFromWebserviceWrs(String pvSearchTextStr) {
 
         List<String> resultObl = new ArrayList<>();
         cWebresult webResultWrs = new cWebresult();

@@ -22,9 +22,11 @@ import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
 import nl.icsvertex.scansuite.Activities.General.LoginActivity;
 import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.SetSerialFragment;
 import nl.icsvertex.scansuite.R;
 
 public class HomeFragment extends DialogFragment implements iICSDefaultFragment {
@@ -39,6 +41,36 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
     //region Constructor
     public HomeFragment() {
         // Required empty public constructor
+    }
+
+    private static void onClick(View view) {
+
+
+        if (cDeviceInfo.getSerialnumberStr().isEmpty()) {
+            cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_set_serial_first), "", true, true);
+            mShowSetSerialFragment();
+            return;
+        }
+
+        if (cAppExtension.context instanceof MainDefaultActivity) {
+
+            if (!cConnection.isInternetConnectedBln()) {
+                final NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
+                noConnectionFragment.setCancelable(true);
+                noConnectionFragment.show(((MainDefaultActivity) cAppExtension.context).getSupportFragmentManager(), "NOCONNECTION");
+                return;
+            }
+
+            cUserInterface.pShowGettingData();
+
+            new Thread(() -> {
+                try {
+                    ((MainDefaultActivity) cAppExtension.context).pLetsGetThisPartyStartedOrNot();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
     }
     // end region Constructor
 
@@ -110,63 +142,34 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
         this.textViewDevicedetails.setText(cDeviceInfo.getDeviceInfoStr());
     }
 
-
-
     //Region Listeners
     private void mSetLogoListener() {
-        this.imageLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               mBounceLogo();
-                if (cardViewDeviceDetails.getVisibility() == View.VISIBLE) {
-                    cardViewDeviceDetails.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    cardViewDeviceDetails.setVisibility(View.VISIBLE);
-                }
+        this.imageLogo.setOnClickListener(view -> {
+           mBounceLogo();
+            if (cardViewDeviceDetails.getVisibility() == View.VISIBLE) {
+                cardViewDeviceDetails.setVisibility(View.INVISIBLE);
+            }
+            else {
+                cardViewDeviceDetails.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private void mSetLoginButtonListener() {
-        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                if (cDeviceInfo.getSerialnumberStr().isEmpty()) {
-                    cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_set_serial_first),"", true,true);
-                    return;
-                }
-
-                if (cAppExtension.context instanceof MainDefaultActivity) {
-
-                    if (!cConnection.isInternetConnectedBln()) {
-                        final NoConnectionFragment noConnectionFragment = new NoConnectionFragment();
-                        noConnectionFragment.setCancelable(true);
-                        noConnectionFragment.show(((MainDefaultActivity) cAppExtension.context).getSupportFragmentManager(), "NOCONNECTION");
-                        return;
-                    }
-
-                    cUserInterface.pShowGettingData();
-
-                    new Thread(new Runnable() {
-                        public void run() {
-                            try {
-                                ((MainDefaultActivity)cAppExtension.context).pLetsGetThisPartyStartedOrNot();
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
-                }
-            }
-        });
+        this.buttonLogin.setOnClickListener(HomeFragment::onClick);
     }
 
     //endregion Listeners
 
+    private static void mShowSetSerialFragment(){
 
+        cUserInterface.pCheckAndCloseOpenDialogs();
+
+        SetSerialFragment serialFragment = new SetSerialFragment();
+        serialFragment.setCancelable(true);
+        serialFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.SETSERIAL_TAG);
+
+    }
 
 }
 
