@@ -262,6 +262,7 @@ public class MoveLinesTakeFragment extends Fragment implements iICSDefaultFragme
             result.resultBln = false;
             return result;
         }
+        cUserInterface.pHideGettingData();
 
         //Set the scanned barcodeStr, so we can raise quantity in next activity
         this.mStartMoveLineTakeActivity();
