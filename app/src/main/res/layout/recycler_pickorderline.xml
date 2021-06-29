@@ -42,7 +42,7 @@
             style="@style/defaultRecyclerBINText"
             android:id="@+id/textViewBIN"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/textViewQuantity"
             app:layout_constraintTop_toTopOf="parent"
             />
         <TextView
@@ -70,7 +70,7 @@
             style="@style/biggerLineRecyclerQuantityText"
             android:id="@+id/textViewQuantity"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewSourceNo"
+            app:layout_constraintTop_toTopOf="@id/textViewBIN"
             />
         <TextView
             style="@style/defaultRecyclerDestinationText"

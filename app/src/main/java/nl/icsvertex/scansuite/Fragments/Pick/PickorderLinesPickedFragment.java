@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ICS.Interfaces.iICSDefaultFragment;
+import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
@@ -31,6 +31,9 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NothingHereFragment;
 import nl.icsvertex.scansuite.R;
+
+import static ICS.Utils.cSharedPreferences.pGetSharedPreferenceBoolean;
+import static SSU_WHS.General.cPublicDefinitions.SHAREDPREFERENCE_PICKLINES_SHOWDEFECTS;
 
 public class PickorderLinesPickedFragment extends Fragment implements iICSDefaultFragment, cPickorderLineRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
@@ -117,7 +120,14 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         this.mFieldsInitialize();
         this.mSetListeners();
         this.pGetData(cPickorder.currentPickOrder.pGetLinesHandledFromDatabaseObl());
+        this.mSetDefects();
         cUserInterface.pEnableScanner();
+    }
+
+    private void mSetDefects() {
+        Boolean pickShowDefects = pGetSharedPreferenceBoolean(SHAREDPREFERENCE_PICKLINES_SHOWDEFECTS, false);
+        switchDefects.setChecked(pickShowDefects);
+        mSetViewDefects(pickShowDefects);
     }
 
     @Override
@@ -227,7 +237,8 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
         this.switchDefects.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean show) {
-                getPickorderLineAdapter().pShowDefects(show);
+                cSharedPreferences.pSetSharedPreferenceBoolean(SHAREDPREFERENCE_PICKLINES_SHOWDEFECTS,show);
+                mSetViewDefects(show);
                 }
         });
     }
@@ -245,7 +256,9 @@ public class PickorderLinesPickedFragment extends Fragment implements iICSDefaul
             }
         });
     }
-
+    private void mSetViewDefects(Boolean show) {
+        getPickorderLineAdapter().pShowDefects(show);
+    }
     private void mSetRecyclerOnScrollListener() {
         this.recyclerViewPickorderLinesPicked.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

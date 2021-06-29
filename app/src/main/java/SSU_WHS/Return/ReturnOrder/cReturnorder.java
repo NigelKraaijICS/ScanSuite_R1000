@@ -125,6 +125,7 @@ public class cReturnorder {
 
     public static List<cReturnorder> allReturnordersObl;
     public static cReturnorder currentReturnOrder;
+    public static String currentNewDocumentScan = "";
 
     private cReturnorderViewModel getReturnorderViewModel(){
         return new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);

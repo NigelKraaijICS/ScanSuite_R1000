@@ -72,7 +72,7 @@
         android:importantForAutofill="no" />
     <TextView
         android:id="@+id/textViewScanArticleText"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         android:textColor="@color/colorTextDefault"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

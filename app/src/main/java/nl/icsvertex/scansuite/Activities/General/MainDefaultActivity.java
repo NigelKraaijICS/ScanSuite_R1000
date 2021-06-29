@@ -418,7 +418,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         return cShippingAgentShipMethod.ShippingAgentServiceShippingMethodsAvailableBln;
     }
 
-    public  void pSetAddedEnvironment() {
+    public void pSetAddedEnvironment() {
         cUserInterface.pCheckAndCloseOpenDialogs();
         this.mShowEnvironmentFragment();
     }
@@ -539,7 +539,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
             return true;
         });
     }
-
 
     //endregion Listeners
 

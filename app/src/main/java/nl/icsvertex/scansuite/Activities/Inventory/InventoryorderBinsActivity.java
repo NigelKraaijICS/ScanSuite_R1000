@@ -457,11 +457,12 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
                 ActivityOptionsCompat activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new Pair<>(clickedBin, cPublicDefinitions.VIEW_CHOSEN_BIN),new Pair<>(clickedBinImage, cPublicDefinitions.VIEW_CHOSEN_BIN_IMAGE) );
                 ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             });
-
         }
         else {
-           startActivity(intent);
-            finish();
+            cAppExtension.activity.runOnUiThread(() -> {
+                startActivity(intent);
+                finish();
+            });
         }
     }
 

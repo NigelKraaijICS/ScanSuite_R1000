@@ -56,7 +56,7 @@
             android:id="@+id/quickhelpText"
             android:layout_height="wrap_content"
             android:layout_width="125dp"
-            android:textSize="@dimen/textsize_big"
+            android:textSize="@dimen/textsize_big_20"
             android:textColor="@color/colorQuickhelpText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/quickhelpIcon"

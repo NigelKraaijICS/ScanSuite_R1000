@@ -50,6 +50,10 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.R;
 
+import static ICS.Utils.cSharedPreferences.pGetSharedPreferenceBoolean;
+import static ICS.Utils.cSharedPreferences.pSetSharedPreferenceBoolean;
+import static SSU_WHS.General.cPublicDefinitions.SHAREDPREFERENCE_MATLINES_SHOWDEFECTS;
+
 public class IntakeorderMATLinesActivity extends AppCompatActivity implements iICSDefaultActivity {
 
     //Region Public Properties
@@ -179,8 +183,6 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
         //Set listeners here, so click listeners only work after activity is shown
         this.mSetListeners();
 
-        this.switchDeviations.setChecked(cIntakeorder.currentIntakeOrder.showDeviationsBln);
-
         this.mInitScreen();
 
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
@@ -229,14 +231,13 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
     @Override
     public void mFieldsInitialize() {
-
+        mSetDeviations();
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
         recyclerSearchView.setQuery("", false);
         recyclerSearchView.setIconified(true);
         getIntakeorderMATSummaryLineAdapter().pSetFilter("", false);
-
     }
 
     @Override
@@ -514,11 +515,8 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
             ReceiveLinesActivity.busyBln = false;
             result.resultBln = true;
 
-            if (!cIntakeorder.currentIntakeOrder.showDeviationsBln) {
-                this.getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
-            } else {
-                this.getIntakeorderMATSummaryLineAdapter().pShowDeviations();
-            }
+            Boolean matLinesShowDefects = pGetSharedPreferenceBoolean(SHAREDPREFERENCE_MATLINES_SHOWDEFECTS, false);
+            mSetViewDeviations(matLinesShowDefects);
             return result;
         }
 
@@ -527,6 +525,21 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
         this.currentInputType = InputType.UNKNOWN;
         return result;
+    }
+
+    private void mSetDeviations() {
+        Boolean matLinesShowDefects = pGetSharedPreferenceBoolean(SHAREDPREFERENCE_MATLINES_SHOWDEFECTS, false);
+        switchDeviations.setChecked(matLinesShowDefects);
+
+        mSetViewDeviations(matLinesShowDefects);
+    }
+
+    private void mSetViewDeviations(Boolean show) {
+        if (!show) {
+            this.getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
+        } else {
+            this.getIntakeorderMATSummaryLineAdapter().pShowDeviations();
+        }
     }
 
     private  boolean mTryToCloseOrderBln() {
@@ -580,15 +593,8 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
     private void mSetDeviationsListener() {
         this.switchDeviations.setOnCheckedChangeListener((compoundButton, show) -> {
-
-            if (switchDeviations.isChecked()) {
-                cIntakeorder.currentIntakeOrder.showDeviationsBln = true;
-                getIntakeorderMATSummaryLineAdapter().pShowDeviations();
-            }
-            else {
-                cIntakeorder.currentIntakeOrder.showDeviationsBln = false;
-                getIntakeorderMATSummaryLineAdapter().pFillData(cIntakeorderMATSummaryLine.sortedMATSummaryLinesObl());
-            }
+            pSetSharedPreferenceBoolean(SHAREDPREFERENCE_MATLINES_SHOWDEFECTS, show);
+            mSetViewDeviations(show);
         });
 }
 

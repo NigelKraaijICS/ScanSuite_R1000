@@ -37,7 +37,7 @@ public class cSharedPreferences {
     }
 
     public static String getSerialNumerStr(){
-        return cSharedPreferences.mGetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_serial_key), "");
+        return cSharedPreferences.pGetSharedPreferenceString(cAppExtension.context.getString(R.string.shared_preference_serial_key), "");
     }
 
     public static void  setSerialNumerStr(String pvSerialStr){
@@ -45,11 +45,11 @@ public class cSharedPreferences {
     }
 
     public static void  setDarkModusBln(Boolean pvDarkModus){
-        mSetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.shared_preference_dark_mode), pvDarkModus);
+        pSetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.shared_preference_dark_mode), pvDarkModus);
     }
 
     public static boolean getDarkModusBln(){
- return cSharedPreferences.mGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.shared_preference_dark_mode),false);
+ return cSharedPreferences.pGetSharedPreferenceBoolean(cAppExtension.context.getString(R.string.shared_preference_dark_mode),false);
     }
 
     private static SharedPreferences gSharedPreferences;
@@ -62,18 +62,17 @@ public class cSharedPreferences {
     }
 
 
-    private static Boolean mGetSharedPreferenceBoolean(String pv_KeyStr, Boolean pvDefaultValueBln) {
-        //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(cAppExtension.context);
+    public static Boolean pGetSharedPreferenceBoolean(String pv_KeyStr, Boolean pvDefaultValueBln) {
         return cSharedPreferences.getSharedPreferences().getBoolean(pv_KeyStr, pvDefaultValueBln);
     }
 
-    public static void mSetSharedPreferenceBoolean(String pvKeyStr, boolean pvValueBln) {
+    public static void pSetSharedPreferenceBoolean(String pvKeyStr, boolean pvValueBln) {
         SharedPreferences.Editor editor =  cSharedPreferences.getSharedPreferences().edit();
         editor.putBoolean(pvKeyStr, pvValueBln);
         editor.apply();
     }
 
-    private static String mGetSharedPreferenceString(String pvKeyStr, String pvDefaultValueStr) {
+    public static String pGetSharedPreferenceString(String pvKeyStr, String pvDefaultValueStr) {
         return cSharedPreferences.getSharedPreferences().getString(pvKeyStr, pvDefaultValueStr);
     }
 

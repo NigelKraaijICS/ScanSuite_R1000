@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ICS.ICSControls.cICSMarqueeView;
 import ICS.Utils.cText;
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -27,6 +28,8 @@ import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesPickedFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
 import nl.icsvertex.scansuite.Fragments.Sort.SortorderLinesToSortFragment;
 import nl.icsvertex.scansuite.R;
+
+import static ICS.ICSControls.cICSMarqueeView.pSetMarqueeview;
 
 public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAdapter.PickorderLineViewHolder>  {
 
@@ -47,28 +50,16 @@ public class cPickorderLineAdapter extends RecyclerView.Adapter<cPickorderLineAd
         public PickorderLineViewHolder(View pvItemView) {
             super(pvItemView);
             this.textViewBIN = pvItemView.findViewById(R.id.textViewBIN);
-            this.textViewBIN.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewBIN.setSingleLine(true);
-            this.textViewBIN.setMarqueeRepeatLimit(5);
-            this.textViewBIN.setSelected(true);
+            pSetMarqueeview(textViewBIN);
 
             this.textViewDescription = pvItemView.findViewById(R.id.textViewDescription);
-            this.textViewDescription.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewDescription.setSingleLine(true);
-            this.textViewDescription.setMarqueeRepeatLimit(5);
-            this.textViewDescription.setSelected(true);
+            pSetMarqueeview(textViewDescription);
 
             this.textViewSourceNo = pvItemView.findViewById(R.id.textViewSourceNo);
-            this.textViewSourceNo.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewSourceNo.setSingleLine(true);
-            this.textViewSourceNo.setMarqueeRepeatLimit(5);
-            this.textViewSourceNo.setSelected(true);
+            pSetMarqueeview(textViewSourceNo);
 
             this.textViewDestination = pvItemView.findViewById(R.id.textViewDestination);
-            this.textViewDestination.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            this.textViewDestination.setSingleLine(true);
-            this.textViewDestination.setMarqueeRepeatLimit(5);
-            this.textViewDestination.setSelected(true);
+            pSetMarqueeview(textViewDestination);
 
             this.textViewQuantity = pvItemView.findViewById(R.id.textViewQuantity);
             this.pickorderLineItemFrameLayout = pvItemView.findViewById(R.id.pickorderLineItemLinearLayout);

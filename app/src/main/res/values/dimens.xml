@@ -20,14 +20,14 @@
     <!--endregion-->
 
     <!--region TextSizes-->
-    <dimen name="textsize_tiny">8sp</dimen>
-    <dimen name="textsize_small">12sp</dimen>
-    <dimen name="textsize_normal">16sp</dimen>
-    <dimen name="textsize_big">20sp</dimen>
-    <dimen name="textsize_huge">24sp</dimen>
-    <dimen name="textsize_enormous">28sp</dimen>
-    <dimen name="textsize_gigantic">36sp</dimen>
-    <dimen name="textsize_ludicrous">52sp</dimen>
+    <dimen name="textsize_tiny_8">8sp</dimen>
+    <dimen name="textsize_small_12">12sp</dimen>
+    <dimen name="textsize_normal_16">16sp</dimen>
+    <dimen name="textsize_big_20">20sp</dimen>
+    <dimen name="textsize_huge_24">24sp</dimen>
+    <dimen name="textsize_enormous_28">28sp</dimen>
+    <dimen name="textsize_gigantic_36">36sp</dimen>
+    <dimen name="textsize_ludicrous_52">52sp</dimen>
     <!--endregion-->
 
     <!--region Shimmer-->

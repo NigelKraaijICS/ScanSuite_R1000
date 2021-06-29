@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="@dimen/textsize_enormous"
+        android:textSize="@dimen/textsize_enormous_28"
         android:text="@string/getting_data_header"
         />
     <TextView
@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textGettingDataHeader"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         android:text="@string/getting_data_text"
         />
     <TextView
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/textGettingDataText"
         app:layout_constraintBottom_toBottomOf="@id/textGettingDataText"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageHourglass"
@@ -59,6 +59,6 @@
             android:id="@+id/textProgress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/textsize_normal"/>
+            android:textSize="@dimen/textsize_normal_16"/>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

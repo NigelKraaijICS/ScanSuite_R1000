@@ -48,6 +48,8 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.SendingFragment;
 import nl.icsvertex.scansuite.PagerAdapters.ReturnorderDocumentsPagerAdapter;
 import nl.icsvertex.scansuite.R;
 
+import static SSU_WHS.General.cPublicDefinitions.RETURNDOCUMENTS_EXTRABARCODE;
+
 public class ReturnorderDocumentsActivity extends AppCompatActivity implements iICSDefaultActivity {
 
 
@@ -76,6 +78,7 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_returnorder_documents);
+
     }
 
     @Override
@@ -176,11 +179,14 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
     @Override
     public void mFieldsInitialize() {
+
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cReturnorder.currentReturnOrder.getOrderNumberStr());
-        this.returnorderDocumentsTabLayout.addTab(this.returnorderDocumentsTabLayout.newTab().setText(R.string.tab_inventorybin_todo));
-        this.returnorderDocumentsTabLayout.addTab(this.returnorderDocumentsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
-        this.returnorderDocumentsTabLayout.addTab(this.returnorderDocumentsTabLayout.newTab().setText(R.string.tab_inventorybin_total));
+        if (this.returnorderDocumentsTabLayout.getTabCount() == 0) {
+            this.returnorderDocumentsTabLayout.addTab(this.returnorderDocumentsTabLayout.newTab().setText(R.string.tab_inventorybin_todo));
+            this.returnorderDocumentsTabLayout.addTab(this.returnorderDocumentsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
+            this.returnorderDocumentsTabLayout.addTab(this.returnorderDocumentsTabLayout.newTab().setText(R.string.tab_inventorybin_total));
+        }
 
         if (cBranchReason.currentBranchReason == null){
             cBranchReason.currentBranchReason = cUser.currentUser.currentBranch.pGetReasonByName(cReturnorder.currentReturnOrder.getReasonStr());
@@ -216,7 +222,11 @@ public class ReturnorderDocumentsActivity extends AppCompatActivity implements i
 
     @Override
     public void mInitScreen() {
-
+        if (cReturnorder.currentNewDocumentScan != null && !cReturnorder.currentNewDocumentScan.isEmpty()) {
+            mHandleScan(cReturnorder.currentNewDocumentScan, true);
+            cReturnorder.currentNewDocumentScan = "";
+            return;
+        }
         if (cReturnorder.currentReturnOrder.isRetourMultiDocument() && cReturnorder.currentReturnOrder.isGeneratedBln() && cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().size() == 1) {
             this.pHandleScan(cBarcodeScan.pFakeScan(cReturnorder.currentReturnOrder.pGetDocumentsNotDoneFromDatabasObl().get(0).getSourceDocumentStr()), true);
         }

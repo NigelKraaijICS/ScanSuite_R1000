@@ -8,4 +8,7 @@
     <integer name="shortAnimationDuration">1000</integer>
     <integer name="scrollTextDelay">1000</integer>
 
+    <integer name="marqueeTextRepeatCount">5</integer>
+    <integer name="marqueeTextDelayMillis">1500</integer>
+
 </resources>

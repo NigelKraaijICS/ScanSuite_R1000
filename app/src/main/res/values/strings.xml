@@ -194,7 +194,7 @@
     <string name="dialog_password_settings_button_login">Log in</string>
     <string name="dialog_password_settings_text">Enter password for settings</string>
     <string name="dialog_password_enviroment_text">Enter password to configure an environment</string>
-    <string name="dialog_password_unknown_enviroment_text">No environment(s) availaibe\n\n Enter password to configure an environment</string>
+    <string name="dialog_password_unknown_enviroment_text">No environments available\n\nEnter password to configure an environment</string>
     <string name="dialog_password_settings_title">Log in</string>
     <!--endregion Password Settings-->
 
@@ -274,7 +274,7 @@
     <string name="message_underpick_property_text">You need %1$s of these, you\'ve only picked %2$s. The amount filled at this tab is the picked number of articles</string>
     <string name="message_undermove_text">You need %1$s of these, you\'ve only moved %2$s. Are you sure that there are no more articles available and you want to finish this line?</string>
     <string name="message_undercheck_text">There were  %1$s picked items\n\You\'ve checked %2$s items.\n\nAre you sure that you want to correct the picked quantity?</string>
-    <string name="message_underplace_text">Quantity to low\n\nYou try to place %1$s items\n\You would have to place %2$s items\n\nBut you can only place %3$s items on other BINS</string>
+    <string name="message_underplace_text">Quantity too low\n\nYou try to place %1$s items\n\You would have to place %2$s items\n\nBut you can only place %3$s items on other BINS</string>
     <string name="button_close_orderline">Finish</string>
     <string name="choose_barcode">Choose barcode</string>
     <string name="quantity_per_scan">Quantity per scan: </string>

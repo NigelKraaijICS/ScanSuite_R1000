@@ -39,7 +39,7 @@
         android:layout_width="0dp"
         android:id="@+id/textViewAction"
         android:text="@string/message_scan_article"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         android:layout_marginTop="@dimen/default_double_margin"
         android:layout_marginStart="@dimen/default_double_margin"
         app:layout_goneMarginRight="@dimen/default_double_margin"

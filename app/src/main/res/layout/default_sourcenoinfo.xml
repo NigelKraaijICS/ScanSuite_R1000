@@ -15,8 +15,8 @@
         >
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/sourceNoImageView"
-            android:layout_width="@dimen/textsize_enormous"
-            android:layout_height="@dimen/textsize_enormous"
+            android:layout_width="@dimen/textsize_enormous_28"
+            android:layout_height="@dimen/textsize_enormous_28"
             app:srcCompat="@drawable/ic_document_black_24dp"
             android:tint="@color/colorDivider"
             app:layout_constraintStart_toStartOf="parent"

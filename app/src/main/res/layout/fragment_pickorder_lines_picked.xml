@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/abort_order_abort"
-            android:textSize="@dimen/textsize_big"
+            android:textSize="@dimen/textsize_big_20"
             android:textColor="@color/colorPrimary"
             app:layout_constraintStart_toEndOf="@id/imageAbortOrder"
             app:layout_constraintTop_toTopOf="@id/imageAbortOrder"

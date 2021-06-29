@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toTopOf="@id/imageViewSatellite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="@dimen/textsize_huge"
+        android:textSize="@dimen/textsize_huge_24"
         android:textColor="@color/colorTextDarker"
         />
     <androidx.appcompat.widget.AppCompatImageView

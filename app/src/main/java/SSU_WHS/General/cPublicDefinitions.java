@@ -78,6 +78,10 @@ public class cPublicDefinitions {
 
     public static String PROGLOVE_CONNECT_ACTION = "com.proglove.api.CONNECT";
 
+    public static final String SHAREDPREFERENCE_PICKLINES_SHOWDEFECTS = "SHAREDPREFERENCE_PICKLINES_SHOWDEFECTS";
+    public static final String SHAREDPREFERENCE_MATLINES_SHOWDEFECTS = "SHAREDPREFERENCE_MATLINES_SHOWDEFECTS";
+
+    public static final String RETURNDOCUMENTS_EXTRABARCODE = "RETURNDOCUMENTS_EXTRABARCODE";
 
     public enum Workflows {
         BC,
