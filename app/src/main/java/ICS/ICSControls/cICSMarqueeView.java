@@ -12,5 +12,6 @@ public class cICSMarqueeView {
         textView.setMarqueeRepeatLimit(cAppExtension.activity.getResources().getInteger(R.integer.marqueeTextRepeatCount) );
         textView.setSingleLine(true);
         textView.setSelected(true);
+        
     }
 }
