@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,8 @@ public class DynamicStockFragment extends Fragment implements iICSDefaultFragmen
 
     private TextView textViewItem;
     private RecyclerView stockRecyclerview;
+    private ProgressBar progressBar;
+    private Button buttonOk;
 
     private cArticleStockAdapter articleStockAdapter;
     private cArticleStockAdapter getArticleStockAdapter(){
@@ -76,6 +80,8 @@ public class DynamicStockFragment extends Fragment implements iICSDefaultFragmen
         if (getView() != null) {
             this.stockRecyclerview =  getView().findViewById(R.id.stockRecyclerview);
             this.textViewItem = getView().findViewById(R.id.textViewItem);
+            this.progressBar = getView().findViewById(R.id.progressBar);
+            this.buttonOk = getView().findViewById(R.id.buttonOk);
         }
 
     }
@@ -83,6 +89,9 @@ public class DynamicStockFragment extends Fragment implements iICSDefaultFragmen
     @Override
     public void mFieldsInitialize() {
         this.textViewItem.setVisibility(View.GONE);
+        this.buttonOk.setVisibility(View.GONE);
+        this.progressBar.setVisibility(View.INVISIBLE);
+
         this.mGetData();
     }
 
@@ -104,37 +113,34 @@ public class DynamicStockFragment extends Fragment implements iICSDefaultFragmen
 
     private  void mShowNoLinesIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
+            cUserInterface.pHideGettingData();
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    stockRecyclerview.setVisibility(View.INVISIBLE);
+                stockRecyclerview.setVisibility(View.INVISIBLE);
 
-                    FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                    NoStockFragment fragment = new NoStockFragment();
-                    fragmentTransaction.replace(R.id.itemStockContainer, fragment);
+                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+                NoStockFragment fragment = new NoStockFragment();
+                fragmentTransaction.replace(R.id.itemStockContainer, fragment);
+                fragmentTransaction.commit();
+                return;
+
+
+            }
+
+            stockRecyclerview.setVisibility(View.VISIBLE);
+            stockRecyclerview.setHasFixedSize(false);
+            stockRecyclerview.setAdapter(getArticleStockAdapter());
+            stockRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NoStockFragment) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
                     fragmentTransaction.commit();
-                    return;
-
-
-                }
-
-                stockRecyclerview.setVisibility(View.VISIBLE);
-                stockRecyclerview.setHasFixedSize(false);
-                stockRecyclerview.setAdapter(getArticleStockAdapter());
-                stockRecyclerview.setLayoutManager(new LinearLayoutManager(cAppExtension.context));
-
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NoStockFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
                 }
             }
         });
