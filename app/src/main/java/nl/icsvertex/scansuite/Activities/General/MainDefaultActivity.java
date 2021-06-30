@@ -283,6 +283,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         cProGlove myproglove= new cProGlove();
         myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER, proglovedata, true, 0, 0);
     }
+    
 
     //Region Public Methods
     public void pLetsGetThisPartyStartedOrNot() throws ExecutionException {
