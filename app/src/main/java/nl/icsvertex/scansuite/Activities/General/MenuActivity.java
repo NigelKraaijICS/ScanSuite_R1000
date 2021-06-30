@@ -27,8 +27,10 @@ import com.google.firebase.crashlytics.*;
 import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.Scanning.cProGlove;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cRegex;
+import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
@@ -59,6 +61,13 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ScanArticleFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ScanBinFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SearchArticleFragment;
 import nl.icsvertex.scansuite.R;
+
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_1HEADER;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_CHECKBOX;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_NEGATIVE;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_YELLOW;
+import static SSU_WHS.General.cPublicDefinitions.SHAREDPREFERENCE_USEPROGLOVE;
 
 public class MenuActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -151,7 +160,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
         pvMenu.findItem(R.id.item_barcodeinfo).setVisible(true);
         pvMenu.findItem(R.id.item_print_item).setVisible(cSetting.GENERIC_PRINT_ITEMLABEL());
         pvMenu.findItem(R.id.item_print_bin).setVisible(cSetting.GENERIC_PRINT_BINLABEL());
-
+        pvMenu.findItem(R.id.item_pair_proglove).setVisible(cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false));
         return super.onPrepareOptionsMenu(pvMenu);
     }
 
@@ -188,7 +197,10 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             case R.id.item_barcodeinfo:
                 mShowBarcodeInfoActivity();
                 return true;
-
+            case R.id.item_pair_proglove:
+                cProGlove myProGlove = new cProGlove();
+                myProGlove.pShowPairGlove();
+                break;
             default:
                 break;
         }
@@ -231,6 +243,7 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
         this.mInitScreen();
 
+        this.mSetProGloveScreen();
     }
 
     @Override
@@ -316,6 +329,11 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
     }
 
+    private void mSetProGloveScreen() {
+        cProGlove myproglove= new cProGlove();
+        String proglovedata = "1|" + getString(R.string.proglove_logged_in_as) + "|" + cUser.currentUser.getNameStr() + "|2|" + getString(R.string.proglove_on_terminal) + "|" + getString(R.string.proglove_choose_menu_option);
+        myproglove.pSendScreen(PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER, proglovedata, true,0,0);
+    }
     //End Region iICSDefaultActivity defaults
 
     //Region Public Methods
@@ -335,7 +353,10 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
 
             cLicense.currentLicenseEnu = cLicense.LicenseEnu.Pick;
             if (!  cLicense.pGetLicenseViaWebserviceBln()) {
-                cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_license_error), "",true,true);
+                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_license_error), "",true,true);
+                String proglovedata = "1||" + getString(R.string.message_license_error);
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_YELLOW);
                 return;
             }
 
@@ -346,6 +367,11 @@ public class MenuActivity extends AppCompatActivity implements iICSDefaultActivi
             activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(cAppExtension.activity, new androidx.core.util.Pair<>(clickedImage, cPublicDefinitions.VIEW_NAME_HEADER_IMAGE), new androidx.core.util.Pair<>(clickedText, cPublicDefinitions.VIEW_NAME_HEADER_TEXT));
             ActivityCompat.startActivity(cAppExtension.context,intent, activityOptions.toBundle());
             return;
+        }
+        else {
+            String proglovedata = "1||" + cAppExtension.context.getString(R.string.proglove_not_implemented) + "|2||" + cAppExtension.context.getString(R.string.proglove_scanning_will_work);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1TITLE_1FIELD_ALERT, proglovedata, false, 0, PROGLOVE_FEEDBACK_YELLOW);
         }
 
         if (cUser.currentUser.currentAuthorisation.getAutorisationEnu() == cAuthorisation.AutorisationEnu.SORTING) {

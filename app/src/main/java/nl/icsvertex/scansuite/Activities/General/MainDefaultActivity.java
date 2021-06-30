@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 import ICS.Environments.cEnvironment;
 import ICS.Interfaces.iICSDefaultActivity;
+import ICS.Utils.Scanning.cProGlove;
 import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cPermissions;
@@ -59,6 +60,11 @@ import nl.icsvertex.scansuite.Fragments.Main.HomeFragment;
 import nl.icsvertex.scansuite.Fragments.Main.LanguageFragment;
 import nl.icsvertex.scansuite.Fragments.Support.SupportFragment;
 import nl.icsvertex.scansuite.R;
+
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_CHECKBOX;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1TITLE_1FIELD_CHECKBOX;
+import static SSU_WHS.General.cPublicDefinitions.PROGLOVE_CONNECT_ACTION;
+import static SSU_WHS.General.cPublicDefinitions.SHAREDPREFERENCE_USEPROGLOVE;
 
 
 public class MainDefaultActivity extends AppCompatActivity implements iICSDefaultActivity {
@@ -113,6 +119,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         cPower.pRegisterPowerConnectReceiver();
         cPower.pRegisterPowerLevelChangedReceiver();
         cUserInterface.pEnableScanner();
+
     }
 
     @Override
@@ -190,6 +197,11 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
         // Init screen
         this.mInitScreen();
+
+        this.mCheckProGlove();
+
+        //Set Proglove Screen
+        this.mSetProGloveScreen();
     }
 
     @Override
@@ -237,7 +249,13 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     @Override
     public void mFieldsInitialize() {
-
+        Boolean useProGlove = cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false);
+        if (!useProGlove) {
+            View proGloveView =  findViewById(R.id.action_proglove);
+            if (proGloveView != null) {
+                proGloveView.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -252,7 +270,19 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     }
 
     //End Region iICSDefaultActivity defaults
-
+    private void mCheckProGlove() {
+        cProGlove myproglove= new cProGlove();
+        if ( cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false)){
+            if (!myproglove.pIsProgloveInstalled()) {
+                cUserInterface.pShowToastMessage(getString(R.string.proglove_not_installed), R.raw.headsupsound);
+            }
+        }
+    }
+    private void mSetProGloveScreen() {
+        String proglovedata = "1|" + getResources().getString(R.string.proglove_header_scansuite) + "|" + cEnvironment.currentEnvironment.getDescriptionStr() + "|2|" + getResources().getString(R.string.proglove_on_terminal) + "|" + getResources().getString(R.string.proglove_press_begin_scanner);
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER, proglovedata, true, 0, 0);
+    }
 
     //Region Public Methods
     public void pLetsGetThisPartyStartedOrNot() throws ExecutionException {
@@ -497,7 +527,8 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
                 case R.id.action_proglove:
                     imageHome.setVisibility(View.GONE);
-                    mShowPairGlove();
+                    cProGlove myProGlove = new cProGlove();
+                    myProGlove.pShowPairGlove();
                     return true;
 
                 case R.id.action_close_application:

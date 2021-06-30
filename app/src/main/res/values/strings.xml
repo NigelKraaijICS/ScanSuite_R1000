@@ -223,6 +223,7 @@
     <string name="tab_to_select">To select</string>
 
     <string name="use_darkmode">Use dark mode</string>
+    <string name="use_proglove">Use proglove</string>
     <string name="confirm">Confirm</string>
     <string name="im_at">I\'m at</string>
     <string name="scan_bincode">Scan BIN</string>
@@ -468,7 +469,8 @@
     <string name="message_unknown_pickcartbox">Unknown pickcartbox</string>
     <string name="message_unknown_salesorder">Unknown salesorder</string>
     <string name="message_unknown_order">Unknown order</string>
-    <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>s
+    <string name="scan_article_or_salesorder_or_pickcartbox">Scan article or salesorder/pickcartbox</string>
+    s
     <string name="message_wrong_pickcartbox">Wrong pickcartbox</string>
     <string name="number_cannot_be_lower">Number can not be lower than required number</string>
     <string name="number_cannot_be_higher">Number can not be higher than required number</string>
@@ -963,6 +965,34 @@
     <string name="message_property_unknown">Property unknown</string>
     <!--End Region return-->
 
+    <!--Region ProGlove-->
+    <string name="proglove_header_scansuite">ScanSuite</string>
+    <string name="proglove_press_begin_scanner">Press begin</string>
+    <string name="proglove_scan_login_barcode">Scan login barcode</string>
+    <string name="proglove_login_header">Login</string>
+    <string name="proglove_welcome_parameter1">Welcome, %1$s</string>
+    <string name="proglove_choose_menu_option">Choose a menu option</string>
+    <string name="proglove_on_terminal">On the terminal:</string>
+    <string name="proglove_logged_in_as">Logged in as:</string>
+    <string name="proglove_not_implemented">No screens</string>
+    <string name="proglove_scanning_will_work">Scanning will work</string>
+    <string name="proglove_header_pickorders">Pick orders</string>
+    <string name="proglove_no_orders">No orders</string>
+    <string name="proglove_header_order">Order</string>
+    <string name="proglove_header_orderlines">Order lines</string>
+    <string name="proglove_header_orderlines_done">Orderlines done</string>
+    <string name="proglove_scan_article">Scan article</string>
+    <string name="proglove_scan_article_or_bin">Scan article or BIN</string>
+    <string name="proglove_header_picking">Picking</string>
+    <string name="proglove_header_article">Article</string>
+    <string name="proglove_header_number">Number</string>
+    <string name="proglove_check_terminal_screen">Check your terminal screen</string>
+    <string name="proglove_unknown">Unknown</string>
+    <string name="proglove_not_installed">ProGlove is not installed</string>
+
+
+    <!--End Region ProGlove-->
+
     <!--Region plurals-->
     <plurals name="plural_orders">
         <item quantity="one">order</item>
@@ -973,6 +1003,8 @@
         <item quantity="one">%d order</item>
         <item quantity="other">%d orders</item>
     </plurals>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--End Region plurals-->
 </resources>

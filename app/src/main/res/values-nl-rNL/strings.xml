@@ -805,6 +805,7 @@
     <string name="message_and_a">en een</string>
     <string name="confirm">Bevestig</string>
     <string name="use_darkmode">Gebruik donkere modus</string>
+    <string name="use_proglove">Gebruik ProGlove</string>
     <string name="quantity_asked">Aantal gevraagd:</string>
     <string name="quantity_handled">Aantal ingegeven:</string>
     <string name="message_please_enter">Geef een %1$s in</string>
@@ -827,4 +828,27 @@
     <string name="error_getting_methods_failed">Ophalen verzendmethoden mislukt</string>
     <string name="dialog_password_enviroment_text">Vul een wachtwoord in om een omgeving te kunnen configureren</string>
     <string name="dialog_password_unknown_enviroment_text">Geen omgeving(en) geconfigureerd\n\nGeef een wachtwoord in om een omgeving te configureren</string>
+    <string name="proglove_header_scansuite">ScanSuite</string>
+    <string name="proglove_press_begin_scanner">Klik begin</string>
+    <string name="proglove_scan_login_barcode">Scan login barcode</string>
+    <string name="proglove_login_header">Login</string>
+    <string name="proglove_welcome_parameter1">Welkom, %1$s</string>
+    <string name="proglove_choose_menu_option">Kies een menuoptie</string>
+    <string name="proglove_on_terminal">Op de terminal:</string>
+    <string name="proglove_logged_in_as">Ingelogd als:</string>
+    <string name="proglove_not_implemented">Geen schermen</string>
+    <string name="proglove_scanning_will_work">Scannen werkt wel</string>
+    <string name="proglove_header_pickorders">Pickopdrachten</string>
+    <string name="proglove_no_orders">Geen opdrachten</string>
+    <string name="proglove_header_order">Opdracht</string>
+    <string name="proglove_header_orderlines">Opdrachtregels</string>
+    <string name="proglove_header_orderlines_done">opdrachtregels gedaan</string>
+    <string name="proglove_scan_article">Scan artikel</string>
+    <string name="proglove_scan_article_or_bin">Scan artikel of BIN</string>
+    <string name="proglove_header_picking">Picken</string>
+    <string name="proglove_header_article">Artikel</string>
+    <string name="proglove_header_number">Aantal</string>
+    <string name="proglove_check_terminal_screen">Check je terminalscherm</string>
+    <string name="proglove_unknown">Onbekend</string>
+    <string name="proglove_not_installed">ProGlove is niet geïnstalleerd</string>
 </resources>

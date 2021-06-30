@@ -20,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cConnection;
 import ICS.Utils.cDeviceInfo;
+import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
@@ -29,6 +30,8 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.NoConnectionFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.SetSerialFragment;
 import nl.icsvertex.scansuite.R;
 
+import static SSU_WHS.General.cPublicDefinitions.SHAREDPREFERENCE_USEPROGLOVE;
+
 public class HomeFragment extends DialogFragment implements iICSDefaultFragment {
 
     //region Private Properties
@@ -36,6 +39,7 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
     private TextView textViewDevicedetails;
     private CardView cardViewDeviceDetails;
     private Button buttonLogin;
+
     //end region Private Properties
 
     //region Constructor
@@ -109,8 +113,6 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
             this.textViewDevicedetails = getView().findViewById(R.id.textViewDeviceDetails);
             this.buttonLogin = getView().findViewById(R.id.buttonLogin);
         }
-
-
     }
 
     @Override
@@ -118,6 +120,7 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
         this.mSetDeviceInfo();
         this.buttonLogin.setVisibility(View.VISIBLE);
         this.mBounceLogo();
+        this.metSetProGlove();
     }
 
     @Override
@@ -133,6 +136,17 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
     //End Region Public Methods
 
     //Region Private Methods
+
+    private void metSetProGlove() {
+        Boolean useProGlove = cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false);
+        if (!useProGlove) {
+            View proGloveView =  getActivity().findViewById(R.id.action_proglove);
+            if (proGloveView != null) {
+                proGloveView.setVisibility(View.GONE);
+            }
+        }
+
+    }
 
     private void mBounceLogo() {
         cUserInterface.pDoBoing(imageLogo);
