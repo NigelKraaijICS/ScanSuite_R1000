@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.Scanning.cProGlove;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
@@ -32,6 +33,9 @@ import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.ScannerLogon.cScannerLogon;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BranchFragment;
 import nl.icsvertex.scansuite.R;
+
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_1HEADER;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_NEGATIVE;
 
 public class LoginActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -108,6 +112,7 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         this.mSetListeners();
         this.mFieldsInitialize();
         this.mInitScreen();
+        this.mSetProGloveScreen();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
@@ -155,6 +160,12 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
 
     }
 
+    private void mSetProGloveScreen() {
+        cProGlove myproglove= new cProGlove();
+        String proglovedata = "1|" + getString(R.string.proglove_login_header) + "|" + getString(R.string.proglove_scan_login_barcode);
+        myproglove.pSendScreen(PROGLOVE_DISPLAY_TEMPLATE_1FIELD_1HEADER, proglovedata, true,0,0);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -181,6 +192,9 @@ public class LoginActivity extends AppCompatActivity implements iICSDefaultActiv
         // Scanned/selected user doesn't exist, so show message and end void
         if (User == null){
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_user), pvBarcodeScan.getBarcodeOriginalStr(), true, true );
+            String proglovedata = "1||" + getString(R.string.error_unknown_user);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
             return;
         }
 

@@ -318,7 +318,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
 
         if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
             ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
-            returnorderDocumentActivity.pCloseDocument();
+            returnorderDocumentActivity.pCloseDocument("");
             this.dismiss();
             return;
         }

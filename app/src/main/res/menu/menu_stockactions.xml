@@ -35,5 +35,11 @@
         app:showAsAction="never"
         android:visible="false"
         />
+    <item
+        android:id="@+id/item_pair_proglove"
+        android:title="@string/pair_pro_glove"
+        app:showAsAction="never"
+        android:visible="false"
+        />
 </group>
 </menu>

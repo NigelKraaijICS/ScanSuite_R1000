@@ -12,7 +12,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="@dimen/textsize_huge"
+        android:textSize="@dimen/textsize_huge_24"
         android:text="@string/webservice_error_header"
         />
     <TextView
@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textWebserviceErrorHeader"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         android:text="@string/webservice_error_text"
         />
     <androidx.appcompat.widget.AppCompatImageView

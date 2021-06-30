@@ -27,7 +27,7 @@
         app:layout_constraintBottom_toTopOf="@id/guidelinetext"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         />
     <View
         android:id="@+id/viewDesert"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -73,22 +74,32 @@
         />
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/checkDarkModus"
+        android:textSize="@dimen/textsize_normal_16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_double_margin"
         android:defaultValue="false"
         android:key="@string/check_receive_barcodes_switch"
         android:text="@string/use_darkmode"
+        android:layout_marginTop="@dimen/default_margin"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="194dp"
-        tools:ignore="MissingConstraints"
         app:layout_constraintTop_toBottomOf="@id/textViewWebservice"/>
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/checkProglove"
+        android:textSize="@dimen/textsize_normal_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:defaultValue="false"
+        android:text="@string/use_proglove"
+        android:layout_marginTop="@dimen/default_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkDarkModus"/>
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iconFreepik"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_freepik"
-        app:layout_constraintTop_toBottomOf="@id/checkDarkModus"
+        app:layout_constraintTop_toBottomOf="@id/checkProglove"
+        android:layout_marginTop="@dimen/default_double_margin"
         app:layout_constraintStart_toStartOf="parent"/>
     <TextView
         style="@style/textFormLabel"

@@ -38,6 +38,7 @@ import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.Scanning.cProGlove;
 import ICS.Utils.cConnection;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
@@ -67,6 +68,10 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintItemLabelFragment;
 import nl.icsvertex.scansuite.R;
+
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_NEGATIVE;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_PURPLE;
 
 public class PickorderPickActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -263,6 +268,7 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         this.mFieldsInitialize();
 
+        this.mSetProGloveScreen();
     }
 
     @Override
@@ -353,6 +359,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.mCheckLineDone();
     }
 
+
+    private void mSetProGloveScreen() {
+
+    }
     @Override
     public void mInitScreen() {
 
@@ -420,6 +430,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             cResult hulpRst = this.mCheckDestionationRst(pvBarcodeScan);
             if (! hulpRst.resultBln) {
                 cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"", true, true);
+                String proglovedata = "1||" + hulpRst.messagesStr();
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
                 return;
             }
 
@@ -445,6 +458,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
            //Just look for a normal barcode with the scan
            if (!cPickorderLine.currentPickOrderLine.pFindBarcodeViaBarcodeInLineBarcodes(pvBarcodeScan)) {
                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+               String proglovedata = "1||" + cAppExtension.context.getString(R.string.proglove_unknown) + "|2||" + pvBarcodeScan.getBarcodeOriginalStr();
+               cProGlove myproglove= new cProGlove();
+               myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1TITLE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
                return;
            }
        }
@@ -452,6 +468,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
        {
            if (! cPickorderLine.currentPickOrderLine.pFindBarcodeViaCompositeBarcodeInLineBarcodes(compositeBarcodesMatchedObl,pvBarcodeScan.getBarcodeOriginalStr())) {
                cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+               String proglovedata = "1||" + cAppExtension.context.getString(R.string.proglove_unknown) + "|2||" + pvBarcodeScan.getBarcodeOriginalStr();
+               cProGlove myproglove= new cProGlove();
+               myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1TITLE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
                return;
            }
 
@@ -621,6 +640,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         this.quantityText.setText(cText.pDoubleToStringStr(quantityDbl));
         this.quantityRequiredText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl()));
+
+        String proglovedata = "1|" + getResources().getString(R.string.proglove_header_picking) + "|" + cPickorderLine.currentPickOrderLine.getBinCodeStr() + "|2|" + getResources().getString(R.string.proglove_header_article) + "|" + cPickorderLine.currentPickOrderLine.getDescriptionStr() + "|3|" + getResources().getString(R.string.proglove_header_number) + "|" + cText.pDoubleToStringStr(quantityDbl) + "/" + cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl());
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_3FIELD_3HEADER, proglovedata, true, 0, 0);
     }
 
     private  void mShowArticleImage() {
@@ -779,6 +802,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         cUserInterface.pDoExplodingScreen(cAppExtension.activity.getString(R.string.message_unknown_barcode),"",true,true);
 
+        String proglovedata = "1||" + getResources().getString(R.string.message_unknown_barcode);
+
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
 
     }
 
@@ -823,7 +850,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //Set the new quantityDbl and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
             this.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
-
+            //and update proglove
+            String proglovedata = "1|" + getResources().getString(R.string.proglove_header_picking) + "|" + cPickorderLine.currentPickOrderLine.getBinCodeStr() + "|2|" + getResources().getString(R.string.proglove_header_article) + "|" + cPickorderLine.currentPickOrderLine.getDescriptionStr() + "|3|" + getResources().getString(R.string.proglove_header_number) + "|" + cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl());
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_3FIELD_3HEADER, proglovedata, false, 0, 0);
             //Add or update line barcodeStr
             cPickorderLine.currentPickOrderLine.pAddOrUpdateLineBarcode(pvAmountDbl);
 
@@ -859,6 +889,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.quantityText.setText(cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()));
         this.imageButtonDone.setImageResource(R.drawable.ic_check_black_24dp);
 
+        String proglovedata = "1|" + getResources().getString(R.string.proglove_header_picking) + "|" + cPickorderLine.currentPickOrderLine.getBinCodeStr() + "|2|" + getResources().getString(R.string.proglove_header_article) + "|" + cPickorderLine.currentPickOrderLine.getDescriptionStr() + "|3|" + getResources().getString(R.string.proglove_header_number) + "|" + cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityHandledDbl()) + "/" + cText.pDoubleToStringStr(cPickorderLine.currentPickOrderLine.getQuantityDbl());
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_3FIELD_3HEADER, proglovedata, false, 0, 0);
+
         //Remove or update line barcodeStr
         cPickorderLine.currentPickOrderLine.pRemoveOrUpdateLineBarcode();
 
@@ -873,6 +907,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         if (!PickorderPickActivity.articleScannedLastBln) {
             // we've scanned a pickCart or a salesOrder, but we need an article
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_article_first), barcodeWithoutPrefixStr, true, true);
+            String proglovedata = "1||" + cAppExtension.context.getString(R.string.message_scan_article_first);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
             return;
         }
 
@@ -885,6 +922,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //If scanned value doesn't match then we are done
             if (!barcodeWithoutPrefixStr.equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr())) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_wrong_sourceno), barcodeWithoutPrefixStr, true, true);
+                String proglovedata = "1||" + cAppExtension.context.getString(R.string.message_wrong_sourceno);
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
                 return;
             }
         }
@@ -894,6 +934,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //If scanned value doesn't match then we are done
             if (!barcodeWithoutPrefixStr.equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getProcessingSequenceStr())) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_wrong_pickcartbox), barcodeWithoutPrefixStr, true, true);
+                String proglovedata = "1||" + cAppExtension.context.getString(R.string.message_wrong_pickcartbox) + "|2||" + barcodeWithoutPrefixStr;
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1TITLE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
                 return;
             }
         }
@@ -909,6 +952,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //try to add SalesOrderPackingtable to database
         if (!this.mAddSalesOrderPackingTableBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_inserting_salesorderpackingtable), barcodeWithoutPrefixStr, true, true);
+            String proglovedata = "1||" + cAppExtension.context.getString(R.string.error_inserting_salesorderpackingtable);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
             cPickorderLine.currentPickOrderLine.processingSequenceStr = "";
             return;
         }
@@ -916,6 +962,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         //try to update ProcessingSequence in database
         if (!cPickorderLine.currentPickOrderLine.pUpdateProcessingSequenceBln(barcodeWithoutPrefixStr)) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_updating_processing_sequence), barcodeWithoutPrefixStr, true, true);
+            String proglovedata = "1||" + cAppExtension.context.getString(R.string.error_updating_processing_sequence);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
             return;
         }
 
@@ -957,6 +1006,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
             if (!cPickorderLine.currentPickOrderLine.pFindBarcodeViaBarcodeInLineBarcodes(pvBarcodeScan)) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_unknown_barcode), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+
+                String proglovedata = "1||" + getResources().getString(R.string.proglove_unknown) + "|2||" + pvBarcodeScan.getBarcodeOriginalStr();
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1TITLE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
+
                 return;
             }
 
@@ -970,6 +1024,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         //You have to scan a pickcart or salesorder after the last article scan
         cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_scan_pickcart_or_salesorder), pvBarcodeScan.getBarcodeOriginalStr(), true, true);
+
+        String proglovedata = "1||" + getResources().getString(R.string.message_scan_pickcart_or_salesorder);
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
     }
 
     private  void mBarcodeSelected(cPickorderBarcode pvBarcode) {
@@ -1137,6 +1195,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         hulpResult = cPickorderLine.currentPickOrderLine.pLineBusyRst();
         if (!hulpResult.resultBln) {
             cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
+
+            String proglovedata = "1||" + hulpResult.messagesStr();
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
+
             cPickorderLine.currentPickOrderLine = null;
             this.mGoBackToLinesActivity();
             return;
@@ -1235,6 +1298,11 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             //Check if we picked less then asked, if so then show dialog
             if (!cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl()) ) {
                 this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
+
+                String proglovedata = "1||" + getResources().getString(R.string.proglove_check_terminal_screen);
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_PURPLE);
+
                 return;
             }
         }
@@ -1304,6 +1372,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
             if (!recordForBarcode.getSalesorderStr().equalsIgnoreCase(cPickorderLine.currentPickOrderLine.getSourceNoStr())) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_pickcartbox_already_assigned), "", true, true);
+                String proglovedata = "1||" + cAppExtension.context.getString(R.string.message_pickcartbox_already_assigned);
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
+
                 return false;
             }
         }
@@ -1313,6 +1385,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
             if (!recordForSalesOrder.getPackingtableStr().equalsIgnoreCase(pvBarcodeStr)) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.message_wrong_pickcartbox), recordForSalesOrder.getPackingtableStr(), true, true);
+                String proglovedata = "1||" + cAppExtension.context.getString(R.string.message_wrong_pickcartbox);
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
                 return false;
             }
         }
@@ -1479,6 +1554,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         cUserInterface.pShowSnackbarMessage(textViewAction , cAppExtension.context.getString(R.string.number_cannot_be_higher), null, false);
         cUserInterface.pDoNope(quantityText, true, true);
         cUserInterface.pDoNope(quantityRequiredText, false, false);
+
+        String proglovedata = "1||" + cAppExtension.context.getString(R.string.number_cannot_be_higher);
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
     }
 
     private void mHideArticleInfo(){

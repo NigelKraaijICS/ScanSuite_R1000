@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/toolbarSubtext"
             android:textColor="@color/colorTextDefault"
-            android:textSize="@dimen/textsize_normal"
+            android:textSize="@dimen/textsize_normal_16"
             android:layout_marginEnd="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
 

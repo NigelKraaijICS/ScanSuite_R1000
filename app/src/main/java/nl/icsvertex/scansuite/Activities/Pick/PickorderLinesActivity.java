@@ -29,16 +29,19 @@ import java.util.concurrent.Future;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.Scanning.cProGlove;
 import ICS.Utils.cConnection;
 import ICS.Utils.cNoSwipeViewPager;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
+import ICS.Utils.cSharedPreferences;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.Basics.Settings.cSetting;
+import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
 import SSU_WHS.General.Comments.cComment;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -62,6 +65,11 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.WorkplaceFragment;
 import nl.icsvertex.scansuite.Fragments.Pick.PickorderLinesToPickFragment;
 import nl.icsvertex.scansuite.PagerAdapters.PickorderLinesPagerAdapter;
 import nl.icsvertex.scansuite.R;
+
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_NEGATIVE;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_PURPLE;
+import static SSU_WHS.General.cPublicDefinitions.SHAREDPREFERENCE_USEPROGLOVE;
 
 public class PickorderLinesActivity extends AppCompatActivity implements iICSDefaultActivity {
 
@@ -147,6 +155,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         MenuItem item_bin_stock = pvMenu.findItem(R.id.item_bin_stock);
         MenuItem item_article_stock = pvMenu.findItem(R.id.item_article_stock);
+
         item_bin_stock.setVisible(cPickorderLine.currentPickOrderLine != null);
         item_article_stock.setVisible(cPickorderLine.currentPickOrderLine != null);
 
@@ -158,6 +167,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
             item_print_item.setVisible(cPickorderLine.currentPickOrderLine != null);
         }
+        MenuItem itemPairProglove = pvMenu.findItem(R.id.item_pair_proglove);
+        if ( cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false)) {
+            if (itemPairProglove != null) {
+                itemPairProglove.setVisible(true);
+            }
+        }
+
 
         return super.onPrepareOptionsMenu(pvMenu);
     }
@@ -196,7 +212,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
                 else
                 {  cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.no_barcodes_availabe_for_this_line),null);}
                 break;
-
+            case R.id.item_pair_proglove:
+                cProGlove myProGlove = new cProGlove();
+                myProGlove.pShowPairGlove();
+                break;
             default:
                 break;
         }
@@ -249,6 +268,8 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         this.mFieldsInitialize();
 
         this.mInitScreen();
+
+        this.mSetProGloveScreen();
     }
 
     @Override
@@ -316,6 +337,11 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     }
 
+    private void mSetProGloveScreen() {
+        cProGlove myproglove= new cProGlove();
+        String proglovedata = "1|" + getString(R.string.proglove_header_order) + "|" + cPickorder.currentPickOrder.getOrderNumberStr() + "|2|" +  "|" + getString(R.string.proglove_scan_article_or_bin);
+        myproglove.pSendScreen(PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER, proglovedata, true,0,0);
+    }
 
     //End Region iICSDefaultActivity defaults
 
@@ -343,6 +369,11 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         if (!cPickorder.currentPickOrder.pUpdateCurrentLocationBln(pvCurrentLocationStr)) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_currentlocation_could_not_update), "", true, false);
+
+            String proglovedata = "1||" + cAppExtension.context.getString(R.string.error_currentlocation_could_not_update);
+
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_NEGATIVE);
             return;
         }
 
@@ -393,6 +424,11 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             cResult hulpRst = this.mCheckDestionationRst(pvBarcodeScan);
             if (! hulpRst.resultBln) {
                 cUserInterface.pDoExplodingScreen(hulpRst.messagesStr(),"", true, true);
+
+                String proglovedata = "1||" + hulpRst.messagesStr();
+
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_NEGATIVE);
             }
 
             //If we scanned, refresh to pick fragment and leave this void
@@ -558,9 +594,17 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         //If we received a current location, then update it via the webservice and locally
         //If we didn't receive a location, then we picked 0 items, so it's oke
+
+
         if (!pvCurrentLocationStr.isEmpty()){
             if (!cPickorder.currentPickOrder.pUpdateCurrentLocationBln(pvCurrentLocationStr)) {
                 cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_currentlocation_could_not_update), "", true, false);
+
+                String proglovedata = "1||" + cAppExtension.context.getString(R.string.error_currentlocation_could_not_update);
+
+                cProGlove myproglove= new cProGlove();
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_NEGATIVE);
+
                 return;
             }
         }
@@ -672,6 +716,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         //Something went wrong, but no further actions are needed, so ony show reason of failure
         if ( hulpResult.activityActionEnu == cWarehouseorder.ActivityActionEnu.Unknown ) {
             cUserInterface.pDoExplodingScreen(hulpResult.messagesStr(),"",true,true);
+
+            String proglovedata = "1||" + hulpResult.messagesStr();
+
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_NEGATIVE);
+
+
             return  false;
         }
 
@@ -751,6 +802,12 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private   void mDoUnknownScan(String pvErrorMessageStr, String pvScannedBarcodeStr) {
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, pvScannedBarcodeStr, true, true);
+
+        String proglovedata = "1||" + pvErrorMessageStr;
+
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_NEGATIVE);
+
     }
 
     private  void mShowCommentsFragment(List<cComment> pvDataObl, String pvTitleStr) {
@@ -791,6 +848,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         final StepDoneFragment stepDoneFragment = new StepDoneFragment(cAppExtension.activity.getString(R.string.message_pick_done), cAppExtension.activity.getString(R.string.message_close_pick_fase) , pvShowCurrentLocationBln);
         stepDoneFragment.setCancelable(false);
         stepDoneFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ORDERDONE_TAG);
+
+        String proglovedata = "1||" + getResources().getString(R.string.proglove_check_terminal_screen);
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_PURPLE);
     }
 
     private  Boolean mCheckAndSentLinesBln() {
@@ -821,7 +882,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             return  true;
         };
 
-
         try {
             Future<Boolean> callableResultBln = executorService.submit(callableBln);
             Boolean hulpBln = callableResultBln.get();
@@ -836,8 +896,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         catch (InterruptedException | ExecutionException ignored) {
         }
       return  false;
-
-
     }
 
     private  Boolean mAllLinesDoneBln() {
@@ -873,6 +931,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private  void mStepFailed(String pvErrorMessageStr, cWarehouseorder.StepCodeEnu pvStepCodeEnu,int pvWorkflowPickStepInt ){
         cUserInterface.pDoExplodingScreen(pvErrorMessageStr, cPickorder.currentPickOrder.getOrderNumberStr(), true, true );
+
+        String proglovedata = "1||" + pvErrorMessageStr;
+
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_NEGATIVE);
+
+
         cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(pvStepCodeEnu,pvWorkflowPickStepInt);
         cUserInterface.pCheckAndCloseOpenDialogs();
     }
@@ -1091,6 +1156,10 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         new Thread(this::mHandleStartShipActivity).start();
 
+        String proglovedata = "1||" + getResources().getString(R.string.proglove_check_terminal_screen);
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 0, PROGLOVE_FEEDBACK_PURPLE);
+
     }
 
     private  void mHandleStartShipActivity(){
@@ -1255,6 +1324,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
         if (!cPickorder.currentPickOrder.pAbortBln()) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_couldnt_abort_order), cPickorderLine.currentPickOrderLine.getLineNoInt().toString(), true, true );
+
+            String proglovedata = "1||" + cAppExtension.context.getString(R.string.error_couldnt_abort_order);
+
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, false, 10, PROGLOVE_FEEDBACK_NEGATIVE);
+
+
             return;
         }
 

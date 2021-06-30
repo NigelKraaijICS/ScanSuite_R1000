@@ -10,7 +10,7 @@
     android:background="@color/colorSky">
     <TextView
         android:id="@+id/textSending"
-        android:textSize="@dimen/textsize_huge"
+        android:textSize="@dimen/textsize_huge_24"
         android:textColor="@color/colorTextDarker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         />
     <TextView
         android:id="@+id/textErrorDetail"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         android:textColor="@color/colorTextDarker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/textSending"
         app:layout_constraintBottom_toBottomOf="@id/textSending"
-        android:textSize="@dimen/textsize_huge"
+        android:textSize="@dimen/textsize_huge_24"
         android:textColor="@color/colorTextDarker"
         android:elevation="@dimen/default_double_elevation"
         />
@@ -81,7 +81,7 @@
         app:layout_constraintStart_toStartOf="@id/imageViewTryAgain"
         app:layout_constraintEnd_toEndOf="@id/imageViewTryAgain"
         android:text="@string/button_try_again"
-        android:textSize="@dimen/textsize_huge"
+        android:textSize="@dimen/textsize_huge_24"
         />
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageCloud"

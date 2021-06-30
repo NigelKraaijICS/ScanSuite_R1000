@@ -37,6 +37,7 @@ import java.util.List;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.Scanning.cProGlove;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
 import ICS.Utils.cSharedPreferences;
@@ -62,6 +63,10 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.HugeErrorFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkflowFragment;
 import nl.icsvertex.scansuite.R;
+
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_NEGATIVE;
+import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_YELLOW;
 
 public class PickorderSelectActivity extends AppCompatActivity implements iICSDefaultActivity, SwipeRefreshLayout.OnRefreshListener {
 
@@ -261,6 +266,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         this.mInitScreen();
 
+        this.mSetProGloveScreen();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
@@ -341,6 +347,10 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     //End Region iICSDefaultActivity defaults
+
+    private void mSetProGloveScreen() {
+
+    }
 
     //Region Public Methods
 
@@ -466,6 +476,10 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                     subtitleStr = cText.pIntToStringStr(pvCountFilterInt)  + "/" + cText.pIntToStringStr(cPickorder.totalPicksInt) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
                 }
                 toolbarSubTitle.setText(subtitleStr);
+
+                cProGlove myproglove= new cProGlove();
+                String proglovedata = "1|" + getString(R.string.proglove_header_pickorders) + "|" + cUser.currentUser.currentBranch.getBranchNameStr() + "|2|" + "" + "|" + subtitleStr;
+                myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER, proglovedata, true, 0, 0);
             }
         });
 
@@ -500,12 +514,18 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         //First get all Pickorders that are new
         if (!cPickorder.pGetPickOrdersViaWebserviceBln(true, false, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
+            String proglovedata = "1||" + cAppExtension.context.getString(R.string.error_get_pickorders_failed);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
             return;
         }
 
         //Then get all pickorders that are processing or parked
         if (!cPickorder.pGetPickOrdersViaWebserviceBln(false, true, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true );
+            String proglovedata = "1||" + cAppExtension.context.getString(R.string.error_get_pickorders_failed);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ERROR, proglovedata, false, 5, PROGLOVE_FEEDBACK_NEGATIVE);
             return;
         }
 
@@ -513,6 +533,11 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             cPickorder.totalPicksInt = 0;
             pSetToolBarTitleWithCounters(cPickorder.totalPicksInt);
             this.mShowNoOrdersIcon(true);
+
+            String proglovedata = "1||" + getResources().getString(R.string.proglove_no_orders);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_ALERT, proglovedata, true, 0, PROGLOVE_FEEDBACK_YELLOW);
+
             return;
         }
 

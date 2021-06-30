@@ -1,6 +1,8 @@
 package nl.icsvertex.scansuite.Activities.Returns;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -286,8 +288,8 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         this.pFillLines();
     }
 
-    public  void pCloseDocument(){
-
+    public  void pCloseDocument(String pvNewDocumentScanStr){
+        cReturnorder.currentNewDocumentScan = pvNewDocumentScanStr;
         //If we still need to fill a current location, show pop-up and we are done.
         if (cReturnorder.currentReturnOrder.getCurrentLocationStr().isEmpty() && cSetting.RETOUR_VALIDATE_CURRENT_LOCATION()) {
             mShowCurrentLocationFragment();
@@ -313,7 +315,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             cReturnorderDocument.currentReturnOrderDocument = null;
 
             //Start Documents activity
-            this.mStartDocumentsActivity();
+                this.mStartDocumentsActivity();
         }
 
 
@@ -332,7 +334,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
         }
 
         //We are done
-        this.pCloseDocument();
+        this.pCloseDocument("");
 
     }
 
@@ -360,7 +362,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
 
         if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.DOCUMENT)) {
 
-            //We scanned a NEW Document so check of we are allowed to add a Document
+            //We scanned a NEW Document so check if we are allowed to add a Document
             if (cReturnorder.currentReturnOrder.isGeneratedBln() && !cReturnorder.currentReturnOrder.getRetourMultiDocumentBln() ) {
                 this.mStepFailed(cAppExtension.activity.getString(R.string.message_document_add_not_allowed));
                 ReturnorderDocumentActivity.busyBln = false;
@@ -368,13 +370,15 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             }
 
             //Close current Document
-            this.pCloseDocument();
+            //if we have a new scan, pass this new Document scan on to the Documents activity
+            this.pCloseDocument(pvBarcodeScan.barcodeOriginalStr);
 
             //We are not busy anymore
             ReturnorderDocumentActivity.busyBln = false;
 
             //Pass this new Document scan on to the Documents activity
-            this.pHandleScan(pvBarcodeScan);
+            //mStartDocumentsActivityWithScan(pvBarcodeScan.barcodeOriginalStr);
+            //this.pHandleScan(pvBarcodeScan);
             return;
         }
 
@@ -417,7 +421,7 @@ public class ReturnorderDocumentActivity extends AppCompatActivity implements iI
             return;
         }
 
-        this.pCloseDocument();
+        this.pCloseDocument("");
     }
 
     private  void mFillRecyclerView(List<cReturnorderLine> pvReturnorderLinesObl) {

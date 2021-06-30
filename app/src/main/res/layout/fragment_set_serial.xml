@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@id/textViewSetSerialHeader"/>
     <TextView
         android:id="@+id/textViewSetSerialText"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         android:textColor="@color/colorTextDefault"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

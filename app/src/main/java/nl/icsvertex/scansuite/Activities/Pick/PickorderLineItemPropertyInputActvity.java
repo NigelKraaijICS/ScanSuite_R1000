@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
+import ICS.Utils.Scanning.cProGlove;
 import ICS.Utils.cConnection;
 import ICS.Utils.cRegex;
 import ICS.Utils.cResult;
@@ -243,6 +244,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
         this.mInitScreen();
 
+        this.mSetProGloveScreen();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
     }
 
@@ -313,6 +315,13 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     //End Regioni ICSDefaultFragment methods
 
+    private void mSetProGloveScreen() {
+        String proglovedata = "1||" + "LAS PROPERTOS ESPACTACULARRRRRRR!!!!!!";
+
+        cProGlove myproglove= new cProGlove();
+        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, true, 0, 0);
+        myproglove.pDisco();
+    }
     //Region Public Methods
 
     public void pHandleScan(cBarcodeScan pvBarcodeScan) {

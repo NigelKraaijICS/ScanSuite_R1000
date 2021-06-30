@@ -31,7 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/no_advice_locations"
-            android:textSize="@dimen/textsize_huge"
+            android:textSize="@dimen/textsize_huge_24"
             android:textColor="@color/colorPrimary"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

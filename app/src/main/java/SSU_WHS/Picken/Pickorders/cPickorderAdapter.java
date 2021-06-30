@@ -135,6 +135,8 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             return;
         }
 
+
+
         final cPickorder  selectedPickorder = localPickorderObl.get(pvPositionInt);
 
 
@@ -274,56 +276,55 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
             pvHolder.textViewExternalreference.setVisibility(View.GONE);
         }
 
-        pvHolder.pickorderItemLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        pvHolder.imageChevronDown.setVisibility(View.INVISIBLE);
 
-                if (cAppExtension.activity instanceof PickorderSelectActivity) {
-                    PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
+        pvHolder.pickorderItemLinearLayout.setOnClickListener(v -> {
+
+            if (cAppExtension.activity instanceof PickorderSelectActivity) {
+                PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;
 
 
-                    switch (PickorderSelectActivity.currentModusEnu) {
-                        case NORMAL:
-                            pickorderSelectActivity.pPickorderSelected(selectedPickorder);
-                            break;
+                switch (PickorderSelectActivity.currentModusEnu) {
+                    case NORMAL:
+                        pickorderSelectActivity.pPickorderSelected(selectedPickorder);
+                        break;
 
-                        case COMBINE:
+                    case COMBINE:
 
-                            if (!selectedPickorder.getIsSelectedBln()) {
-                                pvHolder.imageCheck.setVisibility(View.VISIBLE);
-                            }
-                            else
-                            {
-                                pvHolder.imageCheck.setVisibility(View.INVISIBLE);
-                            }
+                        if (!selectedPickorder.getIsSelectedBln()) {
+                            pvHolder.imageCheck.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            pvHolder.imageCheck.setVisibility(View.INVISIBLE);
+                        }
 
-                            pickorderSelectActivity.pPickorderSelectedForCombi(selectedPickorder);
-                            break;
-                    }
-
-                }
-
-                if (cAppExtension.activity instanceof SortorderSelectActivity) {
-                    SortorderSelectActivity sortorderSelectActivity = (SortorderSelectActivity)cAppExtension.activity;
-                    sortorderSelectActivity.pSortorderSelected(selectedPickorder);
-                }
-
-                if (cAppExtension.activity instanceof ShiporderSelectActivity) {
-                    ShiporderSelectActivity shiporderSelectActivity = (ShiporderSelectActivity)cAppExtension.activity;
-                    shiporderSelectActivity.pShiporderSelected(selectedPickorder);
-                }
-
-                if (cAppExtension.activity instanceof FinishShiporderSelectActivity) {
-                    FinishShiporderSelectActivity finishShiporderSelectActivity = (FinishShiporderSelectActivity)cAppExtension.activity;
-                    finishShiporderSelectActivity.pFinishShiporderSelected(selectedPickorder);
-                }
-
-                if (cAppExtension.activity instanceof StoreorderSelectActivity) {
-                    StoreorderSelectActivity storeorderSelectActivity = (StoreorderSelectActivity)cAppExtension.activity;
-                    storeorderSelectActivity.pStoreorderSelected(selectedPickorder);
+                        pickorderSelectActivity.pPickorderSelectedForCombi(selectedPickorder);
+                        break;
                 }
 
             }
+
+            if (cAppExtension.activity instanceof SortorderSelectActivity) {
+                SortorderSelectActivity sortorderSelectActivity = (SortorderSelectActivity)cAppExtension.activity;
+                sortorderSelectActivity.pSortorderSelected(selectedPickorder);
+            }
+
+            if (cAppExtension.activity instanceof ShiporderSelectActivity) {
+                ShiporderSelectActivity shiporderSelectActivity = (ShiporderSelectActivity)cAppExtension.activity;
+                shiporderSelectActivity.pShiporderSelected(selectedPickorder);
+            }
+
+            if (cAppExtension.activity instanceof FinishShiporderSelectActivity) {
+                FinishShiporderSelectActivity finishShiporderSelectActivity = (FinishShiporderSelectActivity)cAppExtension.activity;
+                finishShiporderSelectActivity.pFinishShiporderSelected(selectedPickorder);
+            }
+
+            if (cAppExtension.activity instanceof StoreorderSelectActivity) {
+                StoreorderSelectActivity storeorderSelectActivity = (StoreorderSelectActivity)cAppExtension.activity;
+                storeorderSelectActivity.pStoreorderSelected(selectedPickorder);
+            }
+
         });
     }
 

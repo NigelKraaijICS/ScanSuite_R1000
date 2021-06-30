@@ -50,7 +50,7 @@
         android:id="@+id/actionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textsize_normal"
+        android:textSize="@dimen/textsize_normal_16"
         android:layout_margin="@dimen/default_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/imageViewShippingDone"

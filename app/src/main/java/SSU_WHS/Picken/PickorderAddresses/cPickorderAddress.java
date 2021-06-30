@@ -22,7 +22,20 @@ public class cPickorderAddress {
     public String getNameAdditionStr() { return nameAddition; }
 
     private String address;
-    public String getAddressStr() { return address; }
+    public String getAddressStr() {
+
+        String resultStr;
+
+        if (!this.address.isEmpty()) {
+            resultStr = this.address;
+
+        }
+        else
+        {
+            resultStr = this.street + " " + this.addressNumber + " " + this.addressAddition;
+        }
+
+        return  resultStr; }
 
     private String addressAddition;
     public String getAddressAdditionStr() { return addressAddition; }

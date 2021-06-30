@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/icsNewRed</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
@@ -26,7 +26,7 @@
         <item name="android:tint" tools:targetApi="lollipop">@color/colorPrimary</item>
     </style>
     <style name="menuButton">
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:paddingTop">@dimen/default_double_padding</item>
         <item name="android:paddingBottom">@dimen/default_double_padding</item>
     </style>
@@ -47,7 +47,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:color">@color/colorWhite</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
     <style name="header_navigationview_logo">
@@ -62,7 +62,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:color">@color/colorWhite</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textSize">@dimen/textsize_huge_24</item>
         <item name="android:layout_marginTop">@dimen/default_double_margin</item>
     </style>
     <style name="header_combine_picks_title">
@@ -70,7 +70,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:color">@color/colorWhite</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="header_navigationview_logo_bup">
@@ -105,7 +105,7 @@
     <style name="menuText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
 
@@ -141,19 +141,19 @@
     <style name="userNameText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
     <style name="userNameSmallText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
     <style name="userUserNameText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorNeutral</item>
     </style>
     <style name="identifierInfoRecyclerLinearLayout">
@@ -165,33 +165,33 @@
     <style name="propertyInfoKey">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextDefault</item>
     </style>
     <style name="propertyValue">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_marginLeft">@dimen/default_margin</item>
     </style>
     <style name="identifierInfoKey">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextDefault</item>
     </style>
     <style name="identifierInfoValue">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
     <style name="userUserNameSmallText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorNeutral</item>
     </style>
     <style name="imageviewUserTinyButton">
@@ -255,21 +255,21 @@
     <style name="actionTextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:padding">@dimen/default_padding</item>
         <item name="android:background">@drawable/speech_bubble</item>
     </style>
     <style name="actionTextView2">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:padding">@dimen/default_padding</item>
         <item name="android:background">@drawable/speech_bubble</item>
     </style>
     <style name="commentTextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:paddingLeft">@dimen/default_double_padding</item>
         <item name="android:paddingBottom">@dimen/default_double_padding</item>
         <item name="android:paddingTop">@dimen/default_padding</item>
@@ -331,7 +331,7 @@
     <style name="pickorderRecyclerOrdernumberText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_marginLeft">@dimen/default_margin</item>
         <item name="android:layout_marginRight">@dimen/default_margin</item>
@@ -339,19 +339,19 @@
     <style name="inventoryorderRecyclerOrdernumberText">
         <item name="android:layout_width">300dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
     </style>
     <style name="inventoryRecyclerDescriptionText">
         <item name="android:layout_width">300dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextLighter</item>
     </style>
     <style name="pickorderRecyclerUser">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
     </style>
     <style name="pickorderRecyclerSingleArticles">
         <item name="android:layout_width">@dimen/orderline_singlearticle_indicator</item>
@@ -380,27 +380,27 @@
     <style name="pickorderRecyclerExternalreferenceText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
     </style>
     <style name="combinePicksText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:padding">@dimen/default_margin</item>
     </style>
     <style name="pickorderRecyclerQuantityTotalText">
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarker</item>
     </style>
     <style name="pickorderRecyclerQuantityTotalWhiteText">
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorWhite</item>
     </style>
     <style name="pickorderRecyclerCurrentLocationText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
     </style>
     <style name="recyclerSearchView">
@@ -415,73 +415,72 @@
     <style name="pickorderRecyclerOrdertypeText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorNeutral</item>
     </style>
     <style name="defaultLineRecyclerLinearLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:padding">@dimen/recycleritem_margin</item>
+        <item name="android:padding">@dimen/default_padding</item>
         <item name="android:background">@drawable/default_recycler_background</item>
     </style>
     <style name="defaultRecyclerOrdernumberText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
     </style>
     <style name="defaultRecyclerSourcenoText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
     </style>
     <style name="defaultRecyclerBINText">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
-        <item name="android:layout_marginLeft">@dimen/default_margin</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
     </style>
     <style name="defaultRecyclerDestinationText">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
     </style>
     <style name="defaultLineRecyclerQuantityText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
     </style>
     <style name="biggerLineRecyclerQuantityText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textStyle">bold</item>
     </style>
     <style name="pickorderLinePackAndShipRecyclerDocumentText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textSize">@dimen/textsize_huge_24</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
     <style name="pickorderLinePackAndShipRecyclerQuantityText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textSize">@dimen/textsize_huge_24</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
     <style name="enormousQuantityText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
     </style>
     <style name="pickorderLinePackAndShipRecyclerPack">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
 
@@ -580,42 +579,42 @@
     <style name="addressText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="addressSmallerText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextLighter</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="addressTextPackAndShip">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="addressSmallerTextPackAndShip">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextLighter</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="addressTextNoConstraint">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="shippingInfoText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
@@ -624,63 +623,63 @@
     <style name="articleDescriptionText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="articleDescriptionSmallText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="articleDescription2Text">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="articleItemText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="articleItemSmallText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="articleBarcodeText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="articleBarcodeSmallText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="articleVendorItemText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
     </style>
     <style name="genericItemExtraFieldText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_margin">@dimen/default_half_margin</item>
         <item name="android:layout_marginStart">@dimen/default_half_margin</item>
@@ -691,26 +690,26 @@
     <style name="defaultinfoText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
     </style>
     <style name="defaultinfoSmallerText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
     </style>
     <style name="containerText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="quantityText">
-        <item name="android:layout_height">@dimen/textsize_ludicrous</item>
+        <item name="android:layout_height">@dimen/textsize_ludicrous_52</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_ludicrous</item>
+        <item name="android:textSize">@dimen/textsize_ludicrous_52</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
         <item name="android:includeFontPadding">false</item>
@@ -719,7 +718,7 @@
     <style name="quantityTextInventory">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_ludicrous</item>
+        <item name="android:textSize">@dimen/textsize_ludicrous_52</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
         <item name="android:includeFontPadding">false</item>
@@ -727,9 +726,9 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
     <style name="quantityRequiredText">
-        <item name="android:layout_height">@dimen/textsize_huge</item>
+        <item name="android:layout_height">@dimen/textsize_huge_24</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textSize">@dimen/textsize_huge_24</item>
         <item name="android:textColor">@color/colorTextLighter</item>
         <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
         <item name="android:includeFontPadding">false</item>
@@ -767,7 +766,7 @@
     <style name="articleFullTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:layout_marginLeft">@dimen/default_double_margin</item>
     </style>
     <style name="articleFullImage">
@@ -779,7 +778,7 @@
     <style name="quantityNumberPicker">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
 
@@ -787,7 +786,7 @@
     <style name="pillButton">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:padding">@dimen/default_padding</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
@@ -798,7 +797,7 @@
     <style name="pillButtonPrimary">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:padding">@dimen/default_padding</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
@@ -815,13 +814,13 @@
         <item name="android:layout_gravity">left|top</item>
         <item name="android:background">@drawable/button_no_background</item>
         <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textSize">@dimen/textsize_huge_24</item>
     </style>
     <style name="quantityPickordersText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:background">@drawable/button_pill</item>
         <item name="android:padding">@dimen/default_padding</item>
         <item name="android:textColor">@color/colorWhite</item>
@@ -831,28 +830,28 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
     </style>
     <style name="languageTextLarge">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
-        <item name="android:textSize">@dimen/textsize_ludicrous</item>
+        <item name="android:textSize">@dimen/textsize_ludicrous_52</item>
     </style>
     <style name="textFormLabel">
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/default_margin</item>
         <item name="android:layout_marginTop">@dimen/default_double_margin</item>
     </style>
     <style name="textFormValue">
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="textFormValueConstrained">
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -886,7 +885,7 @@
     <style name="errorMessageText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:paddingTop">@dimen/default_double_padding</item>
         <item name="android:paddingBottom">@dimen/default_double_padding</item>
@@ -896,7 +895,7 @@
     <style name="errorMessageExtraText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textSize">@dimen/textsize_huge_24</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:paddingTop">@dimen/default_double_padding</item>
         <item name="android:paddingBottom">@dimen/default_double_padding</item>
@@ -914,7 +913,7 @@
         <item name="android:layout_height">match_parent</item>
     </style>
     <style name="stepDoneHeader">
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -922,7 +921,7 @@
         <item name="android:padding">@dimen/default_double_padding</item>
     </style>
     <style name="orderDoneHeader">
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -930,7 +929,7 @@
         <item name="android:padding">@dimen/default_double_padding</item>
     </style>
     <style name="addBinHeader">
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -939,7 +938,7 @@
     </style>
 
     <style name="stepDoneText">
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -952,7 +951,7 @@
         <item name="srcCompat">@drawable/ic_trophy</item>
     </style>
     <style name="acceptRejectHeader">
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -960,7 +959,7 @@
         <item name="android:padding">@dimen/default_double_padding</item>
     </style>
     <style name="acceptRejectText">
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -984,7 +983,7 @@
     <style name="textViewChosenOrder">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
     </style>
 
@@ -1000,21 +999,21 @@
     <style name="usedUnitsDescription">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="usedUnitsUnit">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="usedUnitsQuantity">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
@@ -1028,21 +1027,21 @@
     <style name="passworddialog_header">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="passworddialog_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextLighter</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
     </style>
     <style name="passworddialog_password">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
         <item name="android:inputType">textPassword</item>
@@ -1052,7 +1051,7 @@
     <style name="textdialog">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_margin">@dimen/default_margin</item>
         <item name="android:inputType">text</item>
@@ -1090,7 +1089,7 @@
         <item name="srcCompat">@drawable/ic_create</item>
     </style>
     <style name="createInventoryHeader">
-        <item name="android:textSize">@dimen/textsize_huge</item>
+        <item name="android:textSize">@dimen/textsize_huge_24</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -1099,7 +1098,7 @@
 
     </style>
     <style name="createInventoryText">
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -1108,7 +1107,7 @@
     <style name="inventoryRecyclerDescrptionText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextLightest</item>
         <item name="android:layout_marginLeft">@dimen/default_margin</item>
     </style>
@@ -1130,7 +1129,7 @@
     </style>
     <!--endregion passworddialog-->
     <style name="createMoveHeader">
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -1138,7 +1137,7 @@
         <item name="android:padding">@dimen/default_double_padding</item>
     </style>
     <style name="createMoveText">
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -1154,7 +1153,7 @@
         <item name="srcCompat">@drawable/ic_create</item>
     </style>
     <style name="createReturnHeader">
-        <item name="android:textSize">@dimen/textsize_enormous</item>
+        <item name="android:textSize">@dimen/textsize_enormous_28</item>
         <item name="android:textColor">@color/colorTextDarker</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -1162,7 +1161,7 @@
         <item name="android:padding">@dimen/default_double_padding</item>
     </style>
     <style name="createReturnText">
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -1171,7 +1170,7 @@
     <style name="returnRecyclerDescrptionText">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextLightest</item>
         <item name="android:layout_marginLeft">@dimen/default_margin</item>
     </style>
@@ -1187,24 +1186,24 @@
     <style name="returnorderRecyclerOrdernumberText">
         <item name="android:layout_width">300dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDarkest</item>
     </style>
     <style name="returnorderRecyclerDescriptionText">
         <item name="android:layout_width">300dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textsize_small</item>
+        <item name="android:textSize">@dimen/textsize_small_12</item>
         <item name="android:textColor">@color/colorTextLighter</item>
     </style>
     <style name="createPackingSlipText">
-        <item name="android:textSize">@dimen/textsize_big</item>
+        <item name="android:textSize">@dimen/textsize_big_20</item>
         <item name="android:textColor">@color/colorTextDefault</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/default_double_margin</item>
     </style>
     <style name="branchText">
-        <item name="android:textSize">@dimen/textsize_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal_16</item>
         <item name="android:textColor">@color/colorNeutral</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

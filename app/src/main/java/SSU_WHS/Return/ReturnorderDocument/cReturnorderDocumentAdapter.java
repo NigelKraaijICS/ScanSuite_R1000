@@ -111,7 +111,6 @@ public class cReturnorderDocumentAdapter extends RecyclerView.Adapter<cReturnord
             pvHolder.imageChevronDown.setVisibility(View.INVISIBLE);
         }
 
-
         pvHolder.viewForeground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +120,6 @@ public class cReturnorderDocumentAdapter extends RecyclerView.Adapter<cReturnord
                     ReturnorderDocumentsActivity returnorderDocumentActivity = (ReturnorderDocumentsActivity)cAppExtension.activity;
                     returnorderDocumentActivity.pReturnorderDocumentSelected();
                 }
-
             }
         });
     }

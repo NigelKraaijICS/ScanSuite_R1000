@@ -24,7 +24,7 @@
             app:layout_constraintBottom_toBottomOf="@id/imageViewBinItem"
             app:layout_constraintStart_toStartOf="@id/imageViewBinItem"
             app:layout_constraintEnd_toEndOf="@id/imageViewBinItem"
-            android:textSize="@dimen/textsize_huge"
+            android:textSize="@dimen/textsize_huge_24"
             android:textColor="@color/colorCommentText"
             android:elevation="@dimen/default_double_elevation"
             />

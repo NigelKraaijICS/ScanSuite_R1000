@@ -26,6 +26,8 @@ import SSU_WHS.Webservice.cWebservice;
 import nl.icsvertex.scansuite.Activities.General.MainDefaultActivity;
 import nl.icsvertex.scansuite.R;
 
+import static SSU_WHS.General.cPublicDefinitions.SHAREDPREFERENCE_USEPROGLOVE;
+
 
 public class SupportApplicationFragment extends DialogFragment implements iICSDefaultFragment {
 
@@ -43,6 +45,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
     private  ImageButton updateImageButton;
     private  ImageButton testWebserviceImageButton;
     private SwitchCompat checkDarkModus;
+    private SwitchCompat checkProglove;
 
     //End Region Private Properties
 
@@ -113,6 +116,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
             this.textViewApplicationInstalled = getView().findViewById(R.id.textViewApplicationInstalled);
             this.textViewApplicationLastUpdate = getView().findViewById(R.id.textViewApplicationLastUpdate);
             this.checkDarkModus = getView().findViewById(R.id.checkDarkModus);
+            this.checkProglove = getView().findViewById(R.id.checkProglove);
         }
     }
 
@@ -124,6 +128,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         this.textViewApplicationInstalled.setText(cDeviceInfo.getInstalldate());
         this.textViewApplicationLastUpdate.setText(cDeviceInfo.getLastUpdateDate());
         this.checkDarkModus.setChecked(cSharedPreferences.getDarkModusBln());
+        this.checkProglove.setChecked(cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false));
     }
 
     @Override
@@ -132,6 +137,7 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         this.mTestWebserviceListener();
         this.mWebserviceURLLongClickListener();
         this.mSetDarkModusListener();
+        this.mSetProgloveListener();
     }
 
     //End Region iICSDefaultFragment defaults
@@ -152,6 +158,14 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
                 mainDefaultActivity.pChangeDarkModus();
             }
         });
+    }
+    private void mSetProgloveListener() {
+        this.checkProglove.setOnCheckedChangeListener((compoundButton, checked) -> {
+
+            cSharedPreferences.pSetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, checked);
+
+        });
+
     }
 
     private void mTestWebserviceListener() {

@@ -18,7 +18,7 @@
         android:id="@+id/progressTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/textsize_big"
+        android:textSize="@dimen/textsize_big_20"
         app:layout_constraintStart_toEndOf="@id/indeterminateBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/indeterminateBar"

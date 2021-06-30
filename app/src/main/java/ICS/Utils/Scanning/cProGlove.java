@@ -1,12 +1,56 @@
 package ICS.Utils.Scanning;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+
+import java.util.List;
 
 import ICS.cAppExtension;
+import SSU_WHS.General.cPublicDefinitions;
+
+import static ICS.cAppExtension.context;
 
 public class cProGlove {
+    public boolean pIsProgloveInstalled() {
+        PackageManager packageManager = context.getPackageManager();
+        if (packageManager == null) {
+            return false;
+        }
+        try {
+            packageManager.getPackageInfo(PROGLOVE_PACKAGE_NAME, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+    public void pStartProglove() {
+        if (pIsProgloveInstalled()) {
+            Intent i = context.getPackageManager().getLaunchIntentForPackage(PROGLOVE_PACKAGE_NAME);
+            context.startActivity(i);
+        }
+    }
+    public boolean isProgloveRunning() {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        if (procInfos != null)
+        {
+            for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+                if (processInfo.processName.equals(PROGLOVE_PACKAGE_NAME)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    public void pShowPairGlove() {
+        Intent i = new Intent();
+        i.setAction(PROGLOVE_CONNECT_ACTION);
+        context.sendBroadcast(i);
+    }
     public void pSendScreen(String pvTemplateStr, String pvDataStr, Boolean pvRefreshFullBln, int pvDurationInSecondsInt, int pvLightsInt) {
 
         Intent proglove = new Intent();
@@ -23,8 +67,7 @@ public class cProGlove {
 
         proglove.putExtra(PROGLOVE_DISPLAY_EXTRA_DURATION, pvDurationInSecondsInt * 1000); //0 for permanent screen
 
-        cAppExtension.context.sendBroadcast(proglove);
-
+        context.sendBroadcast(proglove);
 
         if (pvLightsInt != 0) {
             this.pLightEmUp(pvLightsInt);
@@ -35,13 +78,13 @@ public class cProGlove {
         Intent proglove = new Intent();
         proglove.setAction(PROGLOVE_FEEDBACK_ACTION);
         proglove.putExtra(PROGLOVE_FEEDBACK_EXTRA_SEQUENCE_ID, feedBackInt);
-        cAppExtension.context.sendBroadcast(proglove);
+        context.sendBroadcast(proglove);
     }
     public void pDisco() {
         Intent proglove = new Intent();
         proglove.setAction(PROGLOVE_FEEDBACK_ACTION);
         proglove.putExtra(PROGLOVE_FEEDBACK_EXTRA_SEQUENCES_IN_ORDER, new int[]{1, 2, 3, 4, 5});
-        cAppExtension.context.sendBroadcast(proglove);
+        context.sendBroadcast(proglove);
     }
 
     public void mSetOrientation() {
@@ -53,8 +96,9 @@ public class cProGlove {
         }
         intent.setComponent(myComponent);
 
-        cAppExtension.context.startActivity(intent);
+        context.startActivity(intent);
     }
+
     public static String PROGLOVE_CONNECT_ACTION = "com.proglove.api.CONNECT";
 
     public static String PROGLOVE_DISPLAY_ACTION = "com.proglove.api.SET_DISPLAY_SCREEN";
@@ -86,4 +130,7 @@ public class cProGlove {
     public static Integer PROGLOVE_FEEDBACK_YELLOW = 3;
     public static Integer PROGLOVE_FEEDBACK_PURPLE = 4;
     public static Integer PROGLOVE_FEEDBACK_CYAN = 5;
+
+    public static String PROGLOVE_PACKAGE_NAME = "de.proglove.connect";
+    public static String PROGLOVE_INSTALL_URL = "https://scandroid.icsvertex.nl/proglove_latest.apk";
 }
