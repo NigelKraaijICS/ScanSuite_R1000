@@ -231,13 +231,17 @@ public class IntakeorderMATLinesActivity extends AppCompatActivity implements iI
 
     @Override
     public void mFieldsInitialize() {
+
+        //Clear filter first, so deviations filter work
+        getIntakeorderMATSummaryLineAdapter().pSetFilter("", false);
+
+        //Get deviations checked from memory and use this in UI en data filters
         mSetDeviations();
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cIntakeorder.currentIntakeOrder.getOrderNumberStr());
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
         recyclerSearchView.setQuery("", false);
         recyclerSearchView.setIconified(true);
-        getIntakeorderMATSummaryLineAdapter().pSetFilter("", false);
     }
 
     @Override
