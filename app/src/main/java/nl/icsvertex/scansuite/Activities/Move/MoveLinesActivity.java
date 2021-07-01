@@ -73,7 +73,6 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
     private NavigationView actionMenuNavigation;
     private ImageView imageButtonCloseOrder;
     public boolean closeOrderClickedBln = false;
-    public static boolean activityInitializedBln;
 
     //End Region Private Properties
 
@@ -278,12 +277,10 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
         this.textViewChosenOrder.setText(cMoveorder.currentMoveOrder.getOrderNumberStr());
 
-        if (!MoveLinesActivity.activityInitializedBln){
+        if (this.moveLinesTabLayout.getTabCount() <= 0){
             this.moveLinesTabLayout.addTab(this.moveLinesTabLayout.newTab().setText(R.string.tab_moveorderline_take));
             this.moveLinesTabLayout.addTab(this.moveLinesTabLayout.newTab().setText(R.string.tab_moveorderline_place));
-            MoveLinesActivity.activityInitializedBln = true;
-       }
-
+        }
 
         MoveLinesPagerAdapter moveLinesPagerAdapter = new MoveLinesPagerAdapter(this.moveLinesTabLayout.getTabCount());
         this.moveLinesViewpager.setAdapter(moveLinesPagerAdapter);
@@ -457,7 +454,7 @@ public class MoveLinesActivity extends AppCompatActivity implements iICSDefaultA
 
     private void mStartOrderSelectActivity() {
 
-        MoveLinesActivity.activityInitializedBln = false;
+
         cMoveorder.currentMoveOrder.pLockReleaseViaWebserviceBln();
         Intent intent = new Intent(cAppExtension.context, MoveorderSelectActivity.class);
         MoveorderSelectActivity.startedViaMenuBln = false;

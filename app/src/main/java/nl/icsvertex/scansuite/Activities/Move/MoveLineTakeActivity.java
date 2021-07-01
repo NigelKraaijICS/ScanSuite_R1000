@@ -1273,7 +1273,6 @@ public class MoveLineTakeActivity extends AppCompatActivity implements iICSDefau
     }
 
     private void mGoBackToLinesActivity() {
-        MoveLinesActivity.activityInitializedBln = false;
         Intent intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
         startActivity(intent);
         finish();

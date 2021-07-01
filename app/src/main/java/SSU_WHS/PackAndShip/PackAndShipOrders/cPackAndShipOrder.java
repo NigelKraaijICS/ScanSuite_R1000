@@ -1077,7 +1077,7 @@ public class cPackAndShipOrder {
 
         cPackAndShipOrderViewModel  packAndShipOrderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cPackAndShipOrderViewModel.class);
 
-        hulpResultObl = packAndShipOrderViewModel.pGetPackAndShipOrdersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        hulpResultObl = packAndShipOrderViewModel.pGetPackAndShipOrdersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userPackAndShipFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }

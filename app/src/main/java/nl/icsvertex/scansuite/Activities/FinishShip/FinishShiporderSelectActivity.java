@@ -409,7 +409,7 @@ public class FinishShiporderSelectActivity extends AppCompatActivity implements 
 
         List<cPickorder> filteredPicksObl;
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userFinishShipFilterBln());
 
         filteredPicksObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
         if (filteredPicksObl.size() == 0) {

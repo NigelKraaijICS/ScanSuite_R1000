@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.lang.reflect.Method;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cUserInterface;

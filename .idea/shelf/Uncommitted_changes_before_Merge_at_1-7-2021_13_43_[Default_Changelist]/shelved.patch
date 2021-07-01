@@ -1,0 +1,20 @@
+Index: app/release/normal/release/output-metadata.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"version\": 2,\r\n  \"artifactType\": {\r\n    \"type\": \"APK\",\r\n    \"kind\": \"Directory\"\r\n  },\r\n  \"applicationId\": \"nl.icsvertex.scansuite\",\r\n  \"variantName\": \"normalRelease\",\r\n  \"elements\": [\r\n    {\r\n      \"type\": \"SINGLE\",\r\n      \"filters\": [],\r\n      \"versionCode\": 158107,\r\n      \"versionName\": \"1.5.8.107A\",\r\n      \"outputFile\": \"app-normal-release.apk\"\r\n    }\r\n  ]\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/release/normal/release/output-metadata.json	(revision 35e369e047c7495a1acbdc14d639038539231786)
++++ app/release/normal/release/output-metadata.json	(date 1625063656049)
+@@ -10,8 +10,8 @@
+     {
+       "type": "SINGLE",
+       "filters": [],
+-      "versionCode": 158107,
+-      "versionName": "1.5.8.107A",
++      "versionCode": 158108,
++      "versionName": "1.5.8.108A",
+       "outputFile": "app-normal-release.apk"
+     }
+   ]

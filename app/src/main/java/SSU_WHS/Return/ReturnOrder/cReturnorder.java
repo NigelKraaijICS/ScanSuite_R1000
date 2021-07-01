@@ -982,7 +982,7 @@ public class cReturnorder {
         List<cReturnorderEntity> hulpResultObl;
 
         cReturnorderViewModel returnorderViewModel=  new ViewModelProvider(cAppExtension.fragmentActivity).get(cReturnorderViewModel.class);
-        hulpResultObl =  returnorderViewModel.pGetReturnOrdersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        hulpResultObl =  returnorderViewModel.pGetReturnOrdersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userReturnFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }

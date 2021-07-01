@@ -139,6 +139,11 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
     @Override
     public void onBackPressed() {
+
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }
         this.mLeaveActivity();
     }
 
@@ -375,7 +380,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
             //Fill and show recycler
             mSetReturnorderRecycler(cReturnorder.allReturnordersObl);
             mShowNoOrdersIcon(false);
-            if (cSharedPreferences.userFilterBln()) {
+            if (cSharedPreferences.userReturnFilterBln()) {
                 mApplyFilter();
             }
 
@@ -436,7 +441,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
     private  void mApplyFilter() {
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userReturnFilterBln());
 
         List<cReturnorder> returnorderObl = cReturnorder.pGetReturnOrdersWithFilterFromDatabasObl();
 
@@ -743,7 +748,7 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        if (!cSharedPreferences.userFilterBln()) {
+        if (!cSharedPreferences.userReturnFilterBln()) {
             this.toolbarSubTitle.setText(cReturnorder.getNumberOfOrdersStr() + " " + cAppExtension.activity.getString(R.string.orders));
         } else {
             this.toolbarSubTitle.setText(cReturnorder.getNumberOfFilteredOrdersStr() + " " + cAppExtension.activity.getString(R.string.orders));

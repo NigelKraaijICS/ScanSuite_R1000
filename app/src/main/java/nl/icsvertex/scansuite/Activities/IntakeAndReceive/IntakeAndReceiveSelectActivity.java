@@ -147,6 +147,11 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
+
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }
         this.mLeaveActivity();
     }
 
@@ -341,7 +346,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             //Fill and show recycler
             mFillRecycler(cIntakeorder.allIntakeordersObl);
             mShowNoOrdersIcon(false);
-            if (cSharedPreferences.userFilterBln()) {
+            if (cSharedPreferences.userReceiveIntakeFilterBln()) {
                 mApplyFilter();
             }
 
@@ -530,7 +535,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
     private   void mApplyFilter() {
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userReceiveIntakeFilterBln());
 
         List<cIntakeorder> filteredIntakesObl = cIntakeorder.pGetIntakesWithFilterFromDatabasObl();
 
@@ -756,7 +761,7 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
             return;
         }
 
-        if (!cSharedPreferences.userFilterBln()) {
+        if (!cSharedPreferences.userReceiveIntakeFilterBln()) {
             subTitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cIntakeorder.allIntakeordersObl.size(),cIntakeorder.allIntakeordersObl.size());
         } else {
             subTitleStr = "(" + cText.pIntToStringStr(cIntakeorder.pGetIntakesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cIntakeorder.allIntakeordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);

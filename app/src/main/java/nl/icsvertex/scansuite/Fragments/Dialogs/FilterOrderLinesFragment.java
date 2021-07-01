@@ -41,34 +41,34 @@ public class FilterOrderLinesFragment extends PreferenceFragmentCompat {
         }
 
         if (cAppExtension.context instanceof SortorderSelectActivity) {
-            setPreferencesFromResource(R.xml.pick_filter, rootKey);
+            setPreferencesFromResource(R.xml.sort_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof ShiporderSelectActivity) {
-            setPreferencesFromResource(R.xml.pick_filter, rootKey);
+            setPreferencesFromResource(R.xml.ship_filter, rootKey);
         }
         if (cAppExtension.context instanceof StoreorderSelectActivity) {
-            setPreferencesFromResource(R.xml.pick_filter, rootKey);
+            setPreferencesFromResource(R.xml.store_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof InventoryorderSelectActivity) {
-            setPreferencesFromResource(R.xml.standard_filter, rootKey);
+            setPreferencesFromResource(R.xml.inventory_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof IntakeAndReceiveSelectActivity) {
-            setPreferencesFromResource(R.xml.standard_filter, rootKey);
+            setPreferencesFromResource(R.xml.intake_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof ReturnorderSelectActivity) {
-            setPreferencesFromResource(R.xml.standard_filter, rootKey);
+            setPreferencesFromResource(R.xml.return_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof MoveorderSelectActivity) {
-            setPreferencesFromResource(R.xml.standard_filter, rootKey);
+            setPreferencesFromResource(R.xml.move_filter, rootKey);
         }
 
         if (cAppExtension.context instanceof PackAndShipSelectActivity) {
-            setPreferencesFromResource(R.xml.standard_filter, rootKey);
+            setPreferencesFromResource(R.xml.pack_and_ship_filter, rootKey);
         }
 
 

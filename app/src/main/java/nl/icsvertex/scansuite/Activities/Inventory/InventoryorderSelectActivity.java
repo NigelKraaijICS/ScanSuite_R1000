@@ -139,6 +139,10 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     @Override
     public void onBackPressed() {
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }
         this.mLeaveActivity();
     }
 
@@ -372,7 +376,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             //Fill and show recycler
             mSetInventoryorderRecycler(filteredInventoryOrdersObl);
             mShowNoOrdersIcon(false);
-            if (cSharedPreferences.userFilterBln()) {
+            if (cSharedPreferences.userInventoryFilterBln()) {
                 mApplyFilter();
             }
 
@@ -435,7 +439,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
     private  void mApplyFilter() {
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userInventoryFilterBln());
 
         List<cInventoryorder> filteredInventoryOrdersObl = cInventoryorder.pGetInventoriesWithFilterFromDatabasObl();
 
@@ -728,7 +732,7 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
             return;
         }
         String subtitleStr;
-        if (!cSharedPreferences.userFilterBln()) {
+        if (!cSharedPreferences.userInventoryFilterBln()) {
             subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cInventoryorder.allInventoryOrdersObl(false).size(),cInventoryorder.allInventoryOrdersObl(false).size());
         } else {
             subtitleStr = cText.pIntToStringStr(cInventoryorder.pGetInventoriesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cInventoryorder.allInventoryOrdersObl(false).size()) + " " + cAppExtension.activity.getString(R.string.inventory_orders);

@@ -410,7 +410,7 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
 
         List<cPickorder> filteredPicksObl;
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userStoreFilterBln());
 
         filteredPicksObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
         if (filteredPicksObl.size() == 0) {

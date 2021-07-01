@@ -140,6 +140,10 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void onBackPressed() {
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }
         this.mLeaveActivity();
     }
 
@@ -353,7 +357,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
             mSetMoveorderRecycler(cMoveorder.allMoveordersObl);
             mShowNoOrdersIcon(false);
-            if (cSharedPreferences.userFilterBln()) {
+            if (cSharedPreferences.userMoveFilterBln()) {
                 mApplyFilter();
             }
 
@@ -415,7 +419,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         switch ( cMoveorder.currentMoveOrder.getOrderTypeStr()) {
             case "MV":
-                MoveLinesActivity.activityInitializedBln = false;
                 intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
                 break;
 
@@ -440,7 +443,6 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
                 }
                 else
                 {
-                    MoveLinesActivity.activityInitializedBln = false;
                     intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
                 }
                 break;
@@ -549,7 +551,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mApplyFilter() {
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userMoveFilterBln());
 
         List<cMoveorder> filteredMovesObl = cMoveorder.pGetMovesWithFilterFromDatabasObl();
 
@@ -771,7 +773,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        if (!cSharedPreferences.userFilterBln()) {
+        if (!cSharedPreferences.userMoveFilterBln()) {
             subTitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cMoveorder.allMoveordersObl.size(),cMoveorder.allMoveordersObl.size());
         } else {
             subTitleStr = "(" + cText.pIntToStringStr(cMoveorder.pGetMovesWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cMoveorder.allMoveordersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);

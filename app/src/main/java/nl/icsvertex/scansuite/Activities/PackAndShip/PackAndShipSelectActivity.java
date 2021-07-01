@@ -333,7 +333,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
             mFillRecycler(cPackAndShipOrder.allPackAndShipOrdersObl);
             mShowNoOrdersIcon(false);
-            if (cSharedPreferences.userFilterBln()) {
+            if (cSharedPreferences.userPackAndShipFilterBln()) {
                 mApplyFilter();
             }
 
@@ -494,7 +494,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
     private void mApplyFilter() {
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userPackAndShipFilterBln());
 
         List<cPackAndShipOrder> filteredPackAndShipOrdersObl = cPackAndShipOrder.pGetPackAndShipOrdersWithFilterFromDatabasObl();
 
@@ -716,7 +716,7 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
             return;
         }
 
-        if (!cSharedPreferences.userFilterBln()) {
+        if (!cSharedPreferences.userPackAndShipFilterBln()) {
             subTitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cPackAndShipOrder.allPackAndShipOrdersObl.size(),cPackAndShipOrder.allPackAndShipOrdersObl.size());
         } else {
             subTitleStr = "(" + cText.pIntToStringStr(cPackAndShipOrder.pGetPackAndShipOrdersWithFilterFromDatabasObl().size())  + "/" + cText.pIntToStringStr(cPackAndShipOrder.allPackAndShipOrdersObl.size()) + ") " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
