@@ -239,6 +239,11 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void onBackPressed() {
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }
+
         this.mLeaveActivity();
     }
 
@@ -470,7 +475,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                     return;
                 }
                 String subtitleStr;
-                if (!cSharedPreferences.userFilterBln()) {
+                if (!cSharedPreferences.userPickFilterBln()) {
                     subtitleStr = cAppExtension.context.getResources().getQuantityString(R.plurals.plural_parameter1_orders, cPickorder.totalPicksInt,cPickorder.totalPicksInt);
                 } else {
                     subtitleStr = cText.pIntToStringStr(pvCountFilterInt)  + "/" + cText.pIntToStringStr(cPickorder.totalPicksInt) + " " + cAppExtension.activity.getString(R.string.orders) + " " + cAppExtension.activity.getString(R.string.shown);
@@ -569,7 +574,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         //Fill and show recycler
         mSetPickorderRecycler(cPickorder.allPickordersObl);
         mShowNoOrdersIcon(false);
-        if (cSharedPreferences.userFilterBln()) {
+        if (cSharedPreferences.userPickFilterBln()) {
             mApplyFilter();
         }
 
@@ -742,7 +747,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private  void mApplyFilter() {
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userPickFilterBln());
 
         List<cPickorder> filteredPicksObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
 

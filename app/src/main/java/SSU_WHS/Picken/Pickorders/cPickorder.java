@@ -700,7 +700,7 @@ public class cPickorder{
         List<cPickorderEntity> hulpResultObl;
 
         cPickorderViewModel pickorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cPickorderViewModel.class);
-        hulpResultObl =  pickorderViewModel.pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(),cSharedPreferences.userFilterBln());
+        hulpResultObl =  pickorderViewModel.pGetPickordersWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(),cSharedPreferences.userPickFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             if (cAppExtension.activity instanceof PickorderSelectActivity) {
                 PickorderSelectActivity pickorderSelectActivity = (PickorderSelectActivity)cAppExtension.activity;

@@ -12,8 +12,48 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class cSharedPreferences {
 
-    public static Boolean userFilterBln(){
-       return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key), false);
+//    public static Boolean userFilterBln(){
+//       return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key), false);
+//    }
+
+    public static Boolean userPickFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_pick), false);
+    }
+
+    public static Boolean userReceiveIntakeFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_intake), false);
+    }
+
+    public static Boolean userInventoryFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_inventory), false);
+    }
+
+    public static Boolean userMoveFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_move), false);
+    }
+
+    public static Boolean userReturnFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_return), false);
+    }
+
+    public static Boolean userFinishShipFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_finish_ship), false);
+    }
+
+    public static Boolean userPackAndShipFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_pack_ship), false);
+    }
+
+    public static Boolean userShipFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_ship), false);
+    }
+
+    public static Boolean userSortFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_sort), false);
+    }
+
+    public static Boolean userStoreFilterBln(){
+        return cSharedPreferences.mGetDefaultSharedPreferenceBoolean(cAppExtension.context.getString(R.string.filter_orderlines_enable_key_store), false);
     }
 
     public static Boolean showProcessedWaitBln(){

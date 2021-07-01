@@ -193,10 +193,12 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
         ViewCompat.setTransitionName(this.textViewChosenOrder, cPublicDefinitions.VIEW_CHOSEN_ORDER);
 
         this.textViewChosenOrder.setText(cInventoryorder.currentInventoryOrder.getOrderNumberStr());
-        this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_todo));
-        this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
-        this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_total));
 
+        if(this.inventoryorderBinsTabLayout.getTabCount() <= 0){
+            this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_todo));
+            this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_done));
+            this.inventoryorderBinsTabLayout.addTab(this.inventoryorderBinsTabLayout.newTab().setText(R.string.tab_inventorybin_total));
+        }
         InventoryorderBinsPagerAdapter inventoryorderBinsPagerAdapter = new InventoryorderBinsPagerAdapter(this.inventoryorderBinsTabLayout.getTabCount());
         this.inventoryorderBinsViewpager.setAdapter(inventoryorderBinsPagerAdapter);
 
@@ -218,9 +220,6 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
             }
         });
-
-
-
     }
 
     @Override

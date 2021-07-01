@@ -317,7 +317,7 @@ public class cIntakeorder {
         List<cIntakeorderEntity> hulpResultObl;
 
         cIntakeorderViewModel intakeorderViewModel =  new ViewModelProvider(cAppExtension.fragmentActivity).get(cIntakeorderViewModel.class);
-        hulpResultObl =  intakeorderViewModel.pGetIntakeordersFromDatabaseWithFilterObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        hulpResultObl =  intakeorderViewModel.pGetIntakeordersFromDatabaseWithFilterObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userReceiveIntakeFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }

@@ -304,7 +304,16 @@
     <string name="filter_orderlines_title">Show orders that are: </string>
     <string name="filter_orderlines_enable">Use filters</string>
     <string name="filter_orderlines_enable_summary">Enable or disable all filters below</string>
-    <string name="filter_orderlines_enable_key" translatable="false">FILTERORDERLINES_ENABLE</string>
+    <string name="filter_orderlines_enable_key_pick" translatable="false">FILTERORDERLINES_ENABLE_PICK</string>
+    <string name="filter_orderlines_enable_key_intake" translatable="false">FILTERORDERLINES_ENABLE_INTAKE</string>
+    <string name="filter_orderlines_enable_key_return" translatable="false">FILTERORDERLINES_ENABLE_RETURN</string>
+    <string name="filter_orderlines_enable_key_move" translatable="false">FILTERORDERLINES_ENABLE_MOVE</string>
+    <string name="filter_orderlines_enable_key_inventory" translatable="false">FILTERORDERLINES_ENABLE_INVENTORY</string>
+    <string name="filter_orderlines_enable_key_finish_ship" translatable="false">FILTERORDERLINES_ENABLE_FINISH_SHIP</string>
+    <string name="filter_orderlines_enable_key_pack_ship" translatable="false">FILTERORDERLINES_ENABLE_PACK_SHIP</string>
+    <string name="filter_orderlines_enable_key_ship" translatable="false">FILTERORDERLINES_ENABLE_SHIP</string>
+    <string name="filter_orderlines_enable_key_sort" translatable="false">FILTERORDERLINES_ENABLE_SORT</string>
+    <string name="filter_orderlines_enable_key_store" translatable="false">FILTERORDERLINES_ENABLE_STORE</string>
     <string name="filter_orderlines_processing">Being processed or on hold</string>
     <string name="filter_orderlines_processing_summary_on">Showing these</string>
     <string name="filter_orderlines_processing_summary_off">Not showing these</string>

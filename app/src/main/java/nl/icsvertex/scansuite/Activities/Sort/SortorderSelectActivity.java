@@ -405,7 +405,7 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
         List<cPickorder> filteredPicksObl;
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userSortFilterBln());
 
         filteredPicksObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
         if (filteredPicksObl.size() == 0) {

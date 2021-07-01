@@ -478,7 +478,7 @@ public class cInventoryorder {
         List<cInventoryorderEntity> hulpResultObl;
 
         cInventoryorderViewModel inventoryorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cInventoryorderViewModel.class);
-        hulpResultObl =  inventoryorderViewModel.pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        hulpResultObl =  inventoryorderViewModel.pGetInventoriesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userInventoryFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }

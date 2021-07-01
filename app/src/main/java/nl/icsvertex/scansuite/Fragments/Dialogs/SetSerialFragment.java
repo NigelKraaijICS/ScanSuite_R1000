@@ -1,6 +1,7 @@
 package nl.icsvertex.scansuite.Fragments.Dialogs;
 
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultFragment;
@@ -115,6 +117,8 @@ public class SetSerialFragment extends DialogFragment implements iICSDefaultFrag
         this.editTextSetSerial.setFilters(filterArray);
         cUserInterface.pShowKeyboard(editTextSetSerial);
         this.textViewSetSerialText.setVisibility(View.GONE);
+
+        this.editTextSetSerial.setText(this.getSerialNumber());
     }
 
     @Override
@@ -125,7 +129,14 @@ public class SetSerialFragment extends DialogFragment implements iICSDefaultFrag
     }
 
     private void mSetCancelListener() {
-        this.cancelButton.setOnClickListener(view -> dismiss());
+        this.cancelButton.setOnClickListener(view -> {
+
+            if (cAppExtension.activity instanceof MainDefaultActivity) {
+                MainDefaultActivity mainDefaultActivity = (MainDefaultActivity) cAppExtension.activity;
+                mainDefaultActivity.mActivityInitialize();
+            }
+            dismiss();
+        });
     }
 
     private void mSetSetSerialListener() {
@@ -159,6 +170,34 @@ public class SetSerialFragment extends DialogFragment implements iICSDefaultFrag
         this.editTextSetSerial.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
         this.setSerialButton.callOnClick();
 
+    }
+
+    private String getSerialNumber() {
+        String serialNumber;
+
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method get = c.getMethod("get", String.class);
+
+            serialNumber = (String) get.invoke(c, "gsm.sn1");
+            if (serialNumber.equals(""))
+                serialNumber = (String) get.invoke(c, "ril.serialnumber");
+            if (serialNumber.equals(""))
+                serialNumber = (String) get.invoke(c, "ro.serialno");
+            if (serialNumber.equals(""))
+                serialNumber = (String) get.invoke(c, "sys.serialnumber");
+            if (serialNumber.equals(""))
+                serialNumber = Build.SERIAL;
+
+            // If none of the methods above worked
+            if (serialNumber.equals(""))
+                serialNumber = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            serialNumber = null;
+        }
+
+        return serialNumber;
     }
 
 }

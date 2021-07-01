@@ -279,9 +279,11 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         }
     }
     private void mSetProGloveScreen() {
-        String proglovedata = "1|" + getResources().getString(R.string.proglove_header_scansuite) + "|" + cEnvironment.currentEnvironment.getDescriptionStr() + "|2|" + getResources().getString(R.string.proglove_on_terminal) + "|" + getResources().getString(R.string.proglove_press_begin_scanner);
-        cProGlove myproglove= new cProGlove();
-        myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER, proglovedata, true, 0, 0);
+        if (cEnvironment.currentEnvironment != null){
+            String proglovedata = "1|" + getResources().getString(R.string.proglove_header_scansuite) + "|" + cEnvironment.currentEnvironment.getDescriptionStr() + "|2|" + getResources().getString(R.string.proglove_on_terminal) + "|" + getResources().getString(R.string.proglove_press_begin_scanner);
+            cProGlove myproglove= new cProGlove();
+            myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER, proglovedata, true, 0, 0);
+        }
     }
 
     //Region Public Methods

@@ -415,7 +415,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
         List<cPickorder> filteredPicksObl;
 
-        this.mShowThatFiltersInUse(cSharedPreferences.userFilterBln());
+        this.mShowThatFiltersInUse(cSharedPreferences.userShipFilterBln());
 
         filteredPicksObl = cPickorder.pGetPicksWithFilterFromDatabasObl();
         if (filteredPicksObl.size() == 0) {

@@ -1206,7 +1206,7 @@ public class cMoveorder {
 
         cMoveorderViewModel  moveorderViewModel = new ViewModelProvider(cAppExtension.fragmentActivity).get(cMoveorderViewModel.class);
 
-        hulpResultObl = moveorderViewModel.pGetMovesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userFilterBln());
+        hulpResultObl = moveorderViewModel.pGetMovesWithFilterFromDatabaseObl(cUser.currentUser.getUsernameStr(), cSharedPreferences.userMoveFilterBln());
         if (hulpResultObl == null || hulpResultObl.size() == 0) {
             return  resultObl;
         }

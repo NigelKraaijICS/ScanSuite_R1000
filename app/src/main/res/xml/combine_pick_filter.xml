@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <SwitchPreference
-        android:key="@string/filter_orderlines_enable_key"
+        android:key="@string/filter_orderlines_enable_key_pick"
         android:title="@string/filter_orderlines_enable"
         android:summary="@string/filter_orderlines_enable_summary"
         android:icon="@drawable/ic_nofilter_black_24dp"
@@ -16,7 +16,7 @@
             android:summaryOn="@string/filter_orderlines_singlearticles_summary_on"
             android:summaryOff="@string/show_all"
             android:icon="@drawable/ic_circle_one_black_24p"
-            android:dependency="@string/filter_orderlines_enable_key"
+            android:dependency="@string/filter_orderlines_enable_key_pick"
             android:defaultValue="false"
             />
         <!--android:summary="@string/filter_orderlines_singlearticles_summary"-->
@@ -24,7 +24,7 @@
             android:key="@string/filter_orderlines_my_orders_key"
             android:title="@string/filter_orderlines_my_orders"
             android:icon="@drawable/ic_me_black_24dp"
-            android:dependency="@string/filter_orderlines_enable_key"
+            android:dependency="@string/filter_orderlines_enable_key_pick"
             android:defaultValue="false"
             />
         <!--android:summary="@string/filter_orderlines_my_orders_summary"-->
@@ -32,7 +32,7 @@
             android:key="@string/filter_orderlines_their_orders_key"
             android:title="@string/filter_orderlines_their_orders"
             android:icon="@drawable/ic_others_black_24dp"
-            android:dependency="@string/filter_orderlines_enable_key"
+            android:dependency="@string/filter_orderlines_enable_key_pick"
             android:defaultValue="false"
             />
         <!--android:summary="@string/filter_orderlines_their_orders_summary"-->
@@ -40,7 +40,7 @@
             android:key="@string/filter_orderlines_nobodys_orders_key"
             android:title="@string/filter_orderlines_nobodys_orders"
             android:icon="@drawable/ic_nobody_black_24dp"
-            android:dependency="@string/filter_orderlines_enable_key"
+            android:dependency="@string/filter_orderlines_enable_key_pick"
             android:defaultValue="false"
             />
         <!--android:summary="@string/filter_orderlines_nobodys_orders_summary"-->

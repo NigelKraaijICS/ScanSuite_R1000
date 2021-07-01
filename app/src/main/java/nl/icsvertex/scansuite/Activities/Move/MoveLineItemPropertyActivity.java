@@ -871,7 +871,6 @@ public class MoveLineItemPropertyActivity  extends AppCompatActivity implements 
         Intent intent = null;
 
         if(currentModus == modusEnu.GENERATEDPLACE || currentModus == modusEnu.GENERATEDTAKE){
-            MoveLinesActivity.activityInitializedBln = false;
             intent  = new Intent(cAppExtension.context, MoveLinesActivity.class);
         }
 
