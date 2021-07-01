@@ -1307,19 +1307,19 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
         cResult result = new cResult();
         result.resultBln = true;
 
-        cUserInterface.pShowGettingData();
+        //cUserInterface.pShowGettingData();
 
         //Add the barcodeStr via the webservice
         if (!cPickorder.currentPickOrder.pAddERPBarcodeBln(pvBarcodeScan)) {
+            cUserInterface.pHideGettingData();
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_barcode_unknown_ERP,pvBarcodeScan.barcodeOriginalStr));
-            cUserInterface.pHideGettingData();
             return result;
         }
-
+        cUserInterface.pHideGettingData();
         //Refresh the activity
         this.mFieldsInitialize();
-        cUserInterface.pHideGettingData();
+
         return  result;
     }
 
@@ -1334,20 +1334,24 @@ public class PickorderPickGeneratedActivity extends AppCompatActivity implements
 
         cResult result =  new cResult();
         result.resultBln = true;
+        cAppExtension.activity.runOnUiThread(new Runnable() {
+             @Override
+             public void run() {
+                 //Start with complete
+                 imageButtonDone.setVisibility(View.VISIBLE);
 
-        //Start with complete
-        this.imageButtonDone.setVisibility(View.VISIBLE);
+                 //If we don't have a current barcode, you can't close the line
+                 if (cPickorder.currentPickOrder.currentArticle == null) {
+                     textViewAction.setText(cAppExtension.activity.getString(R.string.message_scan_article));
+                     imageButtonDone.setVisibility(View.INVISIBLE);
+                     return;
+                 }
 
-        //If we don't have a current barcode, you can't close the line
-        if (cPickorder.currentPickOrder.currentArticle == null) {
-            this.textViewAction.setText(cAppExtension.activity.getString(R.string.message_scan_article));
-            this.imageButtonDone.setVisibility(View.INVISIBLE);
-            return;
-        }
-
-        this.textViewAction.setText(cAppExtension.activity.getString(R.string.message_scan_article_or_close_line));
-        this.imageButtonDone.setVisibility(View.VISIBLE);
-        this.imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+                 textViewAction.setText(cAppExtension.activity.getString(R.string.message_scan_article_or_close_line));
+                 imageButtonDone.setVisibility(View.VISIBLE);
+                 imageButtonDone.setImageResource(R.drawable.ic_doublecheck_black_24dp);
+             }
+        });
     }
 
     //End Region Number Broadcaster
