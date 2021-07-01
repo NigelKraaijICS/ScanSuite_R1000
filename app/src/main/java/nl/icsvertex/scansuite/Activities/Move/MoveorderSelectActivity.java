@@ -415,6 +415,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         switch ( cMoveorder.currentMoveOrder.getOrderTypeStr()) {
             case "MV":
+                MoveLinesActivity.activityInitializedBln = false;
                 intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
                 break;
 
@@ -439,6 +440,7 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
                 }
                 else
                 {
+                    MoveLinesActivity.activityInitializedBln = false;
                     intent = new Intent(cAppExtension.context, MoveLinesActivity.class);
                 }
                 break;

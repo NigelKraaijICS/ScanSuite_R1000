@@ -346,7 +346,7 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
             result.resultBln = false;
             return result;
         }
-
+        cUserInterface.pHideGettingData();
         //Set the scanned barcodeStr, so we can raise quantity in next activity
         this.mStartMoveLinePlaceActivity();
         return result;
@@ -430,6 +430,7 @@ public class MoveLinesPlaceFragment extends Fragment implements iICSDefaultFragm
             return  result;
         }
 
+        cUserInterface.pHideGettingData();
         //Set the scanned barcodeStr, so we can raise quantity in next activity
         this.mStartMoveLinePlaceActivity();
         return result;
