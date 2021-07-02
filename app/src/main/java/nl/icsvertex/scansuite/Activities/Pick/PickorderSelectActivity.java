@@ -34,6 +34,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
+import java.util.Objects;
 
 import ICS.Interfaces.iICSDefaultActivity;
 import ICS.Utils.Scanning.cBarcodeScan;
@@ -59,12 +60,10 @@ import SSU_WHS.Picken.Pickorders.cPickorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
-import nl.icsvertex.scansuite.Fragments.Dialogs.HugeErrorFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.WorkflowFragment;
 import nl.icsvertex.scansuite.R;
 
-import static ICS.Utils.Scanning.cProGlove.PROGLOVE_DISPLAY_TEMPLATE_2FIELD_2HEADER;
 import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_NEGATIVE;
 import static ICS.Utils.Scanning.cProGlove.PROGLOVE_FEEDBACK_YELLOW;
 
@@ -364,11 +363,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         // Show that we are getting data
         cUserInterface.pShowGettingData();
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandleFillOrders();
-            }
-        }).start();
+        new Thread(this::mHandleFillOrders).start();
 
     }
 
@@ -392,7 +387,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                     return;
                 }
 
-                this.recyclerViewPickorders.findViewHolderForAdapterPosition(cPickorder.pickordersToSelectObl().indexOf(pickorder)).itemView.performClick();
+                Objects.requireNonNull(this.recyclerViewPickorders.findViewHolderForAdapterPosition(cPickorder.pickordersToSelectObl().indexOf(pickorder))).itemView.performClick();
                 return;
             }
         }
@@ -416,7 +411,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
                     return;
                 }
 
-                this.recyclerViewPickorders.findViewHolderForAdapterPosition(cPickorder.pickordersToSelectObl().indexOf(pickorder)).itemView.performClick();
+                Objects.requireNonNull(this.recyclerViewPickorders.findViewHolderForAdapterPosition(cPickorder.pickordersToSelectObl().indexOf(pickorder))).itemView.performClick();
                 return;
             }
         }
@@ -440,11 +435,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorder.currentPickOrder = pvPickorder;
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cPickorder.currentPickOrder.getOrderNumberStr());
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandlePickorderSelected();
-            }
-        }).start();
+        new Thread(this::mHandlePickorderSelected).start();
 
     }
 
@@ -604,13 +595,8 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
             return;
         }
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // If everything went well, then start Lines Activity
-                mShowPickLinesActivity();
-            }
-        });
+        // If everything went well, then start Lines Activity
+        cAppExtension.activity.runOnUiThread(this::mShowPickLinesActivity);
 
     }
 
@@ -629,7 +615,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
         Intent intent;
 
-        if (cPickorder.currentPickOrder.isGeneratedOrderBln()) {
+        if (cPickorder.currentPickOrder.isGeneratedOrderBln() && !cPickorder.currentPickOrder.getOrderNumberStr().toUpperCase().startsWith("PV")) {
             intent = new Intent(cAppExtension.context, PickorderLinesGeneratedActivity.class);
         }
         else{
@@ -733,12 +719,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetNewOrderListener() {
-        this.imageViewNewOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                mShowCreatePickActivity();
-            }
-        });
+        this.imageViewNewOrder.setOnClickListener(pvView -> mShowCreatePickActivity());
     }
 
     //End Bottom Sheet
@@ -767,22 +748,11 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
     }
 
     private void mSetFilterListener() {
-        this.imageViewFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
+        this.imageViewFilter.setOnClickListener(view -> mShowHideBottomSheet(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN || bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED));
     }
 
     private void mSetOpenCombinedOrderListener() {
-        this.imageStartCombinedOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pPickorderSelected(cPickorder.currentCombinedPickOrder);
-
-            }
-        });
+        this.imageStartCombinedOrder.setOnClickListener(view -> pPickorderSelected(cPickorder.currentCombinedPickOrder));
     }
 
     private void mSetSwipeRefreshListener() {
@@ -872,12 +842,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mSetSearchListener() {
         //make whole view clickable
-        this.recyclerSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View pvView) {
-                recyclerSearchView.setIconified(false);
-            }
-        });
+        this.recyclerSearchView.setOnClickListener(pvView -> recyclerSearchView.setIconified(false));
 
         //query entered
         this.recyclerSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -901,38 +866,35 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
 
     private void mShowNoOrdersIcon(final Boolean pvShowBln){
 
-        cAppExtension.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        cAppExtension.activity.runOnUiThread(() -> {
 
-                cUserInterface.pHideGettingData();
-                swipeRefreshLayout.setRefreshing(false);
+            cUserInterface.pHideGettingData();
+            swipeRefreshLayout.setRefreshing(false);
 
-                if (pvShowBln) {
+            if (pvShowBln) {
 
-                    recyclerViewPickorders.setVisibility(View.INVISIBLE);
+                recyclerViewPickorders.setVisibility(View.INVISIBLE);
 
-                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                    NoOrdersFragment fragment = new NoOrdersFragment();
-                    fragmentTransaction.replace(R.id.pickorderContainer, fragment);
-                    fragmentTransaction.commit();
+                FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                NoOrdersFragment fragment = new NoOrdersFragment();
+                fragmentTransaction.replace(R.id.pickorderContainer, fragment);
+                fragmentTransaction.commit();
 
-                    if (cSetting.PICK_AUTO_CREATE_ORDER()) {
-                        mAutoOpenCreateActivity();
-                    }
-
-                    return;
+                if (cSetting.PICK_AUTO_CREATE_ORDER()) {
+                    mAutoOpenCreateActivity();
                 }
 
-                recyclerViewPickorders.setVisibility(View.VISIBLE);
+                return;
+            }
 
-                List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof NoOrdersFragment) {
-                        FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
-                        fragmentTransaction.remove(fragment);
-                        fragmentTransaction.commit();
-                    }
+            recyclerViewPickorders.setVisibility(View.VISIBLE);
+
+            List<Fragment> fragments = cAppExtension.fragmentManager.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof NoOrdersFragment) {
+                    FragmentTransaction fragmentTransaction = cAppExtension.fragmentManager.beginTransaction();
+                    fragmentTransaction.remove(fragment);
+                    fragmentTransaction.commit();
                 }
             }
         });

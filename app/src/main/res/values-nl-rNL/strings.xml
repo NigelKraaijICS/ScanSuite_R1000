@@ -851,4 +851,6 @@
     <string name="proglove_check_terminal_screen">Check je terminalscherm</string>
     <string name="proglove_unknown">Onbekend</string>
     <string name="proglove_not_installed">ProGlove is niet geïnstalleerd</string>
+    <string name="ordertype_incomplete_splitted">Incompleet en afgesplitst</string>
+    <string name="hello_blank_fragment">Hallo blank fragment</string>
 </resources>

@@ -262,7 +262,14 @@ public class cPickorderAdapter  extends RecyclerView.Adapter<cPickorderAdapter.P
         }
 
         if (selectedPickorder.isGeneratedOrderBln()) {
-            orderTypeText = cAppExtension.activity.getString(R.string.ordertype_self_generated);
+
+            if (selectedPickorder.getOrderNumberStr().toUpperCase().startsWith("PV")) {
+                orderTypeText = cAppExtension.activity.getString(R.string.ordertype_incomplete_splitted);
+            }
+            else
+            {
+                orderTypeText = cAppExtension.activity.getString(R.string.ordertype_self_generated);
+            }
 
             if (selectedPickorder.getQuantityTotalInt() == 0) {
                 pvHolder.quantityRelativelayout.setVisibility(View.INVISIBLE);

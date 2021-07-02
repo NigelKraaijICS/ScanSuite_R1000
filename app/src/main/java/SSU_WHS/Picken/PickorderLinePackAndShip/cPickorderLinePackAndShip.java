@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 import ICS.Utils.cResult;
+import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
@@ -130,6 +131,11 @@ public class cPickorderLinePackAndShip {
         return quantityCheckedDbl;
     }
 
+    public  boolean storeSourceNoBln;
+    public boolean getStoreSourceNoBln() {
+        return storeSourceNoBln;
+    }
+
     public static List<cPickorderLinePackAndShip> allPackAndShipLinesObl;
     public static cPickorderLinePackAndShip currentPickorderLinePackAndShip;
 
@@ -199,6 +205,9 @@ public class cPickorderLinePackAndShip {
 
         this.shippingAgentCodeStr = pickorderLinePackAndShipEntity.getShippinAgentCodeStr();
         this.shippingAgentServiceCodeStr = pickorderLinePackAndShipEntity.getShippinAgentServiceCodeStr();
+
+
+        this.storeSourceNoBln = cText.pStringToBooleanBln(pickorderLinePackAndShipEntity.getStoreSourceOrder(),false);
 
     }
 

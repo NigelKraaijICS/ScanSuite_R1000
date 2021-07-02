@@ -176,6 +176,7 @@
     <string name="ordertype_unknown">Unknown</string>
     <string name="ordertype_combined">Combined</string>
     <string name="ordertype_self_generated">Self Generated</string>
+    <string name="ordertype_incomplete_splitted">Incomplete splitted</string>
     <string name="ordertype_ps1">Pack and Ship Single Shipment</string>
     <string name="ordertype_psm">Pack and Ship Multi Shipment</string>
     <!--endregion Order types-->

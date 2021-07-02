@@ -95,10 +95,13 @@ public class cPickorderLinePackAndShipEntity {
     public int status;
     public int getStatusInt() { return this.status; }
 
-
     @ColumnInfo(name = cDatabase.LOCALSTATUS_NAMESTR)
     public Integer localstatus;
     public int getLocalStatusInt() { return this.localstatus; }
+
+    @ColumnInfo(name = cDatabase.STORESOURCEORDER_NAMESTR)
+    public String storeSourceOrder;
+    public String getStoreSourceOrder() {return this.storeSourceOrder;}
 
     //End Region Public Properties
 
@@ -152,6 +155,8 @@ public class cPickorderLinePackAndShipEntity {
             if (this.statusshipping > cWarehouseorder.PackingAndShippingStatusEnu.Needed) {
                 this.localstatus = cWarehouseorder.PicklineLocalStatusEnu.LOCALSTATUS_DONE_SENT;
             }
+
+            this.storeSourceOrder = pvJsonObject.getString(cDatabase.STORESOURCEORDER_NAMESTR);
 
         }
         catch (JSONException e) {

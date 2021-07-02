@@ -1642,8 +1642,9 @@ public class cPickorder{
 
                 cPickorderLinePackAndShip pickorderLinePackAndShip = new cPickorderLinePackAndShip(jsonObject);
 
+
                 //Nothing has been picked, so we can skip this line
-                if (pickorderLinePackAndShip.quantityHandledDbl == 0) {
+                if (pickorderLinePackAndShip.quantityHandledDbl == 0 || pickorderLinePackAndShip.storeSourceNoBln) {
                     continue;
                 }
 
