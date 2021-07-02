@@ -1295,6 +1295,12 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         }
 
         if (!PickorderPickActivity.handledViaPropertysBln) {
+
+
+            if (cPickorderLine.currentPickOrderLine == null) {
+                return;
+            }
+
             //Check if we picked less then asked, if so then show dialog
             if (!cPickorderLine.currentPickOrderLine.getQuantityHandledDbl().equals(cPickorderLine.currentPickOrderLine.getQuantityDbl()) ) {
                 this.mShowUnderPickDialog(cAppExtension.activity.getString(R.string.message_cancel_line), cAppExtension.activity.getString(R.string.message_accept_line));
