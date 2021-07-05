@@ -1574,6 +1574,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mShowNoInputPropertys(){
+        if (cPickorderLine.currentPickOrderLine == null) {
+            return;
+        }
 
         if (PickorderPickActivity.noInputPropertysShownBln || !cPickorderLine.currentPickOrderLine.hasPropertysBln()|| cPickorderLine.currentPickOrderLine.linePropertyNoInputObl().size() == 0) {
             return;
