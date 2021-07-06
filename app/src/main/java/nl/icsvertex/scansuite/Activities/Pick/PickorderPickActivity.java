@@ -20,6 +20,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -47,6 +48,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.ContentlabelContainer.cContentlabelContainer;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
@@ -62,6 +64,7 @@ import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleFullViewFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ArticleInfoFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BarcodeFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ContentlabelContainerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyNoInputFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NumberpickerFragment;
@@ -105,6 +108,8 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private  TextView quantityText;
     private  TextView quantityRequiredText;
     private  ImageView articleThumbImageView;
+    private  AppCompatImageView imageContentContainer;
+    private  TextView contentLabelContainerText;
 
     private  ImageView imageButtonNoInputPropertys;
     private  ImageView imageButtonBarcode;
@@ -187,6 +192,18 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             item_print_item.setVisible(cPickorderBarcode.currentPickorderBarcode != null);
         }
 
+        if (cPickorder.currentPickOrder.isPickPickToContainerBln() || cSetting.PICK_PICK_TO_CONTAINER()){
+            MenuItem item_new_container = pvMenu.findItem(R.id.item_new_container);
+            item_new_container.setVisible(true);
+
+            if (cPickorder.currentPickOrder.contentlabelContainerObl != null){
+                if (cPickorder.currentPickOrder.contentlabelContainerObl.size() > 1){
+                    MenuItem item_switch_container = pvMenu.findItem(R.id.item_switch_container);
+                    item_switch_container.setVisible(true);
+                }
+            }
+        }
+
         return super.onPrepareOptionsMenu(pvMenu);
     }
 
@@ -218,6 +235,14 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
             case R.id.item_print_item:
                 cArticle.currentArticle= cPickorder.currentPickOrder.articleObl.get(cPickorderLine.currentPickOrderLine.getItemNoAndVariantStr());
                 selectedFragment = new PrintItemLabelFragment();
+                break;
+
+            case R.id.item_new_container:
+                this.mAddContentContainer();
+                break;
+
+            case R.id.item_switch_container:
+                selectedFragment = new ContentlabelContainerFragment();
                 break;
 
             default:
@@ -294,6 +319,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.articleDescription2Text = findViewById(R.id.articleDescription2Text);
         this.articleItemText = findViewById(R.id.articleItemText);
         this.articleBarcodeText = findViewById(R.id.articleBarcodeText);
+
+        this.imageContentContainer = findViewById(R.id.imageContentContainer);
+        this.contentLabelContainerText = findViewById(R.id.contentLabelContainerText);
 
         this.sourcenoText = findViewById(R.id.sourcenoText);
         this.sourcenoContainer = findViewById(R.id.sourceNoContainer);
@@ -491,6 +519,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         this.mPickDone();
     }
 
+    public void pRefreshArticleInfo(){
+        this.mShowArticleInfo();
+    }
+
     public  void pAcceptRejectDialogDismissed() {
 
         if (!cPickorderLine.currentPickOrderLine.getProcessingSequenceStr().isEmpty() && !cPickorder.currentPickOrder.isPickPickPVVKOEachPieceBln()) {
@@ -600,6 +632,13 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
         else
         {
             this.articleDescription2Text.setVisibility(View.VISIBLE);
+        }
+        if (cPickorder.currentPickOrder.contentlabelContainerObl != null){
+            this.imageContentContainer.setVisibility(View.VISIBLE);
+            this.contentLabelContainerText.setText(cAppExtension.context.getString(R.string.container_sequence_no) + " " + cText.pLongToStringStr(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng()));
+        } else {
+            this.imageContentContainer.setVisibility(View.GONE);
+            this.contentLabelContainerText.setVisibility(View.GONE);
         }
 
     }
@@ -813,6 +852,39 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         double newQuantityDbl;
         List<cPickorderLineBarcode>  hulpObl;
+
+        if (cPickorder.currentPickOrder.isPickPickToContainerBln() || cSetting.PICK_PICK_TO_CONTAINER()) {
+            if (cPickorderLine.currentPickOrderLine.containerObl == null){
+                cPickorderLine.currentPickOrderLine.containerObl = new ArrayList<>();
+            }
+        }
+
+        if(cPickorderLine.currentPickOrderLine.containerObl != null){
+            if (cPickorderLine.currentPickOrderLine.containerObl.size() == 0){
+                //No containers added to the line so make one
+                cContentlabelContainer contentlabelContainer = new cContentlabelContainer(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng(), 0.0);
+                cPickorderLine.currentPickOrderLine.containerObl.add(contentlabelContainer);
+                cPickorderLine.currentPickOrderLine.currentContainer = contentlabelContainer;
+            } else {
+                boolean foundBln = false;
+                if(!cPickorderLine.currentPickOrderLine.currentContainer.getContainerSequencoNoLng().equals(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng())){
+                    //check if container is in the list
+                    for (cContentlabelContainer contentlabelContainer : cPickorderLine.currentPickOrderLine.containerObl){
+                        if (contentlabelContainer.getContainerSequencoNoLng().equals(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng())){
+                            cPickorderLine.currentPickOrderLine.currentContainer = contentlabelContainer;
+                            foundBln = true;
+                        }
+                    }
+                    if (!foundBln){
+                        //Not found add new container to list
+                        cContentlabelContainer contentlabelContainer = new cContentlabelContainer(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng(), 0.0);
+                        cPickorderLine.currentPickOrderLine.containerObl.add(contentlabelContainer);
+                        cPickorderLine.currentPickOrderLine.currentContainer = contentlabelContainer;
+                    }
+                }
+            }
+        }
+
         if (pvIsPositiveBln) {
 
             //Determine the new amount
@@ -830,6 +902,10 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
                 PickorderPickActivity.articleScannedLastBln = true;
                 newQuantityDbl = pvAmountDbl;
+                if (cPickorderLine.currentPickOrderLine.currentContainer != null){
+                    cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl = pvAmountDbl;
+                }
+
             } else {
                 newQuantityDbl = cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() + pvAmountDbl;
             }
@@ -845,6 +921,9 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
                 PickorderPickActivity.articleScannedLastBln = false;
                 return;
+            }
+            if (cPickorderLine.currentPickOrderLine.currentContainer != null){
+                cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl += pvAmountDbl;
             }
 
             //Set the new quantityDbl and show in Activity
@@ -875,12 +954,21 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
 
         if (pvAmountFixedBln) {
             newQuantityDbl = pvAmountDbl;
+            if (cPickorderLine.currentPickOrderLine.currentContainer != null){
+                cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl = pvAmountDbl;
+            }
         }else {
             newQuantityDbl= cPickorderLine.currentPickOrderLine.getQuantityHandledDbl() - pvAmountDbl;
+            if (cPickorderLine.currentPickOrderLine.currentContainer != null){
+                cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl -= pvAmountDbl;
+            }
         }
 
         if (newQuantityDbl <= 0) {
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = 0.0;
+            if (cPickorderLine.currentPickOrderLine.currentContainer != null){
+                cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl = 0.0;
+            }
         }else {
             //Set the new quantityDbl and show in Activity
             cPickorderLine.currentPickOrderLine.quantityHandledDbl = newQuantityDbl;
@@ -1670,6 +1758,20 @@ public class PickorderPickActivity extends AppCompatActivity implements iICSDefa
     private void mDoDelayedPlus(Runnable pvRunnable, long pvMilliSecsLng) {
         this.plusHandler.postDelayed(pvRunnable, pvMilliSecsLng);
         this.pickCounterPlusHelperInt += 1;
+    }
+
+    private void mAddContentContainer(){
+
+        Long sequenceNoLng = 0L;
+
+        sequenceNoLng = cText.pIntegerToLongLng(cPickorder.currentPickOrder.contentlabelContainerObl.size() + 1);
+
+        cContentlabelContainer contentlabelContainer = new cContentlabelContainer(sequenceNoLng,0.0);
+        cPickorder.currentPickOrder.contentlabelContainerObl.add(contentlabelContainer);
+        cPickorderLine.currentPickOrderLine.containerObl.add(contentlabelContainer);
+        cPickorderLine.currentPickOrderLine.currentContainer = contentlabelContainer;
+
+        this.mShowArticleInfo();
     }
 
     //End Region Number Broadcaster

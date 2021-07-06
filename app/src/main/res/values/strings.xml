@@ -540,6 +540,7 @@
     <string name="error_getting_store_lines_failed">Could not get store lines</string>
     <string name="error_get_adresses_failed">Getting adresses failed</string>
     <string name="error_get_comments_failed">Getting comments failed</string>
+    <string name="error_get_containers_failed">Getting containers failed</string>
     <string name="error_get_settings_failed">Getting settings failed</string>
     <string name="error_couldnt_reset_line">Couldn\'t reset line</string>
     <string name="error_couldnt_abort_order">Could not abort order</string>
@@ -798,6 +799,8 @@
     <string name="add_document_header_default">Add Document</string>
     <string name="error_getting_return_reasons">Getting return reasons failes</string>
     <string name="choose_reason">Choose returnreason</string>
+    <string name="choose_container">Choose container</string>
+    <string name="container_sequence_no">Container No.</string>
     <string name="fill_property">Fill item property</string>
     <string name="select_property">Select item property</string>
     <string name="hint_add_reason">Scan or select reason</string>
@@ -895,6 +898,8 @@
     <string name="screentitle_article_stock">Article Stock</string>
     <string name="message_place_line_already_exists">Place line already exists, if you want to mutate first rest the line</string>
     <string name="bin_stock">BIN stock</string>
+    <string name="new_container">Add new container</string>
+    <string name="switch_container">Switch container</string>
     <string name="close_take">Close TAKE</string>
     <string name="barcode_info">Barcode info</string>
     <string name="article_stock">Article stock</string>

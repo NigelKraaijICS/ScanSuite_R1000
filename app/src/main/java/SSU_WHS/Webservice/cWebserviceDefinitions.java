@@ -27,6 +27,7 @@ public class cWebserviceDefinitions {
     public static String WEBMETHOD_GETPROCESSINGORPARKEDORDERS = "p_PickordersInBehandlingOfInWachtJsonStr";
     public static String WEBMETHOD_GETPICKORDERS = "p_PickordersGetJsonStr";
     public static String WEBMETHOD_GETPICKORDERLINES = "p_PickorderRegelsGetJsonStr";
+    public static String WEBMETHOD_GETPICKHANDLEDCONTAINERS = "p_PickorderContainersHandledGetJsonStr";
     public static String WEBMETHOD_GETQCPICKORDERLINES = "p_WarehouseopdrachtLinesQcCheckGetJsonStr";
 
 
@@ -357,6 +358,8 @@ public class cWebserviceDefinitions {
     public static String WEBPROPERTY_PROPERTYHANDLED_COMPLEX = "c_PropertyHandledUwph";
     public static String WEBPROPERTY_BARCODE_COMPLEX = "g_BarcodeStr";
     public static String WEBPROPERTY_QUANTITYHANDLED_COMPLEX = "g_QuantityHandledDbl";
+    public static String WEBPROPERTY_CONTAINERSEQUENCENO_COMPLEX = "g_ContainerSequenceNoLng";
+    public static String WEBPROPERTY_CONTAINERHANDLED_COMPLEX = "c_ContainerHandledUwch";
 
     public static String WEBPROPERTY_ARTICLEINPUT_COMPLEX = "c_ArtikelInputUari";
     public static String WEBPROPERTY_ITEMNO_COMPLEX = "g_ItemNoStr";

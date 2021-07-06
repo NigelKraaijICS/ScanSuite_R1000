@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 import ICS.Utils.Scanning.cBarcodeScan;
 import ICS.Utils.cDeviceInfo;
+import SSU_WHS.Basics.ContentlabelContainer.cContentlabelContainer;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.acScanSuiteDatabase;
@@ -538,8 +539,7 @@ public class cPickorderLineRepository {
                 l_PropertyInfo6Pin.name = cWebserviceDefinitions.WEBPROPERTY_PICKFROMCONTAINER;
                 l_PropertyInfo6Pin.setValue("");
                 l_PropertyInfoObl.add(l_PropertyInfo6Pin);
-
-
+                
                 SoapObject barcodesHandledList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_BARCODESLIST);
 
                 //Only loop through handled barcodes, of there are any
@@ -557,9 +557,20 @@ public class cPickorderLineRepository {
                 l_PropertyInfo7Pin.setValue(barcodesHandledList);
                 l_PropertyInfoObl.add(l_PropertyInfo7Pin);
 
+                SoapObject containerList = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_CONTAINERSLIST);
+                //Only loop through list if there are any
+                if(cPickorderLine.currentPickOrderLine.containerObl != null) {
+                    for (cContentlabelContainer contentlabelContainer : cPickorderLine.currentPickOrderLine.containerObl){
+                        SoapObject soapObject = new SoapObject(cWebservice.WEBSERVICE_NAMESPACE, cWebserviceDefinitions.WEBPROPERTY_CONTAINERHANDLED_COMPLEX);
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_CONTAINERSEQUENCENO_COMPLEX, contentlabelContainer.getContainerSequencoNoLng());
+                        soapObject.addProperty(cWebserviceDefinitions.WEBPROPERTY_QUANTITYHANDLED_COMPLEX, contentlabelContainer.getQuantityHandledDbl());
+                        containerList.addSoapObject(soapObject);
+                    }
+                }
+
                 PropertyInfo l_PropertyInfo8Pin = new PropertyInfo();
                 l_PropertyInfo8Pin.name = cWebserviceDefinitions.WEBPROPERTY_CONTAINERSLIST;
-                l_PropertyInfo8Pin.setValue(null);
+                l_PropertyInfo8Pin.setValue(containerList);
                 l_PropertyInfoObl.add(l_PropertyInfo8Pin);
 
                 PropertyInfo l_PropertyInfo9Pin = new PropertyInfo();

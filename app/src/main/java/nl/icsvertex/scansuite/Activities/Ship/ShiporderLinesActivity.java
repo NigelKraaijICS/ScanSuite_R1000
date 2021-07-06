@@ -34,6 +34,8 @@ import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Shipment.cShipment;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
+import nl.icsvertex.scansuite.Activities.Pick.PickorderSelectActivity;
 import nl.icsvertex.scansuite.Activities.QualityControl.QualityControlLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.StepDoneFragment;
@@ -270,6 +272,11 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
         //Try to close
         if (!this.mTryToCloseOrderBln()){
+            return;
+        }
+
+        if(PickorderLinesActivity.shipFromPickBln){
+            mStartPickorderSelectActivity();
             return;
         }
 
@@ -543,6 +550,11 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
             cPickorder.currentPickOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Pick_PackAndShip,cWarehouseorder.WorkflowPickStepEnu.PickPackAndShip);
 
+            if(PickorderLinesActivity.shipFromPickBln){
+                mStartPickorderSelectActivity();
+                return;
+            }
+
             //If activity bin is not required, then don't show the fragment
             if (!cPickorder.currentPickOrder.isPickActivityBinRequiredBln() || cPickorder.currentPickOrder.pQuantityHandledDbl() == 0 || !cPickorder.currentPickOrder.getCurrentLocationStr().isEmpty()) {
                 mStartOrderSelectActivity();
@@ -601,6 +613,16 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
         Intent intent = new Intent(cAppExtension.context, ShiporderSelectActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private  void mStartPickorderSelectActivity(){
+        cWorkplace.currentWorkplace = null;
+        PickorderLinesActivity.shipFromPickBln = false;
+
+        Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 
     private void mStartShipActivity(){

@@ -45,6 +45,7 @@ import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.ContentlabelContainer.cContentlabelContainer;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
@@ -962,6 +963,8 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorderLine.currentPickOrderLine = null;
         cPickorderBarcode.currentPickorderBarcode = null;
         cWorkplace.currentWorkplace = null;
+        PickorderLinesActivity.shipFromPickBln = false;
+        cContentlabelContainer.currentContentlabelContainer = null;
 
     }
 

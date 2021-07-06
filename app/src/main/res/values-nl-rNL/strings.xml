@@ -341,6 +341,7 @@
     <string name="error_get_autorisations_failed">Autorisaties ophalen mislukt</string>
     <string name="error_get_barcodes_failed">Barcodes ophalen mislukt</string>
     <string name="error_get_comments_failed">Opmerkingen ophalen mislukt</string>
+    <string name="error_get_containers_failed">Containers ophalen mislukt</string>
     <string name="error_get_lines_failed">Regels van server ophalen mislukt</string>
     <string name="error_get_pickorders_failed">Orders van server ophalen mislukt</string>
     <string name="error_get_workplaces_failed">Werkplekken ophalen mislukt</string>
@@ -570,6 +571,8 @@
     <string name="error_get_returnordersdocuments_failed">Retourdocumenten ophalen mislukt</string>
     <string name="error_getting_return_reasons">Ophalen retour redenen mislukt</string>
     <string name="choose_reason">Kies retourreden</string>
+    <string name="choose_container">Kies container</string>
+    <string name="container_sequence_no">Container No.</string>
     <string name="fill_property">Vul item property</string>
     <string name="select_property">Selecteer item property</string>
     <string name="hint_add_reason">Scan of selecteer reden</string>
@@ -679,6 +682,8 @@
     <string name="message_place_line_already_exists">"Er bestaat al een plaats regel voor dit artikel op deze BIN, als u wilt muteren dient u deze regel te resetten "</string>
     <string name="ordertype_combined">Samengevoegde order</string>
     <string name="bin_stock">BIN voorraad</string>
+    <string name="new_container">Voeg nieuwe container toe</string>
+    <string name="switch_container">Wissel container</string>
     <string name="article_stock">Artikel voorraad</string>
     <string name="check_barcode">Controleer barcode</string>
     <string name="pair_pro_glove">Koppel Pro Glove</string>

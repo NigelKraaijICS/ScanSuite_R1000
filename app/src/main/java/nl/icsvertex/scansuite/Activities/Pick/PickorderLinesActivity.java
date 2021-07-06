@@ -40,6 +40,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.Article.cArticle;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.ContentlabelContainer.cContentlabelContainer;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.Basics.Workplaces.cWorkplace;
@@ -55,6 +56,7 @@ import nl.icsvertex.scansuite.Activities.Store.StoreorderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.BinItemsFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ContentlabelContainerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CurrentLocationFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemStockFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.PrintBinLabelFragment;
@@ -94,6 +96,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     private DrawerLayout menuActionsDrawer;
     private NavigationView actionMenuNavigation;
 
+    public static Boolean shipFromPickBln;
     //End Region Views
 
     //End Region Private Properties
@@ -167,6 +170,18 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
             MenuItem item_print_item = pvMenu.findItem(R.id.item_print_item);
             item_print_item.setVisible(cPickorderLine.currentPickOrderLine != null);
         }
+        if (cPickorder.currentPickOrder.isPickPickToContainerBln() || cSetting.PICK_PICK_TO_CONTAINER()){
+            MenuItem item_new_container = pvMenu.findItem(R.id.item_new_container);
+            item_new_container.setVisible(true);
+
+            if (cPickorder.currentPickOrder.contentlabelContainerObl != null){
+                if (cPickorder.currentPickOrder.contentlabelContainerObl.size() > 1){
+                    MenuItem item_switch_container = pvMenu.findItem(R.id.item_switch_container);
+                    item_switch_container.setVisible(true);
+                }
+            }
+        }
+
         MenuItem itemPairProglove = pvMenu.findItem(R.id.item_pair_proglove);
         if ( cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false)) {
             if (itemPairProglove != null) {
@@ -216,6 +231,15 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
                 cProGlove myProGlove = new cProGlove();
                 myProGlove.pShowPairGlove();
                 break;
+
+            case R.id.item_new_container:
+                this.mAddContentContainer();
+                break;
+
+            case R.id.item_switch_container:
+                selectedFragment = new ContentlabelContainerFragment();
+                break;
+
             default:
                 break;
         }
@@ -530,6 +554,13 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     public void pCheckAllDone() {
 
+        // If not everything is sent, then leave
+        if (cConnection.isInternetConnectedBln()){
+            if (!this.mCheckAndSentLinesBln()) {
+                return;
+            }
+        }
+
         // If not everything is done, then leave
         if (!this.mAllLinesDoneBln()) {
             this.imageButtonCloseOrder.setVisibility(View.INVISIBLE);
@@ -547,10 +578,6 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         // Show close button, so user can close the order manually
         this.imageButtonCloseOrder.setVisibility(View.VISIBLE);
 
-        // If not everything is sent, then leave
-        if (!this.mCheckAndSentLinesBln()) {
-            return;
-        }
 
         //We started an split order, so don't show done pop-up
         if (PickorderLinesActivity.startedViaOrderSelectBln && !cPickorder.currentPickOrder.getDocumentStr().isEmpty()) {
@@ -607,6 +634,11 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
                 return;
             }
+        }
+
+        if (cPickorder.currentPickOrder.isPickPickToContainerBln() || cSetting.PICK_PICK_TO_CONTAINER()){
+            this.mShowWorkplaceFragment();
+            return;
         }
 
         if (cPickorder.currentPickOrder.pQuantityHandledDbl() > 0 ) {
@@ -1152,6 +1184,8 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
 
     private  void mStartShipActivity() {
 
+        PickorderLinesActivity.shipFromPickBln = true;
+
         cUserInterface.pShowGettingData();
 
         new Thread(this::mHandleStartShipActivity).start();
@@ -1363,6 +1397,16 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
         cUserInterface.pShowToastMessage(cAppExtension.context.getString(R.string.message_line_send), R.raw.headsupsound);
         this.mActivityInitialize();
 
+    }
+
+    private void mAddContentContainer(){
+
+        Long sequenceNoLng = 0L;
+
+        sequenceNoLng = cText.pIntegerToLongLng(cPickorder.currentPickOrder.contentlabelContainerObl.size() + 1);
+
+        cContentlabelContainer contentlabelContainer = new cContentlabelContainer(sequenceNoLng,0.0);
+        cPickorder.currentPickOrder.contentlabelContainerObl.add(contentlabelContainer);
     }
 
     //End Region Private Methods

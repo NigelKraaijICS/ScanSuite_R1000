@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menuActionsDrawerProperty"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pickorderlineItemPropertyInputContainer"
     tools:context=".Activities.Pick.PickorderLineItemPropertyInputActvity"
@@ -22,33 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/imageButtonDone"
         />
-<!--    <com.google.android.material.tabs.TabLayout-->
-<!--        android:id="@+id/itemPropertyTabLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_margin="@dimen/default_margin"-->
-<!--        app:tabIndicatorColor="@android:color/holo_red_dark"-->
-<!--        app:tabSelectedTextColor="@android:color/holo_red_dark"-->
-<!--        app:tabTextColor="@android:color/darker_gray"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/articleInfoCompactContainer"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/imageButtonDone"-->
-<!--        />-->
-
-<!--    <androidx.viewpager.widget.ViewPager-->
-<!--        android:id="@+id/itemPropertyViewpager"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_margin="@dimen/default_margin"-->
-<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-<!--        app:layout_constraintTop_toTopOf="@id/itemPropertyTabLayout"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintBottom_toTopOf="@id/imageButtonDone"-->
-<!--        />-->
-<!--    -->
-
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/imageButtonDone"
         style="@style/smallButton"
@@ -57,3 +37,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/actionMenuNavigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        app:headerLayout="@layout/header_actions_menu"
+        app:menu="@menu/menu_pick"
+        android:hapticFeedbackEnabled="true"
+        />
+</androidx.drawerlayout.widget.DrawerLayout>

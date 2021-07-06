@@ -81,6 +81,7 @@ public class cPickorderViewModel extends AndroidViewModel {
     public cWebresult pGetLinePropertyValuesViaWebserviceWrs() {return this.Repository.pGetLinePropertyValuesViaWebserviceWrs(); }
 
     public cWebresult pGetCommentsFromWebserviceWrs() {return this.Repository.pGetCommentsFromWebservice(); }
+    public cWebresult pGetHandledContainersFromWebserviceWrs() {return this.Repository.pGetContainersFromWebserviceWrs(); }
 
     public cWebresult pGetSettingsFromWebserviceWrs() {return this.Repository.pGetSettingsFromWebserviceWrs();}
 

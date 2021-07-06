@@ -26,6 +26,7 @@ import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
+import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import nl.icsvertex.scansuite.Activities.Intake.IntakeOrderLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Inventory.InventoryLinePropertyInputActivity;
 import nl.icsvertex.scansuite.Activities.Move.MoveLineItemPropertyActivity;
@@ -135,6 +136,10 @@ public class NumberpickerFragment extends DialogFragment implements iICSDefaultF
                 if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
                     PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity)cAppExtension.activity;
                     cLinePropertyValue.currentLinePropertyValue.quantityDbl = quantityNumberPicker.getValue();
+
+                    if(cPickorderLine.currentPickOrderLine.currentContainer != null){
+                        cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl  = quantityNumberPicker.getValue();
+                    }
 
                     pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity();
                     pickorderLineItemPropertyInputActvity.pRefreshActivity();

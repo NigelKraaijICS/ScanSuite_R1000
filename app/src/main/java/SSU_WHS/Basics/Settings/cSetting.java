@@ -623,6 +623,20 @@ public class cSetting {
         return cText.pStringToBooleanBln(Setting.valueStr,false);
     }
 
+    public static Boolean PICK_PICK_TO_CONTAINER(){
+
+        cSetting Setting =  mGetSettingByEnu(settingEnu.PICK_PICK_TO_CONTAINER);
+        if (Setting == null) {
+            return  false;
+        }
+        if (Setting.valueStr.equalsIgnoreCase( "")) {
+            return  false;
+        }
+
+
+        return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
     public static Boolean PICK_STORAGE_AUTO_START(){
 
         cSetting Setting =  mGetSettingByEnu(settingEnu.PICK_STORAGE_AUTO_START);

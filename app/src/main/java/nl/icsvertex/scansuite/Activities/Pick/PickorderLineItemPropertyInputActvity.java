@@ -2,6 +2,7 @@ package nl.icsvertex.scansuite.Activities.Pick;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,10 +11,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -31,6 +36,8 @@ import ICS.Utils.cResult;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ContentlabelContainer.cContentlabelContainer;
+import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.General.cPublicDefinitions;
 import SSU_WHS.LineItemProperty.LineProperty.cLineProperty;
 import SSU_WHS.LineItemProperty.LinePropertyValue.cLinePropertyValue;
@@ -41,6 +48,7 @@ import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.SalesOrderPackingTable.cSalesOrderPackingTable;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.AcceptRejectPropertyFragment;
+import nl.icsvertex.scansuite.Fragments.Dialogs.ContentlabelContainerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.DatePickerFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.DynamicItemPropertyFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.ItemPropertyNoInputFragment;
@@ -62,6 +70,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
    private TextView articleBarcodeCompactText;
    private TextView quantityCompactText;
 
+    private AppCompatImageView imageContentContainer;
+    private  TextView contentLabelContainerText;
+
     private List<String> titleObl;
     private AppCompatImageButton imageButtonDone;
 
@@ -71,6 +82,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     public boolean amountHandledBln;
     private boolean deletedFromRecyclerBln;
     private int tabIndexInt;
+
+    private DrawerLayout menuActionsDrawer;
+    private NavigationView actionMenuNavigation;
 
     private  List<cLinePropertyValue> localItemPropertyValueObl (){
 
@@ -167,6 +181,12 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu pvMenu) {
+        getMenuInflater().inflate(R.menu.menu_pick,pvMenu);
+        return true;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         cBarcodeScan.pRegisterBarcodeReceiver(this.getClass().getSimpleName());
@@ -211,8 +231,45 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return true;
         }
 
+        if (item.getItemId() == R.id.item_new_container){
+            this.mAddContentContainer();
+        }
+
+        if (item.getItemId() == R.id.item_switch_container){
+            DialogFragment selectedFragment = new ContentlabelContainerFragment();
+            selectedFragment.setCancelable(true);
+            selectedFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.BINITEMSFRAGMENT_TAG);
+        }
+
+        // deselect everything
+        int size = actionMenuNavigation.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            actionMenuNavigation.getMenu().getItem(i).setChecked(false);
+        }
+
+        // close drawer when item is tapped
+        this.menuActionsDrawer.closeDrawers();
+
         return super.onOptionsItemSelected(item);
 
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu pvMenu) {
+
+        if (cPickorder.currentPickOrder.isPickPickToContainerBln() || cSetting.PICK_PICK_TO_CONTAINER()){
+            MenuItem item_new_container = pvMenu.findItem(R.id.item_new_container);
+            item_new_container.setVisible(true);
+
+            if (cPickorder.currentPickOrder.contentlabelContainerObl != null){
+                if (cPickorder.currentPickOrder.contentlabelContainerObl.size() > 1){
+                    MenuItem item_switch_container = pvMenu.findItem(R.id.item_switch_container);
+                    item_switch_container.setVisible(true);
+                }
+            }
+        }
+
+        return super.onPrepareOptionsMenu(pvMenu);
     }
 
     @Override
@@ -259,18 +316,24 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     @Override
     public void mFindViews() {
 
-            this.toolbarImage = findViewById(R.id.toolbarImage);
-            this.toolbarTitle = findViewById(R.id.toolbarTitle);
+        this.toolbarImage = findViewById(R.id.toolbarImage);
+        this.toolbarTitle = findViewById(R.id.toolbarTitle);
 
-            this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
-            this.articleDescriptionCompactText = findViewById(R.id.articleDescriptionCompactText);
-            this.articleDescription2CompactText = findViewById(R.id.articleDescription2CompactText);
-            this.articleItemCompactText = findViewById(R.id.articleItemCompactText);
-            this.articleBarcodeCompactText = findViewById(R.id.articleBarcodeCompactText);
-            this.quantityCompactText = findViewById(R.id.quantityCompactText);
-            this.itemPropertyTabLayout = findViewById(R.id.itemPropertyTabLayout);
-            this.itemPropertyViewpager = findViewById(R.id.itemPropertyViewpager);
-            this.imageButtonDone = findViewById(R.id.imageButtonDone);
+        this.imageContentContainer = findViewById(R.id.imageContentContainer);
+        this.contentLabelContainerText = findViewById(R.id.contentLabelContainerText);
+
+        this.imageButtonNoInputPropertys = findViewById(R.id.imageButtonNoInputPropertys);
+        this.articleDescriptionCompactText = findViewById(R.id.articleDescriptionCompactText);
+        this.articleDescription2CompactText = findViewById(R.id.articleDescription2CompactText);
+        this.articleItemCompactText = findViewById(R.id.articleItemCompactText);
+        this.articleBarcodeCompactText = findViewById(R.id.articleBarcodeCompactText);
+        this.quantityCompactText = findViewById(R.id.quantityCompactText);
+        this.itemPropertyTabLayout = findViewById(R.id.itemPropertyTabLayout);
+        this.itemPropertyViewpager = findViewById(R.id.itemPropertyViewpager);
+        this.imageButtonDone = findViewById(R.id.imageButtonDone);
+
+        this.menuActionsDrawer = findViewById(R.id.menuActionsDrawerProperty);
+        this.actionMenuNavigation = findViewById(R.id.actionMenuNavigation);
     }
 
     @Override
@@ -292,6 +355,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     public void mFieldsInitialize() {
        // this.mSetItemPropertyValueRecycler();
         this.mSetArticleInfo();
+        this.mCheckContainerObl();
         this.mSetQuantityText();
         this.mShowHideOKButton();
         this.mBuildAndFillTabs();
@@ -430,6 +494,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return;
         }
 
+        //Try to send the line
+        cPickorderLine.currentPickOrderLine.pHandledBln();
+
         this.mGetNextPickLineForCurrentBin();
     }
 
@@ -438,6 +505,10 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         this.mShowHideOKButton();
         this.mBuildAndFillTabs();
         this.mSelectTabAndItem();
+    }
+
+    public void pRefreshArticleInfo(){
+        this.mSetArticleInfo();
     }
 
     public void pDeleteValueFromRecyler() {
@@ -602,6 +673,47 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         }
         else {
             this.imageButtonNoInputPropertys.setVisibility(View.VISIBLE);
+        }
+        if (cPickorder.currentPickOrder.contentlabelContainerObl != null){
+            this.imageContentContainer.setVisibility(View.VISIBLE);
+            this.contentLabelContainerText.setText(cAppExtension.context.getString(R.string.container_sequence_no) + " " + cText.pLongToStringStr(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng()));
+        } else {
+            this.imageContentContainer.setVisibility(View.GONE);
+            this.contentLabelContainerText.setVisibility(View.GONE);
+        }
+    }
+
+    private void mCheckContainerObl(){
+        if (cPickorder.currentPickOrder.isPickPickToContainerBln() || cSetting.PICK_PICK_TO_CONTAINER()) {
+            if (cPickorderLine.currentPickOrderLine.containerObl == null){
+                cPickorderLine.currentPickOrderLine.containerObl = new ArrayList<>();
+            }
+        }
+
+        if(cPickorderLine.currentPickOrderLine.containerObl != null){
+            if (cPickorderLine.currentPickOrderLine.containerObl.size() == 0){
+                //No containers added to the line so make one
+                cContentlabelContainer contentlabelContainer = new cContentlabelContainer(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng(), 0.0);
+                cPickorderLine.currentPickOrderLine.containerObl.add(contentlabelContainer);
+                cPickorderLine.currentPickOrderLine.currentContainer = contentlabelContainer;
+            } else {
+                boolean foundBln = false;
+                if(!cPickorderLine.currentPickOrderLine.currentContainer.getContainerSequencoNoLng().equals(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng())){
+                    //check if container is in the list
+                    for (cContentlabelContainer contentlabelContainer : cPickorderLine.currentPickOrderLine.containerObl){
+                        if (contentlabelContainer.getContainerSequencoNoLng().equals(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng())){
+                            cPickorderLine.currentPickOrderLine.currentContainer = contentlabelContainer;
+                            foundBln = true;
+                        }
+                    }
+                    if (!foundBln){
+                        //Not found add new container to list
+                        cContentlabelContainer contentlabelContainer = new cContentlabelContainer(cContentlabelContainer.currentContentlabelContainer.getContainerSequencoNoLng(), 0.0);
+                        cPickorderLine.currentPickOrderLine.containerObl.add(contentlabelContainer);
+                        cPickorderLine.currentPickOrderLine.currentContainer = contentlabelContainer;
+                    }
+                }
+            }
         }
     }
 
@@ -800,6 +912,20 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
         ItemPropertyPagerAdapter itemPropertyPagerAdapter = new ItemPropertyPagerAdapter(fragments, this.titleObl);
         this.itemPropertyViewpager.setAdapter(itemPropertyPagerAdapter);
         this.itemPropertyTabLayout.setupWithViewPager(itemPropertyViewpager);
+    }
+
+    private void mAddContentContainer(){
+
+        Long sequenceNoLng = 0L;
+
+        sequenceNoLng = cText.pIntegerToLongLng(cPickorder.currentPickOrder.contentlabelContainerObl.size() + 1);
+
+        cContentlabelContainer contentlabelContainer = new cContentlabelContainer(sequenceNoLng,0.0);
+        cPickorder.currentPickOrder.contentlabelContainerObl.add(contentlabelContainer);
+        cPickorderLine.currentPickOrderLine.containerObl.add(contentlabelContainer);
+        cPickorderLine.currentPickOrderLine.currentContainer = contentlabelContainer;
+
+        this.mSetArticleInfo();
     }
 
     //End Region Private Methods

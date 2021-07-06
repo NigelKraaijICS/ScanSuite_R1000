@@ -25,6 +25,7 @@ import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.ArticleStock.cArticleStock;
 import SSU_WHS.Basics.BranchBin.cBranchBin;
 import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.ContentlabelContainer.cContentlabelContainer;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroupViewModel;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -128,6 +129,9 @@ public class cPickorder{
         return pickActivityBinRequiredBln;
     }
 
+    private final boolean pickPickToContainerBln;
+    public  boolean isPickPickToContainerBln() { return pickPickToContainerBln;}
+
     private final boolean pickAutoNextBln;
     public boolean isPickAutoNextBln() {
         return pickAutoNextBln;
@@ -138,7 +142,7 @@ public class cPickorder{
         return assignedUserIdStr;
     }
 
-    private String stockownerStr;
+    private final String stockownerStr;
     public String getStockownerStr() {
         return stockownerStr;
     }
@@ -429,6 +433,7 @@ public class cPickorder{
     public cPickorderBarcode pickorderQCBarcodeScanned;
     public cPickorderBarcode pickorderBarcodeScanned;
     public static int totalPicksInt;
+    public ArrayList<cContentlabelContainer> contentlabelContainerObl;
 
     public List<cPickorderLine> linesObl(){
         return  cPickorderLine.allLinesObl;
@@ -482,6 +487,7 @@ public class cPickorder{
         this.pickPickWithAutoOpenBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
         this.pickPickWithPicturePrefetchBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
         this.pickActivityBinRequiredBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickActivityBinRequired(),false);
+        this.pickPickToContainerBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickToContainer(), false);
         this.pickAutoNextBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickAutoNext(),false);
 
         this.assignedUserIdStr = this.pickorderEntity.getAssignedUserIdStr();
@@ -512,6 +518,7 @@ public class cPickorder{
         this.pickPickWithAutoOpenBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPictureAutoOpenStr(),false) ;
         this.pickPickWithPicturePrefetchBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickWithPicturePrefetchStr(),false) ;
         this.pickActivityBinRequiredBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickActivityBinRequired(),false);
+        this.pickPickToContainerBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickPickToContainer(), false);
         this.pickAutoNextBln = cText.pStringToBooleanBln(this.pickorderEntity.getPickAutoNext(),false);
         this.assignedUserIdStr = this.pickorderEntity.getAssignedUserIdStr();
         this.currentUserIdStr = this.pickorderEntity.getCurrentUserIdStr();
@@ -905,6 +912,13 @@ public class cPickorder{
             return result;
         }
 
+        // Get all containers
+        if (!this.pGetHandledContainersViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_containers_failed));
+            return result;
+        }
+
         if (!this.mGetSortingDetailsBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_sorting_detals_failed));
@@ -990,6 +1004,13 @@ public class cPickorder{
             return result;
         }
 
+        // Get all containers
+        if (!this.pGetHandledContainersViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_containers_failed));
+            return result;
+        }
+
         if (!this.mGetSortingDetailsBln()) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_sorting_detals_failed));
@@ -1058,6 +1079,13 @@ public class cPickorder{
         if (!this.pGetCommentsViaWebserviceBln(true)) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_comments_failed));
+            return result;
+        }
+
+        // Get all containers
+        if (!this.pGetHandledContainersViaWebserviceBln()) {
+            result.resultBln = false;
+            result.pAddErrorMessage(cAppExtension.context.getString(R.string.error_get_containers_failed));
             return result;
         }
 
@@ -1671,6 +1699,46 @@ public class cPickorder{
             cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
             return  false;
         }
+    }
+
+    public boolean pGetHandledContainersViaWebserviceBln() {
+
+
+        if (this.pickPickToContainerBln || cSetting.PICK_PICK_TO_CONTAINER()){
+
+            if (this.contentlabelContainerObl == null){
+                this.contentlabelContainerObl = new ArrayList<>();
+            }
+
+            cWebresult WebResult;
+            WebResult =  this.getPickorderViewModel().pGetHandledContainersFromWebserviceWrs();
+            if (WebResult.getResultBln() && WebResult.getSuccessBln()){
+
+                for (JSONObject jsonObject : WebResult.getResultDtt()) {
+
+                    cContentlabelContainer contentlabelContainer = new cContentlabelContainer(jsonObject);
+
+                    if(contentlabelContainer.getContainerSequencoNoLng() <= 0){
+                        continue;
+                    }
+                    this.contentlabelContainerObl.add(contentlabelContainer);
+                }
+
+                if (this.contentlabelContainerObl.size() == 0) {
+                    cContentlabelContainer contentlabelContainer = new cContentlabelContainer(1L, 0.0);
+                    this.contentlabelContainerObl.add(contentlabelContainer);
+                }
+
+
+                return this.contentlabelContainerObl.size() != 0;
+
+            }
+            else {
+                cWeberror.pReportErrorsToFirebaseBln(cWebserviceDefinitions.WEBMETHOD_GETPICKORDERLINESPACKANDSHIP);
+                return  false;
+            }
+        }
+        return true;
     }
 
     public List<cShipment> pGetNotHandledShipmentsObl() {
