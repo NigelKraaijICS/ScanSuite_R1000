@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -53,6 +54,8 @@ import SSU_WHS.Basics.StockOwner.cStockOwner;
 import SSU_WHS.Basics.Translations.cTranslation;
 import SSU_WHS.Basics.Users.cUser;
 import SSU_WHS.General.cPublicDefinitions;
+import SSU_WHS.Picken.PickorderBarcodes.cPickorderBarcode;
+import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.ScannerLogon.cScannerLogon;
 import SSU_WHS.Webservice.cWebservice;
 import nl.icsvertex.scansuite.Fragments.Dialogs.EnvironmentFragment;
@@ -200,7 +203,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         // Init screen
         this.mInitScreen();
 
-        this.mCheckProGlove();
+        this.pCheckProGlove();
 
         //Set Proglove Screen
         this.mSetProGloveScreen();
@@ -251,13 +254,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
 
     @Override
     public void mFieldsInitialize() {
-        Boolean useProGlove = cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false);
-        if (!useProGlove) {
-            View proGloveView =  findViewById(R.id.action_proglove);
-            if (proGloveView != null) {
-                proGloveView.setVisibility(View.GONE);
-            }
-        }
+
     }
 
     @Override
@@ -272,9 +269,18 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
     }
 
     //End Region iICSDefaultActivity defaults
-    private void mCheckProGlove() {
+    public void pCheckProGlove() {
+        //show or hide menu item
+        Boolean useProGlove = cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false);
+
+            MenuItem proGloveItem = mainmenuNavigation.getMenu().findItem(R.id.action_proglove);
+            if (proGloveItem != null) {
+                proGloveItem.setVisible(useProGlove);
+            }
+
+        //check if proglove is installed
         cProGlove myproglove= new cProGlove();
-        if ( cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false)){
+        if (useProGlove){
             if (!myproglove.pIsProgloveInstalled()) {
                 cUserInterface.pShowToastMessage(getString(R.string.proglove_not_installed), R.raw.headsupsound);
             }
@@ -487,7 +493,6 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
         this.imageHome.setOnClickListener(view -> mShowHomeFragment());
     }
 
-
     private void mSetMenuListener() {
         this.mainmenuNavigation.setNavigationItemSelectedListener(menuItem -> {
             Fragment selectedFragment = null;
@@ -534,7 +539,7 @@ public class MainDefaultActivity extends AppCompatActivity implements iICSDefaul
                     imageHome.setVisibility(View.GONE);
                     cProGlove myProGlove = new cProGlove();
                     myProGlove.pShowPairGlove();
-                    return true;
+                    break;
 
                 case R.id.action_close_application:
 

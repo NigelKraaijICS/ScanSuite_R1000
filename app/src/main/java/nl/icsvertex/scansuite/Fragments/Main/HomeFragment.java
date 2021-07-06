@@ -120,7 +120,6 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
         this.mSetDeviceInfo();
         this.buttonLogin.setVisibility(View.VISIBLE);
         this.mBounceLogo();
-        this.metSetProGlove();
     }
 
     @Override
@@ -136,17 +135,6 @@ public class HomeFragment extends DialogFragment implements iICSDefaultFragment 
     //End Region Public Methods
 
     //Region Private Methods
-
-    private void metSetProGlove() {
-        Boolean useProGlove = cSharedPreferences.pGetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, false);
-        if (!useProGlove) {
-            View proGloveView =  getActivity().findViewById(R.id.action_proglove);
-            if (proGloveView != null) {
-                proGloveView.setVisibility(View.GONE);
-            }
-        }
-
-    }
 
     private void mBounceLogo() {
         cUserInterface.pDoBoing(imageLogo);

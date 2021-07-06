@@ -415,7 +415,6 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
         final ViewGroup container = cAppExtension.activity.findViewById(R.id.container);
         View clickedOrder;
 
-
         switch (cIntakeorder.currentIntakeOrder.getOrderTypeStr().toUpperCase()) {
             case  "MAT":
                 intent = new Intent(cAppExtension.context, IntakeorderMATLinesActivity.class);

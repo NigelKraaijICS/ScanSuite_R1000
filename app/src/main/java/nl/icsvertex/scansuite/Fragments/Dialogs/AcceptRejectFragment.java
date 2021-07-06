@@ -267,7 +267,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof InventoryorderBinsActivity) {
-            InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+            InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
             inventoryorderBinsActivity.pCloseOrder();
             this.dismiss();
             return;
@@ -485,7 +485,7 @@ public class AcceptRejectFragment extends DialogFragment implements iICSDefaultF
         }
 
         if (cAppExtension.activity instanceof  InventoryorderBinsActivity) {
-            InventoryorderBinsActivity inventoryorderBinsActivity = new InventoryorderBinsActivity();
+            InventoryorderBinsActivity inventoryorderBinsActivity = (InventoryorderBinsActivity)cAppExtension.activity;
             inventoryorderBinsActivity.pAcceptRejectDialogDismissed();
             return;
         }

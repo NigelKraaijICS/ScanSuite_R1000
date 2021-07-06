@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.concurrent.ExecutionException;
+
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cDeviceInfo;
 import ICS.Utils.cSharedPreferences;
@@ -163,7 +165,8 @@ public class SupportApplicationFragment extends DialogFragment implements iICSDe
         this.checkProglove.setOnCheckedChangeListener((compoundButton, checked) -> {
 
             cSharedPreferences.pSetSharedPreferenceBoolean(SHAREDPREFERENCE_USEPROGLOVE, checked);
-
+            MainDefaultActivity mainDefaultActivity = (MainDefaultActivity)cAppExtension.activity;
+            mainDefaultActivity.pCheckProGlove();
         });
 
     }
