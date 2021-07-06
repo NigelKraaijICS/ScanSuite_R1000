@@ -470,9 +470,9 @@ public class InventoryorderBinsActivity extends AppCompatActivity implements iIC
 
         cInventoryorder.currentInventoryOrder.pLockReleaseViaWebserviceBln(cWarehouseorder.StepCodeEnu.Inventory, cWarehouseorder.WorkflowInventoryStepEnu.Inventory);
 
-
         Intent intent = new Intent(cAppExtension.context, InventoryorderSelectActivity.class);
-       startActivity(intent);
+        startActivity(intent);
+
        finish();
     }
 
