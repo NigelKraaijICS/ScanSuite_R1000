@@ -23,6 +23,7 @@ import java.util.List;
 import ICS.Utils.cText;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.ContentlabelContainer.cContentlabelContainer;
 import SSU_WHS.Basics.Settings.cSetting;
 import SSU_WHS.Intake.IntakeorderMATLineSummary.cIntakeorderMATSummaryLine;
 import SSU_WHS.Intake.Intakeorders.cIntakeorder;
@@ -289,6 +290,9 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                 if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                     PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
 
+                    if(cPickorderLine.currentPickOrderLine.currentContainer != null){
+                        cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl  += availableDbl;
+                    }
                     pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity( );
                     pickorderLineItemPropertyInputActvity.pRefreshActivity();
                 }
@@ -378,6 +382,10 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                 if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity){
                     PickorderLineItemPropertyInputActvity pickorderLineItemPropertyInputActvity = (PickorderLineItemPropertyInputActvity) cAppExtension.activity;
 
+                    if(cPickorderLine.currentPickOrderLine.currentContainer != null){
+                        cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl  += cLinePropertyValue.quantityPerUnitOfMeasureDbl;
+                    }
+
                     pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity();
                     pickorderLineItemPropertyInputActvity.pRefreshActivity();
                 }
@@ -438,6 +446,9 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                     if (newQuantity == 0) {
                         pickorderLineItemPropertyInputActvity.pDeleteValueFromRecyler();
                     }
+                    if(cPickorderLine.currentPickOrderLine.currentContainer != null){
+                        cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl  -= cLinePropertyValue.quantityPerUnitOfMeasureDbl;
+                    }
 
                     pickorderLineItemPropertyInputActvity.pTryToChangePickedQuantity();
                     pickorderLineItemPropertyInputActvity.pRefreshActivity();
@@ -489,6 +500,9 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
                         while (countDbl > 0) {
 
                             countDbl--;
+                        }
+                        if(cPickorderLine.currentPickOrderLine.currentContainer != null){
+                            cPickorderLine.currentPickOrderLine.currentContainer.quantityHandledDbl  = 0.0;
                         }
 
                         cLinePropertyValue.currentLinePropertyValue.quantityDbl --;

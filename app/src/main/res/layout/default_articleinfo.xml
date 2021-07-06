@@ -38,19 +38,39 @@
             style="@style/articleBarcodeText"
             app:layout_constraintTop_toBottomOf="@id/articleItemText"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
             />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageContentContainer"
+            app:srcCompat="@drawable/ic_box"
+            android:layout_margin="@dimen/recycleritem_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
+            />
+        <TextView
+            android:id="@+id/contentLabelContainerText"
+            style="@style/articleDescriptionText"
+            app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
+            app:layout_constraintStart_toEndOf="@id/imageContentContainer"
+            app:layout_constraintEnd_toStartOf="@id/imageAndButtonsContainer"
+            />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/imageAndButtonsContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
                 android:id="@+id/articleThumbImageView"
                 style="@style/articleThumbImageView"
                 android:contentDescription="@string/articleimage_thumb_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/imageButtonNoInputPropertys"
                 style="@style/smallButton"
@@ -59,6 +79,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/articleThumbImageView"
                 app:srcCompat="@drawable/ic_chat_blue_24dp" />
+
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/imageButtonBarcode"
                 style="@style/smallButton"
@@ -68,13 +89,14 @@
                 app:layout_constraintTop_toBottomOf="@id/imageButtonNoInputPropertys"
                 app:srcCompat="@drawable/ic_barcodescan_black_24dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/articleInfoContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/articleBarcodeText"
+            app:layout_constraintTop_toBottomOf="@id/contentLabelContainerText"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

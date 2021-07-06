@@ -48,5 +48,19 @@
         app:showAsAction="never"
         android:visible="false"
         />
+    <item
+        android:id="@+id/item_new_container"
+        android:title="@string/new_container"
+        android:icon="@drawable/ic_location_black_24dp"
+        app:showAsAction="never"
+        android:visible="false"
+        />
+    <item
+        android:id="@+id/item_switch_container"
+        android:title="@string/switch_container"
+        android:icon="@drawable/ic_location_black_24dp"
+        app:showAsAction="never"
+        android:visible="false"
+        />
 </group>
 </menu>

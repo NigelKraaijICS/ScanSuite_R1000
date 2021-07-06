@@ -83,6 +83,7 @@ public class cDatabase {
     public static final String TABLENAME_LINEPROPERTYVALUE= "LinePropertyValue";
     public static final String TABLENAME_ARTICLEPROPERTY = "ArticleProperty";
     public static final String TABLENAME_ARTICLEPROPERTYVALUE = "ArticlePropertyValue";
+    public static final String TABLENAME_CONTENTLABELCONTAINER= "ContentlabelContainer";
 
 
     //endregion Tables
@@ -146,6 +147,7 @@ public class cDatabase {
     public static final String CONTACTNAME_NAMESTR = "ContactName";
     public static final String CONTACTPERSON_NAMESTR = "Contactpersoon";
     public static final String CONTAINERTYPE_DUTCH_NAMESTR = "Containersoort";
+    public static final String CONTAINERSEQUENCEN_NAMESTR = "ContainerSequenceNo";
     //endregion C
 
     //region D

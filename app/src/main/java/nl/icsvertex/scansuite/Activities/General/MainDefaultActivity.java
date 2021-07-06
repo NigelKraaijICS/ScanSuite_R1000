@@ -1,5 +1,6 @@
 package nl.icsvertex.scansuite.Activities.General;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
 
 import ICS.Environments.cEnvironment;

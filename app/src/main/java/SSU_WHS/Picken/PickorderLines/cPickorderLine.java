@@ -18,6 +18,7 @@ import ICS.cAppExtension;
 import SSU_WHS.Basics.ArticleImages.cArticleImage;
 import SSU_WHS.Basics.ArticleImages.cArticleImageViewModel;
 import SSU_WHS.Basics.Branches.cBranch;
+import SSU_WHS.Basics.ContentlabelContainer.cContentlabelContainer;
 import SSU_WHS.Basics.PropertyGroup.cPropertyGroup;
 import SSU_WHS.Basics.PropertyGroupProperty.cPropertyGroupProperty;
 import SSU_WHS.Basics.Settings.cSetting;
@@ -185,6 +186,8 @@ public class cPickorderLine {
     }
 
     public ArrayList<cLinePropertyValue> presetValueObl;
+    public ArrayList<cContentlabelContainer> containerObl;
+    public cContentlabelContainer currentContainer;
 
     private  List<cLineProperty> linePropertyCachedObl;
     private List<cLineProperty> linePropertyObl() {

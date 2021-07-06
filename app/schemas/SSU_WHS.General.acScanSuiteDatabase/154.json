@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 154,
-    "identityHash": "b7cac5224b25a394149ab321450c2afd",
+    "identityHash": "206b8d28f986a6ecafbce04e204099ec",
     "entities": [
       {
         "tableName": "ScannerLogon",
@@ -279,7 +279,7 @@
       },
       {
         "tableName": "Pickorders",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Ordernumber` TEXT NOT NULL, `Ordertype` TEXT, `QuantityTotal` TEXT, `SingleArticleOrders` TEXT, `Pick_Sales_ask_workplace` TEXT, `Pick_Transfer_ask_workplace` TEXT, `Pick_Pick_PV_VKO_each_piece` TEXT, `Pick_with_picture` TEXT, `Pick_with_picture_auto_open` TEXT, `Pick_with_picture_prefetch` TEXT, `Pick_activity_bin_required` TEXT, `Pick_auto_next` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `ExternalReference` TEXT, `StockOwner` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Currentlocation` TEXT, `Interface_result_method` TEXT, `IsProcessingOrParked` INTEGER, `IsSelected` INTEGER NOT NULL, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Ordernumber`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`Ordernumber` TEXT NOT NULL, `Ordertype` TEXT, `QuantityTotal` TEXT, `SingleArticleOrders` TEXT, `Pick_Sales_ask_workplace` TEXT, `Pick_Transfer_ask_workplace` TEXT, `Pick_Pick_PV_VKO_each_piece` TEXT, `Pick_with_picture` TEXT, `Pick_with_picture_auto_open` TEXT, `Pick_with_picture_prefetch` TEXT, `Pick_activity_bin_required` TEXT, `Pick_pick_to_container` TEXT, `Pick_auto_next` TEXT, `AssignedUserId` TEXT, `CurrentUserId` TEXT, `Status` TEXT, `ExternalReference` TEXT, `StockOwner` TEXT, `SourceDocument` TEXT, `Document` TEXT, `Document2` TEXT, `Currentlocation` TEXT, `Interface_result_method` TEXT, `IsProcessingOrParked` INTEGER, `IsSelected` INTEGER NOT NULL, `Priority` INTEGER NOT NULL, PRIMARY KEY(`Ordernumber`))",
         "fields": [
           {
             "fieldPath": "ordernumber",
@@ -344,6 +344,12 @@
           {
             "fieldPath": "pickActivityBinRequired",
             "columnName": "Pick_activity_bin_required",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pickPickToContainer",
+            "columnName": "Pick_pick_to_container",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -4379,7 +4385,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b7cac5224b25a394149ab321450c2afd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '206b8d28f986a6ecafbce04e204099ec')"
     ]
   }
 }
