@@ -315,6 +315,11 @@ public class cUserInterface {
     }
 
     public static void pShowGettingData() {
+        Fragment activeFragment = cAppExtension.fragmentManager.findFragmentByTag(cPublicDefinitions.GETTING_DATA_TAG);
+        if (activeFragment != null) {
+            //there already is an active gettingdatafragment
+            return;
+        }
 
         //Disable the scanner
         cUserInterface.pDisableScanner();
