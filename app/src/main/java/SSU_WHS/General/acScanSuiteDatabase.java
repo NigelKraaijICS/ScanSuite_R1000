@@ -200,7 +200,7 @@ import SSU_WHS.ScannerLogon.iScannerLogonDao;
         cLabelTemplateEntity.class,
         cLinePropertyEntity.class,
         cLinePropertyValueEntity.class,
-        },version = 156)
+        },version = 157)
 
 
 public abstract class acScanSuiteDatabase extends RoomDatabase {
