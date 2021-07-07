@@ -142,6 +142,10 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void onBackPressed() {
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }
         this.mTryToLeaveActivity();
     }
 
@@ -301,11 +305,13 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         //First get all sortorders
         if (!cPickorder.pGetPackAndShipOrdersViaWebserviceBln(true, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_pickorders_failed), "", true, true);
+            cUserInterface.pHideGettingData();
             return;
         }
 
         if (cPickorder.allPickordersObl == null || cPickorder.allPickordersObl.size() == 0) {
             this.mShowNoOrdersIcon(true);
+            cUserInterface.pHideGettingData();
             return;
         }
 
@@ -313,6 +319,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
             //Fill and show recycler
             mSetSortorderRecycler(cPickorder.allPickordersObl);
             mShowNoOrdersIcon(false);
+            cUserInterface.pHideGettingData();
         });
 
     }

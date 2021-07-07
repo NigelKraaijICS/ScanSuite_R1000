@@ -134,6 +134,11 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
 
     @Override
     public void onBackPressed() {
+
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }
         this.mTryToLeaveActivity();
     }
 

@@ -134,6 +134,11 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
     @Override
     public void onBackPressed() {
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }
+
         this.mLeaveActivity();
     }
 
@@ -313,11 +318,13 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
         //all Pack and Ship orders
         if (!cPackAndShipOrder.pGetPackAndShipOrdersViaWebserviceBln(true, "")) {
             cUserInterface.pDoExplodingScreen(cAppExtension.context.getString(R.string.error_get_packandshiporders_failed), "", true, true );
+            cUserInterface.pHideGettingData();
             return;
         }
 
         if (cPackAndShipOrder.allPackAndShipOrdersObl == null || cPackAndShipOrder.allPackAndShipOrdersObl.size() == 0) {
             this.mShowNoOrdersIcon(true);
+            cUserInterface.pHideGettingData();
             return;
         }
 

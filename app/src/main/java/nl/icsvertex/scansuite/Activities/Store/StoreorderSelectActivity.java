@@ -135,7 +135,11 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
 
     @Override
     public void onBackPressed() {
-        this.mTryToLeaveActivity();
+
+        if (this.bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+            this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return;
+        }this.mTryToLeaveActivity();
     }
 
     @Override
