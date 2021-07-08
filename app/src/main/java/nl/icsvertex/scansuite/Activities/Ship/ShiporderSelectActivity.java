@@ -261,6 +261,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         //Set the current pickorder
         cPickorder.currentPickOrder = pvPickorder;
         FirebaseCrashlytics.getInstance().setCustomKey("Ordernumber", cPickorder.currentPickOrder.getOrderNumberStr());
+        ShiporderLinesActivity.startedFromOrderSelectBln = true;
 
         new Thread(this::mHandleShipOrderSelected).start();
 
@@ -454,6 +455,7 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         cWorkplace.currentWorkplace = null;
         cShipment.allShipmentsObl = null;
         PickorderLinesActivity.shipFromPickBln = false;
+        ShiporderLinesActivity.startedFromOrderSelectBln = false;
 
     }
 

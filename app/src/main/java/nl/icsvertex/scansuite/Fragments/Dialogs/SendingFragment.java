@@ -9,24 +9,21 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
-import java.util.Objects;
+import android.text.method.ScrollingMovementMethod;
 
 import ICS.Interfaces.iICSDefaultFragment;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
-import SSU_WHS.Picken.Shipment.cShipment;
 import nl.icsvertex.scansuite.Activities.Packaging.PackagingActivity;
 import nl.icsvertex.scansuite.Activities.Ship.ShiporderShipActivity;
 import nl.icsvertex.scansuite.R;
-
-import static java.util.Objects.*;
 
 public class SendingFragment extends DialogFragment implements iICSDefaultFragment {
 
@@ -39,10 +36,11 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     private ImageView imageRocket;
     private ImageView imageCloud;
     private TextView textSending;
-    private TextView textError;
+    private TextView textErrorDetail;
     private TextView textDots;
     private TextView textTryAgain;
     private ImageView imageViewTryAgain;
+    private Button buttonCloseSendingFragment;
 
     //End Region Private Properties
 
@@ -87,10 +85,12 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
             this.imageRocket = getView().findViewById(R.id.imageRocket);
             this.imageCloud = getView().findViewById(R.id.imageCloud);
             this.textSending = getView().findViewById(R.id.textSending);
-            this.textError = getView().findViewById(R.id.textErrorDetail);
+            this.textErrorDetail = getView().findViewById(R.id.textErrorDetail);
+            this.textErrorDetail.setMovementMethod(new ScrollingMovementMethod());
             this.textDots = getView().findViewById(R.id.textDots);
             this.textTryAgain = getView().findViewById(R.id.textTryAgain);
             this.imageViewTryAgain = getView().findViewById(R.id.imageViewTryAgain);
+            this.buttonCloseSendingFragment = getView().findViewById(R.id.buttonCloseSendingFragment);
         }
 
     }
@@ -100,12 +100,13 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     public void mFieldsInitialize() {
         this.textSending.setText(R.string.dialog_sending);
         this.textDots.setVisibility(View.VISIBLE);
-        this.textError.setVisibility(View.INVISIBLE);
+        this.textErrorDetail.setVisibility(View.INVISIBLE);
         this.mShowHideTryAgain(false);
     }
 
     @Override
     public void mSetListeners() {
+        this.mSetCloseListener();
         this.mSetTryAgainListener();
     }
 
@@ -121,7 +122,7 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
             public void run() {
                 textSending.setText(R.string.dialog_sent);
                 textDots.setVisibility(View.INVISIBLE);
-                textError.setVisibility(View.INVISIBLE);
+                textErrorDetail.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -173,15 +174,15 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
     public void pShowCrashAnimation(final String pvErrorMessageStr) {
 
         this.mShowHideTryAgain(true);
-
         //new thread, so run in UI
         requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-               textSending.setText(R.string.dialog_notsent);
-               textDots.setVisibility(View.INVISIBLE);
-               textError.setVisibility(View.VISIBLE);
-              textError.setText(pvErrorMessageStr);
+                textSending.setText(R.string.dialog_notsent);
+                textDots.setVisibility(View.INVISIBLE);
+                textErrorDetail.setVisibility(View.VISIBLE);
+                textErrorDetail.setText(pvErrorMessageStr);
+                buttonCloseSendingFragment.setVisibility(View.VISIBLE);
             }
         });
 
@@ -211,7 +212,9 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
 
                 }
             });
-        }
+
+
+    }
 
 
     //End Region Public Methods
@@ -228,6 +231,15 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
                     ShiporderShipActivity shiporderShipActivity = (ShiporderShipActivity)cAppExtension.activity;
                     shiporderShipActivity.pHandleSourceDocumentDone();
                 }
+            }
+        });
+    }
+
+    private void mSetCloseListener(){
+        this.buttonCloseSendingFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }
@@ -291,7 +303,8 @@ public class SendingFragment extends DialogFragment implements iICSDefaultFragme
             @Override
             public void run() {
                 textTryAgain.setVisibility(View.INVISIBLE);
-               imageViewTryAgain.setVisibility(View.INVISIBLE);
+                imageViewTryAgain.setVisibility(View.INVISIBLE);
+                buttonCloseSendingFragment.setVisibility(View.INVISIBLE);
             }
         });
 

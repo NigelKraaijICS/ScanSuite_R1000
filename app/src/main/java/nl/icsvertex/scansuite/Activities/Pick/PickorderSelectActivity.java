@@ -59,6 +59,7 @@ import SSU_WHS.Picken.PickorderLines.cPickorderLine;
 import SSU_WHS.Picken.Pickorders.cPickorder;
 import SSU_WHS.Picken.Pickorders.cPickorderAdapter;
 import nl.icsvertex.scansuite.Activities.General.MenuActivity;
+import nl.icsvertex.scansuite.Activities.Ship.ShiporderLinesActivity;
 import nl.icsvertex.scansuite.Fragments.Dialogs.CommentFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.FilterOrderLinesFragment;
 import nl.icsvertex.scansuite.Fragments.Dialogs.NoOrdersFragment;
@@ -926,6 +927,7 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorderBarcode.currentPickorderBarcode = null;
         cWorkplace.currentWorkplace = null;
         PickorderLinesActivity.shipFromPickBln = false;
+        ShiporderLinesActivity.startedFromOrderSelectBln = false;
         cContentlabelContainer.currentContentlabelContainer = null;
 
     }

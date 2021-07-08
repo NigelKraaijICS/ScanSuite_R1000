@@ -126,7 +126,7 @@ public class cShipmentAdapter extends RecyclerView.Adapter<cShipmentAdapter.Ship
                 ShiporderLinesActivity shiporderLinesActivity = (ShiporderLinesActivity)cAppExtension.activity;
                 shiporderLinesActivity.pShipmentSelected(shipment);
 
-                if (localShipmentsObl.size() == 1 && cWorkplace.currentWorkplace != null) {
+                if (localShipmentsObl.size() == 1 && cWorkplace.currentWorkplace != null && ShiporderLinesActivity.startedFromOrderSelectBln) {
                     shiporderLinesActivity.pHandleScan(null,true);
                 }
 

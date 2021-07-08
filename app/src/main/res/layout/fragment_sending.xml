@@ -21,21 +21,28 @@
         android:text="@string/dialog_sending"
         android:elevation="@dimen/default_double_elevation"
         />
-    <TextView
-        android:id="@+id/textErrorDetail"
-        android:textSize="@dimen/textsize_big_20"
-        android:textColor="@color/colorTextDarker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="@dimen/errormessage_width"
+        android:layout_height="@dimen/errormessage_height"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textSending"
-        app:layout_constraintBottom_toTopOf="@id/imageRocket"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="60dp"
-        android:text="@string/dialog_error"
-        android:elevation="@dimen/default_double_elevation"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/buttonCloseSendingFragment"
+        tools:ignore="ExtraText">
+        <TextView
+            android:id="@+id/textErrorDetail"
+            android:textSize="@dimen/textsize_normal_16"
+            android:textColor="@color/colorTextDarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textSending"
+            app:layout_constraintBottom_toTopOf="@+id/buttonCloseSendingFragment"
+            android:layout_margin="@dimen/activityPadding"
+            />
+    </LinearLayout>
     <TextView
         android:id="@+id/textDots"
         android:layout_width="wrap_content"
@@ -92,5 +99,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
-
+    <Button
+        android:id="@+id/buttonCloseSendingFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:text="@string/close_dialog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

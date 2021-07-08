@@ -380,11 +380,9 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
     //End Regioni ICSDefaultFragment methods
 
     private void mSetProGloveScreen() {
-        String proglovedata = "1||" + "LAS PROPERTOS ESPACTACULARRRRRRR!!!!!!";
-
+        String proglovedata = "1||" + getString(R.string.proglove_check_terminal_screen);
         cProGlove myproglove= new cProGlove();
         myproglove.pSendScreen(cProGlove.PROGLOVE_DISPLAY_TEMPLATE_1FIELD_0HEADER, proglovedata, true, 0, 0);
-        myproglove.pDisco();
     }
     //Region Public Methods
 

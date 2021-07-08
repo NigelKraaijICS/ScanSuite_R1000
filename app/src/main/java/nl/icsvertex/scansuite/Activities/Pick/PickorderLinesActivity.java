@@ -1185,7 +1185,7 @@ public class PickorderLinesActivity extends AppCompatActivity implements iICSDef
     private  void mStartShipActivity() {
 
         PickorderLinesActivity.shipFromPickBln = true;
-
+        ShiporderLinesActivity.startedFromOrderSelectBln = true;
         cUserInterface.pShowGettingData();
 
         new Thread(this::mHandleStartShipActivity).start();

@@ -307,6 +307,7 @@ public class ShiporderShipActivity extends AppCompatActivity implements iICSDefa
     }
 
     private  void mGoBackToLinesActivity() {
+       ShiporderLinesActivity.startedFromOrderSelectBln = false;
        Intent intent =new Intent(cAppExtension.context, ShiporderLinesActivity.class);
         startActivity(intent);
         finish();

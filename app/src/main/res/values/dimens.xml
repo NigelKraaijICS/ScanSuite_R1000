@@ -47,6 +47,9 @@
     <dimen name="imagelogo_width">150dp</dimen>
     <dimen name="imagelogo_height">150dp</dimen>
 
+    <dimen name="errormessage_height">350dp</dimen>
+    <dimen name="errormessage_width">250dp</dimen>
+
     <dimen name="icon_big_width">72dp</dimen>
     <dimen name="icon_big_height">72dp</dimen>
 

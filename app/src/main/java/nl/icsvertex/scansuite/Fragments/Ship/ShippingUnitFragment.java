@@ -126,7 +126,9 @@ public class ShippingUnitFragment extends DialogFragment implements iICSDefaultF
         this.buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 0;
+                if (cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit != null) {
+                    cShippingAgentServiceShippingUnit.currentShippingAgentServiceShippingUnit.ShippingUnitQuantityUsedInt = 0;
+                }
                 dismiss();
             }
         });

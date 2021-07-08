@@ -67,7 +67,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     private  TextView toolbarTitle;
 
     public static Fragment currentLineFragment;
-
+    public static boolean startedFromOrderSelectBln;
 
     //End Region Views
 
@@ -479,6 +479,10 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
 
     private boolean mCheckAllDoneBln() {
 
+        if (!ShiporderLinesActivity.startedFromOrderSelectBln && cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size() == 1){
+            mStartOrderSelectActivity();
+        }
+
         return cPickorder.currentPickOrder.pGetNotHandledShipmentsObl().size() <= 0;
     }
 
@@ -618,6 +622,7 @@ public class ShiporderLinesActivity extends AppCompatActivity implements iICSDef
     private  void mStartPickorderSelectActivity(){
         cWorkplace.currentWorkplace = null;
         PickorderLinesActivity.shipFromPickBln = false;
+        ShiporderLinesActivity.startedFromOrderSelectBln = false;
 
         Intent intent = new Intent(cAppExtension.context, PickorderSelectActivity.class);
         startActivity(intent);
