@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ICS.Utils.cRegex;
 import ICS.Utils.cText;
 import ICS.Weberror.cWeberror;
 import ICS.cAppExtension;
+import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
 import SSU_WHS.General.Warehouseorder.cWarehouseorder;
 import SSU_WHS.Webservice.cWebresult;
 import SSU_WHS.Webservice.cWebserviceDefinitions;
@@ -151,6 +153,7 @@ public class cSetting {
         PICK_AUTO_CREATE_ORDER_TRANSFER,
         PICK_AUTO_NEXT,
         PICK_AUTO_START_PICKEN,
+        PICK_ACTIVITY_CURRENT_LOCATION_LAYOUT,
         PICK_BARCODE_CHECK,
         PICK_BIN_IS_ITEM,
         PICK_BIN_MANUAL,
@@ -497,6 +500,26 @@ public class cSetting {
         }
 
         return cText.pStringToBooleanBln(Setting.valueStr,false);
+    }
+
+    public static String PICK_ACTIVITY_CURRENT_LOCATION_LAYOUT(){
+
+        cSetting Setting =   mGetSettingByEnu(settingEnu.PICK_ACTIVITY_CURRENT_LOCATION_LAYOUT);
+        if (Setting == null) {
+            return "";
+        }
+
+        return Setting.valueStr;
+    }
+
+    public static boolean pCheckBarcodeWithLayoutBln(String pvBarcodeStr){
+
+        if (PICK_ACTIVITY_CURRENT_LOCATION_LAYOUT().equals("")){
+            return true;
+        }
+
+        return cRegex.pCheckRegexBln(PICK_ACTIVITY_CURRENT_LOCATION_LAYOUT(), pvBarcodeStr);
+
     }
 
     public static boolean PICK_PACK_AND_SHIP_FASE_AVAILABLE(){

@@ -25,6 +25,7 @@ import ICS.Utils.cRegex;
 import ICS.Utils.cUserInterface;
 import ICS.cAppExtension;
 import SSU_WHS.Basics.BarcodeLayouts.cBarcodeLayout;
+import SSU_WHS.Basics.Settings.cSetting;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesActivity;
 import nl.icsvertex.scansuite.Activities.Pick.PickorderLinesGeneratedActivity;
 import nl.icsvertex.scansuite.Activities.Returns.ReturnorderDocumentActivity;
@@ -174,7 +175,7 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
             public void onClick(View view) {
 
 
-                if (editTextCurrentLocation.getText().toString().trim().isEmpty() || cBarcodeLayout.pCheckBarcodeWithLayoutBln(editTextCurrentLocation.getText().toString(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
+                if (editTextCurrentLocation.getText().toString().trim().isEmpty() || !cSetting.pCheckBarcodeWithLayoutBln(editTextCurrentLocation.getText().toString())) {
                     cUserInterface.pDoNope(editTextCurrentLocation, true, true);
                     return;
                 }
@@ -183,21 +184,21 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
                     PickorderLinesActivity pickorderLinesActivity = (PickorderLinesActivity)cAppExtension.activity;
                         dismiss();
-                        pickorderLinesActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
+                        pickorderLinesActivity.pSetCurrentLocation(cRegex.pStripRegexPrefixStr( editTextCurrentLocation.getText().toString()));
                     }
 
 
                 if (cAppExtension.activity instanceof PickorderLinesGeneratedActivity) {
                         PickorderLinesGeneratedActivity pickorderLinesGeneratedActivity = (PickorderLinesGeneratedActivity)cAppExtension.activity;
                         dismiss();
-                        pickorderLinesGeneratedActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
+                        pickorderLinesGeneratedActivity.pSetCurrentLocation(cRegex.pStripRegexPrefixStr( editTextCurrentLocation.getText().toString()));
                 }
 
                 if (cAppExtension.activity instanceof ReturnorderDocumentActivity) {
 
                     ReturnorderDocumentActivity returnorderDocumentActivity = (ReturnorderDocumentActivity)cAppExtension.activity;
                         dismiss();
-                        returnorderDocumentActivity.pSetCurrentLocation(editTextCurrentLocation.getText().toString());
+                        returnorderDocumentActivity.pSetCurrentLocation(cRegex.pStripRegexPrefixStr( editTextCurrentLocation.getText().toString()));
                     }
             }
         });
@@ -206,45 +207,24 @@ public class CurrentLocationFragment extends DialogFragment implements iICSDefau
 
     public  void pHandleScan(cBarcodeScan pvBarcodeScan) {
 
-
-        //Has prefix, so check if this is a BIN
-        if (cRegex.pHasPrefix(pvBarcodeScan.getBarcodeOriginalStr())) {
-
-            boolean foundBin = false;
-            if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.BIN)) {
-                foundBin = true;
-            }
-
-            if (cAppExtension.activity instanceof  PickorderLinesActivity) {
-                if (foundBin) {
+        boolean foundBin = false;
+        if (cSetting.pCheckBarcodeWithLayoutBln(pvBarcodeScan.barcodeOriginalStr)){
+            foundBin = true;
+        }
+        if (foundBin) {
+            if (cAppExtension.activity instanceof PickorderLinesActivity || cAppExtension.activity instanceof PickorderLinesGeneratedActivity || cAppExtension.activity instanceof ReturnorderDocumentActivity) {
+                {
                     //has prefix, is bin
-                    this.editTextCurrentLocation.setText(cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr()));
+                    this.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
                     this.setLocationButton.callOnClick();
+                    return;
                 }
-                else {
-                    //has prefix, isn't bin
-                    cUserInterface.pDoNope(this.editTextCurrentLocation, true, true);
-                }
-                return;
-            }
-
-            if (cAppExtension.activity instanceof ReturnorderDocumentActivity ) {
-                String barcodeWithoutPrefixStr = cRegex.pStripRegexPrefixStr(pvBarcodeScan.getBarcodeOriginalStr());
-                this.editTextCurrentLocation.setText(barcodeWithoutPrefixStr);
-                this.setLocationButton.callOnClick();
-                return;
             }
         }
 
-        if (cBarcodeLayout.pCheckBarcodeWithLayoutBln(pvBarcodeScan.getBarcodeOriginalStr(),cBarcodeLayout.barcodeLayoutEnu.ARTICLE)) {
-            cUserInterface.pDoNope(this.editTextCurrentLocation, true, true);
-            return;
-        }
+        cUserInterface.pDoNope(this.editTextCurrentLocation, true, true);
 
-            //no prefix, fine
-        this.editTextCurrentLocation.setText(pvBarcodeScan.getBarcodeOriginalStr());
-        this.setLocationButton.callOnClick();
-    }
+       }
 
     public void pSetConnectionState() {
         if (cConnection.isInternetConnectedBln()) {

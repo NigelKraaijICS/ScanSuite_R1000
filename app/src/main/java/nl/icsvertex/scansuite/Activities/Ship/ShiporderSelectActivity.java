@@ -457,6 +457,10 @@ public class ShiporderSelectActivity extends AppCompatActivity implements iICSDe
         PickorderLinesActivity.shipFromPickBln = false;
         ShiporderLinesActivity.startedFromOrderSelectBln = false;
 
+        getPickorderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
+
     }
 
     private  void mShowNoOrdersIcon(final Boolean pvShowBln) {

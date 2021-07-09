@@ -650,6 +650,9 @@ public class ReturnorderSelectActivity extends AppCompatActivity implements iICS
 
         //Reset all current objects
         cReturnorder.currentReturnOrder = null;
+        getReturnorderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
     }
 
     private void mSetNewOrderButton() {

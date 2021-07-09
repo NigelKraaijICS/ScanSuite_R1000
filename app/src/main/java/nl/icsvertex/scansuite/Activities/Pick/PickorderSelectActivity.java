@@ -929,6 +929,9 @@ public class PickorderSelectActivity extends AppCompatActivity implements iICSDe
         PickorderLinesActivity.shipFromPickBln = false;
         ShiporderLinesActivity.startedFromOrderSelectBln = false;
         cContentlabelContainer.currentContentlabelContainer = null;
+        getPickorderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
 
     }
 

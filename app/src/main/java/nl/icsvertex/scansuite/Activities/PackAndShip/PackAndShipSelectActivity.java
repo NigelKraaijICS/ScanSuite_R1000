@@ -690,6 +690,9 @@ public class PackAndShipSelectActivity extends AppCompatActivity implements iICS
 
         //Reset all current objects
         cPackAndShipOrder.currentPackAndShipOrder = null;
+        getPackAndShipOrderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
     }
 
     private boolean mTryToLockOrderBln(){

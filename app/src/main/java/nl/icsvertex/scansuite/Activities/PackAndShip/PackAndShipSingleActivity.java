@@ -701,9 +701,9 @@ public class PackAndShipSingleActivity extends AppCompatActivity implements iICS
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.shippinAgentServiceSpinner.setAdapter(adapter);
-        this.shippinAgentServiceSpinner.setSelection(adapter.getPosition(cPackAndShipShipment.currentShipment.shippingAgentService().getDescriptionStr()));
+//        this.shippinAgentServiceSpinner.setSelection(adapter.getPosition(cPackAndShipShipment.currentShipment.shippingAgentService().getDescriptionStr()));
 
-        cShippingAgentService shippingAgentService = this.selectedShippingAgent.pGetShippingAgentServiceByDescriptionStr(cPackAndShipShipment.currentShipment.shippingAgentService().getDescriptionStr());
+        cShippingAgentService shippingAgentService = this.selectedShippingAgent.pGetShippingAgentServiceByDescriptionStr(this.shippinAgentServiceSpinner.getSelectedItem().toString());
         this.mFillShippingUnitRecycler(shippingAgentService.shippingUnitsObl());
     }
 

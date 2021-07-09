@@ -440,6 +440,10 @@ public class SortorderSelectActivity extends AppCompatActivity implements iICSDe
         cPickorderLine.currentPickOrderLine = null;
         cPickorderBarcode.currentPickorderBarcode = null;
         cWorkplace.currentWorkplace = null;
+        getPickorderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
+
     }
 
     private void mShowNoOrdersIcon(final Boolean pvShowBln){

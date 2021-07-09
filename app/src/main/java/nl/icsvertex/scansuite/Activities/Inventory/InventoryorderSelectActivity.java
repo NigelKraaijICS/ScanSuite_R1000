@@ -651,6 +651,9 @@ public class InventoryorderSelectActivity extends AppCompatActivity implements i
 
         //Reset all current objects
         cInventoryorder.currentInventoryOrder = null;
+        getInventoryorderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
 
     }
 

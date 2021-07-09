@@ -365,10 +365,6 @@ public class cShipment {
         cResult result = new cResult();
         result.resultBln = true;
 
-        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
-            return  result;
-        }
-
         if (cShipment.currentShipment.shippingAgent() == null) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agent_unkown_or_empty));
@@ -384,6 +380,10 @@ public class cShipment {
         if (this.shippingAgentService().shippingUnitsObl() == null || this.shippingAgentService().shippingUnitsObl().size() == 0 ) {
             result.resultBln = false;
             result.pAddErrorMessage(cAppExtension.activity.getString(R.string.message_shipping_agentservice_shippingingunits_unkown_or_empty));
+            return  result;
+        }
+
+        if (!cPickorder.currentPickOrder.isPackAndShipNeededBln()) {
             return  result;
         }
 

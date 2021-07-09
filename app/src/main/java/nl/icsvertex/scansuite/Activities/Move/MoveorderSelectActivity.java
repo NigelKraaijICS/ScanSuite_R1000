@@ -740,6 +740,10 @@ public class MoveorderSelectActivity extends AppCompatActivity implements iICSDe
 
         //Reset all current objects
         cMoveorder.currentMoveOrder = null;
+        getMoveorderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
+
     }
 
     private boolean mTryToLockOrderBln(){

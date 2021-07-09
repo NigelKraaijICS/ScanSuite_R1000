@@ -444,6 +444,10 @@ public class StoreorderSelectActivity extends AppCompatActivity implements iICSD
         cPickorderLine.currentPickOrderLine = null;
         cPickorderBarcode.currentPickorderBarcode = null;
         cWorkplace.currentWorkplace = null;
+        getPickorderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
+
     }
 
     private void mShowNoOrdersIcon(final Boolean pvShowBln){

@@ -719,6 +719,10 @@ public class IntakeAndReceiveSelectActivity extends AppCompatActivity implements
 
         //Reset all current objects
         cIntakeorder.currentIntakeOrder = null;
+        getIntakeorderAdapter().pSetFilter("");
+        recyclerSearchView.setQuery("", false);
+        recyclerSearchView.setIconified(true);
+
     }
 
     private  boolean mTryToLockOrderBln(){

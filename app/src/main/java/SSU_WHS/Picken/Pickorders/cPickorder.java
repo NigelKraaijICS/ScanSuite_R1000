@@ -771,7 +771,25 @@ public class cPickorder{
 
         //Everything was fine, so we are done
         if (Webresult.getSuccessBln() && Webresult.getResultBln()) {
+
             result.resultBln = true;
+//            Long actionLng = Webresult.getResultLng();
+//
+//            if (Webresult.getResultLng() < 10 ) {
+//                actionLng = Webresult.getResultLng();
+//            }
+//
+//            if (Webresult.getResultLng() > 100) {
+//                actionLng  = Webresult.getResultLng()/100;
+//            }
+//            //Something went wrong, we received a comment
+//            if (actionLng == 80) {
+//                result.resultBln = false;
+//                cComment comment = new cComment(Webresult.getResultDtt().get(0));
+//                result.pAddErrorMessage(comment.commentTextStr);
+//                return  result;
+//            }
+
             return result;
         }
 
