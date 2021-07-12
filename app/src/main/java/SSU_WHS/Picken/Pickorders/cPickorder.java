@@ -1556,14 +1556,6 @@ public class cPickorder{
 
         for (cPickorderLineEntity pickorderLineEntity : hulpResultObl ) {
             cPickorderLine PickorderLine = new cPickorderLine(pickorderLineEntity);
-            for (cPickorderLine pickorderLine : this.linesObl()){
-                if(pickorderLine.getLineNoInt() ==  PickorderLine.getLineNoInt()){
-                    PickorderLine.presetValueObl = new ArrayList<>();
-                    PickorderLine.presetValueObl = pickorderLine.presetValueObl;
-                }
-            }
-
-
             resultObl.add(PickorderLine);
         }
         return  resultObl;
@@ -2844,16 +2836,6 @@ public class cPickorder{
             for (JSONObject jsonObject : WebResult.getResultDtt()) {
                 cLinePropertyValue linePropertyValue = new cLinePropertyValue(jsonObject);
                 linePropertyValue.pInsertInDatabaseBln();
-                if (linePropertyValue.getValueStr() !=null){
-                    for (cPickorderLine pickorderLine : this.linesObl()){
-                        if (pickorderLine.getLineNoInt() == linePropertyValue.getLineNoInt()){
-                            if (pickorderLine.presetValueObl == null) {
-                                pickorderLine.presetValueObl = new ArrayList<>();
-                            }
-                            pickorderLine.presetValueObl.add(linePropertyValue);
-                        }
-                    }
-                }
             }
             return  true;
         }

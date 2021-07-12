@@ -185,7 +185,34 @@ public class cPickorderLine {
         return  this.getSourceNoStr() + " " +  this.getBinCodeStr();
     }
 
-    public ArrayList<cLinePropertyValue> presetValueObl;
+    private ArrayList<cLinePropertyValue> presetCachedValueObl;
+    public ArrayList<cLinePropertyValue> presetValueObl(){
+
+        if (this.presetCachedValueObl != null) {
+            return  this.presetCachedValueObl;
+        }
+
+            this.presetCachedValueObl = new ArrayList<>();
+
+        if (cLinePropertyValue.allLinePropertysValuesObl == null || cLinePropertyValue.allLinePropertysValuesObl.size() == 0) {
+            return  this.presetCachedValueObl;
+        }
+
+        for (cLinePropertyValue linePropertyValue : cLinePropertyValue.allLinePropertysValuesObl) {
+
+            if (linePropertyValue.getLineNoInt() != this.getLineNoInt()) {
+                continue;
+            }
+
+            if (linePropertyValue.getValueStr() !=null){
+                this.presetCachedValueObl.add(linePropertyValue);
+            }
+        }
+
+        return  this.presetCachedValueObl;
+
+    }
+
     public ArrayList<cContentlabelContainer> containerObl;
     public cContentlabelContainer currentContainer;
 

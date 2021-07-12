@@ -170,8 +170,8 @@ public class cLinePropertyValueInputAdapter extends RecyclerView.Adapter<cLinePr
 
             if (cAppExtension.activity instanceof PickorderLineItemPropertyInputActvity) {
 
-                if ( cPickorderLine.currentPickOrderLine != null && cPickorderLine.currentPickOrderLine.presetValueObl != null) {
-                    for (cLinePropertyValue loopValue : cPickorderLine.currentPickOrderLine.presetValueObl){
+                if ( cPickorderLine.currentPickOrderLine != null && cPickorderLine.currentPickOrderLine.presetValueObl() != null) {
+                    for (cLinePropertyValue loopValue : cPickorderLine.currentPickOrderLine.presetValueObl()){
                         if (loopValue.getPropertyCodeStr().equalsIgnoreCase(linePropertyValue.getPropertyCodeStr()) && loopValue.getValueStr().equalsIgnoreCase(linePropertyValue.getValueStr())){
                             pvHolder.imageButtonZero.setVisibility(View.INVISIBLE);
                             break;

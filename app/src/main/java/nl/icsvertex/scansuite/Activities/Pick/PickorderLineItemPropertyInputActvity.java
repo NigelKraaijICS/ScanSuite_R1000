@@ -411,11 +411,11 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     public  void pHandeManualAction(cBarcodeScan pvBarcodeScan){
 
-        if (cPickorderLine.currentPickOrderLine.presetValueObl != null){
+        if (cPickorderLine.currentPickOrderLine.presetValueObl() != null){
             boolean foundBln = false;
             ArrayList<String> propertyObl = new ArrayList<>();
-            for (cLinePropertyValue propertyValue : cPickorderLine.currentPickOrderLine.presetValueObl){
-                if(propertyValue.getPropertyCodeStr().equalsIgnoreCase(cLinePropertyValue.currentLinePropertyValue.getPropertyCodeStr())){
+            for (cLinePropertyValue propertyValue : cPickorderLine.currentPickOrderLine.presetValueObl()){
+                if(propertyValue.getPropertyCodeStr().equalsIgnoreCase( cLineProperty.currentLineProperty.getPropertyCodeStr())){
                     propertyObl.add(propertyValue.getValueStr());}
             }
             if (propertyObl.size() > 0){
@@ -532,7 +532,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
 
     public void pShowDatePickerDialog() {
         cUserInterface.pCheckAndCloseOpenDialogs();
-        DatePickerFragment datePickerFragment = new DatePickerFragment(cPickorderLine.currentPickOrderLine.presetValueObl);
+        DatePickerFragment datePickerFragment = new DatePickerFragment(cPickorderLine.currentPickOrderLine.presetValueObl());
         datePickerFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTDATEFRAGMENT_TAG);
     }
 
@@ -793,7 +793,7 @@ public class PickorderLineItemPropertyInputActvity extends AppCompatActivity imp
             return;
         }
         cUserInterface.pCheckAndCloseOpenDialogs();
-        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment(cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase(), cPickorderLine.currentPickOrderLine.presetValueObl);
+        ItemPropertyTextInputFragment itemPropertyTextInputFragment = new ItemPropertyTextInputFragment(cLinePropertyValue.currentLinePropertyValue.getItemProperty().getValueTypeStr().toUpperCase(), cPickorderLine.currentPickOrderLine.presetValueObl());
         itemPropertyTextInputFragment.show(cAppExtension.fragmentManager, cPublicDefinitions.ITEMPROPERTYINPUTTEXTFRAGMENT_TAG);
     }
 
